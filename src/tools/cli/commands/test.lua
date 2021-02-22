@@ -86,7 +86,7 @@ local function run_test(name, test_fn, seed, debug_on_error)
    local StringIO = require("mod.extlibs.api.StringIO")
    local _print = print
    local redir_out = StringIO.create()
-   print = function(...) for _, i in ipairs({...}) do redir_out:write(i .. "\n") end end
+   print = function(...) for _, i in ipairs({...}) do redir_out:write(tostring(i) .. " "); redir_out:write("\n") end end
 
    local ok, err = xpcall(test_fn, capture)
 
@@ -126,6 +126,8 @@ local function test_file(file, filter_test_name, seed, debug_on_error)
 
    local failures = {}
    local total = 0
+
+   table.sort(mt.__tests, function(a, b) return a[1] < b[1] end)
 
    for _, pair in ipairs(mt.__tests) do
       local name = pair[1]
@@ -177,6 +179,7 @@ return function(args)
    local function get_files(path)
       local items = fs.get_directory_items(path)
       local files = fun.iter(items):map(function(f) return fs.join(path, f) end):to_list()
+      table.sort(files)
       return files
    end
    local files = get_files("test/unit/")

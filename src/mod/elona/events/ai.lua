@@ -70,7 +70,7 @@ local function check_if_sandbag(chara, params, result)
    if chara:calc("is_hung_on_sandbag") then
       if chara:is_in_fov() then
          if Rand.one_in(30) then
-            Gui.mes_c(I18N.quote_speech("action.npc.sand_bag"), "Talk")
+            Gui.mes_c(I18N.quote_speech("action.npc.sand_bag", chara), "Talk")
          end
       end
       chara:set_aggro(chara:get_target(), 0)

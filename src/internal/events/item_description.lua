@@ -176,15 +176,25 @@ local function build_description(item, _, result)
 
    -- >>>>>>>> shade2/command.hsp:4137 	if iKnown(ci)>=knownFull{ ..
    if item:calc("identify_state") >= Enum.IdentifyState.Full then
-      for _, enc in item:iter_enchantments() do
-         local enc_desc = enc:localize(item)
-         local icon = enc.proto.icon or 4
-         local color = enc.proto.color or {80, 50, 0}
-         if enc:alignment() == "negative" then
+      for _, merged_enc in item:iter_merged_enchantments() do
+         local enc_desc
+         if merged_enc.proto.localize then
+            enc_desc = merged_enc.proto.localize(merged_enc.total_power, merged_enc.params, item)
+         else
+            enc_desc = I18N.get("_.base.enchantment." .. merged_enc._id .. ".description")
+         end
+
+         local icon = merged_enc.proto.icon or 4
+         local color = merged_enc.proto.color or {80, 50, 0}
+         local alignment = merged_enc.proto.alignment
+         if type(alignment) == "function" then
+            alignment = alignment(merged_enc.total_power, merged_enc.params)
+         end
+         if alignment == "negative" then
             color = {180, 0, 0}
             icon = 9
          end
-         result[#result+1] = { text = I18N.get("enchantment.it", enc_desc), icon = icon, color = color, is_inheritable = enc.is_inheritable }
+         result[#result+1] = { text = I18N.get("enchantment.it", enc_desc), icon = icon, color = color, is_inheritable = merged_enc.is_inheritable }
       end
 
       if item:calc("is_eternal_force") then
@@ -200,6 +210,10 @@ Event.register("base.on_item_build_description", "Build description", build_desc
 
 local function add_flavor_text(item, params, result)
    -- >>>>>>>> elona122/shade2/command.hsp:4150 		 ..
+   if item:calc("identify_state") < Enum.IdentifyState.Full then
+      return result
+   end
+
    -- NOTE: unused in vanilla
    local show_footnote = false
    if show_footnote then

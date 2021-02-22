@@ -1,17 +1,27 @@
 local Event = require("api.Event")
 local Chara = require("api.Chara")
 local Skill = require("mod.elona_sys.api.Skill")
-local Item = require("api.Item")
 local Env = require("api.Env")
 
+data:add_multi(
+   "base.config_option",
+   {
+      { _id = "enabled", type = "boolean", default = false },
+   }
+)
+
 local function level_up()
+   if not config.cheat.enabled then
+      return
+   end
+
    local player = Chara.player()
 
-   -- local levels = 100
-   -- for _= 1, levels do
-   --   Skill.gain_level(player)
-   --   Skill.grow_primary_skills(player)
-   -- end
+   local levels = 100
+   for _= 1, levels do
+      Skill.gain_level(player)
+      Skill.grow_primary_skills(player)
+   end
 
    player:mod_base_skill_level("elona.stat_magic", 10000)
    player:mod_base_skill_level("elona.stat_mana", 10000)
@@ -66,3 +76,11 @@ local function enable_themes()
 end
 
 Event.register("base.before_engine_init", "Enable non-redistributable themes if available", enable_themes)
+
+local function setup_dev_config()
+   config.base.auto_turn_speed = "highest"
+   config.base.anime_wait = 0
+   config.base.development_mode = true
+   config.base.quickstart_chara_id = "elona.the_leopard_warrior"
+end
+Event.register("base.on_engine_init", "Set some useful config options", setup_dev_config)

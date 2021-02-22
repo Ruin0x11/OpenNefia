@@ -183,7 +183,7 @@ return {
       end,
       unknown_item = "未知のアイテム(バージョン非互換)",
       qualified_name = function(name, originalnameref2)
-         return name
+         return tostring(name)
       end
    },
 }

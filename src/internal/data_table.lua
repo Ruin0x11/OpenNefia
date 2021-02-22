@@ -631,7 +631,7 @@ end
 function proxy:ensure(k)
    local it = self[k]
    if it == nil then
-      error(string.format("No instance of %s with ID %s was found.", self._type, k))
+      error(string.format("No instance of '%s' with ID '%s' was found.", self._type, k))
    end
    return it
 end

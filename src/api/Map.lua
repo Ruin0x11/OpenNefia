@@ -38,6 +38,7 @@ function Map.set_map(map, load_type)
    if load_type ~= "traveled" then
       Gui.mes_clear()
    end
+   save.base.is_first_turn = true
    map:emit("base.on_map_enter", {load_type=load_type})
    map.visit_times = map.visit_times + 1
    field:set_map(map)

@@ -11,6 +11,7 @@ local Itemgen = require("mod.tools.api.Itemgen")
 local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local AliasPrompt = require("api.gui.AliasPrompt")
 local I18N = require("api.I18N")
+local IItemEnchantments = require("api.item.IItemEnchantments")
 
 local Smithing = {}
 
@@ -370,6 +371,14 @@ function Smithing.random_item_filter_and_material(hammer, material, categories, 
    return filter, item_material
 end
 
+--- Returns a merged enchantment with a total power greater than zero, not
+--- including power from enchantments added by the item's material.
+function Smithing.extendable_enchantment(item)
+   local filter = function(enc) return enc.source ~= "material" end
+   local merged_encs = IItemEnchantments.calc_total_enchantment_powers(item:iter_base_enchantments():filter(filter))
+   return fun.iter(merged_encs):filter(function(merged_enc) return merged_enc.total_power > 0 end):nth(1)
+end
+
 function Smithing.create_equipment(hammer, chara, target_item, material, categories, extend)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:98549 		quality = 0 ..
    local quality = 0
@@ -419,11 +428,17 @@ function Smithing.create_equipment(hammer, chara, target_item, material, categor
    then
       if Rand.one_in(40 / math.min(extend, 40)) then
          Gui.mes("smithing.blacksmith_hammer.create.masterpiece")
-         -- TODO enchantment
+         local enc = Smithing.extendable_enchantment(created)
+         if enc then
+            created:mod_base_enchantment_power(enc._id, enc.params, enc.total_power * 3 / 2)
+         end
          created.is_handmade = true
       elseif Rand.one_in(40 / math.min(extend, 20)) then
          Gui.mes("smithing.blacksmith_hammer.create.superior")
-         -- TODO enchantment
+         local enc = Smithing.extendable_enchantment(created)
+         if enc then
+            created:mod_base_enchantment_power(enc._id, enc.params, enc.total_power / 2)
+         end
          created.is_handmade = true
       end
    end

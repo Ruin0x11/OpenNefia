@@ -28,7 +28,7 @@ end
 
 --- @tparam IChara chara
 function Effect.impregnate(chara)
-   if chara:find_enchantment("elona.res_pregnancy") then
+   if chara:find_merged_enchantment("elona.res_pregnancy") then
       Gui.mes("misc.pregnant.pukes_out", chara)
       return false
    end
@@ -323,44 +323,11 @@ function Effect.eat_food(chara, food)
    -- <<<<<<<< shade2/proc.hsp:1155 	return ..
 end
 
--- TODO all categories with elona_id >= 50000
-local autoidentify = table.set {
-   "elona.drink",
-   "elona.cargo_food",
-   "elona.cargo",
-   "elona.misc_item",
-   "elona.gold",
-   "elona.remains",
-   "elona.scroll",
-   "elona.tree",
-   "elona.book",
-   "elona.junk_in_field",
-   "elona.platinum",
-   "elona.food",
-   "elona.ore",
-   "elona.furniture",
-   "elona.furniture_well",
-   "elona.furniture_altar",
-   "elona.spellbook",
-   "elona.rod",
-   "elona.junk",
-   "elona.container"
-}
-
-local identify_states = {
-   unidentified = 0,
-   partly = 1,
-   almost = 2,
-   completely = 3
-}
-
 function Effect.do_identify_item(item, level)
    if item.identify_state == Enum.IdentifyState.Quality then
-      for _, cat in ipairs(item.categories) do
-         if autoidentify[cat] then
-            level = Enum.IdentifyState.Full
-            break
-         end
+      local elona_Item = require("mod.elona.api.Item")
+      if not elona_Item.is_equipment(item) then
+         level = Enum.IdentifyState.Full
       end
    end
 
@@ -368,10 +335,10 @@ function Effect.do_identify_item(item, level)
    local new = level
 
    if old >= new then
-      return false, "unidentified"
+      return false, old
    end
 
-   return true, level
+   return true, new
 end
 
 function Effect.identify_item(item, level)
@@ -1229,7 +1196,7 @@ function Effect.has_sustain_enchantment(chara, attribute_id)
       return enc._id == "elona.sustain_attribute"
          and enc.params.skill_id == attribute_id
    end
-   return chara:iter_enchantments():any(is_sustain_enc)
+   return chara:iter_merged_enchantments():any(is_sustain_enc)
 end
 
 function Effect.generate_money(chara)

@@ -277,7 +277,7 @@ function EquipmentMenu:update()
             -- >>>>>>>> shade2/command.hsp:3743 			snd seEquip ..
             Gui.play_sound("base.equip1")
             Gui.mes_newline()
-            Gui.mes("ui.inv.equip.you_equip", selected_item)
+            Gui.mes("ui.inv.equip.you_equip", selected_item:build_name())
             self.changed_equipment = true
             local curse = selected_item:calc("curse_state")
             if curse == Enum.CurseState.Cursed then

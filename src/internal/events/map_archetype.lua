@@ -86,6 +86,10 @@ local function archetype_on_map_pass_turn(chara, params, result)
       return result
    end
 
+   if params.is_first_turn then
+      return result
+   end
+
    local archetype = map:archetype()
    if not (archetype and archetype.on_map_pass_turn) then
       return

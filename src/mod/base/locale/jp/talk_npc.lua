@@ -318,7 +318,7 @@ return {
             },
             go_to_shelter = function(_1)
                return ("悪天候時はシェルターを無料で開放している%sすみやかに避難して%s")
-                  :format(nda(_1), kure(_1))
+                  :format(noda(_1), kure(_1))
             end
          },
          maid = {

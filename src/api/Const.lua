@@ -17,7 +17,6 @@ Const.MAP_RENEW_MINOR_HOURS = 24
 
 Const.RESIST_GRADE = 50
 
-Const.MAX_ENCHANTMENTLEVEL = 4
 Const.MAX_ENCHANTMENTS = 15
 
 Const.WEAPON_WEIGHT_LIGHT = 1500
@@ -83,5 +82,9 @@ Const.CON_DRUNK_HEAVY     = 45
 Const.ARMOR_WEIGHT_CLASS_HEAVY = 35000
 Const.ARMOR_WEIGHT_CLASS_MEDIUM = 15000
 -- <<<<<<<< shade2/init.hsp:40 	#define global defArmorMedium	15000 ..
+
+-- >>>>>>>> shade2/item_data.hsp:656 	#define global rangeEgoTitleSp	30000 ...
+Const.RANDOM_ITEM_TITLE_SEED_MAX = 30000
+-- <<<<<<<< shade2/item_data.hsp:656 	#define global rangeEgoTitleSp	30000 ..
 
 return Const

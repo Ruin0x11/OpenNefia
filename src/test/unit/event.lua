@@ -37,7 +37,7 @@ function test_event_emiiter_callbacks_restored()
       test_util.register_map(map)
 
       local item = Item.create("base.useable", nil, nil, {}, player)
-      Assert.is_true(item:has_event_handler("elona_sys.on_item_use"))
+      Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
    end
 
    test_util.save_cycle()
@@ -47,9 +47,9 @@ function test_event_emiiter_callbacks_restored()
       local map = player:current_map()
       local item = Item.find("base.useable", "all", map)
 
-      Assert.is_true(item:has_event_handler("elona_sys.on_item_use"))
+      Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
 
-      Assert.is_true(player:equip_item(item))
+      Assert.is_truthy(player:equip_item(item))
    end
 
    test_util.save_cycle()
@@ -59,6 +59,6 @@ function test_event_emiiter_callbacks_restored()
       local map = player:current_map()
       local item = Item.find("base.useable", "all", map)
 
-      Assert.is_true(item:has_event_handler("elona_sys.on_item_use"))
+      Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
    end
 end

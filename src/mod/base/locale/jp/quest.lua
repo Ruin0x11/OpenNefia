@@ -68,7 +68,7 @@ end
 end,
       have_something_to_ask = function(_1)
   return ("%sに頼みたいことがある%s")
-  :format(kimi(_1, 3), nda(_1))
+  :format(kimi(_1, 3), noda(_1))
 end,
       how_about_it = function(_1)
   return ("依頼を受けてくれるの%s")

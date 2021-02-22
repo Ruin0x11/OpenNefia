@@ -32,6 +32,7 @@ local function init_save()
    s.travel_date = 0
    s.travel_date = 0
    s.travel_last_town_name = ""
+   s.is_first_turn = false
 end
 
 Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0})

@@ -47,7 +47,7 @@ function field_logic.quickstart()
    assert(config.base.quickstart_scenario)
    assert(save.base.scenario)
 
-   local me = Chara.create("base.player", nil, nil, {ownerless=true})
+   local me = Chara.create(config.base.quickstart_chara_id, nil, nil, {ownerless=true})
    me:emit("base.on_finalize_player")
    me:emit("base.on_initialize_player")
    field_logic.setup_new_game(me)
@@ -179,12 +179,16 @@ function field_logic.pass_turns()
       return "turn_begin"
    end
 
+   local is_first_turn = save.base.is_first_turn
+   if is_first_turn then
+      save.base.is_first_turn = false
+   end
 
    chara.time_this_turn = chara.time_this_turn - field:turn_cost()
 
    chara.turns_alive = chara.turns_alive + 1
 
-   local result = chara:emit("base.before_chara_turn_start", {}, {blocked=false})
+   local result = chara:emit("base.before_chara_turn_start", {is_first_turn=is_first_turn}, {blocked=false})
    if result.blocked then
       if result.wait then
          Gui.wait(result.wait)

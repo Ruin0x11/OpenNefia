@@ -1,8 +1,5 @@
-local InstancedEnchantment = require("api.item.InstancedEnchantment")
-local Calc = require("mod.elona.api.Calc")
 local Rand = require("api.Rand")
 local Enum = require("api.Enum")
-local Log = require("api.Log")
 local CharaMake = require("api.CharaMake")
 
 local ItemMaterial = {}
@@ -124,23 +121,16 @@ function ItemMaterial.apply_material_enchantments(item, material)
       return
    end
 
-   local remove = {}
-   for i, enc in ipairs(item.enchantments) do
+   for _, enc in item:iter_base_enchantments() do
       if enc.source == "material" then
-         remove[#remove+1] = i
+         item:remove_enchantment(enc)
       end
    end
-   table.remove_indices(item.enchantments, remove)
 
    local material_data = data["elona.item_material"]:ensure(material)
    for _, fixed_enc in ipairs(material_data.enchantments or {}) do
-      local enc = InstancedEnchantment:new(
-         fixed_enc._id,
-         fixed_enc.power,
-         table.deepcopy(fixed_enc.params or {}),
-         "material"
-      )
-      item:add_enchantment(enc)
+      local params = fixed_enc.params and table.deepcopy(fixed_enc.params) or nil
+      item:add_enchantment(fixed_enc._id, fixed_enc.power, params, 0, "material")
    end
 end
 

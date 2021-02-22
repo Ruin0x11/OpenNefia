@@ -628,7 +628,7 @@ What gods this item can be offered to.
          },
          {
             name = "material",
-            default = "elona.sand",
+            default = nil,
             template = true,
             type = "id:elona.item_material",
             doc = [[
@@ -865,11 +865,11 @@ Rarity of this enchantment. Lower means more rare.
 ]]
       },
       {
-         name = "categories",
-         default = { "elona.equip_melee" },
+         name = "filter",
          template = true,
          doc = [[
-Valid item categories this enchantment applies to.
+Function to filter which items this enchantment will get applied to. If nil, it
+can be applied to any item generated randomly.
 ]]
       },
       {
@@ -893,6 +893,47 @@ How to adjust the power when applying the enchantment.
 ]]
       },
    }
+}
+
+data:add_type {
+   name = "ego_enchantment",
+   fields = {
+      {
+         name = "level",
+         type = "integer",
+         default = 0,
+         template = true,
+         doc = [[
+Level of this ego enchantment. Typically between 0-3.
+]]
+      },
+      {
+         name = "filter",
+         type = "function",
+         default = CodeGenerator.gen_literal [[
+function(item)
+   return true
+end
+]],
+         template = true,
+         doc = [[
+A function to filter which items this ego can get applied to.
+]]
+      },
+      {
+         name = "enchantments",
+         default = {},
+         template = true,
+         doc = [[
+List of enchantments and their powers to apply.
+]]
+      },
+   }
+}
+
+data:add_type {
+   name = "ego_minor_enchantment",
+   fields = {}
 }
 
 data:add_type {

@@ -135,7 +135,6 @@ end
 function ItemDescriptionMenu:relayout()
    self.x, self.y, self.width, self.height = Ui.params_centered(self.width, self.height)
    self.t = UiTheme.load(self)
-   print(self.x,self.y,self.width,self.height)
 
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.win:set_pages(self)

@@ -10,10 +10,7 @@ local Enum = require("api.Enum")
 local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Skill = require("mod.elona_sys.api.Skill")
 local ItemFunction = require("mod.elona.api.ItemFunction")
-local InstancedEnchantment = require("api.item.InstancedEnchantment")
 local Calc = require("mod.elona.api.Calc")
-local InstancedArea = require("api.InstancedArea")
-local Area = require("api.Area")
 local Building = require("mod.elona.api.Building")
 local I18N = require("api.I18N")
 local elona_sys_Magic = require("mod.elona_sys.api.Magic")
@@ -4484,7 +4481,7 @@ local item =
          light = light.item,
 
          enchantments = {
-            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.draw_charge" } },
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.draw_shadow" } },
             { _id = "elona.sustain_attribute", power = 100, params = { skill_id = "elona.stat_dexterity" } },
             { _id = "elona.sustain_attribute", power = 100, params = { skill_id = "elona.stat_perception" } },
             { _id = "elona.modify_attribute", power = 450, params = { skill_id = "elona.stat_dexterity" } },
@@ -14752,8 +14749,7 @@ local item =
 
          on_init_params = function(self)
             local power = Rand.rnd(Rand.rnd(1000) + 1)
-            local enc = InstancedEnchantment:new("elona.modify_attribute", power, { skill_id = "elona.stat_speed" })
-            assert(self:add_enchantment(enc))
+            assert(self:add_enchantment("elona.modify_attribute", power, { skill_id = "elona.stat_speed" }, 0, "special"))
          end,
 
          before_wish = function(filter, chara)
@@ -16789,7 +16785,58 @@ local item =
          rarity = 10000,
          coefficient = 100,
 
-         elona_function = 45,
+         on_use = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:1896 	case effSandBag ...
+            -- TODO show house
+            local chara = params.chara
+
+            Gui.mes("action.use.sandbag.prompt")
+            local dir = Input.query_direction(chara)
+            if dir == nil then
+               Gui.mes("common.it_is_impossible")
+               return "player_turn_query"
+            end
+
+            local x, y = Pos.add_direction(dir, chara.x, chara.y)
+            local target = Chara.at(x, y)
+            if target == nil then
+               Gui.mes("common.it_is_impossible")
+               return "player_turn_query"
+            end
+
+            if target.hp >= target:calc("max_hp") and not config.base.development_mode then
+               Gui.mes("action.use.sandbag.not_weak_enough")
+               return "player_turn_query"
+            end
+
+            if not target:is_player() and target:is_in_player_party() then
+               Gui.mes("action.use.sandbag.ally")
+               return "player_turn_query"
+            end
+
+            if target.is_hung_on_sandbag then
+               Gui.mes("action.use.sandbag.already")
+               return "player_turn_query"
+            end
+
+            if target:is_player() then
+               Gui.mes("action.use.sandbag.self")
+               return "turn_end"
+            end
+
+            -- TODO render sand bag chip if is_hung_on_sandbag
+            Gui.play_sound("base.build1", x, y)
+            target.is_hung_on_sandbag = true
+            Gui.mes("action.use.sandbag.start", target)
+            Gui.mes("action.use.leash.other.start.dialog", target)
+            local anim = Anim.load("elona.anim_smoke", target.x, target.y)
+            Gui.start_draw_callback(anim)
+            target:refresh()
+            self:remove(1)
+
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:1918 	swbreak ...         end,
+         end,
 
          categories = {
             "elona.misc_item"

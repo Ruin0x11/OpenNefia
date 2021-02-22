@@ -19,7 +19,7 @@ function test_IItem_get_owning_chara()
 
       Assert.eq(nil, IItem.get_owning_chara(item))
 
-      Assert.is_true(Action.get(player, item))
+      Assert.is_truthy(Action.get(player, item))
       Assert.eq(player, IItem.get_owning_chara(item))
    end
 
@@ -32,7 +32,7 @@ function test_IItem_get_owning_chara()
 
       Assert.eq(player, IItem.get_owning_chara(item))
 
-      Assert.is_true(player:equip_item(item))
+      Assert.is_truthy(player:equip_item(item))
       Assert.eq(player, IItem.get_owning_chara(item))
    end
 

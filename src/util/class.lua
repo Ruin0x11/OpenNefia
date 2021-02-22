@@ -365,6 +365,15 @@ function class.class(name, ifaces, opts)
       if type(self.serialize) == "function" then
          self:serialize()
       end
+      -- BUG this mutates state after saving the game!
+      --
+      -- we need a "post_serialize" callback in binser for calling
+      -- "_deserialize" right afterwards. the invariant that should be followed
+      -- is that calling :serialize() and :deserialize() should retain the
+      -- current state of the object. (you'd have a lot of problems otherwise)
+      --
+      -- also we need to rename the methods to :__serialize() and
+      -- :__deserialize(), to indicate they're special.
       return self
    end
 

@@ -527,6 +527,7 @@ function table.insertion_sort(arr, f)
    end
 end
 
+-- TODO: index_of -> index_of_value
 function table.index_of(tbl, value)
    for i, v in ipairs(tbl) do
       if v == value then

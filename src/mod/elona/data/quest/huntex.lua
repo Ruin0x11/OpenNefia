@@ -14,10 +14,11 @@ local quest_huntex = {
    starting_pos = MapEntrance.random,
 
    properties = {
-      types = { "temporary", "quest" },
+      types = { "quest" },
       tileset = "elona.tower_1",
       level = 1,
       is_indoor = false,
+      is_temporary = true,
       max_crowd_density = 0,
       default_ai_calm = 0,
       shows_floor_count_in_name = true,

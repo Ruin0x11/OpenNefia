@@ -237,24 +237,36 @@ function Action.unequip(chara, item)
 
    chara:unequip_item(item)
    chara:refresh()
-   Gui.play_sound("base.equip1");
+   Gui.play_sound("base.equip1")
 
    return true
 end
 
 --- @tparam IChara chara
 --- @tparam IItem item
+--- @tparam[opt] integer slot
 --- @treturn bool success
 --- @treturn[opt] string error
-function Action.equip(chara, item)
+function Action.equip(chara, item, slot)
+   -- >>>>>>>> shade2/action.hsp:311 *act_equip ...
    if not chara:has_item(item) then
       return false, "not_owned_by_chara"
    end
 
-   chara:equip_item(item)
+   if slot == nil then
+      slot = chara:find_equip_slot_for(item)
+   end
+
+   if chara:is_player() then
+      local Effect = require("mod.elona.api.Effect")
+      Effect.identify_item(item, Enum.IdentifyState.Quality)
+   end
+
+   local result, err = chara:equip_item(item, false, slot)
    chara:refresh()
 
-   return true
+   return result, err
+   -- <<<<<<<< shade2/action.hsp:327 	return true ..
 end
 
 function Action.target_level_text(chara, target)

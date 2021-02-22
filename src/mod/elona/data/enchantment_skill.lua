@@ -15,10 +15,10 @@ data:add {
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "draw_charge",
+   _id = "draw_shadow",
    elona_id = 1,
 
-   skill_id = "elona.action_draw_charge",
+   skill_id = "elona.action_draw_shadow",
    target_type = "enemy",
    rarity = 6000,
    categories = { "elona.equip_ranged" },

@@ -416,6 +416,7 @@ local item_chips = {
    -- { elona_id = 8, _id = "particle_skull" },
    -- { elona_id = 9, _id = "particle_candle" },
    -- { elona_id = 10, _id = "particle_sweat" },
+   { elona_id = 13, _id = "projectile_laser" },
    { elona_id = 23, _id = "projectile_spore" },
    { elona_id = 33, _id = "worthless_fake_gold_bar" },
    { elona_id = 66, _id = "bed" },

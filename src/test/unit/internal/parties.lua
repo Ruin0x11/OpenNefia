@@ -10,8 +10,8 @@ function test_parties_add()
 
    local id = parties:add_party()
 
-   Assert.is_true(not parties:has_member(id, player))
-   Assert.is_true(not parties:has_member(id, ally))
+   Assert.is_truthy(not parties:has_member(id, player))
+   Assert.is_truthy(not parties:has_member(id, ally))
    Assert.eq(parties:get_leader(id), nil)
 
    parties:add_member(id, player)
@@ -19,19 +19,19 @@ function test_parties_add()
 
    Assert.eq(parties:get_party_id_of_chara(player), id)
    Assert.eq(parties:get_party_id_of_chara(ally), id)
-   Assert.is_true(parties:has_member(id, ally))
-   Assert.is_true(parties:has_member(id, player))
-   Assert.is_true(parties:has_member(id, ally))
+   Assert.is_truthy(parties:has_member(id, ally))
+   Assert.is_truthy(parties:has_member(id, player))
+   Assert.is_truthy(parties:has_member(id, ally))
    Assert.eq(parties:get_leader(id), player.uid)
 
    parties:remove_member(id, player)
-   Assert.is_true(not parties:has_member(id, player))
-   Assert.is_true(parties:has_member(id, ally))
+   Assert.is_truthy(not parties:has_member(id, player))
+   Assert.is_truthy(parties:has_member(id, ally))
    Assert.eq(parties:get_leader(id), ally.uid)
 
    parties:remove_member(id, ally)
-   Assert.is_true(not parties:has_member(id, player))
-   Assert.is_true(not parties:has_member(id, ally))
+   Assert.is_truthy(not parties:has_member(id, player))
+   Assert.is_truthy(not parties:has_member(id, ally))
    Assert.eq(parties:get_leader(id), nil)
 end
 

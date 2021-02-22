@@ -165,7 +165,7 @@ end
 function ElonaAction.play_ranged_animation(chara, start_x, start_y, end_x, end_y, attack_skill, weapon)
    local chip, sound
 
-   local color = {255, 255, 255}
+   local color = weapon:calc("color") or {255, 255, 255}
 
    -- >>>>>>>> shade2/screen.hsp:654 	preparePicItem 6,aniCol ...
    if attack_skill == "elona.bow" then
@@ -175,7 +175,7 @@ function ElonaAction.play_ranged_animation(chara, start_x, start_y, end_x, end_y
       chip = "elona.item_projectile_bolt"
       sound = "base.bow1"
    elseif attack_skill == "elona.firearm" then
-      if table.set(weapon.proto.categories)["elona.equip_ranged_laser_gun"] then
+      if weapon:has_category("elona.equip_ranged_laser_gun") then
          chip = "elona.item_projectile_laser"
          sound = "base.laser1"
       else
@@ -222,7 +222,6 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
 
    -- >>>>>>>> elona122/shade2/action.hsp:1248 	if attackRange=true:call anime,(animeId=attackSki ..
    if is_ranged then
-      -- TODO: inherit color if weapon has enchantments
       ElonaAction.play_ranged_animation(chara, chara.x, chara.y, target.x, target.y, attack_skill, weapon)
    end
    -- <<<<<<<< elona122/shade2/action.hsp:1248 	if attackRange=true:call anime,(animeId=attackSki ..

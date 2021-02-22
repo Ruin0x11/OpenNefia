@@ -25,6 +25,13 @@ data:add_multi(
          default = "test_room.test_room"
       },
       {
+         _id = "quickstart_chara_id",
+
+         type = "data_id",
+         data_type = "base.chara",
+         default = "base.player"
+      },
+      {
          _id = "default_font",
 
          type = "string",
@@ -601,6 +608,12 @@ data:add_multi(
       },
       {
          _id = "debug_no_spell_failure",
+
+         type = "boolean",
+         default = false
+      },
+      {
+         _id = "debug_hp_always_full",
 
          type = "boolean",
          default = false

@@ -179,15 +179,21 @@ function Command.close(player)
 end
 
 function Command.search(player)
+   -- >>>>>>>> shade2/action.hsp:1482 *act_search ...
    local Feat = require("api.Feat")
+   local map = player:current_map()
+
+   Gui.mes_duplicate()
+   Gui.mes("action.search.execute")
+   -- <<<<<<<< shade2/action.hsp:1483 	msgDup++:txt lang("周囲を注意深く調べた。","You search the s ..
 
    for j = 0, 10 do
       local y = player.y + j - 5
-      if not (y < 0 or y >= player:current_map():height()) then
+      if not (y < 0 or y >= map:height()) then
          for i = 0, 10 do
             local x = player.x + i - 5
-            if not (x < 0 or x >= player:current_map():width()) then
-               for _, f in Feat.at(x, y) do
+            if not (x < 0 or x >= map:width()) then
+               for _, f in Feat.at(x, y, map) do
                   f:emit("elona_sys.on_feat_search", {chara=player})
                end
             end

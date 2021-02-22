@@ -255,6 +255,10 @@ function UiMessageWindow:redraw_window()
 end
 
 function UiMessageWindow:do_newline()
+   local first = self.history:get(-2)
+   if first and first.newline then
+      return
+   end
    self.history:push({ newline = true, text = "", color = {255, 255, 255} })
    self:newline()
 end

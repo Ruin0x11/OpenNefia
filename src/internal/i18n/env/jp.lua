@@ -450,7 +450,7 @@ local endings = {
 
 for name, list in pairs(endings) do
    jp[name] = function(obj, mark)
-      mark = mark or 1
+      mark = mark and (mark+1) or 1
 
       local gender_index
       if obj.gender == "male" then

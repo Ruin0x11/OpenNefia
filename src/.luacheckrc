@@ -85,6 +85,7 @@ stds.i18n_jp = {
       "yo",
       "na",
       "ru",
+      "thanks",
    }
 }
 

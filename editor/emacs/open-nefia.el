@@ -1,3 +1,32 @@
+;;; open-nefia.el --- Emacs integration with OpenNefia  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2019-2021  Ruin0x11
+
+;; Author: Ruin0x11 <ipickering2@gmail.com>
+;; Keywords: processes, tools
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; A library that lets you interface with OpenNefia's debug server.
+
+;;; Code:
+
+(provide 'open-nefia)
+;;; open-nefia.el ends here
+
 (require 'lua-mode)
 (require 'eval-sexp-fu nil t)
 (require 'json)
@@ -821,29 +850,32 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (interactive "P")
   (open-nefia--start-repl-1 open-nefia--repl-entrypoint "repl"))
 
-(defun open-nefia-run-tests (&optional arg)
-  (interactive "P")
+(defvar open-nefia--previous-test-filter nil)
+
+(defun open-nefia--run-tests (filter &optional arg)
   (if-let ((repl-buffer (open-nefia--repl-buffer)))
       (kill-buffer repl-buffer))
+  (setq open-nefia--previous-test-filter filter)
   (apply
    #'open-nefia--start-repl-1
    (append
-    (list open-nefia--repl-entrypoint
-          "test"
-          )
+    (list open-nefia--repl-entrypoint "test" "-f" filter)
     (when arg '("-d")))))
+
+(defun open-nefia-run-tests (&optional arg)
+  (interactive "P")
+  (open-nefia--run-tests ".*:.*" arg))
 
 (defun open-nefia-run-tests-this-file (&optional arg)
   (interactive "P")
-  (if-let ((repl-buffer (open-nefia--repl-buffer)))
-      (kill-buffer repl-buffer))
-  (apply
-   #'open-nefia--start-repl-1
-   (append (list open-nefia--repl-entrypoint ;
-                 "test"
-                 "-f"
-                 (format "%s:%s" (file-name-base (buffer-file-name)) ".*"))
-           (when arg '("-d")))))
+  (open-nefia--run-tests
+   (format "%s:%s" (file-name-base (buffer-file-name)) ".*") arg))
+
+(defun open-nefia-run-previous-tests (&optional arg)
+  (interactive "P")
+  (if open-nefia--previous-test-filter
+      (open-nefia--run-tests open-nefia--previous-test-filter arg)
+    (open-nefia-run-tests)))
 
 (defun open-nefia-insert-template ()
   (interactive)

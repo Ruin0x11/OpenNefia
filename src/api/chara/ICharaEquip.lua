@@ -8,17 +8,15 @@ local ICharaEquip = class.interface("ICharaEquip", {}, ICharaInventory)
 
 function ICharaEquip:init()
    self.body_parts = self.body_parts or {}
-   -- TODO resolver
    self.equip = EquipSlots:new(self.body_parts, self)
    self.equipment_weight = 0
 end
 
 local function apply_item_enchantments(chara, item)
    -- >>>>>>>> shade2/calculation.hsp:448 	repeat maxItemEnc ..
-   for _, enc in item:iter_enchantments() do
-      local enc_data = data["base.enchantment"]:ensure(enc._id)
-      if enc_data.on_refresh then
-         enc_data.on_refresh(enc, item, chara)
+   for _, merged_enc in item:iter_merged_enchantments() do
+      if merged_enc.proto.on_refresh then
+         merged_enc.proto.on_refresh(merged_enc.total_power, merged_enc.params, item, chara)
       end
    end
    -- <<<<<<<< shade2/calculation.hsp:492 	loop ..
@@ -60,10 +58,10 @@ local function apply_item_stats(chara, item)
    Event.trigger("base.on_calc_chara_equipment_stats", {chara=chara,item=item})
 end
 
-function ICharaEquip:iter_enchantments()
+function ICharaEquip:iter_merged_enchantments()
    local iters = self:iter_equipment():map(
       function(i)
-         local enc_iter = i:iter_enchantments();
+         local enc_iter = i:iter_merged_enchantments();
          -- (i, enc) -> (i, enc, item_with_enc)
          local item_dup = fun.duplicate(i)
          return fun.zip(enc_iter, item_dup)
@@ -71,9 +69,9 @@ function ICharaEquip:iter_enchantments()
    return fun.chain(table.unpack(iters))
 end
 
-function ICharaEquip:find_enchantment(_id)
+function ICharaEquip:find_merged_enchantment(_id)
    data["base.enchantment"]:ensure(_id)
-   return self:iter_enchantments():filter(function(enc) return enc._id == _id end):nth(1)
+   return self:iter_merged_enchantments():filter(function(enc) return enc._id == _id end):nth(1)
 end
 
 function ICharaEquip:on_refresh()
@@ -110,7 +108,7 @@ function ICharaEquip:on_refresh()
    -- <<<<<<<< shade2/calculation.hsp:534 		} ..
 end
 
-function ICharaEquip:equip_item(item, force)
+function ICharaEquip:equip_item(item, force, slot)
    if not self:has_item(item) then
       if force then
          if not self:take_item(item) then
@@ -121,7 +119,7 @@ function ICharaEquip:equip_item(item, force)
       end
    end
 
-   local result, err = self.equip:equip(item)
+   local result, err = self.equip:equip(item, slot)
    item:refresh()
 
    return result, err

@@ -23,14 +23,14 @@ function test_IFactioned_party()
    Assert.eq(Enum.Relation.Enemy, IFactioned.relation_towards(player, ally))
    Assert.eq(Enum.Relation.Enemy, IFactioned.relation_towards(ally, player))
 
-   Assert.is_true(player:recruit_as_ally(ally))
+   Assert.is_truthy(player:recruit_as_ally(ally))
 
    Assert.eq(Enum.Relation.Ally, IFactioned.relation_towards(player, ally))
    Assert.eq(Enum.Relation.Ally, IFactioned.relation_towards(ally, player))
 
    local leader = Chara.create("base.player", 5, 5, {}, map)
    local other_ally = Chara.create("base.player", 5, 5, {}, map)
-   Assert.is_true(leader:recruit_as_ally(other_ally))
+   Assert.is_truthy(leader:recruit_as_ally(other_ally))
 
    leader.relation = Enum.Relation.Enemy
 
@@ -55,12 +55,12 @@ function test_IFactioned_party_personal_relation()
    local player = Chara.create("base.player", 5, 5, {}, map)
    local ally = Chara.create("base.player", 5, 5, {}, map)
    Chara.set_player(player)
-   Assert.is_true(player:recruit_as_ally(ally))
+   Assert.is_truthy(player:recruit_as_ally(ally))
 
    local leader = Chara.create("base.player", 5, 5, {}, map)
    local other_ally = Chara.create("base.player", 5, 5, {}, map)
    leader.relation = Enum.Relation.Neutral
-   Assert.is_true(leader:recruit_as_ally(other_ally))
+   Assert.is_truthy(leader:recruit_as_ally(other_ally))
 
    local function test(relation)
       Assert.eq(relation, IFactioned.relation_towards(player, leader))

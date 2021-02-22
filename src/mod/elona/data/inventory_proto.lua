@@ -1007,8 +1007,8 @@ local inv_take = {
    -- >>>>>>>> shade2/command.hsp:3568 	if invCtrl=25{ ...
    show_target_equip = true,
    -- <<<<<<<< shade2/command.hsp:3568 	if invCtrl=25{ ..
-   window_title = "ui.inventory_command.give",
-   query_text = "ui.inv.title.give",
+   window_title = "ui.inventory_command.take",
+   query_text = "ui.inv.title.take",
 }
 
 function inv_take.on_select(ctxt, item, amount)
