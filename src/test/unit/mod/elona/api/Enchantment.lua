@@ -1,8 +1,11 @@
 local Item = require("api.Item")
 local Assert = require("api.test.Assert")
 local Enchantment = require("mod.elona.api.Enchantment")
+local test_util = require("test.lib.test_util")
 
 local function enchantless_item(id)
+   test_util.set_player()
+
    local item = Item.create(id, nil, nil, {ownerless=true})
 
    local filter = function(enc) return enc.source ~= "item" end
