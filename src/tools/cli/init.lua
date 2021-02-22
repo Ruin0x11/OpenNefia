@@ -45,6 +45,8 @@ local function build_app()
 
       local mod_deps_command = mod_command:command("dependencies", "Print the dependency tree of a mod.")
       mod_deps_command:argument("mod_id", "Mod ID to inspect.", "")
+
+      local mod_analyze_command = mod_command:command("analyze", "Print the list of data all mods add.")
    end
 
    local exec_command = parser:command("exec", "Execute a Lua script using the OpenNefia runtime.")

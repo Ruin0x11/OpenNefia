@@ -17,6 +17,7 @@ local Log = require("api.Log")
 local Command = require("mod.elona_sys.api.Command")
 local FieldMap = require("mod.elona.api.FieldMap")
 local MapgenUtils = require("mod.elona.api.MapgenUtils")
+local Effect = require("mod.elona.api.Effect")
 
 local ElonaCommand = {}
 
@@ -292,7 +293,7 @@ function ElonaCommand.do_sleep(player, bed, params)
       end)
    end
 
-   ElonaCommand.wake_up_everyone()
+   Effect.wake_up_everyone()
 
    local adj = 1
    if player:has_trait("elona.perm_slow_food") then
@@ -326,20 +327,6 @@ function ElonaCommand.do_sleep(player, bed, params)
 
    -- TODO autosave
    -- TODO shop
-end
-
-function ElonaCommand.wake_up_everyone(map)
-   map = map or Map.current()
-   local hour = save.base.date.hour
-   if hour >= 7 or hour <= 22 then
-      for _, chara in Chara.iter(map) do
-         if not chara:is_ally() and chara:has_effect("elona.sleep") then
-            if Rand.one_in(10) then
-               chara:remove_effect("elona.sleep")
-            end
-         end
-      end
-   end
 end
 
 local function get_ammo_enchantments(ammo)
@@ -526,6 +513,83 @@ function ElonaCommand.enter_action(player)
    local command = choose_command_dwim(player)
 
    return command(player)
+end
+
+function ElonaCommand.do_give_ally(player, target)
+   -- >>>>>>>> shade2/command.hsp:3243 *com_allyInventory ...
+   if target:has_activity() then
+      Gui.mes("action.npc.is_busy_now", target)
+      return "player_turn_query"
+   end
+
+   local result, canceled = Input.query_inventory(player, "elona.inv_give", {target=target,params={is_giving_to_ally=true}}, "elona.ally")
+   if canceled then
+      return "player_turn_query"
+   end
+   return result.result
+   -- <<<<<<<< shade2/command.hsp:3246  ..
+end
+
+function ElonaCommand.do_give_other(player, target)
+   local result, canceled = Input.query_inventory(player, "elona.inv_give", {target=target,params={is_giving_to_ally=false}}, nil)
+   if canceled then
+      return "player_turn_query"
+   end
+   return result.result
+end
+
+function ElonaCommand.do_give(player, target)
+   -- >>>>>>>> shade2/command.hsp:1832 	if tc=pc : if gRider!0 : tc=gRider   ...
+   if target:is_in_player_party() and not target.is_being_escorted then
+      return ElonaCommand.do_give_ally(player, target)
+   else
+      return ElonaCommand.do_give_other(player, target)
+   end
+   -- <<<<<<<< shade2/command.hsp:1836 		} ..
+end
+
+function ElonaCommand.give(player)
+   -- >>>>>>>> shade2/command.hsp:1825 *com_give ...
+   Gui.mes("action.which_direction.ask")
+
+   local dir, canceled = Input.query_direction(player)
+   if not dir or canceled then
+      Gui.mes("ui.invalid_target")
+      return "player_turn_query"
+   end
+
+   local x, y = Pos.add_direction(dir, player.x, player.y)
+   local target = Chara.at(x, y, player:current_map())
+
+   if target == nil or target:is_player() then
+      Gui.mes("ui.invalid_target")
+      return "player_turn_query"
+   end
+
+   -- TODO riding
+
+   return ElonaCommand.do_give(player, target)
+   -- <<<<<<<< shade2/command.hsp:1837 	txt strInteractFail:gosub *screen_draw :goto *pc_ ..
+end
+
+function ElonaCommand.name(player, target)
+   -- >>>>>>>> shade2/command.hsp:1916 *com_name ...
+   Gui.mes("action.interact.name.prompt", target)
+
+   local name, canceled = Input.query_text(12, true)
+   if canceled or name == "" then
+      Gui.mes("action.interact.name.cancel")
+      return "player_turn_query"
+   end
+
+   target.name = name
+   target.has_own_name = true
+   Gui.mes("action.interact.name.you_named", target)
+
+   Gui.update_screen()
+
+   return "player_turn_query"
+   -- <<<<<<<< shade2/command.hsp:1926 	gosub *screen_refresh :goto *pc_turn ..
 end
 
 return ElonaCommand

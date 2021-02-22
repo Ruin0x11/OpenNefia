@@ -26,6 +26,8 @@ local event = {
    { _id = "before_default_ai_action" },
    { _id = "on_default_ai_action" },
    { _id = "on_generate_random_encounter_id" },
+   { _id = "on_item_given" },
+   { _id = "on_item_taken" },
 }
 
 data:add_multi("base.event", event)

@@ -1,4 +1,3 @@
-local Ui = require("api.Ui")
 local I18N = require("api.I18N")
 
 local Draw = require("api.Draw")
@@ -69,7 +68,8 @@ function DeathMenu:relayout(x, y, width, height)
 end
 
 function DeathMenu:draw()
-   self.t.base.void:draw(self.x, self.y, self.width, self.height, {255, 255, 255})
+   Draw.set_color(255, 255, 255)
+   self.t.base.void:draw(self.x, self.y, self.width, self.height)
 
    local x = 135
    local y = 134
@@ -98,7 +98,8 @@ function DeathMenu:draw()
          Draw.text(bone.description, x, y)
          Draw.text(bone.death_cause, x, y + 20)
          Draw.text(I18N.get("misc.score.score", bone.score), x + 480, y + 20)
-         self.chip_batch:add(bone.image, x - 22, y + 12, nil, nil, {255, 255, 255}, true)
+         Draw.set_color(255, 255, 255)
+         self.chip_batch:add(bone.image, x - 22, y + 12, nil, nil, nil, true)
       end
    end
 

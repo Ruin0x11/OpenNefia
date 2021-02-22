@@ -52,6 +52,7 @@ Event.register("base.on_damage_chara",
                "Disturb sleep", disturb_sleep)
 
 local function explodes(chara)
+   -- >>>>>>>> shade2/chara_func.hsp:1571 		if cBit(cSuicide,tc) : if rnd(3)=0 : cBitMod cSu ...
    if chara:calc("is_explodable") then
       local chance = chara:calc("explode_chance") or Rand.one_in_percent(3)
       if Rand.percent_chance(chance) then
@@ -59,23 +60,26 @@ local function explodes(chara)
          Gui.mes_c("damage.explode_click", "LightBlue")
       end
    end
+   -- <<<<<<<< shade2/chara_func.hsp:1571 		if cBit(cSuicide,tc) : if rnd(3)=0 : cBitMod cSu ..
 end
 
 Event.register("base.on_damage_chara",
                "Explodes behavior", explodes)
 
 local function splits(chara, params)
+   -- >>>>>>>> shade2/chara_func.hsp:1572 		if cBit(cSplit,tc):if dmgType!dmgSub:if (dmg>cMH ...
    if chara:calc("splits") then
       local threshold = chara:calc("split_threshold") or 20
       local chance = chara:calc("split_chance") or Rand.one_in_percent(10)
       if params.damage > chara:calc("max_hp") / threshold or Rand.percent_chance(chance) then
          if not Map.is_world_map() then
             if chara:clone() then
-               Gui.mes(chara.uid .. " splits.")
+               Gui.mes("damage.splits", chara)
             end
          end
       end
    end
+   -- <<<<<<<< shade2/chara_func.hsp:1574 		} ..
 end
 
 -- TODO: only triggers depending on damage events flag
@@ -91,20 +95,22 @@ local split2_effects = {
 }
 
 local function splits2(chara, params)
+   -- >>>>>>>> shade2/chara_func.hsp:1575 		if cBit(cSplit2,tc):if dmgType!dmgSub:if rnd(3)= ...
    if chara:calc("splits2") then
       local chance = chara:calc("split2_chance") or Rand.one_in_percent(3)
       if Rand.percent_chance(chance) then
          if not fun.iter(split2_effects)
-            :any(function(e) return chara:has_effect(e) end)
+         :any(function(e) return chara:has_effect(e) end)
          then
             if not Map.is_world_map() then
                if chara:clone() then
-                  Gui.mes(chara.uid .. " splits.")
+                  Gui.mes("damage.splits", chara)
                end
             end
          end
       end
    end
+   -- <<<<<<<< shade2/chara_func.hsp:1577 		} ..
 end
 
 Event.register("base.on_damage_chara",

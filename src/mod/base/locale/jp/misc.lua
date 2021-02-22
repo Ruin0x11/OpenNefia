@@ -3,16 +3,16 @@ return {
     ["and"] = "と",
     artifact_regeneration = function(_1, _2)
   return ("%sは%sに形を変えた。")
-  :format(_1, itemname(_2))
+  :format(_1, _2)
 end,
     black_cat_licks = function(_1, _2)
   return ("%sは%sをぺろぺろと舐めた。")
-  :format(name(_1), itemname(_2))
+  :format(name(_1), _2)
 end,
     caught_by_assassins = "暗殺者につかまった。あなたはクライアントを守らなければならない。",
     corpse_is_dried_up = function(_1)
   return ("%sは上手い具合に干された。")
-  :format(itemname(_1))
+  :format(_1)
 end,
     curse = {
       blood_sucked = function(_1)
@@ -75,7 +75,7 @@ end,
     dungeon_level = function(_1, _2) return ("%s %s階"):format(_1, ordinal(_2)) end,
     extract_seed = function(_1)
   return ("あなたは%sから種を取り出した。")
-  :format(itemname(_1))
+  :format(_1)
 end,
     fail_to_cast = {
       creatures_are_summoned = "魔力の渦が何かを召喚した！",
@@ -99,7 +99,7 @@ end,
 end,
     get_rotten = function(_1)
   return ("%sは腐った。")
-  :format(itemname(_1))
+  :format(_1)
 end,
     hostile_action = {
       get_excited = "家畜は興奮した！",
@@ -115,11 +115,11 @@ end
     identify = {
       almost_identified = function(_1, _2)
   return ("バックパックの中の%sは%sだという感じがする。")
-  :format(itemname(_1), _2)
+  :format(_1, _2)
 end,
       fully_identified = function(_1, _2)
   return ("バックパックの中の%sは%sだと判明した。")
-  :format(_1, itemname(_2))
+  :format(_1, _2)
 end
     },
     income = {
@@ -134,7 +134,7 @@ end
     },
     living_weapon_taste_blood = function(_1)
   return ("%sは十分に血を味わった！")
-  :format(itemname(_1))
+  :format(_1)
 end,
     love_miracle = {
       uh = "「あ…！」"

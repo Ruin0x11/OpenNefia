@@ -2,6 +2,7 @@ local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 local I18N = require("api.I18N")
+local InventoryTargetEquipWindow = require("api.gui.menu.InventoryTargetEquipWindow")
 
 local IInput = require("api.gui.IInput")
 local UiList = require("api.gui.UiList")
@@ -78,6 +79,7 @@ function InventoryMenu:init(ctxt, returns_item)
    self.returns_item = returns_item
 
    self.win = UiWindow:new(self.ctxt.proto.window_title, true, "key help")
+   self.target_equip = InventoryTargetEquipWindow:new()
    self.pages = UiList:new_paged({}, 16)
    table.merge(self.pages, UiListExt(self))
 
@@ -88,6 +90,7 @@ function InventoryMenu:init(ctxt, returns_item)
    self.subtext_column = "subtext"
    self.is_drawing = true
    self.total_weight_text = ""
+   self.text_equip_slots = {}
 
    self.result = nil
 
@@ -177,21 +180,17 @@ function InventoryMenu:relayout(x, y)
    self.t = UiTheme.load(self)
 
    self.chip_batch = Draw.make_chip_batch("chip")
+   -- >>>>>>>> shade2/command.hsp:3569 		x=winPosX(640)+455 ...
+   local te_width, te_height = 200, 102
+   local te_x, te_y = Ui.params_centered(self.width, self.height)
+   te_x = te_x + 455
+   te_y = te_y - 32
+   self.target_equip:relayout(te_x, te_y, te_width, te_height)
+   -- <<<<<<<< shade2/command.hsp:3574 		window x,y,w,h-h¥8,0,0 ..
 
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.pages:relayout(self.x + 58, self.y + 60)
    self.win:set_pages(self.pages)
-end
-
-local function draw_ally_weight(self)
-   -- TODO: move to sub object
-   -- local window = Window:new(true)
-   -- window:relayout(self.x + 455, self.y - 32)
-
-   -- Draw.set_font(12) -- 12 + en - en * 2
-   -- Draw.text("DV: dv PV: pv", window.x + 16, window.y + 17)
-   -- Draw.text("Equip sum: sum", window.x + 16, window.y + 35)
-   -- Draw.text("ally equip", window.x + 40, window.y + window.height - 65 - window.height % 8)
 end
 
 function InventoryMenu:update_icons_this_page()
@@ -274,6 +273,19 @@ function InventoryMenu:update_filtering()
       self.money = self.ctxt.target.gold
    end
 
+   if self.ctxt.show_target_equip and self.ctxt.target then
+      self.target_equip:set_data(self.ctxt.target)
+
+      local map = function(slot)
+         return {
+            text = I18N.get("ui.body_part." .. slot.body_part._id),
+            has_equipment = not not slot.equipped
+         }
+      end
+
+      self.text_equip_slots = self.ctxt.target:iter_body_parts():map(map):to_list()
+   end
+
    -- Run after filter actions that can return a turn result, like
    -- exiting the menu preemptively if a condition is false (for
    -- example, an altar is not on ground when praying).
@@ -282,7 +294,12 @@ function InventoryMenu:update_filtering()
       self.result = result
    end
 
-   self.total_weight_text = I18N.get("ui.inv.window.total_weight", self.total_weight, self.max_weight, self.cargo_weight)
+   if self.ctxt.proto.show_weight_text then
+      local weight_text = I18N.get("ui.inv.window.total_weight", self.total_weight, self.max_weight, self.cargo_weight)
+      self.total_weight_text = ("%d items  (%s)"):format(self.pages:len(), weight_text)
+   else
+      self.total_weight_text = ""
+   end
 end
 
 function InventoryMenu:draw()
@@ -302,17 +319,31 @@ function InventoryMenu:draw()
    self.t.base.deco_inv_c:draw(self.x + self.width - 246, self.y - 6)
    self.t.base.deco_inv_d:draw(self.x - 6, self.y - 6)
 
-   local topic = "window items"
-   Ui.draw_topic(topic, self.x + 28, self.y + 30)
+   Ui.draw_topic("ui.inv.window.name", self.x + 28, self.y + 30)
 
    Ui.draw_topic(self.subtext_column, self.x + 526, self.y + 30)
 
-   local weight_note = string.format("%d items  (%s)", self.pages:len(), self.total_weight_text)
-   Ui.draw_note(weight_note, self.x, self.y, self.width, self.height, 0)
+   Ui.draw_note(self.total_weight_text, self.x, self.y, self.width, self.height, 0)
 
-   -- on_draw
-   if true then
-      draw_ally_weight(self)
+   if self.ctxt.show_target_equip then
+      self.target_equip:draw()
+
+      -- >>>>>>>> shade2/command.hsp:3579 		x=wX+40:y=wY+wH-65-wH¥8 ...
+      local x = self.x + 40
+      local y = self.y + self.height - 65 - (self.height % 8)
+      Draw.text(I18N.get("ui.inv.take_ally.window.equip"), x, y)
+      x = x + 60
+
+      for _, slot in ipairs(self.text_equip_slots) do
+         if slot.has_equipment then
+            Draw.set_color(self.t.base.equip_slot_text_color_occupied)
+         else
+            Draw.set_color(self.t.base.equip_slot_text_color_empty)
+         end
+         Draw.text(slot.text, x, y)
+         x = x + Draw.text_width(slot.text) + Draw.text_width(" ")
+      end
+      -- <<<<<<<< shade2/command.hsp:3590 		loop ..
    end
 
    Draw.set_font(14) -- 14 - en * 2
@@ -325,7 +356,7 @@ function InventoryMenu:draw()
    end
 end
 
-function InventoryMenu:update()
+function InventoryMenu:update(dt)
    if self.pages.changed_page then
       self:update_icons_this_page()
       self.win:set_pages(self)
@@ -375,7 +406,8 @@ function InventoryMenu:update()
       return result, "canceled"
    end
 
-   self.pages:update()
+   self.target_equip:update(dt)
+   self.pages:update(dt)
 end
 
 function InventoryMenu:release()

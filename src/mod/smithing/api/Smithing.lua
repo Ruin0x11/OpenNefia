@@ -135,7 +135,8 @@ end
 function Smithing.on_use_blacksmith_hammer(hammer, chara)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:83523 		cw = ci ..
    Gui.play_sound("base.inv")
-   local result, canceled = Input.query_item(chara, "smithing.hammer_target", { hammer = hammer, selected_items = {} })
+   local params = {hammer = hammer, selected_items = {}}
+   local result, canceled = Input.query_item(chara, "smithing.hammer_target", { params=params })
    if canceled then
       return false
    end
@@ -155,7 +156,8 @@ function Smithing.on_use_blacksmith_hammer(hammer, chara)
          return false
       end
 
-      result, canceled = Input.query_item(chara, "smithing.hammer_weapon_material", { hammer = hammer, selected_items = {item} })
+      params = {hammer = hammer, selected_items = {item}}
+      result, canceled = Input.query_item(chara, "smithing.hammer_weapon_material", { params=params })
       if canceled then
          return false
       end
@@ -191,7 +193,8 @@ function Smithing.on_use_blacksmith_hammer(hammer, chara)
 
       Gui.mes("smithing.blacksmith_hammer.repair_furniture.prompt")
 
-      result, canceled = Input.query_item(chara, "smithing.hammer_furniture_material", { hammer = hammer, selected_items = {item} })
+      params = { hammer = hammer, selected_items = {item} }
+      result, canceled = Input.query_item(chara, "smithing.hammer_furniture_material", { params=params })
       if canceled then
          return false
       end

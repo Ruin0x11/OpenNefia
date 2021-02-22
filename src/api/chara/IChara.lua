@@ -156,9 +156,9 @@ function IChara:refresh()
 
    local total_weight = self:calc("equipment_weight")
    local armor_class
-   if total_weight >= 35000 then
+   if total_weight >= Const.ARMOR_WEIGHT_CLASS_HEAVY then
       armor_class = "elona.heavy_armor"
-   elseif total_weight >= 15000 then
+   elseif total_weight >= Const.ARMOR_WEIGHT_CLASS_MEDIUM then
       armor_class = "elona.medium_armor"
    else
       armor_class = "elona.light_armor"
@@ -591,8 +591,6 @@ function IChara:renew_status()
    self.aggro = 0
 
    self:refresh()
-
-   self:emit("base.on_chara_revived")
    -- >>>>>>>> shade2/chara.hsp:637 	return ..
 end
 
@@ -633,11 +631,12 @@ function IChara:has_tag(tag)
    return table.set(self.tags)[tag]
 end
 
-
 function IChara:calc_initial_gold()
    return Rand.rnd(self:calc("level") * 25 + 10) + 1
 end
 
+--- @example tc:set_emotion_icon("elona.heart", 3)
+--- @hsp cEmoIcon(tc)=emoHeart+extEmo*3
 function IChara:set_emotion_icon(icon, duration)
    self.emotion_icon = icon
    self.emotion_icon_turns = duration or 2

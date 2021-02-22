@@ -85,6 +85,7 @@ local quest_sokoban = {
 
 local function prevent_diagonal_movement(chara, params)
    if not chara:is_player() then
+      return
    end
 
    local map = chara:current_map()

@@ -15,6 +15,12 @@ local TextPrompt = class.class("TextPrompt", IUiLayer)
 
 TextPrompt:delegate("input", IInput)
 
+--- val(0): x
+--- val(1): y
+--- val(2): limit_length
+--- val(3): can_cancel
+--- val(4)>1: this is actually a NumberPrompt, initial input
+--- val(5): maximum number
 function TextPrompt:init(length, can_cancel, limit_length, autocenter, y_offset, initial_text, shadow)
    self.length = length or 16
    self.width = self.length * 16 + 60

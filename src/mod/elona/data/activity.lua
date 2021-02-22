@@ -867,7 +867,7 @@ data:add {
                Gui.mes_c("activity.perform.sound.cha", "Blue")
             end
             if self.turns % 20 == 0 then
-               Calc.make_sound(chara.x, chara.y, 5, 1, 1, chara)
+               Effect.make_sound(chara, chara.x, chara.y, 5, 1, 1)
 
                local gold_earned = 0
                for _, audience in chara:current_map():iter_charas() do
@@ -1002,7 +1002,7 @@ data:add {
                chance = chance * 5 / 10
             end
 
-            Calc.make_sound(chara.x, chara.y, 5, 8)
+            Effect.make_sound(chara.x, chara.y, 5, 8)
 
             local found = false
 

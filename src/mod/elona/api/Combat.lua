@@ -201,6 +201,7 @@ local function mod_attack_hit_for_status_ailments(result, chara, target, is_rang
 end
 
 local function mod_attack_hit_for_greater_evasion(result, target)
+   -- >>>>>>>> shade2/calculation.hsp:227 	if sEvadePlus(tc)!0 : if toHit<sEvadePlus(tc)*10{ ...
    local greater_evasion = target:skill_level("elona.greater_evasion")
    if greater_evasion <= 0 then
       return result
@@ -228,6 +229,7 @@ local function mod_attack_hit_for_greater_evasion(result, target)
    end
 
    return result
+   -- <<<<<<<< shade2/calculation.hsp:232 		} ..
 end
 
 local function mod_attack_hit_for_criticals(result, chara)

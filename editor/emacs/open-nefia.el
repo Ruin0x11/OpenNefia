@@ -383,9 +383,10 @@
                                                    :caller 'open-nefia--command-locale-search)))
       (insert (format "\"%s\"" result)))))
 
-(if (fboundp 'ivy-configure)
-    (ivy-configure 'open-nefia--command-locale-search
-      :display-transformer-fn #'open-nefia--command-locale-search-transformer))
+(when (require 'ivy nil t)
+  (if (fboundp 'ivy-configure)
+      (ivy-configure 'open-nefia--command-locale-search
+        :display-transformer-fn #'open-nefia--command-locale-search-transformer)))
 
 (defun open-nefia--unbracket-string (pre post string)
   "Remove PRE/POST from the beginning/end of STRING.

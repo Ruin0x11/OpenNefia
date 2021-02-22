@@ -37,7 +37,8 @@ local event = {
       { _id = "on_gain_skill_exp" },
       { _id = "on_travel_to_outer_map" },
       { _id = "on_get" },
-      { _id = "on_quest_map_leave" }
+      { _id = "on_quest_map_leave" },
+      { _id = "on_build_interact_actions" },
 }
 
 data:add_multi("base.event", event)

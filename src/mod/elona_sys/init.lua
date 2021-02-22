@@ -182,7 +182,16 @@ data:add_type {
 
 data:add_type {
    name = "inventory_proto",
-   schema = schema.Record {
+   fields = {
+      {
+         name = "show_weight_text",
+         default = true,
+         template = true,
+         type = "boolean",
+         doc = [[
+If true, show weight text at the bottom of the inventory menu. Defaults to true.
+]]
+      },
    }
 }
 
@@ -291,6 +300,9 @@ Gui.bind_keys {
    end,
    look = function(_, me)
       return Command.look(me)
+   end,
+   interact = function(_, me)
+      return Command.interact(me)
    end,
    quick_menu = function(_, me)
       return Command.quick_menu(me)

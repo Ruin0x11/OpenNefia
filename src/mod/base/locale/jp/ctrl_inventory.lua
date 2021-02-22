@@ -4,7 +4,7 @@ return {
       buy = {
         how_many = function(_1, _2)
   return ("%sをいくつ買う？ (1〜%s)")
-  :format(itemname(_2, 1), _1)
+  :format(_2, _1)
 end,
         not_enough_money = { "あなたは財布を開いてがっかりした…", "もっと稼がないと買えない！" },
         prompt = function(_1, _2)
@@ -32,7 +32,7 @@ end,
         cannot_anymore = "これ以上は置けない。",
         how_many = function(_1, _2)
   return ("%sをいくつ落とす？ (1〜%s) ")
-  :format(itemname(_2, 1), _1)
+  :format(_2, _1)
 end,
         multi = "続けてアイテムを置くことができる。"
       },
@@ -55,18 +55,18 @@ end,
         too_heavy = "それは重すぎて装備できない。",
         you_equip = function(_1)
   return ("%sを装備した。")
-  :format(itemname(_1))
+  :format(_1)
 end
       },
       examine = {
         no_drop = {
           set = function(_1)
   return ("%sを大事なものに指定した。")
-  :format(itemname(_1))
+  :format(_1)
 end,
           unset = function(_1)
   return ("%sはもう大事なものではない。")
-  :format(itemname(_1))
+  :format(_1)
 end
         }
       },
@@ -101,7 +101,7 @@ end, function(_1)
 end },
           text = function(_1, _2)
   return ("%sは激怒して%sを叩き割った。")
-  :format(name(_1), itemname(_2, 1))
+  :format(name(_1), _2)
 end
         },
         no_more_drink = function(_1)
@@ -115,30 +115,30 @@ end,
 end,
           text = function(_1, _2)
   return ("あなたは%sに%sをプレゼントした。")
-  :format(name(_1), itemname(_2, 1))
+  :format(name(_1), _2)
 end
         },
         refuse_dialog = {
-          _0 = function(_1)
+          too_heavy = function(_1)
   return ("%s「重すぎ」")
   :format(name(_1))
 end,
-          _1 = function(_1)
+          is_furniture = function(_1)
   return ("%s「無理」")
   :format(name(_1))
 end,
-          _2 = function(_1)
+          is_junk = function(_1)
   return ("%s「いらん」")
   :format(name(_1))
 end,
-          _3 = function(_1)
+          is_cargo = function(_1)
   return ("%s「イヤ！」")
   :format(name(_1))
 end
         },
         refuses = function(_1, _2)
   return ("%sは%sを受け取らない。")
-  :format(name(_1), itemname(_2, 1))
+  :format(name(_1), _2)
 end,
         too_creepy = function(_1)
   return ("「そんな得体の知れないものはいらない%s」")
@@ -146,18 +146,18 @@ end,
 end,
         you_hand = function(_1)
   return ("%sを渡した。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
       },
       identify = {
         fully = function(_1)
   return ("それは%sだと完全に判明した。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         need_more_power = "新しい知識は得られなかった。より上位の鑑定で調べる必要がある。",
         partially = function(_1)
   return ("それは%sだと判明したが、完全には鑑定できなかった。")
-  :format(itemname(_1))
+  :format(_1)
 end
       },
       offer = {
@@ -180,27 +180,27 @@ end
 end,
           you_deliver = function(_1)
   return ("%sを納入した")
-  :format(itemname(_1))
+  :format(_1)
 end,
           you_fulfill = "ノルマを達成した！"
         },
         harvest = function(_1, _2, _3, _4)
   return ("%sを納入した。 +%s  納入済み(%s) 納入ノルマ(%s)")
-  :format(itemname(_1), _2, _3, _4)
+  :format(_1, _2, _3, _4)
 end,
         tax = {
           do_not_have_to = "まだ納税する必要はない。",
           not_enough_money = "金が足りない…",
           you_pay = function(_1)
   return ("%sを支払った。")
-  :format(itemname(_1))
+  :format(_1)
 end
         }
       },
       sell = {
         how_many = function(_1, _2)
   return ("%sをいくつ売る？ (1〜%s)")
-  :format(itemname(_2, 1), _1)
+  :format(_2, _1)
 end,
         not_enough_money = function(_1)
   return ("%sは財布を開いてがっかりした…")
@@ -230,7 +230,7 @@ end,
       take_ally = {
         cursed = function(_1)
   return ("%sは呪われていて外せない。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         refuse_dialog = function(_1)
   return ("%s「あげないよ」")
@@ -238,11 +238,13 @@ end,
 end,
         swallows_ring = function(_1, _2)
   return ("%sは激怒して%sを飲み込んだ。")
-  :format(name(_1), itemname(_2, 1))
+  :format(name(_1), _2)
 end,
         window = {
-          equip = "装備箇所",
-          equip_weight = "装備重量"
+          equip = "装備箇所:",
+          equip_weight = function(_1, _2)
+             return ("装備重量: %s%s"):format(_1, _2)
+          end
         },
         you_take = function(_1)
   return ("%sを受け取った。")
@@ -315,7 +317,7 @@ end,
         },
         you_receive = function(_1)
   return ("%sを受け取った！")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
       },
       window = {

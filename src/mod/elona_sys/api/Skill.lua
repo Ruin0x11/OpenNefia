@@ -522,8 +522,10 @@ function Skill.impression_level(impression)
 end
 -- <<<<<<<< shade2/chara_func.hsp:139 	return 8 ..
 
--- >>>>>>>> shade2/chara_func.hsp:141 #deffunc modImp int c,int a ..
+--- @example Skill.modify_impression(tc, 5)
+--- @hsp modImp tc,5
 function Skill.modify_impression(chara, delta)
+   -- >>>>>>>> shade2/chara_func.hsp:141 #deffunc modImp int c,int a ..
    delta = math.floor(delta)
    local level = Skill.impression_level(chara.impression)
    if delta >= 0 then
@@ -540,8 +542,8 @@ function Skill.modify_impression(chara, delta)
    elseif new_level > level and chara:relation_towards(Chara.player()) > Enum.Relation.Enemy then
       Gui.mes_c("chara.impression.gain", "Green", chara, "ui.impression._" .. new_level)
    end
+   -- <<<<<<<< shade2/chara_func.hsp:155 	return ..
 end
--- <<<<<<<< shade2/chara_func.hsp:155 	return ..
 
 --
 --

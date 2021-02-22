@@ -2,11 +2,11 @@ return {
    talk = {
       ignores_you = "…(あなたを無視している)",
       is_busy = function(_1)
-         return ("%sはお取り込み中だ…")
+         return ("(%sはお取り込み中だ…)")
             :format(name(_1))
       end,
       is_sleeping = function(_1)
-         return ("%sはぐっすり眠っている…")
+         return ("(%sはぐっすり眠っている…)")
             :format(name(_1))
       end,
       npc = {

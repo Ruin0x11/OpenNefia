@@ -16,6 +16,8 @@ local World = require("api.World")
 local Const = require("api.Const")
 local I18N = require("api.I18N")
 local Mef = require("api.Mef")
+local Pos = require("api.Pos")
+local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 
 local Effect = {}
 
@@ -292,10 +294,10 @@ function Effect.eat_food(chara, food)
    if chara:is_player() then
       Effect.show_eating_message(chara)
    else
-      if chara.item_to_be_used
-         and chara.item_to_be_used.uid == food
+      if chara.item_to_use
+         and chara.item_to_use == food
       then
-         chara.item_to_be_used = nil
+         chara.item_to_use = nil
       end
 
       if chara.is_eating_traded_item then
@@ -386,7 +388,7 @@ end
 
 function Effect.try_to_identify_item(item, power)
    local level
-   if power >= item:calc("difficulty_of_identification") then
+   if power >= item:calc("identify_difficulty") then
       level = Enum.IdentifyState.Full
    else
       level = Enum.IdentifyState.None
@@ -1241,6 +1243,146 @@ function Effect.generate_money(chara)
       chara.gold = gold
    end
    -- <<<<<<<< shade2/calculation.hsp:707 	return ..
+end
+
+function Effect.sense_quality(chara)
+   -- >>>>>>>> shade2/item.hsp:496 *item_senseQuality ...
+   if chara:has_effect("elona.confusion") or
+      chara:has_effect("elona.sleep") or
+      chara:has_effect("elona.paralysis") or
+      chara:has_effect("elona.choking")
+   then
+      return
+   end
+
+   local elona_Item = require("mod.elona.api.Item")
+
+   local filter = function(i)
+      return Item.is_alive(i)
+         and i.identify_state < Enum.IdentifyState.Full
+         and elona_Item.is_equipment(i)
+   end
+
+   for _, item in chara:iter_items():filter(filter) do
+      local power = chara:skill_level("elona.stat_perception") + chara:skill_level("elona.sense_quality") * 5
+      local proc = 1500 + item:calc("identify_difficulty")
+
+      if power > Rand.rnd(proc * 5) then
+         local unidentified_name = item:build_name()
+         Effect.identify_item(item, Enum.IdentifyState.Full)
+         ItemMemory.set_known(item._id, true)
+         if config.elona.hide_autoidentify ~= "all" then
+            Gui.mes("misc.identify.fully_identified", unidentified_name, item:build_name())
+         end
+         Skill.gain_skill_exp(chara, "elona.sense_quality", 50)
+      end
+      if item.identify_state < Enum.IdentifyState.Quality and power > Rand.rnd(proc) then
+         if config.elona.hide_autoidentify == "none" then
+            Gui.mes("misc.identify.almost_identified", item:build_name(), "ui.quality._" .. item.quality)
+         end
+         Effect.identify_item(item, Enum.IdentifyState.Quality)
+         Skill.gain_skill_exp(chara, "elona.sense_quality", 50)
+      end
+   end
+   -- <<<<<<<< shade2/item.hsp:516 	return ..
+end
+
+function Effect.make_sound(origin, x, y, radius, wake_chance, is_whistle)
+   -- >>>>>>>> shade2/chara_func.hsp:278 #module ...
+   local map = origin:current_map()
+   if map == nil then
+      return
+   end
+
+   local filter = function(c)
+      return Chara.is_alive(c) and Pos.dist(x, y, c.x, c.y) < radius
+   end
+
+   for _, chara in Chara.iter(map):filter(filter) do
+      if Rand.one_in(wake_chance) then
+         if chara:has_effect("elona.sleep") then
+            chara:remove_effect("elona.sleep")
+            if chara:is_in_fov() then
+               Gui.mes("misc.sound.waken", chara)
+            end
+            chara:set_emotion_icon("elona.question", 2)
+            if is_whistle and Rand.one_in(500) then
+               if chara:is_in_fov() then
+                  Gui.mes_c("misc.sound.get_anger", "SkyBlue", chara)
+                  Gui.mes("misc.sound.can_no_longer_stand", chara)
+
+                  local function turn_aggro(cc, tc, duration)
+                     if tc:is_in_player_party() then
+                        cc.relation = Enum.Relation.Enemy
+                     end
+                     cc:set_target(tc, duration)
+                     cc:set_emotion_icon("elona.angry", 2)
+                  end
+
+                  turn_aggro(chara, origin, 80)
+               end
+            end
+         end
+      end
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:296 #global ..
+end
+
+-- >>>>>>>> shade2/chara_func.hsp:474 #module ...
+function Effect.wake_up_everyone(map)
+   local hour = save.base.date.hour
+   if hour >= 7 or hour <= 22 then
+      for _, chara in Chara.iter(map) do
+         if not chara:is_ally() and chara:has_effect("elona.sleep") then
+            if Rand.one_in(10) then
+               chara:remove_effect("elona.sleep")
+            end
+         end
+      end
+   end
+end
+-- <<<<<<<< shade2/chara_func.hsp:483 #global ..
+
+function Effect.try_to_chat(chara, player)
+   -- >>>>>>>> shade2/chat.hsp:42 *chat ...
+   if chara:relation_towards(player) <= Enum.Relation.Dislike then
+      Gui.mes("talk.will_not_listen")
+      return
+   end
+
+   if World.date_hours() >= chara.interest_renew_date then
+      chara.interest = 100
+   end
+   -- <<<<<<<< shade2/chat.hsp:52 	if dateID>=cInterestRenew(tc):cInterest(tc)=100 ..
+
+   -- >>>>>>>> elona122/shade2/chat.hsp:66 	if cSleep(tc)!0{ ..
+   if chara:has_effect("elona.sleep") then
+      Dialog.start(chara, "elona.is_sleeping")
+      return
+   end
+
+   if chara:has_activity() then
+      Dialog.start(chara, "elona.is_busy")
+      return
+   end
+
+   if chara:is_player() then
+      return
+   end
+   -- <<<<<<<< elona122/shade2/chat.hsp:75 	if tc=pc:goto *chat_end ..
+
+   Dialog.start(chara)
+end
+
+function Effect.try_to_set_ai_item(chara, item)
+   -- >>>>>>>> shade2/adv.hsp:116 *chara_item ...
+   if item:has_category("elona.food") or item:has_category("elona.drink") or item:has_category("elona.scroll") then
+      chara.item_to_use = item
+      return true
+   end
+
+   return false
+   -- <<<<<<<< shade2/adv.hsp:119 	return ..
 end
 
 return Effect

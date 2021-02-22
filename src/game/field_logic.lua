@@ -14,7 +14,6 @@ local field = require("game.field")
 local config = require("internal.config")
 local data = require("internal.data")
 local save = require("internal.global.save")
-local Area = require("api.Area")
 
 local DeathMenu = require("api.gui.menu.DeathMenu")
 
@@ -241,6 +240,8 @@ function field_logic.pass_turns()
       if turn_result then
          return turn_result, chara
       end
+      Log.warn("Activity '%s' on chara %d (%s) did not return turn result", chara:get_activity()._id, chara.uid, chara._id)
+      return "pass_turns"
    end
 
    if Chara.is_alive(chara) then

@@ -92,7 +92,7 @@ end
 function PagedListModel:set_data(items)
    self.items_ = items or self.items_
    self.selected_ = math.clamp(math.min(self.selected_, #self.items_), 1, #self.items_)
-   self.page = math.ceil(self.selected_ / self.page_size) - 1
+   self.page = math.max(math.ceil(self.selected_ / self.page_size) - 1, 0)
    self.page_max = math.max(0, math.ceil(#self.items_ / self.page_size) - 1)
 
    self:select_page()

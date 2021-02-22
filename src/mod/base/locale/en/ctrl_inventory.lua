@@ -46,18 +46,18 @@ end,
         too_heavy = "It's too heavy to equip.",
         you_equip = function(_1)
   return ("You equip %s.")
-  :format(itemname(_1))
+  :format(_1)
 end
       },
       examine = {
         no_drop = {
           set = function(_1)
   return ("You set %s as no-drop.")
-  :format(itemname(_1))
+  :format(_1)
 end,
           unset = function(_1)
   return ("%s is no longer set as no-drop.")
-  :format(itemname(_1))
+  :format(_1)
 end
         }
       },
@@ -88,34 +88,34 @@ end
           dialog = "Thank you!",
           text = function(_1, _2)
   return ("You give %s %s.")
-  :format(name(_1), itemname(_2, 1))
+  :format(name(_1), _2)
 end
         },
         refuse_dialog = {
-          _0 = "Too heavy!",
-          _1 = "No way.",
-          _2 = "I don't want it.",
-          _3 = "Never!"
+          too_heavy = "Too heavy!",
+          is_furniture = "No way.",
+          is_junk = "I don't want it.",
+          is_cargo = "Never!"
         },
         refuses = function(_1, _2)
   return ("%s refuse%s to take %s.")
-  :format(name(_1), s(_1), itemname(_2, 1))
+  :format(name(_1), s(_1), _2)
 end,
         too_creepy = "I don't want it. It's too creepy.",
         you_hand = function(_1, _2)
   return ("You hand %s to %s.")
-  :format(itemname(_1, 1), name(_2))
+  :format(_1, name(_2))
 end
       },
       identify = {
         fully = function(_1)
   return ("The item is fully identified as %s.")
-  :format(itemname(_1))
+  :format(_1)
 end,
         need_more_power = "You need higher identification to gain new knowledge.",
         partially = function(_1)
   return ("The item is half-identified as %s.")
-  :format(itemname(_1))
+  :format(_1)
 end
       },
       offer = {
@@ -138,20 +138,20 @@ end
 end,
           you_deliver = function(_1)
   return ("You deliver %s. ")
-  :format(itemname(_1))
+  :format(_1)
 end,
           you_fulfill = "You fulfill the quota!"
         },
         harvest = function(_1, _2, _3, _4)
   return ("You deliver %s. +%s Delivered(%s) Quota (%s)")
-  :format(itemname(_1), _2, _3, _4)
+  :format(_1, _2, _3, _4)
 end,
         tax = {
           do_not_have_to = "You don't have to pay your tax yet.",
           not_enough_money = "You don't have enough money.",
           you_pay = function(_1)
   return ("You pay %s.")
-  :format(itemname(_1))
+  :format(_1)
 end
         }
       },
@@ -188,16 +188,18 @@ end,
       take_ally = {
         cursed = function(_1)
   return ("%s is cursed and can't be taken off.")
-  :format(itemname(_1))
+  :format(_1)
 end,
         refuse_dialog = "It's mine.",
         swallows_ring = function(_1, _2)
   return ("%s swallows %s angrily.")
-  :format(name(_1), itemname(_2, 1))
+  :format(name(_1), _2)
 end,
         window = {
-          equip = "Equip",
-          equip_weight = "EquipWt"
+          equip = "Equip:",
+          equip_weight = function(_1, _2)
+             return ("EquipWt: %s%s"):format(_1, _2)
+          end
         },
         you_take = function(_1)
   return ("You take %s.")
@@ -270,7 +272,7 @@ end,
         },
         you_receive = function(_1)
   return ("You receive %s!")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
       },
       window = {

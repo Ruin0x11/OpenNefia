@@ -51,13 +51,15 @@ function ChooseNpcMenu.generate_list(filter)
          return false
       end
 
+      -- >>>>>>>> shade2/command.hsp:1185 	if cnt=0		: continue ...
       if chara:is_player() then
          return false
       end
 
-      if chara.is_being_escorted then
+      if chara.is_being_escorted_poppy then
          return false
       end
+      -- <<<<<<<< shade2/command.hsp:1186 	if cBit(cGuardTemp,cnt)=true:continue ..
 
       return true
    end

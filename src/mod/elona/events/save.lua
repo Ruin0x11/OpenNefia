@@ -30,15 +30,3 @@ local function init_save()
 end
 
 Event.register("base.on_init_save", "Init save (elona)", init_save)
-
-require("mod.elona.events.action")
-require("mod.elona.events.ai")
-require("mod.elona.events.building")
-require("mod.elona.events.charagen")
-require("mod.elona.events.combat")
-require("mod.elona.events.dialog")
-require("mod.elona.events.item")
-require("mod.elona.events.magic")
-require("mod.elona.events.map")
-require("mod.elona.events.memory")
-require("mod.elona.events.turn_event")

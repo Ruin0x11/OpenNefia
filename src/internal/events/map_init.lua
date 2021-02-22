@@ -15,6 +15,7 @@ local Quest = require("mod.elona_sys.api.Quest")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local ExHelp = require("mod.elona.api.ExHelp")
 local save = require("internal.global.save")
+local Effect = require("mod.elona.api.Effect")
 
 local function relocate_chara(chara, map)
    local x, y
@@ -211,7 +212,7 @@ end
 
 local function proc_map_entered_events(map)
    -- >>>>>>>> shade2/map.hsp:2084 	proc "Map:Update area" ..
-   ElonaCommand.wake_up_everyone(map)
+   Effect.wake_up_everyone(map)
    Chara.player():reset_ai()
 
    -- TODO

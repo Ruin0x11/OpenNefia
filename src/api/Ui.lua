@@ -1,4 +1,5 @@
 --- @module Ui
+local Const = require("api.Const")
 
 local UiTheme = require("api.gui.UiTheme")
 local Rand = require("api.Rand")
@@ -86,9 +87,9 @@ function Ui.display_weight(weight)
 end
 
 function Ui.display_armor_class(weight)
-   if weight >= 35000 then
+   if weight >= Const.ARMOR_WEIGHT_CLASS_HEAVY then
       return I18N.get("item.armor_class.heavy")
-   elseif weight >= 15000 then
+   elseif weight >= Const.ARMOR_WEIGHT_CLASS_MEDIUM then
       return I18N.get("item.armor_class.medium")
    end
    return I18N.get("item.armor_class.light")

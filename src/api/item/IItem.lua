@@ -345,11 +345,12 @@ function IItem:has_category(cat)
    if type(cat) == "table" then
       for _, t in ipairs(cat) do
          assert(type(t) == "string")
-         if self:has_type(t) then
+         if self:has_category(t) then
             return true
          end
       end
    else
+      data["base.item_type"]:ensure(cat)
       for _, v in ipairs(self.categories) do
          if v == cat then
             return true
@@ -369,6 +370,10 @@ function IItem:major_categories()
       end
    end
    return categories
+end
+
+function IItem:has_tag(tag)
+   return table.set(self.tags)[tag]
 end
 
 return IItem

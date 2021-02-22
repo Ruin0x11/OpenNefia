@@ -16,7 +16,7 @@ data:add {
    -- query_text = "ui.inv.title.target",
 
    filter = function(ctxt, item)
-      return Smithing.can_smith_item(item, ctxt.hammer, {})
+      return Smithing.can_smith_item(item, ctxt.params.hammer, {})
    end
 }
 
@@ -36,7 +36,7 @@ data:add {
    -- query_text = "ui.inv.title.target",
 
    filter = function(ctxt, item)
-      return Smithing.can_use_item_as_weapon_material(item, ctxt.hammer, ctxt.selected_items)
+      return Smithing.can_use_item_as_weapon_material(item, ctxt.params.hammer, ctxt.params.selected_items)
    end
 }
 
@@ -56,6 +56,6 @@ data:add {
    -- query_text = "ui.inv.title.target",
 
    filter = function(ctxt, item)
-      return Smithing.can_use_item_as_furniture_material(item, ctxt.hammer, ctxt.selected_items)
+      return Smithing.can_use_item_as_furniture_material(item, ctxt.params.hammer, ctxt.params.selected_items)
    end
 }

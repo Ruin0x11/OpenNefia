@@ -2,7 +2,7 @@ require("mod.elona.init.god")
 
 require("mod.elona.data")
 
-require("mod.elona.events")
+require("mod.elona.events.init")
 
 local Gui = require("api.Gui")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
@@ -11,6 +11,7 @@ data:add_multi(
    "base.config_option",
    {
       { _id = "hide_shop_results", type = "enum", choices = {"none", "could_not_sell", "all"}, default = "none" },
+      { _id = "hide_autoidentify", type = "enum", choices = {"none", "quality", "all"}, default = "none" },
    }
 )
 
