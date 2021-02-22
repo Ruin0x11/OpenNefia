@@ -83,4 +83,8 @@ Const.ARMOR_WEIGHT_CLASS_HEAVY = 35000
 Const.ARMOR_WEIGHT_CLASS_MEDIUM = 15000
 -- <<<<<<<< shade2/init.hsp:40 	#define global defArmorMedium	15000 ..
 
+-- >>>>>>>> shade2/item_data.hsp:656 	#define global rangeEgoTitleSp	30000 ...
+Const.RANDOM_ITEM_TITLE_SEED_MAX = 30000
+-- <<<<<<<< shade2/item_data.hsp:656 	#define global rangeEgoTitleSp	30000 ..
+
 return Const

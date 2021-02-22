@@ -177,7 +177,10 @@ function IItemEnchantments:add_enchantment(enc, power, params, curse_power, sour
    end
 
    if enc.params == "randomized" then
-      enc:on_generate(self)
+      local success, err = enc:on_generate(self)
+      if success then
+         return nil, err
+      end
    end
    enc:on_initialize(self)
 

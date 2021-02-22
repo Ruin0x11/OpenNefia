@@ -284,22 +284,24 @@ function itemname.jp(item, amount, no_article)
          if item:calc("is_eternal_force") then
             s = s .. "eternal force" .. I18N.space()
          else
-            if item.enchant_major_name_id then
-               s = s .. I18N.get("enchantment.item_ego.major._" .. item.enchant_major_name_id)
+            if item.ego_enchantment then
+               s = I18N.get("enchantment.item_ego.major." .. item.ego_enchantment, s)
             end
             if item.enchant_minor_name_id then
-               s = s .. I18N.get("enchantment.item_ego.minor._" .. item.enchant_minor_name_id)
+               s = I18N.get("enchantment.item_ego.minor." .. item.ego_minor_enchantment, s)
             end
 
-            if quality ~= Quality.Unique and quality >= Quality.Great then
-               s = s .. I18N.get("item_material." .. item.material .. ".alias")
-            else
-               local material_name = I18N.get("item_material." .. item.material .. ".name")
-               s = s .. material_name
-               if starts_with_katakana(material_name) then
-                  katakana = true
+            if quality ~= Quality.Unique then
+               if quality >= Quality.Great then
+                  s = s .. I18N.get("item_material." .. item.material .. ".alias")
                else
-                  s = s .. "の"
+                  local material_name = I18N.get("item_material." .. item.material .. ".name")
+                  s = s .. material_name
+                  if starts_with_katakana(material_name) then
+                     katakana = true
+                  else
+                     s = s .. "の"
+                  end
                end
             end
          end
@@ -526,10 +528,10 @@ function itemname.en(item, amount, no_article)
    if not skip then
       if identify >= IdentifyState.Full and elona_Item.is_equipment(item) then
          if item:calc("is_eternal_force") then
-            s = s .. "eternal force" .. I18N.space()
+            s = s .. "エターナルフォース" .. I18N.space()
          else
-            if item.enchant_minor_name_id then
-               s = s .. I18N.get("enchantment.item_ego.minor._" .. item.enchant_minor_name_id) .. " "
+            if item.ego_minor_enchantment then
+               s = I18N.get("enchantment.item_ego.minor." .. item.ego_minor_enchantment, s) .. " "
             end
 
             if quality ~= Quality.Unique and quality >= Quality.Great then
@@ -553,15 +555,21 @@ function itemname.en(item, amount, no_article)
          if quality == Quality.Unique or item:calc("is_precious") then
             s = s .. name
          else
-            if elona_Item.is_equipment(item) and item.enchant_major_name_id then
-               s = s .. " " .. I18N.get("enchantment.item_ego.major._" .. item.enchant_major_name_id)
+            if elona_Item.is_equipment(item) and item.ego_enchantment then
+               s = s .. " " .. I18N.get("enchantment.item_ego.major." .. item.ego_enchantment, name)
+            else
+               s = s .. name
             end
 
-            s = s .. name
+            local title = item:calc("title")
+            if title == nil then
+               local title_seed = item:calc("title_seed")
+               if title_seed then
+                  title = Text.random_title("weapon", title_seed)
+               end
+            end
 
-            local title_seed = item:calc("title_seed")
-            if title_seed then
-               local title = Text.random_title("weapon", title_seed)
+            if title then
                if quality == Quality.Great then
                   s = s .. I18N.get("item.title_paren.great", title)
                else

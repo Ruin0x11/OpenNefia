@@ -142,6 +142,10 @@ end
 
 local function fix_item_2(item, params)
    -- >>>>>>>> shade2/item.hsp:519 *item_fix ..
+   if item.proto.quality then
+      item.quality = item.proto.quality
+   end
+
    if not Item.is_non_useable(item) then
       if Rand.one_in(12) then
          item.curse_state = Enum.CurseState.Blessed

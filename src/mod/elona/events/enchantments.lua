@@ -1,9 +1,10 @@
 local Event = require("api.Event")
 local Rand = require("api.Rand")
-local InstancedEnchantment = require("api.item.InstancedEnchantment")
 local Enchantment = require("mod.elona.api.Enchantment")
 local Enum = require("api.Enum")
 local Log = require("api.Log")
+local Const = require("api.Const")
+local Text = require("mod.elona.api.Text")
 
 local function add_stave_enchantments(item, params)
    -- >>>>>>>> shade2/item_data.hsp:770 	if refTypeMinor=fltStave{ ...
@@ -58,7 +59,8 @@ local function add_great_god_enchantments(item, params)
       return
    end
 
-   item.ego_enchantment = Rand.choice(data["base.ego_enchantment"]:iter():extract("_id"))
+   item.title_seed = Rand.rnd(Const.RANDOM_ITEM_TITLE_SEED_MAX)
+   item.title = Text.random_title("weapon", item.title_seed)
 
    if quality == Enum.Quality.God or (quality == Enum.Quality.Great and Rand.one_in(10)) then
       local enc = Enchantment.generate_fixed_level(item, 99)
@@ -94,7 +96,7 @@ local function add_great_god_enchantments(item, params)
    end
 
    for _ = 1, enchantment_count do
-      local _id = Enchantment.random_enc_id(Enchantment.random_enc_id(item, params.ego_level))
+      local _id = Enchantment.random_enc_id(item, Enchantment.random_enc_level(item, params.ego_level))
       local power = Enchantment.random_enc_power(item)
       if quality == Enum.Quality.God then
          power = power + 100
@@ -136,7 +138,7 @@ local function add_cursed_doomed_enchantments(item, params)
    local curse_state = item:calc("curse_state")
    if curse_state <= Enum.CurseState.Cursed then
       do
-         local _id = Enchantment.random_enc_id(Enchantment.random_enc_id(item, params.ego_level))
+         local _id = Enchantment.random_enc_id(item, Enchantment.random_enc_level(item, params.ego_level))
          local power = Enchantment.random_enc_power(item)
          power = math.clamp(power, 250, 10000) * (125 + (curse_state == Enum.CurseState.Doomed and 25 or 0)) / 100
          item:add_enchantment(_id, power, "randomized")

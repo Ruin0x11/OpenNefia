@@ -7,45 +7,6 @@ local Enum = require("api.Enum")
 
 local Enchantment = {}
 
-function Enchantment.create(_id, power, item, opts)
-   -- >>>>>>>> shade2/item_data.hsp:538 	#deffunc encAdd int id,int EncOrg,int EncPorg,int ..
-   opts = opts or {}
-   local source = "generated"
-   if opts.source then
-      source = opts.source
-   end
-
-   local enc = InstancedEnchantment:new(_id, power, {}, source)
-
-   if not opts.force then
-      if enc.proto.categories and #enc.proto.categories > 0 then
-         local found
-         for _, cat in ipairs(enc.proto.categories or {}) do
-            if item:has_category(cat) then
-               found = true
-               break
-            end
-         end
-         if not found then
-            return nil, "wrong_category"
-         end
-      end
-      if item:has_category("elona.equip_ammo") then
-         if not opts.is_from_material then
-            return nil, "ammo_enchantment_not_from_material"
-         end
-      end
-   end
-
-   local result = enc:on_generate(item, { curse_power = opts.curse_power or 0 })
-   if result and result.skip then
-      return nil, "skipped_by_on_generate_callback"
-   end
-   -- <<<<<<<< shade2/item_data.hsp:554 	if enc<encHeadNormal{ ..
-
-   return enc
-end
-
 function Enchantment.power_text(grade, no_brackets)
    grade = math.abs(grade)
    local grade_str = I18N.get("enchantment.level")
@@ -79,14 +40,12 @@ function Enchantment.random_enc_id(item, level)
    level = level or 0
 
    local filter = function(enc)
-      if enc.level <= level then
+      if enc.level > level then
          return false
       end
 
-      if level >= 0 then
-         if enc.level < 0 then
-            return false
-         end
+      if level >= 0 and enc.level < 0 then
+         return false
       end
 
       if enc.filter and not enc.filter(item) then

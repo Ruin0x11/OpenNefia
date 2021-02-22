@@ -1,5 +1,4 @@
 local Item = require("api.Item")
-local Enchantment = require("mod.elona.api.Enchantment")
 local utils = require("mod.test_room.data.map_archetype.utils")
 
 local ammo = {
@@ -19,9 +18,7 @@ local function make_ammo_enchantments(x, y, map)
       for i= -1, 1, 2 do
          local power = 150 * i
          local item = assert(Item.create("elona.bullet", ix, iy, {}, map))
-         local e = assert(Enchantment.create("elona.ammo", power, item, { is_from_material = true }))
-         e.params.ammo_enchantment_id = ammo_enc._id
-         item:add_enchantment(e)
+         item:add_enchantment("elona.ammo", power, {ammo_enchantment_id = ammo_enc._id}, 0)
       end
    end
 

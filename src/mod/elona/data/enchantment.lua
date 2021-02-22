@@ -14,11 +14,6 @@ local Chara = require("api.Chara")
 local Gui = require("api.Gui")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 
--- see:
--- shade2/item_data.hsp:260 	encRef(0,encRandomTele)		=-1,50	,75	,0		 ..
--- shade2/item_data.hsp:313 	encProcRef(0,0)	=spWeakEle,tgEnemy,1000	,fltWea ..
--- shade2/item_data.hsp:415 ;	encDisp encModHP		:s=lang("ＨＰを上昇させる", "increases  ..
-
 ---
 --- Parameterized enchantments
 ---
@@ -48,6 +43,8 @@ data:add {
       if params.curse_power > 0 and Rand.rnd(100) < params.curse_power then
          self.power = self.power * - 2
       end
+
+      return true
       -- <<<<<<<< shade2/item_data.hsp:559 			} ..
    end,
 
@@ -111,6 +108,8 @@ data:add {
       if params.curse_power > 0 and Rand.rnd(100) < params.curse_power then
          self.power = self.power * - 2
       end
+
+      return true
       -- <<<<<<<< shade2/item_data.hsp:564 			} ..
    end,
 
@@ -170,6 +169,8 @@ data:add {
       if params.curse_power > 0 and Rand.rnd(100) < params.curse_power then
          self.power = self.power * - 2
       end
+
+      return true
       -- <<<<<<<< shade2/item_data.hsp:569 			} ..
    end,
 
@@ -233,6 +234,8 @@ data:add {
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:570 		if enc=encSustain{ ..
       self.params.skill_id = Skill.random_stat()
+
+      return true
       -- <<<<<<<< shade2/item_data.hsp:573 			} ..
    end,
 
@@ -272,6 +275,8 @@ data:add {
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:574 		if enc=encEleDmg{ ..
       self.params.element_id = Skill.random_resistance_by_rarity()
+
+      return true
       -- <<<<<<<< shade2/item_data.hsp:577 			} ..
    end,
 
@@ -348,6 +353,8 @@ data:add {
       end
 
       self.params.enchantment_skill_id = sampler:sample()
+
+      return true
       -- <<<<<<<< shade2/item_data.hsp:594 			} ..
    end,
 
@@ -422,12 +429,14 @@ data:add {
       local cands = data["base.ammo_enchantment"]:iter():to_list()
 
       if #cands == 0 then
-         return { skip = true }
+         return false
       end
 
       local idx = Rand.rnd(Rand.rnd(#cands) + 1) + 1
 
       self.params.ammo_enchantment_id = cands[idx]._id
+
+      return true
       -- <<<<<<<< shade2/item_data.hsp:594 			} ..
    end,
    on_initialize = function(self, item, params)
