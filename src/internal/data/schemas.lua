@@ -865,11 +865,11 @@ Rarity of this enchantment. Lower means more rare.
 ]]
       },
       {
-         name = "categories",
-         default = { "elona.equip_melee" },
+         name = "filter",
          template = true,
          doc = [[
-Valid item categories this enchantment applies to.
+Function to filter which items this enchantment will get applied to. If nil, it
+can be applied to any item generated randomly.
 ]]
       },
       {

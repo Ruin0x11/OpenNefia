@@ -36,6 +36,7 @@ function InstancedEnchantment:on_generate(item)
    if self.proto.on_generate then
       return self.proto.on_generate(self, item, {curse_power=self.curse_power})
    end
+   return true
 end
 
 function InstancedEnchantment:on_initialize(item)

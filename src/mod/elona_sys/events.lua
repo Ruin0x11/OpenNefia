@@ -439,7 +439,7 @@ end)
 local feat_events = {
    on_bash = "elona_sys.on_bash",
    on_activate = "elona_sys.on_feat_activate",
-   on_search = "elona_sys.on_bash",
+   on_search = "elona_sys.on_feat_search",
    on_open = "elona_sys.on_feat_open",
    on_close = "elona_sys.on_feat_close",
    on_descend = "elona_sys.on_feat_descend",

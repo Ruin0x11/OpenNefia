@@ -116,11 +116,11 @@ local effect = {
          local turns = chara:effect_turns("elona.poison")
          if turns >= Const.CON_POISON_HEAVY then
             return {
-               text = "effect.elona.poison.indicator._1"
+               text = "effect.elona.poison.indicator._1",
             }
          else
             return {
-               text = "effect.elona.poison.indicator._0"
+               text = "effect.elona.poison.indicator._0",
             }
          end
       end,
