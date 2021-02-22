@@ -1,7 +1,6 @@
 local utils = require("mod.test_room.data.map_archetype.utils")
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
-local Enchantment = require("mod.elona.api.Enchantment")
 local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Item = require("api.Item")
 local Rand = require("api.Rand")
@@ -70,8 +69,7 @@ local function make_enchantments(x, y, map)
          for i= -1, 1, 2 do
             local power = 150 * i
             local item = assert(Item.create(_id, ix, iy, {}, map))
-            local e = assert(Enchantment.create(enc._id, power, item))
-            item:add_enchantment(e)
+            item:add_enchantment(enc._id, power, "randomized")
          end
       end
    end
@@ -100,9 +98,7 @@ local function make_enchantment_skills(x, y, map)
          for i= -1, 1, 2 do
             local power = 150 * i
             local item = assert(Item.create(_id, ix, iy, {}, map))
-            local e = assert(Enchantment.create("elona.invoke_skill", power, item))
-            e.params.enchantment_skill_id = enc_skill._id
-            item:add_enchantment(e)
+            item:add_enchantment("elona.invoke_skill", power, {enchantment_skill_id = enc_skill._id})
          end
       end
    end

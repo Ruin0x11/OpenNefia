@@ -577,8 +577,8 @@ data:add {
       end
 
       if Rand.rnd(50) < math.clamp(math.abs(power) / 50, 1, 50) then
-         Gui.mes_c_visible("misc.fail_to_cast.creatures_are_summoned", chara, "Purple")
-         for i = 1, Rand.rnd(3) + 1 do
+         Gui.mes_c_visible("misc.curse.creature_summoned", chara, "Purple")
+         for _ = 1, Rand.rnd(3) + 1 do
             local level = Calc.calc_object_level(Chara.player():calc("level") * 3 / 2 + 3, map)
             local quality = Calc.calc_object_quality(Enum.Quality.Normal)
             Charagen.create(chara.x, chara.y, { level, quality }, map)

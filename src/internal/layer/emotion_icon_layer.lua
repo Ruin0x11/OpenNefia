@@ -72,7 +72,7 @@ function emotion_icon_layer:update(dt, screen_updated)
             local x, y = Gui.tile_to_screen(c.x, c.y)
             local memory = {}
             c:produce_memory(memory)
-            self.parts[#self.parts+1] = { id, x + 4 + 16, y - (memory.offset_y or 0) - 16 }
+            self.parts[#self.parts+1] = { id, x + 4 + 16, y - (memory.offset_y or 0) - 16 + (memory.y_offset or 0) }
          end
       end
    end

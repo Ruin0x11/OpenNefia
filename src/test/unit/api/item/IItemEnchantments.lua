@@ -3,6 +3,7 @@ local IItemEnchantments = require("api.item.IItemEnchantments")
 local Assert = require("api.test.Assert")
 local data = require("internal.data")
 local InstancedEnchantment = require("api.item.InstancedEnchantment")
+local ItemMaterial = require("mod.elona.api.ItemMaterial")
 
 local function enchantless_item(id)
    local item = Item.create(id, nil, nil, {ownerless=true})
@@ -332,12 +333,61 @@ function test_IItemEnchantment_calc_total_enchantment_powers()
 
    local result = IItemEnchantments.calc_total_enchantment_powers(item:iter_enchantments())
 
-   -- TODO order
    local is_found = function(_id, power, params)
       local filter = function(r) return r._id == _id and r.total_power == power and table.deepcompare(r.params, params) end
       return fun.iter(result):filter(filter):length() == 1
    end
-   Assert.eq(true, is_found("elona.absorb_mana", 80, {}))
-   Assert.eq(true, is_found("elona.modify_skill", 35, {skill_id="elona.weight_lifting"}))
+   Assert.eq(true, is_found("elona.absorb_mana", 50, {}))
+   Assert.eq(true, is_found("elona.modify_skill", 27, {skill_id="elona.weight_lifting"}))
    Assert.eq(true, is_found("elona.modify_skill", 10, {skill_id="elona.sense_quality"}))
+end
+
+function test_IItemEnchantment_calc_total_enchantment_powers__material()
+   local filter = function(i) return i._id == "elona.modify_attribute" and i.params.skill_id == "elona.stat_strength" end
+
+   local item = enchantless_item("elona.ring_of_steel_dragon")
+
+   do
+      local result = IItemEnchantments.calc_total_enchantment_powers(item:iter_enchantments())
+      local entry = fun.iter(result):filter(filter):nth(1)
+      Assert.is_truthy(entry)
+      Assert.eq(450, entry.total_power)
+   end
+
+   do
+      item:add_enchantment("elona.modify_attribute", 20, {skill_id="elona.stat_strength"})
+      item:add_enchantment("elona.modify_attribute", 15, {skill_id="elona.stat_strength"})
+
+      local result = IItemEnchantments.calc_total_enchantment_powers(item:iter_enchantments())
+      local entry = fun.iter(result):filter(filter):nth(1)
+      Assert.is_truthy(entry)
+      Assert.eq(467, entry.total_power)
+   end
+
+   do
+      ItemMaterial.change_item_material(item, "elona.gold")
+
+      local result = IItemEnchantments.calc_total_enchantment_powers(item:iter_enchantments())
+      local entry = fun.iter(result):filter(filter):nth(1)
+      Assert.is_truthy(entry)
+      Assert.eq(567, entry.total_power)
+   end
+   do
+      item:remove_enchantment("elona.modify_attribute", {skill_id="elona.stat_strength"})
+      item:remove_enchantment("elona.modify_attribute", {skill_id="elona.stat_strength"})
+
+      local result = IItemEnchantments.calc_total_enchantment_powers(item:iter_enchantments())
+      local entry = fun.iter(result):filter(filter):nth(1)
+      Assert.is_truthy(entry)
+      Assert.eq(550, entry.total_power)
+   end
+
+   do
+      ItemMaterial.change_item_material(item, "elona.mithril")
+
+      local result = IItemEnchantments.calc_total_enchantment_powers(item:iter_enchantments())
+      local entry = fun.iter(result):filter(filter):nth(1)
+      Assert.is_truthy(entry)
+      Assert.eq(450, entry.total_power)
+   end
 end

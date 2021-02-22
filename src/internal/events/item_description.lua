@@ -188,13 +188,13 @@ local function build_description(item, _, result)
          local color = merged_enc.proto.color or {80, 50, 0}
          local alignment = merged_enc.proto.alignment
          if type(alignment) == "function" then
-            alignment = alignment(merged_enc.total.power, merged_enc.params)
+            alignment = alignment(merged_enc.total_power, merged_enc.params)
          end
          if alignment == "negative" then
             color = {180, 0, 0}
             icon = 9
          end
-         result[#result+1] = { text = I18N.get("enchantment.it", enc_desc), icon = icon, color = color, is_inheritable = enc.is_inheritable }
+         result[#result+1] = { text = I18N.get("enchantment.it", enc_desc), icon = icon, color = color, is_inheritable = merged_enc.is_inheritable }
       end
 
       if item:calc("is_eternal_force") then

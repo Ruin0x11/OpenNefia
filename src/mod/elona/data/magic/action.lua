@@ -15,6 +15,7 @@ local Calc = require("mod.elona.api.Calc")
 local Input = require("api.Input")
 local Pos = require("api.Pos")
 local Feat = require("api.Feat")
+local Log = require("api.Log")
 
 local RANGE_BOLT = 6
 

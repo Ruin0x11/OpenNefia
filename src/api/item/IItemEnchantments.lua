@@ -107,8 +107,12 @@ function IItemEnchantments:mod_base_enchantment_power(enc, params, power_delta)
    return true
 end
 
---- For all enchantments in iter, combines the powers between the ones with
---- similar parameters.
+--- For all enchantments in iter, sums the powers between the ones with similar
+--- parameters.
+---
+--- iter should iterate in the order the enchantments were added. The first
+--- enchantment in the iterator gets full power, the rest that get merged with
+--- it will have half power (or full power if they're from the item's material).
 function IItemEnchantments.calc_total_enchantment_powers(iter)
    local unique_encs_found = {}
 
@@ -117,9 +121,14 @@ function IItemEnchantments.calc_total_enchantment_powers(iter)
    for _, enc in iter:unwrap() do
       local found = false
       for unique_enc, power in pairs(unique_encs_found) do
-         print(enc._id, inspect(table.deepcompare(unique_enc.params, enc.params)), inspect(unique_enc:can_merge_with(enc)))
          if unique_enc:can_merge_with(enc) then
-            unique_encs_found[unique_enc] = power + enc.power
+            -- >>>>>>>> shade2/item_data.hsp:613 		if mat:else:encP/=2 ...
+            local merged_power = enc.power
+            if enc.source ~= "material" then
+               merged_power = math.floor(merged_power / 2)
+            end
+            -- <<<<<<<< shade2/item_data.hsp:613 		if mat:else:encP/=2 ..
+            unique_encs_found[unique_enc] = power + merged_power
             found = true
             break
          end
@@ -140,7 +149,8 @@ function IItemEnchantments.calc_total_enchantment_powers(iter)
          _id = enc._id,
          proto = enc.proto,
          params = table.deepcopy(enc.params),
-         total_power = power
+         total_power = power,
+         is_inheritable = enc.is_inheritable
       }
    end
 
@@ -318,6 +328,7 @@ local function refresh_temporary_enchantments(item)
 end
 
 function IItemEnchantments:on_refresh()
+   self._merged_enchantments = nil
    refresh_temporary_enchantments(self)
 end
 
