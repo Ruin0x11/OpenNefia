@@ -176,11 +176,21 @@ local function build_description(item, _, result)
 
    -- >>>>>>>> shade2/command.hsp:4137 	if iKnown(ci)>=knownFull{ ..
    if item:calc("identify_state") >= Enum.IdentifyState.Full then
-      for _, enc in item:iter_enchantments() do
-         local enc_desc = enc:localize(item)
-         local icon = enc.proto.icon or 4
-         local color = enc.proto.color or {80, 50, 0}
-         if enc:alignment() == "negative" then
+      for _, merged_enc in item:iter_merged_enchantments() do
+         local enc_desc
+         if merged_enc.proto.localize then
+            enc_desc = merged_enc.proto.localize(merged_enc.total_power, merged_enc.params, item)
+         else
+            enc_desc = I18N.get("_.base.enchantment." .. merged_enc._id .. ".description")
+         end
+
+         local icon = merged_enc.proto.icon or 4
+         local color = merged_enc.proto.color or {80, 50, 0}
+         local alignment = merged_enc.proto.alignment
+         if type(alignment) == "function" then
+            alignment = alignment(merged_enc.total.power, merged_enc.params)
+         end
+         if alignment == "negative" then
             color = {180, 0, 0}
             icon = 9
          end

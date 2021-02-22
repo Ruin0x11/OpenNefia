@@ -61,8 +61,13 @@ local IItemEnchantments = class.interface("IItemEnchantments", {}, IObject)
 
 function IItemEnchantments:init()
    self.enchantments = {}
+   self._merged_enchantments = nil
 
    self:add_enchantments_from_proto()
+end
+
+function IItemEnchantments:__serialize()
+   self._merged_enchantments = nil
 end
 
 function IItemEnchantments:mod_base_enchantment_power(enc, params, power_delta)
@@ -97,6 +102,7 @@ function IItemEnchantments:mod_base_enchantment_power(enc, params, power_delta)
    end
 
    enc.power = enc.power + power_delta
+   self._merged_enchantments = nil
 
    return true
 end
@@ -125,8 +131,17 @@ function IItemEnchantments.calc_total_enchantment_powers(iter)
 
    local result = {}
 
-   for enc, power in pairs(unique_encs_found) do
-      result[#result+1] = { _id = enc._id, params = table.deepcopy(enc.params), total_power = power }
+   local order = table.keys(unique_encs_found)
+   table.sort(order, InstancedEnchantment.__lt)
+
+   for _, enc in ipairs(order) do
+      local power = unique_encs_found[enc]
+      result[#result+1] = {
+         _id = enc._id,
+         proto = enc.proto,
+         params = table.deepcopy(enc.params),
+         total_power = power
+      }
    end
 
    return result
@@ -162,6 +177,7 @@ function IItemEnchantments:add_enchantment(enc, power, params, curse_power, sour
    end
 
    table.insert(self.enchantments, enc)
+   self._merged_enchantments = nil
 
    local adjusted_value = math.floor(self.value * enc.proto.value / 100)
    if adjusted_value > 0 then
@@ -202,6 +218,19 @@ end
 
 function IItemEnchantments:iter_enchantments(_id, params, source)
    return fun.iter(self.temp["enchantments"]):filter(gen_filter(_id, params, source))
+end
+
+function IItemEnchantments:iter_merged_enchantments(_id, params, source)
+   if self._merged_enchantments == nil then
+      local all_encs = fun.wrap(ipairs(self.temp["enchantments"]))
+      self._merged_enchantments = IItemEnchantments.calc_total_enchantment_powers(all_encs)
+   end
+   return fun.iter(self._merged_enchantments)
+end
+
+function IItemEnchantments:add_temporary_enchantment(enc)
+   -- TODO
+   self._merged_enchantments = nil
 end
 
 function IItemEnchantments:enchantment_power(_id, params, source)
@@ -246,6 +275,7 @@ function IItemEnchantments:remove_enchantment(enc, params, source)
    end
 
    assert(table.iremove_value(self.enchantments, enc))
+   self._merged_enchantments = nil
 
    table.insertion_sort(self.enchantments, InstancedEnchantment.__Lt)
    self:emit("base.on_item_remove_enchantment", {index=idx, enchantment=enc})
@@ -270,6 +300,8 @@ function IItemEnchantments:add_enchantments_from_proto()
       local params = fixed_enc.params and table.deepcopy(fixed_enc.params) or "randomized"
       self:add_enchantment(fixed_enc._id, fixed_enc.power, params, 0, "item")
    end
+
+   self._merged_enchantments = nil
 end
 
 local function refresh_temporary_enchantments(item)

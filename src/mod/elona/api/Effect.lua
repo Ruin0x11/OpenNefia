@@ -1196,7 +1196,7 @@ function Effect.has_sustain_enchantment(chara, attribute_id)
       return enc._id == "elona.sustain_attribute"
          and enc.params.skill_id == attribute_id
    end
-   return chara:iter_enchantments():any(is_sustain_enc)
+   return chara:iter_merged_enchantments():any(is_sustain_enc)
 end
 
 function Effect.generate_money(chara)

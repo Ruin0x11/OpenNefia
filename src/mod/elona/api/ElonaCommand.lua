@@ -359,7 +359,7 @@ local function get_ammo_enchantments(ammo)
    ---
    --- For now, only allow selecting ammo that is in `ammo.enchantments` and not
    --- in `ammo.temp["enchantments"]` by calling fun.iter(ammo.enchantments)
-   --- instead of `ammo:iter_enchantments()`. This is a special behavior
+   --- instead of `ammo:iter_merged_enchantments()`. This is a special behavior
    --- specifically for the enchantment "elona.ammo". This still works since
    --- values in `ammo.enchantments["temp"]` are references to the original
    --- objects in `ammo.enchantments`. This is not how IModdable usually works
@@ -370,7 +370,7 @@ local function get_ammo_enchantments(ammo)
    --- To implement an effect like "improves the power of all active
    --- enchantments of type X", we'd have to implement IModdable for
    --- InstancedEnchantment, which I think is reasonable to do.
-   local iter = fun.iter(ammo.enchantments):filter(function(enc) return enc._id == "elona.ammo" end)
+   local iter = ammo:iter_merged_enchantments():filter(function(enc) return enc._id == "elona.ammo" end)
 
    -- Comparison is by reference, not value
    local current_idx = iter:index_by(function(enc) return ammo.params.ammo_loaded == enc end)

@@ -958,7 +958,7 @@ function Tools.iter_in_area(_type)
 end
 
 function Tools.refill_ammo()
-   local enc = Chara.player():iter_enchantments():filter(function(enc) return enc._id == "elona.ammo" end):nth(1)
+   local enc = Chara.player():iter_merged_enchantments():filter(function(enc) return enc._id == "elona.ammo" end):nth(1)
    if not enc then
       return
    end

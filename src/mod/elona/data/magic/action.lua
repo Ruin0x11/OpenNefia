@@ -109,10 +109,12 @@ local function proc_curse(chara)
    -- <<<<<<<< elona122/shade2/item.hsp:446 	return ..
 end
 
-local function proc_cursed_enchantments(chara)
+local function proc_enchantment_on_turn_passed(chara)
    -- >>>>>>>> elona122/shade2/item.hsp:465 *curse_enc ..
-   for _, enc, item in chara:iter_enchantments() do
-      enc:on_turns_passed(item, chara)
+   for _, merged_enc, item in chara:iter_merged_enchantments() do
+      if merged_enc.proto.on_turns_passed then
+         merged_enc.proto.on_turns_passed(merged_enc.total_power, merged_enc.params, item, chara)
+      end
    end
    -- <<<<<<<< elona122/shade2/item.hsp:491 	return ..
 end
@@ -125,7 +127,7 @@ local function event_pregnancy_curse(source, params, result)
    -- >>>>>>>> elona122/shade2/main.hsp:830 	if cTurn(cc)¥25=0{ ..
    if source.turns_alive % 25 == 0 then
       proc_curse(source)
-      proc_cursed_enchantments(source)
+      proc_enchantment_on_turn_passed(source)
       proc_pregnancy(source)
    end
    -- <<<<<<<< elona122/shade2/main.hsp:834 		} ...

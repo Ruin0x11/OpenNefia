@@ -360,8 +360,10 @@ local function proc_weapon_enchantments(chara, params)
    local weapon = params.weapon
    if params.weapon then
       -- >>>>>>>> elona122/shade2/action.hsp:1395 *act_attackSub ..
-      for _, enc in weapon:iter_enchantments() do
-         enc:on_attack_hit(chara, params)
+      for _, merged_enc in weapon:iter_merged_enchantments() do
+         if merged_enc.proto.on_attack_hit then
+            merged_enc.proto.on_attack_hit(merged_enc.total_power, merged_enc.params, chara, params)
+         end
       end
       -- <<<<<<<< elona122/shade2/action.hsp:1479 	return ..
    end
