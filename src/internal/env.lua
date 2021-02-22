@@ -146,11 +146,18 @@ local LOVE2D_REQUIRES = table.set {
    "socket",
    "socket.http",
    "socket.https",
+   "socket.url",
    "ltn12",
+   "mime",
 }
 
 local NATIVE_REQUIRES = table.set {
    "vips",
+   "ssl.https",
+   "ssl.core",
+   "ssl.context",
+   "ssl.x509",
+   "ssl.config",
 }
 
 local global_require = require

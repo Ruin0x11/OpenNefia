@@ -12,7 +12,7 @@ if is_windows then
    package.path = package.path .. ";..\\lib\\luasocket\\?.lua;..\\lib\\lua-vips\\?.lua"
    package.cpath = package.cpath .. ";..\\lib\\luautf8\\?.dll;..\\lib\\luasocket\\?.dll;..\\lib\\luafilesystem\\?.dll;..\\lib\\lua-zlib\\?.dll"
 else
-   package.cpath = package.cpath .. ";../lib/?.so"
+   package.cpath = package.cpath .. ";../lib/?.so;../lib/luasec/?.so"
 end
 
 if love == nil then
@@ -69,6 +69,9 @@ if _IS_LOVEJS then
 
    require("api.Log").set_level("debug")
 end
+
+-- hack because socket/http.lua is dumb
+PROXY = nil
 
 -- Hook the global `require` to support hotloading.
 require("internal.env").hook_global_require()

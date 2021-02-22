@@ -4,9 +4,6 @@ local socket = require("socket")
 
 local Sstp = {}
 
-local DEFAULT_IP = "127.0.0.1"
-local DEFAULT_PORT = 9821 -- SSP baseware port
-
 --- @tparam string resp
 --- @treturn table
 function Sstp.parse(resp)
@@ -43,11 +40,11 @@ end
 --- @tparam[opt] string ip
 --- @tparam[opt] uint port
 --- @treturn table
-function Sstp.send_raw(op, protocol, params, ip, port)
-   ip = ip or DEFAULT_IP
-   port = port or DEFAULT_PORT
+function Sstp.send_raw(op, protocol, params, address, port)
+   address = address or config.sstp.address
+   port = port or config.sstp.port
 
-   local client, err = socket.connect(ip, port)
+   local client, err = socket.connect(address, port)
    if client == nil then
       return nil, err
    end
