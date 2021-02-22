@@ -36,7 +36,7 @@ return {
             description = "炎冷気電撃耐性の獲得",
             name = "元素保護"
          },
-         speed_up = {
+         speed = {
             apply = function(_1)
                return ("%sは機敏になった。")
                   :format(name(_1))
@@ -47,7 +47,7 @@ return {
             end,
             name = "加速"
          },
-         speed_down = {
+         slow = {
             apply = function(_1)
                return ("%sは鈍重になった。")
                   :format(name(_1))
@@ -69,7 +69,7 @@ return {
             end,
             name = "英雄"
          },
-         weak_armor = {
+         mist_of_frailness = {
             apply = function(_1)
                return ("%sは脆くなった。")
                   :format(name(_1))
@@ -77,7 +77,7 @@ return {
             description = "DVとPVを半減",
             name = "脆弱の霧"
          },
-         weak_ele = {
+         element_scar = {
             apply = function(_1)
                return ("%sは元素への耐性を失った。")
                   :format(name(_1))
@@ -104,7 +104,7 @@ return {
             description = "神経幻惑耐性の減少",
             name = "ナイトメア"
          },
-         knowledge = {
+         divine_wisdom = {
             apply = function(_1)
                return ("%sの思考は冴え渡った。")
                   :format(name(_1))
@@ -115,7 +115,7 @@ return {
             end,
             name = "知者の加護"
          },
-         punish = {
+         punishment = {
             apply = function(_1)
                return ("%sは雷に打たれた！")
                   :format(name(_1))
@@ -126,7 +126,7 @@ return {
             end,
             name = "天罰"
          },
-         god_wind = {
+         lulwys_trick = {
             apply = function(_1)
                return ("%sにルルウィが乗り移った。")
                   :format(name(_1))
@@ -145,7 +145,7 @@ return {
             description = "変装",
             name = "インコグニート"
          },
-         death = {
+         death_word = {
             apply = function(_1)
                return ("%sは死の宣告を受けた！")
                   :format(name(_1))

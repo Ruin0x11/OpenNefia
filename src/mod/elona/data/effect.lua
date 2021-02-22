@@ -7,12 +7,14 @@ local Const = require("api.Const")
 
 
 local function indicator_nutrition(player)
-   local nutrition = math.clamp(math.floor(player:calc("nutrition") / 1000), 0, 12)
-   if 5 <= nutrition and nutrition <= 9 then
+   local nutrition_level = math.clamp(math.floor(player:calc("nutrition") / 1000), 0, 12)
+   if 5 <= nutrition_level and nutrition_level <= 9 then
       return nil
    end
 
-   return { text = "hunger " .. nutrition }
+   return {
+      text = ("effect.indicator.hunger._%d"):format(nutrition_level)
+   }
 end
 data:add {
    _type = "base.ui_indicator",
@@ -182,6 +184,12 @@ local effect = {
       stops_activity = true,
 
       on_add = function(chara)
+         -- >>>>>>>> shade2/screen.hsp:1028 	if cBlind(pc)!0 : if (sx!cX(pc)) or (sy!cY(pc)):: ...
+         chara:mod("fov", 2, "set")
+         -- <<<<<<<< shade2/screen.hsp:1028 	if cBlind(pc)!0 : if (sx!cX(pc)) or (sy!cY(pc)):: ..
+      end,
+
+      on_turn_start = function(chara)
          -- >>>>>>>> shade2/screen.hsp:1028 	if cBlind(pc)!0 : if (sx!cX(pc)) or (sy!cY(pc)):: ...
          chara:mod("fov", 2, "set")
          -- <<<<<<<< shade2/screen.hsp:1028 	if cBlind(pc)!0 : if (sx!cX(pc)) or (sy!cY(pc)):: ..

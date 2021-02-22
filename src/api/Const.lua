@@ -87,4 +87,13 @@ Const.ARMOR_WEIGHT_CLASS_MEDIUM = 15000
 Const.RANDOM_ITEM_TITLE_SEED_MAX = 30000
 -- <<<<<<<< shade2/item_data.hsp:656 	#define global rangeEgoTitleSp	30000 ..
 
+-- >>>>>>>> shade2/init.hsp:42 	#define global hungerVomit	35000 ...
+Const.HUNGER_THRESHOLD_VOMIT = 35000
+Const.HUNGER_THRESHOLD_BLOATED = 12000
+Const.HUNGER_THRESHOLD_SATISFIED = 10000
+Const.HUNGER_THRESHOLD_NORMAL = 5000
+Const.HUNGER_THRESHOLD_HUNGRY = 2000
+Const.HUNGER_THRESHOLD_STARVING = 1000
+-- <<<<<<<< shade2/init.hsp:42 	#define global hungerVomit	35000 ..
+
 return Const

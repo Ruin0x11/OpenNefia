@@ -10,6 +10,8 @@ local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Feat = require("api.Feat")
 local Encounter = require("mod.elona.api.Encounter")
 local Effect = require("mod.elona.api.Effect")
+local Const = require("api.Const")
+local Pos = require("api.Pos")
 
 local function refresh_hp_mp_stamina(chara, params, result)
    local mp_factor = chara:skill_level("elona.stat_magic") * 2
@@ -228,3 +230,66 @@ local function gain_experience_at_turn_start(chara)
 end
 
 Event.register("base.before_chara_turn_start", "Gain experience", gain_experience_at_turn_start)
+
+-- >>>>>>>> shade2/main.hsp:792 	if cDrunk(cc)!0{ ...
+local function pick_drunkard_fight(chara)
+   local map = chara:current_map()
+
+   if map:has_type("world_map") then
+      return
+   end
+
+   local filter = function(other)
+      return Chara.is_alive(other)
+         and Pos.dist(chara.x, chara.y, other.x, other.y) <= 5
+         and chara:has_los(other.x, other.y)
+         and chara ~= other
+         and Rand.one_in(3)
+   end
+
+   local target = Chara.iter(map):filter(filter):nth(1)
+   if target == nil then
+      return
+   end
+
+   if chara:is_in_fov() or target:is_in_fov() then
+      Gui.mes_c("action.npc.drunk.gets_the_worse", "SkyBlue", chara, target)
+      Gui.mes("action.npc.drunk.dialog")
+   end
+
+   if Rand.one_in(4) and not target:is_player() then
+      if chara:is_in_fov() or target:is_in_fov() then
+         Gui.mes_c("action.npc.drunk.annoyed.text", "SkyBlue", target)
+         Gui.mes("action.npc.drunk.annoyed.dialog")
+
+         -- XXX maybe this isn't correct. but our targeting system and the way
+         -- relation is calculated between two characters is different than in
+         -- vanilla. (see IFactioned)
+         target:set_relation_towards(chara, Enum.Relation.Enemy)
+
+         target:set_target(chara, 20)
+         target:set_emotion_icon("elona.angry", 2)
+      end
+   end
+end
+
+local function proc_drunk_behavior(chara, params, result)
+   if not chara:has_effect("elona.drunk") then
+      return result
+   end
+
+   if Rand.one_in(200) and not chara:is_player() then
+      pick_drunkard_fight(chara)
+   end
+
+   if chara:effect_turns("elona.drunk") >= Const.CON_DRUNK_HEAVY or chara.nutrition > Const.HUNGER_THRESHOLD_VOMIT then
+      if Rand.one_in(60) then
+         Effect.vomit(chara)
+         return { blocked = true }
+      end
+   end
+
+   return result
+end
+Event.register("base.on_chara_pass_turn", "Proc drunk effect behavior", proc_drunk_behavior)
+-- <<<<<<<< shade2/main.hsp:818 		} ..

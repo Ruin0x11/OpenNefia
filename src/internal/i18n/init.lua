@@ -170,8 +170,7 @@ function i18n.make_prefix_lookup()
          corpus[#corpus+1] = { item, id }
       elseif type(item) == "function" then
          local ok, result = pcall(item, {}, {}, {}, {}, {})
-         if ok then
-            assert(type(result) == "string", id)
+         if ok and type(result) == "string" then
             corpus[#corpus+1] = { result, id }
          end
       elseif type(item) == "table" then

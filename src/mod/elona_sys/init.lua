@@ -176,7 +176,40 @@ implemented in event handlers, like for Silence.
 
 data:add_type {
    name = "basic_anim",
-   schema = schema.Record {
+   fields = {
+      {
+         name = "wait",
+         default = 50,
+         template = true,
+         type = "number",
+         doc = [[
+How much time to wait when running this animation, in milliseconds.
+]]
+      },
+      {
+         name = "frames",
+         default = nil,
+         type = "integer?",
+         doc = [[
+How many frames this animation holds. Omit to default to the asset's `count_x` property.
+]]
+      },
+      {
+         name = "asset",
+         type = "id:base.asset",
+         template = true,
+         doc = [[
+The asset that holds this animation's frames. It should have a `count_x` property.
+]]
+      },
+      {
+         name = "sound",
+         type = "id:base.sound?",
+         template = true,
+         doc = [[
+A sound to play for this animation, if any.
+]]
+      }
    }
 }
 

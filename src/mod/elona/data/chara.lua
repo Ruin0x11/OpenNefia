@@ -5971,8 +5971,7 @@ local chara = {
             id = "elona.skill", skill_id = "elona.spell_healing_rain"
          },
          sub = {
-            { id = "elona.throw_potion",
-              id_set = Filters.isetthrowpotionmajor },
+            { id = "elona.throw_potion", id_set = Filters.isetthrowpotionmajor },
             { id = "elona.skill", skill_id = "elona.buff_mist_of_frailness" },
             { id = "elona.skill", skill_id = "elona.buff_slow" }
          },
@@ -6538,8 +6537,7 @@ local chara = {
             { id = "elona.wait_melee" }
          },
          sub = {
-            { id = "elona.throw_potion",
-              id_set = Filters.isetthrowpotionminor }
+            { id = "elona.throw_potion", id_set = Filters.isetthrowpotionminor }
          },
          sub_action_chance = 30
       },
@@ -6567,8 +6565,7 @@ local chara = {
             { id = "elona.wait_melee" }
          },
          sub = {
-            { id = "elona.throw_potion",
-              id_set = Filters.isetthrowpotionminor }
+            { id = "elona.throw_potion", id_set = Filters.isetthrowpotionminor }
          },
          sub_action_chance = 10
       },
@@ -6596,8 +6593,7 @@ local chara = {
             { id = "elona.wait_melee" }
          },
          sub = {
-            { id = "elona.throw_potion",
-              id_set = Filters.isetthrowpotionmajor }
+            { id = "elona.throw_potion", id_set = Filters.isetthrowpotionmajor }
          },
          sub_action_chance = 30
       },
@@ -6625,8 +6621,7 @@ local chara = {
             { id = "elona.wait_melee" }
          },
          sub = {
-            { id = "elona.throw_potion",
-              id_set = Filters.isetthrowpotiongreater }
+            { id = "elona.throw_potion", id_set = Filters.isetthrowpotiongreater }
          },
          sub_action_chance = 30
       },

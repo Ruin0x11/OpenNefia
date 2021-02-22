@@ -266,7 +266,7 @@ function ElonaCommand.do_sleep(player, bed, params)
                end, { i = 0 }, true)
    end
 
-   for _, chara in player:iter_party() do
+   for _, chara in player:iter_party_members() do
       chara:emit("elona.on_sleep")
    end
 
