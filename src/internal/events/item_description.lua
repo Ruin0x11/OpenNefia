@@ -210,6 +210,10 @@ Event.register("base.on_item_build_description", "Build description", build_desc
 
 local function add_flavor_text(item, params, result)
    -- >>>>>>>> elona122/shade2/command.hsp:4150 		 ..
+   if item:calc("identify_state") < Enum.IdentifyState.Full then
+      return result
+   end
+
    -- NOTE: unused in vanilla
    local show_footnote = false
    if show_footnote then

@@ -628,7 +628,7 @@ What gods this item can be offered to.
          },
          {
             name = "material",
-            default = "elona.sand",
+            default = nil,
             template = true,
             type = "id:elona.item_material",
             doc = [[

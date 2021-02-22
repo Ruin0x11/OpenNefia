@@ -105,6 +105,7 @@ local function interact_release(chara, params)
    chara.is_hung_on_sandbag = false
    Gui.mes("action.interact.release", chara)
    Item.create("elona.sand_bag", chara.x, chara.y, nil, chara:current_map())
+   chara:refresh()
 
    return "player_turn_query"
    -- <<<<<<<< shade2/command.hsp:1909 		} ..
@@ -124,7 +125,7 @@ local function is_temporary_ally(chara)
    return chara.is_being_escorted or chara.is_being_escorted_poppy
 end
 
-local function add_ally_interact_actions(chara, params, actions)
+local function add_interact_actions(chara, params, actions)
    local function add_option(text, callback)
       table.insert(actions, { text = text, callback = callback })
    end
@@ -170,4 +171,4 @@ local function add_ally_interact_actions(chara, params, actions)
    -- <<<<<<<< shade2/command.hsp:1867 	if (develop)or(gWizard):promptAdd lang("情報","Info ..
    return actions
 end
-Event.register("elona_sys.on_build_interact_actions", "Build default options", add_ally_interact_actions)
+Event.register("elona_sys.on_build_interact_actions", "Build default options", add_interact_actions)
