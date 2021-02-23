@@ -194,6 +194,10 @@ Event.register("elona.on_ai_calm_action", "Use snow if available", ai_snow, { pr
 
 -- >>>>>>>> shade2/command.hsp:3220 	cell_itemOnCell cX(pc),cY(pc)	 ...
 local function scoop_up_snow(chara, params, result)
+   if Item.at(chara.x, chara.y):length() > 0 then
+      return result
+   end
+
    local map = chara:current_map()
    if map:has_type("town") or map:has_type("guild") then
       if map:tile(chara.x, chara.y).kind == Enum.TileRole.Snow then
