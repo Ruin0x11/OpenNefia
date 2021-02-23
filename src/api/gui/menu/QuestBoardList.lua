@@ -22,6 +22,15 @@ local KEYS = "abcdefghijklmnopqr"
 
 function QuestBoardList:init(quests)
    local data = fun.iter(quests)
+      -- Only show the quest if the client is still alive.
+      --
+      -- TODO I forgot if qClient(cnt) means the target for things like the
+      -- collect quest. If so we need another check to see if those characters
+      -- are also alive.
+      --
+      -- >>>>>>>> shade2/command.hsp:1065 	if qMap(cnt)!gArea:continue ...
+      :filter(function(q) return Chara.is_alive(Chara.find(q.client_uid)) end)
+      -- <<<<<<<< shade2/command.hsp:1069 	if cExist(rc)!cAlive : continue ..
       :map(function(q)
             local speaker = assert(Chara.find(q.client_uid))
             local title, desc = Quest.get_name_and_desc(q, speaker, false)
