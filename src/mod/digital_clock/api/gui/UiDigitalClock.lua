@@ -3,6 +3,8 @@ local IUiWidget = require("api.gui.IUiWidget")
 local UiTheme = require("api.gui.UiTheme")
 local World = require("api.World")
 local DateTime = require("api.DateTime")
+local UiShadowedText = require("api.gui.UiShadowedText")
+local I18N = require("api.I18N")
 
 local UiDigitalClock = class.class("UiDigitalClock", IUiWidget)
 
@@ -11,6 +13,7 @@ function UiDigitalClock:init(display_seconds)
    self.time_of_day_text = ""
    self.date = DateTime:new()
    self.display_seconds = display_seconds
+   self.time_of_day_text = UiShadowedText:new("")
 end
 
 function UiDigitalClock:default_widget_position(x, y, width, height)
@@ -19,7 +22,7 @@ end
 
 function UiDigitalClock:default_widget_refresh()
    self.date = World.date()
-   self.time_of_day_text = World.time_to_text(self.date.hour)
+   self.time_of_day_text = UiShadowedText:new(("%d/%d/%d (%s) %s"):format(self.date.year, self.date.month, self.date.day, World.time_to_text(self.date.hour), I18N.get("weather." .. save.elona.weather_id .. ".name")), 13)
 end
 
 function UiDigitalClock:default_widget_z_order()
@@ -68,11 +71,8 @@ function UiDigitalClock:draw()
    end
 
    Draw.set_font(12)
-   Draw.text_shadowed(string.format("%d/%d/%d (%s)", self.date.year, self.date.month, self.date.day, self.time_of_day_text),
-             self.x + 5,
-             self.y + self.height + self.padding,
-             self.t.base.text_color_light,
-             self.t.base.text_color_light_shadow)
+   self.time_of_day_text:relayout(self.x + 5, self.y + self.height + self.padding)
+   self.time_of_day_text:draw()
 end
 
 function UiDigitalClock:update(dt)

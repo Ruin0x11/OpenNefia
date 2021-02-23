@@ -795,13 +795,6 @@ end,
       title = "City Chart"
     },
     unit_of_weight = "s",
-    weather = {
-      _0 = "",
-      _1 = "Etherwind",
-      _2 = "Snow",
-      _3 = "Rain",
-      _4 = "Hard rain"
-    },
     weight = {
       _0 = "extremely mini",
       _1 = "small",

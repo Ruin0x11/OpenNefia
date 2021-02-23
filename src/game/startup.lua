@@ -132,8 +132,8 @@ function startup.run(mods)
       Log.warn("Saving the config for the first time.")
       config_store.save()
    end
-   config_store.trigger_on_changed()
 
+   draw.reload_window_mode()
    draw.set_default_font(config.base.default_font)
 
    Event.trigger("base.before_engine_init")
@@ -153,10 +153,9 @@ function startup.run(mods)
 
    Event.trigger("base.on_engine_init")
 
-   collectgarbage("setpause", config.base.gc_pause)
-   collectgarbage("setstepmul", config.base.gc_step_multiplier)
-
    load_keybinds()
+
+   config_store.trigger_on_changed()
 
    progress("Finished.")
    progress()

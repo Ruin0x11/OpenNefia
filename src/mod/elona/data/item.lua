@@ -14780,7 +14780,7 @@ local item =
          elona_function = 26,
          is_precious = true,
          has_cooldown_time = true,
-         param3 = 240,
+         cooldown_hours = 240,
          quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
@@ -14834,7 +14834,7 @@ local item =
 
          is_precious = true,
          has_cooldown_time = true,
-         param3 = 120,
+         cooldown_hours = 120,
          quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
@@ -15283,7 +15283,7 @@ local item =
          has_cooldown_time = true,
          param1 = 446,
          param2 = 300,
-         param3 = 12,
+         cooldown_hours = 12,
          quality = Enum.Quality.Unique,
 
          color = { 175, 175, 255 },
@@ -15310,7 +15310,7 @@ local item =
          has_cooldown_time = true,
          param1 = 404,
          param2 = 400,
-         param3 = 8,
+         cooldown_hours = 8,
          quality = Enum.Quality.Unique,
 
          color = { 225, 225, 255 },
@@ -15335,7 +15335,7 @@ local item =
          elona_function = 31,
          is_precious = true,
          has_cooldown_time = true,
-         param3 = 72,
+         cooldown_hours = 72,
          quality = Enum.Quality.Unique,
 
          color = { 175, 255, 175 },
@@ -15362,7 +15362,7 @@ local item =
          has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
-         param3 = 24,
+         cooldown_hours = 24,
          quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
@@ -15512,7 +15512,7 @@ local item =
          elona_function = 34,
          is_precious = true,
          has_cooldown_time = true,
-         param3 = 720,
+         cooldown_hours = 720,
          quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
@@ -16481,7 +16481,7 @@ local item =
          elona_function = 43,
          is_precious = true,
          has_cooldown_time = true,
-         param3 = 480,
+         cooldown_hours = 480,
          quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
@@ -17188,7 +17188,7 @@ local item =
          has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
-         param3 = 24,
+         cooldown_hours = 24,
 
          color = { 255, 155, 155 },
 
@@ -17213,7 +17213,7 @@ local item =
          has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
-         param3 = 24,
+         cooldown_hours = 24,
 
          color = { 255, 155, 155 },
 
@@ -17238,7 +17238,7 @@ local item =
          has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
-         param3 = 24,
+         cooldown_hours = 24,
 
          color = { 255, 155, 155 },
 
@@ -17263,7 +17263,7 @@ local item =
          has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
-         param3 = 24,
+         cooldown_hours = 24,
 
          color = { 255, 155, 155 },
 
@@ -17960,7 +17960,7 @@ local item =
          elona_function = 26,
          is_precious = true,
          has_cooldown_time = true,
-         param3 = 240,
+         cooldown_hours = 240,
          quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
@@ -17982,7 +17982,7 @@ local item =
          elona_function = 26,
          is_precious = true,
          has_cooldown_time = true,
-         param3 = 240,
+         cooldown_hours = 240,
          quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",

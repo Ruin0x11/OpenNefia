@@ -95,13 +95,13 @@ function Weather.change_from_world_map()
    if w._id == "elona.snow" then
       if x < 65 and y > 10 then
          Weather.change_to("elona.rain")
-         Weather.extend_duration(3)
+         save.elona.turns_until_weather_changes = save.elona.turns_until_weather_changes + 3
          Gui.mes("action.weather.changes")
       end
    elseif w._id == "elona.hard_rain" or w._id == "elona.rain" then
       if x > 65 or y < 10 then
          Weather.change_to("elona.snow")
-         Weather.extend_duration(3)
+         save.elona.turns_until_weather_changes = save.elona.turns_until_weather_changes + 3
          Gui.mes("action.weather.changes")
       end
    end

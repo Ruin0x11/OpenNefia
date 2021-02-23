@@ -10,27 +10,27 @@ return {
         },
         free_chair = function(_1)
   return ("%sは誰でも座っていい席になった！")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         guest_chair = function(_1)
   return ("%sは訪問者の席になった！")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         my_chair = function(_1)
   return ("%sはあなた専用の席になった！")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         needs_place_on_ground = "床に置かないと使えない。",
         relax = "あなたは存分にくつろいだ。",
         you_sit_on = function(_1)
   return ("あなたは%sに座った。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
       },
       deck = {
         add_card = function(_1)
   return ("%sをデッキに加えた。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         no_deck = "デッキを所持していない。",
         put_away = "デッキをしまった。"
@@ -83,7 +83,7 @@ end
       hammer = {
         use = function(_1)
   return ("%sを振った。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
       },
       house_board = {
@@ -130,21 +130,21 @@ end
         bonus = "ボーナス+1",
         displeased = function(_1)
   return ("%sは不満そうに震えた。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         it = "それは…",
         needs_more_blood = "この武器はまだ血を吸い足りない。",
         pleased = function(_1)
   return ("%sは嬉しげに震えた。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         ready_to_grow = function(_1)
   return ("%sは十分に血を吸い成長できる！")
-  :format(itemname(_1))
+  :format(_1)
 end,
         removes_enchantment = function(_1)
   return ("%sはエンチャントを消した。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         weird = "しかし、なんだか様子がおかしい…"
       },
@@ -226,7 +226,7 @@ end,
       statue = {
         activate = function(_1)
   return ("%sを始動させた。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         creator = {
           in_usermap = "この石像を見つめていると、何かを投げつけたくなってうずうずしてきた！",
@@ -273,7 +273,7 @@ end
       unicorn_horn = {
         use = function(_1)
   return ("%sを使った。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
       },
       useable_again_at = function(_1)

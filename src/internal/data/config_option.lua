@@ -128,12 +128,6 @@ data:add {
 -- Menu: screen
 --
 
-local function set_window_mode()
-   local new_w, new_h = config.base.screen_resolution:match("(.+)x(.+)")
-   local mode = config.base.screen_mode
-   draw.set_fullscreen(mode, new_w, new_h)
-end
-
 data:add_multi(
    "base.config_option",
    {
@@ -145,7 +139,9 @@ data:add_multi(
          default = "windowed",
 
          on_changed = function(v, startup)
-            set_window_mode()
+            if not startup then
+               draw.reload_window_mode()
+            end
          end
       },
       {
@@ -161,7 +157,7 @@ data:add_multi(
 
          on_changed = function(v, startup)
             if not startup and config.base.screen_mode == "exclusive" then
-               set_window_mode()
+               draw.reload_window_mode()
             end
          end
       },

@@ -5,9 +5,7 @@ local ISettable = require("api.gui.ISettable")
 local UiShadowedText = class.class("UiShadowedText", {IUiElement, ISettable})
 
 function UiShadowedText:init(str, font, color, shadow_color)
-   local Ui = require("api.Ui")
-
-   self.font_width, self.font_style = Ui.unpack_font_desc(font or 14)
+   self.font_width, self.font_style = font or 14, nil
    self.color = color or {255, 255, 255}
    self.shadow_color = shadow_color or {0, 0, 0}
 

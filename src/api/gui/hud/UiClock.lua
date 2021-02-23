@@ -5,11 +5,15 @@ local UiTheme = require("api.gui.UiTheme")
 local DateTime = require("api.DateTime")
 local World = require("api.World")
 local save = require("internal.global.save")
+local I18N = require("api.I18N")
+local UiShadowedText = require("api.gui.UiShadowedText")
 
 local UiClock = class.class("UiClock", {IUiWidget, ISettable})
 
 function UiClock:init()
    self.date = DateTime:new()
+   self.date_text = ""
+   self.time_weather_text = UiShadowedText:new("")
 end
 
 function UiClock:default_widget_position(x, y, width, height)
@@ -22,6 +26,8 @@ end
 
 function UiClock:set_data(date)
    self.date = date
+   self.date_text = Draw.make_text(("%d/%d/%d"):format(self.date.year, self.date.month, self.date.day))
+   self.time_weather_text = UiShadowedText:new(("%s %s"):format(World.time_to_text(self.date.hour), I18N.get("weather." .. save.elona.weather_id .. ".name")), 13)
 end
 
 function UiClock:relayout(x, y)
@@ -46,15 +52,12 @@ function UiClock:draw()
    self.t.base.clock_hand:draw(self.x + 62, self.y + 48, nil, nil, nil, true, hour_rot)
    self.t.base.clock_hand:draw(self.x + 62, self.y + 48, self.t.base.clock_hand:get_height() / 2, nil, nil, true, minute_rot)
 
-   Draw.text(string.format("%d/%d/%d", self.date.year, self.date.month, self.date.day),
+   Draw.text(self.date_text,
              self.x + 120,
              self.y + 17, -- + vfix
              self.t.base.text_color)
-   Draw.text_shadowed(World.time_to_text(self.date.hour),
-                      self.x + 120 + 6,
-                      self.y + 35,
-                      self.t.base.text_color_light,
-                      self.t.base.text_color_light_shadow)
+   self.time_weather_text:relayout(self.x + 120 + 6, self.y + 35)
+   self.time_weather_text:draw()
    -- <<<<<<<< shade2/screen.hsp:351  ..
 end
 
