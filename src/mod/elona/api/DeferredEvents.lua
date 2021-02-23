@@ -10,6 +10,7 @@ local Calc = require("mod.elona.api.Calc")
 local Enum = require("api.Enum")
 local Charagen = require("mod.tools.api.Charagen")
 local RandomEventPrompt = require("api.gui.RandomEventPrompt")
+local Weather = require("mod.elona.api.Weather")
 
 local DeferredEvents = {}
 
@@ -24,7 +25,7 @@ function DeferredEvents.ragnarok(chara)
       return
    end
 
-   -- TODO weather
+   Weather.change_to("elona.etherwind")
    Gui.mes("event.ragnarok")
    Gui.update_screen()
    Input.query_more()

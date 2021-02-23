@@ -18,9 +18,9 @@ function UiFpsCounter:init()
    self.buff = ""
    self.last = {}
 
-   self.fps_graph = UiFpsGraph:new({0, 0, 255, 128}, 0.10)
-   self.ram_graph = UiFpsGraph:new({255, 0, 0, 128})
-   self.ram_diff_graph = UiFpsGraph:new({0, 255, 0, 128})
+   self.fps_graph = UiFpsGraph:new({0, 0, 255, 128}, 0.10, 0, 60)
+   self.ram_graph = UiFpsGraph:new({255, 0, 0, 128}, 1.0, 0, 30)
+   self.ram_diff_graph = UiFpsGraph:new({0, 255, 0, 128}, 1.0, 0, 0.5)
 end
 
 function UiFpsCounter:default_widget_position(x, y, width, height)

@@ -715,6 +715,8 @@ function Effect.is_visible(chara, viewer)
 end
 
 -- Applies wetness effect and shows the invisibility message.
+--
+-- TODO this is redundant by now, just move it into `base.event` callbacks.
 function Effect.get_wet(chara, amount)
    chara:apply_effect("elona.wet", amount)
    if chara:is_in_fov() then

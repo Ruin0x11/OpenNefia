@@ -1,105 +1,168 @@
-local Draw = require("api.Draw")
-local Gui = require("api.Gui")
-local Map = require("api.Map")
-local Rand = require("api.Rand")
-local Log = require("api.Log")
-
 local Weather = {}
+local Map = require("api.Map")
+local Chara = require("api.Chara")
+local Area = require("api.Area")
+local Gui = require("api.Gui")
+local Rand = require("api.Rand")
+local World = require("api.World")
+local Event = require("api.Event")
 
-local INF_VERH = 16 + 72
-
-local function mkrain(mod_y, length_y, speed_x, speed_y)
-   return function()
-      local rain_x = {}
-      local rain_y = {}
-      local colors = {}
-      local frames_passed = 1
-
-      while true do
-         local map = Map.current()
-         if not map.is_indoor then
-            local width = Draw.get_width()
-            local height = Draw.get_height()
-            local max_rain = width * height / 3500
-
-            local factor = 1
-            if map:has_type("world_map") then
-               factor = 2
-            end
-
-            for _ = 1, frames_passed do
-               for i = 1, max_rain*factor do
-                  local color = colors[i] or {}
-
-                  local color_delta = Rand.rnd(100)
-                  color[1] = 170 - color_delta
-                  color[2] = 200 - color_delta
-                  color[3] = 250 - color_delta
-
-                  colors[i] = color
-
-                  local x = rain_x[i]
-                  local y = rain_y[i]
-                  if x == nil or x <= 0 then
-                     x = Rand.rnd(width) + 40
-                  end
-                  if y == nil or y <= 0 then
-                     y = Rand.rnd(height - INF_VERH) - 6
-                  end
-
-                  x = x + speed_x
-                  y = y + speed_y + (i % 8)
-                  if y > height - INF_VERH - 6 then
-                     x = 0
-                     y = 0
-                  end
-
-                  rain_x[i] = x
-                  rain_y[i] = y
-               end
-            end
-
-            for i = 1, max_rain*factor do
-               local x = rain_x[i]
-               local y = rain_y[i]
-               local color = colors[i]
-
-               if not (x and y and color) then
-                  break
-               end
-
-               Draw.line(x - 40, y - (i % mod_y) - length_y, x - 39 + (i % 2), y, color)
-            end
-         end
-
-         frames_passed = select(3, Draw.yield(config.base.anime_wait))
-      end
-   end
-end
-
-local rain = {
-   callback = mkrain(3, 1, 2, 16),
-}
-
-local hard_rain = {
-   callback = mkrain(5, 4, 1, 24)
-}
-
-function Weather.start_rain()
-   Gui.start_draw_callback(rain.callback, true, "elona.weather")
-end
-
-function Weather.start_hard_rain()
-   Gui.start_draw_callback(hard_rain.callback, true, "elona.weather")
-end
-
-function Weather.stop()
-   Gui.stop_draw_callback("elona.weather")
+function Weather.get()
+   return data["elona.weather"]:ensure(save.elona.weather_id)
 end
 
 function Weather.is(weather_id)
-   Log.error("TODO")
-   return false
+   data["elona.weather"]:ensure(weather_id)
+   local weather = Weather.get()
+   return weather._id == weather_id
+end
+
+function Weather.change_to(weather_id, next_turns)
+   local weather = data["elona.weather"]:ensure(weather_id)
+   local prev_weather_id = save.elona.weather_id
+
+   if weather._id ~= prev_weather_id then
+      Gui.stop_background_sound("elona.weather")
+      Gui.stop_draw_callback("elona.weather")
+
+      save.elona.weather_id = weather._id
+
+      if weather.ambient_sound then
+         Gui.play_background_sound(weather.ambient_sound, "elona.weather")
+      end
+
+      if weather.draw_callback and config.base.weather_effect then
+         Gui.start_background_draw_callback(weather.draw_callback, "elona.weather")
+      end
+
+      Event.trigger("elona.on_weather_changed", {previous_weather_id=prev_weather_id,new_weather_id=weather._id})
+   end
+
+   if next_turns then
+      save.elona.turns_until_weather_changes = math.max(next_turns, 0)
+   end
+end
+
+function Weather.position_in_world_map()
+   -- TODO support for more world maps, less hardcoding. this is just for
+   -- compat, for now.
+   local player = Chara.player()
+   local map = Map.current()
+   if not map then
+      return nil, nil
+   end
+
+   local x, y
+   if map._archetype == "elona.north_tyris" then
+      x, y = player.x, player.y
+   else
+      -- Check if we're inside a map where the parent map is North Tyris, so we
+      -- can do things like check if our position in North Tyris is to the
+      -- northeast (snowy).
+      --
+      -- Hackish, but works.
+      local prev_uid, prev_x, prev_y = map:previous_map_and_location()
+      if prev_uid == nil then
+         return nil, nil
+      end
+      local area = Area.get_unique("elona.north_tyris")
+      if area == nil then
+         return nil, nil
+      end
+      local ok, toplevel_floor = area:get_floor(area:starting_floor())
+      if not ok then
+         return nil, nil
+      end
+      if toplevel_floor.uid ~= prev_uid then
+         return nil, nil
+      end
+      x, y = prev_x, prev_y
+   end
+
+   return x, y
+end
+
+function Weather.change_from_world_map()
+   -- >>>>>>>> shade2/main.hsp:564 *weather_change ...
+   local x, y = Weather.position_in_world_map()
+   if x == nil then
+      return
+   end
+
+   local w = Weather.get()
+
+   -- TODO hardcoded to North Tyris
+   if w._id == "elona.snow" then
+      if x < 65 and y > 10 then
+         Weather.change_to("elona.rain")
+         Weather.extend_duration(3)
+         Gui.mes("action.weather.changes")
+      end
+   elseif w._id == "elona.hard_rain" or w._id == "elona.rain" then
+      if x > 65 or y < 10 then
+         Weather.change_to("elona.snow")
+         Weather.extend_duration(3)
+         Gui.mes("action.weather.changes")
+      end
+   end
+   -- <<<<<<<< shade2/main.hsp:567 	return ..
+end
+
+function Weather.random_weather_id_and_turns()
+   -- >>>>>>>> shade2/main.hsp:582 		if gMonth¥3=0{ ...
+   local date = World.date()
+   if date.month % 3 == 0 then
+      if date.day >= 1 and date.day <= 10 and save.elona.date_of_last_etherwind.month ~= date.month then
+         if Rand.rnd(15) < date.day + 5 then
+            save.elona.date_of_last_etherwind = table.deepcopy(date)
+            Gui.mes_c("action.weather.ether_wind.starts", "Red")
+            return "elona.etherwind", Rand.rnd(24) + 24
+         end
+      end
+   end
+
+   local prev_weather = Weather.get()
+
+   local id = prev_weather._id
+   local turns = Weather.calc_random_weather_duration()
+
+   if prev_weather.on_weather_change then
+      local id_, turns_ = prev_weather.on_weather_change()
+      id = id_ or id
+      turns = turns_ or turns
+   end
+
+   return id, turns
+   -- <<<<<<<< shade2/main.hsp:612 			} ..
+end
+
+function Weather.change_randomly()
+   local next_weather_id, next_weather_turns = Weather.random_weather_id_and_turns()
+   Weather.change_to(next_weather_id, next_weather_turns)
+end
+
+function Weather.calc_random_weather_duration()
+   return Rand.rnd(22) + 2
+end
+
+function Weather.pass_turn()
+   save.elona.turns_until_weather_changes = save.elona.turns_until_weather_changes - 1
+   Weather.change_from_world_map()
+
+   -- >>>>>>>> shade2/main.hsp:576 	gNextWeather-- ...
+   if save.elona.turns_until_weather_changes < 0 then
+      Weather.change_randomly()
+   end
+   -- <<<<<<<< shade2/main.hsp:579 		gNextWeather=rnd(22)+2 ..
+end
+
+function Weather.is_raining()
+   local w = Weather.get()
+   return w._id == "elona.rain" or w._id == "elona.hard_rain"
+end
+
+function Weather.is_bad_weather()
+   return Weather.get().is_bad_weather
 end
 
 return Weather

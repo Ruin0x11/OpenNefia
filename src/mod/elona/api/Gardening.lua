@@ -8,6 +8,7 @@ local Map = require("api.Map")
 local I18N = require("api.I18N")
 local Chara = require("api.Chara")
 local Save = require("api.Save")
+local Weather = require("mod.elona.api.Weather")
 
 local Gardening = {}
 
@@ -23,7 +24,7 @@ function Gardening.plant_seed(seed, chara, x, y)
       return false
    end
 
-   local feats = Feat.at(x, y)
+   local feats = Feat.at(x, y, map)
    if feats:length() > 0 then
       Gui.mes("action.plant.cannot_plant_it_here")
       return false
@@ -104,9 +105,7 @@ function Gardening.calc_gardening_difficulty(plant, chara, is_crop_tile)
       difficulty = difficulty * 3 / 2
    end
 
-   -- TODO weather
-   local is_raining = false
-   if plant.plant_growth_stage == 0 and not is_raining then
+   if plant.plant_growth_stage == 0 and not Weather.is_raining() then
       difficulty = difficulty * 2
    end
 
@@ -127,6 +126,7 @@ function Gardening.calc_plant_time_to_growth_days(plant, chara, is_crop_tile)
 end
 
 function Gardening.calc_regrowth_difficulty(plant, chara, is_crop_tile)
+   -- >>>>>>>> shade2/action.hsp:2316 	p=15 ...
    local plant_data = data["elona.plant"]:ensure(plant.plant_id)
    local difficulty = plant_data.regrowth_difficulty or 15
 
@@ -134,13 +134,12 @@ function Gardening.calc_regrowth_difficulty(plant, chara, is_crop_tile)
       difficulty = difficulty * 2
    end
 
-   -- TODO weather
-   local is_raining = false
-   if plant.plant_growth_stage == 0 and not is_raining then
-      difficulty = difficulty * 2
+   if plant.plant_growth_stage == 0 and not Weather.is_raining() then
+      difficulty = difficulty * 4 / 3
    end
 
    return difficulty
+   -- <<<<<<<< shade2/action.hsp:2322 	if gWeather<weatherRain		: p=p*4/3 ..
 end
 
 function Gardening.regrow_plant(plant, chara, is_crop_tile)
@@ -175,9 +174,7 @@ function Gardening.get_plant(plant, chara)
       return true
    end
 
-   -- TODO inventory space
-   local has_space = true
-   if not has_space then
+   if chara:is_inventory_full() then
       Gui.mes("ui.inv.common.inventory_is_full")
       return false
    end
@@ -188,7 +185,7 @@ function Gardening.get_plant(plant, chara)
    local is_crop_tile = map:tile(chara.x, chara.y).role == Enum.TileRole.Crop
    Gardening.regrow_plant(plant, chara, is_crop_tile)
 
-   -- TODO
+   -- TODO artifact
    if plant.plant_id == "elona.artifact" then
       Save.autosave()
    end

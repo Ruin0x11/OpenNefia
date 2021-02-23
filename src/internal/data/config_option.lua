@@ -368,6 +368,14 @@ data:add_multi(
          max_value = 100
       },
       {
+         _id = "background_effect_wait",
+
+         type = "integer",
+         default = 30,
+         min_value = 0,
+         max_value = 100,
+      },
+      {
          _id = "scroll_when_run",
 
          type = "boolean",
@@ -390,6 +398,7 @@ data:add {
       "base.alert_wait",
       "base.screen_refresh",
       "base.anime_wait",
+      "base.background_effect_wait",
       "base.scroll_when_run"
    }
 }

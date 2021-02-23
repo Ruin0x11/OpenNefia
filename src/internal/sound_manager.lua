@@ -29,7 +29,7 @@ function sound_manager:update()
    end
 end
 
-function sound_manager:play_looping(id, ty)
+function sound_manager:play_looping(tag, id, ty)
    if _IS_LOVEJS then
       -- sound is completely broken in love.js (introduces lag and
       -- doesn't even play properly...)
@@ -53,32 +53,36 @@ function sound_manager:play_looping(id, ty)
       src:setVolume(sound.volume)
    end
 
+   if self.looping_sources[tag] then
+      self:stop_looping(tag, ty)
+   end
+
    src:play()
 
-   self.looping_sources[ty .. ":" .. id] = src
+   self.looping_sources[tag] = src
 end
 
-function sound_manager:stop_looping(id, ty)
+function sound_manager:stop_looping(tag, ty)
    if _IS_LOVEJS then
       return
    end
 
-   if id == nil then
-      for k, _ in pairs(self.looping_sources) do
-         if k ~= "music:" .. self.music_id then
-            self:stop_looping(k, ty)
+   if tag == nil then
+      for other_tag, _ in pairs(self.looping_sources) do
+         if other_tag ~= "global_music" then
+            self:stop_looping(other_tag, ty)
          end
       end
 
       return
    end
 
-   local src = self.looping_sources[ty .. ":" .. id]
+   local src = self.looping_sources[tag]
    if src == nil then return end
 
    love.audio.stop(src)
 
-   self.looping_sources[ty .. ":" .. id] = nil
+   self.looping_sources[tag] = nil
 end
 
 function sound_manager:play(id, x, y, channel)
@@ -149,13 +153,13 @@ function sound_manager:play_music(sound_id)
       self:stop_music()
    end
 
-   self:play_looping(sound_id, "music")
+   self:play_looping("global_music", sound_id, "music")
    self.music_id = sound_id
 end
 
 function sound_manager:stop_music()
    if self.music_id then
-      self:stop_looping(self.music_id, "music")
+      self:stop_looping("global_music", "music")
    end
 end
 

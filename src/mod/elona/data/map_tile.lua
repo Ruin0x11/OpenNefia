@@ -1934,7 +1934,7 @@ local tiles = {
       elona_atlas = 1,
       count_x = 3,
       kind = TileRole.Water,
-      kind2 = 5
+      kind2 = TileRole.MountainWater
    },
    {
       _id = "cobble_wall_top",

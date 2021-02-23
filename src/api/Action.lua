@@ -61,6 +61,8 @@ end)
 --- @tparam int y
 --- @treturn bool success
 function Action.move(chara, x, y)
+   assert(math.type(x) == "integer")
+   assert(math.type(y) == "integer")
    local params = {
       prev_x = chara.x,
       prev_y = chara.y,
@@ -104,8 +106,6 @@ function Action.move(chara, x, y)
    end
    sense_map_feats_on_move()
    -- proc water
-   -- sense feats
-   -- proc world map encounters
    --   how to handle entering a new map here? defer it?
 
    return true
@@ -365,7 +365,9 @@ function Action.build_target_list(chara)
    return targets
 end
 
+--- @hsp *findTarget
 function Action.find_target(chara)
+   -- >>>>>>>> shade2/command.hsp:4240 *findTarget ...
    local target = chara:get_target()
    if target == nil or not Chara.is_alive(target) or not target:is_in_fov() then
       chara:set_target(nil)
@@ -392,6 +394,7 @@ function Action.find_target(chara)
    end
 
    return target
+   -- <<<<<<<< shade2/command.hsp:4264 	return true ..
 end
 
 return Action

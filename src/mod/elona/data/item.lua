@@ -20,6 +20,7 @@ local Chara = require("api.Chara")
 local Pos = require("api.Pos")
 local Anim = require("mod.elona_sys.api.Anim")
 local World = require("api.World")
+local Weather = require("mod.elona.api.Weather")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -14798,7 +14799,39 @@ local item =
          coefficient = 100,
          originalnameref2 = "statue",
 
-         elona_function = 27,
+         on_use = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:2008 	case effRenewWeather ...
+            Gui.mes("action.use.statue.activate", self:build_name(1))
+            Gui.play_sound("base.pray1", self.x, self.y)
+
+            local w = Weather.get()
+
+            if w._id == "elona.etherwind" then
+               Gui.mes_c("action.use.statue.lulwy.during_etherwind", "Yellow")
+            else
+               local choose_weather = function()
+                  if Rand.one_in(10) then
+                     return "elona.sunny"
+                  end
+                  if Rand.one_in(10) then
+                     return "elona.rain"
+                  end
+                  if Rand.one_in(15) then
+                     return "elona.hard_rain"
+                  end
+                  if Rand.one_in(20) then
+                     return "elona.snow"
+                  end
+                  return nil
+               end
+               local next_weather_id = fun.tabulate(choose_weather):filter(function(i) return i and i ~= w._id end):nth(1)
+               Weather.change_to(next_weather_id)
+               Gui.mes_c("action.use.statue.lulwy.normal", "Yellow")
+               Gui.mes("action.weather.changes")
+            end
+            -- <<<<<<<< shade2/action.hsp:2025 	swbreak ..
+         end,
+
          is_precious = true,
          has_cooldown_time = true,
          param3 = 120,

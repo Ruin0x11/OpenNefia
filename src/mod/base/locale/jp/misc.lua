@@ -93,10 +93,6 @@ end,
 end,
       too_difficult = "難解だ！"
     },
-    finished_eating = function(_1, _2)
-  return ("%s%sを食べ終えた。")
-  :format(kare_wa(_1), itemname(_2, 1))
-end,
     get_rotten = function(_1)
   return ("%sは腐った。")
   :format(_1)

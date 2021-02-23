@@ -56,6 +56,9 @@ function Gui.field_draw_pos()
 end
 
 --- Starts a draw callback to be run asynchronously.
+--- @tparam function cb
+--- @tparam[opt] boolean async
+--- @tparam[opt] string tag
 function Gui.start_draw_callback(cb, async, tag)
    if Env.is_headless() then
       return
@@ -66,6 +69,22 @@ function Gui.start_draw_callback(cb, async, tag)
    if not async then
       Gui.wait_for_draw_callbacks()
    end
+end
+
+--- Starts a draw callback to be run asynchronously, which will never block the
+--- main thread if waited on. Use for things like weather animations that will
+--- be continuously ran.
+---
+--- @tparam function cb
+--- @tparam string tag
+function Gui.start_background_draw_callback(cb, tag)
+   assert(type(tag) == "string")
+
+   if Env.is_headless() then
+      return
+   end
+
+   field:add_async_draw_callback(cb, tag, "background")
 end
 
 --- Stops a tagged draw callback.
@@ -439,23 +458,26 @@ end
 
 --- Plays a sound looped in the background.
 ---
+--- @tparam string tag
 --- @tparam id:base.sound sound_id
 --- @see Gui.stop_background_sound
-function Gui.play_background_sound(sound_id)
+function Gui.play_background_sound(sound_id, tag)
    local sound_manager = require("internal.global.global_sound_manager")
 
-   sound_manager:play_looping(sound_id)
+   sound_manager:play_looping(tag, sound_id, "sound")
 end
 
 --- Stops playing a sound that was started with
 --- Gui.play_background_sound.
 ---
---- @tparam id:base.sound sound_id
+--- Pass 'nil' to stop all background sounds.
+---
+--- @tparam string tag
 --- @see Gui.play_background_sound
-function Gui.stop_background_sound(sound_id)
+function Gui.stop_background_sound(tag)
    local sound_manager = require("internal.global.global_sound_manager")
 
-   sound_manager:stop_looping(sound_id)
+   sound_manager:stop_looping(tag)
 end
 
 --- Plays music.

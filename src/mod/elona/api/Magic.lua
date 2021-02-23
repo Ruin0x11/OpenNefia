@@ -363,14 +363,7 @@ function Magic.calc_spellbook_success(chara, difficulty, skill_level)
    return true
 end
 
--- Tries to read a spellbook, and on failure causes a negative effect to happen.
-function Magic.try_to_read_spellbook(chara, difficulty, skill_level)
-   -- >>>>>>>> shade2/calculation.hsp:1096 	if rnd(4)=0{ ..
-   local success = Magic.calc_spellbook_success(chara, difficulty, skill_level)
-   if success then
-      return true
-   end
-
+function Magic.fail_to_read_spellbook(chara, difficulty, skill_level)
    if Rand.one_in(4) then
       Gui.mes_visible("misc.fail_to_cast.mana_is_absorbed", chara)
       if chara:is_player() then
@@ -378,7 +371,7 @@ function Magic.try_to_read_spellbook(chara, difficulty, skill_level)
       else
          chara:damage_mp(chara:calc("max_mp") / 3)
       end
-      return false
+      return
    end
 
    if Rand.one_in(4) then
@@ -390,7 +383,7 @@ function Magic.try_to_read_spellbook(chara, difficulty, skill_level)
          end
       end
       chara:apply_effect("elona.confusion", 100)
-      return false
+      return
    end
 
    if Rand.one_in(4) then
@@ -406,11 +399,24 @@ function Magic.try_to_read_spellbook(chara, difficulty, skill_level)
             spawned:set_relation_towards(player, Enum.Relation.Dislike)
          end
       end
-      return false
+      return
    end
 
    Gui.mes_visible("misc.fail_to_cast.dimension_door_opens", chara)
    elona_sys_Magic.cast("elona.teleport", { source = chara, target = chara })
+
+   return
+end
+
+-- Tries to read a spellbook, and on failure causes a negative effect to happen.
+function Magic.try_to_read_spellbook(chara, difficulty, skill_level)
+   -- >>>>>>>> shade2/calculation.hsp:1096 	if rnd(4)=0{ ..
+   local success = Magic.calc_spellbook_success(chara, difficulty, skill_level)
+   if success then
+      return true
+   end
+
+   Magic.fail_to_read_spellbook(chara, difficulty, skill_level)
 
    return false
    -- <<<<<<<< shade2/calculation.hsp:1118 	return false ..

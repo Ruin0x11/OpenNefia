@@ -83,7 +83,7 @@ local function proc_return(chara)
    -- <<<<<<<< shade2/main.hsp:732 			} ..
 end
 
-Event.register("base.before_chara_turn_start", "Proc return event", proc_return)
+Event.register("base.before_chara_turn_start", "Proc return event", proc_return, { priority = 50000 })
 
 local function calc_wand_success(chara, params)
    -- >>>>>>>> shade2/proc.hsp:1511 	if (efId>=headSpell)&(efId<tailSpell){ ..

@@ -702,7 +702,7 @@ function Map.calc_shadow(hour, map)
       }
    end
 
-   -- TODO weather, noyel
+   shadow = map:emit("base.on_map_calc_shadow", {}, shadow) or shadow
 
    return shadow
 end

@@ -246,7 +246,7 @@ local function proc_map_entered(map)
          local player = Chara.player()
          local gained_exp = math.floor(player:calc("level") * save.base.travel_distance * player:skill_level("elona.traveling") / 100 + 1)
          local total = 0
-         for _, chara in Chara.iter_party(map) do
+         for _, chara in player:iter_party_members() do
             if Chara.is_alive(chara) then
                total = total + 1
                chara.experience = chara.experience + gained_exp

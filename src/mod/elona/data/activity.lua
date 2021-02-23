@@ -24,6 +24,7 @@ local I18N = require("api.I18N")
 local Action = require("api.Action")
 local Ui = require("api.Ui")
 local Const = require("api.Const")
+local Weather = require("mod.elona.api.Weather")
 
 local function calc_dig_success(map, params, result)
    local chara = params.chara
@@ -219,7 +220,7 @@ data:add {
             local chara = params.chara
             if not self.no_message then
                if chara:is_in_fov() then
-                  Gui.mes("activity.eat.finish", chara, self.food)
+                  Gui.mes("activity.eat.finish", chara, self.food:build_name(1))
                end
             end
 
@@ -229,6 +230,119 @@ data:add {
       }
    }
 }
+
+local traveling = {
+   _type = "base.activity",
+   _id = "traveling",
+   elona_id = 3,
+
+   params = { dest_x = "number", dest_y = "number" },
+
+   animation_wait = 0,
+
+   on_interrupt = "prompt",
+}
+
+function traveling.default_turns(self, params, chara)
+   -- >>>>>>>> shade2/proc.hsp:786 		cActionPeriod(cc)=20 ...
+   local turns = 20
+
+   local weather = Weather.get()
+   if weather.travel_speed_modifier then
+      turns = weather.travel_speed_modifier(turns, chara)
+   end
+
+   local map = chara:current_map()
+   if map then
+      local tile = map:tile(chara.x, chara.y)
+
+      if tile.kind == Enum.TileRole.Snow then
+         turns = turns * 22 / 10
+      end
+   end
+
+   turns = turns * 100 / (100 + chara:calc("travel_speed") + chara:skill_level("elona.traveling"))
+
+   return turns
+   -- <<<<<<<< shade2/proc.hsp:791 		cActionPeriod(cc)=cActionPeriod(cc)*100/(100+gTr ..
+end
+
+-- TODO #136
+traveling.events = {}
+traveling.events[#traveling.events+1] = {
+   id = "base.on_activity_start",
+   name = "start",
+
+   callback = function(self, params)
+   end
+}
+
+traveling.events[#traveling.events+1] = {
+   id = "base.on_activity_pass_turns",
+   name = "pass turns",
+
+   callback = function(self, params)
+      local chara = params.chara
+
+      chara:emit("elona.on_chara_travel_in_world_map", {activity=self})
+
+      -- >>>>>>>> shade2/proc.hsp:849 	if cActionPeriod(cc)>0:gMin++:return ..
+      World.pass_time_in_seconds(60)
+      -- <<<<<<<< shade2/proc.hsp:849 	if cActionPeriod(cc)>0:gMin++:return ..
+   end
+}
+
+local travel_finished = false
+
+traveling.events[#traveling.events+1] = {
+   id = "base.on_activity_finish",
+   name = "finish",
+
+   callback = function(self, params)
+      -- >>>>>>>> shade2/proc.hsp:851 	travelDone=true:gTravelDistance+=4 ...
+      save.base.travel_distance = save.base.travel_distance + 4
+      travel_finished = true
+
+      -- Triggers "base.before_chara_moved". See below.
+      Action.move(params.chara, self.dest_x, self.dest_y)
+      -- <<<<<<<< shade2/proc.hsp:851 	travelDone=true:gTravelDistance+=4 ..
+   end
+}
+
+data:add(traveling)
+
+-- This function is sneaky as hell in the original code.
+--
+-- When you're in the world map and try to move onto another tile, the game will
+-- end your turn early and give you the "traveling" activity. That gets finished
+-- instantly as it has no animation delay. Each turn the activity runs it does
+-- the traveling logic and *also* calls the "move to this square" routine
+-- (*act_move) again, over and over. When the activity finishes it sets the
+-- `travelDone` boolean, and then when the "move to this square" thing gets
+-- called immediately after it will finally update your position, doing all the
+-- normal movement things.
+local function proc_world_map_travel(chara, params, result)
+   -- >>>>>>>> shade2/action.hsp:635 	if dbg_noTravel=false:if mType=mTypeWorld : if cc ...
+   if chara:is_player() then
+      local map = chara:current_map()
+      if map:has_type("world_map") then
+         if travel_finished then
+            travel_finished = false
+            -- Continue with movement below.
+         else
+            if not chara:has_activity("elona.traveling") then
+               -- removes any current activity as well
+               chara:start_activity("elona.traveling", {dest_x=params.x,dest_y=params.y})
+            end
+            return { blocked = true }, "blocked"
+         end
+      end
+   end
+   -- <<<<<<<< shade2/action.hsp:635 	if dbg_noTravel=false:if mType=mTypeWorld : if cc ..
+   return result
+end
+Event.register("base.before_chara_moved", "Proc world map travel", proc_world_map_travel, { priority = 150000 })
+
 data:add {
    _type = "base.activity",
    _id = "fishing",
@@ -239,7 +353,7 @@ data:add {
 
    animation_wait = 40,
 
-   on_interrupt = "stop",
+   on_interrupt = "prompt",
    events = {
       {
          id = "base.on_activity_start",
@@ -317,9 +431,10 @@ data:add {
       }
    }
 }
+
 data:add {
    _type = "base.activity",
-   _id = "dig_wall",
+   _id = "mining",
    elona_id = 5,
 
    params = { x = "number", y = "number", chara = "IChara" },

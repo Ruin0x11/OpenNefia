@@ -49,3 +49,38 @@ local function interrupt_eating_activity(chara, params, result)
 end
 
 Event.register("elona.on_chara_displaced", "Interrupt eating activity", interrupt_eating_activity)
+
+local function interrupt_eating_activity(chara, params, result)
+   -- >>>>>>>> shade2/action.hsp:551 			if cRowAct(tc)=rowActEat:if cActionPeriod(tc)>0 ...
+   local displacer = params.chara
+   local activity = chara:get_activity()
+   if activity and activity.proto.interrupt_on_displace then
+      Gui.mes("action.move.interrupt", chara, displacer)
+      chara:remove_activity()
+   end
+   -- <<<<<<<< shade2/action.hsp:551 			if cRowAct(tc)=rowActEat:if cActionPeriod(tc)>0 ..
+end
+
+local function proc_moved_onto_water(chara, params)
+   -- >>>>>>>> shade2/action.hsp:639  	if tRole(p)=tWater{ ...
+   local map = chara:current_map()
+   if not map then
+      return
+   end
+
+   local tile = map:tile(chara.x, chara.y)
+   if tile.kind == Enum.TileRole.Water then
+      if tile.kind2 == Enum.TileRole.MountainWater then
+         Effect.heal_insanity(chara, 1)
+      end
+      -- TODO efmap
+      if not chara:has_effect("elona.wet") then
+         Effect.get_wet(chara, 20)
+      end
+      -- >>>>>>>> shade2/action.hsp:746 			if p=tWater:snd seWater ...
+      Gui.play_sound("base.water2", chara.x, chara.y)
+      -- <<<<<<<< shade2/action.hsp:746 			if p=tWater:snd seWater ..
+   end
+   -- <<<<<<<< shade2/action.hsp:642 		} ...end
+end
+Event.register("base.on_chara_moved", "Proc movement onto water", proc_moved_onto_water)

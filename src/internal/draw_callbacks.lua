@@ -8,7 +8,11 @@ function draw_callbacks:init()
    self.waiting = false
 end
 
-function draw_callbacks:add(cb, tag)
+function draw_callbacks:add(cb, tag, kind)
+   if kind then
+      assert(kind == "background", "invalid draw callback kind " .. tostring(kind))
+   end
+
    local key = #self.draw_callbacks+1
    if tag ~= nil then
       if type(tag) ~= "string" then
@@ -19,7 +23,8 @@ function draw_callbacks:add(cb, tag)
 
    self.draw_callbacks[key] = {
       thread = coroutine.create(cb),
-      dt = 0
+      dt = 0,
+      is_background = kind == "background"
    }
 end
 
@@ -104,7 +109,12 @@ function draw_callbacks:update(dt)
 end
 
 function draw_callbacks:has_more()
-  return next(self.draw_callbacks) ~= nil
+   for _, draw_cb in pairs(self.draw_callbacks) do
+      if not draw_cb.is_background then
+         return true
+      end
+   end
+   return false
 end
 
 function draw_callbacks:wait()

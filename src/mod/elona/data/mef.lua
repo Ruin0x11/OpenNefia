@@ -9,6 +9,7 @@ local Enum = require("api.Enum")
 local Log = require("api.Log")
 local SkillCheck = require("mod.elona.api.SkillCheck")
 local Effect = require("mod.elona.api.Effect")
+local Weather = require("mod.elona.api.Weather")
 
 data:add {
    _type = "base.mef",
@@ -108,12 +109,16 @@ data:add {
    -- TODO check if tile is water, if so do not place
 
    on_updated = function(self, params)
+      -- >>>>>>>> shade2/main.hsp:498 	if mefExist(cnt)=mefFire:if mField=mFieldOutdoor: ...
       local map = self:current_map()
       if map == nil or Map.is_world_map(map) or map:calc("is_indoor") then
          return
       end
 
-      -- TODO weather: rain
+      if Weather.is_raining() then
+         self:remove_ownership()
+         return
+      end
 
       local spread_count = 0
 
@@ -140,6 +145,7 @@ data:add {
             end
          end
       end
+      -- <<<<<<<< shade2/main.hsp:510 		loop ..
    end,
 
    on_stepped_on = function(self, params)

@@ -201,8 +201,8 @@ function field_layer:update(dt, ran_action, result)
    self.hud:update(dt)
 end
 
-function field_layer:add_async_draw_callback(cb, tag)
-   self.draw_callbacks:add(cb, tag)
+function field_layer:add_async_draw_callback(cb, tag, kind)
+   self.draw_callbacks:add(cb, tag, kind)
 end
 
 function field_layer:remove_async_draw_callback(tag)
