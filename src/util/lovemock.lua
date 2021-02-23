@@ -138,6 +138,14 @@ love.graphics.newText = function()
       set = function() end
    }
 end
+love.window.getFullscreenModes = function()
+   return {
+      { width = 800, height = 600 }
+   }
+end
+love.window.setMode = function() return true end
+love.window.getMode = function() return 800, 600, { fullscreen = true, fullscreentype = "desktop" } end
+love.graphics.clear = function() end
 
 love.math.colorFromBytes = function(r, g, b, a)
    return r / 255, g / 255, b / 255, (a or 255) / 255
