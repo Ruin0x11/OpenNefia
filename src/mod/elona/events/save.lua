@@ -31,6 +31,7 @@ local function init_save()
    s.weather_id = "elona.sunny"
    s.turns_until_weather_changes = 0
    s.date_of_last_etherwind = DateTime:new()
+   s.next_train_date = 0
 end
 
 Event.register("base.on_init_save", "Init save (elona)", init_save)

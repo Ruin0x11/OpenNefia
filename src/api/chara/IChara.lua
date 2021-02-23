@@ -642,6 +642,13 @@ function IChara:set_emotion_icon(icon, duration)
    self.emotion_icon_turns = duration or 2
 end
 
+function IChara:set_item_using(item)
+   if item == nil then
+      self.item_using = nil
+   end
+   self.item_using = item
+end
+
 function IChara:iter()
    return self:iter_items()
 end

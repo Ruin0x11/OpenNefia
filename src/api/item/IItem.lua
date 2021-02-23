@@ -207,22 +207,25 @@ function IItem:is_equipped_at(body_part_type)
    return self:slot_equipped_in() == body_part_type
 end
 
-function IItem:set_chara_using(chara)
-   assert(chara == nil or (type(chara) == "table" and chara._type == "base.chara"))
-   self.chara_using = chara
+function IItem:get_chara_using()
+   local owner = self:get_owning_chara()
+   if owner == nil or owner.item_using ~= self then
+      return nil
+   end
+   return owner
 end
 
 function IItem:remove_activity(no_message)
-   if not self.chara_using then
-      return
+   local chara_using = self:get_chara_using()
+   if chara_using == nil then
    end
 
    if not no_message then
-      Gui.mes("activity.cancel.item", self.chara_using)
+      Gui.mes("activity.cancel.item", chara_using)
    end
 
-   self.chara_using:remove_activity()
-   self:set_chara_using(nil)
+   chara_using:remove_activity()
+   chara_using:set_item_using(nil)
 end
 
 function IItem:can_stack_with(other)

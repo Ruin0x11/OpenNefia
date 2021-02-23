@@ -10674,7 +10674,12 @@ local item =
          rarity = 200000,
          coefficient = 100,
 
-         elona_function = 9,
+         on_use = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:1850 	case effTrain ...
+            params.chara:start_activity("elona.training", {skill_id="random",item=self})
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:1853 	swbreak ..
+         end,
 
          gods = { "elona.mani" },
 
@@ -12461,6 +12466,23 @@ local item =
             -- >>>>>>>> shade2/item.hsp:619 	if iId(ci)=idBookSkill	:if iBookId(ci)=0:iBookId( ..
             self.params.textbook_skill_id = Skill.random_skill()
             -- <<<<<<<< shade2/item.hsp:619 	if iId(ci)=idBookSkill	:if iBookId(ci)=0:iBookId( ..
+         end,
+
+         on_read = function(self, params)
+            -- >>>>>>>> shade2/command.hsp:4447 	if iId(ci)=idBookSkill{ ...
+            local skill_id = self.params.textbook_skill_id
+            local chara = params.chara
+            if chara:is_player() and not chara:has_skill(skill_id) then
+               Gui.mes("action.read.book.not_interested")
+               if not Input.yes_no() then
+                  return "player_turn_query"
+               end
+            end
+
+            chara:start_activity("elona.training", {skill_id=skill_id,item=self})
+
+            return "turn_end"
+            -- <<<<<<<< shade2/command.hsp:4454 		} ...         end,
          end,
 
          elona_type = "normal_book",
@@ -14879,6 +14901,14 @@ local item =
             self.params.book_of_rachel_number = Rand.rnd(4) + 1
          end,
 
+         on_read = function(self)
+            -- >>>>>>>> shade2/proc.hsp:1250 	if iId(ci)=idDeedVoid: :snd seOpenBook: txt lang( ...
+            Gui.play_sound("base.book1")
+            Gui.mes("action.read.book.book_of_rachel")
+            return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:1250 	if iId(ci)=idDeedVoid: :snd seOpenBook: txt lang( ..
+         end,
+
          elona_type = "normal_book",
 
          tags = { "noshop" },
@@ -17163,6 +17193,14 @@ local item =
          quality = Enum.Quality.Unique,
 
          elona_type = "normal_book",
+
+         on_read = function(self)
+            -- >>>>>>>> shade2/proc.hsp:1250 	if iId(ci)=idDeedVoid: :snd seOpenBook: txt lang( ...
+            Gui.play_sound("base.book1")
+            Gui.mes("action.read.book.void_permit")
+            return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:1250 	if iId(ci)=idDeedVoid: :snd seOpenBook: txt lang( ..
+         end,
 
          medal_value = 72,
 

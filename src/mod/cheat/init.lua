@@ -81,7 +81,7 @@ local function setup_dev_config()
    if config.base.development_mode then
       config.base.auto_turn_speed = "highest"
       config.base.anime_wait = 0
-      config.base.quickstart_chara_id = "elona.the_leopard_warrior"
+      config.base.quickstart_chara_id = "elona.citizen"
    end
 end
 Event.register("base.on_engine_init", "Set some useful config options", setup_dev_config)

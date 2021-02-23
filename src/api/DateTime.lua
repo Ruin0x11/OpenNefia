@@ -1,6 +1,7 @@
---- @classmod DateTime
+local ICloneable = require("api.ICloneable")
 
-local DateTime = class.class("DateTime")
+--- @classmod DateTime
+local DateTime = class.class("DateTime", ICloneable)
 
 --- @function DateTime:new
 --- @tparam[opt] int year
@@ -43,6 +44,11 @@ end
 
 function DateTime:__tostring()
    return string.format("%d/%d/%d %02d:%02d:%02d", self.year, self.month, self.day, self.hour, self.minute, self.second)
+end
+
+-- TODO figure out a generalized cloning mechanism for class instances
+function DateTime:clone()
+   return DateTime:new(self.year, self.month, self.day, self.hour, self.minute, self.second)
 end
 
 return DateTime

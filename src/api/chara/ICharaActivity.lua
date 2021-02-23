@@ -2,6 +2,7 @@ local data = require("internal.data")
 local Gui = require("api.Gui")
 local Object = require("api.Object")
 local config = require("internal.config")
+local Log = require("api.Log")
 
 local ICharaActivity = class.interface("ICharaActivity")
 
@@ -78,12 +79,12 @@ local function make_activity(id, params)
    local obj = Object.generate_from("base.activity", id)
    Object.finalize(obj)
    local activity = data["base.activity"]:ensure(id)
-   for k, v in pairs(params) do
-      local ty = activity.params[k]
-      if ty and type(v) == ty then
-         -- TODO obj.params[k] = v
-         obj[k] = v
+   for property, ty in pairs(activity.params or {}) do
+      local value = params[property]
+      if type(value) ~= ty then
+         error(("Activity %s requires parameter '%s' of type %s, got '%s'"):format(id, property, ty, tostring(value)))
       end
+      obj[property] = value
    end
    return obj
 end
@@ -113,10 +114,13 @@ function ICharaActivity:start_activity(id, params, turns)
 
    self.activity.turns = math.floor(self.activity.turns)
 
-   local ok, result = pcall(self.activity.start, self.activity, self)
+   local ok, result = xpcall(self.activity.start, debug.traceback, self.activity, self)
 
    if not ok or result == "stop" then
       self:remove_activity()
+      if not ok then
+         Log.error("Error starting activity: %s", result)
+      end
    end
 end
 

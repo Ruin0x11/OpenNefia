@@ -447,6 +447,22 @@ data:add {
          Gui.mes("action.search.discover.hidden_path")
       end
    end,
+
+   events = {
+      {
+         id = "elona.on_feat_tile_digged_into",
+         name = "Reveal hidden path.",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1069 			if map(refX,refY,6)!0{ ...
+            local map = self:current_map()
+            local tile = MapTileset.get("elona.mapgen_tunnel", map)
+            Map.set_tile(self.x, self.y, tile, map)
+            self:remove_ownership()
+            -- <<<<<<<< shade2/proc.hsp:1072 				}		 ..
+         end
+      }
+   }
 }
 
 local function visit_quest_giver(quest)

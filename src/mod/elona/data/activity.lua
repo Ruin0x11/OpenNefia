@@ -57,14 +57,13 @@ Event.define_hook("calc_dig_success",
                   nil,
                   calc_dig_success)
 
-Event.register("elona.on_dig_success", "Create item", function(map, params)
+local function create_dig_item(map, params)
    if map:calc("cannot_mine_items") then
       return
    end
 
    local x = params.dig_x
    local y = params.dig_y
-   local chara = params.chara
 
    local item = nil
    if Rand.one_in(5) then
@@ -76,12 +75,16 @@ Event.register("elona.on_dig_success", "Create item", function(map, params)
    if item == "gold" then
       Item.create("elona.gold_piece", x, y, map)
    elseif item == "item" then
-      local params = Calc.filter(map:calc("level"), 2, nil, map)
-      params.categories = { "elona.ore" }
+      local itemgen_params = {
+         level = Calc.calc_object_level(map:calc("level"), map),
+         quality = Calc.calc_object_quality(Enum.Quality.Good),
+         categories = "elona.ore"
+      }
 
-      Itemgen.create(x, y, params, map)
+      Itemgen.create(x, y, itemgen_params, map)
    end
-end)
+end
+Event.register("elona.on_dig_success", "Create mining item", create_dig_item)
 
 local function do_dig_success(chara, x, y)
    local map = chara:current_map()
@@ -92,7 +95,9 @@ local function do_dig_success(chara, x, y)
    local anim = Anim.breaking(x, y)
    Gui.start_draw_callback(anim)
 
-   -- TODO hidden path
+   for _, feat in Feat.at(x. y, map) do
+      feat:emit("elona.on_feat_tile_digged_into", {chara=chara})
+   end
 
    Gui.mes("activity.dig_mining.finish.wall")
 
@@ -152,7 +157,7 @@ data:add {
    _type = "base.activity",
    _id = "eating",
    elona_id = 1,
-  
+
    params = { food = "table", no_message = "boolean" },
    default_turns = 8,
 
@@ -178,7 +183,7 @@ data:add {
                end
             end
 
-            self.food:set_chara_using(chara)
+            chara:set_item_using(self.food)
             self.food:emit("elona.on_eat_item_begin", {chara=chara})
             -- <<<<<<<< shade2/proc.hsp:1116 		} ..
          end
@@ -190,12 +195,13 @@ data:add {
          callback = function(self, params)
             if not Item.is_alive(self.food) then
                params.chara:remove_activity()
+               params.chara:set_item_using(nil)
                return "turn_end"
             end
 
             -- TODO cargo check
 
-            self.food:set_chara_using(params.chara)
+            params.chara:set_item_using(self.food)
 
             return "turn_end"
          end
@@ -204,11 +210,8 @@ data:add {
          id = "base.on_activity_cleanup",
          name = "start",
 
-         callback = function(self)
-            if not Item.is_alive(self.food) then
-               return
-            end
-            self.food:set_chara_using(nil)
+         callback = function(self, params)
+            params.chara:set_item_using(nil)
          end
       },
       {
@@ -223,6 +226,7 @@ data:add {
                   Gui.mes("activity.eat.finish", chara, self.food:build_name(1))
                end
             end
+            params.chara:set_item_using(nil)
 
             Effect.eat_food(chara, self.food)
             -- <<<<<<<< shade2/proc.hsp:1123 	gosub *insta_eat ..
@@ -577,16 +581,18 @@ data:add {
          name = "start",
 
          callback = function(self, params)
-            Gui.mes("start resting")
-            -- TODO
-            local is_town_or_guild = false
+            -- >>>>>>>> shade2/proc.hsp:447 		if gRowAct=rowActSleep{ ...
+            local map = params.chara:current_map()
+            local is_town_or_guild = map:has_type("player_owned") or map:has_type("town") or map:has_type("guild")
             if is_town_or_guild then
-               Gui.mes("sleep start other")
+               Gui.mes("activity.sleep.start.other")
                self.turns = 5
             else
-               Gui.mes("sleep start global")
+               Gui.mes("activity.sleep.start.global")
                self.turns = 20
             end
+            params.chara:set_item_using(self.bed)
+            -- <<<<<<<< shade2/proc.hsp:455 			} ..
          end
       },
       {
@@ -594,6 +600,7 @@ data:add {
          name = "pass turns",
 
          callback = function(self, params)
+            params.chara:set_item_using(self.bed)
             return "turn_end"
          end
       },
@@ -602,8 +609,11 @@ data:add {
          name = "finish",
 
          callback = function(self, params)
-            Gui.mes("finish preparations")
+            -- >>>>>>>> shade2/proc.hsp:610 		txt lang("あなたは眠り込んだ。","You fall asleep."):gosub  ...
+            Gui.mes("activity.sleep.finish")
             ElonaCommand.do_sleep(params.chara, self.bed)
+            params.chara:set_item_using(nil)
+            -- <<<<<<<< shade2/proc.hsp:610 		txt lang("あなたは眠り込んだ。","You fall asleep."):gosub  ..
          end
       }
    }
@@ -834,7 +844,7 @@ local function update_quest_score(audience)
 end
 
 local function performance_good(chara, instrument, audience, activity)
--- >>>>>>>> shade2/proc.hsp:265 			p=rnd(cLevel(tc)+1)+1 ..
+   -- >>>>>>>> shade2/proc.hsp:265 			p=rnd(cLevel(tc)+1)+1 ..
    local level = audience:calc("level")
    local quality_delta = Rand.rnd(level + 1) + 1
    if Rand.rnd(chara:skill_level("elona.performer") + 1) > Rand.rnd(level * 2 + 1) then
@@ -1064,244 +1074,6 @@ data:add {
                Skill.gain_skill_exp(params.chara, "elona.performer", exp, 0, 0)
             end
             -- <<<<<<<< shade2/proc.hsp:338 	return ..
-         end
-      }
-   }
-}
-
-local function calc_base_stealing_power(chara, item)
-   local power = chara:skill_level("elona.pickpocket") * 5 + chara:skill_level("elona.stat_dexterity") + 25
-
-   local hour = World.date().hour
-   if hour >= 19 or hour < 7 then
-      power = power * 15 / 10
-   end
-   if item:calc("quality") == Enum.Quality.Good then
-      power = power * 8 / 10
-   end
-   if item:calc("quality") >= Enum.Quality.Great then
-      power = power * 5 / 10
-   end
-
-   return power
-end
-
-local function calc_target_steal_power(base_steal_power, chara, other)
-   -- >>>>>>>> shade2/proc.hsp:537 			p=rnd(i+1)*(80+(sync(cnt)=false)*50+dist(cX(cnt ...
-   local power = Rand.rnd(base_steal_power+1)
-
-   local factor = 80
-   if not other:is_in_fov() then
-      factor = factor + 50
-   end
-
-   factor = factor + Pos.dist(other.x, other.y, chara.x, chara.y) * 20
-
-   return power + factor / 200
-   -- <<<<<<<< shade2/proc.hsp:537 			p=rnd(i+1)*(80+(sync(cnt)=false)*50+dist(cX(cnt ..
-end
-
-local function calc_target_noticed_stealing(other, steal_power)
-   -- >>>>>>>> shade2/proc.hsp:539 			if rnd(sPER(cnt)+1)>p{ ...
-   return Rand.rnd(other:skill_level("elona.stat_perception") + 1) > steal_power
-   -- <<<<<<<< shade2/proc.hsp:539 			if rnd(sPER(cnt)+1)>p{ ..
-end
-
-data:add {
-   _type = "base.activity",
-   _id = "pickpocket",
-   elona_id = 105,
-
-   params = { item = "table" },
-   default_turns = function(self, params)
-      -- >>>>>>>> shade2/proc.hsp:443:DONE 			cActionPeriod(cc)=2+limit(iWeight(ci)/500,0,50) ..
-      return 2 + math.clamp(self.item:calc("weight") / 500, 0, 50)
-      -- <<<<<<<< shade2/proc.hsp:444 		;	if develop:cActionPeriod(cc)=1 ..
-   end,
-
-   animation_wait = 15,
-
-   on_interrupt = "stop",
-   events = {
-      {
-         id = "base.on_activity_start",
-         name = "start",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:441:DONE 		if gRowAct=rowActSteal{ ..
-            if not Item.is_alive(self.item) then
-               return "stop"
-            end
-            Gui.mes("activity.steal.start", self.item:build_name(1))
-            -- <<<<<<<< shade2/proc.hsp:445 			} ..
-         end
-      },
-      {
-         id = "base.on_activity_pass_turns",
-         name = "pass turns",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:513 		if gRowAct=rowActSteal{ ..
-            local chara = params.chara
-            local map = chara:current_map()
-
-            local result = self.item:emit("elona.on_item_steal_attempt", params)
-            if result then
-               return result
-            end
-
-            local owner = self.item:get_owning_chara()
-            local from_enemy = owner and owner.relation == Enum.Relation.Enemy
-
-            local base_steal_power = calc_base_stealing_power(chara, self.item)
-
-            Effect.make_sound(chara, chara.x, chara.y, 5, 8)
-
-            local caught_stealing = false
-
-            local can_notice_stealing = function(other)
-               return Chara.is_alive(other)
-                  and not chara:has_effect("elona.sleep")
-                  and Pos.dist(other.x, other.y, chara.x, chara.y) <= 5
-                  and (not from_enemy or owner.uid == other.uid)
-            end
-
-            for _, other in Chara.iter_others(map):filter(can_notice_stealing) do
-               local steal_power = calc_target_steal_power(base_steal_power, chara, other)
-
-               if calc_target_noticed_stealing(other, steal_power) then
-                  if other:is_in_fov() then
-                     Gui.mes("activity.steal.notice.in_fov", other)
-                  else
-                     Gui.mes("activity.steal.notice.out_of_fov", other)
-                  end
-
-                  if other:find_role("elona.guard") then
-                     Gui.mes("activity.steal.notice.dialog.guard")
-                  else
-                     Gui.mes("activity.steal.notice.dialog.other")
-                  end
-                  Skill.modify_impression(other, -5)
-
-                  other:set_emotion_icon("elona.notice", 5)
-
-                  caught_stealing = true
-               end
-            end
-
-            if caught_stealing then
-               Gui.mes("activity.steal.notice.you_are_found")
-               Effect.modify_karma(chara, -5)
-
-               if owner and owner._id ~= "elona.ebon" and not owner:has_effect("elona.sleep") then
-                  owner:set_relation_towards(chara, Enum.Relation.Hate)
-                  chara:act_hostile_towards(owner)
-                  Skill.modify_impression(owner, -20)
-               end
-
-               Effect.turn_guards_hostile(map, chara)
-            end
-
-            local should_abort = caught_stealing or false
-
-            if owner then
-               if not should_abort and not Chara.is_alive(owner) then
-                  Gui.mes("activity.steal.target_is_dead")
-                  should_abort = true
-               end
-               -- TODO user custom chara
-               if not should_abort and owner:find_role("elona.custom_chara") then
-                  Gui.mes("activity.steal.cannot_be_stolen")
-                  should_abort = true
-               end
-               if not should_abort and Pos.dist(chara.x, chara.y, owner.x, owner.y) >= 3 then
-                  Gui.mes("activity.steal.you_lose_the_target")
-                  should_abort = true -- XXX: was false in vanilla, bug?
-               end
-            end
-
-            if not Item.is_alive(self.item) then
-               should_abort = true
-            end
-
-            if not should_abort and self.item:calc("is_precious") then
-               Gui.mes("activity.steal.cannot_be_stolen")
-               should_abort = true
-            end
-
-            if not should_abort and self.item:calc("weight") >= chara:skill_level("elona.stat_strength") * 500 then
-               Gui.mes("activity.steal.it_is_too_heavy")
-               should_abort = true
-            end
-
-            if not should_abort and Chara.is_alive(self.item.chara_using) then
-               Gui.mes("action.someone_else_is_using")
-               should_abort = true
-            end
-
-            if should_abort then
-               Gui.mes("activity.steal.abort")
-               chara:remove_activity()
-            end
-
-            return "turn_end"
-            -- <<<<<<<< shade2/proc.hsp:569 			} ..
-         end
-      },
-      {
-         id = "base.on_activity_finish",
-         name = "finish",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:574 	if gRowAct=rowActSteal{ ..
-            local chara = params.chara
-            local owner = self.item:get_owning_chara()
-            if (owner and not Chara.is_alive(owner)) or not Item.is_alive(self.item) then
-               Gui.mes("activity.steal.abort")
-               chara:remove_activity()
-               return
-            end
-
-            local amount = 1
-            if self.item._id == "elona.gold_piede" then
-               amount = self.item.amount
-            end
-
-            self.item.always_drop = false
-
-            if chara:is_inventory_full() then
-               Gui.mes("action.pick_up.your_inventory_is_full")
-            end
-
-            if self.item:is_equipped() then
-               assert(Chara.is_alive(owner))
-               assert(owner:unequip_item(self.item))
-               owner:refresh()
-            end
-
-            local sep = self.item:separate(amount)
-            sep:remove_ownership()
-            sep.is_stolen = true
-            sep.own_state = Enum.OwnState.None
-
-            Gui.mes("activity.steal.succeed", sep:build_name())
-
-            if sep._id == "elona.gold_piece" then
-               Gui.play_sound("base.getgold1", chara.x, chara.y)
-               chara.gold = chara.gold + 1
-            else
-               assert(chara:take_item(sep))
-               Gui.play_sound(Rand.choice({"base.get1", "base.get2"}), chara.x, chara.y)
-            end
-            chara:refresh_weight()
-
-            Skill.gain_skill_exp(chara, "elona.pickpocket", math.clamp(sep:calc("weight")/25, 0, 450) + 50)
-
-            if chara.karma >= Const.KARMA_BAD and Rand.one_in(3) then
-               Gui.mes("activity.steal.guilt")
-               Effect.modify_karma(chara, -1)
-            end
-            -- <<<<<<<< shade2/proc.hsp:606 		} ..
          end
       }
    }
@@ -1735,6 +1507,360 @@ data:add {
             Gui.mes("activity.harvest.finish", self.item:build_name(1), Ui.display_weight(self.item:calc("weight")))
             Action.get(params.chara, self.item)
             -- <<<<<<<< shade2/proc.hsp:626 		} ..
+         end
+      }
+   }
+}
+
+data:add {
+   _type = "base.activity",
+   _id = "training",
+   elona_id = 104,
+
+   params = { skill_id = "string", item = "table" },
+
+   -- >>>>>>>> shade2/proc.hsp:478 			cActionPeriod(cc)=50 ...
+   default_turns = 50,
+   -- <<<<<<<< shade2/proc.hsp:478 			cActionPeriod(cc)=50 ..
+
+   -- >>>>>>>> shade2/main.hsp:848 			if gRowAct=rowActHarvest:at 40:else:if gRowAct= ...
+   animation_wait = 40,
+   -- <<<<<<<< shade2/main.hsp:848 			if gRowAct=rowActHarvest:at 40:else:if gRowAct= ..
+
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            local chara = params.chara
+
+            if Item.is_alive(self.item) then
+               chara:set_item_using(self.item)
+            end
+
+            -- >>>>>>>> shade2/proc.hsp:469 		if gRowAct=rowActTrain{ ...
+            if not Weather.is_bad_weather() and save.elona.next_train_date > World.date_hours() then
+               Gui.mes("activity.study.start.bored")
+               return "stop"
+            end
+
+            save.elona.next_train_date = World.date_hours() + 48
+
+            if self.skill_id == "random" then
+               Gui.mes("activity.study.start.training")
+            else
+               data["base.skill"]:ensure(self.skill_id)
+               Gui.mes("activity.study.start.studying", "ability." .. self.skill_id .. ".name")
+            end
+
+            -- TODO shelter
+            local map = chara:current_map()
+            local is_town_or_guild = map:has_type("player_owned") or map:has_type("town") or map:has_type("guild")
+            local can_study_here = map._archetype == "elona.shelter" or (map:calc("is_indoor") and is_town_or_guild)
+            if Weather.is_bad_weather() and can_study_here then
+               Gui.mes("activity.study.start.weather_is_bad")
+            end
+            -- <<<<<<<< shade2/proc.hsp:477 				}		 ..
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:499 		if gRowAct=rowActTrain{ ...
+            local chara = params.chara
+            local map = chara:current_map()
+            local is_town_or_guild = map:has_type("player_owned") or map:has_type("town") or map:has_type("guild")
+
+            local chance = 25
+
+            if Weather.is_bad_weather() then
+               -- TODO shelter
+               if map._archetype == "elona.shelter" then
+                  chance = 5
+               elseif map:calc("is_indoor") then
+                  if is_town_or_guild then
+                     chance = 5
+                     World.pass_time_in_seconds(60 * 30)
+                  end
+               end
+            end
+
+            if Rand.one_in(chance) then
+               if self.skill_id == "random" then
+                  Skill.gain_skill_exp(chara, Skill.random_attribute(), 25)
+               else
+                  Skill.gain_skill_exp(chara, self.skill_id, 25)
+               end
+            end
+
+            return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:511 			} ..
+         end
+      },
+      {
+         id = "base.on_activity_cleanup",
+         name = "cleanup",
+
+         callback = function(self, params)
+            params.chara:set_item_using(nil)
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:627 	if gRowAct=rowActTrain{ ...
+            local item = params.chara.item_using
+            if self.skill_id == "random" then
+               Gui.mes("activity.study.finish.training")
+            else
+               Gui.mes("activity.study.finish.studying", "ability." .. self.skill_id .. ".name")
+            end
+            -- <<<<<<<< shade2/proc.hsp:629 		} ..
+         end
+      }
+   }
+}
+
+local function calc_base_stealing_power(chara, item)
+   local power = chara:skill_level("elona.pickpocket") * 5 + chara:skill_level("elona.stat_dexterity") + 25
+
+   local hour = World.date().hour
+   if hour >= 19 or hour < 7 then
+      power = power * 15 / 10
+   end
+   if item:calc("quality") == Enum.Quality.Good then
+      power = power * 8 / 10
+   end
+   if item:calc("quality") >= Enum.Quality.Great then
+      power = power * 5 / 10
+   end
+
+   return power
+end
+
+local function calc_target_steal_power(base_steal_power, chara, other)
+   -- >>>>>>>> shade2/proc.hsp:537 			p=rnd(i+1)*(80+(sync(cnt)=false)*50+dist(cX(cnt ...
+   local power = Rand.rnd(base_steal_power+1)
+
+   local factor = 80
+   if not other:is_in_fov() then
+      factor = factor + 50
+   end
+
+   factor = factor + Pos.dist(other.x, other.y, chara.x, chara.y) * 20
+
+   return power + factor / 200
+   -- <<<<<<<< shade2/proc.hsp:537 			p=rnd(i+1)*(80+(sync(cnt)=false)*50+dist(cX(cnt ..
+end
+
+local function calc_target_noticed_stealing(other, steal_power)
+   -- >>>>>>>> shade2/proc.hsp:539 			if rnd(sPER(cnt)+1)>p{ ...
+   return Rand.rnd(other:skill_level("elona.stat_perception") + 1) > steal_power
+   -- <<<<<<<< shade2/proc.hsp:539 			if rnd(sPER(cnt)+1)>p{ ..
+end
+
+data:add {
+   _type = "base.activity",
+   _id = "pickpocket",
+   elona_id = 105,
+
+   params = { item = "table" },
+   default_turns = function(self, params)
+      -- >>>>>>>> shade2/proc.hsp:443:DONE 			cActionPeriod(cc)=2+limit(iWeight(ci)/500,0,50) ..
+      return 2 + math.clamp(self.item:calc("weight") / 500, 0, 50)
+      -- <<<<<<<< shade2/proc.hsp:444 		;	if develop:cActionPeriod(cc)=1 ..
+   end,
+
+   animation_wait = 15,
+
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:441:DONE 		if gRowAct=rowActSteal{ ..
+            if not Item.is_alive(self.item) then
+               return "stop"
+            end
+            Gui.mes("activity.steal.start", self.item:build_name(1))
+            -- <<<<<<<< shade2/proc.hsp:445 			} ..
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:513 		if gRowAct=rowActSteal{ ..
+            local chara = params.chara
+            local map = chara:current_map()
+
+            local result = self.item:emit("elona.on_item_steal_attempt", params)
+            if result then
+               return result
+            end
+
+            local owner = self.item:get_owning_chara()
+            local from_enemy = owner and owner.relation == Enum.Relation.Enemy
+
+            local base_steal_power = calc_base_stealing_power(chara, self.item)
+
+            Effect.make_sound(chara, chara.x, chara.y, 5, 8)
+
+            local caught_stealing = false
+
+            local can_notice_stealing = function(other)
+               return Chara.is_alive(other)
+                  and not chara:has_effect("elona.sleep")
+                  and Pos.dist(other.x, other.y, chara.x, chara.y) <= 5
+                  and (not from_enemy or owner.uid == other.uid)
+            end
+
+            for _, other in Chara.iter_others(map):filter(can_notice_stealing) do
+               local steal_power = calc_target_steal_power(base_steal_power, chara, other)
+
+               if calc_target_noticed_stealing(other, steal_power) then
+                  if other:is_in_fov() then
+                     Gui.mes("activity.steal.notice.in_fov", other)
+                  else
+                     Gui.mes("activity.steal.notice.out_of_fov", other)
+                  end
+
+                  if other:find_role("elona.guard") then
+                     Gui.mes("activity.steal.notice.dialog.guard")
+                  else
+                     Gui.mes("activity.steal.notice.dialog.other")
+                  end
+                  Skill.modify_impression(other, -5)
+
+                  other:set_emotion_icon("elona.notice", 5)
+
+                  caught_stealing = true
+               end
+            end
+
+            if caught_stealing then
+               Gui.mes("activity.steal.notice.you_are_found")
+               Effect.modify_karma(chara, -5)
+
+               if owner and owner._id ~= "elona.ebon" and not owner:has_effect("elona.sleep") then
+                  owner:set_relation_towards(chara, Enum.Relation.Hate)
+                  chara:act_hostile_towards(owner)
+                  Skill.modify_impression(owner, -20)
+               end
+
+               Effect.turn_guards_hostile(map, chara)
+            end
+
+            local should_abort = caught_stealing or false
+
+            if owner then
+               if not should_abort and not Chara.is_alive(owner) then
+                  Gui.mes("activity.steal.target_is_dead")
+                  should_abort = true
+               end
+               -- TODO user custom chara
+               if not should_abort and owner:find_role("elona.custom_chara") then
+                  Gui.mes("activity.steal.cannot_be_stolen")
+                  should_abort = true
+               end
+               if not should_abort and Pos.dist(chara.x, chara.y, owner.x, owner.y) >= 3 then
+                  Gui.mes("activity.steal.you_lose_the_target")
+                  should_abort = true -- XXX: was false in vanilla, bug?
+               end
+            end
+
+            if not Item.is_alive(self.item) then
+               should_abort = true
+            end
+
+            if not should_abort and self.item:calc("is_precious") then
+               Gui.mes("activity.steal.cannot_be_stolen")
+               should_abort = true
+            end
+
+            if not should_abort and self.item:calc("weight") >= chara:skill_level("elona.stat_strength") * 500 then
+               Gui.mes("activity.steal.it_is_too_heavy")
+               should_abort = true
+            end
+
+            local chara_using = self.item:get_chara_using()
+            if not should_abort and Chara.is_alive(chara_using) then
+               Gui.mes("action.someone_else_is_using")
+               should_abort = true
+            end
+
+            if should_abort then
+               Gui.mes("activity.steal.abort")
+               chara:remove_activity()
+            end
+
+            return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:569 			} ..
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:574 	if gRowAct=rowActSteal{ ..
+            local chara = params.chara
+            local owner = self.item:get_owning_chara()
+            if (owner and not Chara.is_alive(owner)) or not Item.is_alive(self.item) then
+               Gui.mes("activity.steal.abort")
+               chara:remove_activity()
+               return
+            end
+
+            local amount = 1
+            if self.item._id == "elona.gold_piede" then
+               amount = self.item.amount
+            end
+
+            self.item.always_drop = false
+
+            if chara:is_inventory_full() then
+               Gui.mes("action.pick_up.your_inventory_is_full")
+            end
+
+            if self.item:is_equipped() then
+               assert(Chara.is_alive(owner))
+               assert(owner:unequip_item(self.item))
+               owner:refresh()
+            end
+
+            local sep = self.item:separate(amount)
+            sep:remove_ownership()
+            sep.is_stolen = true
+            sep.own_state = Enum.OwnState.None
+
+            Gui.mes("activity.steal.succeed", sep:build_name())
+
+            if sep._id == "elona.gold_piece" then
+               Gui.play_sound("base.getgold1", chara.x, chara.y)
+               chara.gold = chara.gold + 1
+            else
+               assert(chara:take_item(sep))
+               Gui.play_sound(Rand.choice({"base.get1", "base.get2"}), chara.x, chara.y)
+            end
+            chara:refresh_weight()
+
+            Skill.gain_skill_exp(chara, "elona.pickpocket", math.clamp(sep:calc("weight")/25, 0, 450) + 50)
+
+            if chara.karma >= Const.KARMA_BAD and Rand.one_in(3) then
+               Gui.mes("activity.steal.guilt")
+               Effect.modify_karma(chara, -1)
+            end
+            -- <<<<<<<< shade2/proc.hsp:606 		} ..
          end
       }
    }

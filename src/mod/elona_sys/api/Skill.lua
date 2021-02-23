@@ -44,7 +44,8 @@ function Skill.iter_actions()
    return data["base.skill"]:iter():filter(function(s) return s.type == "action" or s.type == "skill_action" end)
 end
 
-function Skill.random_stat()
+--- @hsp randAttb()
+function Skill.random_attribute()
    return Rand.choice(Skill.iter_stats())._id
 end
 

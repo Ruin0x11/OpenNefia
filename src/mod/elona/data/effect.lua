@@ -86,7 +86,7 @@ local effect = {
          local result
 
          if Rand.one_in(80) then
-            local stat = Skill.random_stat()
+            local stat = Skill.random_attribute()
             if not Effect.has_sustain_enchantment(chara, stat) then
                local delta = chara:base_skill_level(stat) / 25 + 1
                chara:add_stat_adjustment(stat, delta)

@@ -661,8 +661,8 @@ function Magic.read_spellbook(item, skill_id, params)
    local skill_data = data["base.skill"]:ensure(skill_id)
 
    local sep = item:separate()
-   sep:set_chara_using(chara)
    assert(Item.is_alive(sep))
+   chara:set_item_using(sep)
 
    local turns = skill_data.difficulty / (2 * chara:skill_level("elona.literacy")) + 1
    chara:start_activity("elona.reading_spellbook", { skill_id = skill_id, spellbook = sep }, turns)

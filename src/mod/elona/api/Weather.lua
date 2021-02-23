@@ -114,7 +114,7 @@ function Weather.random_weather_id_and_turns()
    if date.month % 3 == 0 then
       if date.day >= 1 and date.day <= 10 and save.elona.date_of_last_etherwind.month ~= date.month then
          if Rand.rnd(15) < date.day + 5 then
-            save.elona.date_of_last_etherwind = table.deepcopy(date)
+            save.elona.date_of_last_etherwind = date:clone()
             Gui.mes_c("action.weather.ether_wind.starts", "Red")
             return "elona.etherwind", Rand.rnd(24) + 24
          end

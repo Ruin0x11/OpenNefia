@@ -44,6 +44,10 @@ function pickpocket.on_generate_map(area, floor)
    i.own_state = Enum.OwnState.NotOwned
    i = Item.create("elona.iron_maiden", x + 2, y + 2, {}, map)
    i.own_state = Enum.OwnState.NotOwned
+   i = Item.create("elona.training_machine", x + 3, y + 2, {}, map)
+   i.own_state = Enum.OwnState.NotOwned
+   i = Item.create("elona.textbook", x + 4, y + 2, {}, map)
+   i.own_state = Enum.OwnState.NotOwned
 
    Skill.gain_skill(Chara.player(), "elona.pickpocket")
 

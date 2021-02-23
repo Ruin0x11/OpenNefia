@@ -395,6 +395,13 @@ function ElonaAction.bash(chara, x, y)
 end
 
 function ElonaAction.read(chara, item)
+   -- >>>>>>>> shade2/proc.hsp:1246 	if cBlind(cc)!0{ ...
+   if chara:has_effect("elona.blindness") then
+      Gui.mes_visible("action.read.cannot_see", chara.x, chara.y, chara)
+      return "turn_end"
+   end
+   -- <<<<<<<< shade2/proc.hsp:1249 		}  ..
+
    local result = item:emit("elona_sys.on_item_read", {chara=chara,triggered_by="read"}, "turn_end")
 
    return result
@@ -402,18 +409,19 @@ end
 
 function ElonaAction.eat(chara, item)
    -- >>>>>>>> shade2/action.hsp:364     if cc=pc{ ..
+   local chara_using = item:get_chara_using()
    if chara:is_player() then
-      if item.chara_using and item.chara_using.uid ~= chara.uid then
+      if chara_using and chara_using.uid ~= chara.uid then
          Gui.mes("action.someone_else_is_using")
          return "player_turn_query"
       end
-   elseif item.chara_using then
-      local using = item.chara_using
-      if using.uid ~= chara.uid then
-         using:finish_activity()
-         assert(item.chara_using == nil)
+   elseif chara_using then
+      if chara_using.uid ~= chara.uid then
+         chara_using:finish_activity()
+         chara_using:set_item_using(nil)
+         assert(chara_using.item_using == nil)
          if chara:is_in_fov() then
-            Gui.mes("action.eat.snatches", chara, using)
+            Gui.mes("action.eat.snatches", chara, chara_using)
          end
       end
    end
