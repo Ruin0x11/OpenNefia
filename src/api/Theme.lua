@@ -89,12 +89,23 @@ local function is_in_base(entry)
    return result
 end
 
-local function find_override_path(source, mod_root_path)
+local NOT_FOUND = {}
+
+local function find_override_path(source, mod_root_path, cache)
+   cache[source] = cache[source] or {}
+   if cache[source][mod_root_path] then
+      if cache[source][mod_root_path] ~= NOT_FOUND then
+         return cache[source][mod_root_path]
+      end
+      return nil
+   end
+
    local filename, parent = to_filename(source)
    local path = fs.join(mod_root_path, filename)
 
    if fs.exists(path) then
-      return path
+      cache[source][mod_root_path] = path
+      return cache[source][mod_root_path]
    end
 
    -- Try to find an appropriate subsitute by looking for a file in the
@@ -109,15 +120,18 @@ local function find_override_path(source, mod_root_path)
    local filename_part = "^" .. fs.filename_part(source) .. "%."
 
    if not fs.is_directory(dir) then
+      cache[source][mod_root_path] = NOT_FOUND
       return nil
    end
 
    for _, item in fs.iter_directory_items(dir) do
       if item:match(filename_part) then
-         return fs.join(dir, item)
+         cache[source][mod_root_path] = fs.join(dir, item)
+         return cache[source][mod_root_path]
       end
    end
 
+   cache[source][mod_root_path] = NOT_FOUND
    return nil
 end
 
@@ -131,6 +145,7 @@ end
 function Theme.generate_asset_overrides(mod_root_path)
    local supported_types = table.keys(source_extractors)
    local overrides = {}
+   local path_cache = {}
 
    for _, _type in ipairs(supported_types) do
       local extract_source = source_extractors[_type]
@@ -138,7 +153,7 @@ function Theme.generate_asset_overrides(mod_root_path)
       for _, entry in data[_type]:iter():filter(is_in_base) do
          local source = extract_source(entry)
          if source then
-            local path = find_override_path(source, mod_root_path)
+            local path = find_override_path(source, mod_root_path, path_cache)
             if path then
                local t = table.deepcopy(entry)
                set_source(t, path)

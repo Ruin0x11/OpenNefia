@@ -1,6 +1,7 @@
 local data = require("internal.data")
 local draw = require("internal.draw")
 local config = require("internal.config")
+local Log = require("api.Log")
 
 data:add_multi(
    "base.config_option",
@@ -574,6 +575,17 @@ data:add {
 data:add_multi(
    "base.config_option",
    {
+      {
+         _id = "log_level",
+
+         type = "enum",
+         choices = {"trace", "debug", "info", "warn", "error"},
+         default = "info",
+
+         on_changed = function(value)
+            Log.set_level(value)
+         end
+      },
       {
          _id = "development_mode",
 
