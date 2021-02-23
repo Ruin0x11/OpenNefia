@@ -77,11 +77,11 @@ do
             end
             if Rand.one_in(40) then
                Gui.mes("action.weather.rain.starts_heavy")
-               return "elona.heavy_rain"
+               return "elona.hard_rain"
             end
             if Rand.one_in(60) then
                Gui.mes("action.weather.snow.starts")
-               return "elona.heavy_snow"
+               return "elona.snow"
             end
          end
       end

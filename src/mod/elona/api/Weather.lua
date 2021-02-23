@@ -162,7 +162,7 @@ function Weather.is_raining()
 end
 
 function Weather.is_bad_weather()
-   return Weather.get().is_bad_weather
+   return not not Weather.get().is_bad_weather
 end
 
 return Weather
