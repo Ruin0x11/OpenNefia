@@ -210,7 +210,7 @@ function mod.load_mods(mods)
       if err then
          error(err)
       end
-      Log.info("   %s: %02.02fms", m.id, mod_sw:measure())
+      Log.debug("   %s: %02.02fms", m.id, mod_sw:measure())
    end
 
    Log.info("Loaded mods in %02.02fms.", sw:measure())

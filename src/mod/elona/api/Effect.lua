@@ -540,11 +540,20 @@ function Effect.heal(chara, dice_x, dice_y, bonus)
 end
 
 local function add_ether_disease_trait(chara)
-   for _ = 1, 100000 do
-      -- TODO
-      Gui.mes_c("add corruption trait", "Red")
-      break
+   -- >>>>>>>> shade2/chara_func.hsp:742 		repeat 100000 ...
+   local is_ether_trait = function(trait) return trait.type == "ether_disease" end
+   local choices = data["base.trait"]:iter():filter(is_ether_trait):to_list()
+
+   local random_ether_trait = function() return Rand.choice(choices) end
+   local trait = fun.tabulate(random_ether_trait):take(100000):nth(1)
+
+   if trait == nil then
+      return
    end
+
+   Gui.mes_c("chara.corruption.add", "Purple")
+   chara:modify_trait_level(trait._id, -1)
+   -- <<<<<<<< shade2/chara_func.hsp:761 		loop ..
 end
 
 local function remove_ether_disease_trait(chara)
@@ -556,6 +565,7 @@ local function remove_ether_disease_trait(chara)
 end
 
 function Effect.modify_corruption(chara, delta)
+   -- >>>>>>>> shade2/chara_func.hsp:727 #deffunc modCorrupt int a ...
    local original_stage = math.floor(chara.ether_disease_corruption / 1000)
    local add_amount = delta
    if delta > 0 then
@@ -616,6 +626,7 @@ function Effect.modify_corruption(chara, delta)
    end
 
    chara:refresh()
+   -- <<<<<<<< shade2/chara_func.hsp:767 		} ..
 end
 
 function Effect.can_return_to(area_uid)
@@ -849,7 +860,7 @@ function Effect.damage_item_fire(item, fireproof_blanket)
    if owner then
       if item:is_equipped() then
          Gui.mes_c_visible("item.someones_item.equipment_turns_to_dust", owner.x, owner.y, "Purple", item:build_name(lost_amount), lost_amount, owner)
-         item:unequip()
+         assert(owner:unequip_item(item))
          item:remove_ownership()
          owner:refresh()
       else

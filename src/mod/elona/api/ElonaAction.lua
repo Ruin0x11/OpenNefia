@@ -31,12 +31,12 @@ end
 
 -- >>>>>>>> shade2/action.hsp:1219     repeat sizeBody ..
 local function body_part_where_equipped(flag)
-   return function(entry) return entry.equipped and entry.equipped:calc(flag) end
+   return function(entry) return entry.equipped:calc(flag) end
 end
 
 function ElonaAction.get_melee_weapons(chara)
    local pred = body_part_where_equipped "is_melee_weapon"
-   return chara:iter_body_parts():filter(pred):extract("equipped")
+   return chara:iter_equipped_body_parts():filter(pred):extract("equipped")
 end
 -- <<<<<<<< shade2/action.hsp:1229     return ..
 
@@ -65,10 +65,10 @@ end
 function ElonaAction.get_ranged_weapon_and_ammo(chara)
    -- >>>>>>>> shade2/command.hsp:4290 *FindRangeWeapon ...
    local pred = body_part_where_equipped "is_ranged_weapon"
-   local ranged = chara:iter_body_parts():filter(pred):extract("equipped"):nth(1)
+   local ranged = chara:iter_equipped_body_parts():filter(pred):extract("equipped"):nth(1)
 
    pred = body_part_where_equipped "is_ammo"
-   local ammo = chara:iter_body_parts():filter(pred):extract("equipped"):nth(1)
+   local ammo = chara:iter_equipped_body_parts():filter(pred):extract("equipped"):nth(1)
 
    if ranged == nil then
       return nil, "no_ranged_weapon"

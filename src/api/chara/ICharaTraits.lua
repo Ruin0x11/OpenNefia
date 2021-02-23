@@ -51,6 +51,8 @@ function ICharaTraits:modify_trait_level(trait_id, delta, no_message)
    end
 
    local success = false
+   local trait_data = data["base.trait"]:ensure(trait_id)
+   local prev_level = self:trait_level(trait_id)
 
    if delta < 0 then
       for _ = 1, math.abs(delta) do
@@ -60,6 +62,11 @@ function ICharaTraits:modify_trait_level(trait_id, delta, no_message)
       for _ = 1, delta do
          success = self:increment_trait(trait_id, no_message) or success
       end
+   end
+
+   if success and trait_data.on_modify_level then
+      local cur_level = self:trait_level(trait_id)
+      trait_data.on_modify_level(cur_level, self, prev_level)
    end
 
    return success

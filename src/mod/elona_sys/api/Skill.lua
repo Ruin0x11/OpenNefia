@@ -326,32 +326,34 @@ end
 
 local function get_random_body_part()
    if Rand.one_in(7) then
-      return "base.neck"
+      return "elona.neck"
    end
    if Rand.one_in(9) then
-      return "base.back"
+      return "elona.back"
    end
    if Rand.one_in(8) then
-      return "base.hand"
+      return "elona.hand"
    end
    if Rand.one_in(4) then
-      return "base.ring"
+      return "elona.ring"
    end
    if Rand.one_in(6) then
-      return "base.arm"
+      return "elona.arm"
    end
    if Rand.one_in(5) then
-      return "base.waist"
+      return "elona.waist"
    end
    if Rand.one_in(5) then
-      return "base.leg"
+      return "elona.leg"
    end
 
-   return "base.head"
+   return "elona.head"
 end
 
 local function refresh_speed_correction(chara)
-   local count = chara:iter_body_parts(true):length()
+   -- XXX: "blocked" body parts from things like ether disease still get counted
+   -- towards the speed penalty.
+   local count = chara:iter_all_body_parts():length()
 
    if count > 13 then
       chara.speed_correction = (count - 13) + 5

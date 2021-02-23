@@ -129,7 +129,7 @@ end
 function EquipmentMenu.build_list(chara)
    local list = {}
 
-   for _, i in chara:iter_body_parts(true) do
+   for _, i in chara:iter_all_body_parts() do
       local entry = {}
 
       entry.body_part = i.body_part
@@ -213,11 +213,11 @@ end
 function EquipmentMenu.message_weapon_stats(chara)
    -- >>>>>>>> shade2/command.hsp:3052 *show_weaponStat ..
    local attack_count = 0
-   for _, part in chara:iter_body_parts() do
+   for _, part in chara:iter_equipped_body_parts() do
       if part.body_part._id == "elona.hand" then
-         local equipped = part.equipped
+         local equipped = assert(part.equipped)
          local weight = equipped:calc("weight")
-         if equipped and equipped:calc("is_melee_weapon") then
+         if equipped:calc("is_melee_weapon") then
             attack_count = attack_count + 1
             if chara:calc("is_wielding_two_handed") and weight >= Const.WEAPON_WEIGHT_HEAVY then
                Gui.mes("action.equip.two_handed.fits_well", equipped)

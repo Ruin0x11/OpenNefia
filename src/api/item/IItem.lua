@@ -200,15 +200,6 @@ function IItem:slot_equipped_in()
    return slot and slot.type
 end
 
---- @treturn bool
-function IItem:unequip()
-   if not self:is_equipped() then
-      return
-   end
-
-   assert(self.location:unequip(self))
-end
-
 -- TODO remove
 --- @tparam id:base.body_part body_part_type
 --- @treturn bool

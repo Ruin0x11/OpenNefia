@@ -30,7 +30,7 @@ function Equipment.equip_optimally(chara, item)
          assert(chara:equip_item(item))
          break
       end
-      for _, other in chara:items_equipped_at(body_part) do
+      for _, other in chara:iter_items_equipped_at(body_part) do
          if item:calc("value") > other:calc("value") then
             assert(chara:unequip_item(other))
             assert(chara:equip_item(item))
@@ -62,7 +62,7 @@ function Equipment.generate_and_equip(chara)
 
       local category
 
-      for _, slot in chara:iter_body_parts(true) do
+      for _, slot in chara:iter_all_body_parts() do
          local id = slot.body_part._id
          if slot.equipped then
             if id == "elona.hand" and not have_weapon and slot.equipped:has_category("elona.equip_melee") then

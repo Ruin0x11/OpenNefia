@@ -1275,7 +1275,7 @@ data:add {
 
             if self.item:is_equipped() then
                assert(Chara.is_alive(owner))
-               self.item:unequip()
+               assert(owner:unequip_item(self.item))
                owner:refresh()
             end
 

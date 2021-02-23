@@ -612,7 +612,9 @@ local inv_present = {
       trade_item:remove_activity()
       trade_item.always_drop = false
       Gui.mes("ui.inv.trade.you_receive", trade_item:build_name(), item:build_name())
-      trade_item:unequip()
+      if trade_item:is_equipped() then
+         assert(ctxt.target:unequip_item(trade_item))
+      end
 
       trade_item:remove_ownership()
       item:remove_ownership()
@@ -1047,7 +1049,7 @@ function inv_take.on_select(ctxt, item, amount)
          Gui.mes("ui.inv.take_ally.cursed", item:build_name())
          return "inventory_continue"
       end
-      item:unequip()
+      assert(target:unequip_item(item))
    end
 
    local result = item:emit("elona.on_item_taken", {chara=chara, target=target, amount=amount}, nil)
