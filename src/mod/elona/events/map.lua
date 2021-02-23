@@ -152,7 +152,7 @@ local function ai_snow(chara, _, result)
          if snowball then
             Gui.mes_c("ai.fire_giant", "SkyBlue")
             ElonaAction.throw(chara, snowball, fire_giant.x, fire_giant.y)
-            return true
+            return true, "blocked"
          end
       end
    end
@@ -163,7 +163,7 @@ local function ai_snow(chara, _, result)
          local snowball = Item.create("elona.handful_of_snow", nil, nil, {}, chara)
          if snowball then
             ElonaAction.throw(chara, snowball, snowman.x, snowman.y)
-            return true
+            return true, "blocked"
          end
       end
    end
@@ -174,7 +174,7 @@ local function ai_snow(chara, _, result)
          if snowman then
             Gui.play_sound("base.snow", chara.x, chara.y)
             Gui.mes("ai.makes_snowman", chara, snowman:build_name())
-            return true
+            return true, "blocked"
          end
       end
    end
@@ -185,7 +185,7 @@ local function ai_snow(chara, _, result)
          local player = Chara.player()
          Gui.mes_c("ai.snowball", "SkyBlue")
          ElonaAction.throw(chara, snowball, player.x, player.y)
-         return true
+         return true, "blocked"
       end
    end
    -- <<<<<<<< shade2/ai.hsp:257 			} ..
@@ -201,14 +201,14 @@ local function scoop_up_snow(chara, params, result)
          Gui.mes("action.get.snow")
          if not Effect.do_stamina_check(chara, 10) then
             Gui.mes("common.too_exhausted")
-            return true
+            return true, "blocked"
          end
          local snow = Item.create("elona.handful_of_snow", nil, nil, {}, chara)
          if snow then
             snow.curse_state = Enum.CurseState.Normal
             snow.identify_state = Enum.IdentifyState.Full
             snow:stack(true)
-            return true
+            return true, "blocked"
          end
       end
    end

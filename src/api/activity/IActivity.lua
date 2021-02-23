@@ -3,6 +3,7 @@ local Input = require("api.Input")
 local Event = require("api.Event")
 local IObject = require("api.IObject")
 local IEventEmitter = require("api.IEventEmitter")
+local I18N = require("api.I18N")
 
 local IActivity = class.interface("IActivity", {}, { IObject, IEventEmitter })
 IActivity._type = "base.activity"
@@ -32,9 +33,11 @@ local function interrupt_prompt(activity, _, should_stop)
       if activity.on_interrupt == "stop" then
          return true
       elseif activity.on_interrupt == "prompt" then
+         -- >>>>>>>> shade2/command.hsp:4340 *com_rowActCancel ...
          Gui.update_screen()
-         Gui.mes("Should we stop the activity? ")
+         Gui.mes("activity.cancel.prompt", I18N.get_optional("activity._." .. activity._id .. ".verb") or "activity.default_verb")
          return Input.yes_no()
+         -- <<<<<<<< shade2/command.hsp:4343 	return ..
       end
    else
       return true

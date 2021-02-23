@@ -1,21 +1,5 @@
 return {
   ui = {
-    action = {
-      _0 = "current action",
-      _1 = "eating",
-      _10 = "current action",
-      _11 = "current action",
-      _12 = "current action",
-      _13 = "current action",
-      _2 = "reading",
-      _3 = "moving",
-      _4 = "resting",
-      _5 = "mining",
-      _6 = "playing",
-      _7 = "fishing",
-      _8 = "collecting materials",
-      _9 = "searching"
-    },
     adventurers = {
       fame_lv = "Fame(Lv)",
       hospital = "Hospital",

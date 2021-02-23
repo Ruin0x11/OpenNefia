@@ -42,19 +42,21 @@ function SkillsMenu.generate_list(chara)
    local list = {}
 
    for _, entry in Skill.iter_actions() do
-      local cost = entry.cost
-      if entry.type == "skill_action" then
-         cost = data["elona_sys.magic"]:ensure(entry.effect_id).cost
-      end
+      if chara:has_skill(entry._id) then
+         local cost = entry.cost
+         if entry.type == "skill_action" then
+            cost = data["elona_sys.magic"]:ensure(entry.effect_id).cost
+         end
 
-      list[#list+1] = {
-         _id = entry._id,
-         ordering = (entry.elona_id or 0) * 100,
-         name = I18N.get("ability." .. entry._id .. ".name"),
-         cost = ("%d Sp"):format(cost),
-         description = Skill.get_description(entry._id, chara):sub(0, 34),
-         icon = Ui.skill_icon(entry.related_skill)
-      }
+         list[#list+1] = {
+            _id = entry._id,
+            ordering = (entry.elona_id or 0) * 100,
+            name = I18N.get("ability." .. entry._id .. ".name"),
+            cost = ("%d Sp"):format(cost),
+            description = utf8.wide_sub(Skill.get_description(entry._id, chara), 0, 34),
+            icon = Ui.skill_icon(entry.related_skill)
+         }
+      end
    end
 
    table.sort(list, function(a, b) return a.ordering < b.ordering end)

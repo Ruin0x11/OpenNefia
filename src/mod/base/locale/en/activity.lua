@@ -1,5 +1,50 @@
 return {
-  activity = {
+   activity = {
+      default_verb = "current action",
+      _ = {
+         elona = {
+            eating = {
+               verb = "eating",
+            },
+            reading_spellbook = {
+               verb = "reading",
+            },
+            reading_ancient_book = {
+               verb = "reading",
+            },
+            traveling = {
+               verb = "moving",
+            },
+            resting = {
+               verb = "resting",
+            },
+            mining = {
+               verb = "mining",
+            },
+            performing = {
+               verb = "playing",
+            },
+            fishing = {
+               verb = "fishing",
+            },
+            digging_spot = {
+               verb = "collecting materials",
+            },
+            searching = {
+               verb = "searching",
+            },
+            general = {
+               verb = "current action",
+            },
+            sex = {
+               verb = "current action",
+            },
+            blending = {
+               verb = "current action",
+            },
+         },
+      },
+
     cancel = {
       item = function(_1)
   return ("%s cancel%s %s action.")
@@ -17,11 +62,11 @@ end
     construct = {
       finish = function(_1)
   return ("You finish constructing %s.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
       start = function(_1)
   return ("You start to construct %s.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
     },
     dig_mining = {
@@ -48,17 +93,17 @@ end
     eat = {
       finish = function(_1, _2)
   return ("%s %s finished eating %s.")
-  :format(name(_1), have(_1), itemname(_2, 1))
+  :format(name(_1), have(_1), _2)
 end,
       start = {
         in_secret = function(_1, _2)
   return ("%s start%s to eat %s in secret.")
-  :format(name(_1), s(_1), itemname(_2, 1))
+  :format(name(_1), s(_1), _2)
 end,
         mammoth = "Let's eatammoth.",
         normal = function(_1, _2)
   return ("%s start%s to eat %s.")
-  :format(name(_1), s(_1), itemname(_2, 1))
+  :format(name(_1), s(_1), _2)
 end
       }
     },
@@ -66,7 +111,7 @@ end
       fail = "A waste of a time...",
       get = function(_1)
   return ("You get %s!")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
       start = "You start fishing."
     },
@@ -157,7 +202,7 @@ end,
       },
       start = function(_1, _2)
   return ("%s start%s to play %s.")
-  :format(name(_1), s(_1), itemname(_2))
+  :format(name(_1), s(_1), _2)
 end,
       throws_rock = function(_1)
   return ("%s throw%s a rock.")
@@ -171,7 +216,7 @@ end
     pull_hatch = {
       finish = function(_1)
   return ("You finish pulling the hatch of %s.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
       start = "You start to pull the hatch."
     },
@@ -263,11 +308,11 @@ end,
       },
       start = function(_1)
   return ("You target %s.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
       succeed = function(_1)
   return ("You successfully steal %s.")
-  :format(itemname(_1))
+  :format(_1)
 end,
       target_is_dead = "The target is dead.",
       you_lose_the_target = "You lose the target."

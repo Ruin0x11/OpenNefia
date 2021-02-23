@@ -26,11 +26,11 @@ function ItemFunction.read_ancient_book(item, params)
 
    -- >>>>>>>> shade2/proc.hsp:1186 		cActionPeriod(cc)=p/(2+sLiteracy(pc))+1 ..
    local sep = item:separate()
-   sep.chara_using = chara
    assert(Item.is_alive(sep))
+   sep:set_chara_using(chara)
 
    local turns = difficulty / (2 * chara:skill_level("elona.literacy")) + 1
-   chara:start_activity("elona.read_ancient_book", { ancient_book = sep }, turns)
+   chara:start_activity("elona.reading_ancient_book", { ancient_book = sep }, turns)
 
    return "turn_end"
    -- <<<<<<<< shade2/proc.hsp:1191 		} ..

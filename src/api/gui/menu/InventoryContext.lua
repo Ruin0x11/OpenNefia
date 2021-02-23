@@ -6,6 +6,7 @@ local Ui = require("api.Ui")
 local ILocation = require("api.ILocation")
 local Map = require("api.Map")
 local Event = require("api.Event")
+local Chara = require("api.Chara")
 
 --- The underlying behavior of an inventory screen. Separating it like
 --- this allows trivial creation of item shortcuts, since all that is
@@ -18,6 +19,14 @@ local function source_chara(ctxt)
 end
 
 local function source_target(ctxt)
+   return ctxt.target:iter_inventory()
+end
+
+-- for pickpocket
+local function source_target_optional(ctxt)
+   if not Chara.is_alive(ctxt.target) then
+      return fun.iter({})
+   end
    return ctxt.target:iter_inventory()
 end
 
@@ -66,6 +75,17 @@ local sources = {
    {
       name = "target",
       getter = source_target,
+      order = 11000,
+      params = {
+         target = "IChara"
+      }
+   },
+   {
+      -- TODO special case for pickpocket. We need a way to specify if a source
+      -- is optional. The params table is a list of strings, might need to be a
+      -- table instead.
+      name = "target_optional",
+      getter = source_target_optional,
       order = 11000,
       params = {
          target = "IChara"
@@ -177,6 +197,8 @@ function InventoryContext:init(proto, params)
    self.container = params.container or nil
    self.map = params.map or nil
    self.shop = params.shop or nil
+   self.ground_x = params.ground_x or nil
+   self.ground_y = params.ground_y or nil
    self.params = {}
 
    local passed_params = params.params or {}

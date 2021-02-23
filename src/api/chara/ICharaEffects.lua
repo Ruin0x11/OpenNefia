@@ -63,6 +63,7 @@ function ICharaEffects:set_effect_turns(id, turns, force)
    return true
 end
 
+--- @hsp cPoison(cc) += turns
 function ICharaEffects:add_effect_turns(id, turns)
    self:set_effect_turns(id, self:effect_turns(id) + turns)
 end
@@ -111,6 +112,7 @@ Event.register("elona_sys.calc_effect_power",
                "Effect power from power reduction",
                calc_effect_power_reduction)
 
+--- @hsp dmgCon
 function ICharaEffects:apply_effect(id, power, params)
    power = power or 10
    params = params or {}

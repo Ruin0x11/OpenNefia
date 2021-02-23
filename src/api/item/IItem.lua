@@ -216,6 +216,11 @@ function IItem:is_equipped_at(body_part_type)
    return self:slot_equipped_in() == body_part_type
 end
 
+function IItem:set_chara_using(chara)
+   assert(chara == nil or (type(chara) == "table" and chara._type == "base.chara"))
+   self.chara_using = chara
+end
+
 function IItem:remove_activity(no_message)
    if not self.chara_using then
       return
@@ -226,7 +231,7 @@ function IItem:remove_activity(no_message)
    end
 
    self.chara_using:remove_activity()
-   self.chara_using = nil
+   self:set_chara_using(nil)
 end
 
 function IItem:can_stack_with(other)

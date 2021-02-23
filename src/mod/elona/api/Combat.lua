@@ -172,6 +172,7 @@ function Combat.calc_evasion(target, attacker, weapon, attack_skill, attack_coun
 end
 
 local function mod_attack_hit_for_status_ailments(result, chara, target, is_ranged)
+   -- >>>>>>>> shade2/calculation.hsp:216 	if cDim(tc)!0{ ...
    if chara:has_effect("elona.dimming") then
       if Rand.one_in(4) then
          result.result = "critical"
@@ -198,6 +199,7 @@ local function mod_attack_hit_for_status_ailments(result, chara, target, is_rang
    end
 
    return result
+   -- <<<<<<<< shade2/calculation.hsp:225 	if (cConfuse(cc)!0)or(cDim(cc)!0) : if AttackRang ..
 end
 
 local function mod_attack_hit_for_greater_evasion(result, target)

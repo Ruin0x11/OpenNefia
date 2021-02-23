@@ -15543,7 +15543,26 @@ local item =
 
          categories = {
             "elona.misc_item"
-         }
+         },
+
+         events = {
+            {
+               id = "elona.on_item_steal_attempt",
+               name = "The iron maiden falls forward!",
+
+               callback = function(self, params)
+                  -- >>>>>>>> shade2/proc.hsp:514 			if iId(ci)=idDeath1:if rnd(15)=0:rowActEnd cc:t ...
+                  if Rand.one_in(15) then
+                     local chara = params.chara
+                     chara:remove_activity()
+                     Gui.mes("activity.iron_maiden")
+                     chara:damage_hp(9999, "elona.iron_maiden")
+                     return "turn_end"
+                  end
+                  -- <<<<<<<< shade2/proc.hsp:514 			if iId(ci)=idDeath1:if rnd(15)=0:rowActEnd cc:t ..
+               end
+            },
+         },
       },
       {
          _id = "guillotine",
@@ -15559,7 +15578,26 @@ local item =
 
          categories = {
             "elona.misc_item"
-         }
+         },
+
+         events = {
+            {
+               id = "elona.on_item_steal_attempt",
+               name = "The guillotine is activated!",
+
+               callback = function(self, params)
+                  -- >>>>>>>> shade2/proc.hsp:514 			if iId(ci)=idDeath1:if rnd(15)=0:rowActEnd cc:t ...
+                  if Rand.one_in(15) then
+                     local chara = params.chara
+                     chara:remove_activity()
+                     Gui.mes("activity.guillotine")
+                     chara:damage_hp(9999, "elona.guillotine")
+                     return "turn_end"
+                  end
+                  -- <<<<<<<< shade2/proc.hsp:514 			if iId(ci)=idDeath1:if rnd(15)=0:rowActEnd cc:t ..
+               end
+            },
+         },
       },
       {
          _id = "pan_flute",

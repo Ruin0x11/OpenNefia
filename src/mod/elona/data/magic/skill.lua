@@ -58,7 +58,7 @@ data:add {
          return true
       end
 
-      source:start_activity("elona.performer", {instrument = params.item})
+      source:start_activity("elona.performing", {instrument = params.item})
 
       return true
    end
@@ -185,11 +185,14 @@ data:add {
    effect_id = "elona.pickpocket",
    related_skill = "elona.stat_dexterity",
    target_type = "nearby",
-   message_nothing_happens = false
+   ignore_missing_target = true
 }
 
 local function quest_prevents_stealing()
-   local quest = assert(Quest.get_immediate_quest())
+   local quest = Quest.get_immediate_quest()
+   if quest == nil then
+      return false
+   end
    local quest_proto = data["elona_sys.quest"]:ensure(quest._id)
    return quest_proto.prevents_pickpocket
 end
@@ -202,7 +205,9 @@ data:add {
    type = "skill",
    params = {
       "source",
-      "target",
+      -- "target", optional
+      "x",
+      "y",
    },
 
    related_skill = "elona.stat_dexterity",
@@ -221,7 +226,7 @@ data:add {
          return true
       end
 
-      Input.query_inventory(source, "elona.inv_steal", {target=params.target})
+      Input.query_inventory(source, "elona.inv_steal", {target=params.target, ground_x=params.x, ground_y=params.y})
 
       return true
    end

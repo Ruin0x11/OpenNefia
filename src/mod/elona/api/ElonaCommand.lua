@@ -122,7 +122,7 @@ function ElonaCommand.do_dig(player, x, y)
       return false
    end
 
-   player:start_activity("elona.dig_wall", {x = x, y = y})
+   player:start_activity("elona.mining", {x = x, y = y})
    return true
 end
 

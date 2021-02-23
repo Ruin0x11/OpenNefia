@@ -3,6 +3,7 @@ local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 local I18N = require("api.I18N")
 local InventoryTargetEquipWindow = require("api.gui.menu.InventoryTargetEquipWindow")
+local Chara = require("api.Chara")
 
 local IInput = require("api.gui.IInput")
 local UiList = require("api.gui.UiList")
@@ -269,8 +270,12 @@ function InventoryMenu:update_filtering()
    self.max_weight = Ui.display_weight(self.ctxt.chara:calc("max_inventory_weight"))
    self.cargo_weight = Ui.display_weight(self.ctxt.chara:calc("cargo_weight"))
 
-   if self.ctxt.show_money and self.ctxt.target then
-      self.money = self.ctxt.target.gold
+   if self.ctxt.show_money then
+      if Chara.is_alive(self.ctxt.target) then
+         self.money = self.ctxt.target.gold
+      else
+         self.money = 0
+      end
    end
 
    if self.ctxt.show_target_equip and self.ctxt.target then

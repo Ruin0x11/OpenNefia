@@ -8,7 +8,9 @@ local Text = require("mod.elona.api.Text")
 
 local function add_stave_enchantments(item, params)
    -- >>>>>>>> shade2/item_data.hsp:770 	if refTypeMinor=fltStave{ ...
-   local encs = {}
+   if not item:has_category("elona.equip_melee_staff") then
+      return
+   end
 
    for _ = 1, 1 do
       if Rand.one_in(10) then
@@ -30,8 +32,6 @@ local function add_stave_enchantments(item, params)
          break
       end
    end
-
-   fun.iter(encs):each(function(enc) item:add_enchantment(enc) end)
    -- <<<<<<<< shade2/item_data.hsp:778 		} ..
 end
 Event.register("elona.on_add_random_enchantments", "Add stave enchantments",

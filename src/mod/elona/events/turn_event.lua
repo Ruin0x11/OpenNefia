@@ -113,6 +113,8 @@ Event.register("base.on_minute_passed", "Respawn mobs", respawn_mobs)
 local function proc_sense_quality()
    -- >>>>>>>> shade2/main.hsp:546 		if gTurn¥10=1 : call item_senseQuality ...
    if save.base.play_turns % 10 == 0 then
+      -- NOTE: You don't actually have to know Sense Quality to sense item
+      -- quality.
       Effect.sense_quality(Chara.player())
    end
    -- <<<<<<<< shade2/main.hsp:546 		if gTurn¥10=1 : call item_senseQuality ..

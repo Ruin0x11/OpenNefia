@@ -1107,6 +1107,15 @@ to ensure the AI is right next to its target before exploding.
 Used only when the skill's `type` is "spell" or "action".
 ]]
       },
+      {
+         name = "ignore_missing_target",
+         default = false,
+         doc = [[
+If true, continue to use the skill even if a target character was not found.
+
+This is used by the Pickpocket skill to select an item on the ground independent of a target character.
+]]
+      }
    }
 }
 

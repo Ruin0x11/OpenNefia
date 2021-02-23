@@ -29,6 +29,7 @@ local event = {
    { _id = "on_item_given" },
    { _id = "on_item_taken" },
    { _id = "on_add_random_enchantments" },
+   { _id = "on_item_steal_attempt" },
 }
 
 data:add_multi("base.event", event)
