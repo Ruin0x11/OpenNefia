@@ -84,6 +84,7 @@ local function to_filename(path)
    return ("%s/%s"):format(parent, base), parent
 end
 
+   -- The reason we
 local function is_in_base(entry)
    local result = string.match(entry._id, "^base%.") or string.match(entry._id, "^elona%.")
    return result
@@ -135,14 +136,15 @@ local function find_override_path(source, mod_root_path, cache)
    return nil
 end
 
--- Generates a table of overrides to be used with a `base.theme`. Intended for
--- use with existing Elona installs that have files like `graphic/character.bmp`
--- or similar in a standard layout.
+-- Generates all asset overrides from an Elona install. Assumes all files needed
+-- for Elona to run (graphic/, sound/, etc.) are present in the mod's directory.
+-- Intended for use with existing Elona installs that have files like
+-- `graphic/character.bmp` or similar in a standard layout.
 --
 -- You can also substitute in images in PNG or other formats instead and these
 -- will be picked up. For example, `graphic/character.png` is accepted as an
 -- override for `graphic/character.bmp`.
-function Theme.generate_asset_overrides(mod_root_path)
+function Theme.generate_hsp_asset_overrides(mod_root_path)
    local supported_types = table.keys(source_extractors)
    local overrides = {}
    local path_cache = {}
@@ -164,12 +166,6 @@ function Theme.generate_asset_overrides(mod_root_path)
    end
 
    return overrides
-end
-
--- Generates all asset overrides from an Elona install. Assumes all files needed
--- for Elona to run (graphic/, sound/, etc.) are present in the mod's directory.
-function Theme.generate_all_asset_overrides(mod_root_path)
-   return Theme.generate_asset_overrides(mod_root_path)
 end
 
 function Theme.is_active(theme_id)
