@@ -6,6 +6,7 @@ local FieldMap = {}
 local default_field_type = "elona.plains"
 
 function FieldMap.generate(stood_tile, width, height, outer_map)
+   -- >>>>>>>> shade2/map.hsp:1504 		mModerateCrowd =4 ...
    local tile = data["base.map_tile"]:ensure(stood_tile)
 
    local field_type = tile.field_type or default_field_type
@@ -37,12 +38,13 @@ function FieldMap.generate(stood_tile, width, height, outer_map)
    map.max_crowd_density = 4
    map.turn_cost = 10000
    map.level = 1
-   map.is_indoor = true
+   map.is_indoor = false
    map.has_anchored_npcs = false
    map.default_ai_calm = 0
    map.default_tile = field.fog
 
    return map
+   -- <<<<<<<< shade2/map.hsp:1576 		map_placePlayer	 ..
 end
 
 return FieldMap

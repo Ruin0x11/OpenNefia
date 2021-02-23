@@ -942,7 +942,7 @@ return {
          },
          snow = {
             starts = "It starts to snow.",
-            stops = "It stops raining."
+            stops = "It stops snowing."
          }
       },
       which_direction = {

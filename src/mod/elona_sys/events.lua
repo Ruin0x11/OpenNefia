@@ -69,7 +69,7 @@ local function update_awake_hours()
          s.awake_hours = s.awake_hours + 1
       end
       if Rand.one_in(15) then
-         Gui.mes("move global map awake hours")
+         Gui.mes("action.move.global.nap")
          s.awake_hours = math.max(0, s.awake_hours - 3)
       end
    end
@@ -100,15 +100,6 @@ local function init_save()
 end
 
 Event.register("base.on_init_save", "Init save (elona_sys)", init_save)
-
-local function init_map(map)
-   local fallbacks = {
-      adds_awake_hours = true
-   }
-   map:mod_base_with(fallbacks, "merge")
-end
-
-Event.register("base.on_build_map", "Init map", init_map)
 
 local function show_element_text_damage(target, source, tense, element)
    Gui.mes("element.damage." .. element._id, target)

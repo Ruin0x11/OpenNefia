@@ -14,7 +14,7 @@ local event = {
    { _id = "calc_bad_performance_damage" },
    { _id = "before_spawn_mobs" },
    { _id = "before_cast_return" },
-   { _id = "on_displaced" },
+   { _id = "on_chara_displaced" },
    { _id = "calc_wand_success" },
    { _id = "on_shop_restocked" },
    { _id = "calc_return_forbidden" },
@@ -29,6 +29,9 @@ local event = {
    { _id = "on_item_given" },
    { _id = "on_item_taken" },
    { _id = "on_add_random_enchantments" },
+   { _id = "on_item_steal_attempt" },
+   { _id = "on_weather_changed" },
+   { _id = "on_chara_travel_in_world_map" },
 }
 
 data:add_multi("base.event", event)

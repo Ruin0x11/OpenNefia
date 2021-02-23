@@ -122,7 +122,7 @@ function ElonaCommand.do_dig(player, x, y)
       return false
    end
 
-   player:start_activity("elona.dig_wall", {x = x, y = y})
+   player:start_activity("elona.mining", {x = x, y = y})
    return true
 end
 
@@ -266,7 +266,7 @@ function ElonaCommand.do_sleep(player, bed, params)
                end, { i = 0 }, true)
    end
 
-   for _, chara in player:iter_party() do
+   for _, chara in player:iter_party_members() do
       chara:emit("elona.on_sleep")
    end
 

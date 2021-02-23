@@ -20,6 +20,7 @@ local Chara = require("api.Chara")
 local Pos = require("api.Pos")
 local Anim = require("mod.elona_sys.api.Anim")
 local World = require("api.World")
+local Weather = require("mod.elona.api.Weather")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -14779,7 +14780,7 @@ local item =
          elona_function = 26,
          is_precious = true,
          has_cooldown_time = true,
-         param3 = 240,
+         cooldown_hours = 240,
          quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
@@ -14798,10 +14799,42 @@ local item =
          coefficient = 100,
          originalnameref2 = "statue",
 
-         elona_function = 27,
+         on_use = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:2008 	case effRenewWeather ...
+            Gui.mes("action.use.statue.activate", self:build_name(1))
+            Gui.play_sound("base.pray1", self.x, self.y)
+
+            local w = Weather.get()
+
+            if w._id == "elona.etherwind" then
+               Gui.mes_c("action.use.statue.lulwy.during_etherwind", "Yellow")
+            else
+               local choose_weather = function()
+                  if Rand.one_in(10) then
+                     return "elona.sunny"
+                  end
+                  if Rand.one_in(10) then
+                     return "elona.rain"
+                  end
+                  if Rand.one_in(15) then
+                     return "elona.hard_rain"
+                  end
+                  if Rand.one_in(20) then
+                     return "elona.snow"
+                  end
+                  return nil
+               end
+               local next_weather_id = fun.tabulate(choose_weather):filter(function(i) return i and i ~= w._id end):nth(1)
+               Weather.change_to(next_weather_id)
+               Gui.mes_c("action.use.statue.lulwy.normal", "Yellow")
+               Gui.mes("action.weather.changes")
+            end
+            -- <<<<<<<< shade2/action.hsp:2025 	swbreak ..
+         end,
+
          is_precious = true,
          has_cooldown_time = true,
-         param3 = 120,
+         cooldown_hours = 120,
          quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
@@ -15250,7 +15283,7 @@ local item =
          has_cooldown_time = true,
          param1 = 446,
          param2 = 300,
-         param3 = 12,
+         cooldown_hours = 12,
          quality = Enum.Quality.Unique,
 
          color = { 175, 175, 255 },
@@ -15277,7 +15310,7 @@ local item =
          has_cooldown_time = true,
          param1 = 404,
          param2 = 400,
-         param3 = 8,
+         cooldown_hours = 8,
          quality = Enum.Quality.Unique,
 
          color = { 225, 225, 255 },
@@ -15302,7 +15335,7 @@ local item =
          elona_function = 31,
          is_precious = true,
          has_cooldown_time = true,
-         param3 = 72,
+         cooldown_hours = 72,
          quality = Enum.Quality.Unique,
 
          color = { 175, 255, 175 },
@@ -15329,7 +15362,7 @@ local item =
          has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
-         param3 = 24,
+         cooldown_hours = 24,
          quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
@@ -15479,7 +15512,7 @@ local item =
          elona_function = 34,
          is_precious = true,
          has_cooldown_time = true,
-         param3 = 720,
+         cooldown_hours = 720,
          quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
@@ -15543,7 +15576,26 @@ local item =
 
          categories = {
             "elona.misc_item"
-         }
+         },
+
+         events = {
+            {
+               id = "elona.on_item_steal_attempt",
+               name = "The iron maiden falls forward!",
+
+               callback = function(self, params)
+                  -- >>>>>>>> shade2/proc.hsp:514 			if iId(ci)=idDeath1:if rnd(15)=0:rowActEnd cc:t ...
+                  if Rand.one_in(15) then
+                     local chara = params.chara
+                     chara:remove_activity()
+                     Gui.mes("activity.iron_maiden")
+                     chara:damage_hp(9999, "elona.iron_maiden")
+                     return "turn_end"
+                  end
+                  -- <<<<<<<< shade2/proc.hsp:514 			if iId(ci)=idDeath1:if rnd(15)=0:rowActEnd cc:t ..
+               end
+            },
+         },
       },
       {
          _id = "guillotine",
@@ -15559,7 +15611,26 @@ local item =
 
          categories = {
             "elona.misc_item"
-         }
+         },
+
+         events = {
+            {
+               id = "elona.on_item_steal_attempt",
+               name = "The guillotine is activated!",
+
+               callback = function(self, params)
+                  -- >>>>>>>> shade2/proc.hsp:514 			if iId(ci)=idDeath1:if rnd(15)=0:rowActEnd cc:t ...
+                  if Rand.one_in(15) then
+                     local chara = params.chara
+                     chara:remove_activity()
+                     Gui.mes("activity.guillotine")
+                     chara:damage_hp(9999, "elona.guillotine")
+                     return "turn_end"
+                  end
+                  -- <<<<<<<< shade2/proc.hsp:514 			if iId(ci)=idDeath1:if rnd(15)=0:rowActEnd cc:t ..
+               end
+            },
+         },
       },
       {
          _id = "pan_flute",
@@ -16410,7 +16481,7 @@ local item =
          elona_function = 43,
          is_precious = true,
          has_cooldown_time = true,
-         param3 = 480,
+         cooldown_hours = 480,
          quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
@@ -17117,7 +17188,7 @@ local item =
          has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
-         param3 = 24,
+         cooldown_hours = 24,
 
          color = { 255, 155, 155 },
 
@@ -17142,7 +17213,7 @@ local item =
          has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
-         param3 = 24,
+         cooldown_hours = 24,
 
          color = { 255, 155, 155 },
 
@@ -17167,7 +17238,7 @@ local item =
          has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
-         param3 = 24,
+         cooldown_hours = 24,
 
          color = { 255, 155, 155 },
 
@@ -17192,7 +17263,7 @@ local item =
          has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
-         param3 = 24,
+         cooldown_hours = 24,
 
          color = { 255, 155, 155 },
 
@@ -17889,7 +17960,7 @@ local item =
          elona_function = 26,
          is_precious = true,
          has_cooldown_time = true,
-         param3 = 240,
+         cooldown_hours = 240,
          quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
@@ -17911,7 +17982,7 @@ local item =
          elona_function = 26,
          is_precious = true,
          has_cooldown_time = true,
-         param3 = 240,
+         cooldown_hours = 240,
          quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",

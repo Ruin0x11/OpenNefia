@@ -9,11 +9,7 @@ function is_invisible.on_generate_map(area, floor)
    local map = utils.create_map(20, 20)
    utils.create_stairs(2, 2, area, map)
 
-   local ids = data["base.chara"]:iter():filter(function(c) return c.is_invisible end):to_list()
-
-   for _, _id in ids:unwrap() do
-      Chara.create(_id, nil, nil, {}, map)
-   end
+   Chara.create("elona.puppy", nil, nil, {}, map)
 
    return map
 end

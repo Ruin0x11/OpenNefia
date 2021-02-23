@@ -136,6 +136,11 @@ function field_logic.determine_turn()
    local player = Chara.player()
    assert(player ~= nil)
 
+   if chara_iter == nil then
+      Log.warn("chara iter was nil, probably hotloaded.")
+      return nil
+   end
+
    -- TODO: check if player can go first, then allies, then others.
    if not player_finished_turn then
       player_finished_turn = true
@@ -223,20 +228,12 @@ function field_logic.pass_turns()
       return result.turn_result or "turn_end", chara
    end
 
-   -- RETURN: proc drunk
-   -- proc stopping activity if damaged
-   -- proc turn % 25
-
-   if chara:has_activity() then
+   -- >>>>>>>> shade2/main.hsp:821 		if cc=pc:if (cRowAct(cc)!rowActEat)&(cRowAct(cc) ...
+   if chara:is_player() and chara:has_activity() then
       chara:_proc_activity_interrupted()
    end
+   -- <<<<<<<< shade2/main.hsp:821 		if cc=pc:if (cRowAct(cc)!rowActEat)&(cRowAct(cc) ..
 
-   if chara.turns_alive % 25 == 0 then
-      -- TODO curse_power
-      -- TODO pregnant
-   end
-
-   -- RETURN: proc activity
    -- proc refresh if transferred
 
    if chara:has_activity() then

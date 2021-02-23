@@ -21,6 +21,7 @@ function ICharaAi:reset_ai()
 end
 
 function ICharaAi:set_aggro(target, amount)
+   assert(target == nil or (type(target) == "table" and target._type == "base.chara"))
    self.aggro = math.max(amount, 0)
 end
 
@@ -40,6 +41,7 @@ function ICharaAi:set_target(target, aggro)
       self.target = nil
       self.aggro = 0
    else
+      assert(type(target) == "table" and target._type == "base.chara")
       self.target = target.uid
    end
    if aggro then

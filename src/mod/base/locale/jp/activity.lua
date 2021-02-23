@@ -1,5 +1,50 @@
 return {
-  activity = {
+   activity = {
+      default_verb = "行動",
+      _ = {
+         elona = {
+            eating = {
+               verb = "食事",
+            },
+            reading_spellbook = {
+               verb = "読書",
+            },
+            reading_ancient_book = {
+               verb = "読書",
+            },
+            traveling = {
+               verb = "移動",
+            },
+            resting = {
+               verb = "休息",
+            },
+            mining = {
+               verb = "採掘",
+            },
+            performing = {
+               verb = "演奏",
+            },
+            fishing = {
+               verb = "釣り",
+            },
+            digging_spot = {
+               verb = "採取",
+            },
+            searching = {
+               verb = "探索"
+            },
+            general = {
+               verb = "行動",
+            },
+            sex = {
+               verb = "行動",
+            },
+            blending = {
+               verb = "行動",
+            },
+         },
+      },
+
     cancel = {
       item = function(_1)
   return ("%sは行動を中断した。")
@@ -17,11 +62,11 @@ end
     construct = {
       finish = function(_1)
   return ("%sを作り終えた。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
       start = function(_1)
   return ("%sの建設を始めた。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
     },
     dig_mining = {
@@ -48,17 +93,17 @@ end
     eat = {
       finish = function(_1, _2)
   return ("%s%sを食べ終えた。")
-  :format(kare_wa(_1), itemname(_2, 1))
+  :format(kare_wa(_1), _2)
 end,
       start = {
         in_secret = function(_1, _2)
   return ("%sは%sをこっそりと口に運んだ。")
-  :format(name(_1), itemname(_2, 1))
+  :format(name(_1), _2)
 end,
         mammoth = "「いただきマンモス」",
         normal = function(_1, _2)
   return ("%sは%sを口に運んだ。")
-  :format(name(_1), itemname(_2, 1))
+  :format(name(_1), _2)
 end
       }
     },
@@ -66,7 +111,7 @@ end
       fail = "何も釣れなかった…",
       get = function(_1)
   return ("%sを釣り上げた！")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
       start = "釣りを始めた。"
     },
@@ -160,7 +205,7 @@ end,
       },
       start = function(_1, _2)
   return ("%sは%sの演奏をはじめた。")
-  :format(name(_1), itemname(_2))
+  :format(name(_1), _2)
 end,
       throws_rock = function(_1)
   return ("%sは石を投げた。")
@@ -174,11 +219,11 @@ end
     pull_hatch = {
       finish = function(_1)
   return ("%sのハッチを回し終えた。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
       start = function(_1)
   return ("%sのハッチを回し始めた。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
     },
     read = {
@@ -290,11 +335,11 @@ end,
       },
       start = function(_1)
   return ("%sに目星をつけた。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
       succeed = function(_1)
   return ("%sを盗んだ。")
-  :format(itemname(_1))
+  :format(_1)
 end,
       target_is_dead = "対象は死んでいる",
       you_lose_the_target = "対象が見当たらない。"

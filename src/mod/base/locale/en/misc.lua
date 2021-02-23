@@ -93,10 +93,6 @@ return {
          end,
          too_difficult = "It's too difficult!"
       },
-      finished_eating = function(_1, _2)
-         return ("%s %s finished eating %s.")
-            :format(name(_1), have(_1), itemname(_2, 1))
-      end,
       get_rotten = function(_1)
          return ("%s rot%s.")
             :format(_1, s(_1))

@@ -5,6 +5,7 @@ local Rand = require("api.Rand")
 local Chara = require("api.Chara")
 local Effect = require("mod.elona.api.Effect")
 local Log = require("api.Log")
+local World = require("api.World")
 
 local function proc_sandbag(chara)
    -- >>>>>>>> shade2/chara_func.hsp:1499 		if cBit(cSandBag,tc):cHp(tc)=cMhp(tc) ..
@@ -85,3 +86,20 @@ local function on_potion_thrown(item, params, result)
 end
 
 Event.register("elona_sys.on_item_throw", "On potion thrown", on_potion_thrown)
+
+local function check_item_cooldown_time(item, params, result)
+   -- >>>>>>>> shade2/action.hsp:1719 	if iBit(iPeriod,ci)=true{ ...
+   if item.has_cooldown_time then
+      item.next_use_date = item.next_use_date or 0
+      local date_hours = World.date_hours()
+      if date_hours < item.next_use_date then
+         -- BUG we need to block the next events in line, but that system
+         -- doesn't work right now.
+         return "player_turn_query", "blocked"
+      end
+      local sep = item:separate()
+      sep.next_use_date = date_hours + (item:calc("cooldown_hours") or 0)
+   end
+   -- <<<<<<<< shade2/action.hsp:1723 		} ..
+end
+Event.register("elona_sys.on_item_use", "Check item cooldown time and maybe prevent use", check_item_cooldown_time, { priority = 10000})

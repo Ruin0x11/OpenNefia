@@ -40,8 +40,8 @@ local function proc_return(chara)
       if s.turns_until_cast_return <= 0 and not DeferredEvent.is_pending() then
          local has_escort = Chara.iter_allies()
             :filter(Chara.is_alive)
-            :extract("is_quest_escort")
-            :any(function(i) return i end)
+            :extract("is_being_escorted")
+            :any(fun.op.truth)
 
          if has_escort then
             Gui.mes("magic.return.prevented.normal")
@@ -83,7 +83,7 @@ local function proc_return(chara)
    -- <<<<<<<< shade2/main.hsp:732 			} ..
 end
 
-Event.register("base.before_chara_turn_start", "Proc return event", proc_return)
+Event.register("base.before_chara_turn_start", "Proc return event", proc_return, { priority = 50000 })
 
 local function calc_wand_success(chara, params)
    -- >>>>>>>> shade2/proc.hsp:1511 	if (efId>=headSpell)&(efId<tailSpell){ ..

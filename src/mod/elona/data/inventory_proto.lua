@@ -14,6 +14,7 @@ local Ui = require("api.Ui")
 local I18N = require("api.I18N")
 local Equipment = require("mod.elona.api.Equipment")
 local Skill = require("mod.elona_sys.api.Skill")
+local Chara = require("api.Chara")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
@@ -669,25 +670,37 @@ local inv_steal = {
    _id = "inv_steal",
    elona_id = 27,
 
-   sources = { "target" },
+   sources = { "target_optional", "ground" },
    icon = 7,
    show_money = true,
    window_title = "ui.inventory_command.steal",
    query_text = "ui.inv.title.steal",
+   filter = function(ctxt, item)
+      -- >>>>>>>> shade2/command.hsp:3429 	if invCtrl=27	:if cnt2=0:if iProperty(cnt)!propNp ...
+      return item.own_state == Enum.OwnState.NotOwned
+      -- <<<<<<<< shade2/command.hsp:3429 	if invCtrl=27	:if cnt2=0:if iProperty(cnt)!propNp ..
+   end,
    after_filter = function(ctxt, filtered)
+      -- >>>>>>>> shade2/command.hsp:3456 		if invCtrl=27{ ...
       if #filtered == 0 then
-         Gui.mes("ui.inv.steal.has_nothing", ctxt.target)
+         if Chara.is_alive(ctxt.target) and not ctxt.target:is_player() then
+            Gui.mes("ui.inv.steal.has_nothing", ctxt.target)
+         else
+            Gui.mes("ui.inv.steal.there_is_nothing")
+         end
          return "player_turn_query"
       end
-      if ctxt.target:is_ally() then
+      if Chara.is_alive(ctxt.target) and ctxt.target:is_ally() then
          Gui.mes("ui.inv.steal.do_not_rob_ally")
          return "player_turn_query"
       end
+      -- <<<<<<<< shade2/command.hsp:3459 		} ..
    end,
    on_select = function(ctxt, item, amount)
-      Gui.mes("steal")
-
+      -- >>>>>>>> shade2/command.hsp:3967 		if invCtrl=27:gosub *act_pickpocket:invSubRoutin ...
+      ctxt.chara:start_activity("elona.pickpocket", {item=item})
       return "turn_end"
+      -- <<<<<<<< shade2/command.hsp:3967 		if invCtrl=27:gosub *act_pickpocket:invSubRoutin ..
    end
 }
 data:add(inv_steal)

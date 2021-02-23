@@ -1,6 +1,7 @@
 -- We need to load all data fallbacks here so there are no issues with
 -- missing data, since internal code can add its own data inline.
 require("internal.data.base")
+local Gui = require("api.Gui")
 
 local Draw = require("api.Draw")
 local Event = require("api.Event")
@@ -35,6 +36,8 @@ local function main_title()
       -- Clear the global save.
       SaveFs.clear()
       save_store.clear()
+
+      Gui.stop_background_sound()
 
       local choice = title:query()
 

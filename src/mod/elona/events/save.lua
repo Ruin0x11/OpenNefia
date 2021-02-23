@@ -1,3 +1,4 @@
+local DateTime = require("api.DateTime")
 local Event = require("api.Event")
 
 local function init_save()
@@ -27,6 +28,9 @@ local function init_save()
       ["elona.fishing"] = 0,
       ["elona.guild"] = 0
    }
+   s.weather_id = "elona.sunny"
+   s.turns_until_weather_changes = 0
+   s.date_of_last_etherwind = DateTime:new()
 end
 
 Event.register("base.on_init_save", "Init save (elona)", init_save)

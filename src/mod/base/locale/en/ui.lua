@@ -1,21 +1,5 @@
 return {
   ui = {
-    action = {
-      _0 = "current action",
-      _1 = "eating",
-      _10 = "current action",
-      _11 = "current action",
-      _12 = "current action",
-      _13 = "current action",
-      _2 = "reading",
-      _3 = "moving",
-      _4 = "resting",
-      _5 = "mining",
-      _6 = "playing",
-      _7 = "fishing",
-      _8 = "collecting materials",
-      _9 = "searching"
-    },
     adventurers = {
       fame_lv = "Fame(Lv)",
       hospital = "Hospital",
@@ -811,13 +795,6 @@ end,
       title = "City Chart"
     },
     unit_of_weight = "s",
-    weather = {
-      _0 = "",
-      _1 = "Etherwind",
-      _2 = "Snow",
-      _3 = "Rain",
-      _4 = "Hard rain"
-    },
     weight = {
       _0 = "extremely mini",
       _1 = "small",

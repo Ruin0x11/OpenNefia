@@ -2,6 +2,7 @@ local Enum = require("api.Enum")
 local Rand = require("api.Rand")
 local Resolver = require("api.Resolver")
 local Filters = require("mod.elona.api.Filters")
+local Gui = require("api.Gui")
 
 local eating_effect = require("mod.elona.data.chara.eating_effect")
 
@@ -1520,6 +1521,31 @@ local chara = {
       },
       skills = {
          "elona.action_suspicious_hand"
+      },
+
+      events = {
+         {
+            id = "elona.on_chara_displaced",
+            name = "Steal from passersby",
+
+            callback = function(self, params)
+               -- >>>>>>>> shade2/action.hsp:544 			if cId(tc)=271:if rnd(5)=0:if cSleep(tc)=0{ ...
+               local displacer = params.chara
+               if Rand.one_in(5) and not self:has_effect("elona.sleep") then
+                  local gold_stolen = Rand.rnd(math.clamp(displacer.gold, 0, 20) + 1)
+                  if displacer:calc("is_protected_from_theft") then
+                     gold_stolen = 0
+                  end
+                  if gold_stolen > 0 then
+                     Gui.play_sound("base.getgold1", self.x, self.y)
+                     displacer.gold = displacer.gold - gold_stolen
+                     self.gold = self.gold + gold_stolen
+                     Gui.mes("action.move.displace.dialog", self)
+                  end
+               end
+               -- <<<<<<<< shade2/action.hsp:550 				} ..
+            end
+         }
       }
    },
    {
@@ -5971,8 +5997,7 @@ local chara = {
             id = "elona.skill", skill_id = "elona.spell_healing_rain"
          },
          sub = {
-            { id = "elona.throw_potion",
-              id_set = Filters.isetthrowpotionmajor },
+            { id = "elona.throw_potion", id_set = Filters.isetthrowpotionmajor },
             { id = "elona.skill", skill_id = "elona.buff_mist_of_frailness" },
             { id = "elona.skill", skill_id = "elona.buff_slow" }
          },
@@ -6538,8 +6563,7 @@ local chara = {
             { id = "elona.wait_melee" }
          },
          sub = {
-            { id = "elona.throw_potion",
-              id_set = Filters.isetthrowpotionminor }
+            { id = "elona.throw_potion", id_set = Filters.isetthrowpotionminor }
          },
          sub_action_chance = 30
       },
@@ -6567,8 +6591,7 @@ local chara = {
             { id = "elona.wait_melee" }
          },
          sub = {
-            { id = "elona.throw_potion",
-              id_set = Filters.isetthrowpotionminor }
+            { id = "elona.throw_potion", id_set = Filters.isetthrowpotionminor }
          },
          sub_action_chance = 10
       },
@@ -6596,8 +6619,7 @@ local chara = {
             { id = "elona.wait_melee" }
          },
          sub = {
-            { id = "elona.throw_potion",
-              id_set = Filters.isetthrowpotionmajor }
+            { id = "elona.throw_potion", id_set = Filters.isetthrowpotionmajor }
          },
          sub_action_chance = 30
       },
@@ -6625,8 +6647,7 @@ local chara = {
             { id = "elona.wait_melee" }
          },
          sub = {
-            { id = "elona.throw_potion",
-              id_set = Filters.isetthrowpotiongreater }
+            { id = "elona.throw_potion", id_set = Filters.isetthrowpotiongreater }
          },
          sub_action_chance = 30
       },

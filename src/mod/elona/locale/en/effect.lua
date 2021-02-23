@@ -170,9 +170,6 @@ return {
          hunger = {
             _0 = "Starving!",
             _1 = "Starving",
-            _10 = "Satisfied",
-            _11 = "Satisfied!",
-            _12 = "Bloated",
             _2 = "Hungry!",
             _3 = "Hungry",
             _4 = "Hungry",
@@ -180,7 +177,10 @@ return {
             _6 = "",
             _7 = "",
             _8 = "",
-            _9 = ""
+            _9 = "",
+            _10 = "Satisfied",
+            _11 = "Satisfied!",
+            _12 = "Bloated",
          },
          sleepy = {
             _0 = "Sleepy",

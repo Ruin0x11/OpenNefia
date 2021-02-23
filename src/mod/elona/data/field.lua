@@ -1,5 +1,7 @@
 local Rand = require("api.Rand")
 local Itemgen = require("mod.tools.api.Itemgen")
+local schema = require("thirdparty.schema")
+local I18N = require("api.I18N")
 
 data:add_type {
    name = "field_type",
@@ -43,7 +45,7 @@ data:add_multi(
          },
 
          generate = function(self, map)
-            map.name = "plains"
+            map.name = I18N.get("map.unique.elona.fields.plain_field")
 
             create_junk_items(map)
          end
@@ -64,7 +66,7 @@ data:add_multi(
          material_type = "elona.forest",
 
          generate = function(self, map)
-            map.name = "forest"
+            map.name = I18N.get("map.unique.elona.fields.forest")
 
             create_junk_items(map)
          end
@@ -77,7 +79,7 @@ data:add_multi(
          material_type = "elona.forest",
 
          generate = function(self, map)
-            map.name = "sea"
+            map.name = I18N.get("map.unique.elona.fields.sea")
          end
       },
       {
@@ -100,7 +102,7 @@ data:add_multi(
          material_type = "elona.field",
 
          generate = function(self, map)
-            map.name = "grassland"
+            map.name = I18N.get("map.unique.elona.fields.grassland")
 
             create_junk_items(map)
          end
@@ -144,7 +146,7 @@ data:add_multi(
          },
 
          generate = function(self, map)
-            map.name = "snow_field"
+            map.name = I18N.get("map.unique.elona.fields.snow_field")
 
             create_junk_items(map)
          end

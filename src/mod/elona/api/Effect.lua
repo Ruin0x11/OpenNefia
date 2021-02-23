@@ -493,14 +493,15 @@ function Effect.make_dish(item, quality)
 end
 -- <<<<<<<< shade2/item_func.hsp:709 	return ..
 
+--- @hsp dmgSAN chara, delta
 function Effect.damage_insanity(chara, delta)
-   if chara:calc("quality") >= 4 then
-      return
+   if chara:calc("quality") >= Enum.Quality.Great then
+      return false
    end
 
    local resistance = chara:resist_level("elona.mind")
    if resistance > 10 then
-      return
+      return false
    end
 
    delta = math.floor(delta / resistance)
@@ -513,6 +514,8 @@ function Effect.damage_insanity(chara, delta)
    if Rand.one_in(10) or Rand.rnd(delta + 1) > 5 or Rand.rnd(chara:effect_turns("elona.insanity") + 1) > 50 then
       chara:apply_effect("elona.insanity", 100)
    end
+
+   return true
 end
 
 function Effect.heal_insanity(chara, amount)
@@ -712,6 +715,8 @@ function Effect.is_visible(chara, viewer)
 end
 
 -- Applies wetness effect and shows the invisibility message.
+--
+-- TODO this is redundant by now, just move it into `base.event` callbacks.
 function Effect.get_wet(chara, amount)
    chara:apply_effect("elona.wet", amount)
    if chara:is_in_fov() then
@@ -1063,7 +1068,8 @@ function Effect.end_incognito(source)
    Chara.iter():filter(filter):each(apply)
 end
 
-function Effect.turn_hostile(map, target)
+--- @hsp goHostile
+function Effect.turn_guards_hostile(map, target)
    target = target or Chara.player()
 
    -- >>>>>>>> shade2/module.hsp:125 	#module ...

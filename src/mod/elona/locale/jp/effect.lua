@@ -1,6 +1,6 @@
 return {
-   status_ailment = {
-      message = {
+   effect = {
+      elona = {
          bleeding = {
             apply = function(_1)
                return ("%sは血を流し始めた。")
@@ -35,7 +35,8 @@ return {
             heal = function(_1)
                return ("%sは混乱から回復した。")
                   :format(name(_1))
-            end
+            end,
+            indicator = "混乱",
          },
          dimming = {
             apply = function(_1)
@@ -71,7 +72,8 @@ return {
             heal = function(_1)
                return ("%sは恐怖から立ち直った。")
                   :format(name(_1))
-            end
+            end,
+            indicator = "恐怖",
          },
          insanity = {
             apply = function(_1)
@@ -97,7 +99,7 @@ return {
                return ("%sは麻痺から回復した。")
                   :format(name(_1))
             end,
-            paralyzed = "麻痺",
+            indicator = "麻痺",
          },
          poison = {
             apply = function(_1)
@@ -144,8 +146,6 @@ return {
          choking = {
             indicator = "窒息"
          },
-         confused = "混乱",
-         fear = "恐怖",
          fury = {
             indicator = {
                _0 = "激怒",
@@ -170,9 +170,6 @@ return {
          hunger = {
             _0 = "餓死中",
             _1 = "飢餓",
-            _10 = "満腹",
-            _11 = "満腹",
-            _12 = "食過ぎ",
             _2 = "空腹",
             _3 = "空腹",
             _4 = "空腹",
@@ -180,7 +177,10 @@ return {
             _6 = "",
             _7 = "",
             _8 = "",
-            _9 = ""
+            _9 = "",
+            _10 = "満腹",
+            _11 = "満腹",
+            _12 = "食過ぎ",
          },
          sleepy = {
             _0 = "睡眠可",

@@ -74,7 +74,7 @@ local function check_if_sandbag(chara, params, result)
          end
       end
       chara:set_aggro(chara:get_target(), 0)
-      return true
+      return true, "blocked"
    end
 
    return result
@@ -94,7 +94,7 @@ local function check_if_leashed(chara, params, result)
          if not chara:is_in_fov()
             and not leader:has_effect("elona.blindness")
             and Rand.one_in(4)
-            and not map:has_type("world")
+            and not map:has_type("world_map")
          -- TODO pet arena
          then
             if chara:is_in_same_party(leader) then
@@ -111,7 +111,7 @@ local function check_if_leashed(chara, params, result)
             end
 
             Magic.cast("elona.shadow_step", { source = chara, target = leader })
-            return true
+            return true, "blocked"
          end
       end
 
@@ -124,7 +124,7 @@ Event.register("elona.before_default_ai_action", "Block if leashed", check_if_le
 local function check_if_exploding(chara, params, result)
    if chara:calc("is_about_to_explode") then
       Magic.cast("elona.suicide_attack", {source = chara, x = chara.x, y = chara.y})
-      return true
+      return true, "blocked"
    end
    return result
 end

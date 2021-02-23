@@ -10,27 +10,27 @@ return {
         },
         free_chair = function(_1)
   return ("%s can be used by anyone.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         guest_chair = function(_1)
   return ("%s is used by your guests now.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         my_chair = function(_1)
   return ("%s is your seat now.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         needs_place_on_ground = "You need to put it on the ground.",
         relax = "You relax as much as you like.",
         you_sit_on = function(_1)
   return ("You sit on %s.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
       },
       deck = {
         add_card = function(_1)
   return ("You add %s to your deck.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         no_deck = "You don't have a deck.",
         put_away = "You put away the deck."
@@ -83,7 +83,7 @@ end
       hammer = {
         use = function(_1)
   return ("You swing %s.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
       },
       house_board = {
@@ -130,21 +130,21 @@ end
         bonus = "Bonus+1",
         displeased = function(_1)
   return ("%s vibrates as if she is displeased.")
-  :format(itemname(_1))
+  :format(_1)
 end,
         it = "It...",
         needs_more_blood = "The weapon needs more blood.",
         pleased = function(_1)
   return ("%s vibrates as if she is pleased.")
-  :format(itemname(_1))
+  :format(_1)
 end,
         ready_to_grow = function(_1)
   return ("%s sucked enough blood and ready to grow!")
-  :format(itemname(_1))
+  :format(_1)
 end,
         removes_enchantment = function(_1)
   return ("%s removes an enchantment.")
-  :format(itemname(_1))
+  :format(_1)
 end,
         weird = "But you sense something weird."
       },
@@ -226,7 +226,7 @@ end,
       statue = {
         activate = function(_1)
   return ("You activate %s.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         creator = {
           in_usermap = "Watching this strange statue makes you want to throw something at it!",
@@ -273,7 +273,7 @@ end
       unicorn_horn = {
         use = function(_1)
   return ("You hold %s up high.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
       },
       useable_again_at = function(_1)

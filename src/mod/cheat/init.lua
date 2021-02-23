@@ -78,9 +78,10 @@ end
 Event.register("base.before_engine_init", "Enable non-redistributable themes if available", enable_themes)
 
 local function setup_dev_config()
-   config.base.auto_turn_speed = "highest"
-   config.base.anime_wait = 0
-   config.base.development_mode = true
-   config.base.quickstart_chara_id = "elona.the_leopard_warrior"
+   if config.base.development_mode then
+      config.base.auto_turn_speed = "highest"
+      config.base.anime_wait = 0
+      config.base.quickstart_chara_id = "elona.the_leopard_warrior"
+   end
 end
 Event.register("base.on_engine_init", "Set some useful config options", setup_dev_config)

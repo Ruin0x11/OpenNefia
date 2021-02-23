@@ -4,9 +4,11 @@ local CircularBuffer = require("api.CircularBuffer")
 
 local UiFpsGraph = class.class("UiFpsGraph", IUiElement)
 
-function UiFpsGraph:init(color, smoothing_factor)
+function UiFpsGraph:init(color, smoothing_factor, base_max, base_min)
    self.max = 0
    self.min = 0
+   self.base_max = base_max or nil
+   self.base_min = base_min or nil
    self.use_min = true
    self.step = 1
    self.points = CircularBuffer:new(100)
@@ -48,8 +50,16 @@ function UiFpsGraph:add_point(n)
    -- self.max = math.max(self.max, n)
    -- self.min = math.min(self.min, n)
 
-   self.max = self.smoothed:get(1)
-   self.min = self.smoothed:get(1)
+   if self.base_max then
+      self.max = self.base_max
+   else
+      self.max = self.smoothed:get(1)
+   end
+   if self.base_min then
+      self.min = self.base_min
+   else
+      self.min = self.smoothed:get(1)
+   end
    for _, point in self.smoothed:iter() do
       self.max = math.max(self.max, point)
       self.min = math.min(self.min, point)

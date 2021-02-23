@@ -882,6 +882,16 @@ local assets = {
       height = 16,
       count_x = 29
    },
+   {
+      _id = "weather_snow_etherwind",
+      source = "graphic/interface.bmp",
+      x = 0,
+      y = 600,
+      width = 8 * 4,
+      height = 8 * 6,
+      count_x = 4,
+      count_y = 6
+   },
 
    {
       _id = "failure_to_cast_effect",

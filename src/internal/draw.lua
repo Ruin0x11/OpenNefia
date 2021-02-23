@@ -449,6 +449,12 @@ function draw.copy_to_canvas()
    return love.graphics.newImage(canvas_last:newImageData())
 end
 
+function draw.reload_window_mode()
+   local new_w, new_h = config.base.screen_resolution:match("(.+)x(.+)")
+   local mode = config.base.screen_mode
+   draw.set_fullscreen(mode, new_w, new_h)
+end
+
 --
 --
 -- Event callbacks

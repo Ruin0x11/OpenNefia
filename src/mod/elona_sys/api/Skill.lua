@@ -41,7 +41,7 @@ function Skill.iter_spells()
 end
 
 function Skill.iter_actions()
-   return data["base.skill"]:iter():filter(function(s) return s.type == "action" end)
+   return data["base.skill"]:iter():filter(function(s) return s.type == "action" or s.type == "skill_action" end)
 end
 
 function Skill.random_stat()

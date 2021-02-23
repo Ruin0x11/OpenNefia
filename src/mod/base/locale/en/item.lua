@@ -184,7 +184,7 @@ return {
       unknown_item = "unknown item (incompatible version)",
       qualified_name = function(name, originalnameref2)
          if (originalnameref2 or "") == "" then
-            return tostring(name)
+            return name
          end
          return ("%s of %s"):format(originalnameref2, name)
       end

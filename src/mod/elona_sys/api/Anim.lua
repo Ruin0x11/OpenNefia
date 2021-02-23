@@ -67,7 +67,7 @@ function Anim.load(anim_id, tx, ty)
    if config.base.anime_wait == 0 then
       return function()
          if sound then
-            Gui.play_sound(sound)
+            Gui.play_sound(sound, tx, ty)
          end
       end
    end
@@ -77,7 +77,7 @@ function Anim.load(anim_id, tx, ty)
       sy = draw_y + sy
 
       if sound then
-         Gui.play_sound(sound)
+         Gui.play_sound(sound, tx, ty)
       end
 
       local frame = 1

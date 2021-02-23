@@ -156,6 +156,7 @@ end
 
 -- @tparam bool retreat
 function AiUtil.move_towards_target(chara, target, retreat)
+   -- >>>>>>>> shade2/ai.hsp:373 	if tc=cc:cTarget(cc)=0:goto *turn_end ...
    target = target or chara:get_target()
    if target == nil then
       return false
@@ -263,6 +264,7 @@ function AiUtil.move_towards_target(chara, target, retreat)
    end
 
    return false
+   -- <<<<<<<< shade2/ai.hsp:442 	goto *turn_end ..
 end
 
 -- @tparam int x

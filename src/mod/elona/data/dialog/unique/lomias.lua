@@ -49,7 +49,7 @@ data:add {
 
       easter_egg = {
          text = {
-            function() Chara.player():apply_effect("elona.blindness", 100) end,
+            function() Chara.player():set_effect_turns("elona.blindness", 100, true) end,
             {"talk.unique.lomias.begin.easter_egg._0", speaker = "elona.larnneire"},
             {"talk.unique.lomias.begin.easter_egg._1", speaker = "elona.lomias"},
             function()
@@ -77,6 +77,7 @@ data:add {
             Gui.wait(1500)
             Gui.update_screen()
             Gui.fade_out()
+            Chara.player():remove_effect("elona.blindness")
             Gui.mes("talk.unique.lomias.begin.easter_egg.was_dream")
          end
       },

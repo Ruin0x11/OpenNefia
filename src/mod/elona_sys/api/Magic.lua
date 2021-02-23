@@ -154,6 +154,10 @@ function Magic.prompt_magic_location(target_type, range, caster, triggered_by)
          local target = Chara.at(x, y)
          if target == nil then
             return true, {
+               source = caster,
+               target = nil,
+               x = x,
+               y = y,
                no_effect = true,
                obvious = false
             }
