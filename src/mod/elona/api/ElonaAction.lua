@@ -362,6 +362,7 @@ function ElonaAction.bash(chara, x, y)
             local killed = target:damage_hp(chara:skill_level("elona.stat_strength") * 5, chara)
             if not killed then
                Gui.mes("action.bash.choked.spits", target)
+               Gui.mes("action.bash.choked.dialog", target)
                target:remove_effect("elona.choking")
                Skill.modify_impression(target, 10)
             end

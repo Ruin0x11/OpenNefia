@@ -26,6 +26,7 @@ local Magic = require("mod.elona_sys.api.Magic")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local World = require("api.World")
 local Encounter = require("mod.elona.api.Encounter")
+local ElonaAction = require("mod.elona.api.ElonaAction")
 
 local Tools = {}
 
@@ -1066,6 +1067,12 @@ function Tools.quick_encounter(id, level)
    local player = Chara.player()
    local outer_map = player:current_map()
    Encounter.start(id, outer_map, player.x, player.y, level)
+end
+
+function Tools.chow_down(chara)
+   assert(Chara.is_alive(chara))
+   local item = Itemgen.create(nil, nil, { categories = "elona.food" }, chara)
+   ElonaAction.eat(chara, item)
 end
 
 return Tools

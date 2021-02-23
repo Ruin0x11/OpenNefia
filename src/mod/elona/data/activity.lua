@@ -166,19 +166,20 @@ data:add {
          name = "start",
 
          callback = function(self, params)
-            -- TODO error handling
+            -- >>>>>>>> shade2/proc.hsp:1111 		cItemUsing(cc)=ci ...
             local chara = params.chara
             if chara:is_in_fov() then
                Gui.play_sound("base.eat1")
                if self.food.own_state == Enum.OwnState.NotOwned and chara:is_ally() then
                   Gui.mes("activity.eat.start.in_secret", chara, self.food)
                else
-                  Gui.mes("activity.eat.start.normal", chara, self.food)
+                  Gui.mes("activity.eat.start.normal", chara, self.food:build_name())
                end
             end
 
             self.food:set_chara_using(chara)
             self.food:emit("elona.on_eat_item_begin", {chara=chara})
+            -- <<<<<<<< shade2/proc.hsp:1116 		} ..
          end
       },
       {
@@ -214,6 +215,7 @@ data:add {
          name = "finish",
 
          callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1122 	if sync(cc):txt lang(npcN(cc)+itemName(ci,1)+"を食べ ...
             local chara = params.chara
             if not self.no_message then
                if chara:is_in_fov() then
@@ -222,6 +224,7 @@ data:add {
             end
 
             Effect.eat_food(chara, self.food)
+            -- <<<<<<<< shade2/proc.hsp:1123 	gosub *insta_eat ..
          end
       }
    }
