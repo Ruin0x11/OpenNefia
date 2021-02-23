@@ -544,9 +544,7 @@ local function add_ether_disease_trait(chara)
    local is_ether_trait = function(trait) return trait.type == "ether_disease" end
    local choices = data["base.trait"]:iter():filter(is_ether_trait):to_list()
 
-   local random_ether_trait = function() return Rand.choice(choices) end
-   local trait = fun.tabulate(random_ether_trait):take(100000):nth(1)
-
+   local trait = Rand.choice(choices)
    if trait == nil then
       return
    end
@@ -557,11 +555,18 @@ local function add_ether_disease_trait(chara)
 end
 
 local function remove_ether_disease_trait(chara)
-   for _ = 1, 100000 do
-      -- TODO
-      Gui.mes_c("remove corruption trait", "Green")
-      break
+   -- >>>>>>>> shade2/chara_func.hsp:774 		repeat 100000 ...
+   local is_ether_trait = function(trait) return trait.proto.type == "ether_disease" end
+   local choices = chara:iter_traits():filter(is_ether_trait):to_list()
+
+   local trait = Rand.choice(choices)
+   if trait == nil then
+      return
    end
+
+   Gui.mes_c("chara.corruption.remove", "Green")
+   chara:modify_trait_level(trait._id, 1)
+   -- <<<<<<<< shade2/chara_func.hsp:785 		loop ..
 end
 
 function Effect.modify_corruption(chara, delta)
@@ -579,6 +584,7 @@ function Effect.modify_corruption(chara, delta)
    chara.ether_disease_corruption = math.clamp(math.floor(chara.ether_disease_corruption + add_amount), 0, 20000)
    local stage_delta = math.floor(chara.ether_disease_corruption / 1000) - original_stage
 
+   -- NOTE: Maybe we could remove this restriction.
    if not chara:is_player() then
       return
    end

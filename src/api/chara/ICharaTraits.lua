@@ -23,6 +23,12 @@ function ICharaTraits:trait_level(trait_id)
    return trait.level
 end
 
+function ICharaTraits:iter_traits()
+   return fun.iter(table.keys(self.traits))
+   :filter(function(trait_id) return self.traits[trait_id].level ~= 0 end)
+   :map(function(trait_id) return { proto = data["base.trait"]:ensure(trait_id), level = self.traits[trait_id].level, _id = trait_id } end)
+end
+
 function ICharaTraits:on_refresh()
    local remove = {}
    for trait_id, _ in pairs(self.traits) do
