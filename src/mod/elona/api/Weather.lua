@@ -27,9 +27,7 @@ function Weather.change_to(weather_id, next_turns)
 
       save.elona.weather_id = weather._id
 
-      if weather.ambient_sound then
-         Gui.play_background_sound(weather.ambient_sound, "elona.weather")
-      end
+      Weather.play_ambient_sound()
 
       if weather.draw_callback and config.base.weather_effect then
          Gui.start_background_draw_callback(weather.draw_callback, "elona.weather")
@@ -41,6 +39,33 @@ function Weather.change_to(weather_id, next_turns)
    if next_turns then
       save.elona.turns_until_weather_changes = math.max(next_turns, 0)
    end
+end
+
+function Weather.play_ambient_sound(map)
+   -- >>>>>>>> shade2/sound.hsp:384 	if mField=mFieldOutdoor:dssetvolume lpFile,cfg_sv ...
+   map = map or Map.current()
+   if not map then
+      return
+   end
+
+   local weather = Weather.get()
+   if not weather.ambient_sound then
+      return
+   end
+
+   local volume = 1.0
+   if not map:calc("is_indoor") then
+      volume = 0.8
+   else
+      local floor = Map.floor_number(map) or nil
+      if floor == 1 then
+         volume = 0.2
+      else
+         volume = 0.0
+      end
+   end
+   Gui.play_background_sound(weather.ambient_sound, "elona.weather", nil, nil, volume)
+   -- <<<<<<<< shade2/sound.hsp:384 	if mField=mFieldOutdoor:dssetvolume lpFile,cfg_sv ..
 end
 
 function Weather.position_in_world_map()

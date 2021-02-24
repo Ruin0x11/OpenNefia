@@ -49,10 +49,10 @@ function DateTime:__tostring()
    return string.format("%d/%d/%d %02d:%02d:%02d", self.year, self.month, self.day, self.hour, self.minute, self.second)
 end
 
-function DateTime:format_localized(with_hours)
+function DateTime:format_localized(with_hour)
    local text = I18N.get("ui.date", self.year, self.month, self.day)
-   if with_hours then
-      text = text .. I18N.get("ui.date_hour", self.hour)
+   if with_hour then
+      text = text .. I18N.space() .. I18N.get("ui.date_hour", self.hour)
    end
    return text
 end

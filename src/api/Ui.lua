@@ -284,11 +284,11 @@ function Ui.skill_icon(skill_id)
    return SKILL_ICONS[related_skill]
 end
 
-function Ui.format_date(date)
+function Ui.format_date(date, with_hour)
    if type(date) == "number" then
       date = DateTime:from_hours(date)
    end
-   return date:format_localized()
+   return date:format_localized(with_hour)
 end
 
 return Ui

@@ -29,7 +29,7 @@ function sound_manager:update()
    end
 end
 
-function sound_manager:play_looping(tag, id, ty)
+function sound_manager:play_looping(tag, id, ty, x, y, volume)
    if _IS_LOVEJS then
       -- sound is completely broken in love.js (introduces lag and
       -- doesn't even play properly...)
@@ -42,24 +42,41 @@ function sound_manager:play_looping(tag, id, ty)
       return
    end
 
-   local src = love.audio.newSource(sound.file, "stream")
-   src:setLooping(true)
-   if src:getChannelCount() == 1 then
-      src:setRelative(true)
-      src:setAttenuationDistances(0, 0)
+   local function setup_source(src)
+      src:setLooping(true)
+      src:setVolume(math.clamp(volume or 1.0, 0.0, 1.0))
+      if src:getChannelCount() == 1 then
+         if x ~= nil and y ~= nil then
+            src:setRelative(false)
+            src:setPosition(x, y)
+            src:setAttenuationDistances(100, 500)
+         else
+            src:setRelative(true)
+            src:setAttenuationDistances(0, 0)
+         end
+      end
    end
+
+   local existing = self.looping_sources[tag]
+   if existing then
+      if existing.file == sound.file then
+         setup_source(existing.source)
+         return
+      else
+         self:stop_looping(tag, ty)
+      end
+   end
+
+   local src = love.audio.newSource(sound.file, "stream")
+   setup_source(src)
 
    if sound.volume then
       src:setVolume(sound.volume)
    end
 
-   if self.looping_sources[tag] then
-      self:stop_looping(tag, ty)
-   end
-
    src:play()
 
-   self.looping_sources[tag] = src
+   self.looping_sources[tag] = { source = src, file = sound.file }
 end
 
 function sound_manager:stop_looping(tag, ty)
@@ -80,12 +97,12 @@ function sound_manager:stop_looping(tag, ty)
    local src = self.looping_sources[tag]
    if src == nil then return end
 
-   love.audio.stop(src)
+   love.audio.stop(src.source)
 
    self.looping_sources[tag] = nil
 end
 
-function sound_manager:play(id, x, y, channel)
+function sound_manager:play(id, x, y, volume, channel)
    if _IS_LOVEJS then
       return
    end
@@ -98,9 +115,9 @@ function sound_manager:play(id, x, y, channel)
 
    local src = love.audio.newSource(sound.file, "static")
    src:setLooping(false)
+   src:setVolume(math.clamp(volume or 1.0, 0.0, 1.0))
 
    if src:getChannelCount() == 1 then
-
       if x ~= nil and y ~= nil then
          src:setRelative(false)
          src:setPosition(x, y)

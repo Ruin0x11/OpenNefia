@@ -41,6 +41,7 @@ Event.register("base.on_hour_passed", "Proc weather changing", proc_weather_chan
 
 local function proc_weather_from_world_map_pos(map)
    Weather.change_from_world_map()
+   Weather.play_ambient_sound(map)
 end
 Event.register("base.on_map_enter", "Proc weather based on world map position when the map changes", proc_weather_from_world_map_pos)
 

@@ -14802,7 +14802,6 @@ local item =
 
          elona_function = 26,
          is_precious = true,
-         has_cooldown_time = true,
          cooldown_hours = 240,
          quality = Enum.Quality.Unique,
          categories = {
@@ -14824,7 +14823,6 @@ local item =
 
          on_use = function(self, params, result)
             -- >>>>>>>> shade2/action.hsp:2008 	case effRenewWeather ...
-            pause()
             Gui.mes("action.use.statue.activate", self:build_name(1))
             Gui.play_sound("base.pray1", self.x, self.y)
 
@@ -14857,7 +14855,6 @@ local item =
          end,
 
          is_precious = true,
-         has_cooldown_time = true,
          cooldown_hours = 120,
          quality = Enum.Quality.Unique,
          categories = {
@@ -15312,7 +15309,6 @@ local item =
 
          elona_function = 30,
          is_precious = true,
-         has_cooldown_time = true,
          param1 = 446,
          param2 = 300,
          cooldown_hours = 12,
@@ -15339,7 +15335,6 @@ local item =
 
          elona_function = 30,
          is_precious = true,
-         has_cooldown_time = true,
          param1 = 404,
          param2 = 400,
          cooldown_hours = 8,
@@ -15366,7 +15361,6 @@ local item =
 
          elona_function = 31,
          is_precious = true,
-         has_cooldown_time = true,
          cooldown_hours = 72,
          quality = Enum.Quality.Unique,
 
@@ -15391,7 +15385,6 @@ local item =
 
          elona_function = 30,
          is_precious = true,
-         has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
          cooldown_hours = 24,
@@ -15543,7 +15536,6 @@ local item =
 
          elona_function = 34,
          is_precious = true,
-         has_cooldown_time = true,
          cooldown_hours = 720,
          quality = Enum.Quality.Unique,
          categories = {
@@ -16512,7 +16504,6 @@ local item =
 
          elona_function = 43,
          is_precious = true,
-         has_cooldown_time = true,
          cooldown_hours = 480,
          quality = Enum.Quality.Unique,
          categories = {
@@ -17225,7 +17216,6 @@ local item =
 
          elona_function = 30,
          is_precious = true,
-         has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
          cooldown_hours = 24,
@@ -17250,7 +17240,6 @@ local item =
 
          elona_function = 30,
          is_precious = true,
-         has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
          cooldown_hours = 24,
@@ -17275,7 +17264,6 @@ local item =
 
          elona_function = 30,
          is_precious = true,
-         has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
          cooldown_hours = 24,
@@ -17300,7 +17288,6 @@ local item =
 
          elona_function = 30,
          is_precious = true,
-         has_cooldown_time = true,
          param1 = 1132,
          param2 = 100,
          cooldown_hours = 24,
@@ -18052,7 +18039,6 @@ local item =
 
          elona_function = 26,
          is_precious = true,
-         has_cooldown_time = true,
          cooldown_hours = 240,
          quality = Enum.Quality.Unique,
          categories = {
@@ -18074,7 +18060,6 @@ local item =
 
          elona_function = 26,
          is_precious = true,
-         has_cooldown_time = true,
          cooldown_hours = 240,
          quality = Enum.Quality.Unique,
          categories = {

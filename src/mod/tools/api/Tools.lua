@@ -1076,4 +1076,9 @@ function Tools.chow_down(chara)
    ElonaAction.eat(chara, item)
 end
 
+function Tools.track_skill(skill_id)
+   data["base.skill"]:ensure(skill_id)
+   save.base.tracked_skill_ids[skill_id] = not save.base.tracked_skill_ids[skill_id]
+end
+
 return Tools
