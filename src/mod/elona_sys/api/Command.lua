@@ -22,30 +22,7 @@ local function travel_to_map_hook(source, params, result)
 
    return "player_turn_query"
 end
-
 Event.register("elona_sys.on_travel_to_outer_map", "Hook when traveling to a new map.", travel_to_map_hook)
-
-local hook_player_move = Event.define_hook("player_move",
-                                      "Hook when the player moves.",
-                                      nil,
-                                      "pos")
-
-Event.register("elona_sys.hook_player_move", "Player scroll speed",
-               function(_, params, result)
-                  local scroll = 10
-                  local start_run_wait = 2
-                  if Gui.key_held_frames() > start_run_wait then
-                     scroll = 6
-                  end
-
-                  if Gui.player_is_running() then
-                     scroll = 1
-                  end
-
-                  params.chara:mod("scroll", scroll, "set")
-
-                  return result
-               end)
 
 function Command.move(player, x, y)
    if type(x) == "string" then
@@ -55,7 +32,10 @@ function Command.move(player, x, y)
    player.direction = Pos.pack_direction(Pos.direction_in(player.x, player.y, x, y))
 
    -- Try to modify the final position.
-   local next_pos = hook_player_move({chara=player}, {pos={x=x,y=y}})
+   local next_pos = player:emit("elona_sys.before_player_move", {}, {x=x,y=y,result=nil})
+   if next_pos.result then
+      return next_pos.result or "player_turn_query"
+   end
 
    -- EVENT: before_player_move_check (player)
    -- dimmed

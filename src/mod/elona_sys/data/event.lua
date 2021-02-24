@@ -39,6 +39,7 @@ local event = {
       { _id = "on_get" },
       { _id = "on_quest_map_leave" },
       { _id = "on_build_interact_actions" },
+      { _id = "before_player_move" },
 }
 
 data:add_multi("base.event", event)

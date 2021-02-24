@@ -49,17 +49,33 @@ end
 
 Event.register("base.on_refresh", "Apply buff effects", apply_buff_effects)
 
+local function set_player_scroll_speed(chara, params, result)
+   local scroll = 10
+   local start_run_wait = 2
+   if Gui.key_held_frames() > start_run_wait then
+      scroll = 6
+   end
+
+   if Gui.player_is_running() then
+      scroll = 1
+   end
+
+   chara:mod("scroll", scroll, "set")
+
+   return result
+end
+Event.register("elona_sys.before_player_move", "Player scroll speed", set_player_scroll_speed)
+
 local footstep = 0
 local footsteps = {"base.foot1a", "base.foot1b"}
 local snow_footsteps = {"base.foot2a", "base.foot2b", "base.foot2c"}
 
-local function leave_footsteps(_, params, result)
-   local player = params.chara
-   local map = player:current_map()
-   if (player.x ~= result.pos.x or player.y ~= result.pos.y)
-      and Map.can_access(result.pos.x, result.pos.y, map)
+local function leave_footsteps(chara, _, result)
+   local map = chara:current_map()
+   if (chara.x ~= result.x or chara.y ~= result.y)
+      and Map.can_access(result.x, result.y, map)
    then
-      local tile = map:tile(params.chara.x, params.chara.y)
+      local tile = map:tile(chara.x, chara.y)
       if tile.kind == Enum.TileRole.Snow then
          Gui.play_sound(snow_footsteps[footstep%2+1])
          footstep = footstep + Rand.rnd(2)
@@ -73,8 +89,7 @@ local function leave_footsteps(_, params, result)
 
    return result
 end
-
-Event.register("elona_sys.hook_player_move", "Leave footsteps", leave_footsteps)
+Event.register("elona_sys.before_player_move", "Leave footsteps", leave_footsteps)
 
 local function proc_random_encounter(chara, params, result)
    -- >>>>>>>> shade2/action.hsp:647 	if mType=mTypeWorld:if cc=pc{ ...
@@ -295,3 +310,17 @@ local function proc_drunk_behavior(chara, params, result)
 end
 Event.register("base.on_chara_pass_turn", "Proc drunk effect behavior", proc_drunk_behavior)
 -- <<<<<<<< shade2/main.hsp:818 		} ..
+
+local function proc_overweight_prevent_movement(player, params, result)
+   -- >>>>>>>> shade2/action.hsp:534 	if cBurden(pc)>=burdenMax:if dbg_noWeight=false : ...
+   if player:calc("inventory_weight_type") >= Enum.Burden.Max and not config.base.debug_no_weight then
+      Gui.mes_duplicate()
+      Gui.mes("action.move.carry_too_much")
+      result.result = "player_turn_query"
+      return result, "blocked"
+   end
+
+   return result
+   -- <<<<<<<< shade2/action.hsp:534 	if cBurden(pc)>=burdenMax:if dbg_noWeight=false : ..
+end
+Event.register("elona_sys.before_player_move", "Proc movement prevention on overweight", proc_overweight_prevent_movement)

@@ -399,8 +399,7 @@ function Gui.mes_c_visible(text, x, y, color, ...)
          Gui.mes_c(text, color, obj, ...)
       end
    else
-      local Map = require("api.Map")
-      if Map.is_in_fov(x, y) then
+      if field.map:is_in_fov(x, y) then
          Gui.mes_c(text, color, ...)
       end
    end
@@ -425,7 +424,7 @@ function Gui.mes_continue_sentence()
 end
 
 function Gui.mes_duplicate()
-   -- TODO
+   field:get_message_window():prevent_next_duplicate()
 end
 
 function Gui.mes_halt()

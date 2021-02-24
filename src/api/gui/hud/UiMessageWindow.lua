@@ -3,6 +3,7 @@ local UiTheme = require("api.gui.UiTheme")
 local IUiWidget = require("api.gui.IUiWidget")
 local CircularBuffer = require("api.CircularBuffer")
 local save = require("internal.global.save")
+local config = require("internal.config")
 
 local UiMessageWindow = class.class("UiMessageWindow", IUiWidget)
 
@@ -21,6 +22,7 @@ function UiMessageWindow:init()
    self.canvas = nil
    self.redraw = true
    self.is_new_turn = true
+   self.checking_for_duplicate = false
 
    self:recalc_lines()
 end
@@ -225,6 +227,10 @@ function UiMessageWindow:recalc_lines()
    end
 end
 
+function UiMessageWindow:prevent_next_duplicate()
+   self.checking_for_duplicate = true
+end
+
 function UiMessageWindow:clear()
    self.history = CircularBuffer:new(self.max_log)
    self.each_line = CircularBuffer:new(self.max_lines)
@@ -283,14 +289,22 @@ function UiMessageWindow:message(text, color)
 
    text = tostring(text)
 
+   if self.checking_for_duplicate then
+      self.checking_for_duplicate = false
+      local first = self.history:get(-2)
+      if first and first.text == text then
+         first.duplicate_times = (first.duplicate_times or 0) + 1
+         return
+      end
+   end
+
    if self.is_new_turn then
       self.is_new_turn = false
-      local add_timestamps = true
-      if add_timestamps then
+      if config.base.add_timestamps then
          local minute = save.base.date.minute
          text = string.format("[%d] %s", minute, text)
       else
-         text = string.format("  %s", minute, text)
+         text = string.format("  %s", text)
       end
       self:do_newline()
    end
