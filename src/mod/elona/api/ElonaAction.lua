@@ -42,8 +42,6 @@ end
 
 function ElonaAction.melee_attack(chara, target)
    -- >>>>>>>> shade2/action.hsp:1197 *act_melee ..
-   -- TODO ai damage reaction
-
    if chara:calc("is_wielding_shield") then
       proc_shield_bash(chara, target)
    end
@@ -201,6 +199,7 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
    end
 
    if chara:has_effect("elona.fear") then
+      Gui.mes_duplicate()
       Gui.mes("damage.is_frightened", chara)
       return
    end
@@ -494,6 +493,10 @@ function ElonaAction.trade(player, target)
    target:iter_items():each(cb)
    local result, canceled = Input.query_inventory(player, "elona.inv_trade", {target=target})
    return result, canceled
+end
+
+function ElonaAction.do_sex(chara, target)
+   chara:start_activity("elona.sex", {partner=target,is_host=true})
 end
 
 return ElonaAction

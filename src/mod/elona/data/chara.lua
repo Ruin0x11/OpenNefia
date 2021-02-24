@@ -3,6 +3,8 @@ local Rand = require("api.Rand")
 local Resolver = require("api.Resolver")
 local Filters = require("mod.elona.api.Filters")
 local Gui = require("api.Gui")
+local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 
 local eating_effect = require("mod.elona.data.chara.eating_effect")
 
@@ -1568,6 +1570,22 @@ local chara = {
       coefficient = 400,
       ai_actions = {
          calm_action = "elona.calm_special"
+      },
+
+      events = {
+         {
+            id = "elona.calc_dialog_choices",
+            name = "Add sex dialog choice",
+
+            callback = function(self, params, result)
+               -- >>>>>>>> shade2/chat.hsp:2308 	if cId(tc)=335:if evId()=falseM: chatList 60,lang ...
+               if not DeferredEvent.is_pending() then
+                  Dialog.add_choice("elona.prostitute:before_confirm", "talk.npc.prostitute.choices.buy", result)
+               end
+               return result
+               -- <<<<<<<< shade2/chat.hsp:2308 	if cId(tc)=335:if evId()=falseM: chatList 60,lang ..
+            end
+         }
       }
    },
    {

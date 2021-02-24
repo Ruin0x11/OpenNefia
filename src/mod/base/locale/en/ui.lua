@@ -749,8 +749,8 @@ end
       female = "Female"
     },
     sex2 = {
-      _0 = "boy",
-      _1 = "girl"
+      male = "boy",
+      female = "girl"
     },
     sex3 = {
       female = "female",

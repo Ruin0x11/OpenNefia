@@ -23,6 +23,7 @@ function UiMessageWindow:init()
    self.redraw = true
    self.is_new_turn = true
    self.checking_for_duplicate = false
+   self.previous_text = nil
 
    self:recalc_lines()
 end
@@ -291,12 +292,12 @@ function UiMessageWindow:message(text, color)
 
    if self.checking_for_duplicate then
       self.checking_for_duplicate = false
-      local first = self.history:get(-2)
-      if first and first.text == text then
-         first.duplicate_times = (first.duplicate_times or 0) + 1
+      if text == self.previous_text then
          return
       end
    end
+
+   self.previous_text = text
 
    if self.is_new_turn then
       self.is_new_turn = false

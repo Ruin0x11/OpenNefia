@@ -26,86 +26,6 @@ local Ui = require("api.Ui")
 local Const = require("api.Const")
 local Weather = require("mod.elona.api.Weather")
 
-local function calc_dig_success(map, params, result)
-   local chara = params.chara
-   local x = params.dig_x
-   local y = params.dig_y
-   local dig_count = params.dig_count
-   local success = false
-   local flag = false -- kind == 6
-
-   local tile = map:tile(x, y)
-
-   -- TODO config difficulty
-   local difficulty = tile.mining_difficulty or 1500
-   local coefficient = tile.mining_difficulty_coefficient or 20
-
-   if Rand.rnd(difficulty) < chara:skill_level("elona.stat_strength") + chara:skill_level("elona.mining") * 10 then
-      success = true
-   end
-   local p = math.floor(coefficient - chara:skill_level("elona.mining") / 2)
-   if p > 0 and dig_count <= p then
-      success = false
-   end
-
-   return success
-end
-
-Event.define_hook("calc_dig_success",
-                  "Calculates if digging succeeded.",
-                  false,
-                  nil,
-                  calc_dig_success)
-
-local function create_dig_item(map, params)
-   if map:calc("cannot_mine_items") then
-      return
-   end
-
-   local x = params.dig_x
-   local y = params.dig_y
-
-   local item = nil
-   if Rand.one_in(5) then
-      item = "gold"
-   end
-   if Rand.one_in(8) then
-      item = "item"
-   end
-   if item == "gold" then
-      Item.create("elona.gold_piece", x, y, map)
-   elseif item == "item" then
-      local itemgen_params = {
-         level = Calc.calc_object_level(map:calc("level"), map),
-         quality = Calc.calc_object_quality(Enum.Quality.Good),
-         categories = "elona.ore"
-      }
-
-      Itemgen.create(x, y, itemgen_params, map)
-   end
-end
-Event.register("elona.on_dig_success", "Create mining item", create_dig_item)
-
-local function do_dig_success(chara, x, y)
-   local map = chara:current_map()
-   local tile = MapTileset.get("elona.mapgen_tunnel", map)
-   map:set_tile(x, y, tile)
-   Map.spill_fragments(x, y, 2, map)
-   Gui.play_sound("base.crush1")
-   local anim = Anim.breaking(x, y)
-   Gui.start_draw_callback(anim)
-
-   for _, feat in Feat.at(x, y, map) do
-      feat:emit("elona.on_feat_tile_digged_into", {chara=chara})
-   end
-
-   Gui.mes("activity.dig_mining.finish.wall")
-
-   map:emit("elona.on_dig_success", {chara=chara, dig_x=x, dig_y=y})
-
-   Skill.gain_skill_exp(chara, "elona.mining", 100)
-end
-
 local function sex_check_end(chara, partner)
    if not Chara.is_alive(partner)
    or not partner:has_activity("elona.sex") then
@@ -117,7 +37,7 @@ local function sex_check_end(chara, partner)
 
    if chara:is_player() then
       if not Effect.do_stamina_check(chara, 1 + Rand.rnd(2)) then
-         Gui.mes("common.too_exhausted")
+         Gui.mes("magic.common.too_exhausted")
          partner:remove_activity()
          chara:remove_activity()
          return true
@@ -322,9 +242,8 @@ data:add(traveling)
 -- instantly as it has no animation delay. Each turn the activity runs it does
 -- the traveling logic and *also* calls the "move to this square" routine
 -- (*act_move) again, over and over. When the activity finishes it sets the
--- `travelDone` boolean, and then when the "move to this square" thing gets
--- called immediately after it will finally update your position, doing all the
--- normal movement things.
+-- `travelDone` boolean, and then when *act_move gets called immediately after
+-- it will finally update your position, doing all the normal movement things.
 local function proc_world_map_travel(chara, params, result)
    -- >>>>>>>> shade2/action.hsp:635 	if dbg_noTravel=false:if mType=mTypeWorld : if cc ...
    if chara:is_player() then
@@ -436,6 +355,86 @@ data:add {
       }
    }
 }
+
+local function calc_dig_success(map, params, result)
+   local chara = params.chara
+   local x = params.dig_x
+   local y = params.dig_y
+   local dig_count = params.dig_count
+   local success = false
+   local flag = false -- kind == 6
+
+   local tile = map:tile(x, y)
+
+   -- TODO config difficulty
+   local difficulty = tile.mining_difficulty or 1500
+   local coefficient = tile.mining_difficulty_coefficient or 20
+
+   if Rand.rnd(difficulty) < chara:skill_level("elona.stat_strength") + chara:skill_level("elona.mining") * 10 then
+      success = true
+   end
+   local p = math.floor(coefficient - chara:skill_level("elona.mining") / 2)
+   if p > 0 and dig_count <= p then
+      success = false
+   end
+
+   return success
+end
+
+Event.define_hook("calc_dig_success",
+                  "Calculates if digging succeeded.",
+                  false,
+                  nil,
+                  calc_dig_success)
+
+local function create_dig_item(map, params)
+   if map:calc("cannot_mine_items") then
+      return
+   end
+
+   local x = params.dig_x
+   local y = params.dig_y
+
+   local item = nil
+   if Rand.one_in(5) then
+      item = "gold"
+   end
+   if Rand.one_in(8) then
+      item = "item"
+   end
+   if item == "gold" then
+      Item.create("elona.gold_piece", x, y, map)
+   elseif item == "item" then
+      local itemgen_params = {
+         level = Calc.calc_object_level(map:calc("level"), map),
+         quality = Calc.calc_object_quality(Enum.Quality.Good),
+         categories = "elona.ore"
+      }
+
+      Itemgen.create(x, y, itemgen_params, map)
+   end
+end
+Event.register("elona.on_dig_success", "Create mining item", create_dig_item)
+
+local function do_dig_success(chara, x, y)
+   local map = chara:current_map()
+   local tile = MapTileset.get("elona.mapgen_tunnel", map)
+   map:set_tile(x, y, tile)
+   Map.spill_fragments(x, y, 2, map)
+   Gui.play_sound("base.crush1")
+   local anim = Anim.breaking(x, y)
+   Gui.start_draw_callback(anim)
+
+   for _, feat in Feat.at(x, y, map) do
+      feat:emit("elona.on_feat_tile_digged_into", {chara=chara})
+   end
+
+   Gui.mes("activity.dig_mining.finish.wall")
+
+   map:emit("elona.on_dig_success", {chara=chara, dig_x=x, dig_y=y})
+
+   Skill.gain_skill_exp(chara, "elona.mining", 100)
+end
 
 data:add {
    _type = "base.activity",
@@ -645,8 +644,8 @@ data:add {
             end
 
             if self.is_host then
-               Gui.mes("activity.sex.take_clothes_off", params.chara.x, params.chara.y, params.chara)
-               self.partner:start_activity("elona.sex", {partner=params.chara}, self.turns * 2)
+               Gui.mes_visible("activity.sex.take_clothes_off", params.chara.x, params.chara.y, params.chara)
+               self.partner:start_activity("elona.sex", {partner=params.chara,is_host=false}, self.turns * 2)
             end
          end
       },
@@ -686,7 +685,7 @@ data:add {
 
             local gold_earned = params.chara:skill_level("elona.stat_charisma") * (50 + Rand.rnd(50)) + 100
 
-            Gui.mes_c_visible("activity.sex.after_dialog", params.chara.x, params.chara.y)
+            Gui.mes_c_visible("activity.sex.after_dialog", params.chara.x, params.chara.y, "Talk")
 
             if not self.partner:is_player() then
                if self.partner.gold >= gold_earned then

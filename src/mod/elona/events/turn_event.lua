@@ -56,6 +56,16 @@ local function set_player_scroll_speed(chara, params, result)
       scroll = 6
    end
 
+   -- TODO handle confusion if trying to run
+   --
+   -- if (key_shift)&(gRun=false)&(cConfuse(pc)=0)&(cDim(pc)=0):if mType!mTypeWorld{
+   -- gRun=true
+   -- cell_check cX(cc)+1,cY(cc):gRunRight=cellAccess
+   -- cell_check cX(cc)-1,cY(cc):gRunLeft =cellAccess
+   -- cell_check cX(cc),cY(cc)+1:gRunDown =cellAccess
+   -- cell_check cX(cc),cY(cc)-1:gRunUp   =cellAccess
+   -- }
+
    if Gui.player_is_running() then
       scroll = 1
    end

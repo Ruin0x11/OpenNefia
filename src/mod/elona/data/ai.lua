@@ -571,7 +571,7 @@ local function decide_ally_idle_action(chara, params)
 end
 
 local function decide_targeted_action(chara, params)
-   -- EVENT: if blocked, proc map events
+   -- >>>>>>>> shade2/ai.hsp:144 		if cBlind(cc)!0	  : if rnd(10)>2 : goto *ai_calm ...
    if chara:has_effect("elona.blindness") then
       if Rand.rnd(10) > 2 then
          return Ai.run("elona.idle_action", chara)
@@ -607,6 +607,7 @@ local function decide_targeted_action(chara, params)
    end
 
    return Ai.run("elona.basic_action", chara)
+   -- <<<<<<<< shade2/ai.hsp:172 		} ..
 end
 
 local function ai_talk(chara, params)

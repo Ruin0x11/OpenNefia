@@ -493,6 +493,14 @@ local function feat_bumped_into_handler(chara, p, result)
 end
 Event.register("base.before_chara_moved", "Feat bumped into behavior", feat_bumped_into_handler)
 
+local function proc_confusion_message(chara)
+   if chara:is_player() and chara:has_effect("elona.confusion") then
+      Gui.mes_duplicate()
+      Gui.mes("action.move.confused")
+   end
+end
+Event.register("base.before_chara_moved", "Proc confusion message", proc_confusion_message, { priority = 200000 })
+
 local function feat_stepped_on_handler(chara, p, result)
    for _, feat in Feat.at(p.x, p.y, chara:current_map()) do
       feat:emit("elona_sys.on_feat_stepped_on", {chara=chara})

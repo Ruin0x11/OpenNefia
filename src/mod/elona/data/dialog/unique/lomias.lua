@@ -85,7 +85,7 @@ data:add {
       game_begin = {
          text = {
             function() Gui.mes("talk.unique.lomias.begin.regain_consciousness") end,
-            {"talk.unique.lomias.begin._0"},
+            {"talk.unique.lomias.begin._0", speaker = "elona.lomias"},
             {"talk.unique.lomias.begin._1"},
             {"talk.unique.lomias.begin._2"},
             {"talk.unique.lomias.begin._3", speaker = "elona.larnneire"},
