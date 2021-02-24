@@ -190,7 +190,7 @@ end
 function CharacterSheetMenu:text_time()
    local turns = save.base.play_turns
    local days = save.base.play_days
-   local kills = 100
+   local kills = save.base.total_killed
    local time = Env.get_play_time(save.base.play_time)
 
    self.texts["time"] =
