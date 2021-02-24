@@ -95,7 +95,7 @@ local function do_dig_success(chara, x, y)
    local anim = Anim.breaking(x, y)
    Gui.start_draw_callback(anim)
 
-   for _, feat in Feat.at(x. y, map) do
+   for _, feat in Feat.at(x, y, map) do
       feat:emit("elona.on_feat_tile_digged_into", {chara=chara})
    end
 
@@ -441,7 +441,7 @@ data:add {
    _id = "mining",
    elona_id = 5,
 
-   params = { x = "number", y = "number", chara = "IChara" },
+   params = { x = "number", y = "number" },
    default_turns = 40,
 
    animation_wait = 15,
@@ -506,7 +506,7 @@ data:add {
    _id = "resting",
    elona_id = 4,
 
-   params = { bed = "table" },
+   params = {},
    default_turns = 50,
 
    animation_wait = 5,
@@ -536,16 +536,17 @@ data:add {
                chara:heal_mp(1, true)
             end
 
-            if save.elona_sys.awake_hours >= 30 then
+            if save.elona_sys.awake_hours >= Const.SLEEP_THRESHOLD_MODERATE then
                local do_sleep = false
-               if save.elona_sys.awake_hours >= 50 then
+               if save.elona_sys.awake_hours >= Const.SLEEP_THRESHOLD_HEAVY then
                   do_sleep = true
                elseif Rand.one_in(2) then
                   do_sleep = true
                end
                if do_sleep then
                   Gui.mes("activity.rest.drop_off_to_sleep")
-                  ElonaCommand.do_sleep(chara, self.bed)
+                  chara:set_item_using(nil)
+                  ElonaCommand.do_sleep(chara, nil)
                   chara:remove_activity()
                   return "turn_end"
                end

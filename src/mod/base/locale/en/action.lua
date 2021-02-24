@@ -25,7 +25,10 @@ return {
       autopick = {
          reloaded_autopick_file = "Reloaded autopick file."
       },
-      backpack_squashing = "Your backpack is squashing you!",
+      backpack_squashing = function(_1)
+         return ("%s%s backpack is squashing %s!")
+            :format(name(_1), his_owned(_1), him(_1))
+      end,
       bash = {
          air = function(_1)
             return ("%s bash%s up the air.")

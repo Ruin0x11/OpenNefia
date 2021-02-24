@@ -169,7 +169,7 @@ end
 local function gain_weight_lifting_experience(chara)
    local exp = 0
 
-   if chara:calc("inventory_weight_type") > 0 then
+   if chara:calc("inventory_weight_type") > Enum.Burden.None then
       exp = 4
 
       local map = chara:current_map()

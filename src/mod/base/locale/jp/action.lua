@@ -25,9 +25,9 @@ end,
     autopick = {
       reloaded_autopick_file = "autopickファイルを再読み込みした。"
     },
-    backpack_squashing = function()
+    backpack_squashing = function(_1)
   return ("%sは荷物に圧迫されもがいた。")
-  :format(you())
+  :format(name(_1))
 end,
     bash = {
       air = function(_1)

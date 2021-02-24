@@ -427,7 +427,7 @@ function ElonaAction.eat(chara, item)
    end
 
    chara:set_emotion_icon("elona.eat")
-   chara:start_activity("elona.eating", {food=item})
+   chara:start_activity("elona.eating", {food=item, no_message=false})
 
    return "turn_end"
    -- <<<<<<<< shade2/action.hsp:372     goto *turn_end ..

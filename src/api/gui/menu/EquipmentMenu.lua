@@ -81,6 +81,8 @@ function EquipmentMenu:init(chara)
    self.input:forward_to(self.pages)
    self.input:bind_keys(self:make_keymap())
 
+   self.text_equip_stats = ""
+
    self.stats = {}
    self.changed_equipment = false
 
@@ -161,13 +163,22 @@ function EquipmentMenu:update_from_chara()
    self.win:set_pages(self.pages)
    self:refresh_item_icons()
 
-   self.stats = {
-      dv = self.chara:calc("dv"),
-      pv = self.chara:calc("pv"),
-      weight = self.chara:calc("equipment_weight"),
-      hit_bonus = self.chara:calc("hit_bonus"),
-      damage_bonus = self.chara:calc("damage_bonus"),
-   }
+   local dv = self.chara:calc("dv")
+   local pv = self.chara:calc("pv")
+   local weight = self.chara:calc("equipment_weight")
+   local hit_bonus = self.chara:calc("hit_bonus")
+   local damage_bonus = self.chara:calc("damage_bonus")
+
+   self.text_equip_stats = ("%s: %s%s %s:%d %s:%d  DV/PV:%d/%d")
+      :format(I18N.get("ui.equip.equip_weight"),
+              Ui.display_weight(weight),
+              Ui.display_armor_class(weight),
+              I18N.get("ui.equip.hit_bonus"),
+              hit_bonus,
+              I18N.get("ui.equip.damage_bonus"),
+              damage_bonus,
+              dv,
+              pv)
 
    Gui.refresh_hud()
 end
@@ -198,14 +209,7 @@ function EquipmentMenu:draw()
    self.t.base.deco_wear_a:draw(self.x + self.width - 106, self.y)
    self.t.base.deco_wear_b:draw(self.x, self.y + self.height - 164)
 
-   local note = string.format("weight: %s(%s) hit_bonus: %d damage_bonus: %d  DV/PV: %d/%d",
-                              self.stats.weight,
-                              "med",
-                              self.stats.hit_bonus,
-                              self.stats.damage_bonus,
-                              self.stats.dv,
-                              self.stats.pv)
-   Ui.draw_note(note, self.x, self.y, self.width, self.height, 0)
+   Ui.draw_note(self.text_equip_stats, self.x, self.y, self.width, self.height, 0)
 
    self.pages:draw()
 end

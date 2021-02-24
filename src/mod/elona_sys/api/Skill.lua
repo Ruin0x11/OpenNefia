@@ -410,13 +410,13 @@ function Skill.refresh_speed(chara)
          spd_perc = spd_perc - 10
       end
    end
-   if chara.inventory_weight_type >= 3 then
+   if chara.inventory_weight_type >= Enum.Burden.Heavy then
       spd_perc = spd_perc - 50
    end
-   if chara.inventory_weight_type == 2 then
+   if chara.inventory_weight_type == Enum.Burden.Moderate then
       spd_perc = spd_perc - 30
    end
-   if chara.inventory_weight_type == 1 then
+   if chara.inventory_weight_type == Enum.Burden.Light then
       spd_perc = spd_perc - 10
    end
 
@@ -564,7 +564,7 @@ local function refresh_max_inventory_weight(chara)
              chara:skill_level("elona.stat_strength") * 500 +
                 chara:skill_level("elona.stat_constitution") * 250 +
                 chara:skill_level("elona.weight_lifting") * 2000 +
-                45000)
+                45000, "set")
 end
 
 Event.register("base.on_refresh_weight", "refresh max inventory weight", refresh_max_inventory_weight)
@@ -573,23 +573,25 @@ local function refresh_weight(chara)
    local weight = chara:calc("inventory_weight")
    local max_weight = chara:calc("max_inventory_weight")
 
+   -- >>>>>>>> shade2/calculation.hsp:1315 	repeat 1 ...
    if weight > max_weight * 2 then
-      chara.inventory_weight_type = 4 -- very overweight
+      chara.inventory_weight_type = Enum.Burden.Max
    elseif weight > max_weight then
-      chara.inventory_weight_type = 3 -- overweight
+      chara.inventory_weight_type = Enum.Burden.Heavy
    elseif weight > max_weight / 4 * 3  then
-      chara.inventory_weight_type = 2 -- very burdened
+      chara.inventory_weight_type = Enum.Burden.Moderate
    elseif weight > max_weight / 2 then
-      chara.inventory_weight_type = 1 -- burdened
+      chara.inventory_weight_type = Enum.Burden.Light
    else
-      chara.inventory_weight_type = 0 -- normal
+      chara.inventory_weight_type = Enum.Burden.None
    end
 
    if config.base.debug_no_weight then
-      chara.inventory_weight_type = 0
+      chara.inventory_weight_type = Enum.Burden.None
    end
 
    Skill.refresh_speed(chara)
+   -- <<<<<<<< shade2/calculation.hsp:1326 	return ..
 end
 
 Event.register("base.on_refresh_weight", "apply weight type", refresh_weight)

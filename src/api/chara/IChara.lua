@@ -1,4 +1,5 @@
 --- @classmod IChara
+local Enum = require("api.Enum")
 
 local data = require("internal.data")
 local field = require("game.field")
@@ -257,7 +258,7 @@ function IChara:refresh_weight()
    self:reset("inventory_weight", weight)
    self:reset("cargo_weight", cargo_weight)
    self.max_inventory_weight = 45000
-   self.inventory_weight_type = 0
+   self.inventory_weight_type = Enum.Burden.None
    self:emit("base.on_refresh_weight")
 end
 
