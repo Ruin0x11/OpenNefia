@@ -478,6 +478,46 @@ local function feats_under(player, field)
    return Feat.at(player.x, player.y, player:current_map()):filter(function(f) return f:calc(field) end)
 end
 
+function ElonaCommand.descend(player)
+   local f = feats_under(player, "can_descend"):nth(1)
+   if f then
+      local result = f:emit("elona_sys.on_feat_descend", {chara=player}, "player_turn_query")
+      return result or "player_turn_query"
+   end
+
+   for _, item in Item.at(player.x, player.y, player:current_map())
+        :filter(function(i) return i:calc("can_descend") end)
+   do
+      local result = item:emit("elona_sys.on_item_descend", {chara=player}, nil)
+      if result then
+         return result
+      end
+   end
+
+   Gui.mes("action.use_stairs.no.downstairs")
+   return "player_turn_query"
+end
+
+function ElonaCommand.ascend(player)
+   local f = feats_under(player, "can_ascend"):nth(1)
+   if f then
+      local result = f:emit("elona_sys.on_feat_ascend", {chara=player}, "player_turn_query")
+      return result or "player_turn_query"
+   end
+
+   for _, item in Item.at(player.x, player.y, player:current_map())
+        :filter(function(i) return i:calc("can_ascend") end)
+   do
+      local result = item:emit("elona_sys.on_item_ascend", {chara=player}, nil)
+      if result then
+         return result
+      end
+   end
+
+   Gui.mes("action.use_stairs.no.upstairs")
+   return "player_turn_query"
+end
+
 function ElonaCommand.enter_action(player)
    -- TODO iter objects on square, emit get_enter_action
    -- >>>>>>>> shade2/main.hsp:1238 		cell_featRead cX(cc),cY(cc) ..

@@ -399,7 +399,9 @@ Event.register("base.on_item_instantiated", "Connect item events",
                      "zap",        -- on_zap,        can_zap,        elona_sys.on_item_zap
                      "open",       -- on_open,       can_open,       elona_sys.on_item_open
                      "dip_source", -- on_dip_source, can_dip_source, elona_sys.on_item_dip_source
-                     "throw"       -- on_throw,      can_throw,      elona_sys.on_item_throw
+                     "throw",      -- on_throw,      can_throw,      elona_sys.on_item_throw
+                     "descend",    -- on_descend,    can_descend,    elona_sys.on_item_descend
+                     "ascend",     -- on_ascend,     can_ascend,     elona_sys.on_item_ascend
                   }
 
                   for _, action in ipairs(actions) do

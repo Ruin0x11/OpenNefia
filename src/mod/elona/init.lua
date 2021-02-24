@@ -66,4 +66,10 @@ Gui.bind_keys {
    enter = function(_, me)
       return ElonaCommand.enter_action(me)
    end,
+   go_down = function(_, me)
+      return ElonaCommand.descend(me)
+   end,
+   go_up = function(_, me)
+      return ElonaCommand.ascend(me)
+   end,
 }

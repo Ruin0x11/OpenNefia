@@ -21,6 +21,7 @@ local Pos = require("api.Pos")
 local Anim = require("mod.elona_sys.api.Anim")
 local World = require("api.World")
 local Weather = require("mod.elona.api.Weather")
+local Area = require("api.Area")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -17390,8 +17391,30 @@ local item =
             "elona.furniture"
          },
 
-         on_enter_action = function(self)
-            Log.error("TODO")
+         on_ascend = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:811 		if val=2:if mapItemFind(cX(cc),cY(cc),idUpstairs ...
+            local map = self:containing_map()
+            if map == nil then
+               return nil
+            end
+
+            if map.uid ~= save.base.home_map_uid then
+               return nil
+            end
+
+            -- TODO just return InstancedArea
+            local area_meta = Area.for_map(map)
+            if area_meta == nil then
+               return
+            end
+
+            if Map.floor_number(map) <= 1 then
+               Gui.mes("action.use_stairs.cannot_go.up")
+               return "player_turn_query"
+            end
+
+            Gui.mes_c("TODO", "Yellow")
+            -- <<<<<<<< shade2/action.hsp:811 		if val=2:if mapItemFind(cX(cc),cY(cc),idUpstairs ..
          end
       },
       {
@@ -17409,8 +17432,31 @@ local item =
             "elona.furniture"
          },
 
-         on_enter_action = function(self)
-            Log.error("TODO")
+         on_descend = function(self)
+            -- >>>>>>>> shade2/action.hsp:810 		if val=1:if mapItemFind(cX(cc),cY(cc),idDownstai ...
+            local map = self:containing_map()
+            if map == nil then
+               return nil
+            end
+
+            if map.uid ~= save.base.home_map_uid then
+               return nil
+            end
+
+            -- TODO just return InstancedArea
+            local area_meta = Area.for_map(map)
+            if area_meta == nil then
+               return
+            end
+
+            local area = assert(Area.get(area_meta.uid))
+            if Map.floor_number(map) >= area:deepest_floor() then
+               Gui.mes("action.use_stairs.cannot_go.down")
+               return "player_turn_query"
+            end
+
+            Gui.mes_c("TODO", "Yellow")
+            -- <<<<<<<< shade2/action.hsp:810 		if val=1:if mapItemFind(cX(cc),cY(cc),idDownstai ..
          end
       },
       {
@@ -17447,8 +17493,16 @@ local item =
             "elona.furniture"
          },
 
-         on_enter_action = function(self)
-            Log.error("TODO")
+         on_descend = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:801 	if val=1:if mapItemFind(cX(cc),cY(cc),idKotatsu)! ...
+            Gui.mes("action.use_stairs.kotatsu.prompt")
+            if not Input.yes_no() then
+               return "player_turn_query"
+            end
+            Gui.mes("action.use_stairs.kotatsu.use")
+            params.chara:add_effect_turns("elona.blindness", 2)
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:807 	} ..
          end
       },
       {

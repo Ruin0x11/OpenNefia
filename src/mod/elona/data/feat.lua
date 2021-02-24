@@ -366,7 +366,30 @@ data:add
       end
    end,
 
-   on_descend = function(self, params) self:on_activate(params.chara) end
+   on_descend = function(self, params) self:on_activate(params.chara) end,
+
+   events = {
+      {
+         id = "base.on_feat_make_target_text",
+         name = "Target text",
+
+         callback = function(self)
+            -- >>>>>>>> shade2/command.hsp:49 		if mType=mTypeWorld{ ...
+            local map = self:current_map()
+            if not map:has_type("world_map") then
+               return nil
+            end
+
+            local area = Area.get(self.params.area_uid)
+            if area == nil or area._archetype == nil then
+               return nil
+            end
+
+            return get_map_display_name(area, true)
+            -- <<<<<<<< shade2/command.hsp:53 				} ..
+         end
+      }
+   }
 }
 
 data:add {
