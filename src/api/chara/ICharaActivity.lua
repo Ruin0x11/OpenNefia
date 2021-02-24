@@ -33,6 +33,9 @@ function ICharaActivity:remove_activity()
       self.activity:cleanup()
    end
    self.activity = nil
+   if self:is_player() then
+      Gui.hud_widget("hud_auto_turn"):widget():set_shown(false)
+   end
 end
 
 function ICharaActivity:finish_activity()
@@ -56,12 +59,17 @@ function ICharaActivity:pass_activity_turn()
       -- lot of lag. There has to be some amount of optimization we can do.
       local auto_turn = config.base.auto_turn_speed
 
-      if auto_turn == "high" then
-         Gui.wait(self.activity.animation_wait, true)
-      elseif auto_turn == "normal" then
+      local auto_turn_widget = Gui.hud_widget("hud_auto_turn"):widget()
+      if auto_turn == "normal" then
+         -- With screen update
          Gui.wait(self.activity.animation_wait)
+         auto_turn_widget:pass_turn()
+      elseif auto_turn == "high" then
+         -- No screen update
+         Gui.wait(self.activity.animation_wait, true)
+         auto_turn_widget:pass_turn()
       elseif auto_turn == "highest" then
-         -- don't wait at all
+         -- Don't wait at all
       end
    end
 
@@ -121,6 +129,11 @@ function ICharaActivity:start_activity(id, params, turns)
       if not ok then
          Log.error("Error starting activity: %s", result)
       end
+   end
+
+   if self:is_player() and not config.base.disable_auto_turn_anim then
+      local auto_turn_anim_id = self.activity.proto.auto_turn_anim or nil
+      Gui.hud_widget("hud_auto_turn"):widget():set_shown(true, auto_turn_anim_id)
    end
 end
 

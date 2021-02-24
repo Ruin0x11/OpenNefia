@@ -356,6 +356,7 @@ data:add {
    default_turns = 100,
 
    animation_wait = 40,
+   auto_turn_anim = "base.fishing",
 
    on_interrupt = "prompt",
    events = {
@@ -445,6 +446,7 @@ data:add {
    default_turns = 40,
 
    animation_wait = 15,
+   auto_turn_anim = "base.mining",
 
    on_interrupt = "stop",
    events = {
@@ -1154,6 +1156,7 @@ data:add {
    default_turns = 20,
 
    animation_wait = 15,
+   auto_turn_anim = "base.searching",
 
    on_interrupt = "stop",
    events = {
@@ -1217,6 +1220,7 @@ data:add {
    default_turns = 0,
 
    animation_wait = 15,
+   auto_turn_anim = "base.searching",
 
    on_interrupt = "stop",
    events = {

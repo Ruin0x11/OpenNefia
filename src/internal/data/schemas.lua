@@ -1604,3 +1604,9 @@ The data type of the ID in this config option.
       }
    }
 }
+
+data:add_type {
+   name = "auto_turn_anim",
+   fields = {
+   }
+}

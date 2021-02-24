@@ -19,6 +19,8 @@ local DeathMenu = require("api.gui.menu.DeathMenu")
 
 local field_logic = {}
 
+local dt = 0
+
 function field_logic.setup_new_game(player)
    field.map = nil
 
@@ -27,13 +29,13 @@ function field_logic.setup_new_game(player)
    assert(class.is_an(IChara, player))
 
    Chara.set_player(player)
+   config.base._save_id = ("%s_%d"):format(player.name, os.time())
    scenario:on_game_start(player)
    assert(Map.current(), "Scenario must set the current map")
    assert(player:current_map() == Map.current(), "Player must exist in current map")
 
    save.base.home_map_uid = save.base.home_map_uid or Map.current().uid
    assert(save.base.home_map_uid)
-   config.base._save_id = ("%s_%d"):format(Chara.player().name, os.time())
    Env.update_play_time()
 
    Event.trigger("base.on_new_game")
@@ -88,6 +90,11 @@ local function update_mefs(map)
 end
 
 function field_logic.turn_begin()
+   if config.base.auto_turn_speed ~= "highest" then
+      dt = coroutine.yield()
+      field:update(dt)
+   end
+
    local turn_result = Event.trigger("base.on_turn_begin", {}, nil)
    if turn_result then
       -- return turn_result
@@ -243,6 +250,7 @@ function field_logic.pass_turns()
       end
       Log.warn("Activity '%s' on chara %d (%s) did not return turn result", chara:get_activity()._id, chara.uid, chara._id)
       return "pass_turns"
+   else
    end
 
    if Chara.is_alive(chara) then
@@ -264,8 +272,6 @@ function field_logic.player_turn()
    return "player_turn_query"
 end
 
-local dt = 0
-
 function field_logic.player_turn_query()
    local result
    local going = true
@@ -279,12 +285,11 @@ function field_logic.player_turn_query()
 
    result = Event.trigger("base.on_player_turn")
    if result then
+      field:update(dt)
       return result, player
    end
 
    while going do
-      dt = coroutine.yield()
-
       local ran, turn_result = field:run_actions(dt, player)
       field:update(dt)
 
@@ -302,6 +307,8 @@ function field_logic.player_turn_query()
          going = false
          break
       end
+
+      dt = coroutine.yield()
    end
 
    -- TODO: convert public to internal event
@@ -423,6 +430,8 @@ end
 
 function field_logic.run_one_event(event, target_chara)
    local cb = nil
+
+   Log.debug("Turn event: %s (%s)", event, target_chara)
 
    if Chara.player() == nil then
       -- Something went wrong; at least boot the game back to the

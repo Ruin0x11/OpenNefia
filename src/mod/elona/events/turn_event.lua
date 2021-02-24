@@ -324,3 +324,30 @@ local function proc_overweight_prevent_movement(player, params, result)
    -- <<<<<<<< shade2/action.hsp:534 	if cBurden(pc)>=burdenMax:if dbg_noWeight=false : ..
 end
 Event.register("elona_sys.before_player_move", "Proc movement prevention on overweight", proc_overweight_prevent_movement)
+
+local function proc_status_effect_random_movement(player, params, result)
+   -- >>>>>>>> shade2/action.hsp:521 	f=false ...
+   local stumble = false
+
+   if player:has_effect("elona.dimming") and player:effect_turns("elona.dimming") + 10 > Rand.rnd(60) then
+      stumble = true
+   end
+
+   if player:has_effect("elona.drunk") and Rand.one_in(5) then
+      Gui.mes_c("action.move.drunk", "SkyBlue")
+      stumble = true
+   end
+
+   if player:has_effect("elona.confusion") then
+      stumble = true
+   end
+
+   if stumble then
+      result.x = player.x + Rand.rnd(3) - 1
+      result.y = player.y + Rand.rnd(3) - 1
+   end
+
+   return result
+   -- <<<<<<<< shade2/action.hsp:528 		} ..
+end
+Event.register("elona_sys.before_player_move", "Proc status effect random movement", proc_status_effect_random_movement)

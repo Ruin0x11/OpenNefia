@@ -319,6 +319,12 @@ data:add_multi(
          default = "normal"
       },
       {
+         _id = "disable_auto_turn_anim",
+
+         type = "boolean",
+         default = false
+      },
+      {
          _id = "scroll",
 
          type = "boolean",
