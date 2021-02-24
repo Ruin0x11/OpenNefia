@@ -143,7 +143,7 @@ function Skill.calc_initial_skill_level(skill, initial_level, original_level, ch
    -- <<<<<<<< shade2/calculation.hsp:961 	return ..
 end
 
-function Skill.calc_related_stat_exp(exp, exp_divisor)
+function Skill.calc_related_skill_exp(exp, exp_divisor)
    return exp / (2 + exp_divisor)
 end
 
@@ -280,9 +280,9 @@ function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divi
    if not chara:has_skill(skill) then return end
    if base_exp == 0 then return end
 
-   if skill_data.related_stat then
-      local exp = Skill.calc_related_stat_exp(base_exp, exp_divisor_stat)
-      Skill.gain_skill_exp(chara, skill_data.related_stat, exp)
+   if skill_data.related_skill then
+      local exp = Skill.calc_related_skill_exp(base_exp, exp_divisor_stat)
+      Skill.gain_skill_exp(chara, skill_data.related_skill, exp)
    end
 
    local level = chara:base_skill_level(skill)
