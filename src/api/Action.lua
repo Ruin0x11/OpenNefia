@@ -325,7 +325,7 @@ function Action.target_text(chara, x, y, visible_only)
 
    local target = Chara.at(x, y)
    local Effect = require("mod.elona.api.Effect") -- TODO move
-   if target and Effect.is_visible(target) then
+   if target and Effect.is_visible(target, Chara.player()) then
       local dist = Pos.dist(chara.x, chara.y, target.x, target.y)
       text[#text+1] = Action.target_level_text(chara, target)
       text[#text+1] = I18N.get("action.target.you_are_targeting", target, dist)
@@ -361,7 +361,7 @@ function Action.build_target_list(chara)
             return false
          end
 
-         if not Effect.is_visible(other) then
+         if not Effect.is_visible(other, chara) then
             return false
          end
 

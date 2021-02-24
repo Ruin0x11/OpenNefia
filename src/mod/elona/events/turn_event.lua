@@ -404,3 +404,26 @@ local function proc_player_death_penalties(player)
    -- <<<<<<<< shade2/main.hsp:1816 	swbreak ..
 end
 Event.register("base.on_player_death_revival", "Proc player death penalties", proc_player_death_penalties)
+
+local function proc_trait_on_turn_begin()
+   local player = Chara.player()
+   if not Chara.is_alive(player) then
+      return
+   end
+
+   -- >>>>>>>> shade2/main.hsp:987 	if trait(traitEtherPotion)!0{ ...
+   for _, trait in player:iter_traits() do
+      if trait.proto.on_turn_begin then
+         trait.proto.on_turn_begin(player.traits[trait._id], player)
+      end
+   end
+   -- <<<<<<<< shade2/main.hsp:992 		}	 ..
+
+   -- >>>>>>>> shade2/main.hsp:994 	if cBit(cInvisi,cTarget(pc))=true:if cBit(cSeeInv ...
+   local target = player:get_target()
+   if Chara.is_alive(target) and not Effect.is_visible(target, player) then
+      player:set_target(nil)
+   end
+   -- <<<<<<<< shade2/main.hsp:994 	if cBit(cInvisi,cTarget(pc))=true:if cBit(cSeeInv ..
+end
+Event.register("base.on_turn_begin", "Proc trait on turn begin", proc_trait_on_turn_begin, { priority = 150000 })

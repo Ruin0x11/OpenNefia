@@ -211,7 +211,7 @@ function IChara:produce_memory(memory)
 
    -- TODO move
    Effect = Effect or require("mod.elona.api.Effect")
-   local show = Chara.is_alive(self, self:current_map()) and Effect.is_visible(self)
+   local show = Chara.is_alive(self, self:current_map()) and Effect.is_visible(self, Chara.player())
 
    memory.uid = self.uid
    memory.show = show
@@ -229,7 +229,7 @@ end
 --- @overrides ILocalizable:produce_locale_data
 function IChara:produce_locale_data()
    Effect = Effect or require("mod.elona.api.Effect")
-   local show = Chara.is_alive(self, self:current_map()) and Effect.is_visible(self)
+   local show = Chara.is_alive(self, self:current_map()) and Effect.is_visible(self, Chara.player())
    return {
       name = self:calc("name"),
       title = self:calc("title"),

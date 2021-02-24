@@ -729,7 +729,6 @@ function Effect.do_stamina_check(source, base_cost, related_skill_id)
 end
 
 function Effect.is_visible(chara, viewer)
-   viewer = viewer or Chara.player()
    local is_invisible = chara:calc("is_invisible") and not (viewer:calc("can_see_invisible") or chara:has_effect("elona.wet"))
    return not is_invisible
 end

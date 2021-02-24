@@ -7,6 +7,10 @@ local function gain_or_lose_action(skill_id)
       end
    end
 end
+local Rand = require("api.Rand")
+local Magic = require("mod.elona_sys.api.Magic")
+local Item = require("api.Item")
+local ElonaAction = require("mod.elona.api.ElonaAction")
 
 local trait = {
    {
@@ -998,7 +1002,19 @@ local ether_trait = {
 
       level_min = -1,
       level_max = 0,
-      type = "ether_disease"
+      type = "ether_disease",
+
+      on_turn_begin = function(self, chara)
+         -- >>>>>>>> shade2/main.hsp:987 	if trait(traitEtherPotion)!0{ ...
+         local map = chara:current_map()
+         if Rand.one_in(5) then
+            local item = Rand.choice(chara:iter_inventory())
+            if Item.is_alive(item) and item:has_category("elona.drink") then
+               ElonaAction.drink(chara, item)
+            end
+         end
+         -- <<<<<<<< shade2/main.hsp:989 		}	 ..
+      end
    },
    {
       _id = "ether_weak",
@@ -1057,7 +1073,16 @@ local ether_trait = {
 
       level_min = -1,
       level_max = 0,
-      type = "ether_disease"
+      type = "ether_disease",
+
+      on_turn_begin = function(self, chara)
+         -- >>>>>>>> shade2/main.hsp:990 	if trait(traitEtherTeleport)!0{ ...
+         local map = chara:current_map()
+         if Rand.one_in(250) and map and not map:has_type("world_map") then
+            Magic.cast("elona.teleport", { source = chara })
+         end
+         -- <<<<<<<< shade2/main.hsp:992 		}	 ..
+      end
    },
    {
       _id = "ether_staff",
