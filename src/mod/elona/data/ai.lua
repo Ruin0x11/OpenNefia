@@ -280,7 +280,7 @@ local function train_potential(chara)
       local skill
       for _ = 1, 9999 do
          if Rand.one_in(4) then
-            skill = Rand.choice(Skill.iter_stats())
+            skill = Rand.choice(Skill.iter_attributes())
          else
             skill = Rand.choice(Skill.iter_weapon_proficiencies())
          end

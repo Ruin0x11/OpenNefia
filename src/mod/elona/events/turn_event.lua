@@ -12,6 +12,7 @@ local Encounter = require("mod.elona.api.Encounter")
 local Effect = require("mod.elona.api.Effect")
 local Const = require("api.Const")
 local Pos = require("api.Pos")
+local Save = require("api.Save")
 
 local function refresh_hp_mp_stamina(chara, params, result)
    local mp_factor = chara:skill_level("elona.stat_magic") * 2
@@ -361,3 +362,45 @@ local function proc_status_effect_random_movement(player, params, result)
    -- <<<<<<<< shade2/action.hsp:528 		} ..
 end
 Event.register("elona_sys.before_player_move", "Proc status effect random movement", proc_status_effect_random_movement)
+
+local function proc_ether_disease_death()
+   -- >>>>>>>> shade2/main.hsp:914 	if gCorrupt>=maxCorrupt : dmgHp pc,999999,dmgFrom ...
+   local player = Chara.player()
+   if not Chara.is_alive(player) then
+      return
+   end
+
+   if player:calc("ether_disease_corruption") >= Const.ETHER_DISEASE_DEATH_THRESHOLD then
+      player:damage_hp(math.max(999999, player:calc("max_hp")), "elona.ether_disease")
+   end
+   -- <<<<<<<< shade2/main.hsp:914 	if gCorrupt>=maxCorrupt : dmgHp pc,999999,dmgFrom ..
+end
+Event.register("base.on_turn_begin", "Kill player if ether disease too progressed", proc_ether_disease_death)
+
+local function proc_player_death_penalties(player)
+   -- >>>>>>>> shade2/main.hsp:1789  ...
+   if player:calc("level") > 5 then
+      local attribute_id = Skill.random_base_attribute()
+      if player:skill_level(attribute_id) > 0 and Rand.one_in(3) then
+         Skill.gain_skill_exp(player, attribute_id, -500)
+      end
+      if player.karma < Const.KARMA_BAD then
+         Effect.modify_karma(player, 10)
+      end
+   else
+      Gui.mes("event.death_penalty_not_applied")
+   end
+
+   if player.ether_disease_corruption >= Const.ETHER_DISEASE_DEATH_THRESHOLD then
+      Effect.modify_corruption(player, -2000)
+   end
+
+   Gui.mes("event.you_lost_some_money")
+   player.gold = math.floor(player.gold / 3)
+   Effect.decrement_fame(player, 10)
+
+   player:refresh()
+   Save.autosave()
+   -- <<<<<<<< shade2/main.hsp:1816 	swbreak ..
+end
+Event.register("base.on_player_death_revival", "Proc player death penalties", proc_player_death_penalties)

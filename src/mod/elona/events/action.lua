@@ -24,6 +24,9 @@ local function bump_into_chara(player, params, result)
 
    if relation <= Enum.Relation.Dislike then
       player:set_target(on_cell)
+      if not Effect.is_visible(on_cell, player) then
+         player:set_target(nil)
+      end
       ElonaAction.melee_attack(player, on_cell)
       Gui.set_scroll()
       return "turn_end"

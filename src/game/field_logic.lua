@@ -357,6 +357,8 @@ local function revive_player()
    local success, map = Map.load(save.base.home_map_uid)
    assert(success, map)
    Map.travel_to(map)
+
+   player:emit("base.on_player_death_revival")
 end
 
 function field_logic.player_died(player)

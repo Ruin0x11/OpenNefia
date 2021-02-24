@@ -713,7 +713,7 @@ data:add {
       end
       if Effect.is_cursed(params.curse_state) then
          Gui.mes("magic.common.it_is_cursed")
-         for _, stat in Skill.iter_stats() do
+         for _, stat in Skill.iter_attributes() do
             if Rand.one_in(3) then
                if stat._id ~= "elona.stat_speed"
                   and stat._id ~= "elona.stat_luck"
@@ -866,7 +866,7 @@ data:add {
    cast = function(self, params)
       local target = params.target
 
-      for _, stat in Skill.iter_stats() do
+      for _, stat in Skill.iter_attributes() do
          local amount = per_curse_state(params.curse_state, -2000, -2000, -1000, -250)
          Skill.gain_skill_exp(target, stat._id, amount)
       end
@@ -894,7 +894,7 @@ data:add {
       local target = params.target
 
       if params.curse_state == Enum.CurseState.Blessed then
-         for _, stat in Skill.iter_base_stats() do
+         for _, stat in Skill.iter_base_attributes() do
             local amount = Rand.rnd(target:skill_potential(stat._id) / 20 + 3) + 1
             Skill.modify_potential(target, stat._id, amount)
          end
@@ -903,7 +903,7 @@ data:add {
          Gui.start_draw_callback(cb)
          Gui.play_sound("base.ding3", target.x, target.y)
       else
-         local stat = Rand.choice(Skill.iter_base_stats())
+         local stat = Rand.choice(Skill.iter_base_attributes())
          local stat_name = "ability." .. stat._id .. ".name"
          if params.curse_state == Enum.CurseState.Normal then
             Gui.mes("magic.gain_potential.increases", target, stat_name)

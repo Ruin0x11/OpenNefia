@@ -12,12 +12,12 @@ local Enum = require("api.Enum")
 
 local Skill = {}
 
-function Skill.iter_stats()
+function Skill.iter_attributes()
    return data["base.skill"]:iter():filter(function(s) return s.type == "stat" end)
 end
 
-function Skill.iter_base_stats()
-   return Skill.iter_stats():filter(function(s) return s._id ~= "elona.stat_speed" and s._id ~= "elona.stat_luck" end)
+function Skill.iter_base_attributes()
+   return Skill.iter_attributes():filter(function(s) return s._id ~= "elona.stat_speed" and s._id ~= "elona.stat_luck" end)
 end
 
 function Skill.iter_resistances()
@@ -45,8 +45,12 @@ function Skill.iter_actions()
 end
 
 --- @hsp randAttb()
+function Skill.random_base_attribute()
+   return Rand.choice(Skill.iter_base_attributes())._id
+end
+
 function Skill.random_attribute()
-   return Rand.choice(Skill.iter_stats())._id
+   return Rand.choice(Skill.iter_attributes())._id
 end
 
 function Skill.random_skill()
@@ -493,7 +497,7 @@ function Skill.grow_primary_skills(chara)
       chara:mod_base_skill_level(skill, Rand.rnd(3), "add")
    end
 
-   for _, stat in Skill.iter_stats() do
+   for _, stat in Skill.iter_attributes() do
       grow(stat._id)
    end
 

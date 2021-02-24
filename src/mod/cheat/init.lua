@@ -26,7 +26,7 @@ local function level_up()
    player:mod_base_skill_level("elona.stat_magic", 10000)
    player:mod_base_skill_level("elona.stat_mana", 10000)
 
-   Skill.iter_stats()
+   Skill.iter_attributes()
       :each(function(m)
             player:mod_base_skill_level(m._id, 100, "set")
            end)

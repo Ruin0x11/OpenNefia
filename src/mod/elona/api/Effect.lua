@@ -701,11 +701,14 @@ function Effect.query_return_location(chara)
 end
 -- <<<<<<<< shade2/command.hsp:4426 		}	 ..
 
+--- @hsp decFame
 function Effect.decrement_fame(chara, fraction)
+   -- >>>>>>>> shade2/module.hsp:354 	#deffunc decFame int c ,int per ...
    local delta = chara.fame / fraction + 5
    delta = math.floor(delta + Rand.rnd(delta / 2) - Rand.rnd(delta / 2))
    chara.fame = math.max(chara.fame - math.floor(delta), 0)
    return delta
+   -- <<<<<<<< shade2/module.hsp:358 	return p ..
 end
 
 function Effect.do_stamina_check(source, base_cost, related_skill_id)

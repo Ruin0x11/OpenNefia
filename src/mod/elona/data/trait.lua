@@ -860,7 +860,7 @@ local ether_trait = {
       type = "ether_disease",
 
       on_refresh = function(self, chara)
-         chara:mod_resist_level("elona.stat_charisma", calc_ether_ugly(self, chara), "add")
+         chara:mod_skill_level("elona.stat_charisma", calc_ether_ugly(self, chara), "add")
       end,
 
       locale_params = function(self, chara)
@@ -1076,7 +1076,7 @@ local ether_trait = {
       type = "ether_disease",
 
       on_refresh = function(self, chara)
-         chara:mod_resist_level("elona.stat_poison", 100, "add")
+         chara:mod_resist_level("elona.poison", 100, "add")
       end
    }
 }

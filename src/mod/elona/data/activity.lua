@@ -1595,7 +1595,7 @@ data:add {
 
             if Rand.one_in(chance) then
                if self.skill_id == "random" then
-                  Skill.gain_skill_exp(chara, Skill.random_attribute(), 25)
+                  Skill.gain_skill_exp(chara, Skill.random_base_attribute(), 25)
                else
                   Skill.gain_skill_exp(chara, self.skill_id, 25)
                end

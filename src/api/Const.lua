@@ -108,4 +108,8 @@ Const.SLEEP_THRESHOLD_MODERATE = 30
 Const.SLEEP_THRESHOLD_HEAVY = 50
 -- <<<<<<<< shade2/init.hsp:52 	#define global sleepHeavy	50 ..
 
+-- >>>>>>>> shade2/init.hsp:80 	#define global maxCorrupt	20000 ...
+Const.ETHER_DISEASE_DEATH_THRESHOLD = 20000
+-- <<<<<<<< shade2/init.hsp:80 	#define global maxCorrupt	20000 ..
+
 return Const
