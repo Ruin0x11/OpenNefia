@@ -180,10 +180,11 @@ function EventHolder:trigger(event_id, source, args, default)
    end
    args = args or {}
    local result = default
+   local status = nil -- nil or "blocked"
 
    local events = self.hooks[event_id]
    if events then
-      result = events:trigger(source, args, result)
+      result, status = events:trigger(source, args, result)
    end
 
    local observers = self.observers[event_id]
@@ -193,7 +194,7 @@ function EventHolder:trigger(event_id, source, args, default)
       end
    end
 
-   return result, args
+   return result, args, status
 end
 
 function EventHolder:responds_to(event_id)

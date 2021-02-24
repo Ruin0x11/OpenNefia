@@ -14822,8 +14822,9 @@ local item =
          coefficient = 100,
          originalnameref2 = "statue",
 
-         on_use = function(self, params)
+         on_use = function(self, params, result)
             -- >>>>>>>> shade2/action.hsp:2008 	case effRenewWeather ...
+            pause()
             Gui.mes("action.use.statue.activate", self:build_name(1))
             Gui.play_sound("base.pray1", self.x, self.y)
 

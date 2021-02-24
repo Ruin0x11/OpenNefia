@@ -38,7 +38,25 @@ local function register_global_handler_if_needed(self, event_id, global_events)
       global_events = global_events or Event.global()
       if not cache[event_id] then
          cache[event_id] = function(source, params, result)
-            return global_events:trigger(event_id, source, params, result)
+            -- XXX: To be compatible with "block the rest of the events", the
+            -- below code also needed to return the status of the event handler.
+            --
+            -- For example, say you have a statue or gemstone that has an
+            -- "on_use" callback. This will be registered locally on the item's
+            -- IEventEmitter fields. Now say that you want to have a "cooldown
+            -- time" that can be applied to anything that can be used, including
+            -- said gemstone. If the cooldown time has not passed when the item
+            -- is used, then we want to block the rest of the events that might
+            -- get called. This event that does the blocking will get registered
+            -- globally (inside `global_events`).
+            --
+            -- Problem is, when "blocked" was passed as the second return value
+            -- in the global event handlers, it only stayed local to the global
+            -- event tree. The fix was to also return the status so we can
+            -- bubble it up here.
+            local new_result, _args, status = global_events:trigger(event_id, source, params, result)
+
+            return new_result, status
          end
       end
 

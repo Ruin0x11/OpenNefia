@@ -136,6 +136,12 @@ function EventTree:traverse(source, args, default)
    local status
    for i, cb in ipairs(cache) do
       new_result, status = cb(source, args, result)
+      if new_result == "player_turn_query" then
+         if type(status) == "table" then
+            print(inspect(table.keys(status)))
+         end
+         print(new_result, status, type(status))
+      end
 
       -- If the result returned is nil, do not set the final result to
       -- nil. This is to avoid having to return 'result' for event
@@ -154,7 +160,11 @@ function EventTree:traverse(source, args, default)
       end
    end
 
-   return result
+   -- We will return the event result and the status, in case the caller wants
+   -- to do something more based on if the event was blocked or not. This is
+   -- used by IEventEmitter to bubble up a blocked result so its locally bound
+   -- callbacks won't get run.
+   return result, status
 end
 
 function EventTree:trigger(source, args, default)

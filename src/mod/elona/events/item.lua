@@ -6,6 +6,7 @@ local Chara = require("api.Chara")
 local Effect = require("mod.elona.api.Effect")
 local Log = require("api.Log")
 local World = require("api.World")
+local Ui = require("api.Ui")
 
 local function proc_sandbag(chara)
    -- >>>>>>>> shade2/chara_func.hsp:1499 		if cBit(cSandBag,tc):cHp(tc)=cMhp(tc) ..
@@ -93,8 +94,7 @@ local function check_item_cooldown_time(item, params, result)
       item.next_use_date = item.next_use_date or 0
       local date_hours = World.date_hours()
       if date_hours < item.next_use_date then
-         -- BUG we need to block the next events in line, but that system
-         -- doesn't work right now.
+         Gui.mes("action.use.useable_again_at", Ui.format_date(item.next_use_date))
          return "player_turn_query", "blocked"
       end
       local sep = item:separate()

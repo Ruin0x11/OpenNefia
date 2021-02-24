@@ -70,7 +70,7 @@ local function proc_pregnancy(chara)
    local map = chara:current_map()
    if not Map.is_world_map(map) and Rand.one_in(30) then
       Gui.mes_visible("misc.pregnant.something_breaks_out", chara)
-      chara:apply_effect("elona.bleeding", 15)
+      chara:add_effect_turns("elona.bleeding", 15)
       local level = chara:calc("level") / 2 + 1
       local alien = Chara.create("elona.alien", chara.x, chara.y, { level = level, level_scaling = "fixed" }, map)
       if alien then

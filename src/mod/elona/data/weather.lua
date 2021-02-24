@@ -90,15 +90,6 @@ do
       -- <<<<<<<< shade2/main.hsp:599 			} ..
    end
 
-   function sunny.on_turn_start(chara)
-      -- >>>>>>>> shade2/main.hsp:867 	if mField=mFieldOutdoor : if gWeather>=weatherRai ...
-      local map = chara:current_map()
-      if not map:calc("is_indoor") then
-         chara:set_effect_turns("elona.wet", 50)
-      end
-      -- <<<<<<<< shade2/main.hsp:867 	if mField=mFieldOutdoor : if gWeather>=weatherRai ..
-   end
-
    data:add(sunny)
 end
 
@@ -441,6 +432,15 @@ do
       -- <<<<<<<< shade2/proc.hsp:788 		if gWeather=weatherHardRain	:cActionPeriod(cc)=c ..
    end
 
+   function rain.on_turn_start(chara)
+      -- >>>>>>>> shade2/main.hsp:867 	if mField=mFieldOutdoor : if gWeather>=weatherRai ...
+      local map = chara:current_map()
+      if not map:calc("is_indoor") then
+         chara:set_effect_turns("elona.wet", 50)
+      end
+      -- <<<<<<<< shade2/main.hsp:867 	if mField=mFieldOutdoor : if gWeather>=weatherRai ..
+   end
+
    data:add(rain)
 end
 
@@ -519,6 +519,15 @@ do
 
       return turns
       -- <<<<<<<< shade2/proc.hsp:846 		} ..
+   end
+
+   function hard_rain.on_turn_start(chara)
+      -- >>>>>>>> shade2/main.hsp:867 	if mField=mFieldOutdoor : if gWeather>=weatherRai ...
+      local map = chara:current_map()
+      if not map:calc("is_indoor") then
+         chara:set_effect_turns("elona.wet", 50)
+      end
+      -- <<<<<<<< shade2/main.hsp:867 	if mField=mFieldOutdoor : if gWeather>=weatherRai ..
    end
 
    data:add(hard_rain)

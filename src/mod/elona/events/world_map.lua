@@ -44,6 +44,15 @@ local function proc_weather_from_world_map_pos(map)
 end
 Event.register("base.on_map_enter", "Proc weather based on world map position when the map changes", proc_weather_from_world_map_pos)
 
+local function proc_weather_on_turn_start(chara, params, result)
+   local weather = Weather.get()
+   if weather.on_turn_start then
+      weather.on_turn_start(chara)
+   end
+end
+
+Event.register("base.before_chara_turn_start", "Proc weather on_turn_start", proc_weather_on_turn_start)
+
 local function proc_etherwind(chara, params)
    -- >>>>>>>> shade2/main.hsp:736 		if gWeather=weatherEther{ ...
    if Weather.is("elona.etherwind") and chara:is_player() then
