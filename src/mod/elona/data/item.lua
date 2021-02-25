@@ -3,7 +3,6 @@ local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Item = require("api.Item")
 local Rand = require("api.Rand")
-local Resolver = require("api.Resolver")
 local Magic = require("mod.elona.api.Magic")
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
@@ -6007,7 +6006,14 @@ local item =
          category = 72000,
          coefficient = 100,
 
-         param2 = Resolver.make("base.random", { rnd = 15 }),
+         on_init_params = function(self)
+            -- >>>>>>>> shade2/item.hsp:684 		if iId(ci)=idSuitcase : iParam1(ci)=(rnd(10)+1)* ...
+            self.params.chest_item_level = (Rand.rnd(10) + 1) * (Chara.player():calc("level") / 10 + 1)
+            -- <<<<<<<< shade2/item.hsp:684 		if iId(ci)=idSuitcase : iParam1(ci)=(rnd(10)+1)* ..
+            -- >>>>>>>> shade2/item.hsp:687 		if (iId(ci)=idWallet)or(iId(ci)=idSuitcase):iPar ...
+            self.params.chest_lockpick_difficulty = Rand.rnd(15)
+            -- <<<<<<<< shade2/item.hsp:687 		if (iId(ci)=idWallet)or(iId(ci)=idSuitcase):iPar ..
+         end,
 
          categories = {
             "elona.container",
@@ -6024,7 +6030,11 @@ local item =
          category = 72000,
          coefficient = 100,
 
-         param2 = Resolver.make("base.random", { rnd = 15 }),
+         on_init_params = function(self)
+            -- >>>>>>>> shade2/item.hsp:687 		if (iId(ci)=idWallet)or(iId(ci)=idSuitcase):iPar ...
+            self.params.chest_lockpick_difficulty = Rand.rnd(15)
+            -- <<<<<<<< shade2/item.hsp:687 		if (iId(ci)=idWallet)or(iId(ci)=idSuitcase):iPar ..
+         end,
 
          categories = {
             "elona.container",
@@ -16793,9 +16803,11 @@ local item =
          coefficient = 100,
 
          on_generate = function(self)
-            self.param2 = Rand.rnd(Rand.rnd(100) + 1) + 1
-            self.value = self.param2 * 25 + 150
+            -- >>>>>>>> shade2/item.hsp:689 		if iId(ci)=idGambleChest{ ...
+            self.params.chest_lockpick_difficulty = Rand.rnd(Rand.rnd(100) + 1) + 1
+            self.value = self.params.chest_lockpick_difficulty * 25 + 150
             self.amount = Rand.rnd(8)
+            -- <<<<<<<< shade2/item.hsp:691 			} ..
          end,
 
          categories = {

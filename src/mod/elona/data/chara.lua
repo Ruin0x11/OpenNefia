@@ -1,6 +1,5 @@
 local Enum = require("api.Enum")
 local Rand = require("api.Rand")
-local Resolver = require("api.Resolver")
 local Filters = require("mod.elona.api.Filters")
 local Gui = require("api.Gui")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")

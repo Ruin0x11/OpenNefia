@@ -6,7 +6,6 @@ local MapObject = require("api.MapObject")
 local I18N = require("api.I18N")
 local Skill = require("mod.elona_sys.api.Skill")
 local CharaMake = require("api.CharaMake")
-local Resolver = require("api.Resolver")
 local Const = require("api.Const")
 
 local function fix_name_gender_age(chara)
@@ -138,9 +137,6 @@ local function apply_race_class(chara)
          Skill.apply_class_params(chara, chara.class)
       end
    end
-
-   local rest = Resolver.resolve(chara, {object = chara, diff_only = true, override_method = true})
-   chara:mod_base_with(rest, "set")
 end
 
 Event.register("base.on_normal_build",
