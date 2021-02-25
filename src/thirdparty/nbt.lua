@@ -1216,24 +1216,22 @@ function nbt.decode(input, preservemode)
 
 end
 
-function nbt.registerClass(class)
-   assert(class.__serial_id)
-   assert(class.serialize_nbt)
-   assert(class.deserialize_nbt)
-   print("REG", class.__serial_id)
-   registry[class.__serial_id] = class
+function nbt.registerClass(class, serial_id)
+   assert(serial_id)
+
+   assert(registry[serial_id] == nil, "Class with serial id " .. serial_id .. " already registered")
+
+   registry[serial_id] = class
 end
 
 function nbt.newClassCompound(value, name)
    local mt = assert(getmetatable(value))
    assert(mt.__name)
-   assert(mt.__serial_id)
-   local reg = registry[mt.__serial_id]
 
-   local values = reg.serialize_nbt(value)
+   local values = value:serialize_nbt()
 
    assert(values.__serial_id == nil, "__serial_id is a reserved field")
-   values.__serial_id = mt.__serial_id
+   values.__serial_id = mt.__name
    return nbt.newCompound(values, name)
 end
 

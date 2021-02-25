@@ -1,4 +1,5 @@
 local binser = require("thirdparty.binser")
+local nbt = require("thirdparty.nbt")
 
 -- OOP wrapper. Based on 30log (https://github.com/Yonaba/30log)
 --
@@ -73,7 +74,7 @@ function class.interface(name, reqs, parents)
    i.all_methods = {}
 
    i.delegate = function(i, field, params)
-      if params == nil or _classes[params] then error("Invalid delegate parameter for " .. c.__name .. "." .. field .. ": " .. tostring(params)) end
+      if params == nil or _classes[params] then error("Invalid delegate parameter for " .. i.__name .. "." .. field .. ": " .. tostring(params)) end
       if _interfaces[params] or type(params) == "string" then params = {params} end
       for _, k in ipairs(params) do
          i.methods[k] = function(self, ...)
@@ -229,6 +230,10 @@ end
 
 function class.class(name, ifaces, opts)
    opts = opts or {}
+
+   local env = require("internal.env")
+   local mod_name = env.find_calling_mod()
+   name = mod_name .. ":" .. name
 
    local c = {}
 
@@ -414,6 +419,8 @@ function class.class(name, ifaces, opts)
    if not binser.hasResource(name) and not binser.hasRegistry(name) then
       binser.registerClass(c, name)
    end
+
+   nbt.registerClass(c, name)
 
    return setmetatable(c, class_mt)
 end
