@@ -90,11 +90,6 @@ local function update_mefs(map)
 end
 
 function field_logic.turn_begin()
-   if config.base.auto_turn_speed ~= "highest" then
-      dt = coroutine.yield()
-      field:update(dt)
-   end
-
    local turn_result = Event.trigger("base.on_turn_begin", {}, nil)
    if turn_result then
       -- return turn_result
@@ -108,6 +103,14 @@ function field_logic.turn_begin()
       -- NOTE: should be an internal event, separate from ones that
       -- event callbacks may return.
       return "player_died", player
+   end
+
+   if player:has_activity() then
+      local is_auto_turn = player.activity.proto.animation_wait > 0 and config.base.auto_turn_speed ~= "highest"
+      if is_auto_turn then
+         dt = coroutine.yield()
+         field:update(dt)
+      end
    end
 
    -- In Elona, the player always goes first at the start of each

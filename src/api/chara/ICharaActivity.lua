@@ -55,21 +55,20 @@ end
 
 function ICharaActivity:pass_activity_turn()
    if self:is_player() then
-      -- TODO the performance of Gui.update_screen() is terrible, so this causes a
-      -- lot of lag. There has to be some amount of optimization we can do.
-      local auto_turn = config.base.auto_turn_speed
-
-      local auto_turn_widget = Gui.hud_widget("hud_auto_turn"):widget()
-      if auto_turn == "normal" then
-         -- With screen update
-         Gui.wait(self.activity.animation_wait)
-         auto_turn_widget:pass_turn()
-      elseif auto_turn == "high" then
-         -- No screen update
-         Gui.wait(self.activity.animation_wait, true)
-         auto_turn_widget:pass_turn()
-      elseif auto_turn == "highest" then
-         -- Don't wait at all
+      if self.activity and self.activity.proto.animation_wait > 0 then
+         local auto_turn = config.base.auto_turn_speed
+         local auto_turn_widget = Gui.hud_widget("hud_auto_turn"):widget()
+         if auto_turn == "normal" then
+            -- With screen update
+            Gui.wait(self.activity.proto.anime_wait)
+            auto_turn_widget:pass_turn()
+         elseif auto_turn == "high" then
+            -- No screen update
+            Gui.wait(self.activity.proto.anime_wait, true)
+            auto_turn_widget:pass_turn()
+         elseif auto_turn == "highest" then
+            -- Don't wait at all
+         end
       end
    end
 
@@ -89,7 +88,9 @@ local function make_activity(id, params)
    local activity = data["base.activity"]:ensure(id)
    for property, ty in pairs(activity.params or {}) do
       local value = params[property]
-      if type(value) ~= ty then
+      -- everything is implicitly optional for now, until we get a better
+      -- typechecker
+      if value ~= nil and type(value) ~= ty then
          error(("Activity %s requires parameter '%s' of type %s, got '%s'"):format(id, property, ty, tostring(value)))
       end
       obj[property] = value
@@ -132,8 +133,10 @@ function ICharaActivity:start_activity(id, params, turns)
    end
 
    if self:is_player() and not config.base.disable_auto_turn_anim then
-      local auto_turn_anim_id = self.activity.proto.auto_turn_anim or nil
-      Gui.hud_widget("hud_auto_turn"):widget():set_shown(true, auto_turn_anim_id)
+      if self.activity.proto.animation_wait > 0 then
+         local auto_turn_anim_id = self.activity.proto.auto_turn_anim or nil
+         Gui.hud_widget("hud_auto_turn"):widget():set_shown(true, auto_turn_anim_id)
+      end
    end
 end
 
