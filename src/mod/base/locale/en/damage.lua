@@ -154,40 +154,42 @@ return {
             weapon = "hand",
          },
 
-         claw = {
-            enemy = "claw",
-            ally = "claw",
-            weapon = "claw",
-         },
+         elona = {
+            claw = {
+               enemy = "claw",
+               ally = "claw",
+               weapon = "claw",
+            },
 
-         bite = {
-            enemy = "bite",
-            ally = "bite",
-            weapon = "fang",
-         },
+            bite = {
+               enemy = "bite",
+               ally = "bite",
+               weapon = "fang",
+            },
 
-         gaze = {
-            enemy = "gaze",
-            ally = "gaze",
-            weapon = "eye",
-         },
+            gaze = {
+               enemy = "gaze",
+               ally = "gaze",
+               weapon = "eye",
+            },
 
-         sting = {
-            enemy = "sting",
-            ally = "sting",
-            weapon = "needle",
-         },
+            sting = {
+               enemy = "sting",
+               ally = "sting",
+               weapon = "needle",
+            },
 
-         touch = {
-            enemy = "touch",
-            ally = "touch",
-            weapon = "hand",
-         },
+            touch = {
+               enemy = "touch",
+               ally = "touch",
+               weapon = "hand",
+            },
 
-         spore = {
-            enemy = "attack",
-            ally = "attack",
-            weapon = "spore",
+            spore = {
+               enemy = "attack",
+               ally = "attack",
+               weapon = "spore",
+            }
          }
       }
    }
