@@ -532,7 +532,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -553,7 +553,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -574,7 +574,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          tags = { "nogive" },
 
@@ -598,7 +598,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -618,7 +618,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.identify", 100, params)
@@ -644,7 +644,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.teleport_other", 100, params)
@@ -670,7 +670,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_teleport", params)
@@ -698,7 +698,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_identify", params)
@@ -726,7 +726,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_uncurse", params)
@@ -859,7 +859,7 @@ local item =
          end,
 
          tags = { "neg" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -882,7 +882,7 @@ local item =
          end,
 
          tags = { "neg" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -905,7 +905,7 @@ local item =
          end,
 
          tags = { "neg" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -927,7 +927,7 @@ local item =
          end,
 
          tags = { "nogive" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -964,7 +964,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_ice_bolt", params)
@@ -991,7 +991,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_fire_bolt", params)
@@ -1018,7 +1018,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_lightning_bolt", params)
@@ -1814,7 +1814,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.heal_light", 100, item, params)
@@ -1837,7 +1837,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.heal_light", 300, item, params)
@@ -1860,7 +1860,7 @@ local item =
          coefficient = 50,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.heal_critical", 100, item, params)
@@ -1884,7 +1884,7 @@ local item =
          coefficient = 50,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.heal_critical", 300, item, params)
@@ -1908,7 +1908,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.heal_critical", 400, item, params)
@@ -1972,7 +1972,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.cure_of_eris", 100, item, params)
@@ -1996,7 +1996,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.cure_of_eris", 300, item, params)
@@ -2020,7 +2020,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.cure_of_jure", 100, item, params)
@@ -2084,9 +2084,7 @@ local item =
          category = 60000,
          subcategory = 60004,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          params = { bed_quality = 100 },
 
@@ -2107,9 +2105,7 @@ local item =
          elona_function = 44,
 
          tags = { "fest" },
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.tag_fest",
             "elona.furniture"
@@ -2123,9 +2119,7 @@ local item =
          weight = 320,
          category = 60000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2140,9 +2134,7 @@ local item =
          category = 60000,
          rarity = 400000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          },
@@ -2158,9 +2150,7 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2175,9 +2165,7 @@ local item =
          category = 60000,
          rarity = 300000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2192,9 +2180,7 @@ local item =
          category = 60000,
          coefficient = 100,
          originalnameref2 = "lot",
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2209,9 +2195,7 @@ local item =
          category = 60000,
          coefficient = 100,
          originalnameref2 = "lot",
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2249,9 +2233,7 @@ local item =
          category = 60000,
          rarity = 500000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2266,9 +2248,7 @@ local item =
          category = 60000,
          rarity = 500000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2299,9 +2279,7 @@ local item =
          elona_function = 44,
 
          tags = { "sf" },
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.tag_sf",
             "elona.furniture"
@@ -2315,9 +2293,7 @@ local item =
          weight = 1200,
          category = 60000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2330,9 +2306,7 @@ local item =
          weight = 400,
          category = 60000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          },
@@ -2348,9 +2322,7 @@ local item =
          category = 60000,
          rarity = 100000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2365,9 +2337,7 @@ local item =
          category = 60000,
          rarity = 300000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2380,9 +2350,7 @@ local item =
          weight = 420,
          category = 60000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2395,9 +2363,7 @@ local item =
          weight = 540,
          category = 60000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2411,9 +2377,7 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2441,9 +2405,7 @@ local item =
          weight = 1200,
          category = 60000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          elona_function = 44,
 
@@ -2459,9 +2421,7 @@ local item =
          weight = 6800,
          category = 60000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          elona_function = 44,
 
@@ -2519,9 +2479,7 @@ local item =
          category = 60000,
          rarity = 400000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2591,9 +2549,7 @@ local item =
          rarity = 200000,
          coefficient = 100,
          originalnameref2 = "variety",
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2684,7 +2640,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_dimensional_move", params)
@@ -2708,9 +2664,7 @@ local item =
          category = 64000,
          coefficient = 100,
          tags = { "fish" },
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.tag_fish",
             "elona.junk"
@@ -2729,7 +2683,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_summon_monsters", params)
@@ -2757,7 +2711,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.heal_light", 100, params)
@@ -2784,7 +2738,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.magic_dart", 100, params)
@@ -2810,7 +2764,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.summon_monsters", 100, params)
@@ -2837,7 +2791,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.ice_bolt", 100, params)
@@ -2864,7 +2818,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.fire_bolt", 100, params)
@@ -2906,7 +2860,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.cure_of_eris", 100, params)
@@ -2928,9 +2882,7 @@ local item =
          weight = 210,
          category = 60000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2944,9 +2896,7 @@ local item =
          on_use = function() end,
          category = 59000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          elona_function = 2,
 
@@ -2963,9 +2913,7 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          },
@@ -2981,9 +2929,7 @@ local item =
          category = 60000,
          rarity = 300000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -2998,9 +2944,7 @@ local item =
          category = 60000,
          rarity = 300000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3015,9 +2959,7 @@ local item =
          category = 60000,
          rarity = 300000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3030,9 +2972,7 @@ local item =
          weight = 320,
          category = 60000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3045,9 +2985,7 @@ local item =
          weight = 350,
          category = 60000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3060,9 +2998,7 @@ local item =
          weight = 400,
          category = 60000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3076,9 +3012,7 @@ local item =
          category = 60000,
          rarity = 500000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3092,9 +3026,7 @@ local item =
          category = 60000,
          rarity = 250000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3107,9 +3039,7 @@ local item =
          weight = 250,
          category = 60000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3150,9 +3080,7 @@ local item =
          weight = 1100,
          category = 59000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.misc_item"
          }
@@ -3165,9 +3093,7 @@ local item =
          weight = 240,
          category = 60000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3213,9 +3139,7 @@ local item =
          category = 60000,
          coefficient = 100,
          originalnameref2 = "bundle",
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3229,9 +3153,7 @@ local item =
          category = 60000,
          rarity = 250000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3245,9 +3167,7 @@ local item =
          category = 60000,
          rarity = 250000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3262,9 +3182,7 @@ local item =
          rarity = 100000,
          coefficient = 100,
          originalnameref2 = "statue",
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3304,9 +3222,7 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3321,9 +3237,7 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3337,9 +3251,7 @@ local item =
          category = 60000,
          coefficient = 100,
          originalnameref2 = "lot",
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3354,9 +3266,7 @@ local item =
          category = 60000,
          rarity = 250000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          on_use = function(self, params)
             elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
@@ -3376,9 +3286,7 @@ local item =
          category = 60000,
          rarity = 250000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          on_use = function(self, params)
             elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
@@ -3398,9 +3306,7 @@ local item =
          category = 60000,
          rarity = 250000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          on_use = function(self, params)
             elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
@@ -3432,9 +3338,7 @@ local item =
          category = 60000,
          rarity = 250000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3461,9 +3365,7 @@ local item =
          category = 60000,
          rarity = 500000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3477,9 +3379,7 @@ local item =
          on_use = function() end,
          category = 59000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          elona_function = 4,
 
@@ -3496,9 +3396,7 @@ local item =
          on_use = function() end,
          category = 59000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          elona_function = 1,
 
@@ -3514,9 +3412,7 @@ local item =
          weight = 1200,
          category = 60000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3531,9 +3427,7 @@ local item =
          category = 60000,
          rarity = 500000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -3735,7 +3629,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.lightning_bolt", 100, params)
@@ -3762,7 +3656,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.buff_slow", 100, params)
@@ -4268,7 +4162,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.magic_map", 100, params)
@@ -4296,7 +4190,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.heal_critical", 100, params)
@@ -4518,7 +4412,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -4639,9 +4533,7 @@ local item =
          subcategory = 64000,
          coefficient = 100,
 
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          categories = {
             "elona.junk",
@@ -4658,9 +4550,7 @@ local item =
          subcategory = 64100,
          coefficient = 100,
          originalnameref2 = "lot",
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.junk_town",
             "elona.junk"
@@ -4675,9 +4565,7 @@ local item =
          category = 64000,
          coefficient = 100,
          tags = { "fest" },
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.tag_fest",
             "elona.junk"
@@ -4691,9 +4579,7 @@ local item =
          weight = 90,
          category = 64000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.junk"
          }
@@ -4706,9 +4592,7 @@ local item =
          weight = 80,
          category = 64000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.junk"
          }
@@ -4722,9 +4606,7 @@ local item =
          category = 59000,
          subcategory = 64000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          on_use = function(self, params)
             -- >>>>>>>> shade2/action.hsp:2074 	case effRope ...
@@ -5105,7 +4987,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -5122,9 +5004,7 @@ local item =
          rarity = 100000,
          coefficient = 100,
          originalnameref2 = "figurine",
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -5139,9 +5019,7 @@ local item =
          rarity = 100000,
          coefficient = 100,
          originalnameref2 = "figurine",
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -5155,9 +5033,7 @@ local item =
          category = 72000,
          rarity = 100000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.container"
          },
@@ -5172,9 +5048,7 @@ local item =
          category = 72000,
          rarity = 500000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.container"
          },
@@ -5189,9 +5063,7 @@ local item =
          category = 72000,
          rarity = 500000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.container"
          },
@@ -5211,7 +5083,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -5238,7 +5110,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.scroll",
             "elona.tag_noshop"
@@ -5273,7 +5145,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -5294,7 +5166,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          tags = { "nogive" },
 
@@ -5317,7 +5189,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_magic_map", params)
@@ -5346,7 +5218,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_oracle", params)
@@ -5375,7 +5247,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_return", params)
@@ -5402,7 +5274,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_heal_light", params)
@@ -5430,7 +5302,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_heal_critical", params)
@@ -5459,7 +5331,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_cure_of_eris", params)
@@ -5488,7 +5360,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_cure_of_jure", params)
@@ -5595,7 +5467,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_magic_dart", params)
@@ -5705,7 +5577,7 @@ local item =
          end,
 
          tags = { "nogive", "elona.is_acid" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -5724,7 +5596,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_nether_arrow", params)
@@ -5753,7 +5625,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_chaos_eye", params)
@@ -5781,7 +5653,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_nerve_arrow", params)
@@ -5833,7 +5705,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_darkness_bolt", params)
@@ -5861,7 +5733,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_mind_bolt", params)
@@ -5889,7 +5761,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_ice_ball", params)
@@ -5917,7 +5789,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_fire_ball", params)
@@ -5946,7 +5818,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_raging_roar", params)
@@ -5975,7 +5847,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_chaos_ball", params)
@@ -5998,9 +5870,7 @@ local item =
          weight = 1500,
          category = 64000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.junk"
          }
@@ -6013,9 +5883,7 @@ local item =
          weight = 4800,
          category = 64000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.junk"
          }
@@ -6175,7 +6043,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.restore_body", 100, item, params)
@@ -6197,7 +6065,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.restore_spirit", 100, item, params)
@@ -6226,7 +6094,7 @@ local item =
          end,
 
          tags = { "spshop" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_spshop"
@@ -6250,7 +6118,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "neg" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.scroll",
             "elona.tag_neg"
@@ -6269,7 +6137,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_wish", params)
@@ -6312,7 +6180,7 @@ local item =
          is_zap_always_successful = true,
 
          tags = { "noshop" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.rod",
             "elona.tag_noshop"
@@ -7709,7 +7577,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -7732,7 +7600,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -7750,7 +7618,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.buff_holy_shield", 200, item, params)
@@ -7772,7 +7640,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.buff_holy_shield", params)
@@ -7800,7 +7668,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.buff_mist_of_silence", 100, params)
@@ -7828,7 +7696,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.buff_mist_of_silence", params)
@@ -7860,7 +7728,7 @@ local item =
          end,
 
          tags = { "neg" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -7880,7 +7748,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.buff_regeneration", params)
@@ -7907,7 +7775,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.buff_regeneration", 300, item, params)
@@ -7930,7 +7798,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.buff_elemental_shield", params)
@@ -7957,7 +7825,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.buff_elemental_shield", 250, item, params)
@@ -7980,7 +7848,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.buff_speed", params)
@@ -8009,7 +7877,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.buff_slow", params)
@@ -8036,7 +7904,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.buff_speed", 250, item, params)
@@ -8062,7 +7930,7 @@ local item =
          end,
 
          tags = { "neg" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -8081,7 +7949,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.buff_speed", 100, params)
@@ -8108,7 +7976,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.buff_hero", params)
@@ -8134,7 +8002,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.buff_hero", 250, item, params)
@@ -8156,7 +8024,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.buff_mist_of_frailness", params)
@@ -8185,7 +8053,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.buff_element_scar", params)
@@ -8217,7 +8085,7 @@ local item =
          end,
 
          tags = { "neg" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -8237,7 +8105,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.buff_holy_veil", params)
@@ -8268,7 +8136,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -8289,7 +8157,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.vanquish_hex", 100, params)
@@ -8317,7 +8185,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_holy_light", params)
@@ -8346,7 +8214,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_vanquish_hex", params)
@@ -8376,7 +8244,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -8399,7 +8267,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -8422,7 +8290,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -8443,7 +8311,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.harvest_mana", 100, params)
@@ -8487,9 +8355,7 @@ local item =
          on_use = function() end,
          category = 59000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          elona_function = 3,
 
@@ -8525,7 +8391,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -8546,7 +8412,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.buff_nightmare", params)
@@ -8575,7 +8441,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.buff_divine_wisdom", params)
@@ -8606,7 +8472,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -8810,7 +8676,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_sense_object", params)
@@ -8839,7 +8705,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -8860,7 +8726,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.uncurse", 100, params)
@@ -9018,9 +8884,7 @@ local item =
          subcategory = 58500,
          rarity = 250000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          params = { food_quality = 1, seed_plant_id = "elona.unknown" },
 
@@ -9341,7 +9205,7 @@ local item =
          end,
 
          tags = { "neg" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -9367,7 +9231,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = "Random",
+         random_color = "Random",
          medal_value = 5,
          categories = {
             "elona.scroll",
@@ -9394,7 +9258,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = "Random",
+         random_color = "Random",
          medal_value = 8,
          categories = {
             "elona.scroll",
@@ -9420,7 +9284,7 @@ local item =
          end,
 
          tags = { "nogive" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -9439,7 +9303,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.effect_cure_mutation", 200, item, params)
@@ -9462,7 +9326,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_mutation", params)
@@ -10444,7 +10308,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -10476,7 +10340,7 @@ local item =
          can_be_recharged = false,
 
          tags = { "noshop" },
-         color = "Random",
+         random_color = "Random",
          medal_value = 20,
          categories = {
             "elona.rod",
@@ -10497,7 +10361,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_dominate", params)
@@ -10577,7 +10441,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_web", params)
@@ -10606,7 +10470,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.web", 100, params)
@@ -10938,7 +10802,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "neg" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.scroll",
             "elona.tag_neg"
@@ -10960,7 +10824,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -10987,7 +10851,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "spshop" },
-         color = "Random",
+         random_color = "Random",
          medal_value = 7,
          categories = {
             "elona.scroll",
@@ -11054,7 +10918,7 @@ local item =
          rarity = 25000,
          coefficient = 0,
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          is_precious = true,
 
@@ -11079,7 +10943,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -11102,7 +10966,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -11124,7 +10988,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -11147,7 +11011,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -11320,7 +11184,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -11360,7 +11224,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.change", 100, params)
@@ -11388,7 +11252,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.effect_alchemy", 100, params)
@@ -11950,9 +11814,7 @@ local item =
          end,
 
          tags = { "sf" },
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.tag_sf",
             "elona.misc_item"
@@ -11973,7 +11835,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.wall_creation", 100, params)
@@ -12001,7 +11863,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_wall_creation", params)
@@ -12052,7 +11914,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_healing_rain", params)
@@ -12087,7 +11949,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.scroll",
             "elona.tag_noshop"
@@ -12107,7 +11969,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_healing_touch", params)
@@ -12136,7 +11998,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.healing_touch", 100, params)
@@ -12361,7 +12223,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.effect_cure_corruption", 200, item, params)
@@ -12506,7 +12368,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_acid_ground", params)
@@ -12535,7 +12397,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.spell_acid_ground", 100, params)
@@ -12566,7 +12428,7 @@ local item =
          end,
 
          tags = { "nogive" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -12630,7 +12492,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_fire_wall", params)
@@ -12659,7 +12521,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.fire_wall", 100, params)
@@ -12857,7 +12719,7 @@ local item =
          end,
 
          tags = { "nogive" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -12949,7 +12811,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_zap = function(self, params)
             return Magic.zap_wand(self, "elona.door_creation", 100, params)
@@ -12976,7 +12838,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_door_creation", params)
@@ -13026,9 +12888,7 @@ local item =
          category = 60000,
          rarity = 250000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          },
@@ -13172,9 +13032,7 @@ local item =
          weight = 4800,
          category = 64000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.junk"
          }
@@ -13859,7 +13717,7 @@ local item =
          rarity = 1000,
          coefficient = 0,
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          is_precious = true,
 
@@ -13884,7 +13742,7 @@ local item =
          rarity = 5000,
          coefficient = 0,
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          is_precious = true,
 
@@ -13935,7 +13793,7 @@ local item =
          end,
 
          tags = { "spshop" },
-         color = "Random",
+         random_color = "Random",
          medal_value = 30,
          categories = {
             "elona.drink",
@@ -13999,7 +13857,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.buff_incognito", params)
@@ -14106,7 +13964,7 @@ local item =
          rarity = 25000,
          coefficient = 0,
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -14271,7 +14129,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          elona_type = "scroll",
          categories = {
@@ -14444,9 +14302,7 @@ local item =
          category = 60000,
          rarity = 250000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          elona_function = 44,
 
@@ -14464,9 +14320,7 @@ local item =
          category = 60000,
          rarity = 500000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -14482,9 +14336,7 @@ local item =
          subcategory = 60001,
          rarity = 500000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          params = {
             count_1 = 0,
@@ -14551,9 +14403,7 @@ local item =
          subcategory = 60004,
          rarity = 250000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          params = { bed_quality = 160 },
 
@@ -14638,9 +14488,7 @@ local item =
          category = 60000,
          rarity = 800000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -14658,7 +14506,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_dark_eye", params)
@@ -15823,7 +15671,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_magic_storm", params)
@@ -15852,7 +15700,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_crystal_spear", params)
@@ -16066,7 +15914,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.effect_descent", 100, item, params)
@@ -16140,7 +15988,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.book",
             "elona.tag_noshop"
@@ -16166,7 +16014,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.scroll",
             "elona.tag_noshop"
@@ -16186,7 +16034,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.buff_contingency", params)
@@ -16213,7 +16061,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion("elona.evolution", 100, item, params)
@@ -16480,9 +16328,7 @@ local item =
          params = { bed_quality = 200 },
 
          tags = { "noshop" },
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture_bed",
             "elona.tag_noshop",
@@ -16824,7 +16670,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_four_dimensional_power", params)
@@ -16853,7 +16699,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "Random",
+         random_color = "Random",
 
          on_read = function(self, params)
             return Magic.read_spellbook(self, "elona.spell_wizards_harvest", params)
@@ -17000,7 +16846,7 @@ local item =
          end,
 
          tags = { "nogive" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -17026,7 +16872,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = "Random",
+         random_color = "Random",
          categories = {
             "elona.scroll",
             "elona.tag_noshop"
@@ -17473,9 +17319,7 @@ local item =
          category = 60000,
          rarity = 10000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.no_generate",
             "elona.furniture"
@@ -17673,9 +17517,7 @@ local item =
          subcategory = 10002,
          rarity = 2000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          skill = "elona.long_sword",
          pierce_rate = 100,
@@ -17778,9 +17620,7 @@ local item =
          category = 60000,
          rarity = 40000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
          categories = {
             "elona.furniture"
          }
@@ -18077,9 +17917,7 @@ local item =
          category = 60000,
          rarity = 100000,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          elona_function = 44,
 
@@ -18277,9 +18115,7 @@ local item =
          category = 59000,
          subcategory = 59500,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          on_use = function(self, params)
             elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
@@ -18299,9 +18135,7 @@ local item =
          category = 59000,
          subcategory = 59500,
          coefficient = 100,
-         _copy = {
-            color = Resolver.make("elona.furniture_color"),
-         },
+         random_color = "Furniture",
 
          on_use = function(self, params)
             elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })

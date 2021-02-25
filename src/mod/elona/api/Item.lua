@@ -259,21 +259,46 @@ end
 -- <<<<<<<< shade2/item.hsp:701 	} ..
 
 -- >>>>>>>> shade2/text.hsp:213 	_randColor	=coDefault	,coGreen	,coBlue		,coYellow ..
--- TODO hardcoded
 local RANDOM_COLORS = {
-   { 255, 255, 255 },
-   { 175, 255, 175 },
-   { 175, 175, 255 },
-   { 255, 255, 175 },
-   { 255, 215, 175 },
-   { 255, 155, 155 },
+   Enum.Color.White,
+   Enum.Color.Green,
+   Enum.Color.Blue,
+   Enum.Color.Yellow,
+   Enum.Color.Brown,
+   Enum.Color.Red
 }
 -- <<<<<<<< shade2/text.hsp:213 	_randColor	=coDefault	,coGreen	,coBlue		,coYellow ...
 
 function Item.random_item_color(item, seed)
    seed = seed or save.base.random_seed
    local index = (Util.string_to_integer(item._id) % seed) % 6
-   return RANDOM_COLORS[index+1]
+   return table.deepcopy(RANDOM_COLORS[index+1])
+end
+
+local FURNITURE_COLORS = {
+   Enum.Color.White,
+   Enum.Color.Green,
+   Enum.Color.Blue,
+   Enum.Color.Yellow,
+   Enum.Color.Brown
+}
+
+function Item.random_furniture_color()
+   -- >>>>>>>> shade2/item.hsp:613 	if iCol(ci)=coRand	:iCol(ci)=randColor(rnd(length ...
+   return table.deepcopy(Rand.choice(FURNITURE_COLORS))
+   -- <<<<<<<< shade2/item.hsp:613 	if iCol(ci)=coRand	:iCol(ci)=randColor(rnd(length ...end
+end
+
+function Item.default_item_color(item, seed)
+   -- >>>>>>>> shade2/item.hsp:615 	iCol(ci)=iColOrg(ci) ...
+   if item.proto.random_color == "Random" then
+      return Item.random_item_color(item)
+   elseif item.proto.random_color == "Furniture" then
+      return Item.random_furniture_color(item)
+   else
+      return item.proto.color
+   end
+   -- <<<<<<<< shade2/item.hsp:616 	if iCol(ci)=coRand	:iCol(ci)=randColor(rnd(length ..
 end
 
 function Item.fix_item(item, params)
@@ -289,9 +314,7 @@ function Item.fix_item(item, params)
    local no_oracle = params.no_oracle or is_shop
 
    -- >>>>>>>> shade2/item.hsp:615 	iCol(ci)=iColOrg(ci) ...
-   if item.color == "Random" then
-      item.color = Item.random_item_color(item)
-   end
+   item.color = Item.default_item_color(item) or item.color
    -- <<<<<<<< shade2/item.hsp:616 	if iCol(ci)=coRand	:iCol(ci)=randColor(rnd(length ..
 
    -- >>>>>>>> shade2/item.hsp:628 	itemMemory(1,dbId)++ ..
