@@ -1,13 +1,3 @@
-local Resolver = require("api.Resolver")
--- builtin:
--- is_extra
--- ordering
---
--- all else should be properties
-
--- TODO: there needs to be some way of resolving "male_ratio" before
--- "elona.by_gender".
-
 local race =
    {
       {
@@ -18,11 +8,12 @@ local race =
          properties = {
             breed_power = 250,
             image = "elona.chara_kobold",
-            age = Resolver.make("base.between", { min = 15, max = 44 }),
-            height = 150,
-            gender = Resolver.make("elona.gender", { male_ratio = 50 }),
-
          },
+
+         male_ratio = 50,
+         height = 150,
+         age_min = 15,
+         age_max = 44,
 
          skills = {
             ["elona.stat_life"] = 90,
@@ -54,8 +45,8 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
       },
+
       {
          _id = "orc",
          is_extra = true,
@@ -64,11 +55,12 @@ local race =
          properties = {
             breed_power = 300,
             image = "elona.chara_orc",
-            age = Resolver.make("base.between", { min = 15, max = 44 }),
-            height = 150,
-            gender = Resolver.make("elona.gender", { male_ratio = 51 }),
-
          },
+
+         male_ratio = 51,
+         height = 150,
+         age_min = 15,
+         age_max = 44,
 
          skills = {
             ["elona.stat_life"] = 130,
@@ -99,8 +91,8 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
       },
+
       {
          _id = "troll",
          is_extra = true,
@@ -109,12 +101,13 @@ local race =
          properties = {
             breed_power = 250,
             image = "elona.chara_troll",
-            age = Resolver.make("base.between", { min = 15, max = 44 }),
-            height = 400,
-            gender = Resolver.make("elona.gender", { male_ratio = 51 }),
             pv_correction = 150,
-
          },
+
+         male_ratio = 51,
+         height = 400,
+         age_min = 15,
+         age_max = 44,
 
          skills = {
             ["elona.stat_life"] = 90,
@@ -141,8 +134,8 @@ local race =
             "elona.ring",
             "elona.waist"
          },
-
       },
+
       {
          _id = "lizardman",
          is_extra = true,
@@ -151,12 +144,13 @@ local race =
          properties = {
             breed_power = 300,
             image = "elona.chara_lizardman",
-            age = Resolver.make("base.between", { min = 15, max = 44 }),
-            height = 240,
-            gender = Resolver.make("elona.gender", { male_ratio = 51 }),
             dv_correction = 120,
-
          },
+
+         male_ratio = 51,
+         height = 240,
+         age_min = 15,
+         age_max = 44,
 
          skills = {
             ["elona.stat_life"] = 120,
@@ -187,8 +181,8 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
       },
+
       {
          _id = "minotaur",
          is_extra = true,
@@ -197,11 +191,12 @@ local race =
          properties = {
             breed_power = 300,
             image = "elona.chara_minotaur",
-            age = Resolver.make("base.between", { min = 15, max = 44 }),
-            height = 350,
-            gender = Resolver.make("elona.gender", { male_ratio = 51 }),
-
          },
+
+         male_ratio = 51,
+         height = 350,
+         age_min = 15,
+         age_max = 44,
 
          skills = {
             ["elona.stat_life"] = 160,
@@ -229,8 +224,8 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
       },
+
       {
          _id = "yerles",
          is_extra = false,
@@ -238,19 +233,18 @@ local race =
 
          properties = {
             breed_power = 220,
-            image = Resolver.make("elona.by_gender",
-                                  {
-                                     male = "elona.chara_human_male",
-                                     female = "elona.chara_human_female"
-            }),
-            age = Resolver.make("base.between", { min = 15, max = 34 }),
-            height = 165,
-            gender = Resolver.make("elona.gender", { male_ratio = 52 }),
+            male_image = "elona.chara_human_male",
+            female_image = "elona.chara_human_female",
          },
 
          traits = {
             ["elona.perm_skill_point"] = 1,
          },
+
+         male_ratio = 52,
+         height = 165,
+         age_min = 15,
+         age_max = 34,
 
          skills = {
             ["elona.stat_life"] = 110,
@@ -285,6 +279,7 @@ local race =
             "elona.leg"
          },
       },
+
       {
          _id = "norland",
          is_extra = true,
@@ -292,16 +287,14 @@ local race =
 
          properties = {
             breed_power = 220,
-            image = Resolver.make("elona.by_gender",
-                                  {
-                                     male = "elona.chara_human_male",
-                                     female = "elona.chara_human_female"
-            }),
-            age = Resolver.make("base.between", { min = 15, max = 34 }),
-            height = 170,
-            gender = Resolver.make("elona.gender", { male_ratio = 52 }),
-
+            male_image = "elona.chara_human_male",
+            female_image = "elona.chara_human_female",
          },
+
+         male_ratio = 52,
+         height = 170,
+         age_min = 15,
+         age_max = 34,
 
          skills = {
             ["elona.stat_life"] = 100,
@@ -321,6 +314,7 @@ local race =
             ["elona.two_hand"] = 3,
             ["elona.control_magic"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -335,6 +329,7 @@ local race =
             "elona.leg"
          },
       },
+
       {
          _id = "eulderna",
          is_extra = false,
@@ -342,16 +337,14 @@ local race =
 
          properties = {
             breed_power = 180,
-            image = Resolver.make("elona.by_gender",
-                                  {
-                                     male = "elona.chara_eulderna_male",
-                                     female = "elona.chara_eulderna_female"
-            }),
-            age = Resolver.make("base.between", { min = 16, max = 35 }),
-            height = 175,
-            gender = Resolver.make("elona.gender", { male_ratio = 52 }),
-
+            male_image = "elona.chara_eulderna_male",
+            female_image = "elona.chara_eulderna_female",
          },
+
+         male_ratio = 52,
+         height = 175,
+         age_min = 16,
+         age_max = 35,
 
          traits = {
             ["elona.perm_magic"] = 1,
@@ -374,6 +367,7 @@ local race =
             ["elona.literacy"] = 3,
             ["elona.magic_device"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -387,9 +381,8 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
+
       {
          _id = "fairy",
          is_extra = false,
@@ -398,21 +391,13 @@ local race =
          properties = {
             breed_power = 180,
             image = "elona.chara_fairy",
-            age = Resolver.make("base.between", { min = 5, max = 104 }),
-            height = 50,
-            gender = Resolver.make("elona.gender", { male_ratio = 52 }),
-            resistances = {
-               ["elona.magic"] = 200,
-               ["elona.darkness"] = 200,
-               ["elona.nerve"] = 200,
-               ["elona.nether"] = 200,
-               ["elona.mind"] = 200,
-               ["elona.sound"] = 200,
-               ["elona.chaos"] = 200,
-            },
             dv_correction = 250,
-
          },
+
+         male_ratio = 52,
+         height = 50,
+         age_min = 5,
+         age_max = 104,
 
          traits = {
             ["elona.perm_resist"] = 1,
@@ -436,6 +421,16 @@ local race =
             ["elona.pickpocket"] = 3,
             ["elona.light_armor"] = 3,
          },
+
+         resistances = {
+            ["elona.magic"] = 200,
+            ["elona.darkness"] = 200,
+            ["elona.nerve"] = 200,
+            ["elona.nether"] = 200,
+            ["elona.mind"] = 200,
+            ["elona.sound"] = 200,
+            ["elona.chaos"] = 200,
+         },
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -449,8 +444,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "asura",
@@ -460,12 +453,13 @@ local race =
          properties = {
             breed_power = 100,
             image = "elona.chara_asura",
-            age = Resolver.make("base.between", { min = 15, max = 34 }),
-            height = 220,
-            gender = Resolver.make("elona.gender", { male_ratio = 52 }),
             dv_correction = 200,
-
          },
+
+         male_ratio = 52,
+         height = 220,
+         age_min = 15,
+         age_max = 34,
 
          skills = {
             ["elona.stat_life"] = 90,
@@ -491,8 +485,6 @@ local race =
             "elona.hand",
             "elona.neck"
          },
-
-
       },
       {
          _id = "slime",
@@ -503,11 +495,12 @@ local race =
             breed_power = 700,
             image = "elona.chara_race_slime",
             cast_style = "spill",
-            age = Resolver.make("base.between", { min = 1, max = 10 }),
-            height = 40,
-            gender = Resolver.make("elona.gender", { male_ratio = 54 }),
-
          },
+
+         male_ratio = 54,
+         height = 40,
+         age_min = 1,
+         age_max = 10,
 
          skills = {
             ["elona.stat_life"] = 80,
@@ -528,8 +521,6 @@ local race =
          body_parts = {
             "elona.head"
          },
-
-
       },
       {
          _id = "wolf",
@@ -539,12 +530,13 @@ local race =
          properties = {
             breed_power = 800,
             image = "elona.chara_wolf",
-            age = Resolver.make("base.between", { min = 2, max = 11 }),
-            height = 100,
-            gender = Resolver.make("elona.gender", { male_ratio = 55 }),
             dv_correction = 140,
-
          },
+
+         male_ratio = 55,
+         height = 100,
+         age_min = 2,
+         age_max = 11,
 
          skills = {
             ["elona.stat_life"] = 100,
@@ -570,8 +562,6 @@ local race =
             "elona.ring",
             "elona.leg"
          },
-
-
       },
       {
          _id = "dwarf",
@@ -581,11 +571,12 @@ local race =
          properties = {
             breed_power = 150,
             image = "elona.chara_dwarf",
-            age = Resolver.make("base.between", { min = 20, max = 79 }),
-            height = 100,
-            gender = Resolver.make("elona.gender", { male_ratio = 56 }),
-
          },
+
+         male_ratio = 56,
+         height = 100,
+         age_min = 20,
+         age_max = 79,
 
          traits = {
             ["elona.perm_poison"] = 2,
@@ -622,8 +613,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "juere",
@@ -632,16 +621,14 @@ local race =
 
          properties = {
             breed_power = 210,
-            image = Resolver.make("elona.by_gender",
-                                  {
-                                     male = "elona.chara_juere_male",
-                                     female = "elona.chara_juere_female"
-            }),
-            age = Resolver.make("base.between", { min = 15, max = 44 }),
-            height = 165,
-            gender = Resolver.make("elona.gender", { male_ratio = 50 }),
-
+            male_image = "elona.chara_juere_male",
+            female_image = "elona.chara_juere_female",
          },
+
+         male_ratio = 50,
+         height = 165,
+         age_min = 15,
+         age_max = 44,
 
          traits = {
             ["elona.perm_slow_food"] = 1,
@@ -679,8 +666,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "zombie",
@@ -690,17 +675,12 @@ local race =
          properties = {
             breed_power = 100,
             image = "elona.chara_zombie",
-            age = Resolver.make("base.between", { min = 10, max = 209 }),
-            height = 160,
-            gender = Resolver.make("elona.gender", { male_ratio = 50 }),
-            resistances = {
-               ["elona.darkness"] = 500,
-               ["elona.nerve"] = 500,
-               ["elona.nether"] = 500,
-               ["elona.fire"] = 80,
-            },
-
          },
+
+         male_ratio = 50,
+         height = 160,
+         age_min = 10,
+         age_max = 209,
 
          skills = {
             ["elona.stat_life"] = 120,
@@ -718,6 +698,12 @@ local race =
             ["elona.cooking"] = 3,
             ["elona.fishing"] = 3,
          },
+         resistances = {
+            ["elona.darkness"] = 500,
+            ["elona.nerve"] = 500,
+            ["elona.nether"] = 500,
+            ["elona.fire"] = 80,
+         },
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -728,8 +714,6 @@ local race =
             "elona.ring",
             "elona.waist"
          },
-
-
       },
       {
          _id = "elea",
@@ -738,16 +722,14 @@ local race =
 
          properties = {
             breed_power = 120,
-            image = Resolver.make("elona.by_gender",
-                                  {
-                                     male = "elona.chara_eulderna_male",
-                                     female = "elona.chara_eulderna_female"
-            }),
-            age = Resolver.make("base.between", { min = 10, max = 209 }),
-            height = 180,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
+            male_image = "elona.chara_eulderna_male",
+            female_image = "elona.chara_eulderna_female",
          },
+
+         male_ratio = 53,
+         height = 180,
+         age_min = 10,
+         age_max = 209,
 
          traits = {
             ["elona.perm_res_ether"] = 1,
@@ -784,8 +766,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "rabbit",
@@ -795,11 +775,12 @@ local race =
          properties = {
             breed_power = 800,
             image = "elona.chara_rabbit",
-            age = Resolver.make("base.between", { min = 2, max = 6 }),
-            height = 40,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 40,
+         age_min = 2,
+         age_max = 6,
 
          skills = {
             ["elona.stat_life"] = 90,
@@ -823,8 +804,6 @@ local race =
             "elona.back",
             "elona.ring"
          },
-
-
       },
       {
          _id = "sheep",
@@ -834,11 +813,12 @@ local race =
          properties = {
             breed_power = 1000,
             image = "elona.chara_sheep",
-            age = Resolver.make("base.between", { min = 2, max = 6 }),
-            height = 150,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 150,
+         age_min = 2,
+         age_max = 6,
 
          skills = {
             ["elona.stat_life"] = 130,
@@ -864,8 +844,6 @@ local race =
             "elona.ring",
             "elona.leg"
          },
-
-
       },
       {
          _id = "frog",
@@ -875,11 +853,12 @@ local race =
          properties = {
             breed_power = 600,
             image = "elona.chara_frog",
-            age = Resolver.make("base.between", { min = 2, max = 6 }),
-            height = 10,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 10,
+         age_min = 2,
+         age_max = 6,
 
          skills = {
             ["elona.stat_life"] = 80,
@@ -901,7 +880,6 @@ local race =
          body_parts = {
             "elona.body"
          },
-
       },
       {
          _id = "centipede",
@@ -911,11 +889,12 @@ local race =
          properties = {
             breed_power = 400,
             image = "elona.chara_centipede",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 10,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 10,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 90,
@@ -937,8 +916,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "snail",
@@ -948,11 +925,12 @@ local race =
          properties = {
             breed_power = 500,
             image = "elona.chara_snail",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 8,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 8,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 100,
@@ -972,8 +950,6 @@ local race =
          body_parts = {
             "elona.back"
          },
-
-
       },
       {
          _id = "mandrake",
@@ -983,11 +959,12 @@ local race =
          properties = {
             breed_power = 80,
             image = "elona.chara_mandrake",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 25,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 25,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 70,
@@ -1010,8 +987,6 @@ local race =
             "elona.head",
             "elona.back"
          },
-
-
       },
       {
          _id = "beetle",
@@ -1021,12 +996,13 @@ local race =
          properties = {
             breed_power = 750,
             image = "elona.chara_beetle",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 10,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 140,
-
          },
+
+         male_ratio = 53,
+         height = 10,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 80,
@@ -1047,8 +1023,6 @@ local race =
          body_parts = {
             "elona.neck"
          },
-
-
       },
       {
          _id = "mushroom",
@@ -1060,11 +1034,12 @@ local race =
             image = "elona.chara_mushroom",
             melee_style = "elona.spore",
             cast_style = "spore",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 20,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 20,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 50,
@@ -1086,8 +1061,6 @@ local race =
             "elona.head",
             "elona.neck"
          },
-
-
       },
       {
          _id = "bat",
@@ -1098,12 +1071,13 @@ local race =
             breed_power = 350,
             image = "elona.chara_bat",
             melee_style = "elona.bite",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 70,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 320,
-
          },
+
+         male_ratio = 53,
+         height = 70,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 10,
@@ -1123,8 +1097,6 @@ local race =
          body_parts = {
             "elona.head"
          },
-
-
       },
       {
          _id = "ent",
@@ -1134,11 +1106,12 @@ local race =
          properties = {
             breed_power = 35,
             image = "elona.chara_ent",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 1500,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 1500,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 170,
@@ -1163,8 +1136,6 @@ local race =
             "elona.ring",
             "elona.leg"
          },
-
-
       },
       {
          _id = "lich",
@@ -1174,19 +1145,14 @@ local race =
          properties = {
             breed_power = 25,
             image = "elona.chara_lich",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 180,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            resistances = {
-               ["elona.darkness"] = 500,
-               ["elona.nerve"] = 500,
-               ["elona.nether"] = 500,
-               ["elona.fire"] = 80,
-            },
             dv_correction = 190,
             pv_correction = 150,
-
          },
+
+         male_ratio = 53,
+         height = 180,
+         age_min = 10,
+         age_max = 19,
 
          traits = {
             ["elona.perm_cold"] = 1,
@@ -1211,6 +1177,12 @@ local race =
             ["elona.magic_device"] = 3,
             ["elona.casting"] = 3,
          },
+         resistances = {
+            ["elona.darkness"] = 500,
+            ["elona.nerve"] = 500,
+            ["elona.nether"] = 500,
+            ["elona.fire"] = 80,
+         },
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -1224,8 +1196,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "hound",
@@ -1236,12 +1206,13 @@ local race =
             breed_power = 540,
             image = "elona.chara_hound",
             melee_style = "elona.bite",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 160,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 120,
-
          },
+
+         male_ratio = 53,
+         height = 160,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 100,
@@ -1266,8 +1237,6 @@ local race =
             "elona.back",
             "elona.leg"
          },
-
-
       },
       {
          _id = "ghost",
@@ -1278,18 +1247,13 @@ local race =
             breed_power = 30,
             image = "elona.chara_ghost",
             melee_style = "elona.touch",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 180,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            resistances = {
-               ["elona.darkness"] = 500,
-               ["elona.nerve"] = 500,
-               ["elona.nether"] = 500,
-               ["elona.fire"] = 80,
-            },
             dv_correction = 160,
-
          },
+
+         male_ratio = 53,
+         height = 180,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 60,
@@ -1307,6 +1271,12 @@ local race =
             ["elona.magic_capacity"] = 4,
             ["elona.magic_device"] = 2,
          },
+         resistances = {
+            ["elona.darkness"] = 500,
+            ["elona.nerve"] = 500,
+            ["elona.nether"] = 500,
+            ["elona.fire"] = 80,
+         },
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -1317,8 +1287,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "spirit",
@@ -1328,11 +1296,12 @@ local race =
          properties = {
             breed_power = 25,
             image = "elona.chara_spirit",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 100,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 100,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 100,
@@ -1360,8 +1329,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "eye",
@@ -1372,11 +1339,12 @@ local race =
             breed_power = 50,
             image = "elona.chara_eye",
             melee_style = "elona.gaze",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 40,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 40,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 100,
@@ -1397,8 +1365,6 @@ local race =
          body_parts = {
             "elona.head"
          },
-
-
       },
       {
          _id = "wyvern",
@@ -1409,11 +1375,12 @@ local race =
             breed_power = 100,
             image = "elona.chara_wyvern",
             melee_style = "elona.claw",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 1600,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 1600,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 190,
@@ -1437,8 +1404,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "wasp",
@@ -1449,12 +1414,13 @@ local race =
             breed_power = 580,
             image = "elona.chara_wasp",
             melee_style = "elona.sting",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 80,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 220,
-
          },
+
+         male_ratio = 53,
+         height = 80,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 50,
@@ -1474,8 +1440,6 @@ local race =
          body_parts = {
             "elona.head"
          },
-
-
       },
       {
          _id = "giant",
@@ -1485,11 +1449,12 @@ local race =
          properties = {
             breed_power = 60,
             image = "elona.chara_giant",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 1800,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 1800,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 200,
@@ -1516,8 +1481,6 @@ local race =
             "elona.ring",
             "elona.leg"
          },
-
-
       },
       {
          _id = "imp",
@@ -1528,12 +1491,13 @@ local race =
             breed_power = 240,
             image = "elona.chara_imp",
             melee_style = "elona.claw",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 80,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 200,
-
          },
+
+         male_ratio = 53,
+         height = 80,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 70,
@@ -1560,8 +1524,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "hand",
@@ -1571,11 +1533,12 @@ local race =
          properties = {
             breed_power = 160,
             image = "elona.chara_hand",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 70,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 70,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 100,
@@ -1599,8 +1562,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "snake",
@@ -1611,9 +1572,6 @@ local race =
             breed_power = 430,
             image = "elona.chara_snake",
             melee_style = "elona.bite",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 50,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
          },
 
          skills = {
@@ -1632,6 +1590,11 @@ local race =
             ["elona.stealth"] = 4,
          },
 
+         male_ratio = 53,
+         height = 50,
+         age_min = 10,
+         age_max = 19,
+
          body_parts = {
             "elona.body"
          },
@@ -1648,12 +1611,13 @@ local race =
             breed_power = 120,
             image = "elona.chara_drake",
             melee_style = "elona.claw",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 1400,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 120,
-
          },
+
+         male_ratio = 53,
+         height = 1400,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 160,
@@ -1677,8 +1641,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "goblin",
@@ -1688,11 +1650,12 @@ local race =
          properties = {
             breed_power = 290,
             image = "elona.chara_goblin",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 140,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 140,
+         age_min = 10,
+         age_max = 19,
 
          traits = {
             ["elona.perm_darkness"] = 1,
@@ -1730,8 +1693,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "bear",
@@ -1742,11 +1703,12 @@ local race =
             breed_power = 350,
             image = "elona.chara_bear",
             melee_style = "elona.claw",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 280,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 280,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 160,
@@ -1774,8 +1736,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "armor",
@@ -1785,13 +1745,14 @@ local race =
          properties = {
             breed_power = 40,
             image = "elona.chara_armor",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 550,
             breaks_into_debris = true,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 300,
-
          },
+
+         male_ratio = 53,
+         height = 550,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 40,
@@ -1819,8 +1780,6 @@ local race =
             "elona.ring",
             "elona.waist"
          },
-
-
       },
       {
          _id = "medusa",
@@ -1830,12 +1789,13 @@ local race =
          properties = {
             breed_power = 180,
             image = "elona.chara_medusa",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 160,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 140,
-
          },
+
+         male_ratio = 53,
+         height = 160,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 100,
@@ -1862,8 +1822,6 @@ local race =
             "elona.ring",
             "elona.leg"
          },
-
-
       },
       {
          _id = "cupid",
@@ -1873,12 +1831,13 @@ local race =
          properties = {
             breed_power = 350,
             image = "elona.chara_cupid",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 120,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 200,
-
          },
+
+         male_ratio = 53,
+         height = 120,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 80,
@@ -1905,8 +1864,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "phantom",
@@ -1915,19 +1872,15 @@ local race =
          properties = {
             breed_power = 35,
             image = "elona.chara_phantom",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 450,
             breaks_into_debris = true,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            resistances = {
-               ["elona.darkness"] = 500,
-               ["elona.nerve"] = 500,
-               ["elona.nether"] = 500,
-               ["elona.fire"] = 80,
-            },
             pv_correction = 200,
-
          },
+
+         male_ratio = 53,
+         height = 450,
+         age_min = 10,
+         age_max = 19,
+
          skills = {
             ["elona.stat_life"] = 60,
             ["elona.stat_mana"] = 90,
@@ -1944,6 +1897,12 @@ local race =
             ["elona.stealth"] = 3,
             ["elona.disarm_trap"] = 3,
          },
+         resistances = {
+            ["elona.darkness"] = 500,
+            ["elona.nerve"] = 500,
+            ["elona.nether"] = 500,
+            ["elona.fire"] = 80,
+         },
          body_parts = {
             "elona.neck",
             "elona.body",
@@ -1953,8 +1912,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "harpy",
@@ -1963,12 +1920,14 @@ local race =
          properties = {
             breed_power = 420,
             image = "elona.chara_harpy",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 140,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 150,
-
          },
+
+         male_ratio = 53,
+         height = 140,
+         age_min = 10,
+         age_max = 19,
+
          skills = {
             ["elona.stat_life"] = 90,
             ["elona.stat_mana"] = 100,
@@ -1995,8 +1954,6 @@ local race =
             "elona.leg",
             "elona.leg"
          },
-
-
       },
       {
          _id = "dragon",
@@ -2007,12 +1964,13 @@ local race =
             breed_power = 20,
             image = "elona.chara_dragon",
             melee_style = "elona.claw",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 2400,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 120,
-
          },
+
+         male_ratio = 53,
+         height = 2400,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 220,
@@ -2036,8 +1994,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "dinosaur",
@@ -2048,12 +2004,13 @@ local race =
             breed_power = 100,
             image = "elona.chara_dinosaur",
             melee_style = "elona.claw",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 2000,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 120,
-
          },
+
+         male_ratio = 53,
+         height = 2000,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 140,
@@ -2077,8 +2034,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "cerberus",
@@ -2089,11 +2044,12 @@ local race =
             breed_power = 80,
             image = "elona.chara_cerberus",
             melee_style = "elona.claw",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 1200,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 1200,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 160,
@@ -2120,8 +2076,6 @@ local race =
             "elona.leg",
             "elona.leg"
          },
-
-
       },
       {
          _id = "spider",
@@ -2133,13 +2087,15 @@ local race =
             image = "elona.chara_spider",
             melee_style = "elona.bite",
             cast_style = "spider",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 60,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 170,
 
             can_pass_through_webs = true
          },
+
+         male_ratio = 53,
+         height = 60,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 50,
@@ -2161,8 +2117,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "golem",
@@ -2172,13 +2126,14 @@ local race =
          properties = {
             breed_power = 40,
             image = "elona.chara_golem",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 700,
             breaks_into_debris = true,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 140,
-
          },
+
+         male_ratio = 53,
+         height = 700,
+         age_min = 10,
+         age_max = 19,
 
          traits = {
             ["elona.perm_dim"] = 1,
@@ -2214,8 +2169,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "rock",
@@ -2225,13 +2178,14 @@ local race =
          properties = {
             breed_power = 200,
             image = "elona.chara_rock",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 500,
             breaks_into_debris = true,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 200,
-
          },
+
+         male_ratio = 53,
+         height = 500,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 40,
@@ -2252,8 +2206,6 @@ local race =
          body_parts = {
             "elona.head"
          },
-
-
       },
       {
          _id = "crab",
@@ -2264,12 +2216,13 @@ local race =
             breed_power = 420,
             image = "elona.chara_crab",
             melee_style = "elona.claw",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 50,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 150,
-
          },
+
+         male_ratio = 53,
+         height = 50,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 60,
@@ -2295,8 +2248,6 @@ local race =
             "elona.ring",
             "elona.leg"
          },
-
-
       },
       {
          _id = "skeleton",
@@ -2306,18 +2257,13 @@ local race =
          properties = {
             breed_power = 30,
             image = "elona.chara_skeleton",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 160,
             breaks_into_debris = true,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            resistances = {
-               ["elona.darkness"] = 500,
-               ["elona.nerve"] = 500,
-               ["elona.nether"] = 500,
-               ["elona.fire"] = 80,
-            },
-
          },
+
+         male_ratio = 53,
+         height = 160,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 100,
@@ -2336,6 +2282,12 @@ local race =
             ["elona.shield"] = 2,
             ["elona.lock_picking"] = 3,
          },
+         resistances = {
+            ["elona.darkness"] = 500,
+            ["elona.nerve"] = 500,
+            ["elona.nether"] = 500,
+            ["elona.fire"] = 80,
+         },
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -2349,8 +2301,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "piece",
@@ -2360,13 +2310,14 @@ local race =
          properties = {
             breed_power = 25,
             image = "elona.chara_piece",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 750,
             breaks_into_debris = true,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 150,
-
          },
+
+         male_ratio = 53,
+         height = 750,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 120,
@@ -2396,8 +2347,6 @@ local race =
             "elona.ring",
             "elona.waist"
          },
-
-
       },
       {
          _id = "cat",
@@ -2409,11 +2358,12 @@ local race =
             image = "elona.chara_cat",
             melee_style = "elona.claw",
             cast_style = "gaze",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 60,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 60,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 120,
@@ -2441,8 +2391,6 @@ local race =
             "elona.leg",
             "elona.leg"
          },
-
-
       },
       {
          _id = "dog",
@@ -2453,11 +2401,12 @@ local race =
             breed_power = 920,
             image = "elona.chara_dog",
             melee_style = "elona.bite",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 80,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 80,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 120,
@@ -2485,8 +2434,6 @@ local race =
             "elona.leg",
             "elona.leg"
          },
-
-
       },
       {
          _id = "roran",
@@ -2496,12 +2443,13 @@ local race =
          properties = {
             breed_power = 220,
             image = "elona.chara_roran",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 150,
-            gender = Resolver.make("elona.gender", { male_ratio = 0 }),
             dv_correction = 150,
-
          },
+
+         male_ratio = 0,
+         height = 150,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 100,
@@ -2533,8 +2481,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "rat",
@@ -2545,11 +2491,12 @@ local race =
             breed_power = 1100,
             image = "elona.chara_rat",
             melee_style = "elona.bite",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 30,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 30,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 80,
@@ -2573,8 +2520,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "shell",
@@ -2585,12 +2530,13 @@ local race =
             breed_power = 450,
             image = "elona.chara_shell",
             melee_style = "elona.claw",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 120,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 340,
-
          },
+
+         male_ratio = 53,
+         height = 120,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 100,
@@ -2611,8 +2557,6 @@ local race =
          body_parts = {
             "elona.leg"
          },
-
-
       },
       {
          _id = "catgod",
@@ -2623,12 +2567,13 @@ local race =
             breed_power = 5,
             image = "elona.chara_catgod",
             melee_style = "elona.claw",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 120,
-            gender = Resolver.make("elona.gender", { male_ratio = 0 }),
             dv_correction = 250,
-
          },
+
+         male_ratio = 0,
+         height = 120,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 120,
@@ -2656,8 +2601,6 @@ local race =
             "elona.ring",
             "elona.leg"
          },
-
-
       },
       {
          _id = "machinegod",
@@ -2667,13 +2610,14 @@ local race =
          properties = {
             breed_power = 5,
             image = "elona.chara_machinegod",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 3000,
             breaks_into_debris = true,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 150,
-
          },
+
+         male_ratio = 53,
+         height = 3000,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 200,
@@ -2700,8 +2644,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "undeadgod",
@@ -2711,11 +2653,12 @@ local race =
          properties = {
             breed_power = 5,
             image = "elona.chara_undeadgod",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 1500,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 1500,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 150,
@@ -2742,8 +2685,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "machine",
@@ -2754,12 +2695,13 @@ local race =
             breed_power = 15,
             image = "elona.chara_machine",
             cast_style = "machine",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 240,
             breaks_into_debris = true,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 240,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 100,
@@ -2791,8 +2733,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "wisp",
@@ -2803,11 +2743,12 @@ local race =
             breed_power = 25,
             image = "elona.chara_wisp",
             melee_style = "elona.gaze",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 40,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 40,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 150,
@@ -2828,8 +2769,6 @@ local race =
          body_parts = {
             "elona.head"
          },
-
-
       },
       {
          _id = "chicken",
@@ -2840,11 +2779,12 @@ local race =
             breed_power = 1000,
             image = "elona.chara_chicken",
             melee_style = "elona.bite",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 40,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 40,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 80,
@@ -2865,8 +2805,6 @@ local race =
          body_parts = {
             "elona.head"
          },
-
-
       },
       {
          _id = "stalker",
@@ -2877,18 +2815,13 @@ local race =
             breed_power = 25,
             image = "elona.chara_stalker",
             melee_style = "elona.claw",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 180,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            resistances = {
-               ["elona.darkness"] = 500,
-               ["elona.nerve"] = 500,
-               ["elona.nether"] = 500,
-               ["elona.fire"] = 80,
-            },
             dv_correction = 130,
-
          },
+
+         male_ratio = 53,
+         height = 180,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 120,
@@ -2906,6 +2839,12 @@ local race =
             ["elona.eye_of_mind"] = 3,
             ["elona.stealth"] = 4,
          },
+         resistances = {
+            ["elona.darkness"] = 500,
+            ["elona.nerve"] = 500,
+            ["elona.nether"] = 500,
+            ["elona.fire"] = 80,
+         },
          body_parts = {
             "elona.neck",
             "elona.hand",
@@ -2914,8 +2853,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "catsister",
@@ -2926,11 +2863,12 @@ local race =
             breed_power = 5,
             image = "elona.chara_catsister",
             melee_style = "elona.claw",
-            age = Resolver.make("base.between", { min = 10, max = 13 }),
-            height = 140,
-            gender = Resolver.make("elona.gender", { male_ratio = 0 }),
-
          },
+
+         male_ratio = 0,
+         height = 140,
+         age_min = 10,
+         age_max = 13,
 
          skills = {
             ["elona.stat_life"] = 30,
@@ -2961,8 +2899,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "mutant",
@@ -2972,11 +2908,12 @@ local race =
          properties = {
             breed_power = 50,
             image = "elona.chara_mutant",
-            age = Resolver.make("base.between", { min = 25, max = 74 }),
-            height = 180,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 180,
+         age_min = 25,
+         age_max = 74,
 
          traits = {
             ["elona.perm_chaos_shape"] = 1,
@@ -3002,8 +2939,6 @@ local race =
             "elona.body",
             "elona.hand"
          },
-
-
       },
       {
          _id = "yeek",
@@ -3013,11 +2948,12 @@ local race =
          properties = {
             breed_power = 500,
             image = "elona.chara_yeek",
-            age = Resolver.make("base.between", { min = 15, max = 44 }),
-            height = 90,
-            gender = Resolver.make("elona.gender", { male_ratio = 50 }),
-
          },
+
+         male_ratio = 50,
+         height = 90,
+         age_min = 15,
+         age_max = 44,
 
          skills = {
             ["elona.stat_life"] = 80,
@@ -3048,8 +2984,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "yith",
@@ -3061,11 +2995,12 @@ local race =
             image = "elona.chara_yith",
             melee_style = "elona.touch",
             cast_style = "tentacle",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 950,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 950,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 150,
@@ -3094,8 +3029,6 @@ local race =
             "elona.ring",
             "elona.ring"
          },
-
-
       },
       {
          _id = "servant",
@@ -3105,11 +3038,12 @@ local race =
          properties = {
             breed_power = 5,
             image = "elona.chara_servant",
-            age = Resolver.make("base.between", { min = 100, max = 299 }),
-            height = 165,
-            gender = Resolver.make("elona.gender", { male_ratio = 52 }),
-
          },
+
+         male_ratio = 52,
+         height = 165,
+         age_min = 100,
+         age_max = 299,
 
          skills = {
             ["elona.stat_life"] = 90,
@@ -3145,8 +3079,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "horse",
@@ -3157,11 +3089,12 @@ local race =
             breed_power = 1000,
             image = "elona.chara_horse",
             melee_style = "elona.bite",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 250,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-
          },
+
+         male_ratio = 53,
+         height = 250,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 150,
@@ -3183,8 +3116,6 @@ local race =
             "elona.leg",
             "elona.leg"
          },
-
-
       },
       {
          _id = "god",
@@ -3194,13 +3125,14 @@ local race =
          properties = {
             breed_power = 1,
             image = "elona.chara_lulwy",
-            age = Resolver.make("base.between", { min = 999999, max = 999999 }),
-            height = 180,
-            gender = Resolver.make("elona.gender", { male_ratio = 0 }),
             dv_correction = 300,
             pv_correction = 200,
-
          },
+
+         male_ratio = 0,
+         height = 180,
+         age_min = 999999,
+         age_max = 999999,
 
          skills = {
             ["elona.stat_life"] = 200,
@@ -3228,8 +3160,6 @@ local race =
             "elona.hand",
             "elona.hand"
          },
-
-
       },
       {
          _id = "quickling",
@@ -3239,15 +3169,13 @@ local race =
          properties = {
             breed_power = 1,
             image = "elona.chara_quickling",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 25,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            resistances = {
-               ["elona.magic"] = 500,
-            },
             dv_correction = 550,
-
          },
+
+         male_ratio = 53,
+         height = 25,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 3,
@@ -3266,6 +3194,9 @@ local race =
             ["elona.evasion"] = 7,
             ["elona.greater_evasion"] = 6,
          },
+         resistances = {
+            ["elona.magic"] = 500,
+         },
          body_parts = {
             "elona.head",
             "elona.body",
@@ -3277,8 +3208,6 @@ local race =
             "elona.ring",
             "elona.leg"
          },
-
-
       },
       {
          _id = "metal",
@@ -3289,16 +3218,14 @@ local race =
             breed_power = 1,
             image = "elona.chara_metal",
             melee_style = "elona.bite",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 12,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            resistances = {
-               ["elona.magic"] = 500,
-            },
             dv_correction = 150,
             pv_correction = 1000,
-
          },
+
+         male_ratio = 53,
+         height = 12,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 1,
@@ -3316,13 +3243,14 @@ local race =
             ["elona.magic_capacity"] = 4,
             ["elona.greater_evasion"] = 6,
          },
+         resistances = {
+            ["elona.magic"] = 500,
+         },
          body_parts = {
             "elona.head",
             "elona.body",
             "elona.back"
          },
-
-
       },
       {
          _id = "bike",
@@ -3333,13 +3261,14 @@ local race =
             breed_power = 15,
             image = "elona.chara_bike",
             cast_style = "machine",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 240,
             breaks_into_debris = true,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 150,
-
          },
+
+         male_ratio = 53,
+         height = 240,
+         age_min = 10,
+         age_max = 19,
 
          skills = {
             ["elona.stat_life"] = 170,
@@ -3368,8 +3297,6 @@ local race =
             "elona.leg",
             "elona.leg"
          },
-
-
       },
       -- For debug
       {

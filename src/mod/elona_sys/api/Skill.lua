@@ -829,11 +829,7 @@ function Skill.apply_race_params(chara, race_id)
 
    for k, v in pairs(race_data.properties or {}) do
       if chara[k] == nil then
-         if type(v) == "table" and v.__resolver then
-            chara[k] = Resolver.resolve(v, { object = chara, value = true })
-         else
-            chara[k] = v
-         end
+         chara[k] = v
       end
    end
 
@@ -847,6 +843,25 @@ function Skill.apply_race_params(chara, race_id)
    for trait_id, level in pairs(race_data.traits or {}) do
       chara.traits[trait_id] = { level = level }
    end
+
+   if race_data.resistances then
+      for element_id, amount in ipairs(race_data.resistances) do
+         chara:mod_resist_level(element_id, amount, "set")
+      end
+   end
+
+   chara.age = Rand.between(race_data.age_min, race_data.age_max)
+   if Rand.percent_chance(race_data.male_ratio or 50) then
+      chara.gender = "male"
+   else
+      chara.gender = "female"
+   end
+
+   -- >>>>>>>> shade2/chara.hsp:518 	cHeight(rc)=cHeight(rc) + rnd(cHeight(rc)/5+1) -  ...
+   chara.height = race_data.height or 10
+   chara.height = chara.height + Rand.rnd(chara.height / 5 + 1) - Rand.rnd(chara.height / 5 + 1)
+   chara.weight = math.floor(chara.height * chara.height * (Rand.rnd(6) + 18) / 10000)
+   -- <<<<<<<< shade2/chara.hsp:519 	cWeight(rc)= cHeight(rc)*cHeight(rc)*(rnd(6)+18)/ ..
 
    -- >>>>>>>> shade2/chara.hsp:341 *set_figure ..
    chara.body_parts = table.deepcopy(race_data.body_parts or {})
@@ -869,11 +884,7 @@ function Skill.apply_class_params(chara, class_id)
 
    for k, v in pairs(class_data.properties or {}) do
       if chara[k] == nil then
-         if type(v) == "table" and v.__resolver then
-            chara[k] = Resolver.resolve(v, { object = chara, value = true })
-         else
-            chara[k] = v
-         end
+         chara[k] = v
       end
    end
 

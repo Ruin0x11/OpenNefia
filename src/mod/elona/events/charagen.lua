@@ -165,9 +165,6 @@ local function init_chara_defaults(chara)
    -- >>>>>>>> shade2/chara.hsp:516 	if rc=pc:cHunger(rc)=9000:else:cHunger(rc)=defAll ..
    chara.nutrition = Const.ALLY_HUNGER_THRESHOLD - 1000 + Rand.rnd(4000)
 
-   chara.height = chara.height + Rand.rnd(chara.height / 5 + 1) - Rand.rnd(chara.height / 5 + 1)
-   chara.weight = math.floor(chara.height * chara.height * (Rand.rnd(6) + 18) / 10000)
-
    chara.required_experience = Skill.calc_required_experience(chara)
 
    -- TODO custom talk
