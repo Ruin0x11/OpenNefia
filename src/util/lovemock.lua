@@ -126,6 +126,9 @@ love.filesystem.newFile = function(filepath)
          count = count or "*a"
          return self._inner:read(count)
       end,
+      write = function(self, str)
+         return self._inner:write(str)
+      end,
       close = function(self)
          self._inner:close()
       end,

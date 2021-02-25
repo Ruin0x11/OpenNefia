@@ -965,6 +965,8 @@ function nbt.newList(typeID, value, name)
 		constructorFunction = nbt.newLong
 	elseif typeID == TAG_STRING then
 		constructorFunction = nbt.newString
+	elseif typeID == TAG_BYTE_ARRAY then
+		constructorFunction = nbt.newByteArray
 	end
 
 	for i, v in ipairs(value) do
@@ -976,9 +978,9 @@ function nbt.newList(typeID, value, name)
 			end
 		elseif constructorFunction == nil then
 			error("cannot type deduce value at index #"..i)
+        else
+           list[i] = constructorFunction(v)
 		end
-
-		list[i] = constructorFunction(v)
 	end
 
 	return TagClass.new(TAG_LIST, list, name)
@@ -991,21 +993,29 @@ end
 function nbt.newByteArray(value, name)
 	local list = {}
 
-	for i, v in ipairs(value) do
-		if getmetatable(v) == TagClass then
-			v = v:getInteger()
-		elseif type(v) ~= "number" then
-			v = tonumber(v)
-		end
+    if type(value) == "string" then
+       local i = 1
+       for _, byte in ipairs({string.byte(value, 1, -1)}) do
+          list[i] = byte
+          i = i + 1
+       end
+    else
+        for i, v in ipairs(value) do
+            if getmetatable(v) == TagClass then
+                v = v:getInteger()
+            elseif type(v) ~= "number" then
+                v = tonumber(v)
+            end
 
-		if v == nil then
-			error("invalid value at #"..i)
-		else
-			v = toInteger(math.min(math.max(v, -128), 127))
-		end
+            if v == nil then
+                error("invalid value at #"..i)
+            else
+                v = toInteger(math.min(math.max(v, -128), 127))
+            end
 
-		list[i] = v
-	end
+            list[i] = v
+        end
+    end
 
 	return TagClass.new(TAG_BYTE_ARRAY, list, name)
 end
@@ -1228,7 +1238,7 @@ function nbt.newClassCompound(value, name)
    local mt = assert(getmetatable(value))
    assert(mt.__name)
 
-   local values = value:serialize_nbt()
+   local values = value:serialize_nbt(nbt)
 
    assert(values.__serial_id == nil, "__serial_id is a reserved field")
    values.__serial_id = mt.__name
@@ -1255,16 +1265,26 @@ end
 function nbt.newArbitraryTable(value, name)
    local binser = require("thirdparty.binser")
    assert(type(value) == "table")
-   local serialized = binser.serialize(value)
-   return nbt.newString(serialized, name)
+   local str = binser.serialize(value)
+   return nbt.newByteArray(str, name)
+end
+
+local function byte_array_to_string(arr)
+  local bytearr = {}
+  for _, byte in ipairs(arr) do
+    table.insert(bytearr, string.char(byte))
+  end
+  return table.concat(bytearr)
 end
 
 function TagClass:getArbitraryTable()
    local binser = require("thirdparty.binser")
    if
-      self._type == TAG_STRING
+      self._type == TAG_BYTE_ARRAY
    then
-      return binser.deserialize(self:getValue())
+      local bytes = self:getValue()
+      local str = byte_array_to_string(bytes)
+      return binser.deserialize(str)[1]
    end
 
    error("attempt to get arbitrary table of invalid type")

@@ -890,10 +890,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (let* ((filename (format-time-string "%Y-%m-%d_%H-%M-%S.lua"))
          (dest-path (string-join (list (projectile-project-root) "src/scratch/" filename))))
     (find-file dest-path)
-    (newline)
-    (setq open-nefia-always-send-to-repl t)
-    (add-file-local-variable 'open-nefia-always-send-to-repl t)
-    (beginning-of-buffer)))
+    (goto-char (point-min))))
 
 (defun open-nefia-run-headlessly (arg)
   (interactive "P")

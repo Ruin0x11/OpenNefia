@@ -1,5 +1,6 @@
 local nbt = require("thirdparty.nbt")
 local ISerializable = require("api.ISerializable")
+local Fs = require("api.Fs")
 
 local Thing = class.class("Thing", ISerializable)
 
@@ -108,4 +109,16 @@ do
    local instance2 = compound2:getClassCompound()
    print(inspect(instance1))
    print(inspect(instance2))
+end
+
+do
+   local t = Thing:new(1, 54, { dood = "hey", asd = 42.222222 })
+   local p = Parent:new(t, t)
+   local opt = Option:new(p)
+
+   local compound = nbt.newClassCompound(opt, "option")
+
+   local obj = assert(Fs.open("test.nbt", "wb"))
+   assert(obj:write(compound:encode()))
+   obj:close()
 end
