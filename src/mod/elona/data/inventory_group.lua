@@ -60,10 +60,10 @@ data:add {
 
 data:add {
    _type = "elona_sys.inventory_group",
-   _id = "four_dimensional_pocket",
+   _id = "container_global",
 
    protos = {
-      "elona.inv_get_pocket",
-      "elona.inv_put_pocket"
+      "elona.inv_get_container",
+      "elona.inv_put_container"
    }
 }

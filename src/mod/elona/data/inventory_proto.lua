@@ -707,9 +707,9 @@ local inv_steal = {
 }
 data:add(inv_steal)
 
-local inv_get_pocket = {
+local inv_get_container = {
    _type = "elona_sys.inventory_proto",
-   _id = "inv_get_pocket",
+   _id = "inv_get_container",
    elona_id = 22,
    elona_sub_id = 5,
 
@@ -740,7 +740,7 @@ local inv_get_pocket = {
       return "inventory_continue"
    end
 }
-data:add(inv_get_pocket)
+data:add(inv_get_container)
 
 local inv_harvest_delivery_chest = {
    _type = "elona_sys.inventory_proto",
@@ -785,9 +785,9 @@ local inv_harvest_delivery_chest = {
 }
 data:add(inv_harvest_delivery_chest)
 
-local inv_put_pocket = {
+local inv_put_container = {
    _type = "elona_sys.inventory_proto",
-   _id = "inv_put_pocket",
+   _id = "inv_put_container",
    elona_id = 24,
    elona_sub_id = 5,
 
@@ -838,7 +838,7 @@ local inv_put_pocket = {
       return "inventory_continue"
    end
 }
-data:add(inv_put_pocket)
+data:add(inv_put_container)
 
 local inv_identify = {
    _type = "elona_sys.inventory_proto",

@@ -12,6 +12,13 @@ local Inventory = require("api.Inventory")
 local Effect = require("mod.elona.api.Effect")
 local Util = require("mod.elona_sys.api.Util")
 local Enchantment = require("mod.elona.api.Enchantment")
+local Calc = require("mod.elona.api.Calc")
+local Filters = require("mod.elona.api.Filters")
+local Itemgen = require("mod.tools.api.Itemgen")
+local Gui = require("api.Gui")
+local Input = require("api.Input")
+local Save = require("api.Save")
+local api_Item = require("api.Item")
 
 local Item = {}
 
@@ -205,25 +212,7 @@ local function init_container(item, params)
    local is_shelter = false
    local item_level = 5 + ((not is_shelter) and 1 or 0) * map_level
 
-   -- TODO make moddable
-   if item._id == "elona.suitcase" then
-      item_level = (Rand.rnd(10) + 1) * (Chara.player():calc("level") / 10 + 1)
-   elseif item._id == "elona.treasure_ball" or item._id == "elona.rare_treasure_ball" then
-      item_level = Chara.player():calc("level")
-   end
-
    local difficulty = Rand.rnd(((not is_shelter) and 1 or 0) * math.abs(map_level) + 1)
-
-   if item._id == "elona.wallet" or item._id == "elona.suitcase" then
-      difficulty = Rand.rnd(15)
-   elseif item._id == "elona.small_gamble_chest" then
-      difficulty = Rand.rnd(Rand.rnd(100) + 1) + 1
-      item.value = difficulty * 25 + 150
-      local amount = Rand.rnd(8)
-      if amount > 0 then
-         item.amount = amount
-      end
-   end
 
    item.params.chest_item_level = math.floor(item_level)
    item.params.chest_lockpick_difficulty = difficulty
@@ -422,6 +411,73 @@ function Item.ensure_free_item_slot(chara)
       end
    end
    -- <<<<<<<< shade2/adv.hsp:164 	return p ..
+end
+
+function Item.open_chest(item, gen_filter_cb, item_count, loot_level, seed, silent)
+   -- >>>>>>>> shade2/action.hsp:967 	snd seOpenChest :txt lang("あなたは"+itemName(ci)+"を開 ...
+   if not silent then
+      Gui.play_sound("base.chest1", item.x, item.y)
+      Gui.mes("action.open.text", item:build_name())
+      Input.query_more()
+   end
+   -- <<<<<<<< shade2/action.hsp:967 	snd seOpenChest :txt lang("あなたは"+itemName(ci)+"を開 ..
+
+   -- >>>>>>>> shade2/action.hsp:976 	p=3+rnd(5) ...
+   item_count = item_count or (3 + Rand.rnd(5))
+   loot_level = loot_level or item.params.chest_item_level
+   seed = seed or item.params.chest_random_seed
+
+   local map = item:current_map()
+
+   Rand.set_seed(seed)
+
+   for i = 1, item_count do
+      local filter = {}
+
+      local quality
+      if i == 1 then
+         quality = Enum.Quality.Great
+      else
+         quality = Enum.Quality.Good
+      end
+
+      filter.level = Calc.calc_object_level(quality, map)
+      filter.quality = Calc.calc_object_quality(quality)
+      filter.categories = { Rand.choice(Filters.fsetchest) }
+
+      if i > 1 and not Rand.one_in(3) then
+         filter.categories = { "elona.gold" }
+      else
+         filter.categories = { "elona.ore_valuable" }
+      end
+
+      if gen_filter_cb then
+         filter = gen_filter_cb(filter, item, loot_level) or filter
+      end
+
+      Itemgen.create(item.x, item.y, filter, map)
+   end
+
+   Rand.set_seed()
+
+   if not silent then
+      Gui.play_sound("base.ding2")
+      Gui.mes("action.open.goods", item:build_name())
+   end
+
+   local create_medal = false
+   if item._id ~= "elona.small_gamble_chest" and Rand.one_in(10) then
+      create_medal = true
+   end
+   if (item._id == "elona.bejeweled_chest" or item._id == "elona.chest") and Rand.one_in(5) then
+      create_medal = true
+   end
+   if create_medal then
+      api_Item.create("elona.small_medal", item.x, item.y, { amount = 1 }, map)
+   end
+
+   Save.autosave()
+   -- <<<<<<<< shade2/action.hsp:1022 	iParam1(ri)=0 ..
 end
 
 return Item

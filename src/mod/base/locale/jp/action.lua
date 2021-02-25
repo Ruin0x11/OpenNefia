@@ -11,7 +11,7 @@ end
       current = "現在の装填弾:",
       is_not_capable = function(_1)
   return ("%sは切り替えに対応していない。")
-  :format(itemname(_1))
+  :format(_1)
 end,
       need_to_equip = "矢弾を装備していない。",
       normal = "通常弾",
@@ -71,7 +71,7 @@ end,
       tree = {
         execute = function(_1)
   return ("%sに体当たりした。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         falls_down = function(_1)
   return ("%sが降ってきた。")
@@ -117,37 +117,37 @@ end,
     dip = {
       execute = function(_1, _2)
   return ("%sを%sに浸した。")
-  :format(itemname(_2, 1), itemname(_1))
+  :format(_2, _1)
 end,
       result = {
         bait_attachment = function(_1, _2)
   return ("%sを%sに装着した。")
-  :format(itemname(_2, 1), itemname(_1))
+  :format(_2, _1)
 end,
         becomes_blessed = function(_1)
   return ("%sは銀色に輝いた。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         becomes_cursed = function(_1)
   return ("%sは黒いオーラに包まれた。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         blessed_item = function(_1, _2)
   return ("%sを%sに降りかけた。")
-  :format(itemname(_2, 1), itemname(_1))
+  :format(_2, _1)
 end,
         dyeing = function(_1)
   return ("あなたは%sを染めた。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         empty_bottle_shatters = "空き瓶の割れる音がした。",
         gains_acidproof = function(_1)
   return ("%sは酸から守られた。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         gains_fireproof = function(_1)
   return ("%sは熱から守られた。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         good_idea_but = "いいアイデアだ！しかし…",
         holy_well_polluted = "井戸は汚れた。",
@@ -156,19 +156,19 @@ end,
           guilty = "あなたはうしろめたさを感じた…",
           made = function(_1, _2)
   return ("%sに%sを混入した！")
-  :format(itemname(_1), itemname(_2, 1))
+  :format(_1, _2)
 end
         },
         natural_potion = "空き瓶に水をすくった。",
         natural_potion_drop = "あっ！空き瓶を井戸に落としてしまった…",
         natural_potion_dry = function(_1)
   return ("%sは涸れている。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         poisoned_food = "あなたはにやりと口元を歪めた。",
         put_on = function(_1, _2)
   return ("%sに%sを塗りたくった。")
-  :format(itemname(_1), itemname(_2, 1))
+  :format(_1, _2)
 end,
         snow_melts = {
           blending = "しかしこんな量では… ",
@@ -176,43 +176,43 @@ end,
         },
         well_dry = function(_1)
   return ("%sは完全に枯れている。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         well_refill = function(_1, _2)
   return ("%sを%sに放り込んだ。")
-  :format(itemname(_2, 1), itemname(_1))
+  :format(_2, _1)
 end,
         well_refilled = function(_1)
   return ("%sは一瞬輝いた。")
-  :format(itemname(_1))
+  :format(_1)
 end
       },
       rots = function(_1)
   return ("%sは腐ってしまった…")
-  :format(itemname(_1))
+  :format(_1)
 end,
       rusts = function(_1)
   return ("%sは錆びてしまった…")
-  :format(itemname(_1))
+  :format(_1)
 end,
       unchanged = function(_1)
   return ("%sに変化はない。")
-  :format(itemname(_1))
+  :format(_1)
 end,
       you_get = function(_1)
   return ("%sを手に入れた。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
     },
     drink = {
       potion = function(_1, _2)
   return ("%s%sを飲み干した。")
-  :format(kare_wa(_1), itemname(_2, 1))
+  :format(kare_wa(_1), _2)
 end,
       well = {
         completely_dried_up = function(_1)
   return ("%sは完全に干上がった。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         draw = function(_1, _2)
   return ("%sは%sの水をすくって飲んだ。")
@@ -220,7 +220,7 @@ end,
 end,
         dried_up = function(_1)
   return ("%sは干上がった。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         effect = {
           default = "この水は清涼だ。",
@@ -270,23 +270,23 @@ end
       two_handed = {
         fits_well = function(_1)
   return ("装備中の%sは両手にしっくりとおさまる。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         too_heavy = function(_1)
   return ("装備中の%sは利手で扱うにも重すぎる。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         too_heavy_other_hand = function(_1)
   return ("装備中の%sは片手で扱うには重すぎる。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         too_heavy_when_riding = function(_1)
   return ("装備中の%sは乗馬中に扱うには重すぎる。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         too_light = function(_1)
   return ("装備中の%sは両手持ちにはやや軽すぎる。")
-  :format(itemname(_1))
+  :format(_1)
 end
       },
       you_change = "装備を変更した。"
@@ -622,24 +622,24 @@ end,
       do_not_believe = "あなたは神を信仰していないが、試しに捧げてみた。",
       execute = function(_1, _2)
   return ("あなたは%sを%sに捧げ、その名を唱えた。")
-  :format(itemname(_1), _2)
+  :format(_1, _2)
 end,
       result = {
         best = function(_1)
   return ("%sはまばゆく輝いて消えた。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         good = function(_1)
   return ("%sは輝いて消え、三つ葉のクローバーがふってきた。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         okay = function(_1)
   return ("%sは一瞬輝いて消えた。")
-  :format(itemname(_1))
+  :format(_1)
 end,
         poor = function(_1)
   return ("%sは消えた。")
-  :format(itemname(_1))
+  :format(_1)
 end
       },
       take_over = {
@@ -654,7 +654,7 @@ end,
         shadow = "あなたの神の幻影は、次第に色濃くなった。",
         succeed = function(_1, _2)
   return ("%sは%sを支配した。")
-  :format(_1, itemname(_2))
+  :format(_1, _2)
 end
       }
     },
@@ -672,7 +672,7 @@ end
       empty = "中身は空っぽだ。",
       goods = function(_1)
   return ("%sから溢れ出た高級品が、足元に散らばった。")
-  :format(itemname(_1))
+  :format(_1)
 end,
       new_year_gift = {
         cursed_letter = "中には呪いの手紙が入っていた。",
@@ -691,13 +691,13 @@ end,
       },
       text = function(_1)
   return ("あなたは%sを開けた。")
-  :format(itemname(_1))
+  :format(_1)
 end
     },
     pick_up = {
       do_you_want_to_remove = function(_1)
   return ("%sを撤去する？ ")
-  :format(itemname(_1))
+  :format(_1)
 end,
       execute = function(_1, _2)
   return ("%sは%sを拾った。")
@@ -719,7 +719,7 @@ end,
 end,
       you_absorb_magic = function(_1)
   return ("あなたは%sから魔力を吸い取った。")
-  :format(itemname(_1))
+  :format(_1)
 end,
       you_buy = function(_1)
   return ("%sを買った。")
@@ -788,7 +788,7 @@ end,
         info = "最後に調合したアイテムを、レシピに加えることができる。(まだ未実装)",
         learned = function(_1)
   return ("%sを覚えた！")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
       },
       scroll = {

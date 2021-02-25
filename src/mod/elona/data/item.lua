@@ -21,6 +21,10 @@ local Anim = require("mod.elona_sys.api.Anim")
 local World = require("api.World")
 local Weather = require("mod.elona.api.Weather")
 local Area = require("api.Area")
+local Inventory = require("api.Inventory")
+local elona_Item = require("mod.elona.api.Item")
+local Filters = require("mod.elona.api.Filters")
+local SkillCheck = require("mod.elona.api.SkillCheck")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -58,6 +62,59 @@ local function deed_callback(area_archetype_id, name)
    return function(self, params)
       Building.build_area(area_archetype_id, name, params.x, params.y, params.map)
    end
+end
+
+local function open_chest(filter, item_count, after_cb)
+   return function(self, params)
+      -- >>>>>>>> shade2/action.hsp:950 	item_separate ci ...
+      local sep = self:separate()
+
+      if sep.params.chest_item_level <= 0 then
+         Gui.mes("action.open.empty")
+         return "turn_end"
+      end
+
+      if sep.params.chest_lockpick_difficulty > 0 then
+         local success = SkillCheck.try_to_lockpick(params.chara, sep)
+         if not success then
+            return "turn_end"
+         end
+      end
+
+      elona_Item.open_chest(sep, filter, item_count)
+      sep.params.chest_item_level = 0
+
+      if after_cb then
+         after_cb(sep, params)
+      end
+
+      return "turn_end"
+      -- <<<<<<<< shade2/action.hsp:961 	} ..
+   end
+end
+
+local function open_new_years_gift(self, params)
+   -- >>>>>>>> shade2/action.hsp:950 	item_separate ci ...
+   local sep = self:separate()
+
+   if sep.params.chest_item_level <= 0 then
+      Gui.mes("action.open.empty")
+      return "turn_end"
+   end
+
+   if sep.params.chest_lockpick_difficulty > 0 then
+      local success = SkillCheck.try_to_lockpick(params.chara, sep)
+      if not success then
+         return "turn_end"
+      end
+   end
+
+
+
+   sep.params.chest_item_level = 0
+
+   return "turn_end"
+   -- <<<<<<<< shade2/action.hsp:961 	} ..
 end
 
 -- >>>>>>>> shade2/chips.hsp:392 	dim lightData,10,tailLight ..
@@ -5036,7 +5093,22 @@ local item =
          categories = {
             "elona.container"
          },
-         light = light.item
+         light = light.item,
+
+         -- >>>>>>>> shade2/action.hsp:984 	if iId(ri)=idChestGood{ ...
+         on_open = open_chest(
+            function(filter, item, gen_iteration)
+               if gen_iteration == 1 and Rand.one_in(3) then
+                  filter.quality = Enum.Quality.Great
+               else
+                  filter.quality = Enum.Quality.Good
+               end
+               if Rand.one_in(60) then
+                  filter.id = "elona.potion_of_cure_corruption"
+               end
+               return filter
+            end),
+         -- <<<<<<<< shade2/action.hsp:987 		} ..
       },
       {
          _id = "chest",
@@ -5066,7 +5138,18 @@ local item =
          categories = {
             "elona.container"
          },
-         light = light.item
+         light = light.item,
+
+         -- >>>>>>>> shade2/action.hsp:992 	if iId(ri)=idChestMoney: if rnd(3)!0: fltTypeMino ...
+         on_open = open_chest(function(filter, item)
+               if not Rand.one_in(3) then
+                  filter.categories = { "elona.gold" }
+               else
+                  filter.categories = { "elona.ore_valuable" }
+               end
+               return filter
+         end),
+         -- <<<<<<<< shade2/action.hsp:992 	if iId(ri)=idChestMoney: if rnd(3)!0: fltTypeMino ..
       },
       {
          _id = "scroll_of_magical_map",
@@ -6006,6 +6089,11 @@ local item =
          category = 72000,
          coefficient = 100,
 
+         categories = {
+            "elona.container",
+            "elona.no_generate"
+         },
+
          on_init_params = function(self)
             -- >>>>>>>> shade2/item.hsp:684 		if iId(ci)=idSuitcase : iParam1(ci)=(rnd(10)+1)* ...
             self.params.chest_item_level = (Rand.rnd(10) + 1) * (Chara.player():calc("level") / 10 + 1)
@@ -6015,10 +6103,9 @@ local item =
             -- <<<<<<<< shade2/item.hsp:687 		if (iId(ci)=idWallet)or(iId(ci)=idSuitcase):iPar ..
          end,
 
-         categories = {
-            "elona.container",
-            "elona.no_generate"
-         }
+         -- >>>>>>>> shade2/action.hsp:1024 	if iID(ri)=idSuitcase	: modKarma pc,-8 ...
+         on_open = open_chest(nil, nil, function(self, params) Effect.modify_karma(params.chara, -8) end),
+         -- <<<<<<<< shade2/action.hsp:1024 	if iID(ri)=idSuitcase	: modKarma pc,-8 ..
       },
       {
          _id = "wallet",
@@ -6036,10 +6123,29 @@ local item =
             -- <<<<<<<< shade2/item.hsp:687 		if (iId(ci)=idWallet)or(iId(ci)=idSuitcase):iPar ..
          end,
 
+         -- >>>>>>>> shade2/action.hsp:1004 	if iID(ri)=idWallet{ ...
+         on_open = open_chest(
+            function(filter, item)
+               filter.id = "elona.gold_piece"
+               local amount = Rand.rnd(1000) + 1
+               if Rand.one_in(5) then
+                  amount = Rand.rnd(9) + 1
+               end
+               if Rand.one_in(10) then
+                  amount = Rand.rnd(5000) + 5000
+               end
+               if Rand.one_in(20) then
+                  amount = Rand.rnd(20000) + 10000
+               end
+               filter.amount = amount
+               return filter
+            end, nil, function(self, params) Effect.modify_karma(params.chara, -4) end),
+         -- <<<<<<<< shade2/action.hsp:1010 		} ..
+
          categories = {
             "elona.container",
             "elona.no_generate"
-         }
+         },
       },
       {
          _id = "potion_of_restore_body",
@@ -7570,6 +7676,23 @@ local item =
             "elona.no_generate"
          },
          is_wishable = false,
+
+         on_init_params = function(self)
+            self.params.shop_inventory = Inventory:new(200, "base.item", self)
+         end,
+
+         on_open = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:890 	if iId(ci)=idShopBag{ ...
+            local chara = params.chara
+
+            Effect.modify_karma(chara, -10)
+
+            Gui.play_sound("base.chest1")
+            error("shop chest")
+
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:894 		} ..
+         end
       },
       {
          _id = "scroll_of_greater_identify",
@@ -8797,7 +8920,24 @@ local item =
 
          categories = {
             "elona.container"
-         }
+         },
+
+         on_init_params = function(self)
+            self.params.chest_item_level = Chara.player():calc("level")
+         end,
+
+         -- >>>>>>>> shade2/action.hsp:994 	if (iID(ri)=415)or(iID(ri)=416){ ...
+         on_open = open_chest(
+            function(filter, item)
+               filter.categories = {Rand.choice(Filters.fsetwear)}
+               filter.quality = Enum.Quality.Good
+               if Rand.one_in(30) then
+                  filter.id = "elona.potion_of_cure_corruption"
+               end
+
+               return filter
+            end, 1),
+         -- <<<<<<<< shade2/action.hsp:998 		} ..
       },
       {
          _id = "rare_treasure_ball",
@@ -8813,7 +8953,24 @@ local item =
          categories = {
             "elona.container",
             "elona.tag_spshop"
-         }
+         },
+
+         on_init_params = function(self)
+            self.params.chest_item_level = Chara.player():calc("level")
+         end,
+
+         -- >>>>>>>> shade2/action.hsp:994 	if (iID(ri)=415)or(iID(ri)=416){ ...
+         on_open = open_chest(
+            function(filter, item)
+               filter.categories = {Rand.choice(Filters.fsetwear)}
+               filter.quality = Enum.Quality.Great
+               if Rand.one_in(30) then
+                  filter.id = "elona.potion_of_cure_corruption"
+               end
+
+               return filter
+            end, 1),
+         -- <<<<<<<< shade2/action.hsp:998 		} ..
       },
       {
          _id = "vegetable_seed",
@@ -16810,6 +16967,21 @@ local item =
             -- <<<<<<<< shade2/item.hsp:691 			} ..
          end,
 
+         -- >>>>>>>> shade2/action.hsp:1000 	if iId(ri)=idGambleChest{ ...
+         on_open = open_chest(
+            function(filter, item)
+               filter.id = "elona.gold_piece"
+
+               if Rand.one_in(75) then
+                  filter.amount = 50 * item:calc("value")
+               else
+                  filter.amount = Rand.rnd(item:calc("value")/10+1)+1
+               end
+
+               return filter
+            end, 1),
+         -- <<<<<<<< shade2/action.hsp:1003 		} ..
+
          categories = {
             "elona.container"
          }
@@ -17318,7 +17490,9 @@ local item =
          categories = {
             "elona.container",
             "elona.no_generate"
-         }
+         },
+
+         on_open = open_new_years_gift
       },
       {
          _id = "kotatsu",

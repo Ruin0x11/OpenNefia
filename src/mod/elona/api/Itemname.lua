@@ -363,7 +363,7 @@ function itemname.jp(item, amount, no_article)
          s = s .. I18N.get("item.info." .. _id .. ".level", item.params.monster_ball_max_level)
       end
    elseif _id == "elona.small_gamble_chest" then
-      s = s .. I18N.get("item.info." .. _id .. ".level", item.params.lockpick_difficulty)
+      s = s .. I18N.get("item.info." .. _id .. ".level", item.params.chest_lockpick_difficulty)
    end
 
    if identify == IdentifyState.Quality and elona_Item.is_equipment(item) then
@@ -624,7 +624,7 @@ function itemname.en(item, amount, no_article)
          s = s .. I18N.get("item.info." .. _id .. ".level", item.params.monster_ball_max_level)
       end
    elseif _id == "elona.small_gamble_chest" then
-      s = s .. I18N.get("item.info." .. _id .. ".level", item.params.lockpick_difficulty)
+      s = s .. I18N.get("item.info." .. _id .. ".level", item.params.chest_lockpick_difficulty)
    end
 
    if identify == IdentifyState.Quality and elona_Item.is_equipment(item) then

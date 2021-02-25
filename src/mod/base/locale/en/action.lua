@@ -11,7 +11,7 @@ return {
          current = "Current Ammo Type:",
          is_not_capable = function(_1)
             return ("%s isn't capable of changing ammos.")
-               :format(itemname(_1))
+               :format(_1)
          end,
          need_to_equip = "You need to equip an ammo.",
          normal = "Normal",
@@ -71,7 +71,7 @@ return {
          tree = {
             execute = function(_1)
                return ("You throw your weight against %s.")
-                  :format(itemname(_1))
+                  :format(_1)
             end,
             falls_down = function(_1)
                return ("%s falls down from the tree.")
@@ -117,37 +117,37 @@ return {
       dip = {
          execute = function(_1, _2)
             return ("You dip %s into %s.")
-               :format(itemname(_1), itemname(_2, 1))
+               :format(_1, _2)
          end,
          result = {
             bait_attachment = function(_1, _2)
                return ("You bait %s with %s.")
-                  :format(itemname(_1), itemname(_2, 1))
+                  :format(_1, _2)
             end,
             becomes_blessed = function(_1)
                return ("%s shine%s silvery.")
-                  :format(itemname(_1), s(_1))
+                  :format(_1, s(_1))
             end,
             becomes_cursed = function(_1)
                return ("%s %s wrapped by a dark aura.")
-                  :format(itemname(_1), is(_1))
+                  :format(_1, is(_1))
             end,
             blessed_item = function(_1, _2)
                return ("You shower %s on %s.")
-                  :format(itemname(_1), itemname(_2, 1))
+                  :format(_1, _2)
             end,
             dyeing = function(_1)
                return ("You dye %s.")
-                  :format(itemname(_1))
+                  :format(_1)
             end,
             empty_bottle_shatters = "You hear the sound of the empty bottle shatters.",
             gains_acidproof = function(_1)
                return ("%s gain%s acidproof.")
-                  :format(itemname(_1), s(_1))
+                  :format(_1, s(_1))
             end,
             gains_fireproof = function(_1)
                return ("%s gain%s fireproof.")
-                  :format(itemname(_1), s(_1))
+                  :format(_1, s(_1))
             end,
             good_idea_but = "A good idea! But...",
             holy_well_polluted = "The holy well is polluted.",
@@ -160,12 +160,12 @@ return {
             natural_potion_drop = "Oops! You drop the empty bottle into the well...",
             natural_potion_dry = function(_1)
                return ("%s is dry.")
-                  :format(itemname(_1))
+                  :format(_1)
             end,
             poisoned_food = "You grin.",
             put_on = function(_1, _2)
                return ("You put %s on %s.")
-                  :format(itemname(_2, 1), itemname(_1))
+                  :format(_2, _1)
             end,
             snow_melts = {
                blending = "But the snow just melts.",
@@ -173,43 +173,43 @@ return {
             },
             well_dry = function(_1)
                return ("%s is completely dry.")
-                  :format(itemname(_1))
+                  :format(_1)
             end,
             well_refill = function(_1, _2)
                return ("You throw %s into %s.")
-                  :format(itemname(_1), itemname(_2, 1))
+                  :format(_1, _2)
             end,
             well_refilled = function(_1)
                return ("%s shines for a moment.")
-                  :format(itemname(_1))
+                  :format(_1)
             end
          },
          rots = function(_1)
             return ("%s rots.")
-               :format(itemname(_1))
+               :format(_1)
          end,
          rusts = function(_1)
             return ("%s rusts.")
-               :format(itemname(_1))
+               :format(_1)
          end,
          unchanged = function(_1)
             return ("%s remains unchanged.")
-               :format(itemname(_1))
+               :format(_1)
          end,
          you_get = function(_1)
             return ("You get %s.")
-               :format(itemname(_1, 1))
+               :format(_1)
          end
       },
       drink = {
          potion = function(_1, _2)
             return ("%s drink%s %s.")
-               :format(name(_1), s(_1), itemname(_2, 1))
+               :format(name(_1), s(_1), _2)
          end,
          well = {
             completely_dried_up = function(_1)
                return ("%s has completely dried up.")
-                  :format(itemname(_1))
+                  :format(_1)
             end,
             draw = function(_1, _2)
                return ("%s draw%s water from %s.")
@@ -217,7 +217,7 @@ return {
             end,
             dried_up = function(_1)
                return ("%s has dried up.")
-                  :format(itemname(_1))
+                  :format(_1)
             end,
             effect = {
                default = "Phew, fresh water tastes good.",
@@ -270,23 +270,23 @@ return {
          two_handed = {
             fits_well = function(_1)
                return ("%s fits well for two-hand fighting style.")
-                  :format(itemname(_1))
+                  :format(_1)
             end,
             too_heavy = function(_1)
                return ("%s is too heavy for two-wield fighting style.")
-                  :format(itemname(_1))
+                  :format(_1)
             end,
             too_heavy_other_hand = function(_1)
                return ("%s is too heavy for two-wield fighting style.")
-                  :format(itemname(_1))
+                  :format(_1)
             end,
             too_heavy_when_riding = function(_1)
                return ("%s is too heavy to use when riding.")
-                  :format(itemname(_1))
+                  :format(_1)
             end,
             too_light = function(_1)
                return ("%s is too light for two-hand fighting style.")
-                  :format(itemname(_1))
+                  :format(_1)
             end
          },
          you_change = "You change your equipment."
@@ -613,24 +613,24 @@ return {
          do_not_believe = "You don't believe in God.",
          execute = function(_1, _2)
             return ("You put %s on the altar and mutter the name of %s.")
-               :format(itemname(_1), _2)
+               :format(_1, _2)
          end,
          result = {
             best = function(_1)
                return ("%s shine%s all aruond and dissappear%s.")
-                  :format(itemname(_1), s(_1), s(_1))
+                  :format(_1, s(_1), s(_1))
             end,
             good = function(_1)
                return ("%s for a moment and disappear%s. A three-leaved falls from the altar.")
-                  :format(itemname(_1), s(_1))
+                  :format(_1, s(_1))
             end,
             okay = function(_1)
                return ("%s shine%s for a moment and disappear%s.")
-                  :format(itemname(_1), s(_1), s(_1))
+                  :format(_1, s(_1), s(_1))
             end,
             poor = function(_1)
                return ("%s disappear%s.")
-                  :format(itemname(_1), s(_1))
+                  :format(_1, s(_1))
             end
          },
          take_over = {
@@ -663,7 +663,7 @@ return {
          empty = "It's empty!",
          goods = function(_1)
             return ("Several quality goods spread out from %s.")
-               :format(itemname(_1))
+               :format(_1)
          end,
          new_year_gift = {
             cursed_letter = "You find a cursed letter inside.",
@@ -682,13 +682,13 @@ return {
          },
          text = function(_1)
             return ("You open %s.")
-               :format(itemname(_1))
+               :format(_1)
          end
       },
       pick_up = {
          do_you_want_to_remove = function(_1)
             return ("Do you want to remove %s?")
-               :format(itemname(_1))
+               :format(_1)
          end,
          execute = function(_1, _2)
             return ("%s pick%s up %s.")
@@ -710,7 +710,7 @@ return {
          end,
          you_absorb_magic = function(_1)
             return ("You absorb magic from %s.")
-               :format(itemname(_1))
+               :format(_1)
          end,
          you_buy = function(_1)
             return ("You buy %s.")

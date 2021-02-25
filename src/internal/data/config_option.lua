@@ -43,7 +43,7 @@ data:add_multi(
          _id = "autosave",
 
          type = "boolean",
-         default = false
+         default = true
       },
       {
          _id = "quickstart_on_startup",
