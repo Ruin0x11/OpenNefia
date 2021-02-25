@@ -347,6 +347,7 @@ function Action.target_text(chara, x, y, visible_only)
 end
 
 function Action.build_target_list(chara)
+   -- >>>>>>>> shade2/command.hsp:251 		rc=-1 ...
    local Effect = require("mod.elona.api.Effect") -- TODO move
 
    local filter = function(other)
@@ -380,6 +381,7 @@ function Action.build_target_list(chara)
    table.sort(targets, sort)
 
    return targets
+   -- <<<<<<<< shade2/command.hsp:269 		loop ..
 end
 
 --- @hsp *findTarget

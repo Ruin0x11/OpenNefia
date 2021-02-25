@@ -1035,10 +1035,13 @@ local function visit_quest_giver(quest)
    local player = Chara.player()
    local map = player:current_map()
    local client = Chara.find(quest.client_uid, "all", map)
-   assert(client)
-   Magic.cast("elona.shadow_step", {source=player, target=client})
-   if Chara.is_alive(client) then
-      Dialog.start(client, "elona.quest_giver:quest_about")
+   if client then
+      Magic.cast("elona.shadow_step", {source=player, target=client})
+      if Chara.is_alive(client) then
+         Dialog.start(client, "elona.quest_giver:quest_about")
+      end
+   else
+      Log.warn("Couldn't visit client")
    end
 end
 

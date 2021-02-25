@@ -282,6 +282,10 @@ function IItemEnchantments:find_base_enchantment(_id, params, source)
    return self:iter_base_enchantments(_id, params, source):nth(1)
 end
 
+function IItemEnchantments:find_merged_enchantment(_id)
+   return self:iter_merged_enchantments():filter(function(enc) return enc._id == _id end):nth(1)
+end
+
 function IItemEnchantments:remove_enchantment(enc, params, source)
    -- >>>>>>>> shade2/item_data.hsp:518 	#deffunc encRemove int id,int EncOrg,int encPorg ..
    if type(enc) == "string" then

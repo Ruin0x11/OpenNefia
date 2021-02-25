@@ -1338,7 +1338,7 @@ end
 function Effect.try_to_chat(chara, player)
    -- >>>>>>>> shade2/chat.hsp:42 *chat ...
    if chara:relation_towards(player) <= Enum.Relation.Dislike then
-      Gui.mes("talk.will_not_listen")
+      Gui.mes("talk.will_not_listen", chara)
       return
    end
 

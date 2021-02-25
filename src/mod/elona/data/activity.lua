@@ -988,7 +988,7 @@ data:add {
             if not Item.is_alive(self.instrument) then
                return "stop"
             end
-            Gui.mes_visible("activity.perform.start", params.chara.x, params.chara.y, params.chara, self.instrument)
+            Gui.mes_visible("activity.perform.start", params.chara.x, params.chara.y, params.chara, self.instrument:build_name(1))
             -- <<<<<<<< shade2/proc.hsp:197 		} ..
          end
       },

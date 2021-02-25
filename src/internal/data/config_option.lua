@@ -2,6 +2,7 @@ local data = require("internal.data")
 local draw = require("internal.draw")
 local config = require("internal.config")
 local Log = require("api.Log")
+local Draw = require("api.Draw")
 
 data:add_multi(
    "base.config_option",
@@ -640,6 +641,16 @@ data:add_multi(
 
          type = "boolean",
          default = false
+      },
+      {
+         _id = "show_perf_widgets",
+
+         type = "boolean",
+         default = false,
+
+         on_changed = function(value)
+            draw.global_widget("fps_counter"):set_enabled(value)
+         end
       },
       {
          _id = "max_inspect_length",

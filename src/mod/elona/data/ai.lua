@@ -393,9 +393,13 @@ local function basic_action(chara, params)
    local choice
 
    if choosing_sub_act then
-      choice = Rand.choice(chara.ai_actions.sub or {})
+      if chara.ai_actions.sub then
+         choice = Rand.choice(chara.ai_actions.sub)
+      end
    else
-      choice = Rand.choice(chara.ai_actions.main or {})
+      if chara.ai_actions.main then
+         choice = Rand.choice(chara.ai_actions.main)
+      end
    end
 
    if choice then

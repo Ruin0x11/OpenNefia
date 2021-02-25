@@ -752,7 +752,7 @@ local item =
             Effect.identify_item(self, Enum.IdentifyState.Name)
             local BookMenu = require("api.gui.menu.BookMenu")
             BookMenu:new("text", true):query()
-            return false
+            return "player_turn_query"
             -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
          end,
          fltselect = 1,
@@ -779,7 +779,7 @@ local item =
             local text = I18N.get("_.elona.book." .. self.params.book_id .. ".text")
             local BookMenu = require("api.gui.menu.BookMenu")
             BookMenu:new(text, true):query()
-            return false
+            return "player_turn_query"
             -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
          end,
          category = 55000,

@@ -218,6 +218,7 @@ end
 function IItem:remove_activity(no_message)
    local chara_using = self:get_chara_using()
    if chara_using == nil then
+      return
    end
 
    if not no_message then
