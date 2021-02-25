@@ -132,5 +132,6 @@ data:add_multi(
       { _id = "on_map_calc_shadow" },
       { _id = "on_feat_make_target_text" },
       { _id = "on_player_death_revival" },
+      { _id = "on_theme_switched" },
    }
 )

@@ -60,10 +60,6 @@ local function enable_themes()
       themes[#themes+1] = "scrounged_theme.scrounged"
    end
 
-   if Env.is_mod_loaded("scrounged_theme") then
-      themes[#themes+1] = "scrounged_theme.scrounged"
-   end
-
    if Env.is_mod_loaded("elonapack") then
       themes[#themes+1] = "elonapack.elonapack"
    end
