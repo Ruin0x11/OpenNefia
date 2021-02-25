@@ -29,6 +29,8 @@ local nbt = {
 	_LICENSE = "zLib"
 }
 
+local registry = {}
+
 -- Tag constants
 local TAG_END = 0 nbt.TAG_END = 0
 local TAG_BYTE = 1 nbt.TAG_BYTE = 1
@@ -1212,6 +1214,62 @@ function nbt.decode(input, preservemode)
 		return result, name
 	end
 
+end
+
+function nbt.registerClass(class)
+   assert(class.__serial_id)
+   assert(class.serialize_nbt)
+   assert(class.deserialize_nbt)
+   print("REG", class.__serial_id)
+   registry[class.__serial_id] = class
+end
+
+function nbt.newClassCompound(value, name)
+   local mt = assert(getmetatable(value))
+   assert(mt.__name)
+   assert(mt.__serial_id)
+   local reg = registry[mt.__serial_id]
+
+   local values = reg.serialize_nbt(value)
+
+   assert(values.__serial_id == nil, "__serial_id is a reserved field")
+   values.__serial_id = mt.__serial_id
+   return nbt.newCompound(values, name)
+end
+
+function TagClass:getClassCompound()
+	if
+		self._type == TAG_COMPOUND
+	then
+       local serial_id = assert(self:getValue().__serial_id):getString()
+       local klass = assert(registry[serial_id])
+       local instance = {__class=klass, __memoized={}}
+       setmetatable(instance, klass)
+
+       instance:deserialize_nbt(self:getValue())
+
+       return instance
+	end
+
+	error("attempt to get class compound of invalid type")
+end
+
+function nbt.newArbitraryTable(value, name)
+   local binser = require("thirdparty.binser")
+   assert(type(value) == "table")
+   local serialized = binser.serialize(value)
+   return nbt.newString(serialized, name)
+end
+
+function TagClass:getArbitraryTable()
+   local binser = require("thirdparty.binser")
+   if
+      self._type == TAG_STRING
+   then
+      return binser.deserialize(self:getValue())
+   end
+
+   error("attempt to get arbitrary table of invalid type")
 end
 
 return nbt
