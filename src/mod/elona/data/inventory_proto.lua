@@ -707,9 +707,9 @@ local inv_steal = {
 }
 data:add(inv_steal)
 
-local inv_get_container = {
+local inv_get_four_dimensional_pocket = {
    _type = "elona_sys.inventory_proto",
-   _id = "inv_get_container",
+   _id = "inv_get_four_dimensional_pocket",
    elona_id = 22,
    elona_sub_id = 5,
 
@@ -740,7 +740,7 @@ local inv_get_container = {
       return "inventory_continue"
    end
 }
-data:add(inv_get_container)
+data:add(inv_get_four_dimensional_pocket)
 
 local inv_harvest_delivery_chest = {
    _type = "elona_sys.inventory_proto",
@@ -785,9 +785,9 @@ local inv_harvest_delivery_chest = {
 }
 data:add(inv_harvest_delivery_chest)
 
-local inv_put_container = {
+local inv_put_four_dimensional_pocket = {
    _type = "elona_sys.inventory_proto",
-   _id = "inv_put_container",
+   _id = "inv_put_four_dimensional_pocket",
    elona_id = 24,
    elona_sub_id = 5,
 
@@ -838,7 +838,7 @@ local inv_put_container = {
       return "inventory_continue"
    end
 }
-data:add(inv_put_container)
+data:add(inv_put_four_dimensional_pocket)
 
 local inv_identify = {
    _type = "elona_sys.inventory_proto",

@@ -329,7 +329,7 @@ data:add {
       pocket:set_max_size(math.clamp(math.floor(params.power / 10 + 10), 10, 300))
       pocket.max_weight = params.power * 100
 
-      Input.query_inventory(source, "elona.inv_get_container", { container = pocket }, "elona.container")
+      Input.query_inventory(source, "elona.inv_get_four_dimensional_pocket", { container = pocket }, "elona.container_four_dimensional_pocket")
 
       return false
    end
