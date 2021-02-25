@@ -34,7 +34,7 @@ function Magic.drink_potion(magic_id, power, item, params)
       curse_state = item:calc("curse_state")
       if chara:is_in_fov() then
          Gui.play_sound("base.drink1", chara.x, chara.y)
-         Gui.mes("action.drink.potion", chara, item)
+         Gui.mes("action.drink.potion", chara, item:build_name(1))
       end
    elseif triggered_by == "potion_spilt" then
       -- pass

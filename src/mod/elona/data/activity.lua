@@ -83,7 +83,9 @@ data:add {
 
    animation_wait = 100,
 
+   -- >>>>>>>> shade2/main.hsp:821 		if cc=pc:if (cRowAct(cc)!rowActEat)&(cRowAct(cc) ...
    on_interrupt = "prompt",
+   -- <<<<<<<< shade2/main.hsp:821 		if cc=pc:if (cRowAct(cc)!rowActEat)&(cRowAct(cc) ..
    interrupt_on_displace = true,
 
    events = {
@@ -164,7 +166,9 @@ local traveling = {
 
    animation_wait = 0,
 
-   on_interrupt = "prompt",
+   -- >>>>>>>> shade2/chara_func.hsp:456 	if cRowAct(c)!0:if cRowAct(c)!rowActTravel:cRowAc ...
+   on_interrupt = "ignore",
+   -- <<<<<<<< shade2/chara_func.hsp:456 	if cRowAct(c)!0:if cRowAct(c)!rowActTravel:cRowAc ..
 }
 
 function traveling.default_turns(self, params, chara)
@@ -1272,7 +1276,10 @@ data:add {
 
    animation_wait = 25,
 
+   -- >>>>>>>> shade2/main.hsp:821 		if cc=pc:if (cRowAct(cc)!rowActEat)&(cRowAct(cc) ...
    on_interrupt = "prompt",
+   -- <<<<<<<< shade2/main.hsp:821 		if cc=pc:if (cRowAct(cc)!rowActEat)&(cRowAct(cc) ..
+
    events = {
       {
          id = "base.on_activity_start",
@@ -1372,7 +1379,10 @@ data:add {
 
    animation_wait = 25,
 
+   -- >>>>>>>> shade2/main.hsp:821 		if cc=pc:if (cRowAct(cc)!rowActEat)&(cRowAct(cc) ...
    on_interrupt = "prompt",
+   -- <<<<<<<< shade2/main.hsp:821 		if cc=pc:if (cRowAct(cc)!rowActEat)&(cRowAct(cc) ..
+
    events = {
       {
          id = "base.on_activity_start",

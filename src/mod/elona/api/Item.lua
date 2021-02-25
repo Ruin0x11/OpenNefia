@@ -209,7 +209,7 @@ local function init_container(item, params)
    local map_level = (map and map:calc("level")) or 1
 
    -- TODO shelter
-   local is_shelter = false
+   local is_shelter = map._archetype == "elona.shelter"
    local item_level = 5 + ((not is_shelter) and 1 or 0) * map_level
 
    local difficulty = Rand.rnd(((not is_shelter) and 1 or 0) * math.abs(map_level) + 1)

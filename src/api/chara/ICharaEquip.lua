@@ -74,6 +74,10 @@ function ICharaEquip:find_merged_enchantment(_id)
    return self:iter_merged_enchantments():filter(function(enc) return enc._id == _id end):nth(1)
 end
 
+function ICharaEquip:enchantment_power(_id, params, source)
+   return self:iter_equipment():map(function(i) return i:enchantment_power(_id, params, source) end):sum()
+end
+
 function ICharaEquip:on_refresh()
    local attack_count = 0
    for _, part in self:iter_equipped_body_parts() do

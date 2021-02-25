@@ -224,16 +224,16 @@ function EquipmentMenu.message_weapon_stats(chara)
          if equipped:calc("is_melee_weapon") then
             attack_count = attack_count + 1
             if chara:calc("is_wielding_two_handed") and weight >= Const.WEAPON_WEIGHT_HEAVY then
-               Gui.mes("action.equip.two_handed.fits_well", equipped)
+               Gui.mes("action.equip.two_handed.fits_well", equipped:build_name())
             end
             if chara:calc("is_dual_wielding") then
                if attack_count == 1 then
                   if weight >= Const.WEAPON_WEIGHT_HEAVY then
-                     Gui.mes("action.equip.two_handed.too_heavy_other_hand", equipped)
+                     Gui.mes("action.equip.two_handed.too_heavy_other_hand", equipped:build_name())
                   end
                else
                   if weight > Const.WEAPON_WEIGHT_LIGHT then
-                     Gui.mes("action.equip.two_handed.too_heavy_other_hand", equipped)
+                     Gui.mes("action.equip.two_handed.too_heavy_other_hand", equipped:build_name())
                   end
                end
             end
@@ -277,7 +277,7 @@ function EquipmentMenu:update()
          local result, canceled = Input.query_item(self.chara, "elona.inv_equip", { params = {body_part_id = entry.body_part._id} })
          if not canceled then
             local selected_item = result.result
-            assert(Action.equip(self.chara, selected_item))
+            assert(Action.equip(self.chara, selected_item, slot))
             -- >>>>>>>> shade2/command.hsp:3743 			snd seEquip ..
             Gui.play_sound("base.equip1")
             Gui.mes_newline()

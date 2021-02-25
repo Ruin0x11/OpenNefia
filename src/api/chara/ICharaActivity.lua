@@ -3,6 +3,7 @@ local Gui = require("api.Gui")
 local Object = require("api.Object")
 local config = require("internal.config")
 local Log = require("api.Log")
+local I18N = require("api.I18N")
 
 local ICharaActivity = class.interface("ICharaActivity")
 
@@ -47,6 +48,7 @@ function ICharaActivity:_proc_activity_interrupted()
    local should_stop = self.activity:proc_interrupted()
 
    if should_stop then
+      Gui.mes_visible("activity.cancel.normal", self.x, self.y, self, I18N.get_optional("activity._." .. self.activity._id .. ".verb") or "activity.default_verb")
       self:remove_activity()
    end
 

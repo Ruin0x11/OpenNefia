@@ -25,6 +25,9 @@ local Inventory = require("api.Inventory")
 local elona_Item = require("mod.elona.api.Item")
 local Filters = require("mod.elona.api.Filters")
 local SkillCheck = require("mod.elona.api.SkillCheck")
+local Const = require("api.Const")
+local Charagen = require("mod.tools.api.Charagen")
+local Mef = require("api.Mef")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -93,6 +96,103 @@ local function open_chest(filter, item_count, after_cb)
    end
 end
 
+-- >>>>>>>> shade2/action.hsp:1027 *open_newYear ...
+local function new_years_gift_effect(gift, chara)
+   Gui.play_sound("base.chest1", gift.x, gift.y)
+   Gui.mes("action.open.text", gift:build_name())
+   Input.query_more()
+
+   Gui.play_sound("base.ding2")
+   Rand.set_seed()
+
+   local quality = gift.params.new_years_gift_quality or 0
+   local map = chara:current_map()
+
+   if quality < Const.IMPRESSION_FRIEND then
+      if Rand.one_in(3) then
+         Gui.mes_visible("action.open.new_year_gift.something_jumps_out", chara.x, chara.y)
+         for _ = 1, 3 + Rand.rnd(3) do
+            local filter = {
+               level = Calc.calc_object_level(chara:calc("level")*3/2+3, map),
+               quality = Calc.calc_object_quality(Enum.Quality.Normal)
+            }
+            Charagen.create(chara.x, chara.y, filter, map)
+         end
+         return
+      end
+
+      if Rand.one_in(3) then
+         Gui.mes_visible("action.open.new_year_gift.trap", chara.x, chara.y)
+         for _ = 1, 6 do
+            local x = chara.x + Rand.rnd(3) - Rand.rnd(3)
+            local y = chara.y + Rand.rnd(3) - Rand.rnd(3)
+            if map:can_access(x, y) then
+               Mef.create("elona.fire", x, y, { duration = Rand.rnd(15+20), power = 50, origin = chara }, map)
+               Effect.damage_map_fire(x, y, chara, map)
+            end
+         end
+         return
+      end
+
+      Gui.mes_visible("action.open.new_year_gift.cursed_letter", chara.x, chara.y)
+      elona_sys_Magic.cast("elona.effect_curse", { source = chara, target = chara, power = 1000 })
+      return
+   end
+
+   if quality < Const.IMPRESSION_MARRY then
+      if Rand.one_in(4) then
+         Gui.mes_c_visible("action.open.new_year_gift.ring", chara.x, chara.y, "Yellow")
+         local bells = {
+            "elona.silver_bell",
+            "elona.gold_bell"
+         }
+         local bell = Chara.create(Rand.choice(bells), chara.x, chara.y, {}, map)
+         if bell and bell.relation <= Enum.Relation.Enemy then
+            bell:set_relation_towards(chara, Enum.Relation.Dislike)
+         end
+         return
+      end
+
+      if Rand.one_in(5) then
+         Gui.mes_visible("action.open.new_year_gift.younger_sister", chara.x, chara.y)
+         local younger_sister = Chara.create("elona.younger_sister", chara.x, chara.y, {}, map)
+         if younger_sister then
+            younger_sister.gold = 5000
+         end
+         return
+      end
+
+      Gui.mes_visible("action.open.new_year_gift.something_inside", chara.x, chara.y)
+      Item.create(Rand.choice(Filters.isetgiftminor), chara.x, chara.y, {amount=1}, map)
+      return
+   end
+
+   if Rand.one_in(3) then
+      Gui.mes_c_visible("action.open.new_year_gift.ring", chara.x, chara.y, "Yellow")
+      local bells = {
+         "elona.silver_bell",
+         "elona.gold_bell"
+      }
+      for _ = 1, 2 + Rand.rnd(3) do
+         local bell = Chara.create(Rand.choice(bells), chara.x, chara.y, {}, map)
+         if bell and bell.relation <= Enum.Relation.Enemy then
+            bell:set_relation_towards(chara, Enum.Relation.Dislike)
+         end
+      end
+      return
+   end
+
+   if Rand.one_in(50) then
+      Gui.mes_visible("action.open.new_year_gift.wonderful", chara.x, chara.y)
+      Item.create(Rand.choice(Filters.isetgiftgrand), chara.x, chara.y, {amount=1}, map)
+      return
+   end
+
+   Gui.mes_visible("action.open.new_year_gift.something_inside", chara.x, chara.y)
+   Item.create(Rand.choice(Filters.isetgiftmajor), chara.x, chara.y, {amount=1}, map)
+end
+-- <<<<<<<< shade2/action.hsp:1099 return ..
+
 local function open_new_years_gift(self, params)
    -- >>>>>>>> shade2/action.hsp:950 	item_separate ci ...
    local sep = self:separate()
@@ -109,8 +209,7 @@ local function open_new_years_gift(self, params)
       end
    end
 
-
-
+   new_years_gift_effect(sep, params.chara)
    sep.params.chest_item_level = 0
 
    return "turn_end"

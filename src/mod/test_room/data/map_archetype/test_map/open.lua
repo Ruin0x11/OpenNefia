@@ -2,6 +2,7 @@ local utils = require("mod.test_room.data.map_archetype.utils")
 local Chara = require("api.Chara")
 local Item = require("api.Item")
 local Skill = require("mod.elona_sys.api.Skill")
+local Const = require("api.Const")
 
 local open = {
    _id = "open"
@@ -20,6 +21,13 @@ function open.on_generate_map(area, floor)
    for _, _id in data["base.item"]:iter():filter(function(i) return i.on_open end) do
       for _ = 1, 5 do
          Item.create(_id, nil, nil, {}, map)
+      end
+   end
+
+   for _, imp in ipairs { Const.IMPRESSION_HATE, Const.IMPRESSION_FRIEND, Const.IMPRESSION_MARRY } do
+      local gift = Item.create("elona.new_years_gift", nil, nil, {amount=99}, map)
+      if gift then
+         gift.params.new_years_gift_quality = imp
       end
    end
 
