@@ -99,6 +99,7 @@ love.audio.newSource = function(path)
       setRelative = function() end,
       setAttenuationDistances = function() end,
       getChannelCount = function() return 1 end,
+      setVolume = function() end,
    }
 end
 love.audio.play = function() end

@@ -156,6 +156,9 @@ return {
          god = function(_1)
             return ("《%s》"):format(_1)
          end,
+         article = function(_1)
+            return ("%s"):format(_1)
+         end
       },
       someones_item = {
          breaks_to_pieces = function(_1, _2, _3)

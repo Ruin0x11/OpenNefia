@@ -1158,7 +1158,9 @@ local chara = {
       ai_move_chance = 60,
       skills = {
          "elona.spell_acid_ground"
-      }
+      },
+      unarmed_element_id = "elona.acid",
+      unarmed_element_power = 100
    },
    {
       _id = "bubble",
@@ -2114,7 +2116,9 @@ local chara = {
       ai_move_chance = 0,
       skills = {
          "elona.action_distant_attack_7"
-      }
+      },
+      unarmed_element_id = "elona.mind",
+      unarmed_element_power = 150
    },
    {
       _id = "chaos_mushroom",
@@ -2139,7 +2143,9 @@ local chara = {
       ai_move_chance = 0,
       skills = {
          "elona.action_distant_attack_7"
-      }
+      },
+      unarmed_element_id = "elona.chaos",
+      unarmed_element_power = 250
    },
    {
       _id = "citizen",
@@ -2722,7 +2728,9 @@ local chara = {
       coefficient = 400,
       on_eat_corpse = eating_effect.fire_ent,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      unarmed_element_id = "elona.fire",
+      unarmed_element_power = 200
    },
    {
       _id = "ice_ent",
@@ -2740,7 +2748,9 @@ local chara = {
       coefficient = 400,
       on_eat_corpse = eating_effect.ice_ent,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      unarmed_element_id = "elona.cold",
+      unarmed_element_power = 200
    },
    {
       _id = "lich",
@@ -3432,7 +3442,9 @@ local chara = {
       ai_move_chance = 70,
       skills = {
          "elona.spell_chaos_ball"
-      }
+      },
+      unarmed_element_id = "elona.chaos",
+      unarmed_element_power = 300
    },
    {
       _id = "floating_eye",
@@ -3457,7 +3469,9 @@ local chara = {
          }
       },
       ai_distance = 1,
-      ai_move_chance = 15
+      ai_move_chance = 15,
+      unarmed_element_id = "elona.nerve",
+      unarmed_element_power = 250
    },
    {
       _id = "chaos_eye",
@@ -3491,7 +3505,9 @@ local chara = {
       ai_move_chance = 15,
       skills = {
          "elona.action_eye_of_mutation"
-      }
+      },
+      unarmed_element_id = "elona.chaos",
+      unarmed_element_power = 400
    },
    {
       _id = "mad_gaze",
@@ -3525,7 +3541,9 @@ local chara = {
       ai_move_chance = 15,
       skills = {
          "elona.action_eye_of_insanity"
-      }
+      },
+      unarmed_element_id = "elona.mind",
+      unarmed_element_power = 300
    },
    {
       _id = "death_gaze",
@@ -3560,7 +3578,9 @@ local chara = {
       ai_move_chance = 15,
       skills = {
          "elona.action_eye_of_mana"
-      }
+      },
+      unarmed_element_id = "elona.nerve",
+      unarmed_element_power = 450
    },
    {
       _id = "wyvern",
@@ -3814,7 +3834,9 @@ local chara = {
       skills = {
          "elona.action_draw_shadow",
          "elona.action_touch_of_weakness"
-      }
+      },
+      unarmed_element_id = "elona.darkness",
+      unarmed_element_power = 80
    },
    {
       _id = "hand_of_the_chaos",
@@ -3842,7 +3864,9 @@ local chara = {
       ai_move_chance = 25,
       skills = {
          "elona.action_draw_shadow"
-      }
+      },
+      unarmed_element_id = "elona.chaos",
+      unarmed_element_power = 180
    },
    {
       _id = "hand_of_the_murderer",
@@ -3901,7 +3925,9 @@ local chara = {
       skills = {
          "elona.action_touch_of_fear",
          "elona.action_touch_of_weakness"
-      }
+      },
+      unarmed_element_id = "elona.nether",
+      unarmed_element_power = 80
    },
    {
       _id = "nymph",
@@ -3934,7 +3960,9 @@ local chara = {
          "elona.action_touch_of_sleep",
          "elona.spell_ice_bolt",
          "elona.action_cold_breath"
-      }
+      },
+      unarmed_element_id = "elona.mind",
+      unarmed_element_power = 200
    },
    {
       _id = "man_eater_flower",
@@ -3953,7 +3981,9 @@ local chara = {
          }
       },
       ai_distance = 1,
-      ai_move_chance = 20
+      ai_move_chance = 20,
+      unarmed_element_id = "elona.mind",
+      unarmed_element_power = 200
    },
    {
       _id = "chaos_flower",
@@ -3973,7 +4003,9 @@ local chara = {
          }
       },
       ai_distance = 1,
-      ai_move_chance = 20
+      ai_move_chance = 20,
+      unarmed_element_id = "elona.chaos",
+      unarmed_element_power = 250
    },
    {
       _id = "cobra",
@@ -4814,7 +4846,9 @@ local chara = {
       coefficient = 400,
       on_eat_corpse = eating_effect.cobra,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      unarmed_element_id = "elona.poison",
+      unarmed_element_power = 150
    },
    {
       _id = "king_scorpion",
@@ -4832,7 +4866,9 @@ local chara = {
       coefficient = 400,
       on_eat_corpse = eating_effect.cobra,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      unarmed_element_id = "elona.poison",
+      unarmed_element_power = 350
    },
    {
       _id = "spider",
@@ -4888,7 +4924,9 @@ local chara = {
       ai_move_chance = 80,
       skills = {
          "elona.spell_web"
-      }
+      },
+      unarmed_element_id = "elona.poison",
+      unarmed_element_power = 150
    },
    {
       _id = "paralyzer",
@@ -4917,7 +4955,9 @@ local chara = {
       ai_move_chance = 80,
       skills = {
          "elona.spell_web"
-      }
+      },
+      unarmed_element_id = "elona.nerve",
+      unarmed_element_power = 150
    },
    {
       _id = "tarantula",
@@ -4946,7 +4986,9 @@ local chara = {
       ai_move_chance = 80,
       skills = {
          "elona.spell_web"
-      }
+      },
+      unarmed_element_id = "elona.poison",
+      unarmed_element_power = 200
    },
    {
       _id = "blood_spider",
@@ -4974,7 +5016,9 @@ local chara = {
       ai_move_chance = 80,
       skills = {
          "elona.spell_web"
-      }
+      },
+      unarmed_element_id = "elona.nether",
+      unarmed_element_power = 100
    },
    {
       _id = "wooden_golem",
@@ -5108,7 +5152,9 @@ local chara = {
       coefficient = 400,
       on_eat_corpse = eating_effect.fire_crab,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      unarmed_element_id = "elona.fire",
+      unarmed_element_power = 150
    },
    {
       _id = "fire_centipede",
@@ -5125,7 +5171,9 @@ local chara = {
       coefficient = 400,
       on_eat_corpse = eating_effect.fire_centipede,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      unarmed_element_id = "elona.fire",
+      unarmed_element_power = 200
    },
    {
       _id = "cultist_of_fire",
@@ -5221,7 +5269,9 @@ local chara = {
       ai_move_chance = 80,
       skills = {
          "elona.action_touch_of_weakness"
-      }
+      },
+      unarmed_element_id = "elona.mind",
+      unarmed_element_power = 150
    },
    {
       _id = "pawn",
@@ -6307,7 +6357,9 @@ local chara = {
       flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      unarmed_element_id = "elona.cut",
+      unarmed_element_power = 100
    },
    {
       _id = "blade_alpha",
@@ -6322,7 +6374,9 @@ local chara = {
       flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      unarmed_element_id = "elona.cut",
+      unarmed_element_power = 120
    },
    {
       _id = "blade_omega",
@@ -6337,7 +6391,9 @@ local chara = {
       flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      unarmed_element_id = "elona.cut",
+      unarmed_element_power = 150
    },
    {
       _id = "kaneda_bike",
@@ -6428,7 +6484,9 @@ local chara = {
       flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      unarmed_element_id = "elona.cut",
+      unarmed_element_power = 150
    },
    {
       _id = "deformed_eye",
@@ -6586,7 +6644,9 @@ local chara = {
          sub_action_chance = 30
       },
       ai_distance = 2,
-      ai_move_chance = 50
+      ai_move_chance = 50,
+      unarmed_element_id = "elona.mind",
+      unarmed_element_power = 100
    },
    {
       _id = "puppy",
@@ -6614,7 +6674,9 @@ local chara = {
          sub_action_chance = 10
       },
       ai_distance = 3,
-      ai_move_chance = 80
+      ai_move_chance = 80,
+      unarmed_element_id = "elona.mind",
+      unarmed_element_power = 150
    },
    {
       _id = "greater_pumpkin",
@@ -6642,7 +6704,9 @@ local chara = {
          sub_action_chance = 30
       },
       ai_distance = 2,
-      ai_move_chance = 50
+      ai_move_chance = 50,
+      unarmed_element_id = "elona.mind",
+      unarmed_element_power = 200
    },
    {
       _id = "halloween_nightmare",
@@ -6670,7 +6734,9 @@ local chara = {
          sub_action_chance = 30
       },
       ai_distance = 2,
-      ai_move_chance = 50
+      ai_move_chance = 50,
+      unarmed_element_id = "elona.mind",
+      unarmed_element_power = 250
    },
    {
       _id = "stalker",
@@ -8047,7 +8113,9 @@ local chara = {
       skills = {
          "elona.action_touch_of_fear",
          "elona.action_touch_of_weakness"
-      }
+      },
+      unarmed_element_id = "elona.nether",
+      unarmed_element_power = 400
    },
    {
       _id = "quickling",
@@ -8169,7 +8237,9 @@ local chara = {
       ai_move_chance = 100,
       skills = {
          "elona.action_pregnant"
-      }
+      },
+      unarmed_element_id = "elona.acid",
+      unarmed_element_power = 250
    },
    -- For debug
    -- chara spiral_putit {

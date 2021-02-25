@@ -13,6 +13,7 @@ local Anim = require("mod.elona_sys.api.Anim")
 local Action = require("api.Action")
 local Effect = require("mod.elona.api.Effect")
 local Pos = require("api.Pos")
+local I18N = require("api.I18N")
 
 local ElonaAction = {}
 
@@ -256,17 +257,31 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
 
       local element, element_power
       if weapon then
-         if weapon:calc("quality") >= Enum.Quality.Great then
-            -- TODO ego name
+         local quality = weapon:calc("quality")
+         if quality >= Enum.Quality.Great
+            -- Don't spoil the item's title if not fully identified yet
+            and weapon:calc("identify_state") >= Enum.IdentifyState.Full
+         then
+            local name
+            if quality == Enum.Quality.Unique then
+               name = I18N.get("item.title_paren.article", weapon.name)
+            else
+               if weapon.title then
+                  name = weapon.title
+               else
+                  name = I18N.get("item.title_paren.article", weapon.name)
+               end
+            end
+            name = I18N.get("item.title_paren.great", name)
             if Rand.one_in(5) then
-               Gui.mes_c_visible("damage.wields_proudly", chara, "SkyBlue", weapon)
+               Gui.mes_c_visible("damage.wields_proudly", chara.x, chara.y, "SkyBlue", chara, name)
             end
          end
       else
-         element = chara:calc("unarmed_element")
+         element = chara:calc("unarmed_element_id")
          element_power = chara:calc("unarmed_element_power")
-         if element and not element_power then
-            element_power = 0
+         if element then
+            element_power = element_power or 100
          end
       end
 
