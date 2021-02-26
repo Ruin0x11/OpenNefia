@@ -26,7 +26,7 @@ local target_filter_in_fov = {
       if is_position(candidate) then
          return true
       end
-      if class.is_an(InstancedMap, candidate.location) then
+      if candidate:current_map() then
          return chara:has_los(candidate.x, candidate.y)
             and Pos.dist(chara.x, chara.y, candidate.x, candidate.y) <= chara:calc("fov") / 2
       end

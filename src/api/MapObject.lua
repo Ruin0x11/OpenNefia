@@ -9,10 +9,10 @@ local Log = require("api.Log")
 
 local MapObject = {}
 
-function MapObject.generate_from(_type, id, UidTracker)
-   UidTracker = UidTracker or require("internal.global.save").base.uids
+function MapObject.generate_from(_type, id, uid_tracker)
+   uid_tracker = uid_tracker or require("internal.global.save").base.uids
 
-   local uid = UidTracker:get_next_and_increment()
+   local uid = uid_tracker:get_next_and_increment()
 
    -- params.no_pre_build = true
    local obj = Object.generate_from(_type, id)
@@ -21,13 +21,15 @@ function MapObject.generate_from(_type, id, UidTracker)
 
    -- class.assert_is_an(IMapObject, data)
 
+   obj:pre_build()
+
    return obj
 end
 
-function MapObject.generate(proto, UidTracker)
-   UidTracker = UidTracker or require("internal.global.save").base.uids
+function MapObject.generate(proto, uid_tracker)
+   uid_tracker = uid_tracker or require("internal.global.save").base.uids
 
-   local uid = UidTracker:get_next_and_increment()
+   local uid = uid_tracker:get_next_and_increment()
 
    -- params.no_pre_build = true
    local obj = Object.generate(proto)
@@ -35,6 +37,8 @@ function MapObject.generate(proto, UidTracker)
    rawset(obj, "uid", uid)
 
    -- class.assert_is_an(IMapObject, obj)
+
+   obj:pre_build()
 
    return obj
 end
@@ -66,7 +70,8 @@ function MapObject.clone_base(obj, owned)
    local new_object = MapObject.generate(proto)
    MapObject.finalize(new_object, { no_build=true })
 
-   if owned and class.is_an("api.IMapObject", obj) and class.is_an("api.ILocation", obj.location) then
+   local location = obj:get_location()
+   if owned and class.is_an("api.IMapObject", obj) and class.is_an("api.ILocation", location) then
       -- HACK: This makes cloning characters harder, since the
       -- location also has to be changed manually, or there will be
       -- more than one character on the same square. Perhaps
@@ -74,14 +79,14 @@ function MapObject.clone_base(obj, owned)
       local x = new_object.x or 0
       local y = new_object.y or 0
 
-      if not obj.location:can_take_object(new_object, x, y) then
+      if not location:can_take_object(new_object, x, y) then
          Log.warn("Tried to clone object %d (%s), but the location %s couldn't take the object.",
-                  obj.uid, obj._type, tostring(obj.location))
+                  obj.uid, obj._type, tostring(location))
          new_object:remove_ownership()
          return nil
       end
 
-      assert(obj.location:take_object(new_object, x, y))
+      assert(location:take_object(new_object, x, y))
    end
 
    Event.trigger("base.on_object_cloned", {object=obj, type="base"})
@@ -90,7 +95,12 @@ function MapObject.clone_base(obj, owned)
 end
 
 function MapObject.is_map_object(t)
-   return type(t) == "table" and type(t._id) == "string" and type(t._type) == "string" and type(t.uid) == "number"
+   if type(t) ~= "table" then
+      return false
+   end
+
+   local mt = getmetatable(t)
+   return mt and mt.__index == object.__index and type(t.x) == "number" and type(t.y) == "number" or false
 end
 
 -- NOTE: We could have an interface for classes that need special cloning logic.
@@ -134,7 +144,7 @@ local function cycle_aware_copy(t, cache, uids, first, opts)
       -- object
       if k == "__memoized" then
          res[k] = {}
-      elseif k ~= "location" and k ~= "proto" then
+      elseif k ~= "location" then
          local nk = cycle_aware_copy(k, cache, uids, false)
          local nv = cycle_aware_copy(v, cache, uids, false)
          res[nk] = nv
@@ -151,86 +161,33 @@ local function cycle_aware_copy(t, cache, uids, first, opts)
    end
    setmetatable(res,mt)
 
-   -- This is tricky. A lot of implementers of `ILocation` first call
-   -- pool:take_object() and then manually set the `location` field on the
-   -- object afterwards. Because we deliberately don't try to clone `location`
-   -- as it's a back reference, we have to determine what to set `location` to
-   -- by hand.
-   --
-   -- So at this point, `location` on the cloned object is nil. There are two
-   -- cases:
-   --
-   -- 1. `location` lied outside the original object, so it didn't get cloned.
-   --    Hopefully this should only ever happen at the top level, with the
-   --    original call to MapObject.clone(). In this case we don't have to do
-   --    anything since MapObject.clone() will try to reconnect the object's
-   --    location if the `owned` argument is set to `true`.
-   --
-   -- 2. `location` referred to something nested inside a parent object, like
-   --    EquipSlots. In this case the thing that was originally the object's
-   --    `location` will itself be cloned onto the new object and we have to
-   --    reassociate the cloned object with it, because `pool:take_object()`
-   --    will set `location` but it has no knowledge of any implementer of
-   --    `ILocation` that uses it as a field.
-   --
-   -- The below code handles the second case.
-   if class.is_an(ILocation, t) then
-      -- Try to see if this is a class instance that implements ILocation and
-      -- manually sets the `location` field.
-      local sets_location
-      if class.is_class_or_interface(t.__class) then
-         assert(class.is_class_instance(res))
-         local obj = t:iter():nth(1)
-         if obj and obj.location == t then
-            sets_location = true
-         end
-      end
-
-      -- If not, see if the previous location was a map object. Map objects
-      -- can implement `ILocation` even though they aren't class instances.
-      if not sets_location and MapObject.is_map_object(t) then
-         local obj = t:iter():nth(1)
-         if obj and obj.location == t then
-            sets_location = true
-         end
-      end
-
-      -- If we've determined that the thing acts like an `ILocation` and
-      -- manually sets `location`, update the `location` field on the newly
-      -- cloned object to match.
-      if sets_location then
-         for _, new_obj in res:iter() do
-            Log.warn("Set location %s %s %s", new_obj, res.__class, res)
-            new_obj.location = res
-         end
-      end
-   end
    return res
 end
 
 --- Similar to `table.deepcopy()`, but has awareness of map objects.
-function MapObject.deepcopy(t, UidTracker, opts)
+function MapObject.deepcopy(t, uid_tracker, opts)
    if MapObject.is_map_object(t) then
-      return MapObject.clone(t, false, UidTracker, {}, opts)
+      return MapObject.clone(t, false, uid_tracker, {}, opts)
    end
 
-   return cycle_aware_copy(t, {}, UidTracker, true, opts)
+   return cycle_aware_copy(t, {}, uid_tracker, true, opts)
 end
 
-function MapObject.clone(obj, owned, UidTracker, cache, opts)
-   UidTracker = UidTracker or require("internal.global.save").base.uids
+function MapObject.clone(obj, owned, uid_tracker, cache, opts)
+   uid_tracker = uid_tracker or require("internal.global.save").base.uids
    local preserve_uid = (opts and opts.preserve_uid) or false
 
-   local new_object = cycle_aware_copy(obj, cache or {}, UidTracker, true, opts)
+   local new_object = cycle_aware_copy(obj, cache or {}, uid_tracker, true, opts)
 
    if not preserve_uid then
-      new_object.uid = UidTracker:get_next_and_increment()
+      new_object.uid = uid_tracker:get_next_and_increment()
    end
 
    local mt = getmetatable(obj)
    setmetatable(new_object, mt)
 
-   if owned and class.is_an("api.IMapObject", obj) and class.is_an("api.ILocation", obj.location) then
+   local location = obj:get_location()
+   if owned and class.is_an("api.IMapObject", obj) and class.is_an("api.ILocation", location) then
       assert(not preserve_uid, "Cannot preserve UID for owned object")
       -- HACK: This makes cloning characters harder, since the
       -- location also has to be changed manually, or there will be
@@ -239,14 +196,14 @@ function MapObject.clone(obj, owned, UidTracker, cache, opts)
       local x = new_object.x or 0
       local y = new_object.y or 0
 
-      if not obj.location:can_take_object(new_object, x, y) then
+      if not location:can_take_object(new_object, x, y) then
          Log.warn("Tried to clone object %d (%s), but the location %s couldn't take the object.",
-                  obj.uid, obj._type, tostring(obj.location))
+                  obj.uid, obj._type, tostring(location))
          new_object:remove_ownership()
          return nil
       end
 
-      assert(obj.location:take_object(new_object, x, y))
+      assert(location:take_object(new_object, x, y))
    end
 
    Event.trigger("base.on_object_cloned", {object=obj, type="full", owned=owned})

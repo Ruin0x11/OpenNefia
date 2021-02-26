@@ -83,7 +83,7 @@ function InstancedMap:init(width, height, uids, tile)
    self._width = width
    self._height = height
 
-   self._multi_pool = multi_pool:new(width, height)
+   self._multi_pool = multi_pool:new(width, height, self)
    self._last_sight_id = 1
    self._in_sight = t(table.of(0, width * height))
 
@@ -674,7 +674,7 @@ local function set_events_on_self(map)
 end
 
 function InstancedMap:deserialize()
-   ILocation.deserialize(self)
+   -- ILocation.deserialize(self)
    self:redraw_all_tiles()
    set_events_on_self(self)
 end
@@ -758,7 +758,6 @@ function InstancedMap:take_object(obj, x, y)
       return nil
    end
    self._multi_pool:take_object(obj, x, y)
-   obj.location = self
    self:refresh_tile(x, y)
    return obj
 end

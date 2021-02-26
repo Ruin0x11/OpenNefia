@@ -141,8 +141,6 @@ function object.deserialize(self, _type, _id)
    local iface = data[_type]:interface()
    assert(iface)
 
-   assert(self.location == nil, ("location reference not nil: %s %s %s"):format(_type, _id, tostring(self.location)))
-
    self._type = _type
    self._id = _id
 

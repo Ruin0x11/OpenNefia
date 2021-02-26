@@ -23,15 +23,4 @@ local ILocation = class.interface("ILocation",
 -- @tparam IMapObject obj
 -- @treturn[opt] IMapObject obj
 
-function ILocation:serialize()
-end
-
-function ILocation:deserialize()
-   for _, v in self:iter() do
-      if type(v) == "table" and v._type then
-         v.location = self
-      end
-   end
-end
-
 return ILocation

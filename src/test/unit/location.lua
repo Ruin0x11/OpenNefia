@@ -15,8 +15,8 @@ function test_item_owning_location()
       test_util.register_map(map)
 
       local item = Item.create("elona.long_bow", nil, nil, {}, player)
-      Assert.eq(player.inv, item.location)
-      Assert.eq(map, player.location)
+      Assert.eq(player, item:get_location())
+      Assert.eq(map, player:get_location())
    end
 
    test_util.save_cycle()
@@ -26,7 +26,7 @@ function test_item_owning_location()
       local map = player:current_map()
       local item = Item.find("elona.long_bow", "all", map)
 
-      Assert.eq(player.inv, item.location)
-      Assert.eq(map, player.location)
+      Assert.eq(player, item:get_location())
+      Assert.eq(map, player:get_location())
    end
 end

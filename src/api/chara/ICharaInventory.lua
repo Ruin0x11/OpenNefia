@@ -9,14 +9,42 @@ local ICharaInventory = class.interface("ICharaInventory", {}, {ILocation})
 ICharaInventory:delegate("inv",
                         {
                            "is_positional",
-                           "move_object",
-                           "remove_object",
                            "can_take_object",
                            "is_in_bounds",
                            "objects_at_pos",
                            "get_object",
-                           "has_object"
                         })
+
+function ICharaInventory:iter()
+   return self:iter_items()
+end
+
+function ICharaInventory:move_object(obj, x, y)
+   if self.inv:has_object(obj) then
+      return self.inv:move_object(obj, x, y)
+   elseif self.equip:has_object(obj) then
+      return self.equip:move_object(obj, x, y)
+   end
+   return nil
+end
+
+function ICharaInventory:remove_object(obj)
+   if self.inv:has_object(obj) then
+      return self.inv:remove_object(obj)
+   elseif self.equip:has_object(obj) then
+      return self.equip:remove_object(obj)
+   end
+   return nil
+end
+
+function ICharaInventory:has_object(obj)
+   if self.inv:has_object(obj) then
+      return true
+   elseif self.equip:has_object(obj) then
+      return true
+   end
+   return false
+end
 
 function ICharaInventory:init()
    self.inv = Inventory:new(200, "base.item", self)

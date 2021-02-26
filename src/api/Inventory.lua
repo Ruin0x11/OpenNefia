@@ -14,7 +14,7 @@ function Inventory:init(max_size, type_id, owner)
    self.type_id = type_id or "base.item"
    self.max_weight = nil
 
-   self.pool = pool:new(self.type_id, 1, 1)
+   self.pool = pool:new(self.type_id, 1, 1, self)
 
    self.filters = {}
 end
@@ -110,7 +110,6 @@ function Inventory:take_object(obj)
       return nil
    end
 
-   obj.location = self
    return obj
 end
 

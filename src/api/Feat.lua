@@ -81,8 +81,6 @@ function Feat.create(id, x, y, params, where)
       where = where or field.map
    end
 
-   params.location = where
-
    if not class.is_an(ILocation, where) and not params.ownerless then
       return nil, "invalid location"
    end
@@ -104,17 +102,17 @@ function Feat.create(id, x, y, params, where)
    }
    local feat = MapObject.generate_from("base.feat", id)
 
-   MapObject.finalize(feat, gen_params)
-
    if where then
       feat = where:take_object(feat, x, y)
 
       if not feat then
          return nil, "location failed to receive feat"
       end
-      assert(feat.location == where)
+      assert(feat:get_location() == where)
       assert(feat:current_map())
    end
+
+   MapObject.finalize(feat, gen_params)
 
    feat:instantiate()
 

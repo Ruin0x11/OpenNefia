@@ -84,8 +84,6 @@ function Mef.create(id, x, y, params, where)
       where = where or field.map
    end
 
-   params.location = where
-
    if not class.is_an(ILocation, where) and not params.ownerless then
       return nil, "invalid location"
    end
@@ -114,7 +112,6 @@ function Mef.create(id, x, y, params, where)
    local gen_params = {
       no_build = params.no_build
    }
-   MapObject.finalize(mef, gen_params)
 
    if where then
       local other_mef = Mef.at(x, y, where)
@@ -130,9 +127,11 @@ function Mef.create(id, x, y, params, where)
          end
          return nil, "location failed to receive mef"
       end
-      assert(mef.location == where)
+      assert(mef:get_location() == where)
       assert(mef:current_map())
    end
+
+   MapObject.finalize(mef, gen_params)
 
    mef:instantiate()
 

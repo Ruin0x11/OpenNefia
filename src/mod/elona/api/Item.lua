@@ -204,7 +204,7 @@ local function fix_item_2(item, params)
 end
 
 -- >>>>>>>> shade2/item.hsp:685 	if refType=fltChest{ ..
-local function init_container(item, params)
+local function init_container(item, params, map)
    local map = item:containing_map()
    local map_level = (map and map:calc("level")) or 1
 
@@ -319,12 +319,12 @@ function Item.fix_item(item, params)
    local ev_params = table.shallow_copy(params)
    ev_params.owner = item:get_owning_chara()
    ev_params.map = item:containing_map()
-   ev_params.level = ev_params.level or (ev_params.location and ev_params.location:calc("level")) or 1
+   ev_params.level = ev_params.level or (ev_params.map and ev_params.map:calc("level")) or 1
 
    item:emit("base.on_item_init_params", ev_params)
 
    if item:has_category("elona.container") then
-      init_container(item, params)
+      init_container(item, params, ev_params.map)
    end
 
    if item:has_category("elona.food") then
@@ -414,9 +414,14 @@ function Item.ensure_free_item_slot(chara)
 end
 
 function Item.open_chest(item, gen_filter_cb, item_count, loot_level, seed, silent)
+   local map, _, x, y = item:containing_map()
+   if not map then
+      return
+   end
+
    -- >>>>>>>> shade2/action.hsp:967 	snd seOpenChest :txt lang("あなたは"+itemName(ci)+"を開 ...
    if not silent then
-      Gui.play_sound("base.chest1", item.x, item.y)
+      Gui.play_sound("base.chest1", x, y)
       Gui.mes("action.open.text", item:build_name())
       Input.query_more()
    end
@@ -426,8 +431,6 @@ function Item.open_chest(item, gen_filter_cb, item_count, loot_level, seed, sile
    item_count = item_count or (3 + Rand.rnd(5))
    loot_level = loot_level or item.params.chest_item_level
    seed = seed or item.params.chest_random_seed
-
-   local map = item:current_map()
 
    Rand.set_seed(seed)
 
@@ -455,7 +458,7 @@ function Item.open_chest(item, gen_filter_cb, item_count, loot_level, seed, sile
          filter = gen_filter_cb(filter, item, loot_level) or filter
       end
 
-      Itemgen.create(item.x, item.y, filter, map)
+      Itemgen.create(x, y, filter, map)
    end
 
    Rand.set_seed()
@@ -473,7 +476,7 @@ function Item.open_chest(item, gen_filter_cb, item_count, loot_level, seed, sile
       create_medal = true
    end
    if create_medal then
-      api_Item.create("elona.small_medal", item.x, item.y, { amount = 1 }, map)
+      api_Item.create("elona.small_medal", x, y, { amount = 1 }, map)
    end
 
    Save.autosave()

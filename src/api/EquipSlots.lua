@@ -25,7 +25,7 @@ function EquipSlots:init(body_parts, owner)
    end
    self.body_parts = fun.iter(body_parts):map(init):to_list()
 
-   self.pool = pool:new("base.item", 1, 1)
+   self.pool = pool:new("base.item", 1, 1, self)
 
    self.equipped = {}
    self.blocked = table.set {} -- set of base.body_part IDs
@@ -105,7 +105,6 @@ function EquipSlots:equip(obj, slot)
       return nil, "cannot_own"
    end
 
-   obj.location = self
    self.equipped[obj.uid] = slot
    self.body_parts[slot].equipped = obj.uid
 

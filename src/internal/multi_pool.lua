@@ -8,7 +8,11 @@ local function t(o)
    return setmetatable(o or {}, { __inspect = tostring })
 end
 
-function multi_pool:init(width, height)
+function multi_pool:init(width, height, owner)
+   if owner then
+      -- assert(class.is_an(ITypedLocation, owner))
+      self._parent = owner
+   end
    self.width = width
    self.height = height
 
@@ -20,7 +24,7 @@ end
 
 function multi_pool:get_subpool(type_id)
    -- TODO: preregister known objects types beforehand
-   self.subpools[type_id] = self.subpools[type_id] or pool:new(type_id, self.width, self.height)
+   self.subpools[type_id] = self.subpools[type_id] or pool:new(type_id, self.width, self.height, self)
    return self.subpools[type_id]
 end
 
@@ -37,7 +41,6 @@ function multi_pool:take_object(obj, x, y)
    if subpool:take_object(obj, x, y) == nil then
       return nil
    end
-   obj.location = self
 
    self.refs[obj.uid] = subpool:get_object(obj.uid)
    local idx = obj.y*self.width+obj.x+1

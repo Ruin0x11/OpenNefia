@@ -332,8 +332,8 @@ end
 --- @tparam IMapObject other
 --- @treturn b ool true on success.
 function IChara:swap_places(other)
-   local location = self.location
-   if not location or location ~= other.location then
+   local location = self:get_location()
+   if not location or location ~= other:get_location() then
       return false
    end
 
