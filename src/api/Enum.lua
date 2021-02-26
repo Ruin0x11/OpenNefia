@@ -190,4 +190,12 @@ Enum.Relation = enum("Relation", {
 })
 -- <<<<<<<< shade2/init.hsp:370 	#define global cEnemy		-3 ..
 
+Enum.Burden = enum("Burden", {
+    None = 0,
+    Light = 1,
+    Moderate = 2,
+    Heavy = 3,
+    Max = 4
+})
+
 return Enum

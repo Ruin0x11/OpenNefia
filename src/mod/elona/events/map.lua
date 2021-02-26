@@ -204,7 +204,7 @@ local function scoop_up_snow(chara, params, result)
          Gui.play_sound("base.foot2a", chara.x, chara.y)
          Gui.mes("action.get.snow")
          if not Effect.do_stamina_check(chara, 10) then
-            Gui.mes("common.too_exhausted")
+            Gui.mes("magic.common.too_exhausted")
             return true, "blocked"
          end
          local snow = Item.create("elona.handful_of_snow", nil, nil, {}, chara)

@@ -5,10 +5,7 @@ local Charagen = require("mod.tools.api.Charagen")
 local InstancedMap = require("api.InstancedMap")
 local Enum = require("api.Enum")
 local Util = require("mod.elona_sys.api.Util")
-local Resolver = require("api.Resolver")
-local Area = require("api.Area")
 local Const = require("api.Const")
-local I18N = require("api.I18N")
 
 local Calc = {}
 

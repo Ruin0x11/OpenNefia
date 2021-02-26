@@ -96,4 +96,20 @@ Const.HUNGER_THRESHOLD_HUNGRY = 2000
 Const.HUNGER_THRESHOLD_STARVING = 1000
 -- <<<<<<<< shade2/init.hsp:42 	#define global hungerVomit	35000 ..
 
+-- >>>>>>>> shade2/init.hsp:35 	#define global fatigueHeavy	0 ...
+Const.FATIGUE_THRESHOLD_LIGHT = 50
+Const.FATIGUE_THRESHOLD_MODERATE = 25
+Const.FATIGUE_THRESHOLD_HEAVY = 0
+-- <<<<<<<< shade2/init.hsp:37 	#define global fatigueLight	50 ..
+
+-- >>>>>>>> shade2/init.hsp:50 	#define global sleepLight	15 ...
+Const.SLEEP_THRESHOLD_LIGHT = 15
+Const.SLEEP_THRESHOLD_MODERATE = 30
+Const.SLEEP_THRESHOLD_HEAVY = 50
+-- <<<<<<<< shade2/init.hsp:52 	#define global sleepHeavy	50 ..
+
+-- >>>>>>>> shade2/init.hsp:80 	#define global maxCorrupt	20000 ...
+Const.ETHER_DISEASE_DEATH_THRESHOLD = 20000
+-- <<<<<<<< shade2/init.hsp:80 	#define global maxCorrupt	20000 ..
+
 return Const

@@ -27,10 +27,10 @@ end
 function UiStaminaWidget:relayout(x, y)
    self.x = x
    self.y = y
-   Draw.set_font(13)
 end
 
 function UiStaminaWidget:draw()
+   Draw.set_font(13)
    Draw.text_shadowed(self.str, self.x, self.y)
 end
 

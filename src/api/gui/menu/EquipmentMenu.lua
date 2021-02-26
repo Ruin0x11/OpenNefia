@@ -81,6 +81,8 @@ function EquipmentMenu:init(chara)
    self.input:forward_to(self.pages)
    self.input:bind_keys(self:make_keymap())
 
+   self.text_equip_stats = ""
+
    self.stats = {}
    self.changed_equipment = false
 
@@ -129,7 +131,7 @@ end
 function EquipmentMenu.build_list(chara)
    local list = {}
 
-   for _, i in chara:iter_body_parts(true) do
+   for _, i in chara:iter_all_body_parts() do
       local entry = {}
 
       entry.body_part = i.body_part
@@ -161,13 +163,22 @@ function EquipmentMenu:update_from_chara()
    self.win:set_pages(self.pages)
    self:refresh_item_icons()
 
-   self.stats = {
-      dv = self.chara:calc("dv"),
-      pv = self.chara:calc("pv"),
-      weight = self.chara:calc("equipment_weight"),
-      hit_bonus = self.chara:calc("hit_bonus"),
-      damage_bonus = self.chara:calc("damage_bonus"),
-   }
+   local dv = self.chara:calc("dv")
+   local pv = self.chara:calc("pv")
+   local weight = self.chara:calc("equipment_weight")
+   local hit_bonus = self.chara:calc("hit_bonus")
+   local damage_bonus = self.chara:calc("damage_bonus")
+
+   self.text_equip_stats = ("%s: %s%s %s:%d %s:%d  DV/PV:%d/%d")
+      :format(I18N.get("ui.equip.equip_weight"),
+              Ui.display_weight(weight),
+              Ui.display_armor_class(weight),
+              I18N.get("ui.equip.hit_bonus"),
+              hit_bonus,
+              I18N.get("ui.equip.damage_bonus"),
+              damage_bonus,
+              dv,
+              pv)
 
    Gui.refresh_hud()
 end
@@ -198,14 +209,7 @@ function EquipmentMenu:draw()
    self.t.base.deco_wear_a:draw(self.x + self.width - 106, self.y)
    self.t.base.deco_wear_b:draw(self.x, self.y + self.height - 164)
 
-   local note = string.format("weight: %s(%s) hit_bonus: %d damage_bonus: %d  DV/PV: %d/%d",
-                              self.stats.weight,
-                              "med",
-                              self.stats.hit_bonus,
-                              self.stats.damage_bonus,
-                              self.stats.dv,
-                              self.stats.pv)
-   Ui.draw_note(note, self.x, self.y, self.width, self.height, 0)
+   Ui.draw_note(self.text_equip_stats, self.x, self.y, self.width, self.height, 0)
 
    self.pages:draw()
 end
@@ -213,23 +217,23 @@ end
 function EquipmentMenu.message_weapon_stats(chara)
    -- >>>>>>>> shade2/command.hsp:3052 *show_weaponStat ..
    local attack_count = 0
-   for _, part in chara:iter_body_parts() do
+   for _, part in chara:iter_equipped_body_parts() do
       if part.body_part._id == "elona.hand" then
-         local equipped = part.equipped
+         local equipped = assert(part.equipped)
          local weight = equipped:calc("weight")
-         if equipped and equipped:calc("is_melee_weapon") then
+         if equipped:calc("is_melee_weapon") then
             attack_count = attack_count + 1
             if chara:calc("is_wielding_two_handed") and weight >= Const.WEAPON_WEIGHT_HEAVY then
-               Gui.mes("action.equip.two_handed.fits_well", equipped)
+               Gui.mes("action.equip.two_handed.fits_well", equipped:build_name())
             end
             if chara:calc("is_dual_wielding") then
                if attack_count == 1 then
                   if weight >= Const.WEAPON_WEIGHT_HEAVY then
-                     Gui.mes("action.equip.two_handed.too_heavy_other_hand", equipped)
+                     Gui.mes("action.equip.two_handed.too_heavy_other_hand", equipped:build_name())
                   end
                else
                   if weight > Const.WEAPON_WEIGHT_LIGHT then
-                     Gui.mes("action.equip.two_handed.too_heavy_other_hand", equipped)
+                     Gui.mes("action.equip.two_handed.too_heavy_other_hand", equipped:build_name())
                   end
                end
             end
@@ -273,7 +277,7 @@ function EquipmentMenu:update()
          local result, canceled = Input.query_item(self.chara, "elona.inv_equip", { params = {body_part_id = entry.body_part._id} })
          if not canceled then
             local selected_item = result.result
-            assert(Action.equip(self.chara, selected_item))
+            assert(Action.equip(self.chara, selected_item, slot))
             -- >>>>>>>> shade2/command.hsp:3743 			snd seEquip ..
             Gui.play_sound("base.equip1")
             Gui.mes_newline()

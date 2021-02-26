@@ -366,7 +366,30 @@ data:add
       end
    end,
 
-   on_descend = function(self, params) self:on_activate(params.chara) end
+   on_descend = function(self, params) self:on_activate(params.chara) end,
+
+   events = {
+      {
+         id = "base.on_feat_make_target_text",
+         name = "Target text",
+
+         callback = function(self)
+            -- >>>>>>>> shade2/command.hsp:49 		if mType=mTypeWorld{ ...
+            local map = self:current_map()
+            if not map:has_type("world_map") then
+               return nil
+            end
+
+            local area = Area.get(self.params.area_uid)
+            if area == nil or area._archetype == nil then
+               return nil
+            end
+
+            return get_map_display_name(area, true)
+            -- <<<<<<<< shade2/command.hsp:53 				} ..
+         end
+      }
+   }
 }
 
 data:add {
@@ -447,6 +470,22 @@ data:add {
          Gui.mes("action.search.discover.hidden_path")
       end
    end,
+
+   events = {
+      {
+         id = "elona.on_feat_tile_digged_into",
+         name = "Reveal hidden path.",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1069 			if map(refX,refY,6)!0{ ...
+            local map = self:current_map()
+            local tile = MapTileset.get("elona.mapgen_tunnel", map)
+            Map.set_tile(self.x, self.y, tile, map)
+            self:remove_ownership()
+            -- <<<<<<<< shade2/proc.hsp:1072 				}		 ..
+         end
+      }
+   }
 }
 
 local function visit_quest_giver(quest)

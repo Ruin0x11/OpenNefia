@@ -7,6 +7,7 @@ local Enum = require("api.Enum")
 local I18N = require("api.I18N")
 local Log = require("api.Log")
 local Chara = require("api.Chara")
+local IChara = require("api.chara.IChara")
 
 local data = require("internal.data")
 local field = require("game.field")
@@ -39,6 +40,14 @@ end
 --- @treturn Iterator(IItem)
 function Item.iter(map)
    return Item.iter_all(map):filter(Item.is_alive)
+end
+
+--- @tparam[opt] InstancedMap map
+--- @treturn Iterator(IItem)
+function Item.iter_in_everything(map)
+   local iters = Chara.iter(map):map(IChara.iter_items):to_list()
+   iters[#iters+1] = Item.iter(map)
+   return fun.chain(table.unpack(iters))
 end
 
 --- @tparam[opt] InstancedMap map

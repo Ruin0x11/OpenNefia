@@ -225,7 +225,7 @@ function ElonaCommand.increment_sleep_potential(player)
       elseif grown_count ~= 0 then
          break
       end
-      local skill = Skill.random_stat()
+      local skill = Skill.random_attribute()
       player:mod_skill_potential(skill, 1)
       grown_count = grown_count + 1
       if grown_count > 6 then
@@ -476,6 +476,46 @@ end
 local function feats_under(player, field)
    local Feat = require("api.Feat")
    return Feat.at(player.x, player.y, player:current_map()):filter(function(f) return f:calc(field) end)
+end
+
+function ElonaCommand.descend(player)
+   local f = feats_under(player, "can_descend"):nth(1)
+   if f then
+      local result = f:emit("elona_sys.on_feat_descend", {chara=player}, "player_turn_query")
+      return result or "player_turn_query"
+   end
+
+   for _, item in Item.at(player.x, player.y, player:current_map())
+        :filter(function(i) return i:calc("can_descend") end)
+   do
+      local result = item:emit("elona_sys.on_item_descend", {chara=player}, nil)
+      if result then
+         return result
+      end
+   end
+
+   Gui.mes("action.use_stairs.no.downstairs")
+   return "player_turn_query"
+end
+
+function ElonaCommand.ascend(player)
+   local f = feats_under(player, "can_ascend"):nth(1)
+   if f then
+      local result = f:emit("elona_sys.on_feat_ascend", {chara=player}, "player_turn_query")
+      return result or "player_turn_query"
+   end
+
+   for _, item in Item.at(player.x, player.y, player:current_map())
+        :filter(function(i) return i:calc("can_ascend") end)
+   do
+      local result = item:emit("elona_sys.on_item_ascend", {chara=player}, nil)
+      if result then
+         return result
+      end
+   end
+
+   Gui.mes("action.use_stairs.no.upstairs")
+   return "player_turn_query"
 end
 
 function ElonaCommand.enter_action(player)

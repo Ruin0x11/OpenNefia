@@ -138,7 +138,7 @@ local function should_draw_line(origin_x, origin_y, target_x, target_y)
    end
 
    Effect = Effect or require("mod.elona.api.Effect")
-   if not Effect.is_visible(chara) then
+   if not Effect.is_visible(chara, Chara.player()) then
       return false
    end
 

@@ -38,7 +38,7 @@ local function set_item_image_on_memorize(_, params)
    else
       for _, item in iter_all_items():filter(function(i) return i._id == params._id end) do
          item.image = item.proto.image
-         item.color = elona_Item.random_item_color(item)
+         item.color = elona_Item.default_item_color(item)
       end
    end
 end
@@ -60,9 +60,11 @@ end
 
 Event.register("base.on_generate", "Set item image to FFHP override", set_item_image_on_generate)
 
-local function set_item_image_on_map_enter(map, params)
-   if Theme.is_active("ceri_items.ceri_items") then
-      for _, item in Item.iter(map) do
+local function set_item_images(map)
+   for _, item in Item.iter_in_everything(map) do
+      item.image = item.proto.image
+      item.color = elona_Item.default_item_color(item)
+      if ItemMemory.is_known(item._id) and Theme.is_active("ceri_items.ceri_items") then
          local mapping = FFHP.mapping_for(item._id)
          if mapping then
             apply_mapping(mapping, item)
@@ -71,7 +73,14 @@ local function set_item_image_on_map_enter(map, params)
    end
 end
 
-Event.register("base.on_map_enter", "Set item image to FFHP override", set_item_image_on_map_enter)
+Event.register("base.on_map_enter", "Set item image to FFHP override", set_item_images)
+Event.register("base.on_theme_switched", "Set item image to FFHP override",
+               function()
+                  local player = Chara.player()
+                  if Chara.is_alive(player) then
+                     set_item_images(player:current_map())
+                  end
+end)
 
 Event.register("base.on_hotload_end", "Clear FFHP mapping cache", function(_, params)
                   if params.hotloaded_types["ceri_items.ffhp_mapping"] then

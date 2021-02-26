@@ -340,7 +340,7 @@ Skills this character will already know on creation.
          speed_percentage_in_next_turn = 0,
          inventory_weight = 0,
          max_inventory_weight = 0,
-         inventory_weight_type = 0,
+         inventory_weight_type = Enum.Burden.None,
          cargo_weight = 0,
          max_cargo_weight = 0,
          initial_max_cargo_weight = 0,
@@ -1602,5 +1602,11 @@ Only used if the type is "data_id".
 The data type of the ID in this config option.
 ]]
       }
+   }
+}
+
+data:add_type {
+   name = "auto_turn_anim",
+   fields = {
    }
 }

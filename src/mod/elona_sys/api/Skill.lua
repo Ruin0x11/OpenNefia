@@ -1,4 +1,3 @@
-local Resolver = require("api.Resolver")
 local Const = require("api.Const")
 local Rand = require("api.Rand")
 local Map = require("api.Map")
@@ -12,12 +11,12 @@ local Enum = require("api.Enum")
 
 local Skill = {}
 
-function Skill.iter_stats()
+function Skill.iter_attributes()
    return data["base.skill"]:iter():filter(function(s) return s.type == "stat" end)
 end
 
-function Skill.iter_base_stats()
-   return Skill.iter_stats():filter(function(s) return s._id ~= "elona.stat_speed" and s._id ~= "elona.stat_luck" end)
+function Skill.iter_base_attributes()
+   return Skill.iter_attributes():filter(function(s) return s._id ~= "elona.stat_speed" and s._id ~= "elona.stat_luck" end)
 end
 
 function Skill.iter_resistances()
@@ -44,8 +43,13 @@ function Skill.iter_actions()
    return data["base.skill"]:iter():filter(function(s) return s.type == "action" or s.type == "skill_action" end)
 end
 
-function Skill.random_stat()
-   return Rand.choice(Skill.iter_stats())._id
+--- @hsp randAttb()
+function Skill.random_base_attribute()
+   return Rand.choice(Skill.iter_base_attributes())._id
+end
+
+function Skill.random_attribute()
+   return Rand.choice(Skill.iter_attributes())._id
 end
 
 function Skill.random_skill()
@@ -138,7 +142,7 @@ function Skill.calc_initial_skill_level(skill, initial_level, original_level, ch
    -- <<<<<<<< shade2/calculation.hsp:961 	return ..
 end
 
-function Skill.calc_related_stat_exp(exp, exp_divisor)
+function Skill.calc_related_skill_exp(exp, exp_divisor)
    return exp / (2 + exp_divisor)
 end
 
@@ -275,9 +279,9 @@ function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divi
    if not chara:has_skill(skill) then return end
    if base_exp == 0 then return end
 
-   if skill_data.related_stat then
-      local exp = Skill.calc_related_stat_exp(base_exp, exp_divisor_stat)
-      Skill.gain_skill_exp(chara, skill_data.related_stat, exp)
+   if skill_data.related_skill then
+      local exp = Skill.calc_related_skill_exp(base_exp, exp_divisor_stat)
+      Skill.gain_skill_exp(chara, skill_data.related_skill, exp)
    end
 
    local level = chara:base_skill_level(skill)
@@ -326,32 +330,34 @@ end
 
 local function get_random_body_part()
    if Rand.one_in(7) then
-      return "base.neck"
+      return "elona.neck"
    end
    if Rand.one_in(9) then
-      return "base.back"
+      return "elona.back"
    end
    if Rand.one_in(8) then
-      return "base.hand"
+      return "elona.hand"
    end
    if Rand.one_in(4) then
-      return "base.ring"
+      return "elona.ring"
    end
    if Rand.one_in(6) then
-      return "base.arm"
+      return "elona.arm"
    end
    if Rand.one_in(5) then
-      return "base.waist"
+      return "elona.waist"
    end
    if Rand.one_in(5) then
-      return "base.leg"
+      return "elona.leg"
    end
 
-   return "base.head"
+   return "elona.head"
 end
 
 local function refresh_speed_correction(chara)
-   local count = chara:iter_body_parts(true):length()
+   -- XXX: "blocked" body parts from things like ether disease still get counted
+   -- towards the speed penalty.
+   local count = chara:iter_all_body_parts():length()
 
    if count > 13 then
       chara.speed_correction = (count - 13) + 5
@@ -407,13 +413,13 @@ function Skill.refresh_speed(chara)
          spd_perc = spd_perc - 10
       end
    end
-   if chara.inventory_weight_type >= 3 then
+   if chara.inventory_weight_type >= Enum.Burden.Heavy then
       spd_perc = spd_perc - 50
    end
-   if chara.inventory_weight_type == 2 then
+   if chara.inventory_weight_type == Enum.Burden.Moderate then
       spd_perc = spd_perc - 30
    end
-   if chara.inventory_weight_type == 1 then
+   if chara.inventory_weight_type == Enum.Burden.Light then
       spd_perc = spd_perc - 10
    end
 
@@ -490,7 +496,7 @@ function Skill.grow_primary_skills(chara)
       chara:mod_base_skill_level(skill, Rand.rnd(3), "add")
    end
 
-   for _, stat in Skill.iter_stats() do
+   for _, stat in Skill.iter_attributes() do
       grow(stat._id)
    end
 
@@ -561,7 +567,7 @@ local function refresh_max_inventory_weight(chara)
              chara:skill_level("elona.stat_strength") * 500 +
                 chara:skill_level("elona.stat_constitution") * 250 +
                 chara:skill_level("elona.weight_lifting") * 2000 +
-                45000)
+                45000, "set")
 end
 
 Event.register("base.on_refresh_weight", "refresh max inventory weight", refresh_max_inventory_weight)
@@ -570,23 +576,25 @@ local function refresh_weight(chara)
    local weight = chara:calc("inventory_weight")
    local max_weight = chara:calc("max_inventory_weight")
 
+   -- >>>>>>>> shade2/calculation.hsp:1315 	repeat 1 ...
    if weight > max_weight * 2 then
-      chara.inventory_weight_type = 4 -- very overweight
+      chara.inventory_weight_type = Enum.Burden.Max
    elseif weight > max_weight then
-      chara.inventory_weight_type = 3 -- overweight
+      chara.inventory_weight_type = Enum.Burden.Heavy
    elseif weight > max_weight / 4 * 3  then
-      chara.inventory_weight_type = 2 -- very burdened
+      chara.inventory_weight_type = Enum.Burden.Moderate
    elseif weight > max_weight / 2 then
-      chara.inventory_weight_type = 1 -- burdened
+      chara.inventory_weight_type = Enum.Burden.Light
    else
-      chara.inventory_weight_type = 0 -- normal
+      chara.inventory_weight_type = Enum.Burden.None
    end
 
    if config.base.debug_no_weight then
-      chara.inventory_weight_type = 0
+      chara.inventory_weight_type = Enum.Burden.None
    end
 
    Skill.refresh_speed(chara)
+   -- <<<<<<<< shade2/calculation.hsp:1326 	return ..
 end
 
 Event.register("base.on_refresh_weight", "apply weight type", refresh_weight)
@@ -820,11 +828,7 @@ function Skill.apply_race_params(chara, race_id)
 
    for k, v in pairs(race_data.properties or {}) do
       if chara[k] == nil then
-         if type(v) == "table" and v.__resolver then
-            chara[k] = Resolver.resolve(v, { object = chara, value = true })
-         else
-            chara[k] = v
-         end
+         chara[k] = v
       end
    end
 
@@ -838,6 +842,25 @@ function Skill.apply_race_params(chara, race_id)
    for trait_id, level in pairs(race_data.traits or {}) do
       chara.traits[trait_id] = { level = level }
    end
+
+   if race_data.resistances then
+      for element_id, amount in ipairs(race_data.resistances) do
+         chara:mod_resist_level(element_id, amount, "set")
+      end
+   end
+
+   chara.age = Rand.between(race_data.age_min, race_data.age_max)
+   if Rand.percent_chance(race_data.male_ratio or 50) then
+      chara.gender = "male"
+   else
+      chara.gender = "female"
+   end
+
+   -- >>>>>>>> shade2/chara.hsp:518 	cHeight(rc)=cHeight(rc) + rnd(cHeight(rc)/5+1) -  ...
+   chara.height = race_data.height or 10
+   chara.height = chara.height + Rand.rnd(chara.height / 5 + 1) - Rand.rnd(chara.height / 5 + 1)
+   chara.weight = math.floor(chara.height * chara.height * (Rand.rnd(6) + 18) / 10000)
+   -- <<<<<<<< shade2/chara.hsp:519 	cWeight(rc)= cHeight(rc)*cHeight(rc)*(rnd(6)+18)/ ..
 
    -- >>>>>>>> shade2/chara.hsp:341 *set_figure ..
    chara.body_parts = table.deepcopy(race_data.body_parts or {})
@@ -860,11 +883,7 @@ function Skill.apply_class_params(chara, class_id)
 
    for k, v in pairs(class_data.properties or {}) do
       if chara[k] == nil then
-         if type(v) == "table" and v.__resolver then
-            chara[k] = Resolver.resolve(v, { object = chara, value = true })
-         else
-            chara[k] = v
-         end
+         chara[k] = v
       end
    end
 

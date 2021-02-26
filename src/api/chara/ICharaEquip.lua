@@ -74,21 +74,23 @@ function ICharaEquip:find_merged_enchantment(_id)
    return self:iter_merged_enchantments():filter(function(enc) return enc._id == _id end):nth(1)
 end
 
+function ICharaEquip:enchantment_power(_id, params, source)
+   return self:iter_equipment():map(function(i) return i:enchantment_power(_id, params, source) end):sum()
+end
+
 function ICharaEquip:on_refresh()
    local attack_count = 0
-   for _, part in self:iter_body_parts() do
-      local item = part.equipped
-      if item then
-         item:refresh()
+   for _, part in self:iter_equipped_body_parts() do
+      local item = assert(part.equipped)
+      item:refresh()
 
-         apply_item_stats(self, item)
+      apply_item_stats(self, item)
 
-         if part.body_part._id == "elona.hand" then
-            attack_count = attack_count + 1
-         end
-         if item:has_category("elona.equip_shield") then
-            self:mod("is_wielding_shield", true)
-         end
+      if part.body_part._id == "elona.hand" then
+         attack_count = attack_count + 1
+      end
+      if item:has_category("elona.equip_shield") then
+         self:mod("is_wielding_shield", true)
       end
    end
 
@@ -129,8 +131,8 @@ function ICharaEquip:has_item_equipped(item)
    return self.equip:has_object(item)
 end
 
-function ICharaEquip:items_equipped_at(body_part_type)
-   return self.equip:items_equipped_at(body_part_type)
+function ICharaEquip:iter_items_equipped_at(body_part_type)
+   return self.equip:iter_items_equipped_at(body_part_type)
 end
 
 function ICharaEquip:find_equip_slot_for(item, body_part_type)
@@ -154,10 +156,16 @@ function ICharaEquip:unequip_item(item)
    return result
 end
 
+-- Iterates the body parts on this character that have equipment
+-- @treturn iterator
+function ICharaEquip:iter_equipped_body_parts(also_blocked)
+   return self.equip:iter_equipped_body_parts(also_blocked)
+end
+
 -- Iterates all body parts on this character, including empty slots.
 -- @treturn iterator
-function ICharaEquip:iter_body_parts(also_empty)
-   return self.equip:iter_body_parts(also_empty)
+function ICharaEquip:iter_all_body_parts(also_blocked)
+   return self.equip:iter_all_body_parts(also_blocked)
 end
 
 -- Iterates the items that are equipped on this character.
@@ -189,10 +197,11 @@ function ICharaEquip:remove_body_part(type_or_slot, force)
    -- TODO
 end
 
--- Marks a slot or body part as "blocked" for use as a refreshed
--- value. It will be hidden in the equipment menu for the character.
-function ICharaEquip:temp_block_body_part()
-   -- TODO
+-- Marks a body part type as "blocked" for use as a refreshed value. All slots
+-- with that body part type will be hidden in the equipment menu for the
+-- character, and will also not show up in the results of iterators.
+function ICharaEquip:set_body_part_blocked(body_part_id, blocked)
+   self.equip:set_body_part_blocked(body_part_id, blocked)
 end
 
 return ICharaEquip

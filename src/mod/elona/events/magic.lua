@@ -48,7 +48,7 @@ local function proc_return(chara)
             return
          end
 
-         if chara:calc("inventory_weight_type") >= 4 then
+         if chara:calc("inventory_weight_type") >= Enum.Burden.Max then
             Gui.mes("magic.return.prevented.overweight")
             return
          end

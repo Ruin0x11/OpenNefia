@@ -540,22 +540,37 @@ function Effect.heal(chara, dice_x, dice_y, bonus)
 end
 
 local function add_ether_disease_trait(chara)
-   for _ = 1, 100000 do
-      -- TODO
-      Gui.mes_c("add corruption trait", "Red")
-      break
+   -- >>>>>>>> shade2/chara_func.hsp:742 		repeat 100000 ...
+   local is_ether_trait = function(trait) return trait.type == "ether_disease" end
+   local choices = data["base.trait"]:iter():filter(is_ether_trait):to_list()
+
+   local trait = Rand.choice(choices)
+   if trait == nil then
+      return
    end
+
+   Gui.mes_c("chara.corruption.add", "Purple")
+   chara:modify_trait_level(trait._id, -1)
+   -- <<<<<<<< shade2/chara_func.hsp:761 		loop ..
 end
 
 local function remove_ether_disease_trait(chara)
-   for _ = 1, 100000 do
-      -- TODO
-      Gui.mes_c("remove corruption trait", "Green")
-      break
+   -- >>>>>>>> shade2/chara_func.hsp:774 		repeat 100000 ...
+   local is_ether_trait = function(trait) return trait.proto.type == "ether_disease" end
+   local choices = chara:iter_traits():filter(is_ether_trait):to_list()
+
+   local trait = Rand.choice(choices)
+   if trait == nil then
+      return
    end
+
+   Gui.mes_c("chara.corruption.remove", "Green")
+   chara:modify_trait_level(trait._id, 1)
+   -- <<<<<<<< shade2/chara_func.hsp:785 		loop ..
 end
 
 function Effect.modify_corruption(chara, delta)
+   -- >>>>>>>> shade2/chara_func.hsp:727 #deffunc modCorrupt int a ...
    local original_stage = math.floor(chara.ether_disease_corruption / 1000)
    local add_amount = delta
    if delta > 0 then
@@ -569,6 +584,7 @@ function Effect.modify_corruption(chara, delta)
    chara.ether_disease_corruption = math.clamp(math.floor(chara.ether_disease_corruption + add_amount), 0, 20000)
    local stage_delta = math.floor(chara.ether_disease_corruption / 1000) - original_stage
 
+   -- NOTE: Maybe we could remove this restriction.
    if not chara:is_player() then
       return
    end
@@ -616,6 +632,7 @@ function Effect.modify_corruption(chara, delta)
    end
 
    chara:refresh()
+   -- <<<<<<<< shade2/chara_func.hsp:767 		} ..
 end
 
 function Effect.can_return_to(area_uid)
@@ -684,11 +701,14 @@ function Effect.query_return_location(chara)
 end
 -- <<<<<<<< shade2/command.hsp:4426 		}	 ..
 
+--- @hsp decFame
 function Effect.decrement_fame(chara, fraction)
+   -- >>>>>>>> shade2/module.hsp:354 	#deffunc decFame int c ,int per ...
    local delta = chara.fame / fraction + 5
    delta = math.floor(delta + Rand.rnd(delta / 2) - Rand.rnd(delta / 2))
    chara.fame = math.max(chara.fame - math.floor(delta), 0)
    return delta
+   -- <<<<<<<< shade2/module.hsp:358 	return p ..
 end
 
 function Effect.do_stamina_check(source, base_cost, related_skill_id)
@@ -709,7 +729,6 @@ function Effect.do_stamina_check(source, base_cost, related_skill_id)
 end
 
 function Effect.is_visible(chara, viewer)
-   viewer = viewer or Chara.player()
    local is_invisible = chara:calc("is_invisible") and not (viewer:calc("can_see_invisible") or chara:has_effect("elona.wet"))
    return not is_invisible
 end
@@ -849,7 +868,7 @@ function Effect.damage_item_fire(item, fireproof_blanket)
    if owner then
       if item:is_equipped() then
          Gui.mes_c_visible("item.someones_item.equipment_turns_to_dust", owner.x, owner.y, "Purple", item:build_name(lost_amount), lost_amount, owner)
-         item:unequip()
+         assert(owner:unequip_item(item))
          item:remove_ownership()
          owner:refresh()
       else
@@ -1319,7 +1338,7 @@ end
 function Effect.try_to_chat(chara, player)
    -- >>>>>>>> shade2/chat.hsp:42 *chat ...
    if chara:relation_towards(player) <= Enum.Relation.Dislike then
-      Gui.mes("talk.will_not_listen")
+      Gui.mes("talk.will_not_listen", chara)
       return
    end
 

@@ -1098,7 +1098,7 @@ do
          prevents_return = true,
          prevents_building_shelter = true,
          prevents_random_events = true,
-         adds_awake_hours = false
+         prevents_adding_awake_hours = true
       }
    }
 

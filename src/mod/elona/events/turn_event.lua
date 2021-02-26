@@ -12,6 +12,7 @@ local Encounter = require("mod.elona.api.Encounter")
 local Effect = require("mod.elona.api.Effect")
 local Const = require("api.Const")
 local Pos = require("api.Pos")
+local Save = require("api.Save")
 
 local function refresh_hp_mp_stamina(chara, params, result)
    local mp_factor = chara:skill_level("elona.stat_magic") * 2
@@ -49,17 +50,43 @@ end
 
 Event.register("base.on_refresh", "Apply buff effects", apply_buff_effects)
 
+local function set_player_scroll_speed(chara, params, result)
+   local scroll = 10
+   local start_run_wait = 2
+   if Gui.key_held_frames() > start_run_wait then
+      scroll = 6
+   end
+
+   -- TODO handle confusion if trying to run
+   --
+   -- if (key_shift)&(gRun=false)&(cConfuse(pc)=0)&(cDim(pc)=0):if mType!mTypeWorld{
+   -- gRun=true
+   -- cell_check cX(cc)+1,cY(cc):gRunRight=cellAccess
+   -- cell_check cX(cc)-1,cY(cc):gRunLeft =cellAccess
+   -- cell_check cX(cc),cY(cc)+1:gRunDown =cellAccess
+   -- cell_check cX(cc),cY(cc)-1:gRunUp   =cellAccess
+   -- }
+
+   if Gui.player_is_running() then
+      scroll = 1
+   end
+
+   chara:mod("scroll", scroll, "set")
+
+   return result
+end
+Event.register("elona_sys.before_player_move", "Player scroll speed", set_player_scroll_speed)
+
 local footstep = 0
 local footsteps = {"base.foot1a", "base.foot1b"}
 local snow_footsteps = {"base.foot2a", "base.foot2b", "base.foot2c"}
 
-local function leave_footsteps(_, params, result)
-   local player = params.chara
-   local map = player:current_map()
-   if (player.x ~= result.pos.x or player.y ~= result.pos.y)
-      and Map.can_access(result.pos.x, result.pos.y, map)
+local function leave_footsteps(chara, _, result)
+   local map = chara:current_map()
+   if (chara.x ~= result.x or chara.y ~= result.y)
+      and Map.can_access(result.x, result.y, map)
    then
-      local tile = map:tile(params.chara.x, params.chara.y)
+      local tile = map:tile(chara.x, chara.y)
       if tile.kind == Enum.TileRole.Snow then
          Gui.play_sound(snow_footsteps[footstep%2+1])
          footstep = footstep + Rand.rnd(2)
@@ -73,8 +100,7 @@ local function leave_footsteps(_, params, result)
 
    return result
 end
-
-Event.register("elona_sys.hook_player_move", "Leave footsteps", leave_footsteps)
+Event.register("elona_sys.before_player_move", "Leave footsteps", leave_footsteps)
 
 local function proc_random_encounter(chara, params, result)
    -- >>>>>>>> shade2/action.hsp:647 	if mType=mTypeWorld:if cc=pc{ ...
@@ -169,7 +195,7 @@ end
 local function gain_weight_lifting_experience(chara)
    local exp = 0
 
-   if chara:calc("inventory_weight_type") > 0 then
+   if chara:calc("inventory_weight_type") > Enum.Burden.None then
       exp = 4
 
       local map = chara:current_map()
@@ -295,3 +321,109 @@ local function proc_drunk_behavior(chara, params, result)
 end
 Event.register("base.on_chara_pass_turn", "Proc drunk effect behavior", proc_drunk_behavior)
 -- <<<<<<<< shade2/main.hsp:818 		} ..
+
+local function proc_overweight_prevent_movement(player, params, result)
+   -- >>>>>>>> shade2/action.hsp:534 	if cBurden(pc)>=burdenMax:if dbg_noWeight=false : ...
+   if player:calc("inventory_weight_type") >= Enum.Burden.Max and not config.base.debug_no_weight then
+      Gui.mes_duplicate()
+      Gui.mes("action.move.carry_too_much")
+      result.result = "player_turn_query"
+      return result, "blocked"
+   end
+
+   return result
+   -- <<<<<<<< shade2/action.hsp:534 	if cBurden(pc)>=burdenMax:if dbg_noWeight=false : ..
+end
+Event.register("elona_sys.before_player_move", "Proc movement prevention on overweight", proc_overweight_prevent_movement)
+
+local function proc_status_effect_random_movement(player, params, result)
+   -- >>>>>>>> shade2/action.hsp:521 	f=false ...
+   local stumble = false
+
+   if player:has_effect("elona.dimming") and player:effect_turns("elona.dimming") + 10 > Rand.rnd(60) then
+      stumble = true
+   end
+
+   if player:has_effect("elona.drunk") and Rand.one_in(5) then
+      Gui.mes_c("action.move.drunk", "SkyBlue")
+      stumble = true
+   end
+
+   if player:has_effect("elona.confusion") then
+      stumble = true
+   end
+
+   if stumble then
+      result.x = player.x + Rand.rnd(3) - 1
+      result.y = player.y + Rand.rnd(3) - 1
+   end
+
+   return result
+   -- <<<<<<<< shade2/action.hsp:528 		} ..
+end
+Event.register("elona_sys.before_player_move", "Proc status effect random movement", proc_status_effect_random_movement)
+
+local function proc_ether_disease_death()
+   -- >>>>>>>> shade2/main.hsp:914 	if gCorrupt>=maxCorrupt : dmgHp pc,999999,dmgFrom ...
+   local player = Chara.player()
+   if not Chara.is_alive(player) then
+      return
+   end
+
+   if player:calc("ether_disease_corruption") >= Const.ETHER_DISEASE_DEATH_THRESHOLD then
+      player:damage_hp(math.max(999999, player:calc("max_hp")), "elona.ether_disease")
+   end
+   -- <<<<<<<< shade2/main.hsp:914 	if gCorrupt>=maxCorrupt : dmgHp pc,999999,dmgFrom ..
+end
+Event.register("base.on_turn_begin", "Kill player if ether disease too progressed", proc_ether_disease_death)
+
+local function proc_player_death_penalties(player)
+   -- >>>>>>>> shade2/main.hsp:1789  ...
+   if player:calc("level") > 5 then
+      local attribute_id = Skill.random_base_attribute()
+      if player:skill_level(attribute_id) > 0 and Rand.one_in(3) then
+         Skill.gain_skill_exp(player, attribute_id, -500)
+      end
+      if player.karma < Const.KARMA_BAD then
+         Effect.modify_karma(player, 10)
+      end
+   else
+      Gui.mes("event.death_penalty_not_applied")
+   end
+
+   if player.ether_disease_corruption >= Const.ETHER_DISEASE_DEATH_THRESHOLD then
+      Effect.modify_corruption(player, -2000)
+   end
+
+   Gui.mes("event.you_lost_some_money")
+   player.gold = math.floor(player.gold / 3)
+   Effect.decrement_fame(player, 10)
+
+   player:refresh()
+   Save.autosave()
+   -- <<<<<<<< shade2/main.hsp:1816 	swbreak ..
+end
+Event.register("base.on_player_death_revival", "Proc player death penalties", proc_player_death_penalties)
+
+local function proc_trait_on_turn_begin()
+   local player = Chara.player()
+   if not Chara.is_alive(player) then
+      return
+   end
+
+   -- >>>>>>>> shade2/main.hsp:987 	if trait(traitEtherPotion)!0{ ...
+   for _, trait in player:iter_traits() do
+      if trait.proto.on_turn_begin then
+         trait.proto.on_turn_begin(player.traits[trait._id], player)
+      end
+   end
+   -- <<<<<<<< shade2/main.hsp:992 		}	 ..
+
+   -- >>>>>>>> shade2/main.hsp:994 	if cBit(cInvisi,cTarget(pc))=true:if cBit(cSeeInv ...
+   local target = player:get_target()
+   if Chara.is_alive(target) and not Effect.is_visible(target, player) then
+      player:set_target(nil)
+   end
+   -- <<<<<<<< shade2/main.hsp:994 	if cBit(cInvisi,cTarget(pc))=true:if cBit(cSeeInv ..
+end
+Event.register("base.on_turn_begin", "Proc trait on turn begin", proc_trait_on_turn_begin, { priority = 150000 })

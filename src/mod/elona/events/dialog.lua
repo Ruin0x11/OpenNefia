@@ -23,5 +23,4 @@ local function calc_dialog_choices(speaker, params, result)
 
    return result
 end
-
 Event.register("elona.calc_dialog_choices", "Default NPC dialog choices", calc_dialog_choices)

@@ -2,6 +2,7 @@ local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 local UiTheme = require("api.gui.UiTheme")
 
+-- @hsp window2
 local TopicWindow = class.class("TopicWindow", IUiElement)
 
 function TopicWindow:init(frame_style, fill_style)

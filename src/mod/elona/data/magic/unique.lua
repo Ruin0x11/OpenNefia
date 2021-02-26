@@ -132,9 +132,9 @@ local function do_curse(self, params)
    end
 
    local resistance = 75 + target:skill_level("elona.stat_luck")
-   local enc = source:get_enchantment("elona.res_curse")
-   if enc then
-      resistance = resistance + enc.power / 2
+   local enc_power = source:enchantment_power("elona.res_curse")
+   if enc_power > 0 then
+      resistance = resistance + enc_power / 2
    end
 
    if Rand.rnd(resistance) > chance then
@@ -329,7 +329,7 @@ data:add {
       pocket:set_max_size(math.clamp(math.floor(params.power / 10 + 10), 10, 300))
       pocket.max_weight = params.power * 100
 
-      Input.query_inventory(source, "elona.inv_get_pocket", { container = pocket }, "elona.four_dimensional_pocket")
+      Input.query_inventory(source, "elona.inv_get_four_dimensional_pocket", { container = pocket }, "elona.container_four_dimensional_pocket")
 
       return false
    end
@@ -501,7 +501,7 @@ data:add {
          if item.identify_state ~= Enum.IdentifyState.Full then
             Gui.mes("ui.inv.identify.partially", item)
          else
-            Gui.mes("ui.inv.identify.fully", item)
+            Gui.mes("ui.inv.identify.fully", item:build_name())
          end
       else
          Gui.mes("ui.inv.identify.need_more_power")

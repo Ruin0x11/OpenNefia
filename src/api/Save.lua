@@ -31,7 +31,7 @@ function Save.save_game(save_id)
       global.api_version = Env.api_version()
       global.commit = Env.commit_hash() or "unknown"
 
-      Log.info("Saving game.")
+      Log.info("Saving game '%s'.", save_id)
       Log.trace("save map: %d  player %d", global.map, global.player)
    end
 
@@ -57,6 +57,8 @@ function Save.load_game(save_id)
    assert(type(save_id) == "string")
    config.base._save_id = save_id
 
+   Log.info("Loading game '%s'.", save_id)
+
    local success, map, err
 
    success, err = SaveFs.load_game(save_id)
@@ -71,7 +73,6 @@ function Save.load_game(save_id)
    local player_uid = base.player
    Env.update_play_time()
 
-   Log.info("Loading game.")
    Log.trace("load map: %d  player %d", map_uid, player_uid)
 
    success, map = Map.load(map_uid)
@@ -108,8 +109,8 @@ function Save.load_game(save_id)
    Event.trigger("base.on_game_initialize")
 end
 
--- TODO
 function Save.autosave()
+   -- TODO show house
    if config.base.autosave then
       Save.save_game()
    end

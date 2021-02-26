@@ -12,6 +12,9 @@ local Skill = require("mod.elona_sys.api.Skill")
 local CharacterInfoMenu = require("api.gui.menu.CharacterInfoMenu")
 local Calc = require("mod.elona.api.Calc")
 local Gui = require("api.Gui")
+local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local Dialog = require("mod.elona_sys.dialog.api.Dialog")
+local ElonaAction = require("mod.elona.api.ElonaAction")
 
 data:add {
    _type = "elona_sys.dialog",
@@ -373,6 +376,90 @@ data:add {
       end,
    }
 }
+
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "sex",
+
+   nodes = {
+      confirm = {
+         text = "talk.npc.common.sex.prompt",
+         choices = {
+            {"accept", "talk.npc.common.sex.choices.accept"},
+            {"elona.default:you_kidding", "talk.npc.common.sex.choices.go_back"}
+         }
+      },
+      accept = {
+         text = "talk.npc.common.sex.start",
+         on_finish = function(t)
+            -- >>>>>>>> shade2/chat.hsp:2914 		gosub *sexsex: goto *chat_end ...
+            ElonaAction.do_sex(Chara.player(), t.speaker)
+            -- <<<<<<<< shade2/chat.hsp:2914 		gosub *sexsex: goto *chat_end ..
+         end
+      }
+   }
+}
+
+local function add_sex_dialog_choice(speaker, params, result)
+   -- >>>>>>>> shade2/chat.hsp:2307 	if (cDrunk(tc)!0)or(develop):if gArea!areaShowHou ...
+   if (speaker:has_effect("elona.drunk") or config.base.development_mode)
+      and not speaker:is_in_player_party()
+      and not DeferredEvent.is_pending()
+   then
+      Dialog.add_choice("elona.sex:confirm", "talk.npc.common.choices.sex", result)
+   end
+   -- <<<<<<<< shade2/chat.hsp:2307 	if (cDrunk(tc)!0)or(develop):if gArea!areaShowHou ..
+
+   return result
+end
+
+Event.register("elona.calc_dialog_choices", "Add sex dialog choice", add_sex_dialog_choice)
+
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "prostitute",
+
+   nodes = {
+      before_confirm = function(t, state)
+         state.cost = math.floor(t.speaker:skill_level("elona.stat_charisma") * 25 + 100 + Chara.player():calc("fame") / 10)
+         return "confirm"
+      end,
+      confirm = {
+         text = function(t, state)
+            return {
+               I18N.get("talk.npc.prostitute.buy", state.cost, t.speaker)
+            }
+         end,
+         choices = function(t, state)
+            local choices = {}
+
+            if Chara.player().gold >= state.cost then
+               Dialog.add_choice("accept", "talk.npc.common.sex.choices.accept", choices)
+            end
+            Dialog.add_choice("elona.default:you_kidding", "talk.npc.common.sex.choices.go_back", choices)
+
+            return choices
+         end
+      },
+      accept = {
+         on_start = function(t, state)
+            -- >>>>>>>> shade2/chat.hsp:2931 		snd sePayGold : cGold(cc)-=sexValue:cGold(tc)+=s ...
+            Gui.play_sound("base.paygold1")
+            Chara.player().gold = Chara.player().gold - state.cost
+            t.speaker.gold = t.speaker.gold + state.cost
+            -- <<<<<<<< shade2/chat.hsp:2931 		snd sePayGold : cGold(cc)-=sexValue:cGold(tc)+=s ..
+         end,
+         text = "talk.npc.common.sex.start",
+         on_finish = function(t)
+            -- >>>>>>>> shade2/chat.hsp:2933 		cc=tc:tc=pc:gosub *sexsex:cc=pc: goto *chat_end ...
+            ElonaAction.do_sex(t.speaker, Chara.player())
+            -- <<<<<<<< shade2/chat.hsp:2933 		cc=tc:tc=pc:gosub *sexsex:cc=pc: goto *chat_end ...
+         end
+
+      }
+   }
+}
+
 
 require("mod.elona.data.dialog.unique.miches")
 require("mod.elona.data.dialog.unique.larnneire")

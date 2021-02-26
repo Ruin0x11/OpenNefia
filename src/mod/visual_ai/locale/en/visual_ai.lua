@@ -159,6 +159,7 @@ return {
       },
       block = {
          visual_ai = blocks
-      }
+      },
+      interact_action = "Change Visual AI"
    }
 }

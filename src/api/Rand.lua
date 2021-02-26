@@ -57,7 +57,7 @@ end
 -- @return any
 function Rand.choice(arr_or_iter)
    local arr = arr_or_iter
-   assert(type(arr_or_iter) == "table")
+   assert(type(arr_or_iter) == "table", "Rand.choice must be passed a table, got " .. type(arr_or_iter))
    if tostring(arr_or_iter) == "<generator>" then
       arr = arr_or_iter:to_list()
    end

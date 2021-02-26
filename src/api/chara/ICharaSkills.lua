@@ -34,6 +34,7 @@ function ICharaSkills:set_stat_adjustment(skill, adj)
    local skill_data = data["base.skill"]:ensure(skill)
    assert(skill_data.type == "stat", skill)
    self.stat_adjusts[skill] = adj
+   self:refresh()
 end
 
 function ICharaSkills:add_stat_adjustment(skill, delta)

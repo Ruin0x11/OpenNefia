@@ -9,6 +9,7 @@ local UiTheme = require("api.gui.UiTheme")
 local bmp_convert = require("internal.bmp_convert")
 local config = require("internal.config")
 local Gui = require("api.Gui")
+local Event = require("api.Event")
 
 local theme = {}
 
@@ -304,6 +305,8 @@ function theme.reload_all(log_cb)
       field:on_theme_switched()
 
       Gui.update_screen()
+
+      Event.trigger("base.on_theme_switched")
    end
 end
 

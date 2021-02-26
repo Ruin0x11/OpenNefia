@@ -1,5 +1,6 @@
 --- @module Ui
 local Const = require("api.Const")
+local DateTime = require("api.DateTime")
 
 local UiTheme = require("api.gui.UiTheme")
 local Rand = require("api.Rand")
@@ -281,6 +282,13 @@ function Ui.skill_icon(skill_id)
    local skill = data["base.skill"]:ensure(skill_id)
    local related_skill = skill.related_skill or skill._id
    return SKILL_ICONS[related_skill]
+end
+
+function Ui.format_date(date, with_hour)
+   if type(date) == "number" then
+      date = DateTime:from_hours(date)
+   end
+   return date:format_localized(with_hour)
 end
 
 return Ui

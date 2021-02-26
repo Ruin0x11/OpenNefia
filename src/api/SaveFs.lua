@@ -127,7 +127,7 @@ end
 function SaveFs.save_game(save)
    assert(save)
 
-   Log.info("Copying save to %s", save)
+   Log.debug("Copying save to %s", save)
 
    for path, _ in pairs(touched_paths) do
       local temp_path = SaveFs.save_path(path, "temp")
@@ -145,7 +145,7 @@ function SaveFs.load_game(save)
       return false, ("Save '%s' does not exist yet."):format(save)
    end
 
-   Log.info("Setting save cache to %s", save)
+   Log.debug("Setting save cache to %s", save)
 
    current_save = save
    touched_paths = {}
@@ -154,7 +154,7 @@ function SaveFs.load_game(save)
 end
 
 function SaveFs.clear()
-   Log.info("Clearing save cache")
+   Log.debug("Clearing save cache")
 
    current_save = nil
    touched_paths = {}

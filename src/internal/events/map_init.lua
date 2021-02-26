@@ -325,5 +325,3 @@ Event.register("base.on_map_enter", "Reveal fog if town",
                      end
                   end
 end)
-
-Event.register("base.on_map_loaded", "Clear all debris", Map.clear_debris)

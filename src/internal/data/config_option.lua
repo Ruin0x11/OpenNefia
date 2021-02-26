@@ -1,6 +1,8 @@
 local data = require("internal.data")
 local draw = require("internal.draw")
 local config = require("internal.config")
+local Log = require("api.Log")
+local Draw = require("api.Draw")
 
 data:add_multi(
    "base.config_option",
@@ -41,7 +43,7 @@ data:add_multi(
          _id = "autosave",
 
          type = "boolean",
-         default = false
+         default = true
       },
       {
          _id = "quickstart_on_startup",
@@ -318,6 +320,12 @@ data:add_multi(
          default = "normal"
       },
       {
+         _id = "disable_auto_turn_anim",
+
+         type = "boolean",
+         default = false
+      },
+      {
          _id = "scroll",
 
          type = "boolean",
@@ -575,6 +583,17 @@ data:add_multi(
    "base.config_option",
    {
       {
+         _id = "log_level",
+
+         type = "enum",
+         choices = {"trace", "debug", "info", "warn", "error"},
+         default = "info",
+
+         on_changed = function(value)
+            Log.set_level(value)
+         end
+      },
+      {
          _id = "development_mode",
 
          type = "boolean",
@@ -622,6 +641,16 @@ data:add_multi(
 
          type = "boolean",
          default = false
+      },
+      {
+         _id = "show_perf_widgets",
+
+         type = "boolean",
+         default = false,
+
+         on_changed = function(value)
+            draw.global_widget("fps_counter"):set_enabled(value)
+         end
       },
       {
          _id = "max_inspect_length",

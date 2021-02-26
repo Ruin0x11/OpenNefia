@@ -13,6 +13,7 @@ local Anim = require("mod.elona_sys.api.Anim")
 local Action = require("api.Action")
 local Effect = require("mod.elona.api.Effect")
 local Pos = require("api.Pos")
+local I18N = require("api.I18N")
 
 local ElonaAction = {}
 
@@ -31,19 +32,17 @@ end
 
 -- >>>>>>>> shade2/action.hsp:1219     repeat sizeBody ..
 local function body_part_where_equipped(flag)
-   return function(entry) return entry.equipped and entry.equipped:calc(flag) end
+   return function(entry) return entry.equipped:calc(flag) end
 end
 
 function ElonaAction.get_melee_weapons(chara)
    local pred = body_part_where_equipped "is_melee_weapon"
-   return chara:iter_body_parts():filter(pred):extract("equipped")
+   return chara:iter_equipped_body_parts():filter(pred):extract("equipped")
 end
 -- <<<<<<<< shade2/action.hsp:1229     return ..
 
 function ElonaAction.melee_attack(chara, target)
    -- >>>>>>>> shade2/action.hsp:1197 *act_melee ..
-   -- TODO ai damage reaction
-
    if chara:calc("is_wielding_shield") then
       proc_shield_bash(chara, target)
    end
@@ -65,10 +64,10 @@ end
 function ElonaAction.get_ranged_weapon_and_ammo(chara)
    -- >>>>>>>> shade2/command.hsp:4290 *FindRangeWeapon ...
    local pred = body_part_where_equipped "is_ranged_weapon"
-   local ranged = chara:iter_body_parts():filter(pred):extract("equipped"):nth(1)
+   local ranged = chara:iter_equipped_body_parts():filter(pred):extract("equipped"):nth(1)
 
    pred = body_part_where_equipped "is_ammo"
-   local ammo = chara:iter_body_parts():filter(pred):extract("equipped"):nth(1)
+   local ammo = chara:iter_equipped_body_parts():filter(pred):extract("equipped"):nth(1)
 
    if ranged == nil then
       return nil, "no_ranged_weapon"
@@ -201,6 +200,7 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
    end
 
    if chara:has_effect("elona.fear") then
+      Gui.mes_duplicate()
       Gui.mes("damage.is_frightened", chara)
       return
    end
@@ -257,17 +257,31 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
 
       local element, element_power
       if weapon then
-         if weapon:calc("quality") >= Enum.Quality.Great then
-            -- TODO ego name
+         local quality = weapon:calc("quality")
+         if quality >= Enum.Quality.Great
+            -- Don't spoil the item's title if not fully identified yet
+            and weapon:calc("identify_state") >= Enum.IdentifyState.Full
+         then
+            local name
+            if quality == Enum.Quality.Unique then
+               name = I18N.get("item.title_paren.article", weapon.name)
+            else
+               if weapon.title then
+                  name = weapon.title
+               else
+                  name = I18N.get("item.title_paren.article", weapon.name)
+               end
+            end
+            name = I18N.get("item.title_paren.great", name)
             if Rand.one_in(5) then
-               Gui.mes_c_visible("damage.wields_proudly", chara, "SkyBlue", weapon)
+               Gui.mes_c_visible("damage.wields_proudly", chara.x, chara.y, "SkyBlue", chara, name)
             end
          end
       else
-         element = chara:calc("unarmed_element")
+         element = chara:calc("unarmed_element_id")
          element_power = chara:calc("unarmed_element_power")
-         if element and not element_power then
-            element_power = 0
+         if element then
+            element_power = element_power or 100
          end
       end
 
@@ -395,6 +409,13 @@ function ElonaAction.bash(chara, x, y)
 end
 
 function ElonaAction.read(chara, item)
+   -- >>>>>>>> shade2/proc.hsp:1246 	if cBlind(cc)!0{ ...
+   if chara:has_effect("elona.blindness") then
+      Gui.mes_visible("action.read.cannot_see", chara.x, chara.y, chara)
+      return "turn_end"
+   end
+   -- <<<<<<<< shade2/proc.hsp:1249 		}  ..
+
    local result = item:emit("elona_sys.on_item_read", {chara=chara,triggered_by="read"}, "turn_end")
 
    return result
@@ -402,24 +423,25 @@ end
 
 function ElonaAction.eat(chara, item)
    -- >>>>>>>> shade2/action.hsp:364     if cc=pc{ ..
+   local chara_using = item:get_chara_using()
    if chara:is_player() then
-      if item.chara_using and item.chara_using.uid ~= chara.uid then
+      if chara_using and chara_using.uid ~= chara.uid then
          Gui.mes("action.someone_else_is_using")
          return "player_turn_query"
       end
-   elseif item.chara_using then
-      local using = item.chara_using
-      if using.uid ~= chara.uid then
-         using:finish_activity()
-         assert(item.chara_using == nil)
+   elseif chara_using then
+      if chara_using.uid ~= chara.uid then
+         chara_using:finish_activity()
+         chara_using:set_item_using(nil)
+         assert(chara_using.item_using == nil)
          if chara:is_in_fov() then
-            Gui.mes("action.eat.snatches", chara, using)
+            Gui.mes("action.eat.snatches", chara, chara_using)
          end
       end
    end
 
    chara:set_emotion_icon("elona.eat")
-   chara:start_activity("elona.eating", {food=item})
+   chara:start_activity("elona.eating", {food=item, no_message=false})
 
    return "turn_end"
    -- <<<<<<<< shade2/action.hsp:372     goto *turn_end ..
@@ -486,6 +508,10 @@ function ElonaAction.trade(player, target)
    target:iter_items():each(cb)
    local result, canceled = Input.query_inventory(player, "elona.inv_trade", {target=target})
    return result, canceled
+end
+
+function ElonaAction.do_sex(chara, target)
+   chara:start_activity("elona.sex", {partner=target,is_host=true})
 end
 
 return ElonaAction

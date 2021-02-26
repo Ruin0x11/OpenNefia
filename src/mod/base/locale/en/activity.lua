@@ -246,9 +246,9 @@ end,
   return ("%s gets furious, \"And you think you can just run away?\"")
   :format(name(_1))
 end,
-      spare_life = function(_1)
+      spare_life = function(_1, _2)
   return ("\"I-I don't really know that %s. Please spare my life!\"")
-  :format(_1)
+  :format(_2)
 end,
       take = "Here, take this.",
       take_all_i_have = "Take this money, it's all I have!",
