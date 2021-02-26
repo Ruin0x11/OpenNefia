@@ -182,9 +182,22 @@ function IItem:can_equip_at(body_part_type)
    return can_equip[body_part_type] == true
 end
 
+local function get_equip_slots(item)
+   local location = item.location
+
+   while location do
+      if class.is_an(EquipSlots, location) then
+         return location
+      end
+      location = location._parent
+   end
+
+   return nil
+end
+
 --- @treturn bool
 function IItem:is_equipped()
-   return class.is_an(EquipSlots, self:get_location())
+   return not not get_equip_slots(self)
 end
 
 --- @tparam id:base.body_part body_part_type
@@ -194,7 +207,9 @@ function IItem:slot_equipped_in()
       return nil
    end
 
-   local slot = self:get_location():equip_slot_of(self)
+   local equip_slots = get_equip_slots(self)
+
+   local slot = equip_slots:equip_slot_of(self)
    return slot and slot.type
 end
 
