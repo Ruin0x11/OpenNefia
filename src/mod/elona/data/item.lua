@@ -7792,7 +7792,7 @@ local item =
             -- Only allow taking, not putting. (provide "nil" to inventory group ID)
             Gui.play_sound("base.chest1")
             assert(self:is_item_container())
-            Input.query_inventory(chara, "elona.inv_get_container", { container = self.inv, params={query_leftover=true} }, nil)
+            Input.query_inventory(chara, "elona.inv_get_container", { container = self, params={query_leftover=true} }, nil)
 
             return "turn_end"
             -- <<<<<<<< shade2/action.hsp:894 		} ..
