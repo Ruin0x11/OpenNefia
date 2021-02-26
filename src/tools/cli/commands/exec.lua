@@ -43,10 +43,12 @@ return function(args)
    end
 
    local exec_env
-   if args.repl_env then
+   if args.exec_env == "repl" then
       exec_env = Repl.generate_env()
       rawset(exec_env, "pass_turn", util.pass_turn)
       rawset(exec_env, "load_game", util.load_game)
+   elseif args.exec_env == "global" then
+      exec_env = _G
    else
       exec_env = env.generate_sandbox("exec")
    end

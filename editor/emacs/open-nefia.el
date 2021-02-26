@@ -898,7 +898,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
                 (buffer-file-name)
                 (string-join (list (projectile-project-root) "src"))))
          (script (if (eq system-type 'windows-nt) "./OpenNefia.bat" "./OpenNefia"))
-         (cmd (format "%s exec %s %s" script path (if arg "-m" "")))
+         (cmd (format "%s exec %s %s" script path (if arg "-m " "")))
          (default-directory (projectile-project-root)))
     (compile cmd)))
 
@@ -908,7 +908,17 @@ removed.  Return the new string.  If STRING is nil, return nil."
                 (buffer-file-name)
                 (string-join (list (projectile-project-root) "src"))))
          (script (if (eq system-type 'windows-nt) "./OpenNefia.bat" "./OpenNefia"))
-         (cmd (format "%s exec %s -r %s" script path (if arg "-m" "")))
+         (cmd (format "%s exec %s -n repl %s" script path (if arg "-m " "")))
+         (default-directory (projectile-project-root)))
+    (compile cmd)))
+
+(defun open-nefia-run-headlessly-global (arg)
+  (interactive "P")
+  (let* ((path (file-relative-name
+                (buffer-file-name)
+                (string-join (list (projectile-project-root) "src"))))
+         (script (if (eq system-type 'windows-nt) "./OpenNefia.bat" "./OpenNefia"))
+         (cmd (format "%s exec %s -n global %s" script path (if arg "-m " "")))
          (default-directory (projectile-project-root)))
     (compile cmd)))
 

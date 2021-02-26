@@ -1290,4 +1290,49 @@ function TagClass:getArbitraryTable()
    error("attempt to get arbitrary table of invalid type")
 end
 
+function nbt.newMapObjectCompound(value, name)
+   local mt = assert(getmetatable(value))
+   assert(mt.__proto and mt.__id == "object")
+
+   local inner = value:serialize_nbt(nbt)
+   local inner_compound = nbt.newCompound(inner, "inner")
+
+   local values = {
+      _type = value._type,
+      _id = value._id,
+      uid = value.uid,
+      x = value.x,
+      y = value.y,
+      data = inner_compound
+   }
+
+   return nbt.newCompound(values, name)
+end
+
+function TagClass:getMapObjectCompound()
+	if
+		self._type == TAG_COMPOUND
+	then
+       local outer = self:getValue()
+       local object = require("internal.object")
+
+       local instance = {
+          _type = outer["_type"]:getString(),
+          _id = outer["_id"]:getString(),
+          uid = outer["uid"]:getInteger(),
+          x = outer["x"]:getInteger(),
+          y = outer["y"]:getInteger()
+       }
+
+       instance = object.deserialize(instance)
+
+       local data = outer.data:getValue()
+       instance:deserialize_nbt(data)
+
+       return instance
+	end
+
+	error("attempt to get map object compound of invalid type")
+end
+
 return nbt

@@ -51,7 +51,7 @@ local function build_app()
 
    local exec_command = parser:command("exec", "Execute a Lua script using the OpenNefia runtime.")
    exec_command:flag("-l --load-game", "Load the full game before executing.")
-   exec_command:flag("-r --repl-env", "Execute the script using a REPL env instead of a mod env.")
+   exec_command:option("-n --exec_env", "Execute the script using a REPL/global env instead of a mod env."):choices({"exec", "repl", "global"})
    exec_command:option("-e --exec-code", "A string containing Lua code to execute.")
    exec_command:flag("-m --load-all-mods", "Load all mods when executing.")
    exec_command:argument("lua_file", "The Lua script to execute. Defaults to standard input.", "-")

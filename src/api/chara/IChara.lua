@@ -654,4 +654,16 @@ function IChara:iter()
    return self:iter_items()
 end
 
+function IChara:serialize_nbt(nbt)
+   return {
+      hp = nbt.newInt(self.hp)
+   }
+end
+
+function IChara:deserialize_nbt(t)
+   IObject.init(self)
+
+   self.hp = t["hp"]:getInteger()
+end
+
 return IChara
