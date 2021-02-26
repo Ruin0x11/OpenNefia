@@ -43,3 +43,39 @@ function test_IMapObject_containing_map()
    Assert.eq(map, containing)
    Assert.eq(player, obj)
 end
+
+function test_IMapObject_containing_map__position()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+
+   local player = Chara.create("base.player", 1, 2, {}, map)
+   Chara.set_player(player)
+   local _, _, x, y = IMapObject.containing_map(player)
+   Assert.eq(1, x)
+   Assert.eq(2, y)
+
+   local item = Item.create("elona.long_bow", 3, 4, {}, map)
+   _, _, x, y = IMapObject.containing_map(item)
+   Assert.eq(3, x)
+   Assert.eq(4, y)
+
+   item = Item.create("elona.long_bow", nil, nil, {}, player)
+   _, _, x, y = IMapObject.containing_map(item)
+   Assert.eq(1, x)
+   Assert.eq(2, y)
+
+   Assert.is_truthy(player:equip_item(item))
+   _, _, x, y = IMapObject.containing_map(item)
+   Assert.eq(1, x)
+   Assert.eq(2, y)
+
+   player:set_pos(3, 4)
+   _, _, x, y = IMapObject.containing_map(item)
+   Assert.eq(3, x)
+   Assert.eq(4, y)
+
+   player:remove_ownership()
+   _, _, x, y = IMapObject.containing_map(item)
+   Assert.eq(nil, x)
+   Assert.eq(nil, y)
+end
