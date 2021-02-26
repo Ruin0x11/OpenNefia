@@ -9,10 +9,10 @@ local Log = require("api.Log")
 
 local MapObject = {}
 
-function MapObject.generate_from(_type, id, UidTracker)
-   UidTracker = UidTracker or require("internal.global.save").base.uids
+function MapObject.generate_from(_type, id, uid_tracker)
+   uid_tracker = uid_tracker or require("internal.global.save").base.uids
 
-   local uid = UidTracker:get_next_and_increment()
+   local uid = uid_tracker:get_next_and_increment()
 
    -- params.no_pre_build = true
    local obj = Object.generate_from(_type, id)
@@ -26,10 +26,10 @@ function MapObject.generate_from(_type, id, UidTracker)
    return obj
 end
 
-function MapObject.generate(proto, UidTracker)
-   UidTracker = UidTracker or require("internal.global.save").base.uids
+function MapObject.generate(proto, uid_tracker)
+   uid_tracker = uid_tracker or require("internal.global.save").base.uids
 
-   local uid = UidTracker:get_next_and_increment()
+   local uid = uid_tracker:get_next_and_increment()
 
    -- params.no_pre_build = true
    local obj = Object.generate(proto)
@@ -95,7 +95,12 @@ function MapObject.clone_base(obj, owned)
 end
 
 function MapObject.is_map_object(t)
-   return type(t) == "table" and type(t._id) == "string" and type(t._type) == "string" and type(t.uid) == "number"
+   if type(t) ~= "table" then
+      return false
+   end
+
+   local mt = getmetatable(t)
+   return mt and mt.__index == object.__index and type(t.x) == "number" and type(t.y) == "number" or false
 end
 
 -- NOTE: We could have an interface for classes that need special cloning logic.
@@ -160,22 +165,22 @@ local function cycle_aware_copy(t, cache, uids, first, opts)
 end
 
 --- Similar to `table.deepcopy()`, but has awareness of map objects.
-function MapObject.deepcopy(t, UidTracker, opts)
+function MapObject.deepcopy(t, uid_tracker, opts)
    if MapObject.is_map_object(t) then
-      return MapObject.clone(t, false, UidTracker, {}, opts)
+      return MapObject.clone(t, false, uid_tracker, {}, opts)
    end
 
-   return cycle_aware_copy(t, {}, UidTracker, true, opts)
+   return cycle_aware_copy(t, {}, uid_tracker, true, opts)
 end
 
-function MapObject.clone(obj, owned, UidTracker, cache, opts)
-   UidTracker = UidTracker or require("internal.global.save").base.uids
+function MapObject.clone(obj, owned, uid_tracker, cache, opts)
+   uid_tracker = uid_tracker or require("internal.global.save").base.uids
    local preserve_uid = (opts and opts.preserve_uid) or false
 
-   local new_object = cycle_aware_copy(obj, cache or {}, UidTracker, true, opts)
+   local new_object = cycle_aware_copy(obj, cache or {}, uid_tracker, true, opts)
 
    if not preserve_uid then
-      new_object.uid = UidTracker:get_next_and_increment()
+      new_object.uid = uid_tracker:get_next_and_increment()
    end
 
    local mt = getmetatable(obj)

@@ -871,6 +871,14 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (open-nefia--run-tests
    (format "%s:%s" (file-name-base (buffer-file-name)) ".*") arg))
 
+(defun open-nefia-run-test-at-point (&optional arg)
+  (interactive "P")
+  (let ((func-at-point (which-function)))
+    (if func-at-point
+        (open-nefia--run-tests
+         (format "%s:%s" (file-name-base (buffer-file-name)) (format "^%s$" func-at-point) arg))
+      (message "No function at oint."))))
+
 (defun open-nefia-run-previous-tests (&optional arg)
   (interactive "P")
   (if open-nefia--previous-test-filter
