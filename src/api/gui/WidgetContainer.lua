@@ -47,7 +47,8 @@ function WidgetContainer:add(widget, tag, opts)
                                         tag,
                                         opts.z_order or widget:default_widget_z_order(),
                                         opts.position or nil,
-                                        opts.refresh or nil)
+                                        opts.refresh or nil,
+                                        opts.enabled)
 
    self:update_sorting()
 end

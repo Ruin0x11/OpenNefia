@@ -16,6 +16,7 @@ local Effect = require("mod.elona.api.Effect")
 local Calc = require("mod.elona.api.Calc")
 local Chara = require("api.Chara")
 local elona_Quest = require("mod.elona.api.Quest")
+local Enum = require("api.Enum")
 
 --
 --
@@ -55,10 +56,31 @@ local function proc_effects_turn_end(chara, params, result)
    for effect_id, _ in pairs(chara.effects) do
       chara:add_effect_turns(effect_id, -1)
    end
+
    return result
 end
+Event.register("base.on_chara_turn_end", "Proc effect on_turn_end", proc_effects_turn_end, { priority = 110000 })
 
-Event.register("base.on_chara_turn_end", "Proc effect on_turn_end", proc_effects_turn_end)
+local function proc_player_turn_end(chara, params)
+   -- >>>>>>>> shade2/main.hsp:883 		if cBurden(pc)>=burdenHeavy{ ...
+   if not chara:is_player() then
+      return
+   end
+
+   if chara:calc("inventory_weight_type") >= Enum.Burden.Heavy and not config.base.debug_no_weight then
+      if Rand.one_in(20) then
+         Gui.mes("action.backpack_squashing", chara)
+         local damage = chara:calc("max_hp") * (chara:calc("inventory_weight") * 10 / chara:calc("max_inventory_weight") + 10) / 200 + 1
+         chara:damage_hp(damage, "elona.burden")
+      end
+   end
+
+   -- TODO hunger nutrition
+
+   Skill.refresh_speed(chara)
+   -- <<<<<<<< shade2/main.hsp:887 		refreshSpeed cc ..
+end
+Event.register("base.on_chara_turn_end", "Proc player burden/hunger/speed", proc_player_turn_end, { priority = 120000 })
 
 local function update_awake_hours()
    -- >>>>>>>> shade2/main.hsp:627 	if mType=mTypeWorld{ ...
@@ -73,7 +95,7 @@ local function update_awake_hours()
          s.awake_hours = math.max(0, s.awake_hours - 3)
       end
    end
-   if map:calc("adds_awake_hours") then
+   if not map:calc("prevents_adding_awake_hours") then
       s.awake_hours = s.awake_hours + 1
    end
    -- <<<<<<<< shade2/main.hsp:632 		} ...
@@ -377,7 +399,9 @@ Event.register("base.on_item_instantiated", "Connect item events",
                      "zap",        -- on_zap,        can_zap,        elona_sys.on_item_zap
                      "open",       -- on_open,       can_open,       elona_sys.on_item_open
                      "dip_source", -- on_dip_source, can_dip_source, elona_sys.on_item_dip_source
-                     "throw"       -- on_throw,      can_throw,      elona_sys.on_item_throw
+                     "throw",      -- on_throw,      can_throw,      elona_sys.on_item_throw
+                     "descend",    -- on_descend,    can_descend,    elona_sys.on_item_descend
+                     "ascend",     -- on_ascend,     can_ascend,     elona_sys.on_item_ascend
                   }
 
                   for _, action in ipairs(actions) do
@@ -468,6 +492,14 @@ local function feat_bumped_into_handler(chara, p, result)
    return result
 end
 Event.register("base.before_chara_moved", "Feat bumped into behavior", feat_bumped_into_handler)
+
+local function proc_confusion_message(chara)
+   if chara:is_player() and chara:has_effect("elona.confusion") then
+      Gui.mes_duplicate()
+      Gui.mes("action.move.confused")
+   end
+end
+Event.register("base.before_chara_moved", "Proc confusion message", proc_confusion_message, { priority = 200000 })
 
 local function feat_stepped_on_handler(chara, p, result)
    for _, feat in Feat.at(p.x, p.y, chara:current_map()) do

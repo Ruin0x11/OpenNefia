@@ -140,7 +140,10 @@ function BookMenu:draw()
 end
 
 function BookMenu:update()
-   if self.canceled then
+   local canceled = self.canceled
+   self.canceled = false
+
+   if canceled then
       return nil, "canceled"
    end
 

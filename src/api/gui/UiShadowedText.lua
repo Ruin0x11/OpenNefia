@@ -22,6 +22,11 @@ function UiShadowedText:set_data(str)
    self.text = Draw.make_text(str)
 end
 
+function UiShadowedText:set_color(color, shadow_color)
+   self.color = color or {255, 255, 255}
+   self.shadow_color = shadow_color or {0, 0, 0}
+end
+
 function UiShadowedText:draw()
    Draw.set_color(self.shadow_color[1], self.shadow_color[2], self.shadow_color[3], self.shadow_color[4])
    Draw.set_font(self.font_width, self.font_style)

@@ -1,4 +1,5 @@
 --- @classmod IChara
+local Enum = require("api.Enum")
 
 local data = require("internal.data")
 local field = require("game.field")
@@ -210,7 +211,7 @@ function IChara:produce_memory(memory)
 
    -- TODO move
    Effect = Effect or require("mod.elona.api.Effect")
-   local show = Chara.is_alive(self, self:current_map()) and Effect.is_visible(self)
+   local show = Chara.is_alive(self, self:current_map()) and Effect.is_visible(self, Chara.player())
 
    memory.uid = self.uid
    memory.show = show
@@ -228,7 +229,7 @@ end
 --- @overrides ILocalizable:produce_locale_data
 function IChara:produce_locale_data()
    Effect = Effect or require("mod.elona.api.Effect")
-   local show = Chara.is_alive(self, self:current_map()) and Effect.is_visible(self)
+   local show = Chara.is_alive(self, self:current_map()) and Effect.is_visible(self, Chara.player())
    return {
       name = self:calc("name"),
       title = self:calc("title"),
@@ -257,7 +258,7 @@ function IChara:refresh_weight()
    self:reset("inventory_weight", weight)
    self:reset("cargo_weight", cargo_weight)
    self.max_inventory_weight = 45000
-   self.inventory_weight_type = 0
+   self.inventory_weight_type = Enum.Burden.None
    self:emit("base.on_refresh_weight")
 end
 
@@ -640,6 +641,17 @@ end
 function IChara:set_emotion_icon(icon, duration)
    self.emotion_icon = icon
    self.emotion_icon_turns = duration or 2
+end
+
+function IChara:set_item_using(item)
+   if item == nil then
+      self.item_using = nil
+   end
+   self.item_using = item
+end
+
+function IChara:iter()
+   return self:iter_items()
 end
 
 return IChara

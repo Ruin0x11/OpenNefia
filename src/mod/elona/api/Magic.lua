@@ -34,7 +34,7 @@ function Magic.drink_potion(magic_id, power, item, params)
       curse_state = item:calc("curse_state")
       if chara:is_in_fov() then
          Gui.play_sound("base.drink1", chara.x, chara.y)
-         Gui.mes("action.drink.potion", chara, item)
+         Gui.mes("action.drink.potion", chara, item:build_name(1))
       end
    elseif triggered_by == "potion_spilt" then
       -- pass
@@ -364,6 +364,7 @@ function Magic.calc_spellbook_success(chara, difficulty, skill_level)
 end
 
 function Magic.fail_to_read_spellbook(chara, difficulty, skill_level)
+   -- >>>>>>>> shade2/calculation.hsp:1092 	if rnd(4)=0{ ...
    if Rand.one_in(4) then
       Gui.mes_visible("misc.fail_to_cast.mana_is_absorbed", chara)
       if chara:is_player() then
@@ -406,6 +407,7 @@ function Magic.fail_to_read_spellbook(chara, difficulty, skill_level)
    elona_sys_Magic.cast("elona.teleport", { source = chara, target = chara })
 
    return
+      -- <<<<<<<< shade2/calculation.hsp:1114 	return false ..
 end
 
 -- Tries to read a spellbook, and on failure causes a negative effect to happen.
@@ -476,7 +478,7 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
 
    if caster:has_effect("elona.confusion") or caster:has_effect("elona.dimming") then
       Gui.mes_visible("action.cast.confused", caster.x, caster.y, caster)
-      local success = Magic.calc_spellbook_success(caster)
+      local success = Magic.try_to_read_spellbook(caster, skill_data.difficulty, caster:skill_level(skill_data._id))
       if not success then
          return true
       end
@@ -661,8 +663,8 @@ function Magic.read_spellbook(item, skill_id, params)
    local skill_data = data["base.skill"]:ensure(skill_id)
 
    local sep = item:separate()
-   sep:set_chara_using(chara)
    assert(Item.is_alive(sep))
+   chara:set_item_using(sep)
 
    local turns = skill_data.difficulty / (2 * chara:skill_level("elona.literacy")) + 1
    chara:start_activity("elona.reading_spellbook", { skill_id = skill_id, spellbook = sep }, turns)

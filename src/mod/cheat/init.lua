@@ -26,7 +26,7 @@ local function level_up()
    player:mod_base_skill_level("elona.stat_magic", 10000)
    player:mod_base_skill_level("elona.stat_mana", 10000)
 
-   Skill.iter_stats()
+   Skill.iter_attributes()
       :each(function(m)
             player:mod_base_skill_level(m._id, 100, "set")
            end)
@@ -60,10 +60,6 @@ local function enable_themes()
       themes[#themes+1] = "scrounged_theme.scrounged"
    end
 
-   if Env.is_mod_loaded("scrounged_theme") then
-      themes[#themes+1] = "scrounged_theme.scrounged"
-   end
-
    if Env.is_mod_loaded("elonapack") then
       themes[#themes+1] = "elonapack.elonapack"
    end
@@ -81,7 +77,7 @@ local function setup_dev_config()
    if config.base.development_mode then
       config.base.auto_turn_speed = "highest"
       config.base.anime_wait = 0
-      config.base.quickstart_chara_id = "elona.the_leopard_warrior"
+      config.base.quickstart_chara_id = "elona.citizen"
    end
 end
 Event.register("base.on_engine_init", "Set some useful config options", setup_dev_config)

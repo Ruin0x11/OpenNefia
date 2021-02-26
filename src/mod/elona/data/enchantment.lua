@@ -39,7 +39,7 @@ data:add {
    params = { skill_id = "id:base.skill" },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:555 		if enc=encModAttb{ ..
-      self.params.skill_id = Skill.random_stat()
+      self.params.skill_id = Skill.random_attribute()
       if params.curse_power > 0 and Rand.rnd(100) < params.curse_power then
          self.power = self.power * - 2
       end
@@ -233,7 +233,7 @@ data:add {
    params = { skill_id = "id:base.skill" },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:570 		if enc=encSustain{ ..
-      self.params.skill_id = Skill.random_stat()
+      self.params.skill_id = Skill.random_attribute()
 
       return true
       -- <<<<<<<< shade2/item_data.hsp:573 			} ..

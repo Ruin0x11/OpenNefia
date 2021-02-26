@@ -26,81 +26,6 @@ local Ui = require("api.Ui")
 local Const = require("api.Const")
 local Weather = require("mod.elona.api.Weather")
 
-local function calc_dig_success(map, params, result)
-   local chara = params.chara
-   local x = params.dig_x
-   local y = params.dig_y
-   local dig_count = params.dig_count
-   local success = false
-   local flag = false -- kind == 6
-
-   local tile = map:tile(x, y)
-
-   -- TODO config difficulty
-   local difficulty = tile.mining_difficulty or 1500
-   local coefficient = tile.mining_difficulty_coefficient or 20
-
-   if Rand.rnd(difficulty) < chara:skill_level("elona.stat_strength") + chara:skill_level("elona.mining") * 10 then
-      success = true
-   end
-   local p = math.floor(coefficient - chara:skill_level("elona.mining") / 2)
-   if p > 0 and dig_count <= p then
-      success = false
-   end
-
-   return success
-end
-
-Event.define_hook("calc_dig_success",
-                  "Calculates if digging succeeded.",
-                  false,
-                  nil,
-                  calc_dig_success)
-
-Event.register("elona.on_dig_success", "Create item", function(map, params)
-   if map:calc("cannot_mine_items") then
-      return
-   end
-
-   local x = params.dig_x
-   local y = params.dig_y
-   local chara = params.chara
-
-   local item = nil
-   if Rand.one_in(5) then
-      item = "gold"
-   end
-   if Rand.one_in(8) then
-      item = "item"
-   end
-   if item == "gold" then
-      Item.create("elona.gold_piece", x, y, map)
-   elseif item == "item" then
-      local params = Calc.filter(map:calc("level"), 2, nil, map)
-      params.categories = { "elona.ore" }
-
-      Itemgen.create(x, y, params, map)
-   end
-end)
-
-local function do_dig_success(chara, x, y)
-   local map = chara:current_map()
-   local tile = MapTileset.get("elona.mapgen_tunnel", map)
-   map:set_tile(x, y, tile)
-   Map.spill_fragments(x, y, 2, map)
-   Gui.play_sound("base.crush1")
-   local anim = Anim.breaking(x, y)
-   Gui.start_draw_callback(anim)
-
-   -- TODO hidden path
-
-   Gui.mes("activity.dig_mining.finish.wall")
-
-   map:emit("elona.on_dig_success", {chara=chara, dig_x=x, dig_y=y})
-
-   Skill.gain_skill_exp(chara, "elona.mining", 100)
-end
-
 local function sex_check_end(chara, partner)
    if not Chara.is_alive(partner)
    or not partner:has_activity("elona.sex") then
@@ -112,7 +37,7 @@ local function sex_check_end(chara, partner)
 
    if chara:is_player() then
       if not Effect.do_stamina_check(chara, 1 + Rand.rnd(2)) then
-         Gui.mes("common.too_exhausted")
+         Gui.mes("magic.common.too_exhausted")
          partner:remove_activity()
          chara:remove_activity()
          return true
@@ -152,13 +77,15 @@ data:add {
    _type = "base.activity",
    _id = "eating",
    elona_id = 1,
-  
+
    params = { food = "table", no_message = "boolean" },
    default_turns = 8,
 
    animation_wait = 100,
 
+   -- >>>>>>>> shade2/main.hsp:821 		if cc=pc:if (cRowAct(cc)!rowActEat)&(cRowAct(cc) ...
    on_interrupt = "prompt",
+   -- <<<<<<<< shade2/main.hsp:821 		if cc=pc:if (cRowAct(cc)!rowActEat)&(cRowAct(cc) ..
    interrupt_on_displace = true,
 
    events = {
@@ -178,7 +105,7 @@ data:add {
                end
             end
 
-            self.food:set_chara_using(chara)
+            chara:set_item_using(self.food)
             self.food:emit("elona.on_eat_item_begin", {chara=chara})
             -- <<<<<<<< shade2/proc.hsp:1116 		} ..
          end
@@ -190,12 +117,13 @@ data:add {
          callback = function(self, params)
             if not Item.is_alive(self.food) then
                params.chara:remove_activity()
+               params.chara:set_item_using(nil)
                return "turn_end"
             end
 
             -- TODO cargo check
 
-            self.food:set_chara_using(params.chara)
+            params.chara:set_item_using(self.food)
 
             return "turn_end"
          end
@@ -204,11 +132,8 @@ data:add {
          id = "base.on_activity_cleanup",
          name = "start",
 
-         callback = function(self)
-            if not Item.is_alive(self.food) then
-               return
-            end
-            self.food:set_chara_using(nil)
+         callback = function(self, params)
+            params.chara:set_item_using(nil)
          end
       },
       {
@@ -223,6 +148,7 @@ data:add {
                   Gui.mes("activity.eat.finish", chara, self.food:build_name(1))
                end
             end
+            params.chara:set_item_using(nil)
 
             Effect.eat_food(chara, self.food)
             -- <<<<<<<< shade2/proc.hsp:1123 	gosub *insta_eat ..
@@ -240,7 +166,9 @@ local traveling = {
 
    animation_wait = 0,
 
-   on_interrupt = "prompt",
+   -- >>>>>>>> shade2/chara_func.hsp:456 	if cRowAct(c)!0:if cRowAct(c)!rowActTravel:cRowAc ...
+   on_interrupt = "ignore",
+   -- <<<<<<<< shade2/chara_func.hsp:456 	if cRowAct(c)!0:if cRowAct(c)!rowActTravel:cRowAc ..
 }
 
 function traveling.default_turns(self, params, chara)
@@ -318,9 +246,8 @@ data:add(traveling)
 -- instantly as it has no animation delay. Each turn the activity runs it does
 -- the traveling logic and *also* calls the "move to this square" routine
 -- (*act_move) again, over and over. When the activity finishes it sets the
--- `travelDone` boolean, and then when the "move to this square" thing gets
--- called immediately after it will finally update your position, doing all the
--- normal movement things.
+-- `travelDone` boolean, and then when *act_move gets called immediately after
+-- it will finally update your position, doing all the normal movement things.
 local function proc_world_map_travel(chara, params, result)
    -- >>>>>>>> shade2/action.hsp:635 	if dbg_noTravel=false:if mType=mTypeWorld : if cc ...
    if chara:is_player() then
@@ -352,6 +279,7 @@ data:add {
    default_turns = 100,
 
    animation_wait = 40,
+   auto_turn_anim = "base.fishing",
 
    on_interrupt = "prompt",
    events = {
@@ -432,15 +360,96 @@ data:add {
    }
 }
 
+local function calc_dig_success(map, params, result)
+   local chara = params.chara
+   local x = params.dig_x
+   local y = params.dig_y
+   local dig_count = params.dig_count
+   local success = false
+   local flag = false -- kind == 6
+
+   local tile = map:tile(x, y)
+
+   -- TODO config difficulty
+   local difficulty = tile.mining_difficulty or 1500
+   local coefficient = tile.mining_difficulty_coefficient or 20
+
+   if Rand.rnd(difficulty) < chara:skill_level("elona.stat_strength") + chara:skill_level("elona.mining") * 10 then
+      success = true
+   end
+   local p = math.floor(coefficient - chara:skill_level("elona.mining") / 2)
+   if p > 0 and dig_count <= p then
+      success = false
+   end
+
+   return success
+end
+
+Event.define_hook("calc_dig_success",
+                  "Calculates if digging succeeded.",
+                  false,
+                  nil,
+                  calc_dig_success)
+
+local function create_dig_item(map, params)
+   if map:calc("cannot_mine_items") then
+      return
+   end
+
+   local x = params.dig_x
+   local y = params.dig_y
+
+   local item = nil
+   if Rand.one_in(5) then
+      item = "gold"
+   end
+   if Rand.one_in(8) then
+      item = "item"
+   end
+   if item == "gold" then
+      Item.create("elona.gold_piece", x, y, map)
+   elseif item == "item" then
+      local itemgen_params = {
+         level = Calc.calc_object_level(map:calc("level"), map),
+         quality = Calc.calc_object_quality(Enum.Quality.Good),
+         categories = "elona.ore"
+      }
+
+      Itemgen.create(x, y, itemgen_params, map)
+   end
+end
+Event.register("elona.on_dig_success", "Create mining item", create_dig_item)
+
+local function do_dig_success(chara, x, y)
+   local map = chara:current_map()
+   local tile = MapTileset.get("elona.mapgen_tunnel", map)
+   map:set_tile(x, y, tile)
+   Map.spill_fragments(x, y, 2, map)
+   Gui.play_sound("base.crush1")
+   local anim = Anim.breaking(x, y)
+   Gui.start_draw_callback(anim)
+
+   for _, feat in Feat.at(x, y, map) do
+      feat:emit("elona.on_feat_tile_digged_into", {chara=chara})
+   end
+
+   Gui.mes("activity.dig_mining.finish.wall")
+
+   map:emit("elona.on_dig_success", {chara=chara, dig_x=x, dig_y=y})
+
+   Skill.gain_skill_exp(chara, "elona.mining", 100)
+end
+
 data:add {
    _type = "base.activity",
    _id = "mining",
    elona_id = 5,
 
-   params = { x = "number", y = "number", chara = "IChara" },
+   params = { x = "number", y = "number" },
    default_turns = 40,
 
    animation_wait = 15,
+   auto_turn_anim = "base.mining",
 
    on_interrupt = "stop",
    events = {
@@ -502,7 +511,7 @@ data:add {
    _id = "resting",
    elona_id = 4,
 
-   params = { bed = "table" },
+   params = {},
    default_turns = 50,
 
    animation_wait = 5,
@@ -532,16 +541,17 @@ data:add {
                chara:heal_mp(1, true)
             end
 
-            if save.elona_sys.awake_hours >= 30 then
+            if save.elona_sys.awake_hours >= Const.SLEEP_THRESHOLD_MODERATE then
                local do_sleep = false
-               if save.elona_sys.awake_hours >= 50 then
+               if save.elona_sys.awake_hours >= Const.SLEEP_THRESHOLD_HEAVY then
                   do_sleep = true
                elseif Rand.one_in(2) then
                   do_sleep = true
                end
                if do_sleep then
                   Gui.mes("activity.rest.drop_off_to_sleep")
-                  ElonaCommand.do_sleep(chara, self.bed)
+                  chara:set_item_using(nil)
+                  ElonaCommand.do_sleep(chara, nil)
                   chara:remove_activity()
                   return "turn_end"
                end
@@ -577,16 +587,18 @@ data:add {
          name = "start",
 
          callback = function(self, params)
-            Gui.mes("start resting")
-            -- TODO
-            local is_town_or_guild = false
+            -- >>>>>>>> shade2/proc.hsp:447 		if gRowAct=rowActSleep{ ...
+            local map = params.chara:current_map()
+            local is_town_or_guild = map:has_type("player_owned") or map:has_type("town") or map:has_type("guild")
             if is_town_or_guild then
-               Gui.mes("sleep start other")
+               Gui.mes("activity.sleep.start.other")
                self.turns = 5
             else
-               Gui.mes("sleep start global")
+               Gui.mes("activity.sleep.start.global")
                self.turns = 20
             end
+            params.chara:set_item_using(self.bed)
+            -- <<<<<<<< shade2/proc.hsp:455 			} ..
          end
       },
       {
@@ -594,6 +606,7 @@ data:add {
          name = "pass turns",
 
          callback = function(self, params)
+            params.chara:set_item_using(self.bed)
             return "turn_end"
          end
       },
@@ -602,8 +615,11 @@ data:add {
          name = "finish",
 
          callback = function(self, params)
-            Gui.mes("finish preparations")
+            -- >>>>>>>> shade2/proc.hsp:610 		txt lang("あなたは眠り込んだ。","You fall asleep."):gosub  ...
+            Gui.mes("activity.sleep.finish")
             ElonaCommand.do_sleep(params.chara, self.bed)
+            params.chara:set_item_using(nil)
+            -- <<<<<<<< shade2/proc.hsp:610 		txt lang("あなたは眠り込んだ。","You fall asleep."):gosub  ..
          end
       }
    }
@@ -632,8 +648,8 @@ data:add {
             end
 
             if self.is_host then
-               Gui.mes("activity.sex.take_clothes_off", params.chara.x, params.chara.y, params.chara)
-               self.partner:start_activity("elona.sex", {partner=params.chara}, self.turns * 2)
+               Gui.mes_visible("activity.sex.take_clothes_off", params.chara.x, params.chara.y, params.chara)
+               self.partner:start_activity("elona.sex", {partner=params.chara,is_host=false}, self.turns * 2)
             end
          end
       },
@@ -673,7 +689,7 @@ data:add {
 
             local gold_earned = params.chara:skill_level("elona.stat_charisma") * (50 + Rand.rnd(50)) + 100
 
-            Gui.mes_c_visible("activity.sex.after_dialog", params.chara.x, params.chara.y)
+            Gui.mes_c_visible("activity.sex.after_dialog", params.chara.x, params.chara.y, "Talk")
 
             if not self.partner:is_player() then
                if self.partner.gold >= gold_earned then
@@ -834,7 +850,7 @@ local function update_quest_score(audience)
 end
 
 local function performance_good(chara, instrument, audience, activity)
--- >>>>>>>> shade2/proc.hsp:265 			p=rnd(cLevel(tc)+1)+1 ..
+   -- >>>>>>>> shade2/proc.hsp:265 			p=rnd(cLevel(tc)+1)+1 ..
    local level = audience:calc("level")
    local quality_delta = Rand.rnd(level + 1) + 1
    if Rand.rnd(chara:skill_level("elona.performer") + 1) > Rand.rnd(level * 2 + 1) then
@@ -976,7 +992,7 @@ data:add {
             if not Item.is_alive(self.instrument) then
                return "stop"
             end
-            Gui.mes_visible("activity.perform.start", params.chara.x, params.chara.y, params.chara, self.instrument)
+            Gui.mes_visible("activity.perform.start", params.chara.x, params.chara.y, params.chara, self.instrument:build_name(1))
             -- <<<<<<<< shade2/proc.hsp:197 		} ..
          end
       },
@@ -1064,6 +1080,562 @@ data:add {
                Skill.gain_skill_exp(params.chara, "elona.performer", exp, 0, 0)
             end
             -- <<<<<<<< shade2/proc.hsp:338 	return ..
+         end
+      }
+   }
+}
+
+local function dig_random_site(activity, params)
+   -- >>>>>>>> shade2/proc.hsp:10 *randomSite ..
+   local feat = activity.feat
+   local chara = params.chara
+
+   local map = chara:current_map()
+   local level = map:calc("level")
+   local site = map:calc("material_type") or "elona.field"
+
+   if map:has_type("world_map") then
+      level = math.floor(chara:calc("level") / 2) + Rand.rnd(10)
+      if level > 30 then
+         level = 30 + Rand.rnd(Rand.rnd(level-30)+1)
+      end
+      local tile = map:tile(chara.x, chara.y)
+      if tile.field_type then
+         local field_type = data["elona.field_type"]:ensure(tile.field_type)
+         if field_type.material_type then
+            site = field_type.material_type
+         end
+      end
+   end
+
+   if feat then
+      local ty = feat:calc("material_type")
+      if ty then
+         site = ty
+      end
+      local res = feat:emit("elona.calc_feat_materials", {}, {level=level,material_type=site})
+      if res then
+         level = res.level or level
+         site = res.material_type or site
+      end
+   end
+
+   local site_data = data["elona.material_spot"]:ensure(site)
+
+   if Rand.one_in(7) then
+      local choices = nil -- TODO
+      local id, txt_type
+      local amount = 1
+      if site_data.on_search then
+         id, txt_type = site_data:on_search({chara=chara,feat=feat,material_level=level,material_choices=choices})
+      else
+         id, txt_type = Material.random_material_id(level, 0, choices), nil
+      end
+
+      if id then
+         Material.obtain(chara, id, amount, txt_type)
+      end
+   end
+
+   if Rand.one_in(50 + chara:trait_level("elona.perm_material")*20) then
+      local id = "activity.searching.no_more"
+      if site_data.on_finish then
+         id = site_data.on_finish
+      end
+      Gui.mes(id)
+      return true
+   end
+
+   return false
+   -- <<<<<<<< shade2/proc.hsp:64 	return ..
+end
+
+data:add {
+   _type = "base.activity",
+   _id = "searching",
+   elona_id = 105,
+
+   params = { feat = "table", type = "string" },
+   default_turns = 20,
+
+   animation_wait = 15,
+   auto_turn_anim = "base.searching",
+
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:996 	if cRowAct(cc)=false{ ..
+            if not Feat.is_alive(self.feat) then
+               return "stop"
+            end
+            Gui.mes("activity.dig_spot.start.other")
+            -- <<<<<<<< shade2/proc.hsp:1002 		} ..
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1004 	if rowActRE!false:gosub *randomSite:return ..
+            local finished = dig_random_site(self, params)
+            if finished then
+               return self:finish()
+            end
+            if self.turns % 5 == 0 then
+               Gui.mes_c("activity.dig_spot.sound", "Blue")
+            end
+            return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:1009 		} ..
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1011:DONE 	txt lang("地面を掘り終えた。","You finish digging.") ..
+            Gui.mes("activity.dig_spot.finish")
+            -- <<<<<<<< shade2/proc.hsp:1012 	if mType=mTypeWorld{ ..
+
+            -- >>>>>>>> shade2/proc.hsp:1035:DONE 	spillFrag refX,refY,1 ..
+            if self.feat then
+               self.feat:remove_ownership()
+            end
+            local map = params.chara:current_map()
+            Map.spill_fragments(params.chara.x, params.chara.y, 1, map)
+         end
+         -- <<<<<<<< shade2/proc.hsp:1037 	return ..
+      }
+   }
+}
+
+data:add {
+   _type = "base.activity",
+   _id = "digging_spot",
+   elona_id = 8,
+
+   params = {},
+   default_turns = 0,
+
+   animation_wait = 15,
+   auto_turn_anim = "base.searching",
+
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:996:DONE 	if cRowAct(cc)=false{ ..
+            Gui.mes("activity.dig_spot.start.global")
+            -- <<<<<<<< shade2/proc.hsp:1002 		} ..
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1006:DONE 	if cActionPeriod(cc)>0{ ..
+            if self.turns % 5 == 0 then
+               Gui.mes_c("activity.dig_spot.sound", "Blue")
+            end
+            return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:1009 		} ..
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1011:DONE 	txt lang("地面を掘り終えた。","You finish digging.") ..
+            Gui.mes("activity.dig_spot.finish")
+            local map = params.chara:current_map()
+            map:emit("elona.on_search_finish", {chara=params.chara})
+            Map.spill_fragments(params.chara.x, params.chara.y, 1, map)
+            -- <<<<<<<< shade2/proc.hsp:1037:DONE 	return ..
+         end
+      }
+   }
+}
+
+data:add {
+   _type = "base.activity",
+   _id = "reading_spellbook",
+   elona_id = 2,
+
+   params = { skill_id = "string", spellbook = "table", },
+   default_turns = 10,
+
+   animation_wait = 25,
+
+   -- >>>>>>>> shade2/main.hsp:821 		if cc=pc:if (cRowAct(cc)!rowActEat)&(cRowAct(cc) ...
+   on_interrupt = "prompt",
+   -- <<<<<<<< shade2/main.hsp:821 		if cc=pc:if (cRowAct(cc)!rowActEat)&(cRowAct(cc) ..
+
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1188 		if sync(cc) : txt lang(npcN(cc)+itemName(ci,1)+" ..
+            Gui.mes_visible("activity.read.start", params.chara, self.spellbook:build_name(1))
+            -- <<<<<<<< shade2/proc.hsp:1188 		if sync(cc) : txt lang(npcN(cc)+itemName(ci,1)+" ..
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1193 	if cActionPeriod(cc)>0{ ..
+            Skill.gain_skill_exp(params.chara, "elona.literacy", 15, 10, 100)
+
+            local skill_data = data["base.skill"]:ensure(self.skill_id)
+            local difficulty = skill_data.difficulty
+            local curse = self.spellbook:calc("curse_state")
+
+            if curse == Enum.CurseState.Blessed then
+               difficulty = difficulty * 100 / 120
+            elseif Effect.is_cursed(curse) then
+               difficulty = difficulty * 150 / 100
+            end
+
+            local skill_level = params.chara:skill_level(self.skill_id)
+            local success = Magic.try_to_read_spellbook(params.chara, difficulty, skill_level)
+
+            if not success then
+               params.chara:remove_activity()
+               self.spellbook.charges = math.max(self.spellbook.charges - 1, 0)
+               if self.spellbook.charges <= 0 then
+                  self.spellbook:remove(1)
+                  if params.chara:is_in_fov() then
+                     Gui.mes("action.read.book.falls_apart", self.spellbook:build_name(1))
+                  end
+               end
+            end
+
+            return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:1211 		} ..
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1230 		skillGain cc,efId,1,(rnd(defSpellStock/2+1)+defS ..
+            local chara = params.chara
+
+            Gui.mes_visible("activity.read.finish", chara, self.spellbook:build_name(1))
+
+            local function calc_gained_stock(memorization, current_stock)
+               local BASE_STOCK = 100
+               return (Rand.rnd(BASE_STOCK / 2 + 1) + BASE_STOCK / 2)
+                  * (90 + memorization + ((memorization > 0) and 1 or 0) * 20)
+                  / math.clamp((100 + current_stock) / 2, 50, 100)
+                  + 1
+            end
+
+            local memorization = chara:skill_level("elona.memorization")
+            local current_stock = chara:spell_stock(self.skill_id)
+            local skill_data = data["base.skill"]:ensure(self.skill_id)
+            local difficulty = skill_data.difficulty
+
+            Skill.gain_skill(params.chara, self.skill_id, 1, calc_gained_stock(memorization, current_stock))
+            Skill.gain_skill_exp(params.chara, "elona.memorization", 10 + difficulty / 5)
+            save.elona_sys.reservable_spellbook_ids[self.spellbook._id] = true
+
+            Effect.identify_item(self.spellbook, Enum.IdentifyState.Name)
+
+            self.spellbook.charges = math.max(self.spellbook.charges - 1, 0)
+            if self.spellbook.charges <= 0 then
+               self.spellbook:remove(1)
+               if params.chara:is_in_fov() then
+                  Gui.mes("action.read.book.falls_apart", self.spellbook:build_name(1))
+               end
+            end
+            -- <<<<<<<< shade2/proc.hsp:1232 		if iReserve(iId(ci))=0 : iReserve(iId(ci))=1 ..
+         end
+      }
+   }
+}
+
+data:add {
+   _type = "base.activity",
+   _id = "reading_ancient_book",
+   elona_id = 2,
+
+   params = { ancient_book = "table", },
+   default_turns = 10,
+
+   animation_wait = 25,
+
+   -- >>>>>>>> shade2/main.hsp:821 		if cc=pc:if (cRowAct(cc)!rowActEat)&(cRowAct(cc) ...
+   on_interrupt = "prompt",
+   -- <<<<<<<< shade2/main.hsp:821 		if cc=pc:if (cRowAct(cc)!rowActEat)&(cRowAct(cc) ..
+
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1188 		if sync(cc) : txt lang(npcN(cc)+itemName(ci,1)+" ..
+            Gui.mes_visible("activity.read.start", params.chara, self.ancient_book:build_name(1))
+            -- <<<<<<<< shade2/proc.hsp:1188 		if sync(cc) : txt lang(npcN(cc)+itemName(ci,1)+" ..
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1193 	if cActionPeriod(cc)>0{ ..
+            Skill.gain_skill_exp(params.chara, "elona.literacy", 15, 10, 100)
+
+            local base_diff = self.ancient_book.params.ancient_book_difficulty
+            local difficulty = 50 + base_diff * 50 + base_diff * base_diff * 20
+            local curse = self.ancient_book:calc("curse_state")
+
+            if curse == Enum.CurseState.Blessed then
+               difficulty = difficulty * 100 / 120
+            elseif Effect.is_cursed(curse) then
+               difficulty = difficulty * 150 / 100
+            end
+
+            local stat_level = params.chara:skill_level("elona.stat_magic")
+            local success = Magic.try_to_read_spellbook(params.chara, difficulty, stat_level)
+
+            if not success then
+               params.chara:remove_activity()
+               self.ancient_book.charges = math.max(self.ancient_book.charges - 1, 0)
+               if self.ancient_book.charges <= 0 then
+                  self.ancient_book:remove(1)
+                  if params.chara:is_in_fov() then
+                     Gui.mes("action.read.book.falls_apart", self.ancient_book:build_name(1))
+                  end
+               end
+            end
+
+            return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:1211 		} ..
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1230 		skillGain cc,efId,1,(rnd(defSpellStock/2+1)+defS ..
+            local chara = params.chara
+
+            Gui.mes_visible("activity.read.finish", chara, self.ancient_book:build_name(1))
+
+            Effect.identify_item(self.ancient_book, Enum.IdentifyState.Full)
+            Gui.mes("action.read.book.finished_decoding", self.ancient_book:build_name(1))
+            self.ancient_book.params.ancient_book_is_decoded = true
+            self.ancient_book.has_charge = false
+            self.ancient_book.charges = 1
+
+            -- TODO: shade2/proc.hsp:3118 ((iId(ci)=idMageBook)&(iParam2(ci)!0))
+
+            self.ancient_book:stack()
+            -- <<<<<<<< shade2/proc.hsp:1228 		item_stack pc,ci,1 ..
+         end
+      }
+   }
+}
+
+data:add {
+   _type = "base.activity",
+   _id = "harvest",
+   elona_id = 103,
+
+   params = { item = "table", },
+   default_turns = function(self, params, chara)
+      -- >>>>>>>> shade2/proc.hsp:467 			cActionPeriod(cc)=10+limit(iWeight(ci)/(1+sSTR( ...
+      local item = params.item
+      return 10 + math.clamp(item:calc("weight") / (1 + chara:skill_level("elona.stat_strength") * 10 + chara:skill_level("elona.gardening") * 40), 1, 100)
+      -- <<<<<<<< shade2/proc.hsp:467 			cActionPeriod(cc)=10+limit(iWeight(ci)/(1+sSTR( ..
+   end,
+
+   -- >>>>>>>> shade2/main.hsp:848 			if gRowAct=rowActHarvest:at 40:else:if gRowAct= ...
+   animation_wait = 40,
+   -- <<<<<<<< shade2/main.hsp:848 			if gRowAct=rowActHarvest:at 40:else:if gRowAct= ..
+
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:466 			txt lang(itemName(ci,1)+"を掘り始めた。","You start to ...
+            Gui.mes("activity.harvest.start", self.item:build_name(1))
+            -- <<<<<<<< shade2/proc.hsp:466 			txt lang(itemName(ci,1)+"を掘り始めた。","You start to ..
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:487 		if gRowAct=rowActHarvest{ ...
+            local chara = params.chara
+
+            if Rand.one_in(5) then
+               Skill.gain_skill_exp(chara, "elona.gardening", 20, 4)
+            end
+            if Rand.one_in(6) and Rand.rnd(55) > chara:base_skill_level("elona.stat_strength") + 25 then
+               Skill.gain_skill_exp(chara, "elona.stat_strength", 50)
+            end
+            if Rand.one_in(8) and Rand.rnd(55) > chara:base_skill_level("elona.stat_constitution") + 28 then
+               Skill.gain_skill_exp(chara, "elona.stat_constitution", 50)
+            end
+            if Rand.one_in(10) and Rand.rnd(55) > chara:base_skill_level("elona.stat_will") + 30 then
+               Skill.gain_skill_exp(chara, "elona.stat_will", 50)
+            end
+            if Rand.one_in(4) then
+               Gui.mes_c("activity.harvest.sound", "SkyBlue")
+            end
+            -- <<<<<<<< shade2/proc.hsp:497 			} ..
+
+            return "turn_end"
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:623 	if gRowAct=rowActHarvest{ ...
+            Gui.mes("activity.harvest.finish", self.item:build_name(1), Ui.display_weight(self.item:calc("weight")))
+            Action.get(params.chara, self.item)
+            -- <<<<<<<< shade2/proc.hsp:626 		} ..
+         end
+      }
+   }
+}
+
+data:add {
+   _type = "base.activity",
+   _id = "training",
+   elona_id = 104,
+
+   params = { skill_id = "string", item = "table" },
+
+   -- >>>>>>>> shade2/proc.hsp:478 			cActionPeriod(cc)=50 ...
+   default_turns = 50,
+   -- <<<<<<<< shade2/proc.hsp:478 			cActionPeriod(cc)=50 ..
+
+   -- >>>>>>>> shade2/main.hsp:848 			if gRowAct=rowActHarvest:at 40:else:if gRowAct= ...
+   animation_wait = 40,
+   -- <<<<<<<< shade2/main.hsp:848 			if gRowAct=rowActHarvest:at 40:else:if gRowAct= ..
+
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            local chara = params.chara
+
+            if Item.is_alive(self.item) then
+               chara:set_item_using(self.item)
+            end
+
+            -- >>>>>>>> shade2/proc.hsp:469 		if gRowAct=rowActTrain{ ...
+            if not Weather.is_bad_weather() and save.elona.next_train_date > World.date_hours() then
+               Gui.mes("activity.study.start.bored")
+               return "stop"
+            end
+
+            save.elona.next_train_date = World.date_hours() + 48
+
+            if self.skill_id == "random" then
+               Gui.mes("activity.study.start.training")
+            else
+               data["base.skill"]:ensure(self.skill_id)
+               Gui.mes("activity.study.start.studying", "ability." .. self.skill_id .. ".name")
+            end
+
+            -- TODO shelter
+            local map = chara:current_map()
+            local is_town_or_guild = map:has_type("player_owned") or map:has_type("town") or map:has_type("guild")
+            local can_study_here = map._archetype == "elona.shelter" or (map:calc("is_indoor") and is_town_or_guild)
+            if Weather.is_bad_weather() and can_study_here then
+               Gui.mes("activity.study.start.weather_is_bad")
+            end
+            -- <<<<<<<< shade2/proc.hsp:477 				}		 ..
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:499 		if gRowAct=rowActTrain{ ...
+            local chara = params.chara
+            local map = chara:current_map()
+            local is_town_or_guild = map:has_type("player_owned") or map:has_type("town") or map:has_type("guild")
+
+            local chance = 25
+
+            if Weather.is_bad_weather() then
+               -- TODO shelter
+               if map._archetype == "elona.shelter" then
+                  chance = 5
+               elseif map:calc("is_indoor") then
+                  if is_town_or_guild then
+                     chance = 5
+                     World.pass_time_in_seconds(60 * 30)
+                  end
+               end
+            end
+
+            if Rand.one_in(chance) then
+               if self.skill_id == "random" then
+                  Skill.gain_skill_exp(chara, Skill.random_base_attribute(), 25)
+               else
+                  Skill.gain_skill_exp(chara, self.skill_id, 25)
+               end
+            end
+
+            return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:511 			} ..
+         end
+      },
+      {
+         id = "base.on_activity_cleanup",
+         name = "cleanup",
+
+         callback = function(self, params)
+            params.chara:set_item_using(nil)
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:627 	if gRowAct=rowActTrain{ ...
+            local item = params.chara.item_using
+            if self.skill_id == "random" then
+               Gui.mes("activity.study.finish.training")
+            else
+               Gui.mes("activity.study.finish.studying", "ability." .. self.skill_id .. ".name")
+            end
+            -- <<<<<<<< shade2/proc.hsp:629 		} ..
          end
       }
    }
@@ -1234,7 +1806,8 @@ data:add {
                should_abort = true
             end
 
-            if not should_abort and Chara.is_alive(self.item.chara_using) then
+            local chara_using = self.item:get_chara_using()
+            if not should_abort and Chara.is_alive(chara_using) then
                Gui.mes("action.someone_else_is_using")
                should_abort = true
             end
@@ -1275,7 +1848,7 @@ data:add {
 
             if self.item:is_equipped() then
                assert(Chara.is_alive(owner))
-               self.item:unequip()
+               assert(owner:unequip_item(self.item))
                owner:refresh()
             end
 
@@ -1302,439 +1875,6 @@ data:add {
                Effect.modify_karma(chara, -1)
             end
             -- <<<<<<<< shade2/proc.hsp:606 		} ..
-         end
-      }
-   }
-}
-
-local function dig_random_site(activity, params)
-   -- >>>>>>>> shade2/proc.hsp:10 *randomSite ..
-   local feat = activity.feat
-   local chara = params.chara
-
-   local map = chara:current_map()
-   local level = map:calc("level")
-   local site = map:calc("material_type") or "elona.field"
-
-   if map:has_type("world_map") then
-      level = math.floor(chara:calc("level") / 2) + Rand.rnd(10)
-      if level > 30 then
-         level = 30 + Rand.rnd(Rand.rnd(level-30)+1)
-      end
-      local tile = map:tile(chara.x, chara.y)
-      if tile.field_type then
-         local field_type = data["elona.field_type"]:ensure(tile.field_type)
-         if field_type.material_type then
-            site = field_type.material_type
-         end
-      end
-   end
-
-   if feat then
-      local ty = feat:calc("material_type")
-      if ty then
-         site = ty
-      end
-      local res = feat:emit("elona.calc_feat_materials", {}, {level=level,material_type=site})
-      if res then
-         level = res.level or level
-         site = res.material_type or site
-      end
-   end
-
-   local site_data = data["elona.material_spot"]:ensure(site)
-
-   if Rand.one_in(7) then
-      local choices = nil -- TODO
-      local id, txt_type
-      local amount = 1
-      if site_data.on_search then
-         id, txt_type = site_data:on_search({chara=chara,feat=feat,material_level=level,material_choices=choices})
-      else
-         id, txt_type = Material.random_material_id(level, 0, choices), nil
-      end
-
-      if id then
-         Material.obtain(chara, id, amount, txt_type)
-      end
-   end
-
-   if Rand.one_in(50 + chara:trait_level("elona.perm_material")*20) then
-      local id = "activity.searching.no_more"
-      if site_data.on_finish then
-         id = site_data.on_finish
-      end
-      Gui.mes(id)
-      return true
-   end
-
-   return false
-   -- <<<<<<<< shade2/proc.hsp:64 	return ..
-end
-
-data:add {
-   _type = "base.activity",
-   _id = "searching",
-   elona_id = 105,
-
-   params = { feat = "table", type = "string" },
-   default_turns = 20,
-
-   animation_wait = 15,
-
-   on_interrupt = "stop",
-   events = {
-      {
-         id = "base.on_activity_start",
-         name = "start",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:996 	if cRowAct(cc)=false{ ..
-            if not Feat.is_alive(self.feat) then
-               return "stop"
-            end
-            Gui.mes("activity.dig_spot.start.other")
-            -- <<<<<<<< shade2/proc.hsp:1002 		} ..
-         end
-      },
-      {
-         id = "base.on_activity_pass_turns",
-         name = "pass turns",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:1004 	if rowActRE!false:gosub *randomSite:return ..
-            local finished = dig_random_site(self, params)
-            if finished then
-               return self:finish()
-            end
-            if self.turns % 5 == 0 then
-               Gui.mes_c("activity.dig_spot.sound", "Blue")
-            end
-            return "turn_end"
-            -- <<<<<<<< shade2/proc.hsp:1009 		} ..
-         end
-      },
-      {
-         id = "base.on_activity_finish",
-         name = "finish",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:1011:DONE 	txt lang("地面を掘り終えた。","You finish digging.") ..
-            Gui.mes("activity.dig_spot.finish")
-            -- <<<<<<<< shade2/proc.hsp:1012 	if mType=mTypeWorld{ ..
-
-            -- >>>>>>>> shade2/proc.hsp:1035:DONE 	spillFrag refX,refY,1 ..
-            if self.feat then
-               self.feat:remove_ownership()
-            end
-            local map = params.chara:current_map()
-            Map.spill_fragments(params.chara.x, params.chara.y, 1, map)
-         end
-         -- <<<<<<<< shade2/proc.hsp:1037 	return ..
-      }
-   }
-}
-
-data:add {
-   _type = "base.activity",
-   _id = "digging_spot",
-   elona_id = 8,
-
-   params = {},
-   default_turns = 0,
-
-   animation_wait = 15,
-
-   on_interrupt = "stop",
-   events = {
-      {
-         id = "base.on_activity_start",
-         name = "start",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:996:DONE 	if cRowAct(cc)=false{ ..
-            Gui.mes("activity.dig_spot.start.global")
-            -- <<<<<<<< shade2/proc.hsp:1002 		} ..
-         end
-      },
-      {
-         id = "base.on_activity_pass_turns",
-         name = "pass turns",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:1006:DONE 	if cActionPeriod(cc)>0{ ..
-            if self.turns % 5 == 0 then
-               Gui.mes_c("activity.dig_spot.sound", "Blue")
-            end
-            return "turn_end"
-            -- <<<<<<<< shade2/proc.hsp:1009 		} ..
-         end
-      },
-      {
-         id = "base.on_activity_finish",
-         name = "finish",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:1011:DONE 	txt lang("地面を掘り終えた。","You finish digging.") ..
-            Gui.mes("activity.dig_spot.finish")
-            local map = params.chara:current_map()
-            map:emit("elona.on_search_finish", {chara=params.chara})
-            Map.spill_fragments(params.chara.x, params.chara.y, 1, map)
-            -- <<<<<<<< shade2/proc.hsp:1037:DONE 	return ..
-         end
-      }
-   }
-}
-
-data:add {
-   _type = "base.activity",
-   _id = "reading_spellbook",
-   elona_id = 2,
-
-   params = { skill_id = "string", spellbook = "table", },
-   default_turns = 10,
-
-   animation_wait = 25,
-
-   on_interrupt = "prompt",
-   events = {
-      {
-         id = "base.on_activity_start",
-         name = "start",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:1188 		if sync(cc) : txt lang(npcN(cc)+itemName(ci,1)+" ..
-            Gui.mes_visible("activity.read.start", params.chara, self.spellbook:build_name(1))
-            -- <<<<<<<< shade2/proc.hsp:1188 		if sync(cc) : txt lang(npcN(cc)+itemName(ci,1)+" ..
-         end
-      },
-      {
-         id = "base.on_activity_pass_turns",
-         name = "pass turns",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:1193 	if cActionPeriod(cc)>0{ ..
-            Skill.gain_skill_exp(params.chara, "elona.literacy", 15, 10, 100)
-
-            local skill_data = data["base.skill"]:ensure(self.skill_id)
-            local difficulty = skill_data.difficulty
-            local curse = self.spellbook:calc("curse_state")
-
-            if curse == Enum.CurseState.Blessed then
-               difficulty = difficulty * 100 / 120
-            elseif Effect.is_cursed(curse) then
-               difficulty = difficulty * 150 / 100
-            end
-
-            local skill_level = params.chara:skill_level(self.skill_id)
-            local success = Magic.try_to_read_spellbook(params.chara, difficulty, skill_level)
-
-            if not success then
-               params.chara:remove_activity()
-               self.spellbook.charges = math.max(self.spellbook.charges - 1, 0)
-               if self.spellbook.charges <= 0 then
-                  self.spellbook:remove(1)
-                  if params.chara:is_in_fov() then
-                     Gui.mes("action.read.book.falls_apart", self.spellbook:build_name(1))
-                  end
-               end
-            end
-
-            return "turn_end"
-            -- <<<<<<<< shade2/proc.hsp:1211 		} ..
-         end
-      },
-      {
-         id = "base.on_activity_finish",
-         name = "finish",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:1230 		skillGain cc,efId,1,(rnd(defSpellStock/2+1)+defS ..
-            local chara = params.chara
-
-            Gui.mes_visible("activity.read.finish", chara, self.spellbook:build_name(1))
-
-            local function calc_gained_stock(memorization, current_stock)
-               local BASE_STOCK = 100
-               return (Rand.rnd(BASE_STOCK / 2 + 1) + BASE_STOCK / 2)
-                  * (90 + memorization + ((memorization > 0) and 1 or 0) * 20)
-                  / math.clamp((100 + current_stock) / 2, 50, 100)
-                  + 1
-            end
-
-            local memorization = chara:skill_level("elona.memorization")
-            local current_stock = chara:spell_stock(self.skill_id)
-            local skill_data = data["base.skill"]:ensure(self.skill_id)
-            local difficulty = skill_data.difficulty
-
-            Skill.gain_skill(params.chara, self.skill_id, 1, calc_gained_stock(memorization, current_stock))
-            Skill.gain_skill_exp(params.chara, "elona.memorization", 10 + difficulty / 5)
-            save.elona_sys.reservable_spellbook_ids[self.spellbook._id] = true
-
-            Effect.identify_item(self.spellbook, Enum.IdentifyState.Name)
-
-            self.spellbook.charges = math.max(self.spellbook.charges - 1, 0)
-            if self.spellbook.charges <= 0 then
-               self.spellbook:remove(1)
-               if params.chara:is_in_fov() then
-                  Gui.mes("action.read.book.falls_apart", self.spellbook:build_name(1))
-               end
-            end
-            -- <<<<<<<< shade2/proc.hsp:1232 		if iReserve(iId(ci))=0 : iReserve(iId(ci))=1 ..
-         end
-      }
-   }
-}
-
-data:add {
-   _type = "base.activity",
-   _id = "reading_ancient_book",
-   elona_id = 2,
-
-   params = { ancient_book = "table", },
-   default_turns = 10,
-
-   animation_wait = 25,
-
-   on_interrupt = "prompt",
-   events = {
-      {
-         id = "base.on_activity_start",
-         name = "start",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:1188 		if sync(cc) : txt lang(npcN(cc)+itemName(ci,1)+" ..
-            Gui.mes_visible("activity.read.start", params.chara, self.ancient_book:build_name(1))
-            -- <<<<<<<< shade2/proc.hsp:1188 		if sync(cc) : txt lang(npcN(cc)+itemName(ci,1)+" ..
-         end
-      },
-      {
-         id = "base.on_activity_pass_turns",
-         name = "pass turns",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:1193 	if cActionPeriod(cc)>0{ ..
-            Skill.gain_skill_exp(params.chara, "elona.literacy", 15, 10, 100)
-
-            local base_diff = self.ancient_book.params.ancient_book_difficulty
-            local difficulty = 50 + base_diff * 50 + base_diff * base_diff * 20
-            local curse = self.ancient_book:calc("curse_state")
-
-            if curse == Enum.CurseState.Blessed then
-               difficulty = difficulty * 100 / 120
-            elseif Effect.is_cursed(curse) then
-               difficulty = difficulty * 150 / 100
-            end
-
-            local stat_level = params.chara:skill_level("elona.stat_magic")
-            local success = Magic.try_to_read_spellbook(params.chara, difficulty, stat_level)
-
-            if not success then
-               params.chara:remove_activity()
-               self.ancient_book.charges = math.max(self.ancient_book.charges - 1, 0)
-               if self.ancient_book.charges <= 0 then
-                  self.ancient_book:remove(1)
-                  if params.chara:is_in_fov() then
-                     Gui.mes("action.read.book.falls_apart", self.ancient_book:build_name(1))
-                  end
-               end
-            end
-
-            return "turn_end"
-            -- <<<<<<<< shade2/proc.hsp:1211 		} ..
-         end
-      },
-      {
-         id = "base.on_activity_finish",
-         name = "finish",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:1230 		skillGain cc,efId,1,(rnd(defSpellStock/2+1)+defS ..
-            local chara = params.chara
-
-            Gui.mes_visible("activity.read.finish", chara, self.ancient_book:build_name(1))
-
-            Effect.identify_item(self.ancient_book, Enum.IdentifyState.Full)
-            Gui.mes("action.read.book.finished_decoding", self.ancient_book:build_name(1))
-            self.ancient_book.params.ancient_book_is_decoded = true
-            self.ancient_book.has_charge = false
-            self.ancient_book.charges = 1
-
-            -- TODO: shade2/proc.hsp:3118 ((iId(ci)=idMageBook)&(iParam2(ci)!0))
-
-            self.ancient_book:stack()
-            -- <<<<<<<< shade2/proc.hsp:1228 		item_stack pc,ci,1 ..
-         end
-      }
-   }
-}
-
-data:add {
-   _type = "base.activity",
-   _id = "harvest",
-   elona_id = 103,
-
-   params = { item = "table", },
-   default_turns = function(self, params, chara)
-      -- >>>>>>>> shade2/proc.hsp:467 			cActionPeriod(cc)=10+limit(iWeight(ci)/(1+sSTR( ...
-      local item = params.item
-      return 10 + math.clamp(item:calc("weight") / (1 + chara:skill_level("elona.stat_strength") * 10 + chara:skill_level("elona.gardening") * 40), 1, 100)
-      -- <<<<<<<< shade2/proc.hsp:467 			cActionPeriod(cc)=10+limit(iWeight(ci)/(1+sSTR( ..
-   end,
-
-   -- >>>>>>>> shade2/main.hsp:848 			if gRowAct=rowActHarvest:at 40:else:if gRowAct= ...
-   animation_wait = 40,
-   -- <<<<<<<< shade2/main.hsp:848 			if gRowAct=rowActHarvest:at 40:else:if gRowAct= ..
-
-   on_interrupt = "stop",
-   events = {
-      {
-         id = "base.on_activity_start",
-         name = "start",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:466 			txt lang(itemName(ci,1)+"を掘り始めた。","You start to ...
-            Gui.mes("activity.harvest.start", self.item:build_name(1))
-            -- <<<<<<<< shade2/proc.hsp:466 			txt lang(itemName(ci,1)+"を掘り始めた。","You start to ..
-         end
-      },
-      {
-         id = "base.on_activity_pass_turns",
-         name = "pass turns",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:487 		if gRowAct=rowActHarvest{ ...
-            local chara = params.chara
-
-            if Rand.one_in(5) then
-               Skill.gain_skill_exp(chara, "elona.gardening", 20, 4)
-            end
-            if Rand.one_in(6) and Rand.rnd(55) > chara:base_skill_level("elona.stat_strength") + 25 then
-               Skill.gain_skill_exp(chara, "elona.stat_strength", 50)
-            end
-            if Rand.one_in(8) and Rand.rnd(55) > chara:base_skill_level("elona.stat_constitution") + 28 then
-               Skill.gain_skill_exp(chara, "elona.stat_constitution", 50)
-            end
-            if Rand.one_in(10) and Rand.rnd(55) > chara:base_skill_level("elona.stat_will") + 30 then
-               Skill.gain_skill_exp(chara, "elona.stat_will", 50)
-            end
-            if Rand.one_in(4) then
-               Gui.mes_c("activity.harvest.sound", "SkyBlue")
-            end
-            -- <<<<<<<< shade2/proc.hsp:497 			} ..
-
-            return "turn_end"
-         end
-      },
-      {
-         id = "base.on_activity_finish",
-         name = "finish",
-
-         callback = function(self, params)
-            -- >>>>>>>> shade2/proc.hsp:623 	if gRowAct=rowActHarvest{ ...
-            Gui.mes("activity.harvest.finish", self.item:build_name(1), Ui.display_weight(self.item:calc("weight")))
-            Action.get(params.chara, self.item)
-            -- <<<<<<<< shade2/proc.hsp:626 		} ..
          end
       }
    }

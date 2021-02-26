@@ -288,7 +288,7 @@ function InventoryMenu:update_filtering()
          }
       end
 
-      self.text_equip_slots = self.ctxt.target:iter_body_parts(true):map(map):to_list()
+      self.text_equip_slots = self.ctxt.target:iter_all_body_parts():map(map):to_list()
    end
 
    -- Run after filter actions that can return a turn result, like

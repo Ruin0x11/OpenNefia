@@ -24,13 +24,39 @@ data:add {
    indicator = indicator_nutrition
 }
 
-local function indicator_stamina(player)
-   local sp = player:calc("stamina")
+local function indicator_burden(player)
+   -- >>>>>>>> shade2/screen.hsp:313 	if cBurden(pc)!0{ ...
+   local burden = math.clamp(player:calc("inventory_weight_type"), Enum.Burden.None, Enum.Burden.Max)
 
-   if sp < 25 then
-      return { text = "tired" }
-   elseif sp < 0 then
-      return { text = "very tired" }
+   if burden > 0 then
+      local color = {0, math.min(burden * 40, 255), math.min(burden * 40, 255)}
+      return { text = ("effect.indicator.burden._%d"):format(burden), color = color }
+   end
+
+   return nil
+   -- <<<<<<<< shade2/screen.hsp:316 		} ..
+end
+data:add {
+   _type = "base.ui_indicator",
+   _id = "burden",
+
+   ordering = 190000,
+   indicator = indicator_burden
+}
+
+local COLOR_FATIGUE_HEAVY = {120, 120, 0}
+local COLOR_FATIGUE_MODERATE = {80, 80, 0}
+local COLOR_FATIGUE_LIGHT = {60, 60, 0}
+
+local function indicator_stamina(player)
+   local stamina = player:calc("stamina")
+
+   if stamina < Const.FATIGUE_THRESHOLD_HEAVY then
+      return { text = "effect.indicator.tired._2", color = COLOR_FATIGUE_HEAVY }
+   elseif stamina < Const.FATIGUE_THRESHOLD_MODERATE then
+      return { text = "effect.indicator.tired._1", color = COLOR_FATIGUE_MODERATE }
+   elseif stamina < Const.FATIGUE_THRESHOLD_LIGHT then
+      return { text = "effect.indicator.tired._0", color = COLOR_FATIGUE_LIGHT }
    end
 
    return nil
@@ -43,16 +69,24 @@ data:add {
    indicator = indicator_stamina
 }
 
+local COLOR_SLEEP_HEAVY = {255, 0, 0}
+local COLOR_SLEEP_MODERATE = {100, 100, 0}
+local COLOR_SLEEP_LIGHT = {0, 0, 0}
+
 local function indicator_awake_hours()
+   -- >>>>>>>> shade2/screen.hsp:306 	if gSleep>=sleepLight{ ...
    local hours = save.elona_sys.awake_hours
 
-   if hours >= 50 then
-      return { text = "very sleepy" }
-   elseif hours >= 30 then
-      return { text = "sleepy" }
+   if hours >= Const.SLEEP_THRESHOLD_HEAVY then
+      return { text = "effect.indicator.sleepy._2", color = COLOR_SLEEP_HEAVY }
+   elseif hours >= Const.SLEEP_THRESHOLD_MODERATE then
+      return { text = "effect.indicator.sleepy._1", color = COLOR_SLEEP_MODERATE }
+   elseif hours >= Const.SLEEP_THRESHOLD_LIGHT then
+      return { text = "effect.indicator.sleepy._0", color = COLOR_SLEEP_LIGHT }
    end
 
    return nil
+   -- <<<<<<<< shade2/screen.hsp:308 		} ..
 end
 data:add {
    _type = "base.ui_indicator",
@@ -86,9 +120,9 @@ local effect = {
          local result
 
          if Rand.one_in(80) then
-            local stat = Skill.random_stat()
+            local stat = Skill.random_attribute()
             if not Effect.has_sustain_enchantment(chara, stat) then
-               local delta = chara:base_skill_level(stat) / 25 + 1
+               local delta = -chara:base_skill_level(stat) / 25 + 1
                chara:add_stat_adjustment(stat, delta)
                chara:refresh()
             end

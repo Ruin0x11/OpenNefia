@@ -2,6 +2,7 @@ return {
    visual_ai = {
       gui = {
          menu = {
+            title = "Visual AI",
             category = function(category)
                return ("Category: %s"):format(category)
             end,

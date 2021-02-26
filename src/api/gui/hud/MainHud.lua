@@ -12,8 +12,8 @@ local UiMinimap = require("api.gui.hud.UiMinimap")
 local UiStatsBar = require("api.gui.hud.UiStatsBar")
 local UiStatusEffects = require("api.gui.hud.UiStatusEffects")
 local UiSkillTracker = require("api.gui.hud.UiSkillTracker")
+local UiAutoTurn = require("api.gui.hud.UiAutoTurn")
 local WidgetContainer = require("api.gui.WidgetContainer")
-local save = require("internal.global.save")
 
 local MainHud = class.class("MainHud", IHud)
 MainHud:delegate("input", IInput)
@@ -32,6 +32,7 @@ function MainHud:init()
    self.widgets:add(UiStatsBar:new(), "hud_stats_bar")
    self.widgets:add(UiMinimap:new(), "hud_minimap")
    self.widgets:add(UiBuffs:new(), "hud_buffs")
+   self.widgets:add(UiAutoTurn:new(), "hud_auto_turn")
 
    local position, refresh
    position = function(self, x, y, width, height)

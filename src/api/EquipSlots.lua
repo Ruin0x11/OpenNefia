@@ -28,6 +28,7 @@ function EquipSlots:init(body_parts, owner)
    self.pool = pool:new("base.item", 1, 1, self)
 
    self.equipped = {}
+   self.blocked = table.set {} -- set of base.body_part IDs
 end
 
 function EquipSlots:get(slot_index)
@@ -163,11 +164,11 @@ function EquipSlots:remove_body_part(slot)
    return true
 end
 
-function EquipSlots:items_equipped_at(body_part_type)
+function EquipSlots:iter_items_equipped_at(body_part_type)
    local pred = function(v)
-      return v.equipped and v.body_part._id == body_part_type
+      return v.body_part._id == body_part_type
    end
-   return self:iter_body_parts(false):filter(pred):extract("equipped")
+   return self:iter_equipped_body_parts():filter(pred):extract("equipped")
 end
 
 local function iter_body_parts(state, index)
@@ -179,19 +180,30 @@ local function iter_body_parts(state, index)
 
    repeat
       local body_part = state.body_parts[index]
-      entry = {
-         body_part = data["base.body_part"]:ensure(body_part.type),
-         equipped = state.pool:get_object(body_part.equipped)
-      }
+      local equipped = state.pool:get_object(body_part.equipped)
+
+      if (state.also_empty or equipped) and (state.also_blocked or not state.blocked[body_part.type]) then
+         entry = {
+            body_part = data["base.body_part"]:ensure(body_part.type),
+            equipped = state.pool:get_object(body_part.equipped)
+         }
+      end
       index = index + 1
-   until (entry.equipped ~= nil or state.also_empty)
-      or index > #state.body_parts
+   until entry or index > #state.body_parts
+
+   if entry == nil then
+      return nil
+   end
 
    return index, entry
 end
 
-function EquipSlots:iter_body_parts(also_empty)
-   return fun.wrap(iter_body_parts, {body_parts=self.body_parts,pool=self.pool,also_empty=also_empty or false}, 1)
+function EquipSlots:iter_all_body_parts(also_blocked)
+   return fun.wrap(iter_body_parts, {body_parts=self.body_parts,blocked=self.blocked,pool=self.pool,also_empty=true, also_blocked=also_blocked or false}, 1)
+end
+
+function EquipSlots:iter_equipped_body_parts(also_empty, also_blocked)
+   return fun.wrap(iter_body_parts, {body_parts=self.body_parts,blocked=self.blocked,pool=self.pool,also_empty=false, also_blocked=also_blocked or false}, 1)
 end
 
 function EquipSlots:equip_slot_of(item)
@@ -199,6 +211,11 @@ function EquipSlots:equip_slot_of(item)
    if slot == nil then return nil end
 
    return self.body_parts[slot]
+end
+
+function EquipSlots:set_body_part_blocked(id, blocked)
+   data["base.body_part"]:ensure(id)
+   self.blocked[id] = not not blocked
 end
 
 --

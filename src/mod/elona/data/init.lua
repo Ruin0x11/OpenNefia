@@ -1,5 +1,4 @@
 require("mod.elona.data.event")
-require("mod.elona.data.resolver")
 require("mod.elona.data.skill")
 require("mod.elona.data.body_part")
 require("mod.elona.data.item_type")

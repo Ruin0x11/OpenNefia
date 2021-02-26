@@ -19,42 +19,23 @@ local save = require("internal.global.save")
 
 local Action = {}
 
-local function item_on_cell_text(x, y)
-   local items = Item.at(x, y):to_list()
-   if #items == 0 then
-      return nil
-   end
-
-   if #items > 3 then
-      return I18N.get("action.move.item_on_cell.more_than_three", #items)
-   end
-
-   local mes = ""
-   for i, v in ipairs(items) do
-      if i > 1 then
-         mes = mes .. I18N.get("misc.and")
+-- >>>>>>>> shade2/action.hsp:735 		if map(x,y,4)!0{ ...
+local function proc_item_on_cell_text(chara)
+   if chara:is_player() then
+      if not chara:has_effect("elona.blindness") then
+         local text = Action.target_item_text(chara.x, chara.y)
+         if text then
+            Gui.mes(text)
+         end
+      else
+         if Item.at(chara.x, chara.y):length() > 0 then
+            Gui.mes("action.move.sense_something")
+         end
       end
-      mes = mes .. v:build_name()
-   end
-
-   local own_state = items[1].own_state
-   if own_state == Enum.OwnState.None then
-      return I18N.get("action.move.item_on_cell.item", mes)
-   elseif own_state == Enum.OwnState.Shelter then
-      return I18N.get("action.move.item_on_cell.building", mes)
-   else
-      return I18N.get("action.move.item_on_cell.not_owned", mes)
    end
 end
-
-Event.register("base.on_chara_moved", "Item on cell text", function(chara)
-   if chara:is_player() then
-      local text = item_on_cell_text(chara.x, chara.y)
-      if text then
-         Gui.mes(text)
-      end
-   end
-end)
+Event.register("base.on_chara_moved", "Item on cell text", proc_item_on_cell_text)
+-- <<<<<<<< shade2/action.hsp:741 			} ..
 
 --- @tparam IChara chara
 --- @tparam int x
@@ -111,34 +92,34 @@ function Action.move(chara, x, y)
    return true
 end
 
-Event.register("base.on_get_item", "Pick up item",
-               function(item, params, result)
-                  if type(result) == "string" then
-                     -- HACK for the harvest quest, eventually we need some way
-                     -- of skipping the other event callbacks like returning
-                     -- ("turn_end", Event.ACT_SKIP_REST)
-                     return result
-                  end
+local function pick_up_item(item, params, result)
+   if type(result) == "string" then
+      -- HACK for the harvest quest, eventually we need some way
+      -- of skipping the other event callbacks like returning
+      -- ("turn_end", Event.ACT_SKIP_REST)
+      return result
+   end
 
-                  if not Item.is_alive(item) then
-                     return result
-                  end
+   if not Item.is_alive(item) then
+      return result
+   end
 
-                  params.amount = params.amount or item.amount
-                  local picked_up = params.chara:take_item(item, params.amount)
-                  if picked_up then
-                     Gui.mes("action.pick_up.execute", params.chara, item:build_name(params.amount))
-                     Gui.play_sound(Rand.choice({"base.get1", "base.get2"}), params.chara.x, params.chara.y)
-                     params.chara:refresh_weight()
-                     return picked_up
-                  end
+   params.amount = params.amount or item.amount
+   local picked_up = params.chara:take_item(item, params.amount)
+   if picked_up then
+      Gui.mes("action.pick_up.execute", params.chara, item:build_name(params.amount))
+      Gui.play_sound(Rand.choice({"base.get1", "base.get2"}), params.chara.x, params.chara.y)
+      params.chara:refresh_weight()
+      return picked_up
+   end
 
-                  if params.chara:is_player() then
-                     Gui.mes("action.get.cannot_carry")
-                  end
+   if params.chara:is_player() then
+      Gui.mes("action.get.cannot_carry")
+   end
 
-                  return false
-               end)
+   return false
+end
+Event.register("base.on_get_item", "Pick up item", pick_up_item)
 
 --- @tparam IChara chara
 --- @tparam IItem item
@@ -290,12 +271,46 @@ function Action.target_level_text(chara, target)
    return I18N.get("action.target.level._" .. key, target)
 end
 
-function Action.target_item_text(chara, item)
-   return "TODO item"
+--- @hsp txtItemOnCell(x, y)
+function Action.target_item_text(x, y)
+   -- >>>>>>>> shade2/command.hsp:4 #module ...
+   local items = Item.at(x, y):to_list()
+   if #items == 0 then
+      return nil
+   end
+
+   if #items > 3 then
+      return I18N.get("action.move.item_on_cell.more_than_three", #items)
+   end
+
+   local mes = ""
+   for i, v in ipairs(items) do
+      if i > 1 then
+         mes = mes .. I18N.get("misc.and")
+      end
+      mes = mes .. v:build_name()
+   end
+
+   local own_state = items[1].own_state
+   if own_state == Enum.OwnState.None then
+      return I18N.get("action.move.item_on_cell.item", mes)
+   elseif own_state == Enum.OwnState.Shelter then
+      return I18N.get("action.move.item_on_cell.building", mes)
+   else
+      return I18N.get("action.move.item_on_cell.not_owned", mes)
+   end
+   -- <<<<<<<< shade2/command.hsp:24 #global ..
 end
 
-function Action.target_feat_text(chara, feat)
-   return "TODO feat"
+function Action.target_feat_texts(x, y)
+   -- >>>>>>>> shade2/command.hsp:48 	if map@(x,y,6)!0{ ...
+   local map = function(feat)
+      local result = feat:emit("base.on_feat_make_target_text")
+      assert(type(result) == "string" or result == nil)
+      return result
+   end
+   return Feat.at(x, y):map(map):filter(fun.op.truth)
+   -- <<<<<<<< shade2/command.hsp:58 		} ..
 end
 
 function Action.target_text(chara, x, y, visible_only)
@@ -310,7 +325,7 @@ function Action.target_text(chara, x, y, visible_only)
 
    local target = Chara.at(x, y)
    local Effect = require("mod.elona.api.Effect") -- TODO move
-   if target and Effect.is_visible(target) then
+   if target and Effect.is_visible(target, Chara.player()) then
       local dist = Pos.dist(chara.x, chara.y, target.x, target.y)
       text[#text+1] = Action.target_level_text(chara, target)
       text[#text+1] = I18N.get("action.target.you_are_targeting", target, dist)
@@ -318,18 +333,21 @@ function Action.target_text(chara, x, y, visible_only)
 
    local item = Item.at(x, y):nth(1)
    if item then
-      text[#text+1] = Action.target_item_text(item)
+      text[#text+1] = Action.target_item_text(x, y)
    end
 
    local feat = Feat.at(x, y):nth(1)
    if feat then
-      text[#text+1] = Action.target_feat_text(feat)
+      for _, t in Action.target_feat_texts(x, y) do
+         text[#text+1] = t
+      end
    end
 
    return text, true
 end
 
 function Action.build_target_list(chara)
+   -- >>>>>>>> shade2/command.hsp:251 		rc=-1 ...
    local Effect = require("mod.elona.api.Effect") -- TODO move
 
    local filter = function(other)
@@ -344,7 +362,7 @@ function Action.build_target_list(chara)
             return false
          end
 
-         if not Effect.is_visible(other) then
+         if not Effect.is_visible(other, chara) then
             return false
          end
 
@@ -363,6 +381,7 @@ function Action.build_target_list(chara)
    table.sort(targets, sort)
 
    return targets
+   -- <<<<<<<< shade2/command.hsp:269 		loop ..
 end
 
 --- @hsp *findTarget

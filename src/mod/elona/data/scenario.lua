@@ -49,10 +49,6 @@ local function start(self, player)
    Map.set_map(your_home)
    save.base.home_map_uid = your_home.uid
 
-   -- >>>>>>>> shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
-   Save.save_game()
-   -- <<<<<<<< shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
-
    -- Load all towns.
    load_towns(north_tyris)
 
@@ -75,6 +71,10 @@ local function start(self, player)
    assert(your_home:take_object(player, pos.x, pos.y))
 
    save.base.should_reset_world_map = true
+
+   -- >>>>>>>> shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
+   Save.save_game()
+   -- <<<<<<<< shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
 
    DeferredEvent.add(function()
          local lomias = Chara.find("elona.lomias", "others")

@@ -749,8 +749,8 @@ return {
          female = "女"
       },
       sex2 = {
-         _0 = "男",
-         _1 = "女"
+         male = "男",
+         female = "女"
       },
       sex3 = {
          female = "女性",

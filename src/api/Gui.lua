@@ -399,8 +399,7 @@ function Gui.mes_c_visible(text, x, y, color, ...)
          Gui.mes_c(text, color, obj, ...)
       end
    else
-      local Map = require("api.Map")
-      if Map.is_in_fov(x, y) then
+      if field.map:is_in_fov(x, y) then
          Gui.mes_c(text, color, ...)
       end
    end
@@ -425,7 +424,7 @@ function Gui.mes_continue_sentence()
 end
 
 function Gui.mes_duplicate()
-   -- TODO
+   field:get_message_window():prevent_next_duplicate()
 end
 
 function Gui.mes_halt()
@@ -443,16 +442,17 @@ end
 --- @tparam id:base.sound sound_id
 --- @tparam[opt] int x
 --- @tparam[opt] int y
+--- @tparam[opt] number volume
 --- @tparam[opt] int channel
-function Gui.play_sound(sound_id, x, y, channel)
+function Gui.play_sound(sound_id, x, y, volume, channel)
    local sound_manager = require("internal.global.global_sound_manager")
    local coords = draw.get_coords()
 
    if config.base.positional_audio and x ~= nil and y ~= nil then
       local sx, sy = coords:tile_to_screen(x, y)
-      sound_manager:play(sound_id, sx, sy, channel)
+      sound_manager:play(sound_id, sx, sy, volume, channel)
    else
-      sound_manager:play(sound_id, nil, nil, channel)
+      sound_manager:play(sound_id, nil, nil, volume, channel)
    end
 end
 
@@ -460,11 +460,14 @@ end
 ---
 --- @tparam string tag
 --- @tparam id:base.sound sound_id
+--- @tparam[opt] int x
+--- @tparam[opt] int y
+--- @tparam[opt] number volume
 --- @see Gui.stop_background_sound
-function Gui.play_background_sound(sound_id, tag)
+function Gui.play_background_sound(sound_id, tag, x, y, volume)
    local sound_manager = require("internal.global.global_sound_manager")
 
-   sound_manager:play_looping(tag, sound_id, "sound")
+   sound_manager:play_looping(tag, sound_id, "sound", x, y, volume)
 end
 
 --- Stops playing a sound that was started with

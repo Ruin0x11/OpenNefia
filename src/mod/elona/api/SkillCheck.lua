@@ -2,6 +2,8 @@ local Gui = require("api.Gui")
 local Skill = require("mod.elona_sys.api.Skill")
 local Rand = require("api.Rand")
 local Pos = require("api.Pos")
+local Item = require("api.Item")
+local Input = require("api.Input")
 
 local SkillCheck = {}
 
@@ -72,6 +74,67 @@ function SkillCheck.try_to_perceive(target, perceiver)
 
    return false
    -- <<<<<<<< shade2/calculation.hsp:1149 	return false ..
+end
+
+--- @hsp *lockpick
+function SkillCheck.try_to_lockpick(chara, item, difficulty)
+   difficulty = difficulty or item.params.chest_lockpick_difficulty
+
+   -- >>>>>>>> shade2/action.hsp:861 *lockpick ...
+   while true do
+      local lockpick = chara:iter_inventory()
+         :filter(function(i) return Item.is_alive(i) and i._id == "elona.lockpick" end)
+         :nth(1)
+
+      if not lockpick then
+         Gui.mes("action.unlock.do_not_have_lockpicks")
+         return false
+      end
+
+      Gui.mes("action.unlock.use_lockpick")
+      Gui.play_sound("base.locked1")
+
+      local skeleton_key = chara:iter_inventory()
+         :filter(function(i) return Item.is_alive(i) and i._id == "elona.skeleton_key" end)
+         :nth(1)
+
+      local power
+      if skeleton_key then
+         power = chara:skill_level("elona.lock_picking") * 150 / 100 + 5
+         Gui.mes("action.unlock.use_skeleton_key")
+      else
+         power = chara:skill_level("elona.lock_picking")
+      end
+
+      local failed = false
+      if power * 2 < difficulty then
+         Gui.mes("action.unlock.too_difficult")
+         failed = true
+      elseif power / 2 >= difficulty then
+         Gui.mes("action.unlock.easy")
+      elseif Rand.rnd(Rand.rnd(power * 2)+1) < difficulty then
+         Gui.mes("action.unlock.fail")
+         failed = true
+      end
+
+      if failed then
+         if Rand.one_in(3) then
+            Gui.mes("action.unlock.lockpick_breaks")
+            lockpick:remove(1)
+         end
+         Gui.mes("action.unlock.try_again")
+         if not Input.yes_no() then
+            return false
+         end
+      else
+         break
+      end
+   end
+
+   Gui.mes("action.unlock.succeed")
+   Skill.gain_skill_exp(chara, "elona.lock_picking", 100)
+   return true
+   -- <<<<<<<< shade2/action.hsp:886 	return true ..
 end
 
 return SkillCheck

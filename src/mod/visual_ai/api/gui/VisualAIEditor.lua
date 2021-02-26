@@ -25,7 +25,7 @@ function VisualAIEditor:init(plan, opts)
    self.last_category = nil
    self.interactive = opts.interactive
 
-   self.win = UiWindow:new("Visual AI", true)
+   self.win = UiWindow:new("visual_ai.gui.menu.title", true)
    self.grid = VisualAIPlanGrid:new(self.plan)
    self.trail = VisualAIPlanTrail:new(self.plan)
 

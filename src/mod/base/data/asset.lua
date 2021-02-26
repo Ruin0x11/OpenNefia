@@ -137,6 +137,14 @@ local assets = {
       height = 24
    },
    {
+      _id = "auto_turn_icon",
+      source = "graphic/interface.bmp",
+      x = 72,
+      y = 392,
+      width = 24,
+      height = 24
+   },
+   {
       _id = "hp_bar_frame",
       source = "graphic/interface.bmp",
       x = 312,
@@ -1165,6 +1173,31 @@ local assets = {
    },
 
    {
+      _id = "auto_turn_mining",
+      image = "graphic/anime1.bmp",
+      count_x = 5
+   },
+   {
+      _id = "auto_turn_fishing",
+      image = "graphic/anime2.bmp",
+      count_x = 3
+   },
+   {
+      _id = "auto_turn_harvesting",
+      image = "graphic/anime3.bmp",
+      count_x = 3
+   },
+   {
+      _id = "auto_turn_searching",
+      source = "graphic/anime4.bmp",
+      x = 0,
+      y = 0,
+      width = 144 * 4,
+      height = 96,
+      count_x = 4,
+   },
+
+   {
       _id = "light_port_light",
       source = "graphic/interface.bmp",
       x = 192,
@@ -1305,6 +1338,11 @@ local assets = {
       _id = "text_list_key_name_shadow",
       type = "color",
       color = {50, 60, 80},
+   },
+   {
+      _id = "text_color_auto_turn",
+      type = "color",
+      color = {235, 235, 235}
    },
    {
       _id = "equip_slot_text_color_empty",

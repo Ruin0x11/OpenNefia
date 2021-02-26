@@ -2,6 +2,8 @@ local data = require("internal.data")
 local Gui = require("api.Gui")
 local Object = require("api.Object")
 local config = require("internal.config")
+local Log = require("api.Log")
+local I18N = require("api.I18N")
 
 local ICharaActivity = class.interface("ICharaActivity")
 
@@ -32,6 +34,9 @@ function ICharaActivity:remove_activity()
       self.activity:cleanup()
    end
    self.activity = nil
+   if self:is_player() then
+      Gui.hud_widget("hud_auto_turn"):widget():set_shown(false)
+   end
 end
 
 function ICharaActivity:finish_activity()
@@ -43,6 +48,7 @@ function ICharaActivity:_proc_activity_interrupted()
    local should_stop = self.activity:proc_interrupted()
 
    if should_stop then
+      Gui.mes_visible("activity.cancel.normal", self.x, self.y, self, I18N.get_optional("activity._." .. self.activity._id .. ".verb") or "activity.default_verb")
       self:remove_activity()
    end
 
@@ -51,16 +57,20 @@ end
 
 function ICharaActivity:pass_activity_turn()
    if self:is_player() then
-      -- TODO the performance of Gui.update_screen() is terrible, so this causes a
-      -- lot of lag. There has to be some amount of optimization we can do.
-      local auto_turn = config.base.auto_turn_speed
-
-      if auto_turn == "high" then
-         Gui.wait(self.activity.animation_wait, true)
-      elseif auto_turn == "normal" then
-         Gui.wait(self.activity.animation_wait)
-      elseif auto_turn == "highest" then
-         -- don't wait at all
+      if self.activity and self.activity.proto.animation_wait > 0 then
+         local auto_turn = config.base.auto_turn_speed
+         local auto_turn_widget = Gui.hud_widget("hud_auto_turn"):widget()
+         if auto_turn == "normal" then
+            -- With screen update
+            Gui.wait(self.activity.proto.anime_wait)
+            auto_turn_widget:pass_turn()
+         elseif auto_turn == "high" then
+            -- No screen update
+            Gui.wait(self.activity.proto.anime_wait, true)
+            auto_turn_widget:pass_turn()
+         elseif auto_turn == "highest" then
+            -- Don't wait at all
+         end
       end
    end
 
@@ -78,12 +88,14 @@ local function make_activity(id, params)
    local obj = Object.generate_from("base.activity", id)
    Object.finalize(obj)
    local activity = data["base.activity"]:ensure(id)
-   for k, v in pairs(params) do
-      local ty = activity.params[k]
-      if ty and type(v) == ty then
-         -- TODO obj.params[k] = v
-         obj[k] = v
+   for property, ty in pairs(activity.params or {}) do
+      local value = params[property]
+      -- everything is implicitly optional for now, until we get a better
+      -- typechecker
+      if value ~= nil and type(value) ~= ty then
+         error(("Activity %s requires parameter '%s' of type %s, got '%s'"):format(id, property, ty, tostring(value)))
       end
+      obj[property] = value
    end
    return obj
 end
@@ -113,10 +125,20 @@ function ICharaActivity:start_activity(id, params, turns)
 
    self.activity.turns = math.floor(self.activity.turns)
 
-   local ok, result = pcall(self.activity.start, self.activity, self)
+   local ok, result = xpcall(self.activity.start, debug.traceback, self.activity, self)
 
    if not ok or result == "stop" then
       self:remove_activity()
+      if not ok then
+         Log.error("Error starting activity: %s", result)
+      end
+   end
+
+   if self:is_player() and not config.base.disable_auto_turn_anim then
+      if self.activity.proto.animation_wait > 0 then
+         local auto_turn_anim_id = self.activity.proto.auto_turn_anim or nil
+         Gui.hud_widget("hud_auto_turn"):widget():set_shown(true, auto_turn_anim_id)
+      end
    end
 end
 

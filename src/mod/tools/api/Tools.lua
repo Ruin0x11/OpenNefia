@@ -690,7 +690,8 @@ end
 function Tools.goto_area(area_archetype_id, floor)
    local area
    if not Area.is_created(area_archetype_id) then
-      area = Area.create_unique(area_archetype_id, Area.current() or "root")
+      local cur = Area.current()
+      area = Area.create_unique(area_archetype_id, (cur and cur.uid) or "root")
       area.parent_x = Chara.player().x
       area.parent_y = Chara.player().y
    else
@@ -1034,10 +1035,13 @@ local function visit_quest_giver(quest)
    local player = Chara.player()
    local map = player:current_map()
    local client = Chara.find(quest.client_uid, "all", map)
-   assert(client)
-   Magic.cast("elona.shadow_step", {source=player, target=client})
-   if Chara.is_alive(client) then
-      Dialog.start(client, "elona.quest_giver:quest_about")
+   if client then
+      Magic.cast("elona.shadow_step", {source=player, target=client})
+      if Chara.is_alive(client) then
+         Dialog.start(client, "elona.quest_giver:quest_about")
+      end
+   else
+      Log.warn("Couldn't visit client")
    end
 end
 
@@ -1073,6 +1077,11 @@ function Tools.chow_down(chara)
    assert(Chara.is_alive(chara))
    local item = Itemgen.create(nil, nil, { categories = "elona.food" }, chara)
    ElonaAction.eat(chara, item)
+end
+
+function Tools.track_skill(skill_id)
+   data["base.skill"]:ensure(skill_id)
+   save.base.tracked_skill_ids[skill_id] = not save.base.tracked_skill_ids[skill_id]
 end
 
 return Tools

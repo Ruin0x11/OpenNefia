@@ -84,6 +84,7 @@ function config_holder:__inspect()
    local options = data["base.config_option"]:iter()
       :filter(Env.mod_filter(self._mod_id))
       :map(format)
+      :into_sorted()
       :foldl(concat)
 
    options = options or " (none)"

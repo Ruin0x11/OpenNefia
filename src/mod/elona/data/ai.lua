@@ -280,7 +280,7 @@ local function train_potential(chara)
       local skill
       for _ = 1, 9999 do
          if Rand.one_in(4) then
-            skill = Rand.choice(Skill.iter_stats())
+            skill = Rand.choice(Skill.iter_attributes())
          else
             skill = Rand.choice(Skill.iter_weapon_proficiencies())
          end
@@ -393,9 +393,13 @@ local function basic_action(chara, params)
    local choice
 
    if choosing_sub_act then
-      choice = Rand.choice(chara.ai_actions.sub or {})
+      if chara.ai_actions.sub then
+         choice = Rand.choice(chara.ai_actions.sub)
+      end
    else
-      choice = Rand.choice(chara.ai_actions.main or {})
+      if chara.ai_actions.main then
+         choice = Rand.choice(chara.ai_actions.main)
+      end
    end
 
    if choice then
@@ -571,7 +575,7 @@ local function decide_ally_idle_action(chara, params)
 end
 
 local function decide_targeted_action(chara, params)
-   -- EVENT: if blocked, proc map events
+   -- >>>>>>>> shade2/ai.hsp:144 		if cBlind(cc)!0	  : if rnd(10)>2 : goto *ai_calm ...
    if chara:has_effect("elona.blindness") then
       if Rand.rnd(10) > 2 then
          return Ai.run("elona.idle_action", chara)
@@ -607,6 +611,7 @@ local function decide_targeted_action(chara, params)
    end
 
    return Ai.run("elona.basic_action", chara)
+   -- <<<<<<<< shade2/ai.hsp:172 		} ..
 end
 
 local function ai_talk(chara, params)

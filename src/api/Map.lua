@@ -32,8 +32,8 @@ function Map.set_map(map, load_type)
    load_type = load_type or "full"
    assert(class.is_an(InstancedMap, map))
    if field.map == map then return end
-   if field.map then
-      Map.clear_debris(field.map)
+   if load_type ~= "continue" then
+      Map.clear_debris(map)
    end
    if load_type ~= "traveled" then
       Gui.mes_clear()
