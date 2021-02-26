@@ -62,6 +62,9 @@ end
 --- @tparam IStackableObject other
 --- @treturn bool
 function IStackableObject:can_stack_with(other)
+   if not class.is_an(IStackableObject, other) then
+      return false
+   end
    return self._type == other._type and self.uid ~= other.uid
 end
 
