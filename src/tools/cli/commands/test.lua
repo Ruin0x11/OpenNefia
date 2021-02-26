@@ -94,6 +94,7 @@ local function run_test(name, test_fn, seed, debug_on_error)
 
    if ok then
       io.write(ansicolors("%{green}.%{reset}"))
+      io.flush()
       return true, nil
    else
       io.write(ansicolors("%{red}F"))
@@ -111,6 +112,8 @@ local function run_test(name, test_fn, seed, debug_on_error)
          print(inspect(table.keys(locals)))
          elona_repl:run()
       end
+
+      io.flush()
 
       return false, result
    end
