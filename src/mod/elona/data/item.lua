@@ -7777,8 +7777,11 @@ local item =
          is_wishable = false,
 
          on_init_params = function(self)
-            self.params.shop_inventory = Inventory:new(200, "base.item", self)
          end,
+
+         container_params = {
+            type = "local"
+         },
 
          on_open = function(self, params)
             -- >>>>>>>> shade2/action.hsp:890 	if iId(ci)=idShopBag{ ...
@@ -7786,8 +7789,10 @@ local item =
 
             Effect.modify_karma(chara, -10)
 
+            -- Only allow taking, not putting. (provide "nil" to inventory group ID)
             Gui.play_sound("base.chest1")
-            error("shop chest")
+            assert(self:is_item_container())
+            Input.query_inventory(chara, "elona.inv_get_container", { container = self.inv, params={query_leftover=true} }, nil)
 
             return "turn_end"
             -- <<<<<<<< shade2/action.hsp:894 		} ..
@@ -16939,7 +16944,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_four_dimensional_power", params)
+            return Magic.read_spellbook(self, "elona.spell_four_dimensional_pocket", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)

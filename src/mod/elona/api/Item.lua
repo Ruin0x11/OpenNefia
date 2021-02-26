@@ -209,7 +209,7 @@ local function init_container(item, params, map)
    local map_level = (map and map:calc("level")) or 1
 
    -- TODO shelter
-   local is_shelter = map._archetype == "elona.shelter"
+   local is_shelter = map and map._archetype == "elona.shelter"
    local item_level = 5 + ((not is_shelter) and 1 or 0) * map_level
 
    local difficulty = Rand.rnd(((not is_shelter) and 1 or 0) * math.abs(map_level) + 1)
@@ -217,12 +217,6 @@ local function init_container(item, params, map)
    item.params.chest_item_level = math.floor(item_level)
    item.params.chest_lockpick_difficulty = difficulty
    item.params.chest_random_seed = Rand.rnd(30000)
-
-   if item.container_params then
-      if item.container_params.type == "local" then
-         item.inv = Inventory:new(nil, "base.item", item)
-      end
-   end
 end
 
 -- >>>>>>>> shade2/item.hsp:697 	if refType=fltFood : if iParam1(ci)!0{ ..
