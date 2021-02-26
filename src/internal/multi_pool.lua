@@ -37,7 +37,6 @@ function multi_pool:take_object(obj, x, y)
    if subpool:take_object(obj, x, y) == nil then
       return nil
    end
-   obj.location = self
 
    self.refs[obj.uid] = subpool:get_object(obj.uid)
    local idx = obj.y*self.width+obj.x+1

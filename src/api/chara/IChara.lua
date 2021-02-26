@@ -655,16 +655,18 @@ end
 function IChara:serialize_nbt(nbt)
    local t = {}
    local function write(name, ty)
-      t[name] = ty(self[name])
+      t[name] = ty(nbt, self[name])
    end
 
-   write("hp", nbt.newInt)
-   write("max_hp", nbt.newInt)
-   write("mp", nbt.newInt)
-   write("max_mp", nbt.newInt)
-   write("stamina", nbt.newInt)
-   write("max_stamina", nbt.newInt)
-   write("gold", nbt.newInt)
+   write("hp", nbt.new_integer)
+   write("max_hp", nbt.new_integer)
+   write("mp", nbt.new_integer)
+   write("max_mp", nbt.new_integer)
+   write("stamina", nbt.new_integer)
+   write("max_stamina", nbt.new_integer)
+   write("gold", nbt.new_integer)
+
+   write("item_to_use", nbt.new_map_object_ref)
 
    ICharaEffects.serialize_nbt_inner(self, nbt, t)
 

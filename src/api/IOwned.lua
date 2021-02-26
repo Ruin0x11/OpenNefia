@@ -12,7 +12,7 @@ function IOwned:remove_ownership(no_events)
          self:emit("base.on_object_removed")
       end
       assert(self.location:remove_object(self))
-      self.location = nil
+      assert(self.location == nil)
    end
 end
 

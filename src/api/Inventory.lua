@@ -110,7 +110,6 @@ function Inventory:take_object(obj)
       return nil
    end
 
-   obj.location = self
    return obj
 end
 

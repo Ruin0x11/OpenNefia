@@ -758,7 +758,6 @@ function InstancedMap:take_object(obj, x, y)
       return nil
    end
    self._multi_pool:take_object(obj, x, y)
-   obj.location = self
    self:refresh_tile(x, y)
    return obj
 end

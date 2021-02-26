@@ -48,9 +48,12 @@ function pool:take_object(obj, x, y)
       obj.location = nil
    end
 
+   -- The following line is the *only* place in the engine besides serialization
+   -- where `location` should get updated manually.
+   obj.location = self
+
    obj.x = x
    obj.y = y
-   obj.location = self
 
    local entry = { data = obj, array_index = #self.uids + 1 }
 

@@ -105,7 +105,6 @@ function EquipSlots:equip(obj, slot)
       return nil, "cannot_own"
    end
 
-   obj.location = self
    self.equipped[obj.uid] = slot
    self.body_parts[slot].equipped = obj.uid
 
