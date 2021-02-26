@@ -101,7 +101,12 @@ function IMapObject:containing_map()
 
    while location ~= nil do
       if class.is_an(InstancedMap, location) then
-         return location, containing
+         local x, y
+         if class.is_an(IMapObject, containing) then
+            x = containing.x
+            y = containing.y
+         end
+         return location, containing, x, y
       end
       containing = location
       if location.get_location then

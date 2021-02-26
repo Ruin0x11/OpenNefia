@@ -128,8 +128,6 @@ function Item.create(id, x, y, params, where)
 
    item.quality = params.quality or Enum.Quality.Bad
 
-   MapObject.finalize(item, gen_params)
-
    if where then
       item = where:take_object(item, x, y)
 
@@ -137,6 +135,8 @@ function Item.create(id, x, y, params, where)
          return nil, "location failed to receive object"
       end
    end
+
+   MapObject.finalize(item, gen_params)
 
    item:instantiate()
    item:emit("base.on_generate", params)

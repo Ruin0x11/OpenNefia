@@ -21,6 +21,8 @@ function MapObject.generate_from(_type, id, UidTracker)
 
    -- class.assert_is_an(IMapObject, data)
 
+   obj:pre_build()
+
    return obj
 end
 
@@ -35,6 +37,8 @@ function MapObject.generate(proto, UidTracker)
    rawset(obj, "uid", uid)
 
    -- class.assert_is_an(IMapObject, obj)
+
+   obj:pre_build()
 
    return obj
 end
@@ -177,7 +181,7 @@ function MapObject.clone(obj, owned, UidTracker, cache, opts)
    local mt = getmetatable(obj)
    setmetatable(new_object, mt)
 
-   local locatoin = obj:get_location()
+   local location = obj:get_location()
    if owned and class.is_an("api.IMapObject", obj) and class.is_an("api.ILocation", location) then
       assert(not preserve_uid, "Cannot preserve UID for owned object")
       -- HACK: This makes cloning characters harder, since the

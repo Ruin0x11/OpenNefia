@@ -94,13 +94,9 @@ end
 function Object.finalize(obj, params)
    params = params or {}
 
-   if not params.no_pre_build then
-      obj:pre_build()
-
-      if not params.no_build then
-         obj:normal_build()
-         obj:finalize(params.build_params)
-      end
+   if not params.no_build then
+      obj:normal_build()
+      obj:finalize(params.build_params)
    end
 end
 

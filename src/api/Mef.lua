@@ -112,7 +112,6 @@ function Mef.create(id, x, y, params, where)
    local gen_params = {
       no_build = params.no_build
    }
-   MapObject.finalize(mef, gen_params)
 
    if where then
       local other_mef = Mef.at(x, y, where)
@@ -131,6 +130,8 @@ function Mef.create(id, x, y, params, where)
       assert(mef:get_location() == where)
       assert(mef:current_map())
    end
+
+   MapObject.finalize(mef, gen_params)
 
    mef:instantiate()
 

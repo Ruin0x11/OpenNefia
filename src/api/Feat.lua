@@ -102,8 +102,6 @@ function Feat.create(id, x, y, params, where)
    }
    local feat = MapObject.generate_from("base.feat", id)
 
-   MapObject.finalize(feat, gen_params)
-
    if where then
       feat = where:take_object(feat, x, y)
 
@@ -113,6 +111,8 @@ function Feat.create(id, x, y, params, where)
       assert(feat:get_location() == where)
       assert(feat:current_map())
    end
+
+   MapObject.finalize(feat, gen_params)
 
    feat:instantiate()
 
