@@ -11,6 +11,34 @@ function ICharaEffects:init()
    self.effect_immunities = {}
 end
 
+function ICharaEffects:serialize_nbt_inner(nbt, t)
+   local effects = {}
+   for effect_id, turns in pairs(self.effects) do
+      effects[effect_id] = nbt.newInt(turns)
+   end
+   t.effects = nbt.newCompound(effects, "effects")
+
+   local effect_immunities = {}
+   for effect_id, is_immune in pairs(self.effect_immunities) do
+      effect_immunities[effect_id] = nbt.newBoolean(is_immune)
+   end
+   t.effect_immunities = nbt.newCompound(effect_immunities, "effect_immunities")
+
+   return t
+end
+
+function ICharaEffects:deserialize_nbt_inner(t)
+   for effect_id, nbt in pairs(t["effects"]:getValue()) do
+      self.effects[effect_id] = nbt:getInteger()
+   end
+
+   for effect_id, nbt in pairs(t["effect_immunities"]:getValue()) do
+      self.effects[effect_id] = nbt:getBoolean()
+   end
+
+   return t
+end
+
 function ICharaEffects:effect_turns(id)
    data["base.effect"]:ensure(id)
 

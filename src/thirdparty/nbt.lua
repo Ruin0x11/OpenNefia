@@ -1298,11 +1298,11 @@ function nbt.newMapObjectCompound(value, name)
    local inner_compound = nbt.newCompound(inner, "inner")
 
    local values = {
-      _type = value._type,
-      _id = value._id,
-      uid = value.uid,
-      x = value.x,
-      y = value.y,
+      _type = nbt.newString(value._type),
+      _id = nbt.newString(value._id),
+      uid = nbt.newLong(value.uid),
+      x = nbt.newInt(value.x),
+      y = nbt.newInt(value.y),
       data = inner_compound
    }
 
@@ -1333,6 +1333,21 @@ function TagClass:getMapObjectCompound()
 	end
 
 	error("attempt to get map object compound of invalid type")
+end
+
+function nbt.newBoolean(v, name)
+   assert(v == true or v == false)
+   return TagClass.new(TAG_BYTE, v and 1 or 0, name)
+end
+
+function TagClass:getBoolean()
+	if
+		self._type == TAG_BYTE
+	then
+       return self:getValue() == 1 and true or false
+	end
+
+	error("attempt to get boolean of invalid type")
 end
 
 return nbt

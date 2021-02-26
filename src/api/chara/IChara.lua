@@ -57,7 +57,7 @@ IChara._type = "base.chara"
 -- Must be available before generation.
 local defaults = {
    level = 1,
-   quality = 2,
+   quality = Enum.Quality.Normal,
 }
 
 --- Initializes the bare minimum values on this character. All
@@ -82,8 +82,6 @@ function IChara:pre_build()
    ICharaActivity.init(self)
    ICharaBuffs.init(self)
    ICharaRoles.init(self)
-
-   self:emit("base.on_pre_build")
 
    self:mod_base_with(defaults, "merge")
 end
@@ -655,15 +653,42 @@ function IChara:iter()
 end
 
 function IChara:serialize_nbt(nbt)
-   return {
-      hp = nbt.newInt(self.hp)
-   }
+   local t = {}
+   local function write(name, ty)
+      t[name] = ty(self[name])
+   end
+
+   write("hp", nbt.newInt)
+   write("max_hp", nbt.newInt)
+   write("mp", nbt.newInt)
+   write("max_mp", nbt.newInt)
+   write("stamina", nbt.newInt)
+   write("max_stamina", nbt.newInt)
+   write("gold", nbt.newInt)
+
+   ICharaEffects.serialize_nbt_inner(self, nbt, t)
+
+   return t
 end
 
 function IChara:deserialize_nbt(t)
-   IObject.init(self)
+   self:pre_build()
 
-   self.hp = t["hp"]:getInteger()
+   local function read(name, ty)
+      self[name] = t[name][ty](t[name])
+   end
+
+   read("hp", "getInteger")
+   read("max_hp", "getInteger")
+   read("mp", "getInteger")
+   read("max_mp", "getInteger")
+   read("stamina", "getInteger")
+   read("max_stamina", "getInteger")
+   read("gold", "getInteger")
+
+   ICharaEffects.deserialize_nbt_inner(self, t)
+
+   return t
 end
 
 return IChara

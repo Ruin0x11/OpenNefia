@@ -11,6 +11,39 @@ function VisualAIPlan:init()
    self.parent = nil
 end
 
+function VisualAIPlan:serialize_nbt(nbt)
+   local function map(block)
+      return nbt.newArbitraryTable({_id = block._id, vars = block._vars}, "block")
+   end
+
+   local blocks = nbt.newList(nbt.TAG_BYTE_ARRAY, fun.iter(self.blocks):map(map):to_list(), "blocks")
+   return {
+      blocks = blocks,
+      subplan_true = self.subplan_true and nbt.newClassCompound(self.subplan_true),
+      subplan_false = self.subplan_false and nbt.newClassCompound(self.subplan_false)
+   }
+end
+
+function VisualAIPlan:deserialize_nbt(t)
+   local function map(n)
+      local block = n:getArbitraryTable()
+      block.proto = data["visual_ai.block"]:ensure(block._id)
+      return block
+   end
+   self.blocks = fun.iter(t["blocks"]:getValue()):map(map):to_list()
+
+   if t["subplan_true"] then
+      self.subplan_true = t["subplan_true"]:getClassCompound()
+      self.subplan_true.parent = self
+   end
+   if t["subplan_false"] then
+      self.subplan_false = t["subplan_false"]:getClassCompound()
+      self.subplan_false.parent = self
+   end
+
+   self.parent = nil
+end
+
 function VisualAIPlan:current_block()
    return self.blocks[#self.blocks]
 end
@@ -446,39 +479,6 @@ function VisualAIPlan:deserialize()
    if self.subplan_false then
       self.subplan_false.parent = self
    end
-end
-
-function VisualAIPlan:serialize_nbt(nbt)
-   local function map(block)
-      return nbt.newArbitraryTable({_id = block._id, vars = block._vars}, "block")
-   end
-
-   local blocks = nbt.newList(nbt.TAG_BYTE_ARRAY, fun.iter(self.blocks):map(map):to_list(), "blocks")
-   return {
-      blocks = blocks,
-      subplan_true = self.subplan_true and nbt.newClassCompound(self.subplan_true),
-      subplan_false = self.subplan_false and nbt.newClassCompound(self.subplan_false)
-   }
-end
-
-function VisualAIPlan:deserialize_nbt(t)
-   local function map(n)
-      local block = n:getArbitraryTable()
-      block.proto = data["visual_ai.block"]:ensure(block._id)
-      return block
-   end
-   self.blocks = fun.iter(t["blocks"]:getValue()):map(map):to_list()
-
-   if t["subplan_true"] then
-      self.subplan_true = t["subplan_true"]:getClassCompound()
-      self.subplan_true.parent = self
-   end
-   if t["subplan_false"] then
-      self.subplan_false = t["subplan_false"]:getClassCompound()
-      self.subplan_false.parent = self
-   end
-
-   self.parent = nil
 end
 
 return VisualAIPlan
