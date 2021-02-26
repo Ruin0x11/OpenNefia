@@ -27,8 +27,6 @@ function IItem:pre_build()
 end
 
 function IItem:normal_build()
-   self.location = nil
-
    self.name = self._id
 
    self.image = self.proto.image
@@ -97,7 +95,7 @@ end
 --- @treturn[opt] IChara
 function IItem:get_owning_chara()
    local IChara = require("api.chara.IChara")
-   local location = self.location
+   local location = self:get_location()
 
    while location ~= nil do
       if class.is_an(IChara, location) then
@@ -186,7 +184,7 @@ end
 
 --- @treturn bool
 function IItem:is_equipped()
-   return class.is_an(EquipSlots, self.location)
+   return class.is_an(EquipSlots, self:get_location())
 end
 
 --- @tparam id:base.body_part body_part_type
@@ -196,7 +194,7 @@ function IItem:slot_equipped_in()
       return nil
    end
 
-   local slot = self.location:equip_slot_of(self)
+   local slot = self:get_location():equip_slot_of(self)
    return slot and slot.type
 end
 
@@ -206,7 +204,7 @@ function IItem:unequip()
       return
    end
 
-   assert(self.location:unequip(self))
+   assert(self:get_location():unequip(self))
 end
 
 -- TODO remove

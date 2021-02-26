@@ -71,19 +71,20 @@ end
 --- IStackableObject:can_stack_with().
 -- @treturn bool
 function IStackableObject:stack(show_message)
-   if not self.location then
-      return false
-   end
-
    local iter
    local did_stack = false
 
-   if self.location:is_positional() then
+   local location = self:get_location()
+   if not location then
+      return false
+   end
+
+   if location:is_positional() then
       -- HACK: really needs a uniform interface. type may need to be a
       -- required parameter.
-      iter = self.location:iter_type_at_pos(self._type, self.x, self.y)
+      iter = location:iter_type_at_pos(self._type, self.x, self.y)
    else
-      iter = self.location:iter()
+      iter = location:iter()
    end
 
    for _, other in iter:unwrap() do

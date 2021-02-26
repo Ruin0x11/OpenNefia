@@ -153,7 +153,7 @@ end
 
 -- Generates all asset overrides from an Elona install. Assumes all files needed
 -- for Elona to run (graphic/, sound/, etc.) are present in the mod's directory.
-function Theme.generate_all_asset_overrides(mod_root_path)
+function Theme.generate_hsp_asset_overrides(mod_root_path)
    return Theme.generate_asset_overrides(mod_root_path)
 end
 

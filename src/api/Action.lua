@@ -185,7 +185,7 @@ end
 --- @treturn[1] bool success
 --- @treturn[2] string turn_result
 function Action.get_from_container(chara, item, amount)
-   return item:emit("base.on_get_item", {chara=chara,amount=amount,source=item.location}, false)
+   return item:emit("base.on_get_item", {chara=chara,amount=amount,source=item:get_location()}, false)
 end
 
 --- @tparam ILocation container

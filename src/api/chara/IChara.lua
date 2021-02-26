@@ -331,8 +331,8 @@ end
 --- @tparam IMapObject other
 --- @treturn b ool true on success.
 function IChara:swap_places(other)
-   local location = self.location
-   if not location or location ~= other.location then
+   local location = self:get_location()
+   if not location or location ~= other:get_location() then
       return false
    end
 
@@ -640,10 +640,6 @@ end
 function IChara:set_emotion_icon(icon, duration)
    self.emotion_icon = icon
    self.emotion_icon_turns = duration or 2
-end
-
-function IChara:iter()
-   return self:iter_items()
 end
 
 return IChara

@@ -45,8 +45,6 @@ function ObjectContainer:take_object(obj)
       return nil, "cannot_own"
    end
 
-   obj.location = self
-
    return obj, nil
 end
 

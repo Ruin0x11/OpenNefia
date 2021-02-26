@@ -1,5 +1,6 @@
 --- @interface IMapObject
 
+local multi_pool = require("internal.multi_pool")
 local IOwned = require("api.IOwned")
 local IObject = require("api.IObject")
 local Log = require("api.Log")
@@ -40,7 +41,8 @@ end
 --- @tparam[opt] bool force
 --- @treturn bool true if succeeded
 function IMapObject:set_pos(x, y, force)
-   local location = self.location
+   local location = self:get_location()
+   print(location)
 
    assert(location:has_object(self))
 
@@ -72,8 +74,9 @@ end
 --- @see IMapObject:containing_map()
 function IMapObject:current_map()
    local InstancedMap = require("api.InstancedMap")
-   if class.is_an(InstancedMap, self.location) then
-      return self.location
+   local location = self:get_location()
+   if class.is_an(InstancedMap, location) then
+      return location
    end
 
    return nil
@@ -93,7 +96,7 @@ end
 --- @see IMapObject:current_map()
 function IMapObject:containing_map()
    local InstancedMap = require("api.InstancedMap")
-   local location = self.location
+   local location = self:get_location()
    local containing = self
 
    while location ~= nil do
@@ -101,7 +104,13 @@ function IMapObject:containing_map()
          return location, containing
       end
       containing = location
-      location = location.location or location._parent
+      if location.get_location then
+         location = location:get_location()
+      elseif location.location then
+         location = location.location
+      else
+         location = location._parent
+      end
    end
 
    return nil

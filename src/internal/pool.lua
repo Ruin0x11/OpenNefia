@@ -7,7 +7,11 @@ local pool = class.class("pool", ILocation, { no_inspect = false })
 -- serialization ID for binser
 pool.__id = "pool"
 
-function pool:init(type_id, width, height)
+function pool:init(type_id, width, height, owner)
+   if owner then
+      -- assert(class.is_an(ILocation, owner))
+      self._parent = owner
+   end
    width = width or 1
    height = height or 1
 
@@ -41,8 +45,9 @@ function pool:take_object(obj, x, y)
    assert(y >= 0 and y < self.height)
 
    -- obj:remove_ownership()
-   if obj.location then
-      if not obj.location:remove_object(obj) then
+   local location = obj:get_location()
+   if location then
+      if not location:remove_object(obj) then
          return nil
       end
       obj.location = nil
@@ -143,6 +148,17 @@ end
 
 function pool:has_object(obj)
    return obj ~= nil and self.content[obj.uid] ~= nil
+end
+
+function pool:serialize()
+end
+
+function pool:deserialize()
+   for _, v in self:iter() do
+      if type(v) == "table" and v._type then
+         v.location = self
+      end
+   end
 end
 
 local function iter(state, index)
