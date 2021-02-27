@@ -1610,3 +1610,13 @@ data:add_type {
    fields = {
    }
 }
+
+data:add_type {
+   name = "equipment_type",
+   fields = {}
+}
+
+data:add_type {
+   name = "loot_type",
+   fields = {}
+}

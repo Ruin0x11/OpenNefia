@@ -214,7 +214,7 @@ function LootDrops.do_drop_held_items(chara, map, items)
    -- <<<<<<<< shade2/item.hsp:144 		iNum(ci)=0 ..
 end
 
-local function make_loot(chance, category, chara, map)
+function LootDrops.make_loot(chance, category, chara, map)
    -- >>>>>>>> shade2/item_data.hsp:87 #define global loot(%%1,%%2=0,%%3=0,%%4=0) if rnd(%%1)= ...
    if Rand.one_in(chance) then
       if type(category) == "table" then
@@ -269,7 +269,7 @@ function LootDrops.calc_loot_drops(chara, map, attacker)
    local drops = {}
 
    local loot = function(chance, category, on_create_cb)
-      local filter = make_loot(chance, category, chara, map)
+      local filter = LootDrops.make_loot(chance, category, chara, map)
       if filter then
          local drop = { filter = filter }
          if on_create_cb then
@@ -295,60 +295,22 @@ function LootDrops.calc_loot_drops(chara, map, attacker)
       chara.gold = chara.gold - gold_amount
    end
 
-   -- TODO externalize
    local eqtype = chara:calc("equipment_type")
 
-   if eqtype == "elona.warrior" then
-      loot(20, "elona.drink")
-   elseif eqtype == "elona.thief" then
-      loot(20, "elona.drink")
-   elseif eqtype == "elona.archer" then
-      loot(20, "elona.drink")
-   elseif eqtype == "elona.mage" then
-      loot(20, "elona.scroll")
-      loot(40, "elona.spellbook")
-   elseif eqtype == "elona.gunner" then
-      loot(20, "elona.drink")
-   elseif eqtype == "elona.war_mage" then
-      loot(50, "elona.spellbook")
+   if eqtype then
+      local proto = data["base.equipment_type"]:ensure(eqtype)
+      if proto.on_drop_loot then
+         proto.on_drop_loot(chara, attacker, drops)
+      end
    end
 
-   -- TODO externalize
    local loot_type = chara:calc("loot_type")
 
-   if loot_type == "elona.humanoid" then
-      loot(40, "elona.drink")
-      loot(40, "elona.scroll")
-      loot(40, Filters.fsetwear)
-      loot(40, Filters.fsetweapon)
-      loot(40, "elona.gold")
-   elseif loot_type == "elona.animal" then
-      loot(40, "elona.remains", LootDrops.make_remains)
-   elseif loot_type == "elona.insect" then
-      loot(40, "elona.remains", LootDrops.make_remains)
-   elseif loot_type == "elona.lich" then
-      loot(10, "elona.equip_ring")
-      loot(10, "elona.equip_neck")
-      loot(20, "elona.spellbook")
-      loot(10, "elona.drink")
-      loot(10, "elona.scroll")
-      loot(20, "elona.container")
-      loot(10, "elona.gold")
-      loot(10, "elona.ore")
-   elseif loot_type == "elona.drake" then
-      loot(5, Filters.fsetwear)
-      loot(5, Filters.fsetweapon)
-      loot(20, "elona.container")
-      loot(4, "elona.gold")
-   elseif loot_type == "elona.animal" then
-      loot(5, Filters.fsetwear)
-      loot(5, Filters.fsetweapon)
-      loot(15, "elona.spellbook")
-      loot(5, "elona.drink")
-      loot(5, "elona.scroll")
-      loot(10, "elona.container")
-      loot(4, "elona.gold")
-      loot(4, "elona.ore")
+   if loot_type then
+      local proto = data["base.loot_type"]:ensure(loot_type)
+      if proto.on_drop_loot then
+         proto.on_drop_loot(chara, attacker, drops)
+      end
    end
 
    loot(40, "elona.remains", LootDrops.make_remains)
