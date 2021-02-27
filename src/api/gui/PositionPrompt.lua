@@ -54,6 +54,26 @@ function PositionPrompt:make_keymap()
          self.target_x = math.min(self.target_x + 1, Map.current():width()-1)
          self:update_target_text()
       end,
+      northwest = function()
+         self.target_x = math.max(self.target_x - 1, 0)
+         self.target_y = math.max(self.target_y - 1, 0)
+         self:update_target_text()
+      end,
+      northeast = function()
+         self.target_x = math.min(self.target_x + 1, Map.current():width()-1)
+         self.target_y = math.max(self.target_y - 1, 0)
+         self:update_target_text()
+      end,
+      southwest = function()
+         self.target_x = math.max(self.target_x - 1, 0)
+         self.target_y = math.min(self.target_y + 1, Map.current():height()-1)
+         self:update_target_text()
+      end,
+      southeast = function()
+         self.target_x = math.min(self.target_x + 1, Map.current():width()-1)
+         self.target_y = math.min(self.target_y + 1, Map.current():height()-1)
+         self:update_target_text()
+      end,
       escape = function()
          self.canceled = true
       end,
@@ -88,6 +108,9 @@ end
 
 function PositionPrompt:next_target()
    local cur = self:current_target_index()
+   if cur == nil then
+      return
+   end
 
    cur = cur + 1
    if cur > #self.targets then
@@ -101,6 +124,9 @@ end
 
 function PositionPrompt:previous_target()
    local cur = self:current_target_index()
+   if cur == nil then
+      return
+   end
 
    cur = cur - 1
    if cur < 1 then

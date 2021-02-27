@@ -5,8 +5,29 @@ local Gui = require("api.Gui")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Chara = require("api.Chara")
+local Item = require("api.Item")
+local Calc = require("mod.elona.api.Calc")
+local Itemgen = require("mod.tools.api.Itemgen")
 
 local eating_effect = require("mod.elona.data.chara.eating_effect")
+
+local function set_equip_spec_slot(kind, id, equip_spec)
+   for _, spec in ipairs(equip_spec) do
+      if spec.kind == kind then
+         spec.category = nil
+         spec._id = id
+         return spec
+      end
+   end
+end
+
+local function find_equip_spec_slot(kind, equip_spec)
+   for _, spec in ipairs(equip_spec) do
+      if spec.kind == kind then
+         return spec
+      end
+   end
+end
 
 local chara = {
    {
@@ -350,6 +371,10 @@ local chara = {
          "elona.spell_magic_dart",
          "elona.spell_chaos_ball",
          "elona.spell_summon_monsters"
+      },
+
+      initial_equipment = {
+         { kind = "elona.primary_weapon", _id = "elona.scythe_of_void" },
       }
    },
    {
@@ -389,6 +414,10 @@ local chara = {
       rarity = 1000,
       coefficient = 400,
       dialog = "elona.orphe",
+
+      initial_equipment = {
+         { kind = "elona.primary_weapon", _id = "elona.mournblade" },
+      }
    },
    {
       _id = "mad_scientist",
@@ -445,7 +474,11 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       rarity = 1000,
       coefficient = 400,
-      dialog = "elona.whom_dwell_in_the_vanity"
+      dialog = "elona.whom_dwell_in_the_vanity",
+
+      initial_equipment = {
+         { kind = "elona.primary_weapon", _id = "elona.ragnarok" },
+      }
    },
    {
       _id = "loyter",
@@ -561,6 +594,25 @@ local chara = {
          "elona.buff_boost"
       },
 
+      initial_equipment = {
+         { kind = "elona.primary_weapon", _id = "elona.claymore", is_two_handed = true },
+      },
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         -- >>>>>>>> shade2/chara.hsp:330 	if (cId(rc)=351)or(cId(rc)=352){ ...
+         for _ = 1, 6 do
+            local item = Item.create("elona.tomato", nil, nil, {no_stack = true}, self)
+            if item then
+               item.amount = item.amount + Rand.rnd(4)
+               if Rand.one_in(2) then
+                  item.spoilage_date = -1
+                  item.image = "elona.item_rotten_food"
+               end
+            end
+         end
+         -- <<<<<<<< shade2/chara.hsp:334 	} ..
+      end,
+
       on_drop_loot = function(self, _, drops)
          -- >>>>>>>> shade2/item.hsp:392 	if (cId(rc)=351)or(cId(rc)=352){ ...
          for _ = 1, 12 do
@@ -597,6 +649,21 @@ local chara = {
       ai_actions = {
          calm_action = "elona.calm_special"
       },
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         -- >>>>>>>> shade2/chara.hsp:330 	if (cId(rc)=351)or(cId(rc)=352){ ...
+         for _ = 1, 6 do
+            local item = Item.create("elona.tomato", nil, nil, {no_stack = true}, self)
+            if item then
+               item.amount = item.amount + Rand.rnd(4)
+               if Rand.one_in(2) then
+                  item.spoilage_date = -1
+                  item.image = "elona.item_rotten_food"
+               end
+            end
+         end
+         -- <<<<<<<< shade2/chara.hsp:334 	} ..
+      end,
 
       on_drop_loot = function(self, _, drops)
          -- >>>>>>>> shade2/item.hsp:392 	if (cId(rc)=351)or(cId(rc)=352){ ...
@@ -657,7 +724,11 @@ local chara = {
       },
       skills = {
          "elona.spell_nerve_arrow"
-      }
+      },
+
+      initial_equipment = {
+         { kind = "elona.primary_weapon", _id = "elona.claymore", is_two_handed = true },
+      },
    },
    {
       _id = "lomias",
@@ -1377,6 +1448,14 @@ local chara = {
       fltselect = Enum.FltSelect.Town,
       coefficient = 400,
       always_drops_gold = true,
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         -- >>>>>>>> shade2/chara.hsp:173 	if cId(rc)=9 	: if rnd(120)=0	:eqAmulet1	=705	;be ...
+         if Rand.one_in(120) then
+            set_equip_spec_slot("elona.amulet", "elona.beggars_pendant", equip_spec)
+         end
+         -- <<<<<<<< shade2/chara.hsp:173 	if cId(rc)=9 	: if rnd(120)=0	:eqAmulet1	=705	;be ..
+      end
    },
    {
       _id = "farmer",
@@ -1461,7 +1540,22 @@ local chara = {
       coefficient = 400,
       ai_actions = {
          calm_action = "elona.calm_special"
-      }
+      },
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         -- >>>>>>>> shade2/chara.hsp:326 	if cId(rc)=326{	;bard ...
+         if Rand.one_in(150) then
+            Item.create("elona.stradivarius", nil, nil, {}, self)
+         else
+            local filter = {
+               level = Calc.calc_object_level(self:calc("level"), self:current_map()),
+               quality = Calc.calc_object_quality(),
+               categories = "elona.furniture_instrument"
+            }
+            Itemgen.create(nil, nil, filter, self)
+         end
+         -- <<<<<<<< shade2/chara.hsp:328 		} ..
+      end
    },
    {
       _id = "sister",
@@ -1689,6 +1783,14 @@ local chara = {
       fltselect = Enum.FltSelect.TownSp,
       rarity = 2000,
       coefficient = 400,
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         -- >>>>>>>> shade2/chara.hsp:174 	if cId(rc)=274 	: if rnd(100)=0	:eqRange	=718	;lo ...
+         if Rand.one_in(100) then
+            set_equip_spec_slot("elona.ranged_weapon", "elona.shenas_panty", equip_spec)
+         end
+         -- <<<<<<<< shade2/chara.hsp:174 	if cId(rc)=274 	: if rnd(100)=0	:eqRange	=718	;lo ..
+      end
    },
    {
       _id = "mage_guild_member",
@@ -2547,7 +2649,19 @@ local chara = {
       eqmultiweapon = 2,
       coefficient = 400,
       ai_distance = 1,
-      ai_move_chance = 90
+      ai_move_chance = 90,
+
+      initial_equipment = {
+         { kind = "elona.multi_weapon", _id = "elona.dagger", quality = Enum.Quality.Normal },
+      },
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         -- >>>>>>>> shade2/chara.hsp:178 	if (cId(rc)=309)or(cId(rc)=310)or(cId(rc)=311) :  ...
+         if Rand.one_in(600) then
+            set_equip_spec_slot("elona.amulet", "elona.twin_edge", equip_spec)
+         end
+         -- <<<<<<<< shade2/chara.hsp:178 	if (cId(rc)=309)or(cId(rc)=310)or(cId(rc)=311) :  ..
+      end
    },
    {
       _id = "mitra",
@@ -2563,7 +2677,19 @@ local chara = {
       eqmultiweapon = 266,
       coefficient = 400,
       ai_distance = 1,
-      ai_move_chance = 90
+      ai_move_chance = 90,
+
+      initial_equipment = {
+         { kind = "elona.multi_weapon", _id = "elona.wakizashi", quality = Enum.Quality.Normal },
+      },
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         -- >>>>>>>> shade2/chara.hsp:178 	if (cId(rc)=309)or(cId(rc)=310)or(cId(rc)=311) :  ...
+         if Rand.one_in(600) then
+            set_equip_spec_slot("elona.amulet", "elona.twin_edge", equip_spec)
+         end
+         -- <<<<<<<< shade2/chara.hsp:178 	if (cId(rc)=309)or(cId(rc)=310)or(cId(rc)=311) :  ..
+      end
    },
    {
       _id = "varuna",
@@ -2579,7 +2705,19 @@ local chara = {
       eqmultiweapon = 224,
       coefficient = 400,
       ai_distance = 1,
-      ai_move_chance = 90
+      ai_move_chance = 90,
+
+      initial_equipment = {
+         { kind = "elona.multi_weapon", _id = "elona.katana", quality = Enum.Quality.Normal },
+      },
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         -- >>>>>>>> shade2/chara.hsp:178 	if (cId(rc)=309)or(cId(rc)=310)or(cId(rc)=311) :  ...
+         if Rand.one_in(600) then
+            set_equip_spec_slot("elona.amulet", "elona.twin_edge", equip_spec)
+         end
+         -- <<<<<<<< shade2/chara.hsp:178 	if (cId(rc)=309)or(cId(rc)=310)or(cId(rc)=311) :  ..
+      end
    },
    {
       _id = "wizard",
@@ -2944,6 +3082,10 @@ local chara = {
          "elona.buff_death_word"
       },
 
+      initial_equipment = {
+         { kind = "elona.primary_weapon", _id = "elona.scythe", quality = Enum.Quality.Normal, is_two_handed = true },
+      },
+
       on_drop_loot = function(self, _, drops)
          -- >>>>>>>> shade2/item.hsp:361 	if (cId(rc)=307)or(cId(rc)=308){	;executioner ...
          if Rand.one_in(150) then
@@ -2987,6 +3129,10 @@ local chara = {
          "elona.buff_death_word"
       },
 
+      initial_equipment = {
+         { kind = "elona.primary_weapon", _id = "elona.scythe", quality = Enum.Quality.Normal },
+      },
+
       on_drop_loot = function(self, _, drops)
          -- >>>>>>>> shade2/item.hsp:361 	if (cId(rc)=307)or(cId(rc)=308){	;executioner ...
          if Rand.one_in(150) then
@@ -3011,7 +3157,14 @@ local chara = {
       coefficient = 400,
       flags = { "IsSuitableForMount" },
       ai_distance = 2,
-      ai_move_chance = 30
+      ai_move_chance = 30,
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         local spec = find_equip_spec_slot("elona.primary_weapon", equip_spec)
+         if spec then
+            spec.is_two_handed = true
+         end
+      end
    },
    {
       _id = "fire_hound",
@@ -3987,7 +4140,14 @@ local chara = {
       skills = {
          "elona.action_draw_shadow",
          "elona.buff_mist_of_frailness"
-      }
+      },
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         local spec = find_equip_spec_slot("elona.primary_weapon", equip_spec)
+         if spec then
+            spec.is_two_handed = true
+         end
+      end
    },
    {
       _id = "ghost",
@@ -5363,7 +5523,14 @@ local chara = {
       coefficient = 400,
       flags = { "IsImmuneToFear" },
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         local spec = find_equip_spec_slot("elona.primary_weapon", equip_spec)
+         if spec then
+            spec.is_two_handed = true
+         end
+      end
    },
    {
       _id = "missionary_of_darkness",
@@ -5473,7 +5640,14 @@ local chara = {
          }
       },
       ai_distance = 2,
-      ai_move_chance = 30
+      ai_move_chance = 30,
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         local spec = find_equip_spec_slot("elona.primary_weapon", equip_spec)
+         if spec then
+            spec.is_two_handed = true
+         end
+      end
    },
    {
       _id = "queen",
@@ -5671,6 +5845,13 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 80,
 
+      on_initialize_equipment = function(self, _, equip_spec)
+         local spec = find_equip_spec_slot("elona.primary_weapon", equip_spec)
+         if spec then
+            spec.is_two_handed = true
+         end
+      end,
+
       on_drop_loot = function(self, _, drops)
          -- TODO dedup
          -- >>>>>>>> shade2/item.hsp:358 	if (cId(rc)>=302)and(cId(rc)<=305){	;robbers ...
@@ -5701,6 +5882,14 @@ local chara = {
       },
       ai_distance = 1,
       ai_move_chance = 50,
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         -- >>>>>>>> shade2/chara.hsp:179 	if cId(rc)=304 	: if rnd(250)=0	:eqAmulet1 	=722	 ...
+         if Rand.one_in(250) then
+            set_equip_spec_slot("elona.amulet", "elona.arbalest", equip_spec)
+         end
+         -- <<<<<<<< shade2/chara.hsp:179 	if cId(rc)=304 	: if rnd(250)=0	:eqAmulet1 	=722	 ..
+      end,
 
       on_drop_loot = function(self, _, drops)
          -- TODO dedup
@@ -5871,7 +6060,19 @@ local chara = {
       coefficient = 400,
       eqrange = 210,
       ai_distance = 3,
-      ai_move_chance = 25
+      ai_move_chance = 25,
+
+      initial_equipment = {
+         { kind = "elona.ranged_weapon", _id = "elona.stone" },
+      },
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         -- >>>>>>>> shade2/chara.hsp:175 	if cId(rc)=163 	: if rnd(200)=0	:eqRange 	=716	;r ...
+         if Rand.one_in(200) then
+            set_equip_spec_slot("elona.ranged_weapon", "elona.vanilla_rock", equip_spec)
+         end
+         -- <<<<<<<< shade2/chara.hsp:175 	if cId(rc)=163 	: if rnd(200)=0	:eqRange 	=716	;r ..
+      end
    },
    {
       _id = "cat",
@@ -6146,7 +6347,11 @@ local chara = {
       coefficient = 400,
       eqrange = 210,
       ai_distance = 2,
-      ai_move_chance = 70
+      ai_move_chance = 70,
+
+      initial_equipment = {
+         { kind = "elona.ranged_weapon", _id = "elona.stone" },
+      },
    },
    {
       _id = "frisia",
@@ -6288,7 +6493,13 @@ local chara = {
       ai_move_chance = 80,
       skills = {
          "elona.buff_boost"
-      }
+      },
+
+      initial_equipment = {
+         { kind = "elona.primary_weapon", _id = "elona.long_sword" },
+         { kind = "elona.ranged_weapon", _id = "elona.rail_gun" },
+         { kind = "elona.ammo", category = "elona.equip_ammo_energy_cell", quality = Enum.Quality.Good },
+      },
    },
    {
       _id = "azzrssil",
@@ -6541,7 +6752,16 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       unarmed_element_id = "elona.cut",
-      unarmed_element_power = 100
+      unarmed_element_power = 100,
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         -- TODO dedup
+         -- >>>>>>>> shade2/chara.hsp:176 	if (cId(rc)=186)or(cId(rc)=187)or(cId(rc)=188) :  ...
+         if Rand.one_in(800) then
+            set_equip_spec_slot("elona.girdle", "elona.crimson_plate", equip_spec)
+         end
+         -- <<<<<<<< shade2/chara.hsp:176 	if (cId(rc)=186)or(cId(rc)=187)or(cId(rc)=188) :  ..
+      end
    },
    {
       _id = "blade_alpha",
@@ -6558,7 +6778,16 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       unarmed_element_id = "elona.cut",
-      unarmed_element_power = 120
+      unarmed_element_power = 120,
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         -- TODO dedup
+         -- >>>>>>>> shade2/chara.hsp:176 	if (cId(rc)=186)or(cId(rc)=187)or(cId(rc)=188) :  ...
+         if Rand.one_in(800) then
+            set_equip_spec_slot("elona.girdle", "elona.crimson_plate", equip_spec)
+         end
+         -- <<<<<<<< shade2/chara.hsp:176 	if (cId(rc)=186)or(cId(rc)=187)or(cId(rc)=188) :  ..
+      end
    },
    {
       _id = "blade_omega",
@@ -6575,7 +6804,16 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       unarmed_element_id = "elona.cut",
-      unarmed_element_power = 150
+      unarmed_element_power = 150,
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         -- TODO dedup
+         -- >>>>>>>> shade2/chara.hsp:176 	if (cId(rc)=186)or(cId(rc)=187)or(cId(rc)=188) :  ...
+         if Rand.one_in(800) then
+            set_equip_spec_slot("elona.girdle", "elona.crimson_plate", equip_spec)
+         end
+         -- <<<<<<<< shade2/chara.hsp:176 	if (cId(rc)=186)or(cId(rc)=187)or(cId(rc)=188) :  ..
+      end
    },
    {
       _id = "kaneda_bike",
@@ -7111,6 +7349,10 @@ local chara = {
       eqweapon1 = 56,
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
+
+      initial_equipment = {
+         { kind = "elona.primary_weapon", _id = "elona.diablo" },
+      },
    },
    {
       _id = "gwen",
@@ -7392,7 +7634,14 @@ local chara = {
       flags = { "IsQuickTempered" },
       dialog = "elona.conery",
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         local spec = find_equip_spec_slot("elona.primary_weapon", equip_spec)
+         if spec then
+            spec.is_two_handed = true
+         end
+      end,
    },
    {
       _id = "thief",
@@ -8222,7 +8471,21 @@ local chara = {
       ai_move_chance = 80,
       skills = {
          "elona.action_insult"
-      }
+      },
+
+      on_initialize_equipment = function(self, _, equip_spec)
+         local spec = find_equip_spec_slot("elona.primary_weapon", equip_spec)
+         if spec then
+            spec.is_two_handed = true
+         end
+
+         -- >>>>>>>> shade2/chara.hsp:177 	if cId(rc)=317 	: if rnd(150)=0	:eqWeapon1 	=719	 ...
+         if Rand.one_in(150) then
+            local spec = set_equip_spec_slot("elona.primary_weapon", "elona.claymore_unique", equip_spec)
+            spec.is_two_handed = true
+         end
+         -- <<<<<<<< shade2/chara.hsp:177 	if cId(rc)=317 	: if rnd(150)=0	:eqWeapon1 	=719	 ..
+      end
    },
    {
       _id = "big_daddy",
@@ -8249,7 +8512,12 @@ local chara = {
       eqammo = { 25020, 3 },
       eqrange = { 496, 4 },
       ai_distance = 3,
-      ai_move_chance = 25
+      ai_move_chance = 25,
+
+      initial_equipment = {
+         { kind = "elona.ranged_weapon", _id = "elona.shot_gun", quality = Enum.Quality.Great },
+         { kind = "elona.ammo", category = "elona.equip_ammo_bullet", quality = Enum.Quality.Good },
+      },
    },
    {
       _id = "little_sister",

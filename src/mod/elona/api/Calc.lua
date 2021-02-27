@@ -10,16 +10,20 @@ local Const = require("api.Const")
 local Calc = {}
 
 function Calc.calc_object_level(base, map)
-   assert(class.is_an(InstancedMap, map), "Map must be provided")
-
    local ret = base or 0
    if base <= 0 then
-      ret = map:calc("level")
+      if map then
+         ret = map:calc("level")
+      else
+         ret = 1
+      end
    end
 
-   local map_base = map:calc("base_object_level")
-   if map_base then
-      ret = map_base
+   if map then
+      local map_base = map:calc("base_object_level")
+      if map_base then
+         ret = map_base
+      end
    end
 
    for i=1, 3 do
@@ -38,12 +42,12 @@ function Calc.calc_object_level(base, map)
 end
 
 function Calc.calc_object_quality(quality)
-   assert(Enum.Quality:has_value(quality))
-
-   local ret = quality or 2
+   local ret = quality or Enum.Quality.Normal
    if ret == 0 then
-      ret = 2
+      ret = Enum.Quality.Normal
    end
+
+   assert(Enum.Quality:has_value(ret))
 
    for i=1, 3 do
       local n = Rand.rnd(30 + i * 5)
