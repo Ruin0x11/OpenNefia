@@ -47,6 +47,7 @@ function pool:take_object(obj, x, y)
    -- obj:remove_ownership()
    local location = obj:get_location()
    if location then
+      print(location)
       if not location:remove_object(obj) then
          return nil
       end

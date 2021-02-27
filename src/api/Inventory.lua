@@ -106,11 +106,7 @@ function Inventory:take_object(obj)
       return nil
    end
 
-   if not self.pool:take_object(obj) then
-      return nil
-   end
-
-   return obj
+   return self.pool:take_object(obj)
 end
 
 return Inventory

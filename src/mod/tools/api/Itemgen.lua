@@ -97,7 +97,7 @@ function Itemgen.random_item_id_raw(objlv, categories)
    end
 
    if sampler:len() == 0 then
-      Log.warn("No item generation candidates found for parameters: %d %s", objlv, inspect(categories))
+      Log.warn("No item generation candidates found for parameters: %d %s\n%s", objlv, inspect(categories), debug.traceback())
    end
 
    return sampler:sample()

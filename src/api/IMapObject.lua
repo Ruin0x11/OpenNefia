@@ -42,7 +42,6 @@ end
 --- @treturn bool true if succeeded
 function IMapObject:set_pos(x, y, force)
    local location = self:get_location()
-   print(location)
 
    assert(location:has_object(self))
 

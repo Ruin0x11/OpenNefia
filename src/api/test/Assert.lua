@@ -21,13 +21,13 @@ function Assert.not_eq(lhs, rhs)
 end
 
 function Assert.gt(expected, actual)
-   if expected <= actual then
+   if actual <= expected then
       error(("expected '%s' > '%s'"):format(expected, actual))
    end
 end
 
 function Assert.lt(expected, actual)
-   if expected >= actual then
+   if actual >= expected then
       error(("expected '%s' < '%s'"):format(expected, actual))
    end
 end

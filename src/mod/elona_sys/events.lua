@@ -179,7 +179,8 @@ end
 local function show_damage_text(chara, weapon, target, damage_level, was_killed,
                                 tense, no_attack_text, element, extra_attacks,
                                 is_third_person)
-   if not Map.is_in_fov(target.x, target.y) then
+   local map = target:current_map()
+   if not map:is_in_fov(target.x, target.y) then
       return
    end
 
@@ -337,7 +338,7 @@ Event.register("base.on_kill_chara", "Damage text and kill handling", function(c
                         local cb = Anim.death(chara.x, chara.y, "base.death_blood", params.element and params.element._id)
                         Gui.start_draw_callback(cb)
                      end
-                     Map.spill_blood(chara.x, chara.y, 4)
+                     Map.spill_blood(chara.x, chara.y, 4, chara:current_map())
                   end
                   Gui.update_screen()
                   -- <<<<<<<< shade2/chara_func.hsp:1661 			} ..
