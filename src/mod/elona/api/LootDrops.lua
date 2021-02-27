@@ -188,7 +188,7 @@ function LootDrops.calc_dropped_held_items(chara)
    local pred = function(item)
       return LootDrops.should_drop_item(item, chara)
    end
-   return chara:iter_items():filter(pred):to_list()
+   return chara:iter_items():filter(pred):map(function(item) return { item = item, remove = false } end):to_list()
 end
 
 function LootDrops.do_drop_held_items(chara, map, items)
@@ -376,6 +376,13 @@ function LootDrops.calc_loot_drops(chara, map, attacker)
          -- is changed, not the figure/card itself. (so not item.color)
          item.params.chara_color = table.deepcopy(chara_color)
 
+         if chara.proto.image then
+            local chip = data["base.chip"]:ensure(chara.proto.image)
+            if chip.is_tall then
+               item.image = "elona.item_figurine_tall"
+            end
+         end
+
          item:refresh_cell_on_map()
       end
 
@@ -386,7 +393,7 @@ function LootDrops.calc_loot_drops(chara, map, attacker)
       end
 
       if should_drop_figure(quality) then
-         drops[#drops+1] = { _id = "elona.figure", on_create = set_figure_params }
+         drops[#drops+1] = { _id = "elona.figurine", on_create = set_figure_params }
       end
    end
    -- <<<<<<<< shade2/item.hsp:296 		} ..
