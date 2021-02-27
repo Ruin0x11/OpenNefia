@@ -1332,6 +1332,19 @@ do
       -- <<<<<<<< shade2/ai.hsp:90 		} ..
    end
    Event.register("elona.on_default_ai_action", "Target fire giant if escaped", target_fire_giant)
+
+   local function prevent_tourist_loot(chara, _, blocked)
+      -- >>>>>>>> shade2/item.hsp:154 	if gArea=areaNoyel{ ...
+      local map = chara:current_map()
+      if map and map._archetype == "elona.noyel" then
+         if chara._id == "elona.tourist" or chara._id == "elona.palmian_elite_soldier" then
+            blocked = true
+         end
+      end
+      return blocked
+      -- <<<<<<<< shade2/item.hsp:157 	} ..
+   end
+   Event.register("elona.before_chara_drop_items", "Prevent loot drops from citizens and soldiers in Noyel", prevent_tourist_loot)
 end
 
 do

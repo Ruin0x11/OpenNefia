@@ -689,7 +689,7 @@ local item_chips = {
    { elona_id = 333, _id = "book" },
    { elona_id = 334, _id = "textbook" },
    { elona_id = 335, _id = "blanket" },
-   { elona_id = 336, _id = "_336" },
+   { elona_id = 336, _id = "rotten_food" },
    { elona_id = 337, _id = "jerky" },
    { elona_id = 338, _id = "egg" },
    { elona_id = 339, _id = "bottle_of_milk" },

@@ -13,6 +13,8 @@ local Anim = require("mod.elona_sys.api.Anim")
 local Action = require("api.Action")
 local elona_sys_Magic = require("mod.elona_sys.api.Magic")
 local Enum = require("api.Enum")
+local SkillCheck = require("mod.elona.api.SkillCheck")
+local Log = require("api.Log")
 
 local Magic = {}
 
@@ -75,12 +77,13 @@ end
 local function proc_well_events(well, chara)
    -- >>>>>>>> shade2/proc.hsp:1389 	p=rnd(100) ..
    local event = Rand.rnd(100)
+   Log.error("TODO well")
 
    if not chara:is_player() and Rand.one_in(15) then
       -- Fall into well.
       Gui.mes("action.drink.well.effect.falls.text", chara)
       Gui.mes_c("action.drink.well.effect.falls.dialog", "SkyBlue", chara)
-      if chara:calc("is_floating") and not chara:has_effect("elona.gravity") then
+      if SkillCheck.is_floating(chara) then
          Gui.mes_c("action.drink.well.effect.falls.floats", chara)
       else
          chara:damage_hp(9999, "elona.well")
