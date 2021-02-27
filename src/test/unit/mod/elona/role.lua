@@ -1,3 +1,4 @@
+local ShopInventory = require("mod.elona.api.ShopInventory")
 local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
@@ -19,13 +20,17 @@ function test_wandering_merchant_trunk()
    local items = Item.at(4, 5, map)
    Assert.eq(0, items:length())
 
+   ShopInventory.refresh_shop(merchant)
+   Assert.is_truthy(merchant.shop_inventory)
+   local item_count = merchant.shop_inventory:iter():length()
+   Assert.gt(0, item_count)
+
    merchant:damage_hp(merchant:calc("max_hp")+1)
 
-   Assert.is_truthy(merchant.shop_inventory)
    Assert.eq(0, merchant.shop_inventory:iter():length())
    local trunk = Item.at(4, 5, map):filter(function(i) return i._id == "elona.shopkeepers_trunk" end):nth(1)
    Assert.is_truthy(trunk)
-   Assert.gt(0, trunk:iter():length())
+   Assert.eq(item_count, trunk:iter():length())
 
    for _, item in trunk:iter() do
       Assert.eq(trunk, item:get_location())

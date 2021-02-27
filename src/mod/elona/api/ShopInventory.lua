@@ -228,7 +228,7 @@ end
 -- @tparam IChara shopkeeper
 function ShopInventory.generate(inv_id, shopkeeper)
    local inv = data["elona.shop_inventory"]:ensure(inv_id)
-   local result = Inventory:new(nil, "base.item", shopkeeper)
+   local result = Inventory:new(nil, "base.item", nil) -- will set _parent later
 
    -- Determine how many items to create. Shops can also adjust the
    -- amount with a formula.
@@ -318,6 +318,7 @@ function ShopInventory.refresh_shop(shopkeeper)
    local inv_id = role.inventory_id
    local inv_data = data["elona.shop_inventory"]:ensure(inv_id)
    shopkeeper.shop_inventory = ShopInventory.generate(inv_id, shopkeeper)
+   shopkeeper.shop_inventory:set_owner(shopkeeper)
 
    -- >>>>>>>> elona122/shade2/chat.hsp:3564  ..
    local restock_interval = inv_data.restock_interval or 24

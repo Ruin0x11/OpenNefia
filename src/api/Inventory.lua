@@ -19,6 +19,11 @@ function Inventory:init(max_size, type_id, owner)
    self.filters = {}
 end
 
+function Inventory:set_owner(owner)
+   assert(class.is_an(IOwned, owner))
+   self._parent = owner
+end
+
 function Inventory:set_max_size(max_size)
    self.max_size = max_size
 end
