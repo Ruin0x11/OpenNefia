@@ -77,8 +77,12 @@ end
 --- @hsp randomEncP(level)
 function Enchantment.random_enc_power(item, level)
    -- >>>>>>>> shade2/item_data.hsp:489 	#defcfunc randomEncP int refLv ...
+   local has_god_luck = false
    local player = Chara.player()
-   local power = Rand.rnd(Rand.rnd(500 + (player:has_trait("elona.god_luck") and 50 or 0)) + 1) + 1
+   if player then
+      has_god_luck = player:has_trait("elona.god_luck")
+   end
+   local power = Rand.rnd(Rand.rnd(500 + (has_god_luck and 50 or 0)) + 1) + 1
    if (level or 0) ~= 0 then
       power = power * level / 100
    end

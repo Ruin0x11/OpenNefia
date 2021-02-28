@@ -1,5 +1,7 @@
 local env = require("internal.env")
 local IReplMode = require("api.gui.menu.IReplMode")
+local Stopwatch = require("api.Stopwatch")
+local MemoryProfiler = require("api.MemoryProfiler")
 
 local LuaReplMode = class.class("LuaReplMode", IReplMode)
 
@@ -40,7 +42,7 @@ local function trim_traceback(err)
    return new
 end
 
-function LuaReplMode:submit(text)
+function LuaReplMode:submit(text, env, measure_perf)
    -- WARNING: massive backdoor waiting to happen. All someone has to
    -- do is load this API and arbitrary code execution is possible.
    local chunk, err = loadstring("return " .. text)
@@ -55,8 +57,19 @@ function LuaReplMode:submit(text)
 
    setfenv(chunk, self.env)
 
+   local sw, mem
+   if measure_perf then
+      sw = Stopwatch:new("info")
+      mem = MemoryProfiler:new("info")
+   end
+
    -- capture (status, varags...) as a table
    local results = { xpcall(chunk, trim_traceback) }
+
+   if sw and mem then
+      sw:p("Command runtime")
+      mem:p("Command memory usage")
+   end
 
    local ok = results[1]
 

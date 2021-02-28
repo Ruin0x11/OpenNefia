@@ -2,7 +2,7 @@ local Env = require("api.Env")
 local Log = require("api.Log")
 local Stopwatch = class.class("Stopwatch")
 
-function Stopwatch:init(precision, log_level)
+function Stopwatch:init(log_level, precision)
    self.time = Env.get_time()
    self.framerate = 60
    self.precision = precision or 5

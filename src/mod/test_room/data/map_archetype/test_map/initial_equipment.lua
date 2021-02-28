@@ -31,6 +31,10 @@ function initial_equipment.on_generate_map(area, floor)
       local chara = Chara.create(proto._id, 2 + i, 4, nil, map)
       if chara then
          chara.relation = Enum.Relation.Dislike
+
+         for _, item in chara:iter_items() do
+            item.identify_state = Enum.IdentifyState.Full
+         end
       end
       i = i + 1
    end

@@ -4,9 +4,13 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Equipment = require("mod.elona.api.Equipment")
 
 local function initialize_equipment(chara, params, equip_spec)
+   -- NOTE: the 'kind' is unique for each spec entry, so that an earlier spec
+   -- can get overridden by a later one. The order is important to get right so
+   -- that, for example, unique weapons will always override the equipment added
+   -- by e.g. class default equipment.
    if chara.proto.initial_equipment then
-      for _, spec in ipairs(chara.proto.initial_equipment ) do
-         equip_spec[#equip_spec+1] = table.deepcopy(spec)
+      for key, spec in pairs(chara.proto.initial_equipment) do
+         equip_spec[key] = table.deepcopy(spec)
       end
    end
 
@@ -15,18 +19,6 @@ local function initialize_equipment(chara, params, equip_spec)
    end
 end
 Event.register("elona.on_chara_initialize_equipment", "Add special equipment", initialize_equipment)
-
-local function proc_on_drop_loot(chara, params, drops)
-   if chara.proto.on_drop_loot then
-      chara.proto.on_drop_loot(chara, params, drops)
-   end
-end
-Event.register("elona.on_chara_generate_loot_drops", "Run on_drop_loot callback", proc_on_drop_loot)
-
-local function generate_loot(chara, params)
-   LootDrops.drop_loot(chara, params.attacker)
-end
-Event.register("base.on_kill_chara", "Generate loot and drop held items", generate_loot)
 
 local function add_mutant_body_parts(chara, params)
    -- >>>>>>>> shade2/chara.hsp:44 	if cnRace(rc)="mutant"{ ...
@@ -47,3 +39,15 @@ local function generate_initial_equipment(chara, params)
    -- <<<<<<<< shade2/chara.hsp:526 	gosub *chara_initEquip ..
 end
 Event.register("base.on_build_chara", "Generate initial equipment", generate_initial_equipment, { priority = 150000 })
+
+local function proc_on_drop_loot(chara, params, drops)
+   if chara.proto.on_drop_loot then
+      chara.proto.on_drop_loot(chara, params, drops)
+   end
+end
+Event.register("elona.on_chara_generate_loot_drops", "Run on_drop_loot callback", proc_on_drop_loot)
+
+local function generate_loot(chara, params)
+   LootDrops.drop_loot(chara, params.attacker)
+end
+Event.register("base.on_kill_chara", "Generate loot and drop held items", generate_loot)

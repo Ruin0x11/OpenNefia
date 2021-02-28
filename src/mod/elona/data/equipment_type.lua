@@ -49,12 +49,8 @@ end
 
 local function add_equip(equip_spec, kind, category, quality)
    data["base.item_type"]:ensure(category)
-   local spec = {
-      kind = kind,
-      category = category,
-      quality = quality
-   }
-   equip_spec[#equip_spec+1] = spec
+   local spec = { category = category, quality = quality }
+   equip_spec[kind] = spec
    return spec
 end
 
@@ -102,9 +98,9 @@ data:add {
       Effect.generate_money(chara)
 
       add_equip(equip_spec, "elona.primary_weapon", random_mage_weapon(), Enum.Quality.Normal)
-      add_equip(equip_spec, "elona.amulet", "elona.equip_neck_armor", Enum.Quality.Bad)
-      add_equip(equip_spec, "elona.ring", "elona.equip_ring_ring", Enum.Quality.Normal)
-      add_equip(equip_spec, "elona.ring", "elona.equip_ring_ring", Enum.Quality.Bad)
+      add_equip(equip_spec, "elona.amulet_1", "elona.equip_neck_armor", Enum.Quality.Bad)
+      add_equip(equip_spec, "elona.ring_1", "elona.equip_ring_ring", Enum.Quality.Normal)
+      add_equip(equip_spec, "elona.ring_2", "elona.equip_ring_ring", Enum.Quality.Bad)
       if Rand.one_in(gen_chance) then
          add_equip(equip_spec, "elona.armor", "elona.equip_body_robe", Enum.Quality.Bad)
       end
@@ -201,9 +197,9 @@ data:add {
       Effect.generate_money(chara)
 
       add_equip(equip_spec, "elona.primary_weapon", random_mage_weapon(), Enum.Quality.Normal)
-      add_equip(equip_spec, "elona.amulet", "elona.equip_neck_armor", Enum.Quality.Bad)
-      add_equip(equip_spec, "elona.ring", "elona.equip_ring_ring", Enum.Quality.Normal)
-      add_equip(equip_spec, "elona.ring", "elona.equip_ring_ring", Enum.Quality.Bad)
+      add_equip(equip_spec, "elona.amulet_1", "elona.equip_neck_armor", Enum.Quality.Bad)
+      add_equip(equip_spec, "elona.ring_1", "elona.equip_ring_ring", Enum.Quality.Normal)
+      add_equip(equip_spec, "elona.ring_2", "elona.equip_ring_ring", Enum.Quality.Bad)
       if Rand.one_in(gen_chance) then
          add_equip(equip_spec, "elona.armor", "elona.equip_body_mail", Enum.Quality.Bad)
       end
@@ -293,8 +289,7 @@ data:add {
       -- >>>>>>>> shade2/chara.hsp:75 	if cEquipment=eqClaymore{ ...
       Effect.generate_money(chara)
 
-      equip_spec[#equip_spec+1] = {
-         kind = "elona.primary_weapon",
+      equip_spec["elona.primary_weapon"] = {
          _id = "elona.claymore",
          quality = Enum.Quality.Good,
          is_two_handed = true
