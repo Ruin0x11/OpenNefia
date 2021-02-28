@@ -57,6 +57,13 @@ function field_logic.quickstart()
          local me = Chara.create(config.base.quickstart_chara_id, nil, nil, {ownerless=true})
          me:emit("base.on_finalize_player")
          me:emit("base.on_initialize_player")
+
+         -- HACK: We have to apply race/class ourselves as the charamake process
+         -- will assume the GUI will do so
+         local Skill = require("mod.elona_sys.api.Skill")
+         Skill.apply_race_params(me, me.race)
+         Skill.apply_class_params(me, me.class)
+
          field_logic.setup_new_game(me)
    end)
    chara_make.set_is_active_override(false)

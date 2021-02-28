@@ -663,8 +663,10 @@ data:add_multi(
 
          type = "integer",
          default = 100,
-         on_changed = function(v)
-            collectgarbage("setpause", v)
+         on_changed = function(v, startup)
+            if not startup then
+               startup.set_gc_params()
+            end
          end
       },
       {
@@ -672,8 +674,10 @@ data:add_multi(
 
          type = "integer",
          default = 800,
-         on_changed = function(v)
-            collectgarbage("setstepmul", v)
+         on_changed = function(v, startup)
+            if not startup then
+               startup.set_gc_params()
+            end
          end
       }
    }

@@ -62,6 +62,12 @@ function debris_layer:update(dt, screen_updated)
       end
    end
 
+   if self.blood_batch then
+      self.blood_batch:release()
+   end
+   if self.fragment_batch then
+      self.fragment_batch:release()
+   end
    self.blood_batch = self.blood_asset:make_batch(blood_parts)
    self.fragment_batch = self.fragment_asset:make_batch(fragment_parts)
 end

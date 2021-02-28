@@ -851,7 +851,10 @@ function Skill.apply_race_params(chara, race_id)
       end
    end
 
-   chara.age = Rand.between(race_data.age_min, race_data.age_max)
+   chara.age = 1
+   if race_data.age_min or race_data.age_max then
+      chara.age = Rand.between(race_data.age_min or 1, race_data.age_max or 1)
+   end
    if Rand.percent_chance(race_data.male_ratio or 50) then
       chara.gender = "male"
    else

@@ -9,7 +9,7 @@ function is_invisible.on_generate_map(area, floor)
    local map = utils.create_map(20, 20)
    utils.create_stairs(2, 2, area, map)
 
-   Chara.create("elona.puppy", nil, nil, {}, map)
+   Chara.create("elona.greater_pumpkin", 10, 10, {}, map)
 
    return map
 end

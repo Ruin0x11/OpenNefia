@@ -804,19 +804,43 @@ removed.  Return the new string.  If STRING is nil, return nil."
 (defvar open-nefia--repl-name "open-nefia-repl")
 (defvar open-nefia--repl-entrypoint "src/opennefia.lua")
 
+(defun open-nefia--executable-name ()
+  (if (eq system-type 'windows-nt) "./OpenNefia.bat" "./OpenNefia"))
+
+(defun open-nefia--lua-headless-executable-name ()
+  (if (eq system-type 'windows-nt) "luajit.exe" "luajit"))
+
 (defun open-nefia--repl-file (file)
   (string-join (list (projectile-project-root) file)))
 
 (defun open-nefia--test-repl (file)
   (with-current-buffer (get-buffer-create open-nefia--repl-errors-buffer)
     (erase-buffer)
-    (apply 'call-process "luajit" nil
+    (apply 'call-process (open-nefia--lua-headless-executable-name) nil
            (current-buffer)
            nil
            (list (open-nefia--repl-file file) "verify"))))
 
+(defun open-nefia--repl-buffer-name ()
+  (string-join (list "*" open-nefia--repl-name "*")))
+
 (defun open-nefia--repl-buffer ()
-  (get-buffer (string-join (list "*" open-nefia--repl-name "*"))))
+  (get-buffer (open-nefia--repl-buffer-name)))
+
+(defun open-nefia--run-lua (file switches)
+  ;; Windows blocks the process I/O preventing the buffer from ever showing.
+  (if (eq system-type 'windows-nt)
+      (with-current-buffer (get-buffer-create (open-nefia--repl-buffer-name))
+        (erase-buffer)
+        (apply 'call-process (open-nefia--lua-headless-executable-name) nil
+               (current-buffer)
+               nil
+               (append (list (open-nefia--repl-file file)) switches)))
+    (apply 'run-lua (append (list open-nefia--repl-name
+                                  (open-nefia--lua-headless-executable-name)
+                                  nil
+                                  (open-nefia--repl-file file))
+                            switches))))
 
 (defun open-nefia--start-repl-1 (file &rest switches)
   (save-some-buffers (not compilation-ask-about-save)
@@ -832,11 +856,10 @@ removed.  Return the new string.  If STRING is nil, return nil."
           (setq next-error-last-buffer (open-nefia--repl-buffer))
           (pop-to-buffer buffer)
           (comint-goto-process-mark))
-      (let ((result (open-nefia--test-repl open-nefia--repl-entrypoint)))
+      (let ((result (open-nefia--test-repl file)))
         (if (eq result 0)
             (progn
-              (apply 'run-lua (append (list open-nefia--repl-name "luajit" nil (open-nefia--repl-file file))
-                                      switches))
+              (open-nefia--run-lua  file switches)
               (setq next-error-last-buffer (open-nefia--repl-buffer))
               (pop-to-buffer (open-nefia--repl-buffer))
               (setq-local company-backends '(company-etags)))
@@ -877,7 +900,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
     (if func-at-point
         (open-nefia--run-tests
          (format "%s:%s" (file-name-base (buffer-file-name)) (format "^%s$" func-at-point) arg))
-      (message "No function at oint."))))
+      (message "No function at point."))))
 
 (defun open-nefia-run-previous-tests (&optional arg)
   (interactive "P")
@@ -908,7 +931,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (let* ((path (file-relative-name
                 (buffer-file-name)
                 (string-join (list (projectile-project-root) "src"))))
-         (script (if (eq system-type 'windows-nt) "./OpenNefia.bat" "./OpenNefia"))
+         (script (open-nefia--executable-name))
          (cmd (format "%s exec %s %s" script path (if arg "-m" "")))
          (default-directory (projectile-project-root)))
     (compile cmd)))
@@ -918,14 +941,14 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (let* ((path (file-relative-name
                 (buffer-file-name)
                 (string-join (list (projectile-project-root) "src"))))
-         (script (if (eq system-type 'windows-nt) "./OpenNefia.bat" "./OpenNefia"))
+         (script (open-nefia--executable-name))
          (cmd (format "%s exec %s -r %s" script path (if arg "-m" "")))
          (default-directory (projectile-project-root)))
     (compile cmd)))
 
 (defun open-nefia-start-game ()
   (interactive)
-  (let* ((cmd (if (eq system-type 'windows-nt) "./OpenNefia.bat" "./OpenNefia"))
+  (let* ((cmd (open-nefia--executable-name))
          (default-directory (projectile-project-root)))
     (setq compilation-search-path (list nil "src"))
     (compile cmd)))
