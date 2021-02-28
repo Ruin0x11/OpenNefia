@@ -24,6 +24,12 @@ end
 Event.register("base.on_hotload_begin", "Clean up events missing in chunk on hotload", on_hotload_begin, {priority = 1})
 Event.register("base.on_hotload_end", "Clean up events missing in chunk on hotload", on_hotload_end, {priority = 9999999999})
 
+Event.register("base.on_hotload_object", "reload events for object", function(obj)
+                  if class.is_an(IEventEmitter, obj) then
+                     IEventEmitter.on_reload_prototype(obj)
+                  end
+end)
+
 Event.register("base.on_map_loaded", "init all event callbacks",
                function(map)
                   local objs = map:iter():to_list()
