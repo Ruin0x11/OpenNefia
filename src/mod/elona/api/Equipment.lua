@@ -115,7 +115,7 @@ function Equipment.generate_and_equip(chara)
    -- <<<<<<<< shade2/adv.hsp:247 	return ..
 end
 
-function Equipment.generate_random_equipment_spec(chara)
+function Equipment.generate_initial_equipment_spec(chara)
    local quality = chara:calc("quality")
 
    local gen_chance, add_quality
@@ -327,7 +327,7 @@ function Equipment.apply_equipment_spec(chara, equip_spec, gen_chance, add_quali
 end
 
 function Equipment.generate_initial_equipment(chara)
-   local equip_spec, gen_chance, add_quality = Equipment.generate_random_equipment_spec(chara)
+   local equip_spec, gen_chance, add_quality = Equipment.generate_initial_equipment_spec(chara)
    Equipment.apply_equipment_spec(chara, equip_spec, gen_chance, add_quality)
 end
 
