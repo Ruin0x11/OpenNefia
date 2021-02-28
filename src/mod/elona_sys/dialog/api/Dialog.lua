@@ -85,8 +85,9 @@ end
 -- @tparam string text String to display (not locale key)
 -- @tparam table choices List of choices in format {"response_id", "core.locale.key"}
 -- @tparam[opt] int default_choice index of default choice if window is canceled
+-- @tparam[opt] function query_cb Function that returns next node_id and params table
 -- @treturn string Response ID of the choice selected.
-local function query(talk, text, choices, default_choice)
+local function query(talk, text, choices, default_choice, query_cb)
    if #choices == 1 then
       default_choice = 1
    end
@@ -120,20 +121,31 @@ local function query(talk, text, choices, default_choice)
       end
    end
 
+   local node_id, params = query_cb(text, choices, the_choices, default_choice, talk.speaker)
+
+   if Env.is_headless() and Log.has_level("info") then
+      local mes = ("<dialog> %%{blue}(%s)%%{reset}"):format(node_id)
+      print(ansicolors(mes))
+   end
+
+   return node_id, params or {}
+end
+
+local function default_query(text, choices, choice_texts, default_choice, speaker)
    -- >>>>>>>> shade2/chat.hsp:60 	chatVal(1)=false,true ..
    local impression, interest
-   if talk.speaker:calc("quality") < Enum.Quality.Unique then
-      impression = talk.speaker.impression
-      interest = talk.speaker.interest
+   if speaker:calc("quality") < Enum.Quality.Unique then
+      impression = speaker.impression
+      interest = speaker.interest
    end
    -- <<<<<<<< shade2/chat.hsp:61 	if cQuality(tc)=fixUnique:chatVal(1)=cId(tc),fals ..
 
    local menu = DialogMenu:new(text,
-                               the_choices,
-                               speaker_name(talk.speaker),
-                               talk.speaker:calc("portrait"),
-                               talk.speaker:calc("image"),
-                               talk.speaker:calc("color"),
+                               choice_texts,
+                               speaker_name(speaker),
+                               speaker:calc("portrait"),
+                               speaker:calc("image"),
+                               speaker:calc("color"),
                                default_choice,
                                true,
                                impression,
@@ -141,14 +153,7 @@ local function query(talk, text, choices, default_choice)
 
    local result = menu:query()
 
-   if Env.is_headless() and Log.has_level("info") then
-      local mes = ("<dialog> %%{yellow}>> %s %%{blue}(%s)%%{reset}")
-         :format(choices[result][2],
-                 choices[result][1])
-      print(ansicolors(mes))
-   end
-
-   return choices[result][1], choices[result].params or {}
+   return choices[result][1] or default_choice, choices[result].params or {}
 end
 
 --- Initializes the dialog control data.
@@ -236,7 +241,7 @@ local function fully_qualify_node_id(node_id, talk)
    return node_id
 end
 
-local function step_dialog(node_data, talk, state, prev_node_id)
+local function step_dialog(node_data, talk, state, prev_node_id, query_cb)
    node_data.node_id = fully_qualify_node_id(node_data.node_id, talk)
    node_data = Event.trigger("elona_sys.on_step_dialog", {talk=talk,state=state,prev_node_id=prev_node_id}, node_data)
    local prev = node_data.node_id
@@ -399,7 +404,7 @@ local function step_dialog(node_data, talk, state, prev_node_id)
             -- Prompt for choice if on the last text entry or
             -- `next_node` is non-nil, otherwise show single choice.
             if texts[i+1] == nil then
-               local node_id, params = query(talk, tex, choices, default_choice)
+               local node_id, params = query(talk, tex, choices, default_choice, query_cb)
                next_node = {node_id = node_id, params = params}
             else
                query(talk, tex, {{"dummy", choice_key}})
@@ -431,12 +436,13 @@ local function step_dialog(node_data, talk, state, prev_node_id)
    return next_node, prev
 end
 
-function Dialog.start(chara, dialog_id)
+function Dialog.start(chara, dialog_id, query_cb)
    if not Chara.is_alive(chara) then
       return
    end
 
    dialog_id = dialog_id or chara:calc("dialog") or "elona.default"
+   query_cb = query_cb or default_query
 
    local start_node
    local colon_pos = string.find(dialog_id, ":")
@@ -457,7 +463,7 @@ function Dialog.start(chara, dialog_id)
    Gui.play_sound("base.chat")
 
    while next_node ~= nil do
-      next_node, prev_node_id = step_dialog(next_node, talk, state, prev_node_id)
+      next_node, prev_node_id = step_dialog(next_node, talk, state, prev_node_id, query_cb)
    end
 end
 

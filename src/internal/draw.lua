@@ -367,19 +367,22 @@ function draw.set_default_font(font)
 end
 
 local font_cache = setmetatable({}, { __mode = "v" })
-function draw.set_font(size, style, filename)
+function draw.set_font(size, style, hinting_mode, filename)
    if type(size) == "table" then
       filename = size.filename
       style = size.style
+      hinting_mode = size.hinting_mode
       size = size.size
    end
    assert(type(size) == "number")
    style = style or "normal"
+   hinting_mode = hinting_mode or "mono"
    filename = filename or default_font
    if not font_cache[size] then font_cache[size] = setmetatable({}, { __mode = "v" }) end
-   font_cache[size][filename] = font_cache[size][filename]
-      or love.graphics.newFont(filename, size, "mono")
-   love.graphics.setFont(font_cache[size][filename])
+   if not font_cache[size][filename] then font_cache[size][filename] = setmetatable({}, { __mode = "v" }) end
+   font_cache[size][filename][hinting_mode] = font_cache[size][filename][hinting_mode]
+      or love.graphics.newFont(filename, size, hinting_mode)
+   love.graphics.setFont(font_cache[size][filename][hinting_mode])
 end
 
 -- Function called when an error is caught by the main loop.
