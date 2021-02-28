@@ -13,8 +13,12 @@ local Event = require("api.Event")
 
 local theme = {}
 
-function theme.get_tile_size()
+function theme.get_tilemap_tile_size()
    return draw.get_coords():get_size()
+end
+
+function theme.get_tile_size()
+   return 48, 48
 end
 
 local types = {}
@@ -162,7 +166,7 @@ end
 function theme.load_tilemap_tile(map_tiles)
    map_tiles = map_tiles or data["base.map_tile"]:iter():to_list()
 
-   local tw, th = theme.get_tile_size()
+   local tw, th = theme.get_tilemap_tile_size()
 
    local tile_atlas = atlas:new(tw, th)
    tile_atlas:load(map_tiles, draw.get_coords())

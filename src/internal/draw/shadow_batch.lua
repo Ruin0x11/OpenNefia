@@ -65,6 +65,7 @@ end
 
 function shadow_batch:on_theme_switched(atlas, coords)
    self.coords = coords
+   self.tile_width, self.tile_height = coords:get_size()
 
    self.t = UiTheme.load(self)
    self.image = self.t.base.shadow.image
@@ -288,22 +289,22 @@ function shadow_batch:draw(x, y, offx, offy)
    sy = -sy
 
    if x < 0 then
-      ox = 48
+      ox = tw
    elseif x > 0 then
-      if ox == 48 then
+      if ox == tw then
          ox = 0
       end
    end
    if y < 0 then
-      oy = 48
+      oy = th
    elseif y > 0 then
-      if oy == 48 then
+      if oy == th then
          oy = 0
       end
    end
 
-   ox = ox - 48
-   oy = oy - 48
+   ox = ox - tw
+   oy = oy - th
 
    if self.updated then
       local tx, ty, tdx, tdy = self.coords:find_bounds(0, 0, self.width, self.height)
@@ -316,9 +317,9 @@ function shadow_batch:draw(x, y, offx, offy)
          if iy >= -1 and iy <= self.height then
             for ix=tx-1,tdx+1 do
                if ix >= -1 and ix <= self.width then
-                  local tile = self_tiles[ix+1][iy+1]
-                  local i, j = self.coords:tile_to_screen(ix - tx, iy - ty)
-                  self:add_one(tile, i, j)
+                  -- local tile = self_tiles[ix+1][iy+1]
+                  -- local i, j = self.coords:tile_to_screen(ix - tx, iy - ty)
+                  -- self:add_one(tile, i, j)
                end
             end
          end

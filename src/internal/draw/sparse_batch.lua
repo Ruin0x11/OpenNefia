@@ -40,8 +40,8 @@ end
 function sparse_batch:on_theme_switched(atlas, coords)
    self.atlas = atlas
    self.coords = coords
-   self.tile_width = self.atlas.tile_width
-   self.tile_height = self.atlas.tile_height
+   self.tile_width = 48
+   self.tile_height = 48
    self:clear()
 end
 

@@ -4,6 +4,7 @@ local Draw = require("api.Draw")
 local tile_batch = require("internal.draw.tile_batch")
 local save = require("internal.global.save")
 local atlases = require("internal.global.atlases")
+local iso_coords = require("internal.draw.coords.iso_coords")
 
 local tile_overhang_layer = class.class("tile_overhang_layer", IDrawLayer)
 
@@ -98,6 +99,11 @@ function tile_overhang_layer:update(dt, screen_updated)
 end
 
 function tile_overhang_layer:draw_shadows(draw_x, draw_y, offx, offy)
+   -- HACK
+   if class.is_an(iso_coords, self.coords) then
+      return
+   end
+
    local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
 
    Draw.set_blend_mode("subtract")

@@ -6,18 +6,10 @@ function tiled_coords:get_size()
 end
 
 function tiled_coords:get_tiled_width(w)
-   local add = 0
-   if w % 48 ~= 0 then
-      add = 1
-   end
    return math.floor(w / 48) + 1
 end
 
 function tiled_coords:get_tiled_height(h)
-   local add = 0
-   if h % 48 ~= 0 then
-      add = 1
-   end
    return math.floor(h / 48) + 1
 end
 

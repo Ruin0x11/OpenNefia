@@ -9,14 +9,14 @@ function test_Equipment_generate_initial_equipment_spec()
 
    local lomias = Chara.create("elona.lomias", nil, nil, {}, map)
 
-   local spec = Equipment.generate_initial_equipment_spec(lomias)
+   local equip_spec = Equipment.generate_initial_equipment_spec(lomias)
 
    local ids = table.set {
       "elona.long_sword",
       "elona.bow_of_vindale",
    }
 
-   for _, spec in pairs(spec) do
+   for _, spec in pairs(equip_spec) do
       if spec._id and ids[spec._id] then
          ids[spec._id] = nil
       end

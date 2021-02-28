@@ -180,7 +180,7 @@ local tile_size = 48
 function startup.load_batches()
    Log.debug("Loading tile batches.")
 
-   local coords = require("internal.draw.coords.tiled_coords"):new()
+   local coords = require("internal.draw.coords.iso_coords"):new()
    draw.set_coords(coords)
 
    theme.reload_all(progress)
