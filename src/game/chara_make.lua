@@ -18,6 +18,7 @@ chara_make.sections = {
 }
 
 chara_make.wrapper = nil
+local is_active = false
 
 function chara_make.set_caption(text)
    return chara_make.wrapper and chara_make.wrapper:set_caption(text)
@@ -27,8 +28,15 @@ function chara_make.get_in_progress_result()
    return chara_make.wrapper and chara_make.wrapper:get_in_progress_result()
 end
 
+function chara_make.set_is_active_override(_is_active)
+   -- for mocking out CharaMake.is_active(), for special player generation
+   -- behavior like making sure all their equipment is generated uncursed, but
+   -- without going through the charamake GUI (quickstart)
+   is_active = _is_active
+end
+
 function chara_make.is_active()
-   return chara_make.wrapper ~= nil
+   return is_active or chara_make.wrapper ~= nil
 end
 
 function chara_make.query()

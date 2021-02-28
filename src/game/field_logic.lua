@@ -14,6 +14,7 @@ local field = require("game.field")
 local config = require("internal.config")
 local data = require("internal.data")
 local save = require("internal.global.save")
+local chara_make = require("game.chara_make")
 
 local DeathMenu = require("api.gui.menu.DeathMenu")
 
@@ -49,10 +50,20 @@ function field_logic.quickstart()
    assert(config.base.quickstart_scenario)
    assert(save.base.scenario)
 
-   local me = Chara.create(config.base.quickstart_chara_id, nil, nil, {ownerless=true})
-   me:emit("base.on_finalize_player")
-   me:emit("base.on_initialize_player")
-   field_logic.setup_new_game(me)
+   -- We will want to act as if the character making GUI is active, because that
+   -- will force the player's equipment to be generated uncursed.
+   chara_make.set_is_active_override(true)
+   local ok, err = pcall(function()
+         local me = Chara.create(config.base.quickstart_chara_id, nil, nil, {ownerless=true})
+         me:emit("base.on_finalize_player")
+         me:emit("base.on_initialize_player")
+         field_logic.setup_new_game(me)
+   end)
+   chara_make.set_is_active_override(false)
+
+   if not ok then
+      error(err)
+   end
 
    Gui.mes("Quickstarted game.")
 end
