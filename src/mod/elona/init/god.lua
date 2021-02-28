@@ -23,7 +23,7 @@ local function set_god(chara)
    end
 end
 
-Event.register("base.on_normal_build",
+Event.register("base.on_chara_normal_build",
                "Set NPC god", set_god)
 
 local function apply_god_blessing(chara)

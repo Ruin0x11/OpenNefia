@@ -11,12 +11,23 @@ ICharaInventory:delegate("inv",
                            "is_positional",
                            "can_take_object",
                            "is_in_bounds",
-                           "objects_at_pos",
-                           "get_object",
+                           "objects_at_pos"
                         })
 
 function ICharaInventory:iter()
    return self:iter_items()
+end
+
+function ICharaInventory:get_object(uid)
+   local obj = self.inv:get_object(uid)
+   if not obj then
+      obj = self.equip:get_object(uid)
+   end
+   -- HACK see #149
+   if not obj and self.shop_inventory then
+      obj = self.shop_inventory:get_object(uid)
+   end
+   return obj
 end
 
 function ICharaInventory:move_object(obj, x, y)
@@ -24,6 +35,9 @@ function ICharaInventory:move_object(obj, x, y)
       return self.inv:move_object(obj, x, y)
    elseif self.equip:has_object(obj) then
       return self.equip:move_object(obj, x, y)
+   -- HACK see #149
+   elseif self.shop_inventory and self.shop_inventory:has_object(obj) then
+      return self.shop_inventory:move_object(obj, x, y)
    end
    return nil
 end
@@ -33,6 +47,9 @@ function ICharaInventory:remove_object(obj)
       return self.inv:remove_object(obj)
    elseif self.equip:has_object(obj) then
       return self.equip:remove_object(obj)
+   -- HACK see #149
+   elseif self.shop_inventory and self.shop_inventory:has_object(obj) then
+      return self.shop_inventory:remove_object(obj)
    end
    return nil
 end
@@ -41,6 +58,9 @@ function ICharaInventory:has_object(obj)
    if self.inv:has_object(obj) then
       return true
    elseif self.equip:has_object(obj) then
+      return true
+   -- HACK see #149
+   elseif self.shop_inventory and self.shop_inventory:has_object(obj) then
       return true
    end
    return false

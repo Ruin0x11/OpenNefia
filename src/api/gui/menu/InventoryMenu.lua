@@ -403,12 +403,15 @@ function InventoryMenu:update(dt)
    self.result = nil
 
    if self.canceled then
+      self.canceled = false
       if self.returns_item then
          return nil, "canceled"
       end
 
       local result = self:on_menu_exit()
-      return result, "canceled"
+      if result ~= "inventory_continue" then
+         return result, "canceled"
+      end
    end
 
    self.target_equip:update(dt)

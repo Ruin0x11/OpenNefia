@@ -707,6 +707,49 @@ local inv_steal = {
 }
 data:add(inv_steal)
 
+local inv_get_container = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_get_container",
+   elona_id = 22,
+   elona_sub_id = 0,
+
+   sources = { "container" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   window_title = "ui.inventory_command.take",
+   query_text = "ui.inv.title.take",
+
+   can_select = function(ctxt, item)
+      if not can_take(item) then
+         return "turn_end"
+      end
+
+      return true
+   end,
+
+   on_menu_exit = function(ctxt)
+      -- >>>>>>>> shade2/command.hsp:4018 		if invCtrl=22:if invCtrl(1)=0:if listMax>0{ ...
+      local item_count = ctxt.container:iter():length()
+      if item_count > 0 then
+         Gui.mes("ui.inv.take.really_leave")
+         if not Input.yes_no() then
+            return "inventory_continue"
+         end
+      end
+      -- <<<<<<<< shade2/command.hsp:4022 			} ..
+
+      return "player_turn_query"
+   end,
+
+   on_select = function(ctxt, item, amount)
+      local result = Action.get_from_container(ctxt.chara, item, amount)
+
+      return "inventory_continue"
+   end
+}
+data:add(inv_get_container)
+
 local inv_get_four_dimensional_pocket = {
    _type = "elona_sys.inventory_proto",
    _id = "inv_get_four_dimensional_pocket",

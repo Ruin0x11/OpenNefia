@@ -6,8 +6,7 @@ local class = {
       ordering = 10010,
 
       properties = {
-         item_type = 1,
-         equipment_type = 1
+         equipment_type = "elona.warrior"
       },
 
       skills = {
@@ -40,8 +39,7 @@ local class = {
       ordering = 10020,
 
       properties = {
-         item_type = 7,
-         equipment_type = 7
+         equipment_type = "elona.thief"
       },
 
       skills = {
@@ -71,8 +69,7 @@ local class = {
       ordering = 10030,
 
       properties = {
-         item_type = 2,
-         equipment_type = 2
+         equipment_type = "elona.mage"
       },
 
       skills = {
@@ -106,8 +103,7 @@ local class = {
       ordering = 10040,
 
       properties = {
-         item_type = 1,
-         equipment_type = 1
+         equipment_type = "elona.warrior"
       },
 
       skills = {
@@ -141,8 +137,7 @@ local class = {
       is_extra = true,
 
       properties = {
-         item_type = 0,
-         equipment_type = 0
+         equipment_type = nil
       },
 
       skills = {
@@ -163,8 +158,7 @@ local class = {
       ordering = 10050,
 
       properties = {
-         item_type = 3,
-         equipment_type = 3
+         equipment_type = "elona.archer"
       },
 
       skills = {
@@ -194,8 +188,7 @@ local class = {
       ordering = 10060,
 
       properties = {
-         item_type = 5,
-         equipment_type = 5
+         equipment_type = "elona.war_mage"
       },
 
       skills = {
@@ -229,8 +222,7 @@ local class = {
       ordering = 10070,
 
       properties = {
-         item_type = 0,
-         equipment_type = 0
+         equipment_type = nil
       },
 
       skills = {
@@ -252,8 +244,7 @@ local class = {
       ordering = 10080,
 
       properties = {
-         item_type = 3,
-         equipment_type = 3
+         equipment_type = "elona.archer"
       },
 
       skills = {
@@ -286,8 +277,7 @@ local class = {
       is_extra = true,
 
       properties = {
-         item_type = 4,
-         equipment_type = 4
+         equipment_type = "elona.gunner"
       },
 
       skills = {
@@ -312,8 +302,7 @@ local class = {
       ordering = 10090,
 
       properties = {
-         item_type = 6,
-         equipment_type = 6
+         equipment_type = "elona.priest"
       },
 
       skills = {
@@ -347,8 +336,7 @@ local class = {
       ordering = 10100,
 
       properties = {
-         item_type = 8,
-         equipment_type = 8
+         equipment_type = "elona.claymore"
       },
 
       skills = {

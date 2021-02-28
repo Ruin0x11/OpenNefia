@@ -1,3 +1,6 @@
+local Event = require("api.Event")
+local ShopInventory = require("mod.elona.api.ShopInventory")
+
 local role = {
    {
       _id = "shopkeeper",
@@ -120,3 +123,34 @@ local role = {
 }
 
 data:add_multi("base.role", role)
+
+local function find_wandering_merchant_role(chara)
+   local filter = function(role) return role.inventory_id == "elona.wandering_merchant" end
+   return chara:iter_roles("elona.shopkeeper"):filter(filter):nth(1)
+end
+
+local function proc_drop_wandering_merchant_trunk(chara, params, drops)
+   -- >>>>>>>> shade2/item.hsp:298 	if cRole(rc)=cRoleShopWander{ ...
+   local role = find_wandering_merchant_role(chara)
+   if role == nil then
+      return drops
+   end
+
+   if chara.shop_inventory == nil then
+      ShopInventory.refresh_shop(chara)
+   end
+
+   local function on_create(item, chara_)
+      for _, i in chara_.shop_inventory:iter() do
+         assert(item:take_object(i))
+      end
+   end
+
+   drops[#drops+1] = {
+      _id = "elona.shopkeepers_trunk",
+      amount = 1,
+      on_create = on_create
+   }
+   -- <<<<<<<< shade2/item.hsp:301 		} ..
+end
+Event.register("elona.on_chara_generate_loot_drops", "Generate wandering merchant shopkeeper's trunk", proc_drop_wandering_merchant_trunk)

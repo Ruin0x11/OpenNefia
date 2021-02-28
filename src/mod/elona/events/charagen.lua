@@ -139,7 +139,7 @@ local function apply_race_class(chara)
    end
 end
 
-Event.register("base.on_normal_build",
+Event.register("base.on_chara_normal_build",
                "Init race and class", apply_race_class)
 
 local function init_lay_hand(chara)

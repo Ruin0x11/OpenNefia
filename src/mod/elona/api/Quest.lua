@@ -5,6 +5,7 @@ local Gui = require("api.Gui")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Map = require("api.Map")
 local elona_sys_Quest = require("mod.elona_sys.api.Quest")
+local Log = require("api.Log")
 
 local Quest = {}
 
@@ -113,6 +114,11 @@ end
 function Quest.travel_to_previous_map()
    local map = Chara.player():current_map()
    local prev_map_uid, prev_x, prev_y = map:previous_map_and_location()
+   if prev_map_uid == nil then
+      Log.error("Tried to travel to previous map, but there wasn't one set. This might be an error.")
+      return
+   end
+
    Gui.play_sound("base.exitmap1")
    Gui.update_screen()
    local ok, prev_map = assert(Map.load(prev_map_uid))

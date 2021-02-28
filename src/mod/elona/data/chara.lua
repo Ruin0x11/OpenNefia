@@ -4,6 +4,7 @@ local Filters = require("mod.elona.api.Filters")
 local Gui = require("api.Gui")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
+local Chara = require("api.Chara")
 
 local eating_effect = require("mod.elona.data.chara.eating_effect")
 
@@ -12,7 +13,7 @@ local chara = {
       _id = "bug",
       _doc = "bug",
       elona_id = 0,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 1,
       relation = Enum.Relation.Enemy,
       race = "elona.slime",
@@ -23,7 +24,7 @@ local chara = {
    {
       _id = "user",
       elona_id = 343,
-      item_type = 6,
+      loot_type = "elona.lich",
       level = 1,
       relation = Enum.Relation.Neutral,
       race = "elona.god",
@@ -40,7 +41,7 @@ local chara = {
    {
       _id = "shopkeeper",
       elona_id = 1,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 35,
       portrait = "random",
@@ -63,7 +64,7 @@ local chara = {
    {
       _id = "caravan_master",
       elona_id = 353,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 22,
       portrait = "random",
@@ -82,7 +83,7 @@ local chara = {
    {
       _id = "bartender",
       elona_id = 70,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 20,
       portrait = "random",
@@ -103,7 +104,7 @@ local chara = {
    {
       _id = "informer",
       elona_id = 69,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 20,
       portrait = "random",
@@ -124,7 +125,7 @@ local chara = {
    {
       _id = "arena_master",
       elona_id = 73,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 40,
       portrait = "random",
@@ -145,7 +146,7 @@ local chara = {
    {
       _id = "healer",
       elona_id = 74,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 20,
       portrait = "random",
@@ -167,7 +168,7 @@ local chara = {
    {
       _id = "nun",
       elona_id = 206,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 50,
       portrait = "random",
@@ -189,7 +190,7 @@ local chara = {
    {
       _id = "elder",
       elona_id = 38,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 20,
       portrait = "random",
@@ -210,7 +211,7 @@ local chara = {
    {
       _id = "trainer",
       elona_id = 40,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 40,
       portrait = "random",
@@ -231,7 +232,7 @@ local chara = {
    {
       _id = "guild_trainer",
       elona_id = 333,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 69,
       portrait = "random",
@@ -252,7 +253,7 @@ local chara = {
    {
       _id = "guard_port_kapul",
       elona_id = 76,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 40,
       portrait = "random",
@@ -270,7 +271,7 @@ local chara = {
    {
       _id = "guard",
       elona_id = 77,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 40,
       portrait = "random",
@@ -288,7 +289,7 @@ local chara = {
    {
       _id = "palmian_elite_soldier",
       elona_id = 204,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 10,
       portrait = "random",
@@ -314,7 +315,7 @@ local chara = {
    {
       _id = "zeome",
       elona_id = 2,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 55,
       portrait = "elona.zeome",
@@ -354,7 +355,7 @@ local chara = {
    {
       _id = "at",
       elona_id = 37,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 1,
       portrait = "elona.zeome",
@@ -371,7 +372,7 @@ local chara = {
    {
       _id = "orphe",
       elona_id = 23,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man", "god" },
       level = 20,
       portrait = "elona.orphe",
@@ -392,7 +393,7 @@ local chara = {
    {
       _id = "mad_scientist",
       elona_id = 26,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 6,
       portrait = "elona.man7",
@@ -410,7 +411,7 @@ local chara = {
    {
       _id = "isca",
       elona_id = 27,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man", "god" },
       level = 42,
       portrait = "elona.isca",
@@ -428,7 +429,7 @@ local chara = {
    {
       _id = "whom_dwell_in_the_vanity",
       elona_id = 28,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 78,
       portrait = "elona.bethel",
@@ -449,7 +450,7 @@ local chara = {
    {
       _id = "loyter",
       elona_id = 29,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 50,
       portrait = "elona.loyter",
@@ -468,7 +469,7 @@ local chara = {
    {
       _id = "vesda",
       elona_id = 140,
-      item_type = 5,
+      loot_type = "elona.dragon",
       tags = { "dragon" },
       level = 25,
       relation = Enum.Relation.Enemy,
@@ -498,7 +499,7 @@ local chara = {
    {
       _id = "miches",
       elona_id = 30,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 20,
       portrait = "elona.miches",
@@ -516,7 +517,7 @@ local chara = {
    {
       _id = "shena",
       elona_id = 31,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 20,
       portrait = "elona.shena",
@@ -534,7 +535,7 @@ local chara = {
    {
       _id = "the_leopard_warrior",
       elona_id = 351,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 130,
       can_talk = true,
@@ -550,7 +551,6 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       flags = { "IsQuickTempered" },
-      drops = { "elona.the_leopard_warrior" },
       ai_actions = {
          sub = {
             { id = "elona.skill", skill_id = "elona.buff_boost" }
@@ -559,12 +559,29 @@ local chara = {
       },
       skills = {
          "elona.buff_boost"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:392 	if (cId(rc)=351)or(cId(rc)=352){ ...
+         for _ = 1, 12 do
+            drops[#drops+1] = {
+               _id = "elona.tomato",
+               no_stack = true,
+               on_create = function(item)
+                  if Rand.one_in(2) then
+                     item.spoilage_date = -1
+                     item.image = "elona.item_rotten_food"
+                  end
+               end
+            }
+         end
+         -- <<<<<<<< shade2/item.hsp:396 	} ..
+      end
    },
    {
       _id = "silvia",
       elona_id = 352,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 1,
       ai_calm = 5,
@@ -577,15 +594,31 @@ local chara = {
       quality = Enum.Quality.Unique,
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
-      drops = { "elona.the_leopard_warrior" },
       ai_actions = {
          calm_action = "elona.calm_special"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:392 	if (cId(rc)=351)or(cId(rc)=352){ ...
+         for _ = 1, 12 do
+            drops[#drops+1] = {
+               _id = "elona.tomato",
+               no_stack = true,
+               on_create = function(item)
+                  if Rand.one_in(2) then
+                     item.spoilage_date = -1
+                     item.image = "elona.item_rotten_food"
+                  end
+               end
+            }
+         end
+         -- <<<<<<<< shade2/item.hsp:396 	} ..
+      end
    },
    {
       _id = "dungeon_cleaner",
       elona_id = 32,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 20,
       can_talk = true,
       relation = Enum.Relation.Neutral,
@@ -600,7 +633,7 @@ local chara = {
    {
       _id = "larnneire",
       elona_id = 33,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 20,
       portrait = "elona.larnneire",
@@ -629,7 +662,7 @@ local chara = {
    {
       _id = "lomias",
       elona_id = 34,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 20,
       portrait = "elona.lomias",
@@ -647,7 +680,6 @@ local chara = {
       eqammo_1 = 3,
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
-      drops = { "elona.lomias" },
       dialog = "elona.lomias",
       eqammo = { 25001, 3 },
       eqrange = 207,
@@ -661,12 +693,20 @@ local chara = {
       ai_move_chance = 60,
       skills = {
          "elona.buff_slow"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:345 	if cId(rc)=34{	;Lomias ...
+         if Rand.one_in(4) then
+            drops[#drops+1] = { _id = "elona.secret_experience_of_lomias" }
+         end
+         -- <<<<<<<< shade2/item.hsp:347 	} ..
+      end
    },
    {
       _id = "slan",
       elona_id = 139,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 10,
       portrait = "elona.karam",
@@ -684,7 +724,7 @@ local chara = {
    {
       _id = "karam",
       elona_id = 146,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 10,
       portrait = "elona.karam",
@@ -702,7 +742,7 @@ local chara = {
    {
       _id = "erystia",
       elona_id = 142,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 10,
       portrait = "elona.erystia",
@@ -720,7 +760,7 @@ local chara = {
    {
       _id = "issizzle",
       elona_id = 141,
-      item_type = 6,
+      loot_type = "elona.lich",
       tags = { "undead", "god" },
       level = 28,
       relation = Enum.Relation.Enemy,
@@ -759,7 +799,7 @@ local chara = {
    {
       _id = "wynan",
       elona_id = 143,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 25,
       relation = Enum.Relation.Enemy,
       race = "elona.norland",
@@ -794,7 +834,7 @@ local chara = {
    {
       _id = "quruiza",
       elona_id = 144,
-      item_type = 6,
+      loot_type = "elona.lich",
       level = 24,
       relation = Enum.Relation.Enemy,
       race = "elona.norland",
@@ -832,7 +872,7 @@ local chara = {
    {
       _id = "corgon",
       elona_id = 145,
-      item_type = 5,
+      loot_type = "elona.dragon",
       level = 16,
       relation = Enum.Relation.Enemy,
       race = "elona.dragon",
@@ -856,7 +896,7 @@ local chara = {
    {
       _id = "lulwy",
       elona_id = 306,
-      item_type = 6,
+      loot_type = "elona.lich",
       tags = { "god" },
       level = 350,
       relation = Enum.Relation.Neutral,
@@ -884,7 +924,7 @@ local chara = {
    {
       _id = "ehekatl",
       elona_id = 331,
-      item_type = 6,
+      loot_type = "elona.lich",
       tags = { "god" },
       level = 350,
       relation = Enum.Relation.Neutral,
@@ -910,7 +950,7 @@ local chara = {
    {
       _id = "god_inside_ehekatl",
       elona_id = 336,
-      item_type = 6,
+      loot_type = "elona.lich",
       tags = { "god" },
       level = 1200,
       relation = Enum.Relation.Enemy,
@@ -945,7 +985,7 @@ local chara = {
    {
       _id = "opatos",
       elona_id = 338,
-      item_type = 6,
+      loot_type = "elona.lich",
       tags = { "god" },
       level = 350,
       relation = Enum.Relation.Neutral,
@@ -974,7 +1014,7 @@ local chara = {
    {
       _id = "kumiromi",
       elona_id = 339,
-      item_type = 6,
+      loot_type = "elona.lich",
       tags = { "god" },
       level = 350,
       relation = Enum.Relation.Neutral,
@@ -1003,7 +1043,7 @@ local chara = {
    {
       _id = "mani",
       elona_id = 342,
-      item_type = 6,
+      loot_type = "elona.lich",
       tags = { "god" },
       level = 350,
       relation = Enum.Relation.Neutral,
@@ -1032,7 +1072,7 @@ local chara = {
    {
       _id = "_test",
       elona_id = 340,
-      item_type = 6,
+      loot_type = "elona.lich",
       level = 1200,
       relation = Enum.Relation.Enemy,
       race = "elona.god",
@@ -1065,7 +1105,7 @@ local chara = {
    {
       _id = "putit",
       elona_id = 3,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "slime" },
       level = 1,
       creaturepack = Enum.CharaCategory.Slime,
@@ -1086,7 +1126,7 @@ local chara = {
    {
       _id = "red_putit",
       elona_id = 4,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "fire", "slime" },
       level = 4,
       creaturepack = Enum.CharaCategory.Slime,
@@ -1107,7 +1147,7 @@ local chara = {
    {
       _id = "slime",
       elona_id = 169,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "slime" },
       level = 10,
       creaturepack = Enum.CharaCategory.Slime,
@@ -1129,7 +1169,7 @@ local chara = {
    {
       _id = "acid_slime",
       elona_id = 194,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "slime" },
       level = 16,
       creaturepack = Enum.CharaCategory.Slime,
@@ -1164,7 +1204,7 @@ local chara = {
    {
       _id = "bubble",
       elona_id = 286,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "slime" },
       level = 9,
       can_talk = true,
@@ -1183,7 +1223,7 @@ local chara = {
    {
       _id = "blue_bubble",
       elona_id = 285,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "slime" },
       level = 22,
       can_talk = true,
@@ -1203,7 +1243,7 @@ local chara = {
    {
       _id = "mass_monster",
       elona_id = 287,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 20,
       ai_calm = 3,
       relation = Enum.Relation.Enemy,
@@ -1232,7 +1272,7 @@ local chara = {
    {
       _id = "cube",
       elona_id = 327,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 52,
       ai_calm = 3,
       relation = Enum.Relation.Enemy,
@@ -1262,19 +1302,26 @@ local chara = {
    {
       _id = "rabbit",
       elona_id = 5,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 1,
       relation = Enum.Relation.Enemy,
       race = "elona.rabbit",
       class = "elona.tourist",
       coefficient = 400,
-      drops = { "elona.rabbit" },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:339 	if cId(rc)=5{	;rabbit ...
+         if Rand.one_in(200) then
+            drops[#drops+1] = { _id = "elona.rabbits_tail" }
+         end
+         -- <<<<<<<< shade2/item.hsp:341 	} ..
+      end
    },
    {
       _id = "snail",
       elona_id = 6,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 1,
       can_talk = true,
@@ -1286,7 +1333,7 @@ local chara = {
    {
       _id = "fallen_soldier",
       elona_id = 7,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 3,
       portrait = "random",
@@ -1300,7 +1347,7 @@ local chara = {
    {
       _id = "mercenary",
       elona_id = 8,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 4,
       portrait = "random",
@@ -1316,7 +1363,7 @@ local chara = {
    {
       _id = "beggar",
       elona_id = 9,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 2,
       portrait = "random",
@@ -1329,12 +1376,12 @@ local chara = {
       female_image = "elona.chara_beggar_female",
       fltselect = Enum.FltSelect.Town,
       coefficient = 400,
-      flags = { "DropsGold" },
+      always_drops_gold = true,
    },
    {
       _id = "farmer",
       elona_id = 269,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 5,
       portrait = "random",
@@ -1352,7 +1399,7 @@ local chara = {
    {
       _id = "cleaner",
       elona_id = 320,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 32,
       portrait = "random",
@@ -1380,7 +1427,7 @@ local chara = {
    {
       _id = "miner",
       elona_id = 273,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 5,
       portrait = "random",
@@ -1398,7 +1445,7 @@ local chara = {
    {
       _id = "bard",
       elona_id = 326,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 16,
       portrait = "random",
@@ -1419,7 +1466,7 @@ local chara = {
    {
       _id = "sister",
       elona_id = 270,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 5,
       portrait = "random",
@@ -1437,7 +1484,7 @@ local chara = {
    {
       _id = "holy_beast",
       elona_id = 349,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man", "god" },
       level = 12,
       can_talk = true,
@@ -1453,7 +1500,7 @@ local chara = {
    {
       _id = "part_time_worker",
       elona_id = 348,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 35,
       ai_calm = 3,
@@ -1475,7 +1522,7 @@ local chara = {
    {
       _id = "fanatic",
       elona_id = 347,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 5,
       portrait = "random",
@@ -1502,7 +1549,7 @@ local chara = {
    {
       _id = "rogue",
       elona_id = 271,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 8,
       portrait = "random",
@@ -1554,7 +1601,7 @@ local chara = {
    {
       _id = "prostitute",
       elona_id = 335,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 8,
       portrait = "random",
@@ -1592,7 +1639,7 @@ local chara = {
    {
       _id = "prisoner",
       elona_id = 337,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 3,
       portrait = "random",
@@ -1610,7 +1657,7 @@ local chara = {
    {
       _id = "artist",
       elona_id = 272,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 6,
       portrait = "random",
@@ -1628,7 +1675,7 @@ local chara = {
    {
       _id = "noble",
       elona_id = 274,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 10,
       portrait = "random",
@@ -1646,7 +1693,7 @@ local chara = {
    {
       _id = "mage_guild_member",
       elona_id = 289,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 26,
       portrait = "random",
@@ -1679,7 +1726,7 @@ local chara = {
    {
       _id = "thief_guild_member",
       elona_id = 293,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 26,
       portrait = "random",
@@ -1699,7 +1746,7 @@ local chara = {
    {
       _id = "fighter_guild_member",
       elona_id = 295,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 26,
       portrait = "random",
@@ -1719,7 +1766,7 @@ local chara = {
    {
       _id = "town_child",
       elona_id = 35,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 1,
       portrait = "random",
@@ -1737,7 +1784,7 @@ local chara = {
    {
       _id = "old_person",
       elona_id = 36,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man" },
       level = 1,
       portrait = "random",
@@ -1754,7 +1801,7 @@ local chara = {
    {
       _id = "punk",
       elona_id = 174,
-      item_type = 0,
+      loot_type = nil,
       tags = { "man", "sf" },
       level = 1,
       portrait = "random",
@@ -1772,7 +1819,7 @@ local chara = {
    {
       _id = "wild_sheep",
       elona_id = 10,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 1,
       relation = Enum.Relation.Enemy,
@@ -1784,7 +1831,7 @@ local chara = {
    {
       _id = "flying_frog",
       elona_id = 11,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 2,
       relation = Enum.Relation.Enemy,
@@ -1796,7 +1843,7 @@ local chara = {
    {
       _id = "gangster",
       elona_id = 12,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 3,
       portrait = "random",
@@ -1811,7 +1858,7 @@ local chara = {
    {
       _id = "kobold",
       elona_id = 13,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 3,
       creaturepack = Enum.CharaCategory.Kobolt,
       relation = Enum.Relation.Enemy,
@@ -1824,7 +1871,7 @@ local chara = {
    {
       _id = "yeek",
       elona_id = 236,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "yeek" },
       level = 2,
       creaturepack = Enum.CharaCategory.Yeek,
@@ -1836,7 +1883,7 @@ local chara = {
    {
       _id = "yeek_warrior",
       elona_id = 238,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "yeek" },
       level = 6,
       creaturepack = Enum.CharaCategory.Yeek,
@@ -1849,7 +1896,7 @@ local chara = {
    {
       _id = "yeek_archer",
       elona_id = 241,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "yeek" },
       level = 4,
       creaturepack = Enum.CharaCategory.Yeek,
@@ -1870,7 +1917,7 @@ local chara = {
    {
       _id = "master_yeek",
       elona_id = 240,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "yeek" },
       level = 9,
       creaturepack = Enum.CharaCategory.Yeek,
@@ -1903,7 +1950,7 @@ local chara = {
    {
       _id = "kamikaze_yeek",
       elona_id = 237,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "yeek" },
       level = 6,
       creaturepack = Enum.CharaCategory.Kamikaze,
@@ -1926,7 +1973,7 @@ local chara = {
    {
       _id = "kamikaze_samurai",
       elona_id = 244,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 18,
       creaturepack = Enum.CharaCategory.Kamikaze,
       can_talk = true,
@@ -1950,7 +1997,7 @@ local chara = {
    {
       _id = "bomb_rock",
       elona_id = 245,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 25,
       relation = Enum.Relation.Enemy,
       race = "elona.rock",
@@ -1978,7 +2025,7 @@ local chara = {
    {
       _id = "hard_gay",
       elona_id = 321,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 10,
       can_talk = true,
       relation = Enum.Relation.Enemy,
@@ -2003,7 +2050,7 @@ local chara = {
    {
       _id = "rodlob",
       elona_id = 242,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "yeek" },
       level = 14,
       creaturepack = Enum.CharaCategory.Yeek,
@@ -2045,7 +2092,7 @@ local chara = {
    {
       _id = "hot_spring_maniac",
       elona_id = 239,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 5,
       portrait = "random",
@@ -2061,7 +2108,7 @@ local chara = {
    {
       _id = "centipede",
       elona_id = 14,
-      item_type = 2,
+      loot_type = "elona.insect",
       level = 4,
       relation = Enum.Relation.Enemy,
       race = "elona.centipede",
@@ -2071,7 +2118,7 @@ local chara = {
    {
       _id = "mushroom",
       elona_id = 15,
-      item_type = 2,
+      loot_type = "elona.insect",
       level = 4,
       ai_calm = 3,
       relation = Enum.Relation.Enemy,
@@ -2095,7 +2142,7 @@ local chara = {
    {
       _id = "spore_mushroom",
       elona_id = 283,
-      item_type = 2,
+      loot_type = "elona.insect",
       level = 8,
       ai_calm = 3,
       relation = Enum.Relation.Enemy,
@@ -2122,7 +2169,7 @@ local chara = {
    {
       _id = "chaos_mushroom",
       elona_id = 284,
-      item_type = 2,
+      loot_type = "elona.insect",
       level = 21,
       ai_calm = 3,
       relation = Enum.Relation.Enemy,
@@ -2149,7 +2196,7 @@ local chara = {
    {
       _id = "citizen",
       elona_id = 16,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 5,
       portrait = "random",
@@ -2166,7 +2213,7 @@ local chara = {
    {
       _id = "citizen2",
       elona_id = 39,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 5,
       portrait = "random",
@@ -2183,7 +2230,7 @@ local chara = {
    {
       _id = "citizen_of_cyber_dome",
       elona_id = 171,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 5,
       portrait = "random",
@@ -2200,7 +2247,7 @@ local chara = {
    {
       _id = "citizen_of_cyber_dome2",
       elona_id = 172,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 5,
       portrait = "random",
@@ -2217,7 +2264,7 @@ local chara = {
    {
       _id = "sales_person",
       elona_id = 173,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 20,
       portrait = "random",
@@ -2234,7 +2281,7 @@ local chara = {
    {
       _id = "sailor",
       elona_id = 71,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 5,
       portrait = "random",
@@ -2251,7 +2298,7 @@ local chara = {
    {
       _id = "captain",
       elona_id = 72,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 5,
       portrait = "elona.man45",
@@ -2268,7 +2315,7 @@ local chara = {
    {
       _id = "stersha",
       elona_id = 79,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 25,
       portrait = "elona.stersha",
@@ -2286,7 +2333,7 @@ local chara = {
    {
       _id = "xabi",
       elona_id = 80,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 35,
       portrait = "elona.xabi",
@@ -2304,7 +2351,7 @@ local chara = {
    {
       _id = "orc",
       elona_id = 17,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 5,
       creaturepack = Enum.CharaCategory.Orc,
       relation = Enum.Relation.Enemy,
@@ -2316,7 +2363,7 @@ local chara = {
    {
       _id = "lizard_man",
       elona_id = 281,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "dragon" },
       level = 7,
       relation = Enum.Relation.Enemy,
@@ -2328,7 +2375,7 @@ local chara = {
    {
       _id = "minotaur",
       elona_id = 282,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "mino" },
       level = 18,
       relation = Enum.Relation.Enemy,
@@ -2340,7 +2387,7 @@ local chara = {
    {
       _id = "minotaur_magician",
       elona_id = 296,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "mino" },
       level = 22,
       relation = Enum.Relation.Enemy,
@@ -2372,7 +2419,7 @@ local chara = {
    {
       _id = "minotaur_boxer",
       elona_id = 298,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "mino" },
       level = 23,
       relation = Enum.Relation.Enemy,
@@ -2386,7 +2433,7 @@ local chara = {
    {
       _id = "minotaur_king",
       elona_id = 299,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "mino" },
       level = 25,
       relation = Enum.Relation.Enemy,
@@ -2401,7 +2448,7 @@ local chara = {
    {
       _id = "ungaga",
       elona_id = 300,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "mino" },
       level = 31,
       relation = Enum.Relation.Enemy,
@@ -2428,7 +2475,7 @@ local chara = {
    {
       _id = "troll",
       elona_id = 251,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 14,
       creaturepack = Enum.CharaCategory.Orc,
       relation = Enum.Relation.Enemy,
@@ -2443,7 +2490,7 @@ local chara = {
    {
       _id = "warrior_of_elea",
       elona_id = 18,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 5,
       portrait = "random",
@@ -2458,7 +2505,7 @@ local chara = {
    {
       _id = "wizard_of_elea",
       elona_id = 24,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 5,
       portrait = "random",
@@ -2490,7 +2537,7 @@ local chara = {
    {
       _id = "asura",
       elona_id = 309,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 12,
       relation = Enum.Relation.Enemy,
@@ -2505,7 +2552,7 @@ local chara = {
    {
       _id = "mitra",
       elona_id = 310,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 26,
       relation = Enum.Relation.Enemy,
@@ -2521,7 +2568,7 @@ local chara = {
    {
       _id = "varuna",
       elona_id = 311,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 37,
       relation = Enum.Relation.Enemy,
@@ -2537,7 +2584,7 @@ local chara = {
    {
       _id = "wizard",
       elona_id = 41,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 5,
       portrait = "random",
@@ -2575,7 +2622,7 @@ local chara = {
    {
       _id = "warrior",
       elona_id = 75,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 5,
       portrait = "random",
@@ -2591,7 +2638,7 @@ local chara = {
    {
       _id = "mandrake",
       elona_id = 19,
-      item_type = 2,
+      loot_type = "elona.insect",
       level = 5,
       relation = Enum.Relation.Enemy,
       race = "elona.mandrake",
@@ -2601,7 +2648,7 @@ local chara = {
    {
       _id = "beetle",
       elona_id = 22,
-      item_type = 2,
+      loot_type = "elona.insect",
       level = 5,
       relation = Enum.Relation.Enemy,
       race = "elona.beetle",
@@ -2612,7 +2659,7 @@ local chara = {
    {
       _id = "orc_warrior",
       elona_id = 20,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 10,
       creaturepack = Enum.CharaCategory.Orc,
       relation = Enum.Relation.Enemy,
@@ -2624,7 +2671,7 @@ local chara = {
    {
       _id = "goda",
       elona_id = 25,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 25,
       creaturepack = Enum.CharaCategory.Orc,
       relation = Enum.Relation.Enemy,
@@ -2641,7 +2688,7 @@ local chara = {
    {
       _id = "zombie",
       elona_id = 21,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 8,
       creaturepack = Enum.CharaCategory.Zombie,
@@ -2651,12 +2698,19 @@ local chara = {
       category = Enum.CharaCategory.Zombie,
       coefficient = 400,
       on_eat_corpse = eating_effect.rotten_one,
-      drops = { "elona.zombie" },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:342 	if cId(rc)=21{	;zombie ...
+         if Rand.one_in(100) then
+            drops[#drops+1] = { _id = "elona.potion_of_descent" }
+         end
+         -- <<<<<<<< shade2/item.hsp:344 	} ..
+      end
    },
    {
       _id = "bat",
       elona_id = 42,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 1,
       relation = Enum.Relation.Enemy,
@@ -2669,7 +2723,7 @@ local chara = {
    {
       _id = "vampire_bat",
       elona_id = 43,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 10,
       relation = Enum.Relation.Enemy,
@@ -2697,7 +2751,7 @@ local chara = {
    {
       _id = "dragon_bat",
       elona_id = 44,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild", "fire", "dragon" },
       level = 30,
       relation = Enum.Relation.Enemy,
@@ -2713,7 +2767,7 @@ local chara = {
    {
       _id = "fire_ent",
       elona_id = 45,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "fire" },
       level = 15,
       relation = Enum.Relation.Enemy,
@@ -2734,7 +2788,7 @@ local chara = {
    {
       _id = "ice_ent",
       elona_id = 46,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 15,
       relation = Enum.Relation.Enemy,
       race = "elona.ent",
@@ -2754,7 +2808,7 @@ local chara = {
    {
       _id = "lich",
       elona_id = 47,
-      item_type = 6,
+      loot_type = "elona.lich",
       tags = { "undead" },
       level = 20,
       relation = Enum.Relation.Enemy,
@@ -2787,7 +2841,7 @@ local chara = {
    {
       _id = "master_lich",
       elona_id = 48,
-      item_type = 6,
+      loot_type = "elona.lich",
       tags = { "undead" },
       level = 30,
       relation = Enum.Relation.Enemy,
@@ -2823,7 +2877,7 @@ local chara = {
    {
       _id = "demi_lich",
       elona_id = 49,
-      item_type = 6,
+      loot_type = "elona.lich",
       tags = { "undead" },
       level = 45,
       relation = Enum.Relation.Enemy,
@@ -2857,7 +2911,7 @@ local chara = {
    {
       _id = "executioner",
       elona_id = 307,
-      item_type = 6,
+      loot_type = "elona.lich",
       tags = { "undead" },
       level = 18,
       relation = Enum.Relation.Enemy,
@@ -2870,7 +2924,6 @@ local chara = {
       rarity = 10000,
       coefficient = 400,
       flags = { "IsDeathMaster" },
-      drops = { "elona.executioner" },
       ai_actions = {
          main = {
             { id = "elona.melee" },
@@ -2889,12 +2942,20 @@ local chara = {
          "elona.spell_lightning_bolt",
          "elona.spell_short_teleport",
          "elona.buff_death_word"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:361 	if (cId(rc)=307)or(cId(rc)=308){	;executioner ...
+         if Rand.one_in(150) then
+            drops[#drops+1] = { _id = "elona.scroll_of_contingency" }
+         end
+         -- <<<<<<<< shade2/item.hsp:361 	if (cId(rc)=307)or(cId(rc)=308){	;executioner ..
+      end
    },
    {
       _id = "messenger_of_death",
       elona_id = 308,
-      item_type = 6,
+      loot_type = "elona.lich",
       tags = { "undead" },
       level = 35,
       relation = Enum.Relation.Enemy,
@@ -2907,7 +2968,6 @@ local chara = {
       rarity = 10000,
       coefficient = 400,
       flags = { "IsDeathMaster" },
-      drops = { "elona.executioner" },
       ai_actions = {
          main = {
             { id = "elona.melee" },
@@ -2925,12 +2985,20 @@ local chara = {
          "elona.spell_lightning_bolt",
          "elona.spell_short_teleport",
          "elona.buff_death_word"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:361 	if (cId(rc)=307)or(cId(rc)=308){	;executioner ...
+         if Rand.one_in(150) then
+            drops[#drops+1] = { _id = "elona.scroll_of_contingency" }
+         end
+         -- <<<<<<<< shade2/item.hsp:361 	if (cId(rc)=307)or(cId(rc)=308){	;executioner ..
+      end
    },
    {
       _id = "hound",
       elona_id = 50,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 5,
       relation = Enum.Relation.Enemy,
@@ -2948,7 +3016,7 @@ local chara = {
    {
       _id = "fire_hound",
       elona_id = 51,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild", "fire" },
       level = 10,
       creaturepack = Enum.CharaCategory.HoundFire,
@@ -2979,7 +3047,7 @@ local chara = {
    {
       _id = "ice_hound",
       elona_id = 52,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 10,
       creaturepack = Enum.CharaCategory.HoundIce,
@@ -3010,7 +3078,7 @@ local chara = {
    {
       _id = "lightning_hound",
       elona_id = 53,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 12,
       creaturepack = Enum.CharaCategory.HoundLightning,
@@ -3040,7 +3108,7 @@ local chara = {
    {
       _id = "dark_hound",
       elona_id = 54,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 12,
       creaturepack = Enum.CharaCategory.HoundDarkness,
@@ -3070,7 +3138,7 @@ local chara = {
    {
       _id = "illusion_hound",
       elona_id = 55,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 18,
       creaturepack = Enum.CharaCategory.HoundMind,
@@ -3100,7 +3168,7 @@ local chara = {
    {
       _id = "nerve_hound",
       elona_id = 56,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 18,
       creaturepack = Enum.CharaCategory.HoundNerve,
@@ -3130,7 +3198,7 @@ local chara = {
    {
       _id = "poison_hound",
       elona_id = 57,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 15,
       creaturepack = Enum.CharaCategory.HoundPoison,
@@ -3160,7 +3228,7 @@ local chara = {
    {
       _id = "sound_hound",
       elona_id = 58,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 22,
       creaturepack = Enum.CharaCategory.HoundSound,
@@ -3190,7 +3258,7 @@ local chara = {
    {
       _id = "nether_hound",
       elona_id = 59,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 25,
       creaturepack = Enum.CharaCategory.HoundNether,
@@ -3220,7 +3288,7 @@ local chara = {
    {
       _id = "chaos_hound",
       elona_id = 60,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 30,
       creaturepack = Enum.CharaCategory.HoundChaos,
@@ -3250,7 +3318,7 @@ local chara = {
    {
       _id = "giant_squirrel",
       elona_id = 61,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 4,
       relation = Enum.Relation.Enemy,
@@ -3266,7 +3334,7 @@ local chara = {
    {
       _id = "killer_squirrel",
       elona_id = 62,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 10,
       relation = Enum.Relation.Enemy,
@@ -3282,7 +3350,7 @@ local chara = {
    {
       _id = "grudge",
       elona_id = 63,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 7,
       relation = Enum.Relation.Enemy,
@@ -3312,7 +3380,7 @@ local chara = {
    {
       _id = "hungry_demon",
       elona_id = 64,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 3,
       relation = Enum.Relation.Enemy,
@@ -3337,7 +3405,7 @@ local chara = {
    {
       _id = "hungry_sea_lion",
       elona_id = 312,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 8,
       relation = Enum.Relation.Enemy,
       race = "elona.ent",
@@ -3364,7 +3432,7 @@ local chara = {
    {
       _id = "super_hungry_sea_lion",
       elona_id = 313,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 19,
       relation = Enum.Relation.Enemy,
       race = "elona.ent",
@@ -3392,7 +3460,7 @@ local chara = {
    {
       _id = "electric_cloud",
       elona_id = 65,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 12,
       relation = Enum.Relation.Enemy,
       race = "elona.spirit",
@@ -3420,7 +3488,7 @@ local chara = {
    {
       _id = "chaos_cloud",
       elona_id = 66,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 30,
       relation = Enum.Relation.Enemy,
       race = "elona.spirit",
@@ -3448,7 +3516,7 @@ local chara = {
    {
       _id = "floating_eye",
       elona_id = 67,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 2,
       ai_calm = 3,
       relation = Enum.Relation.Enemy,
@@ -3475,7 +3543,7 @@ local chara = {
    {
       _id = "chaos_eye",
       elona_id = 315,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 14,
       ai_calm = 3,
       relation = Enum.Relation.Enemy,
@@ -3511,7 +3579,7 @@ local chara = {
    {
       _id = "mad_gaze",
       elona_id = 316,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 7,
       ai_calm = 3,
       relation = Enum.Relation.Enemy,
@@ -3547,7 +3615,7 @@ local chara = {
    {
       _id = "death_gaze",
       elona_id = 314,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 29,
       ai_calm = 3,
       relation = Enum.Relation.Enemy,
@@ -3584,7 +3652,7 @@ local chara = {
    {
       _id = "wyvern",
       elona_id = 68,
-      item_type = 4,
+      loot_type = "elona.drake",
       tags = { "dragon" },
       level = 20,
       relation = Enum.Relation.Enemy,
@@ -3611,7 +3679,7 @@ local chara = {
    {
       _id = "puppet",
       elona_id = 78,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 15,
       relation = Enum.Relation.Enemy,
       race = "elona.eulderna",
@@ -3637,7 +3705,7 @@ local chara = {
    {
       _id = "wasp",
       elona_id = 81,
-      item_type = 2,
+      loot_type = "elona.insect",
       level = 5,
       relation = Enum.Relation.Enemy,
       race = "elona.wasp",
@@ -3658,7 +3726,7 @@ local chara = {
    {
       _id = "red_wasp",
       elona_id = 82,
-      item_type = 2,
+      loot_type = "elona.insect",
       tags = { "fire" },
       level = 10,
       relation = Enum.Relation.Enemy,
@@ -3681,7 +3749,7 @@ local chara = {
    {
       _id = "cyclops",
       elona_id = 83,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 22,
       relation = Enum.Relation.Enemy,
       race = "elona.giant",
@@ -3696,7 +3764,7 @@ local chara = {
    {
       _id = "titan",
       elona_id = 84,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 40,
       can_talk = true,
       relation = Enum.Relation.Enemy,
@@ -3713,7 +3781,7 @@ local chara = {
    {
       _id = "imp",
       elona_id = 85,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "fire" },
       level = 7,
       relation = Enum.Relation.Enemy,
@@ -3722,7 +3790,6 @@ local chara = {
       coefficient = 400,
       flags = { "IsFloating" },
       on_eat_corpse = eating_effect.imp,
-      drops = { "elona.imp" },
       ai_actions = {
          main = {
             { id = "elona.melee" },
@@ -3741,12 +3808,20 @@ local chara = {
          "elona.spell_magic_dart",
          "elona.spell_short_teleport",
          "elona.buff_element_scar"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:376 	if (cId(rc)=85)or(cId(rc)=86)or(cId(rc)=87){	;imp ...
+         if Rand.one_in(600) then
+            drops[#drops+1] = { _id = "elona.scroll_of_name" }
+         end
+         -- <<<<<<<< shade2/item.hsp:378 	} ..
+      end
    },
    {
       _id = "nether_imp",
       elona_id = 86,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 16,
       relation = Enum.Relation.Enemy,
@@ -3755,7 +3830,6 @@ local chara = {
       coefficient = 400,
       flags = { "IsFloating" },
       on_eat_corpse = eating_effect.imp,
-      drops = { "elona.imp" },
       ai_actions = {
          main = {
             { id = "elona.melee" },
@@ -3773,12 +3847,20 @@ local chara = {
          "elona.spell_nether_arrow",
          "elona.spell_magic_dart",
          "elona.spell_short_teleport"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:376 	if (cId(rc)=85)or(cId(rc)=86)or(cId(rc)=87){	;imp ...
+         if Rand.one_in(600) then
+            drops[#drops+1] = { _id = "elona.scroll_of_name" }
+         end
+         -- <<<<<<<< shade2/item.hsp:378 	} ..
+      end
    },
    {
       _id = "chaos_imp",
       elona_id = 87,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 27,
       relation = Enum.Relation.Enemy,
       race = "elona.imp",
@@ -3786,7 +3868,6 @@ local chara = {
       coefficient = 400,
       flags = { "IsFloating" },
       on_eat_corpse = eating_effect.imp,
-      drops = { "elona.imp" },
       ai_actions = {
          main = {
             { id = "elona.melee" },
@@ -3804,12 +3885,20 @@ local chara = {
          "elona.spell_chaos_eye",
          "elona.spell_magic_dart",
          "elona.spell_short_teleport"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:376 	if (cId(rc)=85)or(cId(rc)=86)or(cId(rc)=87){	;imp ...
+         if Rand.one_in(600) then
+            drops[#drops+1] = { _id = "elona.scroll_of_name" }
+         end
+         -- <<<<<<<< shade2/item.hsp:378 	} ..
+      end
    },
    {
       _id = "hand_of_the_dead",
       elona_id = 88,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 4,
       ai_calm = 3,
@@ -3840,7 +3929,7 @@ local chara = {
    {
       _id = "hand_of_the_chaos",
       elona_id = 89,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 11,
       ai_calm = 3,
@@ -3870,7 +3959,7 @@ local chara = {
    {
       _id = "hand_of_the_murderer",
       elona_id = 90,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 15,
       ai_calm = 3,
@@ -3903,7 +3992,7 @@ local chara = {
    {
       _id = "ghost",
       elona_id = 91,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 5,
       relation = Enum.Relation.Enemy,
@@ -3931,7 +4020,7 @@ local chara = {
    {
       _id = "nymph",
       elona_id = 92,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 13,
       relation = Enum.Relation.Enemy,
@@ -3966,7 +4055,7 @@ local chara = {
    {
       _id = "man_eater_flower",
       elona_id = 93,
-      item_type = 2,
+      loot_type = "elona.insect",
       level = 8,
       ai_calm = 3,
       relation = Enum.Relation.Enemy,
@@ -3987,7 +4076,7 @@ local chara = {
    {
       _id = "chaos_flower",
       elona_id = 94,
-      item_type = 2,
+      loot_type = "elona.insect",
       level = 19,
       ai_calm = 3,
       relation = Enum.Relation.Enemy,
@@ -4009,7 +4098,7 @@ local chara = {
    {
       _id = "cobra",
       elona_id = 95,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 10,
       relation = Enum.Relation.Enemy,
@@ -4032,7 +4121,7 @@ local chara = {
    {
       _id = "king_cobra",
       elona_id = 96,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 18,
       relation = Enum.Relation.Enemy,
@@ -4055,7 +4144,7 @@ local chara = {
    {
       _id = "fire_drake",
       elona_id = 97,
-      item_type = 4,
+      loot_type = "elona.drake",
       tags = { "fire", "dragon" },
       level = 16,
       relation = Enum.Relation.Enemy,
@@ -4080,7 +4169,7 @@ local chara = {
    {
       _id = "ice_drake",
       elona_id = 98,
-      item_type = 4,
+      loot_type = "elona.drake",
       tags = { "dragon" },
       level = 16,
       relation = Enum.Relation.Enemy,
@@ -4104,7 +4193,7 @@ local chara = {
    {
       _id = "lesser_mummy",
       elona_id = 99,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 7,
       creaturepack = Enum.CharaCategory.Mummy,
@@ -4114,7 +4203,6 @@ local chara = {
       category = Enum.CharaCategory.Mummy,
       coefficient = 400,
       on_eat_corpse = eating_effect.rotten_one,
-      drops = { "elona.mummy" },
       ai_actions = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_touch_of_fear" },
@@ -4127,12 +4215,21 @@ local chara = {
       skills = {
          "elona.action_touch_of_fear",
          "elona.action_touch_of_weakness"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- TODO dedup
+         -- >>>>>>>> shade2/item.hsp:348 	if (cId(rc)=99)or(cId(rc)=100)or(cId(rc)=101){	;m ...
+         if Rand.one_in(300) then
+            drops[#drops+1] = { _id = "elona.book_of_resurrection" }
+         end
+         -- <<<<<<<< shade2/item.hsp:350 	} ..
+      end
    },
    {
       _id = "mummy",
       elona_id = 100,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 14,
       creaturepack = Enum.CharaCategory.Mummy,
@@ -4156,12 +4253,21 @@ local chara = {
       skills = {
          "elona.action_touch_of_fear",
          "elona.action_touch_of_weakness"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- TODO dedup
+         -- >>>>>>>> shade2/item.hsp:348 	if (cId(rc)=99)or(cId(rc)=100)or(cId(rc)=101){	;m ...
+         if Rand.one_in(300) then
+            drops[#drops+1] = { _id = "elona.book_of_resurrection" }
+         end
+         -- <<<<<<<< shade2/item.hsp:350 	} ..
+      end
    },
    {
       _id = "greater_mummy",
       elona_id = 101,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 22,
       creaturepack = Enum.CharaCategory.Mummy,
@@ -4185,12 +4291,21 @@ local chara = {
       skills = {
          "elona.action_touch_of_fear",
          "elona.action_touch_of_weakness"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- TODO dedup
+         -- >>>>>>>> shade2/item.hsp:348 	if (cId(rc)=99)or(cId(rc)=100)or(cId(rc)=101){	;m ...
+         if Rand.one_in(300) then
+            drops[#drops+1] = { _id = "elona.book_of_resurrection" }
+         end
+         -- <<<<<<<< shade2/item.hsp:350 	} ..
+      end
    },
    {
       _id = "tuwen",
       elona_id = 257,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 28,
       creaturepack = Enum.CharaCategory.Mummy,
@@ -4205,7 +4320,6 @@ local chara = {
       coefficient = 400,
       flags = { "IsDeathMaster" },
       on_eat_corpse = eating_effect.rotten_one,
-      drops = { "elona.tuwen" },
       ai_actions = {
          sub = {
             { id = "elona.skill", skill_id = "elona.buff_death_word" },
@@ -4223,7 +4337,7 @@ local chara = {
    {
       _id = "ancient_coffin",
       elona_id = 254,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 19,
       creaturepack = Enum.CharaCategory.Mummy,
@@ -4257,7 +4371,7 @@ local chara = {
    {
       _id = "goblin",
       elona_id = 102,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 2,
       creaturepack = Enum.CharaCategory.Goblin,
       relation = Enum.Relation.Enemy,
@@ -4271,7 +4385,7 @@ local chara = {
    {
       _id = "goblin_warrior",
       elona_id = 103,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 6,
       creaturepack = Enum.CharaCategory.Goblin,
       relation = Enum.Relation.Enemy,
@@ -4286,7 +4400,7 @@ local chara = {
    {
       _id = "goblin_shaman",
       elona_id = 104,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 8,
       creaturepack = Enum.CharaCategory.Goblin,
       relation = Enum.Relation.Enemy,
@@ -4321,7 +4435,7 @@ local chara = {
    {
       _id = "goblin_wizard",
       elona_id = 105,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 10,
       creaturepack = Enum.CharaCategory.Goblin,
       relation = Enum.Relation.Enemy,
@@ -4345,7 +4459,7 @@ local chara = {
    {
       _id = "red_baptist",
       elona_id = 106,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead", "fire" },
       level = 12,
       relation = Enum.Relation.Enemy,
@@ -4378,7 +4492,7 @@ local chara = {
    {
       _id = "blue_baptist",
       elona_id = 107,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 12,
       relation = Enum.Relation.Enemy,
@@ -4411,7 +4525,7 @@ local chara = {
    {
       _id = "brown_bear",
       elona_id = 108,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 4,
       creaturepack = Enum.CharaCategory.Bear,
@@ -4427,7 +4541,7 @@ local chara = {
    {
       _id = "grizzly",
       elona_id = 109,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 10,
       creaturepack = Enum.CharaCategory.Bear,
@@ -4443,7 +4557,7 @@ local chara = {
    {
       _id = "mammoth",
       elona_id = 344,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 28,
       creaturepack = Enum.CharaCategory.Bear,
@@ -4460,7 +4574,7 @@ local chara = {
    {
       _id = "living_armor",
       elona_id = 110,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 15,
       relation = Enum.Relation.Enemy,
@@ -4476,7 +4590,7 @@ local chara = {
    {
       _id = "steel_mass",
       elona_id = 111,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 25,
       relation = Enum.Relation.Enemy,
@@ -4493,7 +4607,7 @@ local chara = {
    {
       _id = "golden_armor",
       elona_id = 112,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 35,
       relation = Enum.Relation.Enemy,
@@ -4510,7 +4624,7 @@ local chara = {
    {
       _id = "death_armor",
       elona_id = 113,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 45,
       relation = Enum.Relation.Enemy,
       race = "elona.armor",
@@ -4535,7 +4649,7 @@ local chara = {
    {
       _id = "medusa",
       elona_id = 114,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 22,
       relation = Enum.Relation.Enemy,
@@ -4548,7 +4662,7 @@ local chara = {
    {
       _id = "euryale",
       elona_id = 115,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 33,
       relation = Enum.Relation.Enemy,
@@ -4562,7 +4676,7 @@ local chara = {
    {
       _id = "stheno",
       elona_id = 116,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 44,
       relation = Enum.Relation.Enemy,
@@ -4576,7 +4690,7 @@ local chara = {
    {
       _id = "cupid_of_love",
       elona_id = 117,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 8,
       relation = Enum.Relation.Enemy,
@@ -4585,7 +4699,6 @@ local chara = {
       coefficient = 400,
       flags = { "IsFloating" },
       on_eat_corpse = eating_effect.cupid_of_love,
-      drops = { "elona.cupid_of_love" },
       ai_actions = {
          sub = {
             { id = "elona.skill", skill_id = "elona.buff_mist_of_silence" }
@@ -4596,12 +4709,20 @@ local chara = {
       ai_move_chance = 50,
       skills = {
          "elona.buff_mist_of_silence"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:351 	if cId(rc)=117{	;cupid ...
+         if Rand.one_in(140) then
+            drops[#drops+1] = { _id = "elona.happy_bed" }
+         end
+         -- <<<<<<<< shade2/item.hsp:353 	} ..
+      end
    },
    {
       _id = "lesser_phantom",
       elona_id = 118,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 9,
       relation = Enum.Relation.Enemy,
@@ -4624,7 +4745,7 @@ local chara = {
    {
       _id = "tyrannosaurus",
       elona_id = 248,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "dragon" },
       level = 30,
       relation = Enum.Relation.Enemy,
@@ -4638,7 +4759,7 @@ local chara = {
    {
       _id = "harpy",
       elona_id = 119,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 13,
       relation = Enum.Relation.Enemy,
       race = "elona.harpy",
@@ -4649,7 +4770,7 @@ local chara = {
    {
       _id = "green_dragon",
       elona_id = 120,
-      item_type = 5,
+      loot_type = "elona.dragon",
       tags = { "dragon" },
       level = 32,
       relation = Enum.Relation.Enemy,
@@ -4673,7 +4794,7 @@ local chara = {
    {
       _id = "red_dragon",
       elona_id = 121,
-      item_type = 5,
+      loot_type = "elona.dragon",
       tags = { "fire", "dragon" },
       level = 40,
       relation = Enum.Relation.Enemy,
@@ -4700,7 +4821,7 @@ local chara = {
    {
       _id = "white_dragon",
       elona_id = 122,
-      item_type = 5,
+      loot_type = "elona.dragon",
       tags = { "dragon" },
       level = 40,
       relation = Enum.Relation.Enemy,
@@ -4726,7 +4847,7 @@ local chara = {
    {
       _id = "elec_dragon",
       elona_id = 123,
-      item_type = 5,
+      loot_type = "elona.dragon",
       tags = { "dragon" },
       level = 40,
       relation = Enum.Relation.Enemy,
@@ -4753,7 +4874,7 @@ local chara = {
    {
       _id = "nether_dragon",
       elona_id = 124,
-      item_type = 5,
+      loot_type = "elona.dragon",
       tags = { "undead", "dragon" },
       level = 45,
       relation = Enum.Relation.Enemy,
@@ -4780,7 +4901,7 @@ local chara = {
    {
       _id = "chaos_dragon",
       elona_id = 125,
-      item_type = 5,
+      loot_type = "elona.dragon",
       tags = { "dragon" },
       level = 50,
       relation = Enum.Relation.Enemy,
@@ -4807,7 +4928,7 @@ local chara = {
    {
       _id = "cerberus",
       elona_id = 126,
-      item_type = 4,
+      loot_type = "elona.drake",
       tags = { "fire" },
       level = 23,
       relation = Enum.Relation.Enemy,
@@ -4833,7 +4954,7 @@ local chara = {
    {
       _id = "scorpion",
       elona_id = 255,
-      item_type = 2,
+      loot_type = "elona.insect",
       tags = { "wild" },
       level = 4,
       relation = Enum.Relation.Enemy,
@@ -4852,7 +4973,7 @@ local chara = {
    {
       _id = "king_scorpion",
       elona_id = 256,
-      item_type = 2,
+      loot_type = "elona.insect",
       tags = { "wild" },
       level = 24,
       relation = Enum.Relation.Enemy,
@@ -4872,7 +4993,7 @@ local chara = {
    {
       _id = "spider",
       elona_id = 127,
-      item_type = 2,
+      loot_type = "elona.insect",
       tags = { "wild" },
       level = 3,
       creaturepack = Enum.CharaCategory.Spider,
@@ -4899,7 +5020,7 @@ local chara = {
    {
       _id = "black_widow",
       elona_id = 128,
-      item_type = 2,
+      loot_type = "elona.insect",
       tags = { "wild" },
       level = 11,
       creaturepack = Enum.CharaCategory.Spider,
@@ -4930,7 +5051,7 @@ local chara = {
    {
       _id = "paralyzer",
       elona_id = 129,
-      item_type = 2,
+      loot_type = "elona.insect",
       tags = { "wild" },
       level = 21,
       creaturepack = Enum.CharaCategory.Spider,
@@ -4961,7 +5082,7 @@ local chara = {
    {
       _id = "tarantula",
       elona_id = 130,
-      item_type = 2,
+      loot_type = "elona.insect",
       tags = { "wild" },
       level = 15,
       creaturepack = Enum.CharaCategory.Spider,
@@ -4992,7 +5113,7 @@ local chara = {
    {
       _id = "blood_spider",
       elona_id = 131,
-      item_type = 2,
+      loot_type = "elona.insect",
       tags = { "undead" },
       level = 28,
       creaturepack = Enum.CharaCategory.Spider,
@@ -5022,7 +5143,7 @@ local chara = {
    {
       _id = "wooden_golem",
       elona_id = 132,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 13,
       can_talk = true,
       relation = Enum.Relation.Enemy,
@@ -5038,7 +5159,7 @@ local chara = {
    {
       _id = "stone_golem",
       elona_id = 133,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "fire" },
       level = 19,
       can_talk = true,
@@ -5054,7 +5175,7 @@ local chara = {
    {
       _id = "steel_golem",
       elona_id = 134,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "fire" },
       level = 25,
       can_talk = true,
@@ -5072,7 +5193,7 @@ local chara = {
    {
       _id = "golden_golem",
       elona_id = 135,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 30,
       can_talk = true,
       relation = Enum.Relation.Enemy,
@@ -5089,7 +5210,7 @@ local chara = {
    {
       _id = "mithril_golem",
       elona_id = 136,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 35,
       can_talk = true,
       relation = Enum.Relation.Enemy,
@@ -5106,7 +5227,7 @@ local chara = {
    {
       _id = "sky_golem",
       elona_id = 137,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 40,
       can_talk = true,
       relation = Enum.Relation.Enemy,
@@ -5123,7 +5244,7 @@ local chara = {
    {
       _id = "adamantium_golem",
       elona_id = 138,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 50,
       can_talk = true,
       relation = Enum.Relation.Enemy,
@@ -5140,7 +5261,7 @@ local chara = {
    {
       _id = "fire_crab",
       elona_id = 147,
-      item_type = 2,
+      loot_type = "elona.insect",
       tags = { "fire" },
       level = 16,
       relation = Enum.Relation.Enemy,
@@ -5158,7 +5279,7 @@ local chara = {
    {
       _id = "fire_centipede",
       elona_id = 148,
-      item_type = 2,
+      loot_type = "elona.insect",
       tags = { "fire" },
       level = 18,
       relation = Enum.Relation.Enemy,
@@ -5177,7 +5298,7 @@ local chara = {
    {
       _id = "cultist_of_fire",
       elona_id = 149,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "fire" },
       level = 20,
       relation = Enum.Relation.Enemy,
@@ -5212,7 +5333,7 @@ local chara = {
    {
       _id = "skeleton_warrior",
       elona_id = 150,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 12,
       creaturepack = Enum.CharaCategory.Zombie,
@@ -5228,7 +5349,7 @@ local chara = {
    {
       _id = "skeleton_berserker",
       elona_id = 151,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 20,
       creaturepack = Enum.CharaCategory.Zombie,
@@ -5247,7 +5368,7 @@ local chara = {
    {
       _id = "missionary_of_darkness",
       elona_id = 152,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 20,
       creaturepack = Enum.CharaCategory.Zombie,
@@ -5275,7 +5396,7 @@ local chara = {
    {
       _id = "pawn",
       elona_id = 153,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "pawn" },
       level = 12,
       relation = Enum.Relation.Enemy,
@@ -5289,7 +5410,7 @@ local chara = {
    {
       _id = "rook",
       elona_id = 154,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "pawn" },
       level = 16,
       relation = Enum.Relation.Enemy,
@@ -5304,7 +5425,7 @@ local chara = {
    {
       _id = "bishop",
       elona_id = 155,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "pawn" },
       level = 18,
       relation = Enum.Relation.Enemy,
@@ -5335,7 +5456,7 @@ local chara = {
    {
       _id = "knight",
       elona_id = 156,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "pawn" },
       level = 18,
       relation = Enum.Relation.Enemy,
@@ -5357,7 +5478,7 @@ local chara = {
    {
       _id = "queen",
       elona_id = 157,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 22,
       relation = Enum.Relation.Enemy,
       race = "elona.piece",
@@ -5387,7 +5508,7 @@ local chara = {
    {
       _id = "king",
       elona_id = 158,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 22,
       relation = Enum.Relation.Enemy,
       race = "elona.piece",
@@ -5413,7 +5534,7 @@ local chara = {
    {
       _id = "mercenary_warrior",
       elona_id = 159,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man", "shopguard" },
       level = 20,
       creaturepack = Enum.CharaCategory.Mercenary,
@@ -5432,7 +5553,7 @@ local chara = {
    {
       _id = "mercenary_archer",
       elona_id = 160,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man", "shopguard" },
       level = 20,
       creaturepack = Enum.CharaCategory.Mercenary,
@@ -5450,7 +5571,7 @@ local chara = {
    {
       _id = "mercenary_wizard",
       elona_id = 161,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man", "shopguard" },
       level = 20,
       creaturepack = Enum.CharaCategory.Mercenary,
@@ -5478,7 +5599,7 @@ local chara = {
    {
       _id = "rogue_boss",
       elona_id = 302,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man", "rogue" },
       level = 12,
       portrait = "elona.man47",
@@ -5492,7 +5613,6 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       rarity = 25000,
       coefficient = 400,
-      drops = { "elona.rogue", "elona.rogue_boss" },
       dialog = "elona.rogue_boss",
       ai_actions = {
          sub = {
@@ -5504,12 +5624,38 @@ local chara = {
       ai_move_chance = 80,
       skills = {
          "elona.buff_boost"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- TODO dedup
+         -- >>>>>>>> shade2/item.hsp:358 	if (cId(rc)>=302)and(cId(rc)<=305){	;robbers ...
+         if Rand.one_in(90) then
+            drops[#drops+1] = { _id = "elona.blue_capsule_drug" }
+         end
+         -- <<<<<<<< shade2/item.hsp:360 	} ..
+
+         -- >>>>>>>> shade2/item.hsp:379 	if cId(rc)=302{ ...
+         for _ = 1, 2 + Rand.rnd(4) do
+            drops[#drops+1] = {
+               filter = {
+                  level = self.level,
+                  quality = Enum.Quality.Normal,
+                  categories = "elona.cargo",
+               },
+               on_create = function(item)
+                  if item.value < 800 then
+                     item.amount = Rand.rnd(5) + 1
+                  end
+               end
+            }
+         end
+         -- <<<<<<<< shade2/item.hsp:383 	} ..
+      end
    },
    {
       _id = "rogue_warrior",
       elona_id = 303,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man", "rogue", "rogue_guard" },
       level = 10,
       can_talk = true,
@@ -5522,14 +5668,22 @@ local chara = {
       eqtwohand = 1,
       rarity = 25000,
       coefficient = 400,
-      drops = { "elona.rogue" },
       ai_distance = 1,
-      ai_move_chance = 80
+      ai_move_chance = 80,
+
+      on_drop_loot = function(self, _, drops)
+         -- TODO dedup
+         -- >>>>>>>> shade2/item.hsp:358 	if (cId(rc)>=302)and(cId(rc)<=305){	;robbers ...
+         if Rand.one_in(90) then
+            drops[#drops+1] = { _id = "elona.blue_capsule_drug" }
+         end
+         -- <<<<<<<< shade2/item.hsp:360 	} ..
+      end
    },
    {
       _id = "rogue_archer",
       elona_id = 304,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man", "rogue", "rogue_guard" },
       level = 10,
       can_talk = true,
@@ -5540,19 +5694,27 @@ local chara = {
       image = "elona.chara_rogue_archer",
       rarity = 25000,
       coefficient = 400,
-      drops = { "elona.rogue" },
       ai_actions = {
          main = {
             { id = "elona.ranged" }
          }
       },
       ai_distance = 1,
-      ai_move_chance = 50
+      ai_move_chance = 50,
+
+      on_drop_loot = function(self, _, drops)
+         -- TODO dedup
+         -- >>>>>>>> shade2/item.hsp:358 	if (cId(rc)>=302)and(cId(rc)<=305){	;robbers ...
+         if Rand.one_in(90) then
+            drops[#drops+1] = { _id = "elona.blue_capsule_drug" }
+         end
+         -- <<<<<<<< shade2/item.hsp:360 	} ..
+      end
    },
    {
       _id = "rogue_wizard",
       elona_id = 305,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man", "rogue", "rogue_guard" },
       level = 10,
       can_talk = true,
@@ -5563,7 +5725,6 @@ local chara = {
       image = "elona.chara_rogue_wizard",
       rarity = 25000,
       coefficient = 400,
-      drops = { "elona.rogue" },
       ai_actions = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_fire_bolt" },
@@ -5578,12 +5739,21 @@ local chara = {
          "elona.spell_fire_bolt",
          "elona.spell_magic_dart",
          "elona.buff_slow"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- TODO dedup
+         -- >>>>>>>> shade2/item.hsp:358 	if (cId(rc)>=302)and(cId(rc)<=305){	;robbers ...
+         if Rand.one_in(90) then
+            drops[#drops+1] = { _id = "elona.blue_capsule_drug" }
+         end
+         -- <<<<<<<< shade2/item.hsp:360 	} ..
+      end
    },
    {
       _id = "yerles_machine_infantry",
       elona_id = 162,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 5,
       can_talk = true,
@@ -5598,7 +5768,7 @@ local chara = {
    {
       _id = "yerles_elite_machine_infantry",
       elona_id = 234,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 22,
       can_talk = true,
@@ -5614,7 +5784,7 @@ local chara = {
    {
       _id = "gilbert_the_colonel",
       elona_id = 231,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 45,
       portrait = "elona.gilbert",
@@ -5638,7 +5808,7 @@ local chara = {
    {
       _id = "yerles_self_propelled_gun",
       elona_id = 232,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 17,
       ai_calm = 3,
       relation = Enum.Relation.Enemy,
@@ -5658,7 +5828,7 @@ local chara = {
    {
       _id = "juere_infantry",
       elona_id = 233,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 7,
       can_talk = true,
@@ -5673,7 +5843,7 @@ local chara = {
    {
       _id = "juere_swordman",
       elona_id = 235,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 15,
       can_talk = true,
@@ -5689,7 +5859,7 @@ local chara = {
    {
       _id = "rock_thrower",
       elona_id = 163,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 9,
       relation = Enum.Relation.Enemy,
@@ -5706,7 +5876,7 @@ local chara = {
    {
       _id = "cat",
       elona_id = 164,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild", "cat" },
       level = 4,
       can_talk = true,
@@ -5722,7 +5892,7 @@ local chara = {
    {
       _id = "silver_cat",
       elona_id = 246,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild", "cat" },
       level = 3,
       can_talk = true,
@@ -5739,7 +5909,7 @@ local chara = {
    {
       _id = "stray_cat",
       elona_id = 332,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild", "cat" },
       level = 9,
       can_talk = true,
@@ -5757,7 +5927,7 @@ local chara = {
    {
       _id = "lion",
       elona_id = 229,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild", "cat" },
       level = 18,
       creaturepack = Enum.CharaCategory.Dog,
@@ -5775,7 +5945,7 @@ local chara = {
    {
       _id = "cacy",
       elona_id = 230,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild", "cat" },
       level = 25,
       can_talk = true,
@@ -5801,7 +5971,7 @@ local chara = {
    {
       _id = "carbuncle",
       elona_id = 228,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild", "cat" },
       level = 20,
       can_talk = true,
@@ -5830,7 +6000,7 @@ local chara = {
    {
       _id = "dog",
       elona_id = 165,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 4,
       creaturepack = Enum.CharaCategory.Dog,
@@ -5847,7 +6017,7 @@ local chara = {
    {
       _id = "poppy",
       elona_id = 225,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 1,
       can_talk = true,
@@ -5865,7 +6035,7 @@ local chara = {
    {
       _id = "rilian",
       elona_id = 226,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 4,
       portrait = "elona.woman17",
@@ -5887,7 +6057,7 @@ local chara = {
    {
       _id = "tam",
       elona_id = 227,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 5,
       portrait = "elona.man17",
@@ -5910,7 +6080,7 @@ local chara = {
    {
       _id = "little_girl",
       elona_id = 166,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 4,
       can_talk = true,
@@ -5927,7 +6097,7 @@ local chara = {
    {
       _id = "rat",
       elona_id = 167,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 1,
       can_talk = true,
@@ -5941,7 +6111,7 @@ local chara = {
    {
       _id = "hermit_crab",
       elona_id = 168,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 1,
       relation = Enum.Relation.Enemy,
@@ -5949,14 +6119,21 @@ local chara = {
       class = "elona.predator",
       coefficient = 400,
       on_eat_corpse = eating_effect.calm,
-      drops = { "elona.hermit_crab" },
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:354 	if cId(rc)=168{	;crab ...
+         if Rand.one_in(100) then
+            drops[#drops+1] = { _id = "elona.unknown_shell" }
+         end
+         -- <<<<<<<< shade2/item.hsp:356 	} ..
+      end
    },
    {
       _id = "public_performer",
       elona_id = 170,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 1,
       can_talk = true,
@@ -5974,7 +6151,7 @@ local chara = {
    {
       _id = "frisia",
       elona_id = 175,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 80,
       can_talk = true,
@@ -5984,14 +6161,13 @@ local chara = {
       quality = Enum.Quality.Unique,
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
-      drops = { "elona.god_boss" },
       ai_distance = 1,
       ai_move_chance = 50
    },
    {
       _id = "younger_sister",
       elona_id = 176,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 1,
       can_talk = true,
@@ -6007,7 +6183,7 @@ local chara = {
    {
       _id = "younger_sister_of_mansion",
       elona_id = 249,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 50,
       can_talk = true,
@@ -6032,7 +6208,7 @@ local chara = {
    {
       _id = "younger_cat_sister",
       elona_id = 210,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 1,
       can_talk = true,
@@ -6046,7 +6222,7 @@ local chara = {
    {
       _id = "young_lady",
       elona_id = 211,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 1,
       can_talk = true,
@@ -6079,7 +6255,7 @@ local chara = {
    {
       _id = "utima",
       elona_id = 177,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 80,
       can_talk = true,
@@ -6095,7 +6271,6 @@ local chara = {
       eqammo_1 = 3,
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
-      drops = { "elona.god_boss" },
       eqammo = { 25030, 3 },
       eqrange = 514,
       ai_actions = {
@@ -6118,7 +6293,7 @@ local chara = {
    {
       _id = "azzrssil",
       elona_id = 178,
-      item_type = 6,
+      loot_type = "elona.lich",
       tags = { "undead", "god" },
       level = 80,
       can_talk = true,
@@ -6132,7 +6307,6 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       on_eat_corpse = eating_effect.insanity,
-      drops = { "elona.god_boss" },
       ai_actions = {
          main = {
             { id = "elona.melee" },
@@ -6159,7 +6333,7 @@ local chara = {
    {
       _id = "pet_arena_master",
       elona_id = 179,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 35,
       relation = Enum.Relation.Neutral,
@@ -6174,7 +6348,7 @@ local chara = {
    {
       _id = "garokk",
       elona_id = 208,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 45,
       can_talk = true,
@@ -6193,7 +6367,7 @@ local chara = {
    {
       _id = "miral",
       elona_id = 209,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 45,
       can_talk = true,
@@ -6212,7 +6386,7 @@ local chara = {
    {
       _id = "twintail",
       elona_id = 180,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 1,
       can_talk = true,
       relation = Enum.Relation.Neutral,
@@ -6227,7 +6401,7 @@ local chara = {
    {
       _id = "silver_wolf",
       elona_id = 181,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "god" },
       level = 10,
       can_talk = true,
@@ -6242,7 +6416,7 @@ local chara = {
    {
       _id = "nurse",
       elona_id = 182,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 8,
       can_talk = true,
@@ -6267,7 +6441,7 @@ local chara = {
    {
       _id = "rich_person",
       elona_id = 183,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 15,
       portrait = "random",
@@ -6281,6 +6455,9 @@ local chara = {
       rarity = 20000,
       coefficient = 400,
 
+      -- >>>>>>>> shade2/item.hsp:314 	if cId(rc)=183 : lootRich=8 ...
+      rich_loot_amount = 8,
+      -- <<<<<<<< shade2/item.hsp:314 	if cId(rc)=183 : lootRich=8 ..
       calc_initial_gold = function()
          return 5000 + Rand.rnd(11000)
       end
@@ -6288,7 +6465,7 @@ local chara = {
    {
       _id = "noble_child",
       elona_id = 184,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 9,
       portrait = "random",
@@ -6302,6 +6479,9 @@ local chara = {
       rarity = 40000,
       coefficient = 400,
 
+      -- >>>>>>>> shade2/item.hsp:315 	if cId(rc)=184 : lootRich=4 ...
+      rich_loot_amount = 4,
+      -- <<<<<<<< shade2/item.hsp:315 	if cId(rc)=184 : lootRich=4 ..
       calc_initial_gold = function()
          return 2000 + Rand.rnd(5000)
       end
@@ -6309,7 +6489,7 @@ local chara = {
    {
       _id = "tourist",
       elona_id = 185,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 20,
       portrait = "random",
@@ -6323,6 +6503,9 @@ local chara = {
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
 
+      -- >>>>>>>> shade2/item.hsp:316 	if cId(rc)=185 : lootRich=2	;大富豪、貴族、観光客 ...
+      rich_loot_amount = 2,
+      -- <<<<<<<< shade2/item.hsp:316 	if cId(rc)=185 : lootRich=2	;大富豪、貴族、観光客 ..
       calc_initial_gold = function()
          return 1000 + Rand.rnd(3000)
       end
@@ -6330,7 +6513,7 @@ local chara = {
    {
       _id = "festival_tourist",
       elona_id = 350,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 10,
       portrait = "random",
@@ -6348,7 +6531,7 @@ local chara = {
    {
       _id = "blade",
       elona_id = 186,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 5,
       relation = Enum.Relation.Enemy,
       race = "elona.machine",
@@ -6363,7 +6546,7 @@ local chara = {
    {
       _id = "blade_alpha",
       elona_id = 187,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 13,
       relation = Enum.Relation.Enemy,
       race = "elona.machine",
@@ -6380,7 +6563,7 @@ local chara = {
    {
       _id = "blade_omega",
       elona_id = 188,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 30,
       relation = Enum.Relation.Enemy,
       race = "elona.machine",
@@ -6397,7 +6580,7 @@ local chara = {
    {
       _id = "kaneda_bike",
       elona_id = 345,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 22,
       ai_calm = 3,
       can_talk = true,
@@ -6420,7 +6603,7 @@ local chara = {
    {
       _id = "cub",
       elona_id = 346,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 8,
       ai_calm = 3,
       can_talk = true,
@@ -6441,7 +6624,7 @@ local chara = {
    {
       _id = "mine_dog",
       elona_id = 341,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 15,
       relation = Enum.Relation.Enemy,
       race = "elona.machine",
@@ -6451,7 +6634,6 @@ local chara = {
       flags = { "IsImmuneToFear", "CuresMpFrequently" },
       is_immune_to_mines = true,
       on_eat_corpse = eating_effect.iron,
-      drops = { "elona.mine_dog" },
       ai_actions = {
          main = {
             { id = "elona.skill", skill_id = "elona.action_drop_mine" },
@@ -6467,12 +6649,20 @@ local chara = {
       skills = {
          "elona.action_drop_mine",
          "elona.spell_gravity"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:370 	if cId(rc)=250{				;fairy ...
+         if Rand.one_in(3) then
+            drops[#drops+1] = { _id = "elona.mine" }
+         end
+         -- <<<<<<<< shade2/item.hsp:372 	} ..
+      end
    },
    {
       _id = "iron_maiden",
       elona_id = 258,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 25,
       relation = Enum.Relation.Enemy,
       race = "elona.machine",
@@ -6490,7 +6680,7 @@ local chara = {
    {
       _id = "deformed_eye",
       elona_id = 189,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 8,
       relation = Enum.Relation.Enemy,
@@ -6500,7 +6690,6 @@ local chara = {
       coefficient = 400,
       flags = { "IsFloating", "IsImmuneToFear" },
       on_eat_corpse = eating_effect.deformed_eye,
-      drops = { "elona.deformed_eye" },
       ai_actions = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_eye_of_mutation" }
@@ -6511,12 +6700,20 @@ local chara = {
       ai_move_chance = 80,
       skills = {
          "elona.action_eye_of_mutation"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:364 	if (cId(rc)=189)or(cId(rc)=190){	;deformed eye ...
+         if Rand.one_in(150) then
+            drops[#drops+1] = { _id = "elona.potion_of_evolution" }
+         end
+         -- <<<<<<<< shade2/item.hsp:366 	} ..
+      end
    },
    {
       _id = "impure_eye",
       elona_id = 190,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 19,
       relation = Enum.Relation.Enemy,
@@ -6527,7 +6724,6 @@ local chara = {
       coefficient = 400,
       flags = { "IsFloating", "IsImmuneToFear" },
       on_eat_corpse = eating_effect.deformed_eye,
-      drops = { "elona.deformed_eye" },
       ai_actions = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_eye_of_mutation" }
@@ -6543,7 +6739,7 @@ local chara = {
    {
       _id = "wisp",
       elona_id = 191,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead", "ether" },
       level = 14,
       relation = Enum.Relation.Enemy,
@@ -6577,7 +6773,7 @@ local chara = {
    {
       _id = "hedgehog",
       elona_id = 192,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 5,
       relation = Enum.Relation.Enemy,
@@ -6591,7 +6787,7 @@ local chara = {
    {
       _id = "shining_hedgehog",
       elona_id = 193,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild", "ether" },
       level = 15,
       relation = Enum.Relation.Enemy,
@@ -6608,7 +6804,7 @@ local chara = {
    {
       _id = "chicken",
       elona_id = 195,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild" },
       level = 1,
       can_talk = true,
@@ -6622,7 +6818,7 @@ local chara = {
    {
       _id = "pumpkin",
       elona_id = 196,
-      item_type = 2,
+      loot_type = "elona.insect",
       tags = { "undead" },
       level = 7,
       ai_calm = 3,
@@ -6650,7 +6846,7 @@ local chara = {
    {
       _id = "puppy",
       elona_id = 201,
-      item_type = 2,
+      loot_type = "elona.insect",
       tags = { "undead" },
       level = 5,
       ai_calm = 3,
@@ -6680,7 +6876,7 @@ local chara = {
    {
       _id = "greater_pumpkin",
       elona_id = 197,
-      item_type = 2,
+      loot_type = "elona.insect",
       tags = { "undead" },
       level = 18,
       ai_calm = 3,
@@ -6710,7 +6906,7 @@ local chara = {
    {
       _id = "halloween_nightmare",
       elona_id = 198,
-      item_type = 2,
+      loot_type = "elona.insect",
       tags = { "undead" },
       level = 30,
       ai_calm = 3,
@@ -6740,7 +6936,7 @@ local chara = {
    {
       _id = "stalker",
       elona_id = 199,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 12,
       relation = Enum.Relation.Enemy,
@@ -6763,7 +6959,7 @@ local chara = {
    {
       _id = "shadow_stalker",
       elona_id = 200,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 26,
       relation = Enum.Relation.Enemy,
@@ -6787,7 +6983,7 @@ local chara = {
    {
       _id = "ebon",
       elona_id = 202,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 80,
       ai_calm = 3,
       can_talk = true,
@@ -6817,7 +7013,7 @@ local chara = {
    {
       _id = "moyer_the_crooked",
       elona_id = 203,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 10,
       portrait = "random",
@@ -6837,7 +7033,7 @@ local chara = {
    {
       _id = "maid",
       elona_id = 205,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 1,
       can_talk = true,
@@ -6872,7 +7068,7 @@ local chara = {
    {
       _id = "ebon2",
       elona_id = 207,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 30,
       can_talk = true,
@@ -6902,7 +7098,7 @@ local chara = {
    {
       _id = "test_subject",
       elona_id = 212,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 1,
       portrait = "elona.stersha",
       relation = Enum.Relation.Enemy,
@@ -6919,7 +7115,7 @@ local chara = {
    {
       _id = "gwen",
       elona_id = 213,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 1,
       ai_calm = 4,
@@ -6932,16 +7128,28 @@ local chara = {
       quality = Enum.Quality.Unique,
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
-      drops = { "elona.gwen" },
       ai_actions = {
          calm_action = "elona.calm_follow"
       },
-      ai_distance = 1
+      ai_distance = 1,
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:367 	if cId(rc)=213{	;Gwen ...
+         if Rand.one_in(50) then
+            drops[#drops+1] = {
+               _id = "elona.secret_treasure",
+               on_create = function(item)
+                  item.params.secret_treasure_trait = "elona.perm_good"
+               end
+            }
+         end
+         -- <<<<<<<< shade2/item.hsp:369 	} ..
+      end
    },
    {
       _id = "pael",
       elona_id = 221,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 10,
       portrait = "elona.woman16",
@@ -6964,7 +7172,7 @@ local chara = {
    {
       _id = "lily",
       elona_id = 222,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 15,
       portrait = "elona.woman14",
@@ -6987,7 +7195,7 @@ local chara = {
    {
       _id = "raphael",
       elona_id = 223,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 10,
       portrait = "elona.man15",
@@ -7010,7 +7218,7 @@ local chara = {
    {
       _id = "ainc",
       elona_id = 224,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 7,
       portrait = "elona.man19",
@@ -7033,7 +7241,7 @@ local chara = {
    {
       _id = "arnord",
       elona_id = 243,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 15,
       portrait = "elona.arnord",
@@ -7056,7 +7264,7 @@ local chara = {
    {
       _id = "mia",
       elona_id = 247,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 4,
       portrait = "elona.mia",
@@ -7074,7 +7282,7 @@ local chara = {
    {
       _id = "renton",
       elona_id = 252,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 45,
       portrait = "elona.man6",
@@ -7108,7 +7316,7 @@ local chara = {
    {
       _id = "marks",
       elona_id = 253,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 25,
       portrait = "elona.man2",
@@ -7137,7 +7345,7 @@ local chara = {
    {
       _id = "noel",
       elona_id = 259,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 20,
       portrait = "elona.woman16",
@@ -7166,7 +7374,7 @@ local chara = {
    {
       _id = "conery",
       elona_id = 301,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 38,
       portrait = "elona.conery",
@@ -7189,7 +7397,7 @@ local chara = {
    {
       _id = "thief",
       elona_id = 214,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 2,
       can_talk = true,
@@ -7198,7 +7406,7 @@ local chara = {
       image = "elona.chara_master_thief",
       rarity = 30000,
       coefficient = 400,
-      flags = { "DropsGold" },
+      always_drops_gold = true,
       ai_actions = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_suspicious_hand" }
@@ -7214,7 +7422,7 @@ local chara = {
    {
       _id = "robber",
       elona_id = 215,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 5,
       can_talk = true,
@@ -7225,7 +7433,7 @@ local chara = {
       color = { 255, 155, 155 },
       rarity = 30000,
       coefficient = 400,
-      flags = { "DropsGold" },
+      always_drops_gold = true,
       ai_actions = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_suspicious_hand" }
@@ -7241,7 +7449,7 @@ local chara = {
    {
       _id = "master_thief",
       elona_id = 217,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 35,
       can_talk = true,
@@ -7252,7 +7460,7 @@ local chara = {
       color = { 175, 175, 255 },
       rarity = 30000,
       coefficient = 400,
-      flags = { "DropsGold" },
+      always_drops_gold = true,
       ai_actions = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_suspicious_hand" }
@@ -7268,7 +7476,7 @@ local chara = {
    {
       _id = "great_race_of_yith",
       elona_id = 216,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 50,
       relation = Enum.Relation.Enemy,
       race = "elona.yith",
@@ -7297,7 +7505,7 @@ local chara = {
    {
       _id = "shub_niggurath",
       elona_id = 218,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 45,
       ai_calm = 3,
       relation = Enum.Relation.Enemy,
@@ -7335,7 +7543,7 @@ local chara = {
    {
       _id = "gagu",
       elona_id = 219,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 38,
       relation = Enum.Relation.Enemy,
       race = "elona.orc",
@@ -7359,7 +7567,7 @@ local chara = {
    {
       _id = "spiral_king",
       elona_id = 220,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 65,
       relation = Enum.Relation.Enemy,
@@ -7398,14 +7606,14 @@ local chara = {
    {
       _id = "fairy",
       elona_id = 250,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 13,
       relation = Enum.Relation.Enemy,
       race = "elona.fairy",
       rarity = 50000,
       coefficient = 400,
-      flags = { "IsFloating", "DropsGold" },
-      drops = { "elona.fairy" },
+      is_floating = true,
+      always_drops_gold = true,
       ai_actions = {
          main = {
             { id = "elona.melee" },
@@ -7423,12 +7631,25 @@ local chara = {
          "elona.spell_mind_bolt",
          "elona.spell_short_teleport",
          "elona.action_suspicious_hand"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:370 	if cId(rc)=250{				;fairy ...
+         if Rand.one_in(50) then
+            drops[#drops+1] = {
+               _id = "elona.secret_treasure",
+               on_create = function(item)
+                  item.params.secret_treasure_trait = "elona.perm_good"
+               end
+            }
+         end
+         -- <<<<<<<< shade2/item.hsp:372 	} ..
+      end
    },
    {
       _id = "black_cat",
       elona_id = 260,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 8,
       can_talk = true,
@@ -7464,7 +7685,7 @@ local chara = {
    {
       _id = "cute_fairy",
       elona_id = 261,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 8,
       can_talk = true,
@@ -7500,7 +7721,7 @@ local chara = {
    {
       _id = "android",
       elona_id = 262,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 8,
       has_own_name = true,
@@ -7528,7 +7749,7 @@ local chara = {
    {
       _id = "black_angel",
       elona_id = 263,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 8,
       can_talk = true,
@@ -7569,7 +7790,7 @@ local chara = {
    {
       _id = "exile",
       elona_id = 264,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 8,
       has_own_name = true,
@@ -7601,7 +7822,7 @@ local chara = {
    {
       _id = "golden_knight",
       elona_id = 265,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 8,
       has_own_name = true,
@@ -7636,7 +7857,7 @@ local chara = {
    {
       _id = "defender",
       elona_id = 266,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "god" },
       level = 8,
       has_own_name = true,
@@ -7672,7 +7893,7 @@ local chara = {
    {
       _id = "lame_horse",
       elona_id = 267,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild", "horse" },
       level = 1,
       can_talk = true,
@@ -7690,7 +7911,7 @@ local chara = {
    {
       _id = "wild_horse",
       elona_id = 276,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild", "horse" },
       level = 4,
       can_talk = true,
@@ -7709,7 +7930,7 @@ local chara = {
    {
       _id = "noyel_horse",
       elona_id = 275,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild", "horse" },
       level = 10,
       can_talk = true,
@@ -7728,7 +7949,7 @@ local chara = {
    {
       _id = "yowyn_horse",
       elona_id = 268,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild", "horse" },
       level = 15,
       can_talk = true,
@@ -7747,7 +7968,7 @@ local chara = {
    {
       _id = "wild_horse2",
       elona_id = 277,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "wild", "horse" },
       level = 20,
       can_talk = true,
@@ -7766,7 +7987,7 @@ local chara = {
    {
       _id = "mutant",
       elona_id = 278,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 6,
       has_own_name = true,
       relation = Enum.Relation.Enemy,
@@ -7781,7 +8002,7 @@ local chara = {
    {
       _id = "icolle",
       elona_id = 279,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 15,
       portrait = "elona.man18",
@@ -7801,7 +8022,7 @@ local chara = {
    {
       _id = "balzak",
       elona_id = 280,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 10,
       portrait = "elona.balzak",
@@ -7824,7 +8045,7 @@ local chara = {
    {
       _id = "revlus",
       elona_id = 288,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 55,
       portrait = "elona.man14",
@@ -7857,7 +8078,7 @@ local chara = {
    {
       _id = "lexus",
       elona_id = 290,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 38,
       portrait = "elona.man6",
@@ -7893,7 +8114,7 @@ local chara = {
    {
       _id = "sin",
       elona_id = 292,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 55,
       portrait = "elona.man7",
@@ -7911,7 +8132,7 @@ local chara = {
    {
       _id = "abyss",
       elona_id = 294,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 38,
       portrait = "elona.man6",
@@ -7935,7 +8156,7 @@ local chara = {
    {
       _id = "fray",
       elona_id = 291,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 55,
       portrait = "elona.woman18",
@@ -7953,7 +8174,7 @@ local chara = {
    {
       _id = "doria",
       elona_id = 297,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 38,
       portrait = "elona.man6",
@@ -7977,7 +8198,7 @@ local chara = {
    {
       _id = "silver_eyed_witch",
       elona_id = 317,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 28,
       can_talk = true,
       has_own_name = true,
@@ -8006,7 +8227,7 @@ local chara = {
    {
       _id = "big_daddy",
       elona_id = 318,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 30,
       can_talk = true,
       relation = Enum.Relation.Neutral,
@@ -8033,7 +8254,7 @@ local chara = {
    {
       _id = "little_sister",
       elona_id = 319,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 1,
       can_talk = true,
       relation = Enum.Relation.Neutral,
@@ -8051,7 +8272,7 @@ local chara = {
    {
       _id = "strange_scientist",
       elona_id = 322,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 15,
       can_talk = true,
@@ -8071,7 +8292,7 @@ local chara = {
    {
       _id = "mysterious_producer",
       elona_id = 334,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "man" },
       level = 7,
       can_talk = true,
@@ -8090,7 +8311,7 @@ local chara = {
    {
       _id = "shade",
       elona_id = 323,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       tags = { "undead" },
       level = 12,
       relation = Enum.Relation.Enemy,
@@ -8119,7 +8340,7 @@ local chara = {
    {
       _id = "quickling",
       elona_id = 324,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 10,
       relation = Enum.Relation.Enemy,
       race = "elona.quickling",
@@ -8134,7 +8355,7 @@ local chara = {
    {
       _id = "quickling_archer",
       elona_id = 325,
-      item_type = 3,
+      loot_type = "elona.humanoid",
       level = 17,
       relation = Enum.Relation.Enemy,
       race = "elona.quickling",
@@ -8164,7 +8385,7 @@ local chara = {
    {
       _id = "silver_bell",
       elona_id = 328,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 3,
       can_talk = true,
       relation = Enum.Relation.Enemy,
@@ -8173,7 +8394,6 @@ local chara = {
       coefficient = 0,
       flags = { "IsUnsuitableForMount", "IsMetal", "IsImmuneToElementalDamage", "IsFloating" },
       on_eat_corpse = eating_effect.iron,
-      drops = { "elona.silver_bell" },
       ai_actions = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_vanish" }
@@ -8184,12 +8404,22 @@ local chara = {
       ai_move_chance = 30,
       skills = {
          "elona.action_vanish"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:384 	if cId(rc)=328{ ...
+         drops[#drops+1] = { _id = "elona.platinum_coin", amount = 1 + Rand.rnd(3) }
+
+         if Rand.one_in(2) then
+            drops[#drops+1] = { _id = "elona.small_medal" }
+         end
+         -- <<<<<<<< shade2/item.hsp:387 	} ..
+      end
    },
    {
       _id = "gold_bell",
       elona_id = 329,
-      item_type = 1,
+      loot_type = "elona.animal",
       level = 1,
       can_talk = true,
       relation = Enum.Relation.Enemy,
@@ -8199,7 +8429,6 @@ local chara = {
       coefficient = 0,
       flags = { "IsUnsuitableForMount", "IsMetal", "IsImmuneToElementalDamage", "IsFloating" },
       on_eat_corpse = eating_effect.iron,
-      drops = { "elona.gold_bell" },
       ai_actions = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_vanish" }
@@ -8210,12 +8439,21 @@ local chara = {
       ai_move_chance = 30,
       skills = {
          "elona.action_vanish"
-      }
+      },
+
+      on_drop_loot = function(self, _, drops)
+         -- >>>>>>>> shade2/item.hsp:388 	if cId(rc)=329{ ...
+         drops[#drops+1] = {
+            _id = "elona.gold_piece",
+            amount = 2500 + Rand.rnd(Chara.player():calc("fame") + 1000)
+         }
+         -- <<<<<<<< shade2/item.hsp:390 	}	 ..
+      end
    },
    {
       _id = "alien",
       elona_id = 330,
-      item_type = 1,
+      loot_type = "elona.animal",
       tags = { "dragon" },
       level = 19,
       relation = Enum.Relation.Enemy,
@@ -8243,7 +8481,7 @@ local chara = {
    -- For debug
    -- chara spiral_putit {
    --     _id = 500,
-   --     item_type = 1,
+   --     loot_type = "elona.animal",
    --     tags = { "slime" },
    --     level = 1,
    --     creaturepack = Enum.CharaCategory.Slime,
@@ -8262,7 +8500,7 @@ local chara = {
    -- For debug
    -- chara dragon_putit {
    --     _id = 501,
-   --     item_type = 5,
+   --     loot_type = "elona.dragon",
    --     tags = { "dragon" },
    --     level = 1,
    --     relation = Enum.Relation.Enemy,

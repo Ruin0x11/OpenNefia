@@ -6,6 +6,7 @@ local IModdable = require("api.IModdable")
 local IEventEmitter = require("api.IEventEmitter")
 local IStackableObject = require("api.IStackableObject")
 local ILocalizable = require("api.ILocalizable")
+local IItemContainer = require("api.item.IItemContainer")
 local I18N = require("api.I18N")
 local Log = require("api.Log")
 local Gui = require("api.Gui")
@@ -14,27 +15,36 @@ local Enum = require("api.Enum")
 
 local IItem = class.interface("IItem",
                          {},
-                         {IStackableObject, IModdable, IItemEnchantments, IEventEmitter, ILocalizable})
+                         {
+                            IStackableObject,
+                            IModdable,
+                            IEventEmitter,
+                            ILocalizable,
+                            IItemEnchantments,
+                            IItemContainer,
+                         })
 
 function IItem:pre_build()
    IModdable.init(self)
    IMapObject.init(self)
    IEventEmitter.init(self)
    IItemEnchantments.init(self)
+   IItemContainer.init(self)
+end
+
+function IItem:normal_build()
+   self.name = self._id
+   self.image = self.proto.image
 
    local fallbacks = data.fallbacks["base.item"]
    self:mod_base_with(table.deepcopy(fallbacks), "merge")
 end
 
-function IItem:normal_build()
-   self.name = self._id
-
-   self.image = self.proto.image
-end
-
 function IItem:build(params)
    params = params or {}
    self.name = I18N.get("item.info." .. self._id .. ".name")
+
+   IItemContainer.build(self)
 
    -- TODO remove params
    self:emit("base.on_build_item", params)
@@ -99,11 +109,11 @@ function IItem:get_owning_chara()
 
    while location ~= nil do
       if class.is_an(IChara, location) then
-         if location:has_item(self) then
+         if location:has_object(self) then
             return location
          end
       end
-      location = location._parent or nil
+      location = location.location or location._parent or nil
    end
 
    return nil

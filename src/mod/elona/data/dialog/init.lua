@@ -227,21 +227,6 @@ end
 
 Event.register("elona.calc_dialog_choices", "Add quest dialog choices", add_quest_dialog)
 
-local function refresh_shop(shopkeeper)
-   -- TODO multiple shop roles
-   local role = shopkeeper:find_role("elona.shopkeeper")
-   local inv_id = role.inventory_id
-   local inv_data = data["elona.shop_inventory"]:ensure(inv_id)
-   shopkeeper.shop_inventory = ShopInventory.generate(inv_id, shopkeeper)
-
-   -- >>>>>>>> elona122/shade2/chat.hsp:3564  ..
-   local restock_interval = inv_data.restock_interval or 24
-   shopkeeper.shop_restock_date = World.date_hours() + restock_interval
-   -- <<<<<<<< elona122/shade2/chat.hsp:3565 	cRoleRestock(tc)=dateID+restockTime*(1+(cRole(tc) ..
-
-   shopkeeper:emit("elona.on_shop_restocked", {inventory_id=inv_id})
-end
-
 data:add {
    _type = "elona_sys.dialog",
    _id = "shopkeeper",
@@ -251,7 +236,7 @@ data:add {
          if t.speaker.shop_inventory == nil
             or World.date():hours() >= t.speaker.shop_restock_date
          then
-            refresh_shop(t.speaker)
+            ShopInventory.refresh_shop(t.speaker)
          end
 
          Input.query_inventory(Chara.player(), "elona.inv_buy", {target=t.speaker, shop=t.speaker.shop_inventory})

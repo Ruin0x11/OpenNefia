@@ -1,9 +1,11 @@
 local Chara = require("api.Chara")
 local Item = require("api.Item")
 local Itemgen = require("mod.tools.api.Itemgen")
-local ObjectContainer = require("api.ObjectContainer")
 local Rand = require("api.Rand")
 local Enum = require("api.Enum")
+local World = require("api.World")
+local Inventory = require("api.Inventory")
+local Calc = require("mod.elona.api.Calc")
 
 local ShopInventory = {}
 
@@ -56,7 +58,12 @@ function ShopInventory.apply_rule_properties(rule, ret, index, shopkeeper)
 end
 
 function ShopInventory.apply_rules(index, shopkeeper, inv)
-   local ret = {level = shopkeeper:calc("shop_rank"), quality = 1}
+   -- >>>>>>>> shade2/chat.hsp:3314 	flt calcObjLv(cRoleShopLv(tc)),calcFixLv(fixNorma ...
+   local ret = {
+      level = Calc.calc_object_level(shopkeeper:calc("shop_rank"), shopkeeper:current_map()),
+      quality = Calc.calc_object_quality(Enum.Quality.Normal)
+   }
+   -- <<<<<<<< shade2/chat.hsp:3314 	flt calcObjLv(cRoleShopLv(tc)),calcFixLv(fixNorma ..
 
    if not inv.rules then
       return ret
@@ -221,7 +228,7 @@ end
 -- @tparam IChara shopkeeper
 function ShopInventory.generate(inv_id, shopkeeper)
    local inv = data["elona.shop_inventory"]:ensure(inv_id)
-   local result = ObjectContainer:new("base.item")
+   local result = Inventory:new(nil, "base.item", nil) -- will set _parent later
 
    -- Determine how many items to create. Shops can also adjust the
    -- amount with a formula.
@@ -303,6 +310,22 @@ function ShopInventory.generate(inv_id, shopkeeper)
    end
 
    return result
+end
+
+function ShopInventory.refresh_shop(shopkeeper)
+   -- TODO multiple shop roles
+   local role = shopkeeper:find_role("elona.shopkeeper")
+   local inv_id = role.inventory_id
+   local inv_data = data["elona.shop_inventory"]:ensure(inv_id)
+   shopkeeper.shop_inventory = ShopInventory.generate(inv_id, shopkeeper)
+   shopkeeper.shop_inventory:set_owner(shopkeeper)
+
+   -- >>>>>>>> elona122/shade2/chat.hsp:3564  ..
+   local restock_interval = inv_data.restock_interval or 24
+   shopkeeper.shop_restock_date = World.date_hours() + restock_interval
+   -- <<<<<<<< elona122/shade2/chat.hsp:3565 	cRoleRestock(tc)=dateID+restockTime*(1+(cRole(tc) ..
+
+   shopkeeper:emit("elona.on_shop_restocked", {inventory_id=inv_id})
 end
 
 return ShopInventory

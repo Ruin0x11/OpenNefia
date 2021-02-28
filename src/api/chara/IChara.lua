@@ -94,7 +94,7 @@ end
 --- responsibility to ensure that IChara:build() is also called at
 --- some later point.
 function IChara:normal_build()
-   self:emit("base.on_normal_build")
+   self:emit("base.on_chara_normal_build")
 end
 
 --- Finishes initializing this character. All characters must run this

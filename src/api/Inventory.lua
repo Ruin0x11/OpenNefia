@@ -19,6 +19,11 @@ function Inventory:init(max_size, type_id, owner)
    self.filters = {}
 end
 
+function Inventory:set_owner(owner)
+   assert(class.is_an(IOwned, owner))
+   self._parent = owner
+end
+
 function Inventory:set_max_size(max_size)
    self.max_size = max_size
 end
@@ -106,11 +111,7 @@ function Inventory:take_object(obj)
       return nil
    end
 
-   if not self.pool:take_object(obj) then
-      return nil
-   end
-
-   return obj
+   return self.pool:take_object(obj)
 end
 
 return Inventory

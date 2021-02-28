@@ -13,7 +13,7 @@ function Calc.calc_object_level(base, map)
    assert(class.is_an(InstancedMap, map), "Map must be provided")
 
    local ret = base or 0
-   if base < 0 then
+   if base <= 0 then
       ret = map:calc("level")
    end
 
