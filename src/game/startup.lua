@@ -68,6 +68,12 @@ local function load_keybinds()
    Input.reload_keybinds()
 end
 
+function startup.set_gc_params()
+   collectgarbage()
+   collectgarbage("setpause", config.base.gc_pause)
+   collectgarbage("setstepmul", config.base.gc_step_multiplier)
+end
+
 -- skip documenting api tables to save startup time from dozens of
 -- requires.
 -- TODO should be config option
@@ -156,6 +162,8 @@ function startup.run(mods)
    load_keybinds()
 
    config_store.trigger_on_changed()
+
+   startup.set_gc_params()
 
    progress("Finished.")
    progress()
