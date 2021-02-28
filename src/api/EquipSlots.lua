@@ -139,9 +139,9 @@ end
 
 --- Adds a new body part.
 -- @tparam base.body_part _type
-function EquipSlots:add_body_part(_type)
-   data["base.body_part"]:ensure(_type)
-   self.body_parts[#self.body_parts+1] = { type = _type, equipped = nil }
+function EquipSlots:add_body_part(_id)
+   data["base.body_part"]:ensure(_id)
+   self.body_parts[#self.body_parts+1] = { type = _id, equipped = nil }
 end
 
 --- Removes a body part at slot. Fails if an item is equipped there;
@@ -185,7 +185,8 @@ local function iter_body_parts(state, index)
       if (state.also_empty or equipped) and (state.also_blocked or not state.blocked[body_part.type]) then
          entry = {
             body_part = data["base.body_part"]:ensure(body_part.type),
-            equipped = state.pool:get_object(body_part.equipped)
+            equipped = state.pool:get_object(body_part.equipped),
+            slot = index
          }
       end
       index = index + 1

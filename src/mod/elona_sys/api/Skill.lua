@@ -329,6 +329,7 @@ end
 -- <<<<<<<< shade2/module.hsp:349 	#defcfunc calcFame int c,int per ..
 
 local function get_random_body_part()
+   -- >>>>>>>> shade2/calculation.hsp:33 	gainBody bodyNeck,7 ...
    if Rand.one_in(7) then
       return "elona.neck"
    end
@@ -352,6 +353,7 @@ local function get_random_body_part()
    end
 
    return "elona.head"
+   -- <<<<<<<< shade2/calculation.hsp:40 	gainBody bodyHead,1 ..
 end
 
 local function refresh_speed_correction(chara)

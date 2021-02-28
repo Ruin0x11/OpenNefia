@@ -1,5 +1,6 @@
 local Event = require("api.Event")
 local ShopInventory = require("mod.elona.api.ShopInventory")
+local Enum = require("api.Enum")
 
 local role = {
    {
@@ -144,6 +145,7 @@ local function proc_drop_wandering_merchant_trunk(chara, params, drops)
       for _, i in chara_.shop_inventory:iter() do
          assert(item:take_object(i))
       end
+      item.own_state = Enum.OwnState.Shop
    end
 
    drops[#drops+1] = {

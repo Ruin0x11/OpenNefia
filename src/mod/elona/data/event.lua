@@ -35,6 +35,7 @@ local event = {
    { _id = "on_feat_tile_digged_into" },
    { _id = "before_chara_drop_items" },
    { _id = "on_chara_generate_loot_drops" },
+   { _id = "on_chara_initialize_equipment" },
 }
 
 data:add_multi("base.event", event)

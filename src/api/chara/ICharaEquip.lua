@@ -184,6 +184,10 @@ function ICharaEquip:add_body_part(_type)
    self.equip:add_body_part(_type)
 end
 
+function ICharaEquip:get_equip_slot(index)
+   return self.equip:get(index)
+end
+
 -- Attempts to remove a body part. If something is equipped there,
 -- this function fails unless `force` is true. If `force` is true when
 -- an item is equipped there, removes the item, makes it ownerless and

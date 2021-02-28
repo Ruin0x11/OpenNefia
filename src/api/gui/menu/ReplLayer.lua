@@ -8,6 +8,8 @@ local Log = require("api.Log")
 local CircularBuffer = require("api.CircularBuffer")
 local Queue = require("api.Queue")
 local config = require("internal.config")
+local Stopwatch = require("api.Stopwatch")
+local MemoryProfiler = require("api.MemoryProfiler")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
@@ -75,6 +77,9 @@ function ReplLayer:init(env, params)
    self.deferred = Queue:new()
 
    self.print_varargs = false
+   self.measure_perf = false
+   self.hide_during_execute = true
+   self.is_executing = false
 
    -- mode of operation. could implement Elona-style console if
    -- desired.
@@ -576,7 +581,9 @@ function ReplLayer:submit()
       table.insert(self.history, 1, text)
    end
 
-   local success, results = self.mode:submit(text, self.env)
+   self.is_executing = true
+   local success, results = self.mode:submit(text, self.env, self.measure_perf)
+   self.is_executing = false
 
    local result_text = ReplLayer.format_results(results, true, self.show_metatables)
 
@@ -697,6 +704,10 @@ function ReplLayer:redraw_window()
 end
 
 function ReplLayer:draw()
+   if self.is_executing and self.hide_during_execute then
+      return
+   end
+
    if self.redraw then
       Draw.with_canvas(self.canvas, function() self:redraw_window() end)
       self.redraw = false
