@@ -19,6 +19,7 @@ local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Save = require("api.Save")
 local api_Item = require("api.Item")
+local Hunger = require("mod.elona.api.Hunger")
 
 local Item = {}
 
@@ -232,7 +233,7 @@ local function init_food(item, params)
    end
 
    if item.params.food_type and item.params.food_quality ~= 0 then
-      item.image = Item.get_food_image(item.params.food_type, item.params.food_quality)
+      item.image = Hunger.get_food_image(item.params.food_type, item.params.food_quality)
    end
 
    if item.material == "elona.fresh" then

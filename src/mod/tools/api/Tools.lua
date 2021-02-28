@@ -27,6 +27,7 @@ local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local World = require("api.World")
 local Encounter = require("mod.elona.api.Encounter")
 local ElonaAction = require("mod.elona.api.ElonaAction")
+local Hunger = require("mod.elona.api.Hunger")
 
 local Tools = {}
 
@@ -652,7 +653,7 @@ function Tools.make_foods(x, y)
    for _, i, _id in foods:enumerate() do
       for quality=0, 9 do
          local food = Item.create(_id, x + i, y + quality - 1, {})
-         Effect.make_dish(food, quality)
+         Hunger.make_dish(food, quality)
       end
    end
 end
