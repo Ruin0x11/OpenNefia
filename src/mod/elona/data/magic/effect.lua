@@ -22,6 +22,7 @@ local Text = require("mod.elona.api.Text")
 local Mef = require("api.Mef")
 local Const = require("api.Const")
 local Quest = require("mod.elona.api.Quest")
+local Hunger = require("mod.elona.api.Hunger")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    assert(type(curse_state) == "number")
@@ -71,10 +72,10 @@ data:add {
 
       target.nutrition = target.nutrition + 1000 * math.floor(params.power / 100)
       if target:is_player() then
-         Effect.show_eating_message(target)
+         Hunger.show_eating_message(target)
       end
 
-      Effect.apply_food_curse_state(target, params.curse_state)
+      Hunger.apply_food_curse_state(target, params.curse_state)
       local anim = Anim.load("elona.anim_elec", target.x, target.y)
       Gui.start_draw_callback(anim)
 
@@ -103,7 +104,7 @@ data:add {
       end
 
       target:apply_effect("elona.drunk", params.power)
-      Effect.apply_food_curse_state(target, params.curse_state)
+      Hunger.apply_food_curse_state(target, params.curse_state)
 
       return true
    end

@@ -1,178 +1,194 @@
 local Gui = require("api.Gui")
-local Skill = require("mod.elona_sys.api.Skill")
+local Chara = require("api.Chara")
+local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
+local Rand = require("api.Rand")
+local Item = require("api.Item")
+local Skill = require("mod.elona_sys.api.Skill")
+local Log = require("api.Log")
+local World = require("api.World")
 
 local Hunger = {}
 
-local lists = {
-   [1] = {
-      nutrition = 3500,
-      { id = 10, power = 30 },
-      { id = 11, power = 40 },
-      { id = 17, power = 10 },
-   },
-   [8] = {
-      nutrition = 2000,
-      { id = 17, power = 20 },
-      { id = 13, power = 20 },
-      { id = 15, power = 20 },
-   },
-   [2] = {
-      nutrition = 2000,
-      { id = 14, power = 50 },
-   },
-   [3] = {
-      nutrition = 2000,
-      { id = 16, power = 50 },
-      { id = 17, power = 20 },
-      { id = 13, power = 30 },
-   },
-   [7] = {
-      nutrition = 2800,
-      { id = 10, power = 25 },
-      { id = 12, power = 25 },
-      { id = 14, power = 25 },
-      { id = 11, power = 25 },
-   },
-   [4] = {
-      nutrition = 1500,
-      { id = 16, power = 40 },
-      { id = 12, power = 30 },
-      { id = 14, power = 30 },
-   },
-   [6] = {
-      nutrition = 3000,
-      { id = 14, power = 40 },
-      { id = 12, power = 40 },
-      { id = 13, power = 20 },
-   },
-   [5] = {
-      nutrition = 3500,
-      { id = 11, power = 60 },
-      { id = 12, power = 40 },
-   },
-}
-
-function Hunger.calc_base_food_buff(power, food_quality)
-   if power > 0 then
-      if food_quality < 3 then
-         power = math.floor(power/2)
-      else
-         power = power * (50 + food_quality * 20) / 100
-      end
-   elseif food_quality < 3 then
-      power = power * ((3 - food_quality) * 100 + 100) / 100
+function Hunger.show_eating_message(chara)
+   local nutrition = chara.nutrition
+   if nutrition >= 12000 then
+      Gui.mes_c("food.eating_message.bloated", "Green")
+   elseif nutrition >= 10000 then
+      Gui.mes_c("food.eating_message.satisfied", "Green")
+   elseif nutrition >= 5000 then
+      Gui.mes_c("food.eating_message.normal", "Green")
+   elseif nutrition >= 2000 then
+      Gui.mes_c("food.eating_message.hungry", "Green")
+   elseif nutrition >= 1000 then
+      Gui.mes_c("food.eating_message.very_hungry", "Green")
    else
-      power = power * 100 / (food_quality * 50)
+      Gui.mes_c("food.eating_message.starving", "Green")
    end
-   return power
 end
 
-function Hunger.calc_base_nutrition(item)
-   local buffs = {}
-   local quality = item.params.food_quality or item.params.food_rank or 0
-
-   for _, v in ipairs(item:calc("base_food_buffs") or lists[1]) do
-      local power = v.power
-      if not v.no_modify then
-         Hunger.calc_base_food_buff(v.power, quality)
-      end
-      buffs[#buffs+1] = { id = v.id, power = power }
+function Hunger.apply_food_curse_state(chara, curse_state)
+   -- >>>>>>>> shade2/chara_func.hsp:1930 	if cExist(c)!cAlive:return ..
+   if not Chara.is_alive(chara) then
+      return
    end
 
-   return buffs
+   if Effect.is_cursed(curse_state) then
+      chara.nutrition = chara.nutrition - 1500
+      if chara:is_in_fov() then
+         Gui.mes("food.eat_status.bad", chara)
+      end
+      Hunger.vomit(chara)
+   elseif curse_state == Enum.CurseState.Blessed then
+      if chara:is_in_fov() then
+         Gui.mes("food.eat_status.good", chara)
+      end
+      if Rand.one_in(5) then
+         Effect.add_buff(chara, chara, "elona.lucky", 100, 500 + Rand.rnd(500))
+      end
+
+      Effect.heal_insanity(chara, 2)
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:1941 	return ..
 end
 
-function Hunger.apply_food_buffs(chara, buffs, is_rotten)
-   for _, buff in ipairs(buffs) do
-      local i = 1000
-      local nutrition = chara:calc("nutrition")
+function Effect.proc_anorexia(chara)
+   if chara:calc("is_anorexic") then
+      Hunger.vomit(chara)
+   end
+end
 
-      if nutrition >= 5000 then
-         local p = math.floor(nutrition - 5000 / 25)
-         i = math.floor(i * 100 / (100 + p))
+function Hunger.vomit(chara)
+   chara.anorexia_count = chara.anorexia_count + 1
+
+   if chara:is_in_fov() then
+      Gui.play_sound("base.vomit")
+      Gui.mes("food.vomits", chara)
+   end
+
+   if chara.is_pregnant then
+      chara.is_pregnant = false
+      if chara:is_in_fov() then
+         Gui.mes("food.spits_alien_children", chara)
       end
-      if not chara:is_player() then
-         i = 1500
-         if is_rotten then
-            i = 500
+   end
+
+   local map = chara:current_map()
+   if not map:has_type("world_map") then
+      local chance = 2
+      for _, item in Item.iter_ground(map) do
+         if Item.is_alive(item) and item._id == "elona.vomit" then
+            chance = chance + 1
          end
       end
-      if i > 0 then
-         Skill.gain_skill_exp(chara, buff.id, buff.power * i / 100)
+      if chara:is_player() or Rand.one_in(chance * chance * chance) then
+         local vomit = Item.create("elona.vomit", chara.x, chara.y)
+         if vomit and not chara:is_player() then
+            vomit.params = { chara_id = chara._id }
+         end
       end
    end
+
+   if chara.is_anorexic then
+      Skill.gain_fixed_skill_exp(chara, "elona.stat_strength", -50)
+      Skill.gain_fixed_skill_exp(chara, "elona.stat_constitution", -75)
+      Skill.gain_fixed_skill_exp(chara, "elona.stat_charisma", -100)
+   else
+      if (chara:is_in_player_party() and chara.anorexia_count > 10)
+         or (not chara:is_in_player_party() and Rand.one_in(4))
+      then
+         if Rand.one_in(5) then
+            chara.has_anorexia = true
+            if chara:is_in_fov() then
+               Gui.mes("food.anorexia.develops", chara)
+               Gui.play_sound("base.offer1")
+            end
+         end
+      end
+   end
+
+   chara:apply_effect("elona.dimming", 100)
+   Effect.modify_weight(chara, (1 + Rand.rnd(5)) * -1)
+   if chara.nutrition <= 0 then
+      chara:damage_hp(9999, "elona.vomit")
+   end
+   chara.nutrition = chara.nutrition - 3000
 end
 
-function Hunger.calc_nutrition(item)
-   local curse_state = item:calc("curse_state")
-   local quality = item.params.food_quality or item.params.food_rank or 0
-
-   local nutrition = item:calc("base_nutrition") or 2500
-
-   local apply_nutrition_buff = item:has_type("elona.food")
-   if apply_nutrition_buff then
-      nutrition = nutrition * (100 + quality * 15) / 100
-   end
-
-   local override_nutrition = item:calc("nutrition")
-   if override_nutrition then
-      nutrition = override_nutrition
-   end
-
-   if curse_state == Enum.CurseState.Blessed then
-      nutrition = nutrition * 150 / 100
-   end
-   if curse_state == Enum.CurseState.Cursed or curse_state == Enum.CurseState.Doomed then
-      nutrition = nutrition * 50 / 100
-   end
-
-   return nutrition
+function Hunger.eat_rotten_food(chara)
+   Log.warn("TODO rotten")
 end
 
-function Hunger.print_quality(chara, item)
+function Hunger.get_hungry(chara)
+   if chara:has_trait("elona.perm_slow_food") and Rand.one_in(3) then
+      return
+   end
+
+   local old_level = math.floor(chara.nutrition / 1000)
+   chara.nutrition = chara.nutrition - 8
+   local new_level = math.floor(chara.nutrition / 1000)
+   if new_level ~= old_level then
+      if new_level == 1 then
+         Gui.mes("food.hunger_status.starving")
+      elseif new_level == 2 then
+         Gui.mes("food.hunger_status.very_hungry")
+      elseif new_level == 5 then
+         Gui.mes("food.hunger_status.hungry")
+      end
+      Skill.refresh_speed(chara)
+   end
+end
+
+function Hunger.apply_general_eating_effect(chara, food)
+   -- >>>>>>>> shade2/item.hsp:833 *eatEffect ...
+   -- <<<<<<<< shade2/item.hsp:1206 	return ..
+end
+
+function Hunger.eat_food(chara, food)
+   -- >>>>>>>> shade2/proc.hsp:1128 *insta_eat ..
+   Hunger.apply_general_eating_effect(chara, food)
+   food:emit("elona_sys.on_item_eat", {chara=chara})
+
    if chara:is_player() then
-      local quality = item.params.food_quality or item.params.food_rank or 0
-      if chara:has_trait("elona.eat_human") then
-         local is_human = item._id == "elona.corpse" and false
-         if is_human then
-            Gui.mes("food: human flesh")
+      Effect.identify_item(food, Enum.IdentifyState.Name)
+   end
+
+   if chara:unequip_item(food) then
+      chara:refresh()
+   end
+
+   food.amount = food.amount - 1
+
+   if chara:is_player() then
+      Hunger.show_eating_message(chara)
+   else
+      if chara.item_to_use
+         and chara.item_to_use == food
+      then
+         chara.item_to_use = nil
+      end
+
+      if chara.is_eating_traded_item then
+         chara.is_eating_traded_item = false
+         if food.spoilage_date and food.spoilage_date < World.date_hours() then
+            Gui.mes_c("food.passed_rotten", "SkyBlue")
+            chara:damage_hp(999, "elona.rotten_food")
+            local player = Chara.player()
+            if not Chara.is_alive(chara) and chara:relation_towards() > Enum.Relation.Neutral then
+               Effect.modify_karma(player, -5)
+            else
+               Effect.modify_karma(player, -1)
+            end
+            Skill.modify_impression(chara, -25)
             return
          end
       end
-
-      if item.material == "elona.fresh" and item:calc("time_until_rot") < 0 then
-         Gui.mes("food: rotten")
-         return
-      end
-
-      if quality <= 0 then
-         -- TODO raw meat/powder/raw
-         return
-      end
-      if quality < 3 then
-         Gui.mes("food: bad")
-         return
-      end
-      if quality < 5 then
-         Gui.mes("food: so_so")
-         return
-      end
-      if quality < 7 then
-         Gui.mes("food: good")
-         return
-      end
-      if quality < 9 then
-         Gui.mes("food: good")
-         return
-      end
-
-      Gui.mes("food: delicious")
-
-   elseif item.material == "elona.fresh" and item:calc("time_until_rot") < 0 then
-      Gui.mes("food other: rotten")
-      return
    end
+
+   Effect.proc_anorexia(chara)
+
+   food:emit("elona.on_eat_item_finish", {chara=chara})
+   -- <<<<<<<< shade2/proc.hsp:1155 	return ..
 end
 
 return Hunger

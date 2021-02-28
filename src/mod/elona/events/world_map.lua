@@ -6,6 +6,7 @@ local Event = require("api.Event")
 local Weather = require("mod.elona.api.Weather")
 local Rand = require("api.Rand")
 local Magic = require("mod.elona_sys.api.Magic")
+local Hunger = require("mod.elona.api.Hunger")
 
 local function proc_auto_eat_cargo_food(chara)
    -- >>>>>>>> shade2/proc.hsp:795 	if cHunger(pc)<=hungerNormal{ ...
@@ -18,7 +19,7 @@ local function proc_auto_eat_cargo_food(chara)
       local cargo_food = chara:iter_inventory():filter(is_cargo_food):nth(1)
       if cargo_food then
          Gui.mes_visible("activity.eat.finish", chara, cargo_food:build_name(1))
-         Effect.eat_food(chara, cargo_food)
+         Hunger.eat_food(chara, cargo_food)
       end
    end
    -- <<<<<<<< shade2/proc.hsp:806 	} ..

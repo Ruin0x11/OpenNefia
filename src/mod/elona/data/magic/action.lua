@@ -16,6 +16,7 @@ local Input = require("api.Input")
 local Pos = require("api.Pos")
 local Feat = require("api.Feat")
 local Log = require("api.Log")
+local Hunger = require("mod.elona.api.Hunger")
 
 local RANGE_BOLT = 6
 
@@ -522,7 +523,7 @@ make_touch {
       local target = params.target
       target.nutrition = target.nutrition - 8 * 100
       Gui.mes_c_visible("magic.hunger", target, "Purple")
-      Effect.get_hungry(target)
+      Hunger.get_hungry(target)
    end
 }
 
@@ -662,7 +663,7 @@ data:add {
       Gui.mes_visible("magic.scavenge.eats", target, source, food)
 
       source:heal_hp(source:calc("max_hp") / 3)
-      Effect.eat_food(source, food)
+      Hunger.eat_food(source, food)
 
       return true
    end

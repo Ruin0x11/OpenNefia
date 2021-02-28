@@ -15,6 +15,7 @@ local elona_sys_Magic = require("mod.elona_sys.api.Magic")
 local Enum = require("api.Enum")
 local SkillCheck = require("mod.elona.api.SkillCheck")
 local Log = require("api.Log")
+local Hunger = require("mod.elona.api.Hunger")
 
 local Magic = {}
 
@@ -64,7 +65,7 @@ function Magic.drink_potion(magic_id, power, item, params)
    chara.nutrition = chara.nutrition + 150
 
    if chara:is_in_player_party() and chara.nutrition > 12000 and Rand.one_in(5) then
-      Effect.vomit(chara)
+      Hunger.vomit(chara)
    end
 
    if did_something then

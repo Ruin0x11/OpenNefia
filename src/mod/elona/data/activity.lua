@@ -25,6 +25,7 @@ local Action = require("api.Action")
 local Ui = require("api.Ui")
 local Const = require("api.Const")
 local Weather = require("mod.elona.api.Weather")
+local Hunger = require("mod.elona.api.Hunger")
 
 local function sex_check_end(chara, partner)
    if not Chara.is_alive(partner)
@@ -150,7 +151,7 @@ data:add {
             end
             params.chara:set_item_using(nil)
 
-            Effect.eat_food(chara, self.food)
+            Hunger.eat_food(chara, self.food)
             -- <<<<<<<< shade2/proc.hsp:1123 	gosub *insta_eat ..
          end
       }

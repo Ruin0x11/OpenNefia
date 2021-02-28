@@ -3,6 +3,7 @@ local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Effect = require("mod.elona.api.Effect")
 local Skill = require("mod.elona_sys.api.Skill")
+local Hunger = require("mod.elona.api.Hunger")
 
 local eating_effect = {}
 
@@ -100,7 +101,7 @@ end
 
 function eating_effect.rotten_one(corpse, params)
    eat_message(params.chara, "rotten_one", "Purple")
-   Effect.eat_rotten_food(params.chara)
+   Hunger.eat_rotten_food(params.chara)
 end
 
 function eating_effect.beetle(corpse, params)
