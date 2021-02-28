@@ -9,12 +9,17 @@ Fs.basename = fs.basename
 Fs.filename_part = fs.filename_part
 Fs.extension_part = fs.extension_part
 Fs.convert_to_require_path = paths.convert_to_require_path
+Fs.get_working_directory = fs.get_working_directory
 
 function Fs.open(filepath, mode)
    assert(mode, "mode is required")
 
    -- love.File:open() does not support "rb"
    mode = mode:gsub("b$", "")
+
+   if not fs.is_absolute(filepath) then
+      filepath = fs.join(Fs.get_working_directory(), filepath)
+   end
 
    local file = love.filesystem.newFile(filepath)
    local ok, err = file:open(mode)
