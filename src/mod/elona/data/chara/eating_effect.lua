@@ -43,7 +43,7 @@ function eating_effect.holy_one(corpse, params)
 end
 
 function eating_effect.at(corpse, params)
-   eat_message(params.chara, "at", "None")
+   eat_message(params.chara, "at", "White")
 end
 
 function eating_effect.guard(corpse, params)
@@ -148,7 +148,7 @@ function eating_effect.cat(corpse, params)
    if not params.chara:is_player() then
       return
    end
-   eat_message(params.chara, "cat", "None")
+   eat_message(params.chara, "cat", "White")
    Effect.modify_karma(params.chara, -5)
 end
 
@@ -208,7 +208,7 @@ function eating_effect.quickling(corpse, params)
 end
 
 function eating_effect.alien(corpse, params)
-   eat_message(params.chara, "alien", "None")
+   eat_message(params.chara, "alien", "White")
    Effect.impregnate(params.chara)
 end
 
