@@ -28,17 +28,19 @@ local function set_item_image_on_memorize(_, params)
       return
    end
 
-   if params.is_known then
-      local mapping = FFHP.mapping_for(params._id)
-      if mapping then
-         for _, item in iter_all_items():filter(function(i) return i._id == params._id end) do
-            apply_mapping(mapping, item)
+   local mapping = FFHP.mapping_for(params._id)
+   if mapping then
+      if params.is_known then
+         if mapping then
+            for _, item in iter_all_items():filter(function(i) return i._id == params._id end) do
+               apply_mapping(mapping, item)
+            end
          end
-      end
-   else
-      for _, item in iter_all_items():filter(function(i) return i._id == params._id end) do
-         item.image = item.proto.image
-         item.color = elona_Item.default_item_color(item)
+      else
+         for _, item in iter_all_items():filter(function(i) return i._id == params._id end) do
+            item.image = item.proto.image
+            item.color = elona_Item.default_item_color(item)
+         end
       end
    end
 end
@@ -50,9 +52,9 @@ local function set_item_image_on_generate(obj, params)
       return
    end
 
-   if (ItemMemory.is_known(obj._id) or params.is_shop) and Theme.is_active("ceri_items.ceri_items") then
-      local mapping = FFHP.mapping_for(obj._id)
-      if mapping then
+   local mapping = FFHP.mapping_for(obj._id)
+   if mapping then
+      if (ItemMemory.is_known(obj._id) or params.is_shop) and Theme.is_active("ceri_items.ceri_items") then
          apply_mapping(mapping, obj)
       end
    end
@@ -62,11 +64,11 @@ Event.register("base.on_generate", "Set item image to FFHP override", set_item_i
 
 local function set_item_images(map)
    for _, item in Item.iter_in_everything(map) do
-      item.image = item.proto.image
-      item.color = elona_Item.default_item_color(item)
-      if ItemMemory.is_known(item._id) and Theme.is_active("ceri_items.ceri_items") then
-         local mapping = FFHP.mapping_for(item._id)
-         if mapping then
+      local mapping = FFHP.mapping_for(item._id)
+      if mapping then
+         item.image = item.proto.image
+         item.color = elona_Item.default_item_color(item)
+         if ItemMemory.is_known(item._id) and Theme.is_active("ceri_items.ceri_items") then
             apply_mapping(mapping, item)
          end
       end
