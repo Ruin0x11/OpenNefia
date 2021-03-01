@@ -6,6 +6,7 @@ local draw_callbacks = class.class("draw_callbacks", IDrawable)
 function draw_callbacks:init()
    self.draw_callbacks = {}
    self.waiting = false
+   self.dt_this_frame = 0.0
 end
 
 function draw_callbacks:add(cb, tag, kind)
@@ -37,8 +38,8 @@ function draw_callbacks:remove(tag)
    self.draw_callbacks[tag] = nil
 end
 
-local function resume_coroutine(co, draw_x, draw_y, frame_delta)
-   local ok, dt = coroutine.resume(co.thread, draw_x, draw_y, frame_delta)
+local function resume_coroutine(co, draw_x, draw_y, frame_delta, dt_this_frame)
+   local ok, dt = coroutine.resume(co.thread, draw_x, draw_y, frame_delta, dt_this_frame)
    local is_dead = coroutine.status(co.thread) == "dead"
    if is_dead or not ok then
       local err = dt
@@ -71,21 +72,26 @@ function draw_callbacks:draw(draw_x, draw_y)
       if co.dt > 0 then
          -- This frame has not been advanced yet; redraw the animation
          -- on the current frame (delta 0)
-         local going = resume_coroutine(co, draw_x, draw_y, 0)
+         local going = resume_coroutine(co, draw_x, draw_y, 0, self.dt_this_frame)
          if not going then
             -- Coroutine error; stop drawing now
             dead[#dead+1] = key
          end
       else
-         -- Advance one frame (delta 1)
-         local going, dt = resume_coroutine(co, draw_x, draw_y, 1)
+         local frames = 0
+         while co.dt <= 0 do
+            -- TODO: assumes 60 FPS
+            frames = frames + 1
+            co.dt = co.dt + 16.66 / 1000
+         end
+         -- Advance the passed number of frames
+         local going, dt = resume_coroutine(co, draw_x, draw_y, frames, self.dt_this_frame)
          if not going then
             -- Coroutine error; stop drawing now
             dead[#dead+1] = key
             break
          else
-            -- TODO: assumes 60 FPS
-            dt = math.max(dt or 16.66, 16.66) / 1000
+            dt = (dt or 16.66) / 1000
             co.dt = co.dt + dt
          end
       end
@@ -97,8 +103,11 @@ end
 function draw_callbacks:update(dt)
    -- TODO: order by priority
    for _, co in pairs(self.draw_callbacks) do
+      co.total = co.total or 0
+      co.total = co.total + dt
       co.dt = co.dt - dt
    end
+   self.dt_this_frame = dt
 
    if self:has_more() and self.waiting then
       return true
@@ -122,10 +131,14 @@ function draw_callbacks:wait()
 
    local dt, _, skip
    local has_cbs
+   dt = 0
 
    repeat
-      dt, _, skip = coroutine.yield()
       has_cbs = self:update(dt)
+      if not has_cbs then
+         return
+      end
+      dt, _, skip = coroutine.yield()
    until not has_cbs or skip
 
    self.waiting = false

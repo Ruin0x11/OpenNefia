@@ -103,18 +103,26 @@ end
 
 --- Waits for the specified number of milliseconds.
 function Gui.wait(ms, no_update)
-   local frames = ms / 16.66 -- TODO assumes 60 FPS
    local anim = function()
-      local frame = 0
+      if ms <= 0 then
+         return
+      end
+      local total_ms = 16.66
+      local sw = Stopwatch:new()
       while true do
+         sw:measure()
          if not no_update then
-            Gui.update_screen(16.66 / 1000)
+            Gui.update_screen()
+            total_ms = total_ms + sw:measure()
+            if total_ms + 16.66 >= ms then
+               return
+            end
          end
-         if frame >= frames then
+         local _, _, _, dt = Draw.yield(0)
+         total_ms = total_ms + dt * 1000
+         if total_ms + 16.66 >= ms then
             return
          end
-         local _, _, frame_delta = Draw.yield(16.66)
-         frame = frame + frame_delta
       end
    end
    Gui.start_draw_callback(anim)
@@ -399,7 +407,7 @@ function Gui.mes_c_visible(text, x, y, color, ...)
          Gui.mes_c(text, color, obj, ...)
       end
    else
-      if field.map:is_in_fov(x, y) then
+      if field.map and field.map:is_in_fov(x, y) then
          Gui.mes_c(text, color, ...)
       end
    end
