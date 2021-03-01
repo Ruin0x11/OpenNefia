@@ -25,12 +25,6 @@ function IEventEmitter:on_reload_prototype()
    end
 end
 
-Event.register("base.on_hotload_object", "reload events for object", function(obj)
-                  if class.is_an(IEventEmitter, obj) then
-                     IEventEmitter.on_reload_prototype(obj)
-                  end
-end)
-
 local cache = {}
 
 local function register_global_handler_if_needed(self, event_id, global_events)
