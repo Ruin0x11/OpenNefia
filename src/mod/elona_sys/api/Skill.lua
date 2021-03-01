@@ -186,19 +186,19 @@ function Skill.modify_potential(chara, skill, delta)
 end
 
 local function skill_change_text(chara, skill_id, is_increase)
-   local part
+   local text
    if is_increase then
-      part = "increase"
+      text = I18N.get("skill." .. skill_id .. ".increase", chara)
    else
-      part = "decrease"
+      text = I18N.get("skill." .. skill_id .. ".decrease", chara)
    end
-   local text = I18N.get_optional("skill." .. part .. "." .. skill_id, chara)
+
    if text then
       return text
    end
 
    if is_increase then
-      return I18N.get("skill.default.increase", chara, "ability." .. skill_id .. ".name")
+      return I18N.get("skill.default", chara, "ability." .. skill_id .. ".name")
    else
       return I18N.get("skill.default.decrease", chara, "ability." .. skill_id .. ".name")
    end
