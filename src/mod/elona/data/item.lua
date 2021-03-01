@@ -21,13 +21,13 @@ local Anim = require("mod.elona_sys.api.Anim")
 local World = require("api.World")
 local Weather = require("mod.elona.api.Weather")
 local Area = require("api.Area")
-local Inventory = require("api.Inventory")
 local elona_Item = require("mod.elona.api.Item")
 local Filters = require("mod.elona.api.Filters")
 local SkillCheck = require("mod.elona.api.SkillCheck")
 local Const = require("api.Const")
 local Charagen = require("mod.tools.api.Charagen")
 local Mef = require("api.Mef")
+local Hunger = require("mod.elona.api.Hunger")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -2094,7 +2094,6 @@ local item =
          coefficient = 100,
 
          skill = "elona.long_sword",
-         { id = 37, power = 100 },
 
          is_precious = true,
          identify_difficulty = 500,
@@ -4374,21 +4373,42 @@ local item =
 
          gods = { "any" },
 
+         on_eat = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:1097 	if iId(ci)=204:if iSubName(ci)=319{ ...
+            local chara = params.chara
+            if self.params.chara_id == "elona.little_sister" then
+               Gui.mes_c("food.effect.little_sister", "Green")
+               if Rand.rnd(chara:base_skill_level("elona.stat_life") ^ 2 + 1) < 2000 then
+                  Skill.gain_fixed_skill_exp(chara, "elona.stat_life", 1000)
+               end
+               if Rand.rnd(chara:base_skill_level("elona.stat_mana") ^ 2 + 1) < 2000 then
+                  Skill.gain_fixed_skill_exp(chara, "elona.stat_mana", 1000)
+               end
+
+               for _, skill in Skill.iter_skills() do
+                  if chara:has_skill(skill._id) then
+                     Skill.modify_potential(chara, skill._id, Rand.rnd(10) + 1)
+                  end
+               end
+            end
+            -- <<<<<<<< shade2/item.hsp:1105 		} ..
+         end,
+
          events = {
             {
-               id = "elona_sys.on_item_eat",
+               id = "elona_sys.before_item_eat",
                name = "corpse effects",
 
                callback = function(self, params, result)
+                  -- >>>>>>>> shade2/item.hsp:1042 	if iId(ci)=idCorpse{ ...
                   local corpse_chara_id = self.params.chara_id
                   if not corpse_chara_id then
                      return
                   end
 
-                  local dat = data["base.chara"]:ensure(corpse_chara_id)
                   local chara = params.chara
 
-                  if table.set(dat.tags or {})["man"] then
+                  if Hunger.is_human_flesh(self) then
                      if chara:has_trait("elona.eat_human") then
                         Gui.mes("food.effect.human.like")
                      else
@@ -4404,15 +4424,18 @@ local item =
                      result.nutrition = result.nutrition * 2 / 3
                   end
 
-                  if dat.on_eat_corpse then
-                     dat.on_eat_corpse(self, params, result)
+                  local chara_proto = data["base.chara"]:ensure(corpse_chara_id)
+
+                  if chara_proto.on_eat_corpse then
+                     chara_proto.on_eat_corpse(self, params, result)
                   end
 
                   return result
+                  -- <<<<<<<< shade2/item.hsp:1066 		} ..
                end
             },
             {
-               id = "elona.on_eat_item_begin",
+               id = "elona.on_item_eat_begin",
                name = "itadaki-mammoth",
 
                callback = function(self)
@@ -5206,7 +5229,7 @@ local item =
                   filter.id = "elona.potion_of_cure_corruption"
                end
                return filter
-            end),
+         end),
          -- <<<<<<<< shade2/action.hsp:987 		} ..
       },
       {
@@ -9206,27 +9229,27 @@ local item =
          params = { food_quality = 1 },
 
          nutrition = 500,
-         food_buffs = {
-            { id = 10, power = 900 },
-            { id = 11, power = 700 },
-            { id = 17, power = 10 },
-            { id = 16, power = 10 },
-            { id = 12, power = 10 },
-            { id = 13, power = 10 },
-            { id = 14, power = 10 },
-            { id = 15, power = 10 },
+         food_exp_gains = {
+            { _id = "elona.stat_strength", amount = 900 },
+            { _id = "elona.stat_constitution", amount = 700 },
+            { _id = "elona.stat_charisma", amount = 10 },
+            { _id = "elona.stat_magic", amount = 10 },
+            { _id = "elona.stat_dexterity", amount = 10 },
+            { _id = "elona.stat_perception", amount = 10 },
+            { _id = "elona.stat_learning", amount = 10 },
+            { _id = "elona.stat_will", amount = 10 },
          },
 
          events = {
             {
-               id = "elona_sys.on_item_eat",
+               id = "elona_sys.before_item_eat",
                name = "morgia effects",
 
                callback = function(self, params)
                   params.chara:mod_skill_potential("elona.stat_strength", 2)
                   params.chara:mod_skill_potential("elona.stat_constitution", 2)
                   if params.chara:is_player() then
-                     Gui.mes("food special: morgia")
+                     Gui.mes("food.effect.herb.morgia")
                   end
                end
             }
@@ -9251,27 +9274,27 @@ local item =
          params = { food_quality = 4 },
 
          nutrition = 500,
-         food_buffs = {
-            { id = 10, power = 10 },
-            { id = 11, power = 10 },
-            { id = 17, power = 10 },
-            { id = 16, power = 800 },
-            { id = 12, power = 10 },
-            { id = 13, power = 10 },
-            { id = 14, power = 10 },
-            { id = 15, power = 800 },
+         food_exp_gains = {
+            { _id = "elona.stat_strength", amount = 10 },
+            { _id = "elona.stat_constitution", amount = 10 },
+            { _id = "elona.stat_charisma", amount = 10 },
+            { _id = "elona.stat_magic", amount = 800 },
+            { _id = "elona.stat_dexterity", amount = 10 },
+            { _id = "elona.stat_perception", amount = 10 },
+            { _id = "elona.stat_learning", amount = 10 },
+            { _id = "elona.stat_will", amount = 800 },
          },
 
          events = {
             {
-               id = "elona_sys.on_item_eat",
+               id = "elona_sys.before_item_eat",
                name = "marelion effects",
 
                callback = function(self, params)
                   params.chara:mod_skill_potential("elona.stat_magic", 2)
                   params.chara:mod_skill_potential("elona.stat_will", 2)
                   if params.chara:is_player() then
-                     Gui.mes("food special: marelion")
+                     Gui.mes("food.effect.herb.mareilon")
                   end
                end
             }
@@ -9296,27 +9319,27 @@ local item =
          params = { food_quality = 3 },
 
          nutrition = 500,
-         food_buffs = {
-            { id = 10, power = 10 },
-            { id = 11, power = 10 },
-            { id = 17, power = 10 },
-            { id = 16, power = 10 },
-            { id = 12, power = 750 },
-            { id = 13, power = 800 },
-            { id = 14, power = 10 },
-            { id = 15, power = 10 },
+         food_exp_gains = {
+            { _id = "elona.stat_strength", amount = 10 },
+            { _id = "elona.stat_constitution", amount = 10 },
+            { _id = "elona.stat_charisma", amount = 10 },
+            { _id = "elona.stat_magic", amount = 10 },
+            { _id = "elona.stat_dexterity", amount = 750 },
+            { _id = "elona.stat_perception", amount = 800 },
+            { _id = "elona.stat_learning", amount = 10 },
+            { _id = "elona.stat_will", amount = 10 },
          },
 
          events = {
             {
-               id = "elona_sys.on_item_eat",
+               id = "elona_sys.before_item_eat",
                name = "spenseweed effects",
 
                callback = function(self, params)
                   params.chara:mod_skill_potential("elona.stat_dexterity", 2)
                   params.chara:mod_skill_potential("elona.stat_perception", 2)
                   if params.chara:is_player() then
-                     Gui.mes("food special: spenseweed")
+                     Gui.mes("food.effect.herb.spenseweed")
                   end
                end
             }
@@ -9340,25 +9363,25 @@ local item =
          params = { food_quality = 6 },
 
          nutrition = 2500,
-         food_buffs = {
-            { id = 10, power = 100 },
-            { id = 11, power = 100 },
-            { id = 17, power = 100 },
-            { id = 16, power = 100 },
-            { id = 12, power = 100 },
-            { id = 13, power = 100 },
-            { id = 14, power = 100 },
-            { id = 15, power = 100 },
+         food_exp_gains = {
+            { _id = "elona.stat_strength", amount = 100 },
+            { _id = "elona.stat_constitution", amount = 100 },
+            { _id = "elona.stat_charisma", amount = 100 },
+            { _id = "elona.stat_magic", amount = 100 },
+            { _id = "elona.stat_dexterity", amount = 100 },
+            { _id = "elona.stat_perception", amount = 100 },
+            { _id = "elona.stat_learning", amount = 100 },
+            { _id = "elona.stat_will", amount = 100 },
          },
 
          events = {
             {
-               id = "elona_sys.on_item_eat",
+               id = "elona_sys.before_item_eat",
                name = "curaria effects",
 
                callback = function(self, params)
                   if params.chara:is_player() then
-                     Gui.mes("food special: curaria")
+                     Gui.mes("food.effect.herb.curaria")
                   end
                end
             }
@@ -9383,26 +9406,26 @@ local item =
          params = { food_quality = 3 },
 
          nutrition = 500,
-         food_buffs = {
-            { id = 10, power = 10 },
-            { id = 11, power = 10 },
-            { id = 17, power = 850 },
-            { id = 16, power = 10 },
-            { id = 12, power = 10 },
-            { id = 13, power = 10 },
-            { id = 14, power = 700 },
-            { id = 15, power = 10 },
+         food_exp_gains = {
+            { _id = "elona.stat_strength", amount = 10 },
+            { _id = "elona.stat_constitution", amount = 10 },
+            { _id = "elona.stat_charisma", amount = 850 },
+            { _id = "elona.stat_magic", amount = 10 },
+            { _id = "elona.stat_dexterity", amount = 10 },
+            { _id = "elona.stat_perception", amount = 10 },
+            { _id = "elona.stat_learning", amount = 700 },
+            { _id = "elona.stat_will", amount = 10 },
          },
          events = {
             {
-               id = "elona_sys.on_item_eat",
+               id = "elona_sys.before_item_eat",
                name = "alraunia effects",
 
                callback = function(self, params)
                   params.chara:mod_skill_potential("elona.stat_charisma", 2)
                   params.chara:mod_skill_potential("elona.stat_learning", 2)
                   if params.chara:is_player() then
-                     Gui.mes("food special: alarunia")
+                     Gui.mes("food.effect.herb.alraunia")
                   end
                end
             }
@@ -9425,15 +9448,15 @@ local item =
          params = { food_quality = 7 },
 
          nutrition = 20000,
-         food_buffs = {
-            { id = 10, power = 50 },
-            { id = 11, power = 50 },
-            { id = 17, power = 50 },
-            { id = 16, power = 50 },
-            { id = 12, power = 50 },
-            { id = 13, power = 50 },
-            { id = 14, power = 50 },
-            { id = 15, power = 50 },
+         food_exp_gains = {
+            { _id = "elona.stat_strength", amount = 50 },
+            { _id = "elona.stat_constitution", amount = 50 },
+            { _id = "elona.stat_charisma", amount = 50 },
+            { _id = "elona.stat_magic", amount = 50 },
+            { _id = "elona.stat_dexterity", amount = 50 },
+            { _id = "elona.stat_perception", amount = 50 },
+            { _id = "elona.stat_learning", amount = 50 },
+            { _id = "elona.stat_will", amount = 50 },
          },
          categories = {
             "elona.crop_herb",
@@ -12821,22 +12844,24 @@ local item =
 
          events = {
             {
-               id = "elona_sys.on_item_eat",
-               name = "egg effects",
+               id = "elona_sys.before_item_eat",
+               name = "jerky effects",
 
                callback = function(self, params, result)
+                  -- >>>>>>>> shade2/item.hsp:1064 	if (iId(ci)=idCorpse)or( ((iId(ci)=idJerky)or(iId ...
                   local chara = self.params.chara_id
                   if not chara then
                      return
                   end
 
-                  local dat = data["base.chara"]:ensure(chara)
+                  local chara_proto = data["base.chara"]:ensure(chara)
 
-                  if dat.on_eat_corpse and Rand.one_in(3) then
-                     dat:on_eat_corpse(self, params, result)
+                  if chara_proto.on_eat_corpse and Rand.one_in(3) then
+                     chara_proto:on_eat_corpse(self, params, result)
                   end
 
                   return result
+                  -- <<<<<<<< shade2/item.hsp:1066 		} ..
                end
             },
          },
@@ -12894,10 +12919,11 @@ local item =
 
          events = {
             {
-               id = "elona_sys.on_item_eat",
+               id = "elona_sys.before_item_eat",
                name = "egg effects",
 
                callback = function(self, params, result)
+                  -- >>>>>>>> shade2/item.hsp:1064 	if (iId(ci)=idCorpse)or( ((iId(ci)=idJerky)or(iId ...
                   local chara = self.params.chara_id
                   if not chara then
                      return
@@ -12910,6 +12936,7 @@ local item =
                   end
 
                   return result
+                  -- <<<<<<<< shade2/item.hsp:1066 		} ..
                end
             },
          },
@@ -14428,7 +14455,13 @@ local item =
             "elona.food_fruit",
             "elona.unique_item",
             "elona.food"
-         }
+         },
+        
+         on_eat = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:1116 	if iId(ci)=idHappyApple{ ...
+            Skill.gain_fixed_skill_exp(params.chara, "elona.stat_luck", 1000 * 20)
+            -- <<<<<<<< shade2/item.hsp:1118 		} ..
+         end
       },
       {
          _id = "unicorn_horn",
@@ -14702,7 +14735,13 @@ local item =
          categories = {
             "elona.unique_item",
             "elona.food"
-         }
+         },
+
+         on_eat = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:1120 	if iId(ci)=idHeroCheese{ ...
+            Skill.gain_fixed_skill_exp(params.chara, "elona.stat_life", 1000 * 3)
+            -- <<<<<<<< shade2/item.hsp:1122 		} ..
+         end
       },
       {
          _id = "eastern_lamp",
@@ -14853,7 +14892,13 @@ local item =
             "elona.food_fruit",
             "elona.unique_item",
             "elona.food"
-         }
+         },
+
+         on_eat = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:1124 	if iId(ci)=idMagicFruit{ ...
+            Skill.gain_fixed_skill_exp(params.chara, "elona.stat_mana", 1000 * 3)
+            -- <<<<<<<< shade2/item.hsp:1126 		} ..
+         end
       },
       {
          _id = "monster_heart",
@@ -14998,6 +15043,14 @@ local item =
          -- <<<<<<<< shade2/item.hsp:678 	} ..
 
          params = { food_quality = 7 },
+
+         on_eat = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:1135 	if iId(ci)=idSisterLunch{ ...
+            local chara = params.chara
+            Gui.mes("food.effect.sisters_love_fueled_lunch", chara)
+            Effect.heal_insanity(chara, 30)
+            -- <<<<<<<< shade2/item.hsp:1138 		} ..
+         end,
 
          categories = {
             "elona.no_generate",
@@ -16106,7 +16159,13 @@ local item =
          categories = {
             "elona.unique_item",
             "elona.food"
-         }
+         },
+
+         on_eat = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:1112 	if iId(ci)=idRabbitTail{ ...
+            Skill.gain_fixed_skill_exp(params.chara, "elona.stat_luck", 1000)
+            -- <<<<<<<< shade2/item.hsp:1114 		} ..
+         end,
       },
       {
          _id = "whistle",
@@ -17185,7 +17244,21 @@ local item =
          categories = {
             "elona.tag_fest",
             "elona.food"
-         }
+         },
+
+         on_eat = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:1127 	if iId(ci)=idCookie:if cc<maxFollower{ ...
+            local chara = params.chara
+            if chara:is_in_player_party() then
+               Gui.mes("food.effect.fortune_cookie", chara)
+               local id = "talk.random.fortune_cookie.normal"
+               if self:calc("curse_state") >= Enum.CurseState.Blessed then
+                  id = "talk.random.fortune_cookie.blessed"
+               end
+               Gui.mes_c(id, "Yellow")
+            end
+            -- <<<<<<<< shade2/item.hsp:1132 		} ..
+         end
       },
       {
          _id = "frisias_tail",
@@ -17654,12 +17727,21 @@ local item =
 
          params = { food_quality = 6 },
 
+         on_eat = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:1107 	if iId(ci)=idKagamiMochi{ ...
+            Gui.mes("food.effect.kagami_mochi")
+            Skill.gain_fixed_skill_exp(params.chara, "elona.stat_luck", 2000)
+            -- <<<<<<<< shade2/item.hsp:1110 	} ..
+         end,
+
          events = {
             {
-               id = "elona.on_eat_item_finish",
+               id = "elona_sys.on_item_eat",
                name = "Choking behavior",
+               priority = 150000,
 
                callback = function(self, params)
+                  -- >>>>>>>> shade2/proc.hsp:1151 	if(iId(ci)=idKagamiMochi and rnd(3))or(iId(ci)=id ...
                   local chance = 3
                   if Rand.one_in(chance) then
                      local chara = params.chara
@@ -17669,6 +17751,7 @@ local item =
                      end
                      chara:add_effect_turns("elona.choked", 1)
                   end
+                  -- <<<<<<<< shade2/proc.hsp:1154 	} ..
                end
             }
          },
@@ -17692,11 +17775,13 @@ local item =
 
          tags = { "fest" },
 
-         {
-            id = "elona.on_eat_item_finish",
+         events = {
+            id = "elona_sys.on_item_eat",
             name = "Choking behavior",
+            priority = 150000,
 
             callback = function(self, params)
+               -- >>>>>>>> shade2/proc.hsp:1151 	if(iId(ci)=idKagamiMochi and rnd(3))or(iId(ci)=id ...
                local chance = 10
                if Rand.one_in(chance) then
                   local chara = params.chara
@@ -17706,6 +17791,7 @@ local item =
                   end
                   chara:add_effect_turns("elona.choked", 1)
                end
+               -- <<<<<<<< shade2/proc.hsp:1154 	} ..
             end
          },
 

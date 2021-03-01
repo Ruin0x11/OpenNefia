@@ -99,9 +99,9 @@ function eating_effect.troll(corpse, params)
    Skill.gain_skill_exp(params.chara, "core.healing", 200)
 end
 
-function eating_effect.rotten_one(corpse, params)
+function eating_effect.rotten_one(corpse, params, result)
    eat_message(params.chara, "rotten_one", "Purple")
-   Hunger.eat_rotten_food(params.chara)
+   return Hunger.add_rotten_food_exp_losses(params.chara, result.exp_gains)
 end
 
 function eating_effect.beetle(corpse, params)

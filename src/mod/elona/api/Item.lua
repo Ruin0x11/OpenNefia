@@ -8,7 +8,6 @@ local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Event = require("api.Event")
 local Chara = require("api.Chara")
 local World = require("api.World")
-local Inventory = require("api.Inventory")
 local Effect = require("mod.elona.api.Effect")
 local Util = require("mod.elona_sys.api.Util")
 local Enchantment = require("mod.elona.api.Enchantment")
@@ -271,6 +270,14 @@ function Item.random_furniture_color()
    -- >>>>>>>> shade2/item.hsp:613 	if iCol(ci)=coRand	:iCol(ci)=randColor(rnd(length ...
    return table.deepcopy(Rand.choice(FURNITURE_COLORS))
    -- <<<<<<<< shade2/item.hsp:613 	if iCol(ci)=coRand	:iCol(ci)=randColor(rnd(length ...end
+end
+
+function Item.default_item_image(item)
+   if item.params.food_type and item.params.food_quality ~= 0 then
+      return Hunger.get_food_image(item.params.food_type, item.params.food_quality)
+   else
+      return item.proto.image
+   end
 end
 
 function Item.default_item_color(item, seed)

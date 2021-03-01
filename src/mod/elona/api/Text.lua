@@ -198,8 +198,10 @@ local TITLE_FILES = {
 --- @tparam[opt] string kind One of "character" (default), "weapon",
 --- "party" or "living_weapon"
 --- @tparam[opt] uint seed
+--- @tparam[opt] string rng_kind "hsp" (default) or "lua"
 --- @treturn string
-function Text.random_title(kind, seed)
+function Text.random_title(kind, seed, rng_kind)
+   rng_kind = rng_kind or "hsp"
    kind = kind or "character"
    local lang = I18N.language()
    if titles[lang] == nil then
@@ -212,7 +214,7 @@ function Text.random_title(kind, seed)
    end
 
    if seed then
-      Rand.set_seed(seed)
+      Rand.set_seed(seed, rng_kind)
    end
 
    -- keep trying until we get a valid title

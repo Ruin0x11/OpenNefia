@@ -16,6 +16,7 @@ local event = {
       { _id = "on_item_throw" },
       { _id = "on_item_descend" },
       { _id = "on_item_ascend" },
+      { _id = "before_item_eat" },
       { _id = "on_bash" },
       { _id = "on_search" },
       { _id = "on_feat_activate" },

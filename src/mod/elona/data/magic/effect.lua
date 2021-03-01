@@ -298,38 +298,13 @@ data:add {
          return true, { obvious = false }
       end
 
-      local function love_miracle(chara)
-         if Rand.one_in(2) or chara:is_player() then
-            return
-         end
-         Gui.mes_c("misc.love_miracle.uh", "SkyBlue")
-         if Rand.one_in(2) then
-            local item = Item.create("elona.egg", chara.x, chara.y, {}, chara:current_map())
-            if item then
-               item.params.chara_id = chara._id
-               local weight = chara:calc("weight")
-               item.weight = weight * 10 + 250
-               item.value = math.clamp(math.floor(weight * weight / 10000), 200, 40000)
-            end
-         else
-            local item = Item.create("elona.bottle_of_milk", chara.x, chara.y, {}, chara:current_map())
-            if item then
-               item.params.chara_id = chara._id
-            end
-         end
-
-         Gui.play_sound("base.atk_elec")
-         local anim = Anim.load("elona.anim_elec", chara.x, chara.y)
-         Gui.start_draw_callback(anim)
-      end
-
       params.target:set_emotion_icon("elona.heart", 3)
 
       if params.triggered_by == "potion_spilt" or params.triggered_by == "potion_thrown" then
          Gui.mes("magic.love_potion.spill", params.target)
          Skill.modify_impression(params.target, math.clamp(params.power / 15, 0, 15))
          params.target:apply_effect("elona.dimming", 100)
-         love_miracle(params.target)
+         Effect.love_miracle(params.target)
          return true
       end
 
@@ -337,7 +312,7 @@ data:add {
          Gui.mes("magic.love_potion.self", params.target)
       else
          Gui.mes("magic.love_potion.other", params.target)
-         love_miracle(params.target)
+         Effect.love_miracle(params.target)
          Skill.modify_impression(params.target, math.clamp(params.power / 4, 0, 25))
       end
 

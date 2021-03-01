@@ -107,7 +107,7 @@ data:add {
             end
 
             chara:set_item_using(self.food)
-            self.food:emit("elona.on_eat_item_begin", {chara=chara})
+            self.food:emit("elona.on_item_eat_begin", {chara=chara})
             -- <<<<<<<< shade2/proc.hsp:1116 		} ..
          end
       },
@@ -216,7 +216,7 @@ traveling.events[#traveling.events+1] = {
       chara:emit("elona.on_chara_travel_in_world_map", {activity=self})
 
       -- >>>>>>>> shade2/proc.hsp:849 	if cActionPeriod(cc)>0:gMin++:return ..
-      World.pass_time_in_seconds(60)
+      World.pass_time_in_seconds(60, "none")
       -- <<<<<<<< shade2/proc.hsp:849 	if cActionPeriod(cc)>0:gMin++:return ..
    end
 }

@@ -16,22 +16,9 @@ local Effect = require("mod.elona.api.Effect")
 local elona_Item = require("mod.elona.api.Item")
 local Ui = require("api.Ui")
 local World = require("api.World")
+local Hunger = require("mod.elona.api.Hunger")
 
 local Itemname = {}
-
-function Itemname.food_name(food_type, original_name, food_quality, chara_id)
-   local origin = original_name
-
-   if origin == nil then
-      origin = I18N.get("food.names." .. food_type .. ".default_origin")
-   end
-
-   if chara_id then
-      origin = I18N.get("chara." .. chara_id .. ".name")
-   end
-
-   return I18N.get("food.names." .. food_type .. "._" .. food_quality, origin)
-end
 
 local function number_string(i)
    if i >= 0 then
@@ -139,12 +126,13 @@ local function item_name_sub(s, item, jp)
          skip = true
          if _id == "elona.fish_a" then
             local fish_name = "??? fish" -- TODO fishing
-            s = s .. Itemname.food_name(item.params.food_type, fish_name, item.params.food_quality)
+            s = s .. Hunger.food_name(item.params.food_type, fish_name, item.params.food_quality)
          else
             local original_name = "item.info." .. _id .. ".name"
             local chara_id = item.params.chara_id or nil
-            s = s .. Itemname.food_name(item.params.food_type, original_name, item.params.food_quality, chara_id)
+            s = s .. Hunger.food_name(item.params.food_type, original_name, item.params.food_quality, chara_id)
          end
+         return s, skip
       end
 
       if item.own_state == Enum.OwnState.Quest and item.params.harvest_weight_class then
@@ -394,7 +382,7 @@ function itemname.jp(item, amount, no_article)
       s = s .. I18N.get("item.aphrodisiac")
    end
 
-   if item:calc("is_poisoned") then
+   if item:calc("is_mixed_with_poison") then
       s = s .. I18N.get("item.poisoned")
    end
 
@@ -655,7 +643,7 @@ function itemname.en(item, amount, no_article)
       s = s .. I18N.get("item.aphrodisiac")
    end
 
-   if item:calc("is_poisoned") then
+   if item:calc("is_mixed_with_poison") then
       s = s .. I18N.get("item.poisoned")
    end
 

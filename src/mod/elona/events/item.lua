@@ -104,3 +104,51 @@ local function check_item_cooldown_time(item, params, result)
    -- <<<<<<<< shade2/action.hsp:1723 		} ..
 end
 Event.register("elona_sys.on_item_use", "Check item cooldown time and maybe prevent use", check_item_cooldown_time, { priority = 10000})
+
+local function proc_item_eaten_is_poisoned(food, params, result)
+   -- >>>>>>>> shade2/item.hsp:1140 	if iBit(iPoisonBlend,ci)=true{ ...
+   if not food:calc("is_mixed_with_poison") then
+      return result
+   end
+
+   local chara = params.chara
+
+   if chara:is_in_fov() then
+      Gui.mes("food.effect.poisoned.text", chara)
+      Gui.mes("food.effect.poisoned.dialog", chara)
+   end
+
+   chara:damage_hp(Rand.rnd(250) + 250, "elona.poison")
+
+   if not Chara.is_alive(chara) then
+      if not chara:is_player() and chara:relation_towards(Chara.player()) >= Enum.Relation.Neutral then
+         Effect.modify_karma(Chara.player(), -1)
+      end
+      return result, "blocked"
+   end
+   -- <<<<<<<< shade2/item.hsp:1150 		} ..
+end
+Event.register("elona_sys.on_item_eat", "Proc is poisoned eating effect", proc_item_eaten_is_poisoned, { priority = 120000 })
+
+local function proc_item_eaten_is_spiked_with_love_potion(food, params, result)
+   -- >>>>>>>> shade2/item.hsp:1152 	if iBit(iLoveBlend,ci)=true{ ...
+   if not food:calc("is_spiked_with_love_potion") then
+      return result
+   end
+
+   local chara = params.chara
+
+   if chara:is_player() then
+      Gui.mes("food.effect.spiked.self")
+   else
+      Gui.mes_c("food.effect.spiked.other", "SkyBlue", chara)
+      Effect.modify_impression(chara, 30)
+      Effect.modify_karma(Chara.player(), -10)
+      Effect.love_miracle(chara)
+   end
+
+   chara:apply_effect("elona.dimming", 500)
+   chara:set_emotion_icon("elona.heart", 3)
+   -- <<<<<<<< shade2/item.hsp:1163 	} ..
+end
+Event.register("elona_sys.on_item_eat", "Proc is spiked with love potion eating effect", proc_item_eaten_is_spiked_with_love_potion, { priority = 130000 })

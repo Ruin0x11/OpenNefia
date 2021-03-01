@@ -206,13 +206,14 @@ end
 
 local function proc_leveling(chara, skill, new_exp, level)
    -- >>>>>>>> shade2/module.hsp:312 	if exp>=1000{ ..
+   local map = chara:current_map()
    if new_exp >= 1000 then
       local level_delta = math.floor(new_exp / 1000)
       new_exp = new_exp % 1000
       level = level + level_delta
       local potential = Skill.modify_potential_from_level(chara, skill, level_delta)
       chara:set_base_skill(skill, level, potential, new_exp)
-      if Map.is_in_fov(chara.x, chara.y) then
+      if Map.is_in_fov(chara.x, chara.y, map) then
          local color = "White"
          if chara:is_in_player_party() then
             Gui.play_sound("base.ding3")
@@ -236,7 +237,7 @@ local function proc_leveling(chara, skill, new_exp, level)
       level = level - level_delta
       local potential = Skill.modify_potential_from_level(chara, skill, -level_delta)
       chara:set_base_skill(skill, level, potential, new_exp)
-      if Map.is_in_fov(chara.x, chara.y) and level_delta ~= 0 then
+      if Map.is_in_fov(chara.x, chara.y, map) and level_delta ~= 0 then
          Gui.mes_c(skill_change_text(chara, skill, false), "Red")
          Gui.mes_alert()
       end
@@ -249,8 +250,9 @@ local function proc_leveling(chara, skill, new_exp, level)
    -- <<<<<<<< shade2/module.hsp:346 	sdata@(sID+rangeSdata,c)=limit(lv,0,2000)*1000000 ..
 end
 
--- >>>>>>>> shade2/module.hsp:234 	#deffunc skillMod int sid,int c,int a ..
+--- @hsp skillMod skill, chara, exp
 function Skill.gain_fixed_skill_exp(chara, skill, exp)
+-- >>>>>>>> shade2/module.hsp:234 	#deffunc skillMod int sid,int c,int a ..
    data["base.skill"]:ensure(skill)
 
    local level = chara:base_skill_level(skill)
@@ -266,11 +268,12 @@ function Skill.gain_fixed_skill_exp(chara, skill, exp)
    chara:emit("elona_sys.on_gain_skill_exp", { skill_id = skill, base_exp_amount = exp, actual_exp_amount = exp })
 
    return level_delta
+   -- <<<<<<<< shade2/module.hsp:281 	return ..
 end
--- <<<<<<<< shade2/module.hsp:281 	return ..
 
--- >>>>>>>> shade2/module.hsp:283 	#deffunc skillExp int sid,int c,int a,int refExpD ..
+--- @hsp skillExp skill chara base_exp exp_divisor_stat exp_divisor_level
 function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divisor_level)
+   -- >>>>>>>> shade2/module.hsp:283 	#deffunc skillExp int sid,int c,int a,int refExpD ..
    exp_divisor_stat = exp_divisor_stat or 0
    exp_divisor_level = exp_divisor_level or 0
 
@@ -325,8 +328,8 @@ function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divi
    chara:emit("elona_sys.on_gain_skill_exp", { skill_id = skill, base_exp_amount = base_exp, actual_exp_amount = exp })
 
    return level_delta, exp
+   -- <<<<<<<< shade2/module.hsp:349 	#defcfunc calcFame int c,int per ..
 end
--- <<<<<<<< shade2/module.hsp:349 	#defcfunc calcFame int c,int per ..
 
 local function get_random_body_part()
    -- >>>>>>>> shade2/calculation.hsp:33 	gainBody bodyNeck,7 ...

@@ -34,7 +34,7 @@ end
 
 function IItem:normal_build()
    self.name = self._id
-   self.image = self.proto.image
+   self.image = self.image or self.proto.image
 
    local fallbacks = data.fallbacks["base.item"]
    self:mod_base_with(table.deepcopy(fallbacks), "merge")

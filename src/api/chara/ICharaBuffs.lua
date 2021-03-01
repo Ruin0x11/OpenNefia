@@ -26,8 +26,12 @@ function ICharaBuffs:remove_all_buffs(force)
    end
 end
 
+function ICharaBuffs:iter_buffs()
+   return fun.iter(self.buffs)
+end
+
 function ICharaBuffs:find_buff(buff_id)
-   return fun.iter(self.buffs):filter(function(b) return b._id == buff_id end):nth(1)
+   return self:iter_buffs():filter(function(b) return b._id == buff_id end):nth(1)
 end
 
 function ICharaBuffs:add_buff(buff_id, power, duration)
@@ -51,7 +55,7 @@ function ICharaBuffs:add_buff(buff_id, power, duration)
 end
 
 function ICharaBuffs:get_buff(buff_id)
-   return fun.iter(self.buffs):filter(function(b) return b._id == buff_id end):nth(1)
+   return self:iter_buffs():filter(function(b) return b._id == buff_id end):nth(1)
 end
 
 function ICharaBuffs:remove_buff(buff_id_or_idx)

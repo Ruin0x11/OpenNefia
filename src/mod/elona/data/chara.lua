@@ -8,6 +8,7 @@ local Chara = require("api.Chara")
 local Item = require("api.Item")
 local Calc = require("mod.elona.api.Calc")
 local Itemgen = require("mod.tools.api.Itemgen")
+local Event = require("api.Event")
 
 local eating_effect = require("mod.elona.data.chara.eating_effect")
 
@@ -8000,7 +8001,7 @@ local chara = {
          "elona.buff_mist_of_silence",
          "elona.buff_slow",
          "elona.spell_nether_arrow"
-      }
+      },
    },
    {
       _id = "android",
@@ -8814,3 +8815,27 @@ local chara = {
 }
 
 data:add_multi("base.chara", chara)
+
+
+-- TODO organize better
+local function proc_fairy_eat_food(item, params)
+   -- >>>>>>>> shade2/item.hsp:1090 	if cId(cc)=261:if nutrition>=2000{ ...
+   local chara = params.chara
+   if chara._id ~= "elona.cute_fairy" then
+      return
+   end
+
+   local map = chara:current_map()
+
+   local filter = {
+      level = Calc.calc_object_level(chara:calc("level"), map),
+      quality = nil,
+      categories = "elona.crop_seed"
+   }
+   local seed = Itemgen.create(chara.x, chara.y, filter, map)
+   if seed then
+      Gui.mes_c("food.effect.fairy_seed", "SkyBlue", chara, seed:build_name(1))
+   end
+   -- <<<<<<<< shade2/item.hsp:1095 		} ..
+end
+Event.register("elona_sys.on_item_eat", "Fairy seed creation behavior", proc_fairy_eat_food)

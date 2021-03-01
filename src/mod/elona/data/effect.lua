@@ -5,6 +5,8 @@ local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Const = require("api.Const")
 
+local Stopwatch = require("api.Stopwatch")
+local sw
 
 local function indicator_nutrition(player)
    local nutrition_level = math.clamp(math.floor(player:calc("nutrition") / 1000), 0, 12)
@@ -321,13 +323,21 @@ local effect = {
       end,
 
       on_turn_start = function(chara)
+         -- >>>>>>>> shade2/main.hsp:784 	if (cMochi(cc)>0)or(cSleep(cc)>0)or(cParalyze(cc) ...
          local result = { blocked = true }
+         if sw == nil then
+            sw = Stopwatch:new("info")
+         end
+         if sw then
+            sw:p("From last turn")
+         end
          if chara:is_player() then
             result.wait = 60
          end
          if chara:effect_turns("elona.dimming") > 60 then
             return result, "blocked"
          end
+         -- <<<<<<<< shade2/main.hsp:790 		} ..
       end,
 
       stops_activity = true,

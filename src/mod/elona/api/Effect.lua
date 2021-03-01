@@ -18,7 +18,7 @@ local I18N = require("api.I18N")
 local Mef = require("api.Mef")
 local Pos = require("api.Pos")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
-local Hunger = require("mod.elona.api.Hunger")
+local Log = require("api.Log")
 
 local Effect = {}
 
@@ -487,7 +487,6 @@ function Effect.damage_chara_item_acid(chara)
 
    return Effect.damage_item_acid(target)
    -- <<<<<<<< shade2/chara_func.hsp:1161 	if iType(ci)>=fltHeadItem : return ...
-
 end
 
 function Effect.damage_item_fire(item, fireproof_blanket)
@@ -510,6 +509,7 @@ function Effect.damage_item_fire(item, fireproof_blanket)
       else
          Gui.mes_c_visible("item.item_on_the_ground.get_broiled", item, "Orange", item)
       end
+      local Hunger = require("mod.elona.api.Hunger")
       Hunger.make_dish(item, Rand.rnd(5) + 1)
       return true
    end
@@ -1059,6 +1059,35 @@ function Effect.try_to_set_ai_item(chara, item)
 
    return false
    -- <<<<<<<< shade2/adv.hsp:119 	return ..
+end
+
+function Effect.love_miracle(chara)
+   if Rand.one_in(2) or chara:is_player() then
+      return
+   end
+   Gui.mes_c("misc.love_miracle.uh", "SkyBlue")
+   if Rand.one_in(2) then
+      local item = Item.create("elona.egg", chara.x, chara.y, {}, chara:current_map())
+      if item then
+         item.params.chara_id = chara._id
+         local weight = chara:calc("weight")
+         item.weight = weight * 10 + 250
+         item.value = math.clamp(math.floor(weight * weight / 10000), 200, 40000)
+      end
+   else
+      local item = Item.create("elona.bottle_of_milk", chara.x, chara.y, {}, chara:current_map())
+      if item then
+         item.params.chara_id = chara._id
+      end
+   end
+
+   Gui.play_sound("base.atk_elec")
+   local anim = Anim.load("elona.anim_elec", chara.x, chara.y)
+   Gui.start_draw_callback(anim)
+end
+
+function Effect.stop_time(chara)
+   Log.error("TODO time stop")
 end
 
 return Effect

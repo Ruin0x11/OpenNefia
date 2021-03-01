@@ -7,6 +7,7 @@ local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Event = require("api.Event")
 local Itemname = require("mod.elona.api.Itemname")
 local elona_Item = require("mod.elona.api.Item")
+local Log = require("api.Log")
 
 local cook = {
    _id = "cook",
@@ -40,41 +41,14 @@ local cook = {
    end,
 }
 
-local FOOD_TYPES = {
-   "elona.meat",
-   "elona.vegetable",
-   "elona.fruit",
-   "elona.sweet",
-   "elona.pasta",
-   "elona.fish",
-   "elona.bread",
-   "elona.egg",
-}
-
 function cook.generate(self, client, start)
-   local food_type = Rand.choice(FOOD_TYPES)
+   local food_type = Rand.choice(data["elona.food_type"]:iter())
+   local reward_category = food_type.quest_reward_category
 
-   local category
-
-   if food_type == "elona.sweet" then
-      category = "elona.drink"
-   elseif food_type == "elona.fish" then
-      category = "elona.equip_ammo"
-   elseif food_type == "elona.meat" then
-      category = "elona.equip_ammo"
-   elseif food_type == "elona.pasta" then
-      category = "elona.drink"
-   elseif food_type == "elona.bread" then
-      category = "elona.ore"
-   elseif food_type == "elona.vegetable" then
-      category = "elona.rod"
-   elseif food_type == "elona.fruit" then
-      category = "elona.scroll"
-   end
-
-   if category then
-      self.reward = { _id = "elona.by_category", category = category }
+   if reward_category then
+      self.reward = { _id = "elona.by_category", category = reward_category }
    else
+      Log.debug("No quest reward category for food type %s, using default", food_type._id)
       self.reward = { _id = "elona.supply" }
    end
 

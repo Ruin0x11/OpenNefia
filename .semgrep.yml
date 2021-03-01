@@ -82,3 +82,14 @@ rules:
     message: "Typecheck with plain `assert`; use `class.assert_is_an(...) instead`"
     languages: [lua]
     severity: WARNING
+  - id: require-inside-function
+    pattern-either:
+      - pattern:
+          function $X(...)
+          ...
+          require(...)
+          ...
+          end
+    message: "Call to `require()` inside function"
+    languages: [lua]
+    severity: WARNING

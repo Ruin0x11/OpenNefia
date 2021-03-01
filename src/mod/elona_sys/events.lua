@@ -54,7 +54,7 @@ local function proc_effects_turn_end(chara, params, result)
       -- <<<<<<<< shade2/calculation.hsp:1174 *calcCondition ..
    end
    for effect_id, _ in pairs(chara.effects) do
-      chara:add_effect_turns(effect_id, -1)
+      chara:heal_effect(effect_id, 1)
    end
 
    return result
