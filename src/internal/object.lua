@@ -81,14 +81,11 @@ local function extract_functions(instance, serial, proto, cache)
 
    for k, v in pairs(instance) do
       if type(k) == "string" then
-         -- Skip non-copiable fields (prefixed with '_')
-         if string.sub(k, 1, 1) ~= "_" then
-            if type(v) == "function" and proto[k] == v then
-               serial[k] = "copy_from_proto"
-            elseif type(v) == "table" and type(instance) == "table" then
-               serial[k] = {}
-               extract_functions(serial[k], v, proto[k], cache)
-            end
+         if type(v) == "function" and proto[k] == v then
+            serial[k] = "copy_from_proto"
+         elseif type(v) == "table" and type(instance) == "table" then
+            serial[k] = {}
+            extract_functions(serial[k], v, proto[k], cache)
          end
       end
    end
