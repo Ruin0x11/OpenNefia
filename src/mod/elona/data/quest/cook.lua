@@ -57,7 +57,7 @@ function cook.generate(self, client, start)
    self.reward_fix = 60 + self.difficulty
 
    self.params = {
-      food_type = food_type,
+      food_type = food_type._id,
       food_quality = food_quality
    }
 

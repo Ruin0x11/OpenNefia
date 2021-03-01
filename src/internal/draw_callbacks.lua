@@ -103,8 +103,6 @@ end
 function draw_callbacks:update(dt)
    -- TODO: order by priority
    for _, co in pairs(self.draw_callbacks) do
-      co.total = co.total or 0
-      co.total = co.total + dt
       co.dt = co.dt - dt
    end
    self.dt_this_frame = dt

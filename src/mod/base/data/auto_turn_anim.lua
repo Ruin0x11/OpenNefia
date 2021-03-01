@@ -8,9 +8,11 @@ data:add {
    callback = function(x, y, t)
       return function()
          local frame = 0
+         local played_sound = false
          while frame < 10 do
-            if frame == 2 then
+            if frame >= 2 and played_sound == false then
                Gui.play_sound("base.dig1")
+               played_sound = true
             end
 
             t.base.auto_turn_mining:draw_region(math.floor(frame/2)%5+1, x, y)
@@ -53,9 +55,11 @@ data:add {
    callback = function(x, y, t)
       return function()
          local frame = 0
+         local played_sound = false
          while frame < 10 do
-            if frame == 3 then
+            if frame >= 3 and played_sound == false then
                Gui.play_sound("base.bush1")
+               played_sound = true
             end
             t.base.auto_turn_harvesting:draw_region(math.floor(frame/2)%3+1, x, y)
             local frames_passed = select(3, Draw.yield(55))
@@ -75,9 +79,11 @@ data:add {
    callback = function(x, y, t)
       return function()
          local frame = 0
+         local played_sound = false
          while frame < 10 do
-            if frame == 2 then
+            if frame >= 2 then
                Gui.play_sound("base.dig2")
+               played_sound = true
             end
             t.base.auto_turn_searching:draw_region(math.floor(frame/2)%4+1, x, y)
             local frames_passed = select(3, Draw.yield(60))

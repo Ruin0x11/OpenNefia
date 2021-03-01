@@ -412,7 +412,23 @@ local function basic_action(chara, params)
       end
    end
 
-   return Ai.run("elona.melee", chara)
+   if Ai.run("elona.melee", chara) then
+      return true
+   end
+
+   if chara.ai_distance <= Pos.dist(chara.x, chara.y, target.x, target.y) and Rand.one_in(3) then
+      return true
+   end
+
+   if Rand.one_in(5) then
+      chara:set_aggro(target, chara:get_aggro(target) - 1)
+   end
+
+   if Rand.percent_chance(chara.ai_move_chance) then
+      return Ai.run("elona.move_towards_target", chara)
+   end
+
+   return true
    -- <<<<<<<< shade2/ai.hsp:527 	 ..
 end
 

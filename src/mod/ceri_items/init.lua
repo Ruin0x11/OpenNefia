@@ -12,9 +12,11 @@ local elona_Item = require("mod.elona.api.Item")
 
 local function apply_mapping(mapping, item)
    if mapping.chip_on_identify then
-      -- Don't apply the mapped image if the item's default image is different
-      -- than the prototype's image. For cases like raw noodles where the image
-      -- is changed dynamically based on factors like cooked dish quality.
+      -- Don't apply the mapped image if the item's current image is different
+      -- than the prototype's image. For items like raw noodles, the image can
+      -- get changed dynamically based on things like cooked dish quality. If we
+      -- did not do this, then an override for the raw noodle image would also
+      -- get applied to cooked noodle dishes.
       if item.proto.image == nil or item.image == item.proto.image then
          item.image = mapping.chip_on_identify
       end
@@ -55,9 +57,13 @@ local function set_item_image_on_generate(obj, params)
       return
    end
 
+   if not Theme.is_active("ceri_items.ceri_items") then
+      return
+   end
+
    local mapping = FFHP.mapping_for(obj._id)
    if mapping then
-      if (ItemMemory.is_known(obj._id) or params.is_shop) and Theme.is_active("ceri_items.ceri_items") then
+      if (ItemMemory.is_known(obj._id) or params.is_shop) then
          apply_mapping(mapping, obj)
       end
    end
