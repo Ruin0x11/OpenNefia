@@ -130,8 +130,6 @@ local function test_file(file, filter_test_name, seed, debug_on_error)
    local failures = {}
    local total = 0
 
-   table.sort(mt.__tests, function(a, b) return a[1] < b[1] end)
-
    for _, pair in ipairs(mt.__tests) do
       local name = pair[1]
       local test_fn = pair[2]
