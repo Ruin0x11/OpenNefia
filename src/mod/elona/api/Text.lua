@@ -63,7 +63,11 @@ end
 
 function Text.random_name()
    if names == nil then
-      names = Csv.parse_file("mod/elona/data/csv/name.csv"):to_list()
+      local names_iter, err = Csv.parse_file("mod/elona/data/csv/name.csv")
+      if names_iter == nil then
+         error(err)
+      end
+      names = names_iter:to_list()
    end
 
    return fun.tabulate(random_name_internal):filter(function(i) return i end):nth(1)
@@ -210,7 +214,11 @@ function Text.random_title(kind, seed, rng_kind)
          file = TITLE_FILES["en"]
       end
 
-      titles[lang] = Csv.parse_file("mod/elona/data/csv/" .. file):to_list()
+      local titles_iter, err = Csv.parse_file("mod/elona/data/csv/" .. file)
+      if titles_iter == nil then
+         error(err)
+      end
+      titles[lang] = titles_iter:to_list()
    end
 
    if seed then

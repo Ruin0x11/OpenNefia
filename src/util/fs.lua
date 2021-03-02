@@ -49,6 +49,10 @@ function fs.set_global_working_directory(prefix)
    working_dir_prefix = prefix
 end
 
+function fs.get_global_working_directory()
+   return working_dir_prefix
+end
+
 if not love or love.getVersion() == "lovemock" then
    local ok, lfs = pcall(require, "lfs")
    assert(ok, "luafilesystem not installed")
