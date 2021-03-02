@@ -5,14 +5,31 @@ local draw_callbacks = class.class("draw_callbacks", IDrawable)
 
 function draw_callbacks:init()
    self.draw_callbacks = {}
+   self.draw_order = {}
    self.waiting = false
    self.dt_this_frame = 0.0
 end
 
-function draw_callbacks:add(cb, tag, kind)
+function draw_callbacks:_reorder_callbacks()
+   self.draw_order = {}
+   for k, _ in pairs(self.draw_callbacks) do
+      table.insert(self.draw_order, k)
+   end
+   local sort = function(a, b)
+      return self.draw_callbacks[a].z_order < self.draw_callbacks[b].z_order
+   end
+   table.sort(self.draw_order, sort)
+end
+
+function draw_callbacks:add(cb, tag, kind, z_order)
    if kind then
       assert(kind == "background", "invalid draw callback kind " .. tostring(kind))
    end
+   if z_order then
+      assert(type(z_order) == "number")
+   end
+
+   z_order = z_order or 100000
 
    local key = #self.draw_callbacks+1
    if tag ~= nil then
@@ -25,8 +42,10 @@ function draw_callbacks:add(cb, tag, kind)
    self.draw_callbacks[key] = {
       thread = coroutine.create(cb),
       dt = 0,
-      is_background = kind == "background"
+      is_background = kind == "background",
+      z_order = z_order
    }
+   self:_reorder_callbacks()
 end
 
 function draw_callbacks:remove(tag)
@@ -36,6 +55,8 @@ function draw_callbacks:remove(tag)
    end
 
    self.draw_callbacks[tag] = nil
+
+   self:_reorder_callbacks()
 end
 
 local function resume_coroutine(co, draw_x, draw_y, frame_delta, dt_this_frame)
@@ -68,7 +89,8 @@ function draw_callbacks:draw(draw_x, draw_y)
    Draw.set_color(255, 255, 255)
 
    -- TODO: order by priority
-   for key, co in pairs(self.draw_callbacks) do
+   for _, key in pairs(self.draw_order) do
+      local co = assert(self.draw_callbacks[key])
       if co.dt > 0 then
          -- This frame has not been advanced yet; redraw the animation
          -- on the current frame (delta 0)
@@ -98,6 +120,9 @@ function draw_callbacks:draw(draw_x, draw_y)
    end
 
    table.remove_keys(self.draw_callbacks, dead)
+   if #dead > 0 then
+      self:_reorder_callbacks()
+   end
 end
 
 function draw_callbacks:update(dt)

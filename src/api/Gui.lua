@@ -78,14 +78,14 @@ end
 ---
 --- @tparam function cb
 --- @tparam string tag
-function Gui.start_background_draw_callback(cb, tag)
+function Gui.start_background_draw_callback(cb, tag, z_order)
    assert(type(tag) == "string")
 
    if Env.is_headless() then
       return
    end
 
-   field:add_async_draw_callback(cb, tag, "background")
+   field:add_async_draw_callback(cb, tag, "background", z_order)
 end
 
 --- Stops a tagged draw callback.

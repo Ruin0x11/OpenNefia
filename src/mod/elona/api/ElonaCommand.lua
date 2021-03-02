@@ -310,7 +310,7 @@ function ElonaCommand.do_sleep(player, bed, params)
             Draw.yield(200)
          end
       end
-      Gui.start_background_draw_callback(bg_cb, "elona.sleep")
+      Gui.start_background_draw_callback(bg_cb, "elona.sleep", 500000)
 
       local cb = function()
          local i = 0

@@ -30,7 +30,7 @@ function Weather.change_to(weather_id, next_turns)
       Weather.play_ambient_sound()
 
       if weather.draw_callback and config.base.weather_effect then
-         Gui.start_background_draw_callback(weather.draw_callback, "elona.weather")
+         Gui.start_background_draw_callback(weather.draw_callback, "elona.weather", 50000)
       end
 
       Event.trigger("elona.on_weather_changed", {previous_weather_id=prev_weather_id,new_weather_id=weather._id})
