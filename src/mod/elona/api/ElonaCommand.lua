@@ -21,6 +21,7 @@ local Effect = require("mod.elona.api.Effect")
 local Hunger = require("mod.elona.api.Hunger")
 local Quest = require("mod.elona_sys.api.Quest")
 local Save = require("api.Save")
+local Const = require("api.Const")
 
 local ElonaCommand = {}
 
@@ -350,7 +351,7 @@ function ElonaCommand.do_sleep(player, bed, params)
    if player:has_trait("elona.perm_slow_food") then
       hunger_adj = 2
    end
-   player.nutrition = player.nutrition - math.floor(1500 / hunger_adj)
+   player.nutrition = player.nutrition - math.floor(Const.HUNGER_SLEEP_DECREMENT_AMOUNT / hunger_adj)
    Gui.mes_c("activity.sleep.slept_for", "Green", time_slept)
 
    local add_potential = true
