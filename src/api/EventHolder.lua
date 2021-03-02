@@ -154,11 +154,19 @@ function EventHolder:unregister(event_id, name)
    local events = self.hooks[event_id]
    if events then
       events:unregister(name)
+      if events:count() == 0 then
+         self.hooks[event_id] = nil
+      end
    end
 
    for chunk, t in pairs(self.registered) do
       if t[event_id] then
-         t[event_id][name] = nil
+         if t[event_id][name] then
+            t[event_id][name] = nil
+         end
+         if next(t[event_id]) == nil then
+            t[event_id] = nil
+         end
       end
    end
 end

@@ -27,6 +27,10 @@ end
 
 local cache = {}
 
+local function global_callback_id_for(event_id)
+   return ("Global callback runner (%s)"):format(event_id)
+end
+
 local function register_global_handler_if_needed(self, event_id, global_events)
    if self._events:count(event_id) == 0 then
       global_events = global_events or Event.global()
@@ -54,7 +58,17 @@ local function register_global_handler_if_needed(self, event_id, global_events)
          end
       end
 
-      self._events:register(event_id, string.format("Global callback runner (%s)", event_id), cache[event_id], { priority = 100000 })
+      self._events:register(event_id, global_callback_id_for(event_id), cache[event_id], { priority = 100000 })
+   end
+end
+
+local function unregister_global_handler_if_needed(self, event_id)
+   if cache[event_id] and self._events:count(event_id) == 1 then
+      local global_callback_id = global_callback_id_for(event_id)
+      if self:has_event_handler(event_id, global_callback_id) then
+         self._events:unregister(event_id, global_callback_id)
+         assert(not self:has_event_handler(event_id))
+      end
    end
 end
 
@@ -152,9 +166,7 @@ function IEventEmitter:disconnect_self(event_id, name)
 
    self._events:unregister(event_id, name)
 
-   if self._events:count(event_id) == 0 then
-      self._events:unregister(event_id, string.format("Global callback runner (%s)", event_id))
-   end
+   unregister_global_handler_if_needed(self, event_id)
 end
 
 function IEventEmitter:connect_self_multiple(events, force)

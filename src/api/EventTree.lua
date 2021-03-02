@@ -136,12 +136,6 @@ function EventTree:traverse(source, args, default)
    local status
    for i, cb in ipairs(cache) do
       new_result, status = cb(source, args, result)
-      if new_result == "player_turn_query" then
-         if type(status) == "table" then
-            print(inspect(table.keys(status)))
-         end
-         print(new_result, status, type(status))
-      end
 
       -- If the result returned is nil, do not set the final result to
       -- nil. This is to avoid having to return 'result' for event
