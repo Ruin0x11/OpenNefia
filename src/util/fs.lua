@@ -43,10 +43,19 @@ local function gen_recursive_delete(rm_fn)
    end
 end
 
+local working_dir_prefix = nil
+
+function fs.set_global_working_directory(prefix)
+   working_dir_prefix = prefix
+end
+
 if not love or love.getVersion() == "lovemock" then
    local ok, lfs = pcall(require, "lfs")
    assert(ok, "luafilesystem not installed")
    fs.get_directory_items = function(dir, recursive)
+      if working_dir_prefix and not fs.is_absolute(dir) then
+         dir = fs.join(working_dir_prefix, dir)
+      end
       dir = fs.to_relative(dir)
       local items = {}
 
@@ -120,7 +129,12 @@ if not love or love.getVersion() == "lovemock" then
       return true, nil
    end
    fs.remove = gen_recursive_delete(os.remove)
-   fs.get_working_directory = lfs.currentdir
+   fs.get_working_directory = function()
+      if working_dir_prefix then
+         return fs.join(lfs.currentdir(), working_dir_prefix)
+      end
+      return lfs.currentdir()
+   end
 
    fs.attributes = lfs.attributes
 else
@@ -208,6 +222,9 @@ function fs.exists(path)
       return love.filesystem.exists(path)
    end
 
+   if working_dir_prefix and not fs.is_absolute(path) then
+      path = fs.join(working_dir_prefix, path)
+   end
    return fs.get_info(path) ~= nil
 end
 
@@ -216,6 +233,9 @@ function fs.is_directory(path)
       return love.filesystem.isDirectory(path)
    end
 
+   if working_dir_prefix and not fs.is_absolute(path) then
+      path = fs.join(working_dir_prefix, path)
+   end
    local info = fs.get_info(path)
    return info ~= nil and info.type == "directory"
 end
@@ -225,6 +245,9 @@ function fs.is_file(path)
       return love.filesystem.isFile(path)
    end
 
+   if working_dir_prefix and not fs.is_absolute(path) then
+      path = fs.join(working_dir_prefix, path)
+   end
    local info = fs.get_info(path)
    return info ~= nil and info.type == "file"
 end

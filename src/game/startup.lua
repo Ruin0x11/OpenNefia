@@ -39,7 +39,7 @@ local function copy_files(src, dest)
    end
 
    for _, name in fs.iter_directory_items(src) do
-      local src_file = fs.join(src, name)
+      local src_file = fs.join(fs.get_working_directory(), src, name)
       local dest_file = fs.join(fs.get_working_directory(), dest, name)
 
       -- HACK: Because of LÖVE's restriction that you can only write

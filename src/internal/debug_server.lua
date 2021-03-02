@@ -45,7 +45,7 @@ function commands.run(args)
       -- potentially leave the debug server in an invalid state. To
       -- protect against this, run the code itself in a new coroutine
       -- so if the code yields it will not affect any state.
-      local coro = coroutine.create(function() xpcall(fn, function(e) return e .. "\n" .. debug.traceback(2) end) end)
+      local coro = coroutine.create(function() return xpcall(fn, function(e) return e .. "\n" .. debug.traceback(2) end) end)
       repeat
          continue, success, result = coroutine.resume(coro, dt, nil)
          dt = coroutine.yield()

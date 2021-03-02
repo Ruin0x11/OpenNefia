@@ -3,7 +3,7 @@ local love = require("thirdparty.automagic")()
 
 local function check_path(path)
    if type(path) == "string" then
-      assert(fs.is_file(path), "File does not exist: " .. path)
+      -- assert(fs.is_file(path), "File does not exist: " .. path)
    end
 end
 
@@ -116,7 +116,12 @@ end
 love.timer.sleep = function() end
 love.system.getOS = function() return "lovemock" end
 love.filesystem.setRequirePath = function() end
-love.filesystem.load = loadfile
+love.filesystem.load = function(path)
+   if fs.is_absolute(path) then
+      return loadfile(path)
+   end
+   return loadfile(fs.join(fs.get_working_directory(), path))
+end
 love.filesystem.newFile = function(filepath)
    return {
       open = function(self, mode)
