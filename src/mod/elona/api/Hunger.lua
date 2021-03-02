@@ -71,15 +71,15 @@ end
 
 function Hunger.show_eating_message(chara)
    local nutrition = chara.nutrition
-   if nutrition >= 12000 then
+   if nutrition >= Const.HUNGER_THRESHOLD_BLOATED then
       Gui.mes_c("food.eating_message.bloated", "Green")
-   elseif nutrition >= 10000 then
+   elseif nutrition >= Const.HUNGER_THRESHOLD_SATISFIED then
       Gui.mes_c("food.eating_message.satisfied", "Green")
-   elseif nutrition >= 5000 then
+   elseif nutrition >= Const.HUNGER_THRESHOLD_NORMAL then
       Gui.mes_c("food.eating_message.normal", "Green")
-   elseif nutrition >= 2000 then
+   elseif nutrition >= Const.HUNGER_THRESHOLD_HUNGRY then
       Gui.mes_c("food.eating_message.hungry", "Green")
-   elseif nutrition >= 1000 then
+   elseif nutrition >= Const.HUNGER_THRESHOLD_STARVING then
       Gui.mes_c("food.eating_message.very_hungry", "Green")
    else
       Gui.mes_c("food.eating_message.starving", "Green")
@@ -432,11 +432,11 @@ function Hunger.make_player_hungry(chara)
    chara.nutrition = chara.nutrition - Const.HUNGER_DECREMENT_AMOUNT
    local new_level = math.floor(chara.nutrition / 1000)
    if new_level ~= old_level then
-      if new_level == 1 then
+      if old_level * 1000 == Const.HUNGER_THRESHOLD_STARVING then
          Gui.mes("food.hunger_status.starving")
-      elseif new_level == 2 then
+      elseif old_level * 1000 == Const.HUNGER_THRESHOLD_HUNGRY then
          Gui.mes("food.hunger_status.very_hungry")
-      elseif new_level == 5 then
+      elseif old_level * 1000 == Const.HUNGER_THRESHOLD_NORMAL then
          Gui.mes("food.hunger_status.hungry")
       end
       Skill.refresh_speed(chara)

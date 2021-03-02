@@ -5,14 +5,33 @@ local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Const = require("api.Const")
 
+local COLOR_BLACK = {0, 0, 0}
+local COLOR_LIGHT_RED = {200, 0, 0}
+local COLOR_RED = {250, 0, 0}
+
 local function indicator_nutrition(player)
-   local nutrition_level = math.clamp(math.floor(player:calc("nutrition") / 1000), 0, 12)
+   local nutrition = player:calc("nutrition")
+   local nutrition_level = math.clamp(math.floor(nutrition / 1000), 0, 12)
    if 5 <= nutrition_level and nutrition_level <= 9 then
       return nil
    end
 
+   local color
+   if nutrition >= Const.HUNGER_THRESHOLD_BLOATED then
+      color = COLOR_BLACK
+   elseif nutrition >= Const.HUNGER_THRESHOLD_STARVING then
+      if nutrition <= Const.HUNGER_THRESHOLD_NORMAL - 1000 then
+         color = COLOR_LIGHT_RED
+      else
+         color = COLOR_BLACK
+      end
+   else
+      color = COLOR_RED
+   end
+
    return {
-      text = ("effect.indicator.hunger._%d"):format(nutrition_level)
+      text = ("effect.indicator.hunger._%d"):format(nutrition_level),
+      color = color
    }
 end
 data:add {
