@@ -187,3 +187,46 @@ function test_Hunger_apply_general_eating_effect___nonplayer_eats_rotten()
    Assert.eq(540, chara:skill_experience("elona.stat_constitution"))
    Assert.eq(8500, chara.nutrition)
 end
+
+function test_Hunger_apply_general_eating_effect__corpse_effects()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+
+   local chara = stripped_chara(map)
+
+   do
+      local food = stripped_item(map, "elona.corpse")
+
+      food.params.chara_id = nil
+      chara.nutrition = 5000
+      chara:mod_base_skill_level("elona.healing", 10, "set")
+      chara:mod_skill_experience("elona.healing", 500, "set")
+      Assert.eq(10, chara:base_skill_level("elona.healing"))
+      Assert.eq(500, chara:skill_experience("elona.healing"))
+      Assert.eq(5000, chara.nutrition)
+
+      Hunger.apply_general_eating_effect(chara, food)
+
+      Assert.eq(10, chara:base_skill_level("elona.healing"))
+      Assert.eq(500, chara:skill_experience("elona.healing"))
+      Assert.eq(8500, chara.nutrition)
+   end
+
+   do
+      local food = stripped_item(map, "elona.corpse")
+
+      food.params.chara_id = "elona.troll"
+      chara.nutrition = 5000
+      chara:mod_base_skill_level("elona.healing", 10, "set")
+      chara:mod_skill_experience("elona.healing", 500, "set")
+      Assert.eq(10, chara:base_skill_level("elona.healing"))
+      Assert.eq(500, chara:skill_experience("elona.healing"))
+      Assert.eq(5000, chara.nutrition)
+
+      Hunger.apply_general_eating_effect(chara, food)
+
+      Assert.eq(10, chara:base_skill_level("elona.healing"))
+      Assert.eq(556, chara:skill_experience("elona.healing"))
+      Assert.eq(8500, chara.nutrition)
+   end
+end

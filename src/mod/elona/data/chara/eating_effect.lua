@@ -96,7 +96,7 @@ eating_effect.poisonous = eating_effect_poisonous(false)
 
 function eating_effect.troll(corpse, params)
    eat_message(params.chara, "troll", "Green")
-   Skill.gain_skill_exp(params.chara, "core.healing", 200)
+   Skill.gain_skill_exp(params.chara, "elona.healing", 200)
 end
 
 function eating_effect.rotten_one(corpse, params, result)
@@ -111,7 +111,7 @@ end
 
 function eating_effect.mandrake(corpse, params)
    eat_message(params.chara, "mandrake", "Green")
-   Skill.gain_skill_exp(params.chara, "core.meditation", 500)
+   Skill.gain_skill_exp(params.chara, "elona.meditation", 500)
 end
 
 function eating_effect.grudge(corpse, params)
