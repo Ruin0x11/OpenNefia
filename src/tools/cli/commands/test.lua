@@ -13,6 +13,7 @@ local Log = require("api.Log")
 local config_store = require("internal.config_store")
 local save_store = require("internal.save_store")
 local SaveFs = require("api.SaveFs")
+local Stopwatch = require("api.Stopwatch")
 
 -- Make an environment rejecting the setting of global variables except
 -- functions that are named "test_*".
@@ -199,6 +200,8 @@ return function(args)
    end
    local files = get_files("test/unit/")
 
+   local sw = Stopwatch:new()
+
    while #files > 0 do
       local path = files[#files]
       files[#files] = nil
@@ -216,6 +219,10 @@ return function(args)
 
    cleanup_globals()
 
+   print("\n")
+
+   local seconds_elapsed = sw:measure() / 1000
+   print(("Finished in %02.08fs."):format(seconds_elapsed))
    print()
 
    if disabled > 0 then
