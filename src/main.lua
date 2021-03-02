@@ -112,6 +112,10 @@ function love.update(dt)
    ok, err = coroutine.resume(loop_coro, dt, pop_draw_layer)
    pop_draw_layer = false
    if not ok or err ~= nil then
+      -- we can throw anything, including non-string objects, so convert the
+      -- error to a string for when something tries to concat it
+      err = tostring(err)
+
       print("Error in loop:\n\t" .. debug.traceback(loop_coro, err))
       print()
       if not ok then
@@ -146,6 +150,10 @@ function love.draw()
    local going = true
    local ok, err = coroutine.resume(draw_coro, going)
    if not ok or err then
+      -- we can throw anything, including non-string objects, so convert the
+      -- error to a string for when something tries to concat it
+      err = tostring(err)
+
       print("Error in draw:\n\t" .. debug.traceback(draw_coro, err))
       print()
       if not ok then
@@ -163,7 +171,7 @@ function love.draw()
    ok, err = xpcall(draw.draw_global_widgets, debug.traceback)
    if not ok then
       start_halt()
-      halt_error = err
+      halt_error = tostring(err)
    end
    draw.draw_global_draw_callbacks()
 
