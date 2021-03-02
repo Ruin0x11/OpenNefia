@@ -51,6 +51,9 @@ function object.__index(t, k)
    if k == "_type" then
       return mt._type
    end
+   if k == "uid" then
+      return mt.uid
+   end
    if k == "proto" then
       return data[mt._type]:ensure(mt._id)
    end
@@ -77,6 +80,7 @@ function object.__newindex(t, k, v)
       or k == "__mt"
       or k == "_id"
       or k == "_type"
+      or k == "uid"
       or k == "proto"
       or k == "x"
       or k == "y"
@@ -149,6 +153,7 @@ function object.serialize(self)
    -- for deserialization, removed afterward
    ret.x = self.x
    ret.y = self.y
+   ret.uid = self.uid
    assert(ret.location == nil)
 
    local serial = {}
@@ -167,7 +172,10 @@ function object.deserialize(self, _type, _id)
 
    local x = 0
    local y = 0
+   local uid = nil
 
+   -- Get some fields that the serializer saved for us and restore them.
+   -- Afterward they are removed, as they are reserved for internal use.
    assert(self.location == nil)
    if self.x or self.y then
       assert(self.x and self.y, "Both x and y must be specified")
@@ -175,6 +183,10 @@ function object.deserialize(self, _type, _id)
       y = self.y
       self.x = nil
       self.y = nil
+   end
+   if self.uid then
+      uid = self.uid
+      self.uid = nil
    end
 
    assert(type(_type) == "string")
@@ -199,6 +211,7 @@ function object.deserialize(self, _type, _id)
    local mt = {
       _id = _id,
       _type = _type,
+      uid = uid,
 
       -- for map objects. these must always be non-nil.
       x = x,

@@ -18,7 +18,9 @@ function MapObject.generate_from(_type, id, uid_tracker)
    -- params.no_pre_build = true
    local obj = Object.generate_from(_type, id)
 
-   rawset(obj, "uid", uid)
+   local mt = getmetatable(obj)
+   assert(mt.__id == "object")
+   rawset(mt, "uid", uid)
 
    -- class.assert_is_an(IMapObject, data)
 
@@ -35,7 +37,9 @@ function MapObject.generate(proto, uid_tracker)
    -- params.no_pre_build = true
    local obj = Object.generate(proto)
 
-   rawset(obj, "uid", uid)
+   local mt = getmetatable(obj)
+   assert(mt.__id == "object")
+   rawset(mt, "uid", uid)
 
    -- class.assert_is_an(IMapObject, obj)
 
@@ -169,6 +173,7 @@ local function cycle_aware_copy(t, cache, uids, first, opts)
          new_mt.__inspect = object.__inspect
 
          -- immutable state
+         new_mt.uid = nil
          new_mt.x = mt.x
          new_mt.y = mt.y
          new_mt.location = nil
@@ -199,8 +204,11 @@ function MapObject.clone(obj, owned, uid_tracker, cache, opts)
 
    local new_object = cycle_aware_copy(obj, cache or {}, uid_tracker, true, opts)
 
-   if not preserve_uid then
-      new_object.uid = uid_tracker:get_next_and_increment()
+   local mt = getmetatable(new_object)
+   if preserve_uid then
+      mt.uid = obj.uid
+   else
+      mt.uid = uid_tracker:get_next_and_increment()
    end
 
    local location = obj:get_location()

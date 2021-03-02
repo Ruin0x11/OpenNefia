@@ -84,3 +84,57 @@ function test_event_emitter_callbacks_restored()
       Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
    end
 end
+
+function test_object_set_item_prototype__event_callbacks_added()
+   do
+      local map = InstancedMap:new(10, 10)
+      map:clear("elona.cobble")
+
+      local player = Chara.create("base.player", 5, 5, {}, map)
+      Chara.set_player(player)
+      test_util.register_map(map)
+
+      local item = Item.create("base.nonuseable", nil, nil, {}, player)
+      Assert.is_falsy(item:has_event_handler("elona_sys.on_item_use"))
+
+      item:set_object_prototype("base.useable")
+      Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
+   end
+
+   test_util.save_cycle()
+
+   do
+      local player = Chara.player()
+      local map = player:current_map()
+      local item = Item.find("base.useable", "all", map)
+
+      Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
+   end
+end
+
+function test_object_set_item_prototype__event_callbacks_removed()
+   do
+      local map = InstancedMap:new(10, 10)
+      map:clear("elona.cobble")
+
+      local player = Chara.create("base.player", 5, 5, {}, map)
+      Chara.set_player(player)
+      test_util.register_map(map)
+
+      local item = Item.create("base.useable", nil, nil, {}, player)
+      Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
+
+      item:set_object_prototype("base.nonuseable")
+      Assert.is_falsy(item:has_event_handler("elona_sys.on_item_use"))
+   end
+
+   test_util.save_cycle()
+
+   do
+      local player = Chara.player()
+      local map = player:current_map()
+      local item = Item.find("base.nonuseable", "all", map)
+
+      Assert.is_falsy(item:has_event_handler("elona_sys.on_item_use"))
+   end
+end
