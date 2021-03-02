@@ -15,7 +15,7 @@ end
 
 local function mod_resist_chance(chara, elem, chance)
    if Rand.one_in(chance) then
-      Skill.modify_resist_level(elem, 50)
+      Skill.modify_resist_level(chara, elem, 50)
    end
 end
 
@@ -59,12 +59,12 @@ function eating_effect.vesda(corpse, params)
       return
    end
    eat_message(params.chara, "vesda", "Green")
-   params.Skill.modify_resist_level("elona.fire", 100)
+   Skill.modify_resist_level(params.chara, "elona.fire", 100)
 end
 
 function eating_effect.insanity(corpse, params)
    eat_message(params.chara, "insanity", "Purple")
-   params.Skill.modify_resist_level("elona.mind", 50)
+   Skill.modify_resist_level(params.chara, "elona.mind", 50)
    Effect.damage_insanity(params.chara, 500)
    params.chara:apply_effect("elona.insanity", 1000)
 end
@@ -101,7 +101,7 @@ end
 
 function eating_effect.rotten_one(corpse, params, result)
    eat_message(params.chara, "rotten_one", "Purple")
-   return Hunger.add_rotten_food_exp_losses(params.chara, result.exp_gains)
+   result.exp_gains, result.nutrition = Hunger.add_rotten_food_exp_losses(params.chara, result.exp_gains, result.nutrition)
 end
 
 function eating_effect.beetle(corpse, params)

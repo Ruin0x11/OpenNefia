@@ -223,10 +223,35 @@ function Hunger.vomit(chara)
    -- <<<<<<<< shade2/chara_func.hsp:1927 	return ..
 end
 
-function Hunger.add_rotten_food_exp_losses(chara, exp_gains)
+function Hunger.add_rotten_food_exp_losses(chara, exp_gains, nutrition)
    exp_gains = exp_gains or {}
 
-   return exp_gains
+   if chara:calc("is_protected_from_rotten_food") then
+      Gui.mes("food.not_affected_by_rotten", chara)
+      return exp_gains, nutrition
+   end
+
+   for k, _ in pairs(exp_gains) do
+      exp_gains[k] = nil
+   end
+
+   local function add_exp_loss(skill_id)
+      exp_gains[#exp_gains+1] = { _id = skill_id, amount = -100 }
+   end
+
+   add_exp_loss("elona.stat_strength")
+   add_exp_loss("elona.stat_constitution")
+   add_exp_loss("elona.stat_charisma")
+   add_exp_loss("elona.stat_magic")
+   add_exp_loss("elona.stat_dexterity")
+   add_exp_loss("elona.stat_perception")
+   add_exp_loss("elona.stat_learning")
+   add_exp_loss("elona.stat_will")
+   nutrition = 1000
+   chara:apply_effect("elona.paralysis", 100)
+   chara:apply_effect("elona.confusion", 200)
+
+   return exp_gains, nutrition
 end
 
 function Hunger.is_human_flesh(food)
@@ -242,51 +267,51 @@ end
 local function show_player_eating_message(player, food)
    -- >>>>>>>> shade2/item.hsp:919 		p=iParam1(ci)/extFood ...
    local food_quality = food.params.food_quality or 0
-   local is_rotten = food.spoilage_date and food.spoilage_date < World.date_hours()
+   local is_rotten = food.spoilage_date and food.spoilage_date <= World.date_hours()
 
    if player:has_trait("elona.eat_human") then
       if Hunger.is_human_flesh(food) then
          Gui.mes("food.effect.human.delicious")
       end
+   end
 
-      if is_rotten then
-         Gui.mes("food.effect.rotten")
-         return
-      end
+   if is_rotten then
+      Gui.mes("food.effect.rotten")
+      return
+   end
 
-      if food_quality <= 0 then
-         local food_type = food.params.food_type
-         if food_type then
-            local message = I18N.get_optional("food.names.elona.meat.uncooked_message")
-            if message then
-               Gui.mes(message)
-               return
-            end
-
-            Gui.mes("food.effect.boring")
+   if food_quality <= 0 then
+      local food_type = food.params.food_type
+      if food_type then
+         local message = I18N.get_optional("food.names.elona.meat.uncooked_message")
+         if message then
+            Gui.mes(message)
             return
          end
-      end
 
-      if food_quality < 3 then
-         Gui.mes("food.effect.quality.bad")
+         Gui.mes("food.effect.boring")
          return
       end
-      if food_quality < 5 then
-         Gui.mes("food.effect.quality.so_so")
-         return
-      end
-      if food_quality < 7 then
-         Gui.mes("food.effect.quality.good")
-         return
-      end
-      if food_quality < 9 then
-         Gui.mes("food.effect.quality.great")
-         return
-      end
-
-      Gui.mes("food.effect.quality.delicious")
    end
+
+   if food_quality < 3 then
+      Gui.mes("food.effect.quality.bad")
+      return
+   end
+   if food_quality < 5 then
+      Gui.mes("food.effect.quality.so_so")
+      return
+   end
+   if food_quality < 7 then
+      Gui.mes("food.effect.quality.good")
+      return
+   end
+   if food_quality < 9 then
+      Gui.mes("food.effect.quality.great")
+      return
+   end
+
+   Gui.mes("food.effect.quality.delicious")
    -- <<<<<<<< shade2/item.hsp:942 		} ..
 end
 
@@ -364,7 +389,7 @@ function Hunger.apply_general_eating_effect(chara, food)
    end
 
    if chara:is_player() and is_rotten then
-      exp_gains = Hunger.add_rotten_food_exp_losses(chara, exp_gains)
+      exp_gains, nutrition = Hunger.add_rotten_food_exp_losses(chara, exp_gains, nutrition)
    end
 
    local event_result = { nutrition = nutrition, exp_gains = exp_gains }

@@ -191,7 +191,10 @@ function ICharaEffects:heal_effect(id, power, params)
       success = self:set_effect_turns(id, turns)
    end
    if success and not params.no_message and current > 0 and turns <= 0 then
-      Gui.mes_visible("effect." .. id .. ".heal", self.x, self.y, self)
+      local text = I18N.get_optional("effect." .. id .. ".heal", self)
+      if text then
+         Gui.mes_visible(text, self.x, self.y)
+      end
    end
 
    self:emit("elona_sys.on_heal_effect", {effect=effect,turns=turns,prev_turns=current,immune=(not success)})

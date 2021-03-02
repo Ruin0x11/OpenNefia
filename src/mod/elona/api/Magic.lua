@@ -64,7 +64,7 @@ function Magic.drink_potion(magic_id, power, item, params)
 
    chara.nutrition = chara.nutrition + 150
 
-   if chara:is_in_player_party() and chara.nutrition > 12000 and Rand.one_in(5) then
+   if chara:is_in_player_party() and chara.nutrition > Const.HUNGER_THRESHOLD_BLOATED and Rand.one_in(5) then
       Hunger.vomit(chara)
    end
 

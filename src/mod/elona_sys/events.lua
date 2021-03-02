@@ -105,9 +105,10 @@ local function hourly_events()
          Gui.mes("action.move.global.nap")
          s.awake_hours = math.max(0, s.awake_hours - 3)
       end
-   end
-   if not map:calc("prevents_adding_awake_hours") then
-      s.awake_hours = s.awake_hours + 1
+   else
+      if not map:calc("prevents_adding_awake_hours") then
+         s.awake_hours = s.awake_hours + 1
+      end
    end
 
    if World.date().hour == 8 then

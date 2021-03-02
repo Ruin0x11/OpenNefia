@@ -1102,7 +1102,6 @@ function Effect.spoil_items(map)
          and item.spoilage_date
          and item.spoilage_date <= date_hours
    end
-   pause()
 
    for _, item in Item.iter(map):filter(will_rot) do
       if item._id == "elona.corpse" and map:tile(item.x, item.y).kind == Enum.TileRole.Dryground then
