@@ -2,7 +2,7 @@
 
 local IModDataHolder = require("api.IModDataHolder")
 local IModdable = require("api.IModdable")
-
+local data = require("internal.data")
 
 -- An object instance backed by a data prototype.
 local IObject = class.interface("IObject",
@@ -63,6 +63,14 @@ end
 
 function IObject:is_a(_type)
    return self._type == _type
+end
+
+function IObject:change_prototype(new_id)
+   data[self._type]:ensure(new_id)
+   local mt = getmetatable(self)
+   local old_id = mt._id
+   mt._id = new_id
+   self:emit("base.on_object_prototype_changed", {old_id=old_id})
 end
 
 return IObject
