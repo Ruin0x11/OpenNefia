@@ -229,6 +229,14 @@ data:add {
     on_refresh = function(item)
        item:mod("is_acidproof", true)
        item:mod("is_fireproof", true)
+    end,
+
+    on_equipper_refresh = function(chara, item)
+       -- >>>>>>>> shade2/calculation.hsp:446 	if iMaterial(rp)=mtEther : if r1=pc : gEtherSpeed ...
+       if chara:is_player() then
+          chara:mod("ether_disease_speed", 5, "add")
+       end
+       -- <<<<<<<< shade2/calculation.hsp:446 	if iMaterial(rp)=mtEther : if r1=pc : gEtherSpeed ..
     end
 }
 

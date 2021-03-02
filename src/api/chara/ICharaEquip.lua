@@ -47,9 +47,12 @@ local function apply_item_stats(chara, item)
       chara:mod("curse_power", 100, "add")
    end
 
-   local is_ether = item:calc("material") == "elona.ether"
-   if is_ether then
-      chara:mod("ether_disease_speed", 5, "add")
+   local material = item:calc("material")
+   if material then
+      local material_proto = data["elona.item_material"]:ensure(material)
+      if material_proto.on_equipper_refresh then
+         material_proto.on_equipper_refresh(chara, item)
+      end
    end
    -- <<<<<<<< shade2/calculation.hsp:446 	if iMaterial(rp)=mtEther : if r1=pc : gEtherSpeed ...
 
