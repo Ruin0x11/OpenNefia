@@ -107,6 +107,10 @@ function IChara:build()
 
    self.target = nil
 
+   -- HACK fallback to prevent errors. Races should always declare an image, but
+   -- they might not still.
+   self.image = self.image or "elona.chara_race_slime"
+
    self:reset_ai()
 
    self:emit("base.on_build_chara")
