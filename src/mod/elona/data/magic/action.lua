@@ -106,7 +106,7 @@ local function proc_curse(chara)
    if Rand.one_in(10) and chara.gold > 0 then
       local lose_amount = math.min(Rand.rnd(chara.gold) / 100 + Rand.rnd(10) + 1, chara.gold)
       chara.gold = chara.gold - lose_amount
-      Gui.mes_c_visible("misc.curse.gold_stolen", chara, "Purple")
+      Gui.mes_c_visible("misc.curse.gold_stolen", chara.x, chara.y, "Purple", chara)
       return
    end
    -- <<<<<<<< elona122/shade2/item.hsp:446 	return ..
