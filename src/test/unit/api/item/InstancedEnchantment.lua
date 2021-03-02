@@ -2,7 +2,7 @@ local InstancedEnchantment = require("api.item.InstancedEnchantment")
 local Assert = require("api.test.Assert")
 
 function test_InstancedEnchantment_init__invalid_id()
-   Assert.error(
+   Assert.throws_error(
       function() InstancedEnchantment:new("foo", 20, {}) end,
       "No instance of 'base.enchantment' with ID 'foo' was found."
    )

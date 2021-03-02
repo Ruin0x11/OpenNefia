@@ -48,9 +48,17 @@ function object.__index(t, k)
       local mt = getmetatable(t)
       return env.get_require_path(mt.__iface)
    end
+   if k == "_id" then
+      local mt = getmetatable(t)
+      return mt._id
+   end
+   if k == "_type" then
+      local mt = getmetatable(t)
+      return mt._type
+   end
    if k == "proto" then
       local mt = getmetatable(t)
-      return mt.__proto
+      return data[mt._type]:ensure(mt._id)
    end
 
    local v = rawget(t, k)
@@ -65,6 +73,24 @@ function object.__index(t, k)
    -- end
 
    return mt.__iface[k]
+end
+
+function object.__newindex(t, k, v)
+   if k == "__iface"
+      or k == "__mt"
+      or k == "_id"
+      or k == "_type"
+      or k == "proto"
+   then
+      error(("'%s' is a reserved field name on map objects."):format(k))
+   end
+
+   local mt = getmetatable(t)
+   if mt.__iface[k] then
+      error(("Tried to overwrite a field on interface '%s' named '%s'"):format(mt.__iface, k))
+   end
+
+   rawset(t, k, v)
 end
 
 local function extract_functions(instance, serial, proto, cache)
@@ -128,6 +154,8 @@ function object.deserialize(self, _type, _id)
    if self._type and self._id then
       _type = self._type
       _id = self._id
+      self._type = nil
+      self._id = nil
    end
    assert(type(_type) == "string")
    assert(type(_id) == "string")
@@ -137,9 +165,6 @@ function object.deserialize(self, _type, _id)
    end
    local iface = data[_type]:interface()
    assert(iface)
-
-   self._type = _type
-   self._id = _id
 
    -- functions on the prototype table are not serialized, so they
    -- must be copied from the prototype to the instance on
@@ -153,8 +178,11 @@ function object.deserialize(self, _type, _id)
 
    setmetatable(self,
                 {
+                   _id = _id,
+                   _type = _type,
                    __id = "object",
                    __index = object.__index,
+                   __newindex = object.__newindex,
                    __proto = proto,
                    __iface = iface,
                    __tostring = function(t)

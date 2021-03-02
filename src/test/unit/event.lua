@@ -7,6 +7,28 @@ local data = require("internal.data")
 
 data:add {
    _type = "base.item",
+   _id = "nonuseable",
+
+   dice_x = 2,
+   dice_y = 7,
+   hit_bonus = 4,
+   damage_bonus = 8,
+   material = "elona.metal",
+   equip_slots = { "elona.ranged" },
+   coefficient = 100,
+
+   skill = "elona.bow",
+
+   categories = {
+      "elona.equip_ranged_bow",
+      "elona.equip_ranged"
+   },
+
+   on_use = nil
+}
+
+data:add {
+   _type = "base.item",
    _id = "useable",
 
    dice_x = 2,
@@ -27,7 +49,7 @@ data:add {
    on_use = function() end
 }
 
-function test_event_emiiter_callbacks_restored()
+function test_event_emitter_callbacks_restored()
    do
       local map = InstancedMap:new(10, 10)
       map:clear("elona.cobble")
