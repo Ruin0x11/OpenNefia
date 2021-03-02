@@ -517,7 +517,7 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
 
    local enc = caster:find_merged_enchantment("elona.power_magic")
    if enc then
-      params.power = params.power * (100 + enc.power / 10) / 100
+      params.power = params.power * (100 + enc.total_power / 10) / 100
    end
 
    local rapid_magic

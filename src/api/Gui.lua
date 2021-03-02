@@ -166,10 +166,8 @@ function Gui.fade_out(length)
       while frame < length do
          local _, _, frames_passed = Draw.yield(20)
          Draw.set_blend_mode("subtract")
-         for _ = 1, frames_passed do
-            Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255, 10 + frame * 5})
-            frame = frame + 1
-         end
+         frame = frame + frames_passed
+         Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255, 10 + frame * 5})
          Draw.set_blend_mode("alpha")
       end
    end
