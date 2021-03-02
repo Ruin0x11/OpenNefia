@@ -2,7 +2,7 @@ local ILocation = require("api.ILocation")
 
 local IOwned = class.interface("IOwned",
                          {
-                            location = { type = ILocation, optional = true },
+                            -- location = { type = ILocation, optional = true },
                             _parent = { type = ILocation, optional = true }
                          })
 

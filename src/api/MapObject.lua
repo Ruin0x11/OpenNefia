@@ -155,7 +155,16 @@ local function cycle_aware_copy(t, cache, uids, first, opts)
    if t.__class and class.is_class_or_interface(mt) then
       res.__class = mt
    end
-   setmetatable(res,mt)
+   if mt then
+      local new_mt = {}
+      local is_object = mt.__id == "object"
+      for k, v in pairs(mt) do
+         if not is_object or (k ~= "location") then
+            new_mt[k] = v
+         end
+      end
+      setmetatable(res,new_mt)
+   end
 
    return res
 end
@@ -178,9 +187,6 @@ function MapObject.clone(obj, owned, uid_tracker, cache, opts)
    if not preserve_uid then
       new_object.uid = uid_tracker:get_next_and_increment()
    end
-
-   local mt = getmetatable(obj)
-   setmetatable(new_object, mt)
 
    local location = obj:get_location()
    if owned and class.is_an("api.IMapObject", obj) and class.is_an("api.ILocation", location) then

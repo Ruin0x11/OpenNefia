@@ -68,6 +68,10 @@ function object.__index(t, k)
       local mt = getmetatable(t)
       return mt.y
    end
+   if k == "location" then
+      local mt = getmetatable(t)
+      return mt.location
+   end
 
    local v = rawget(t, k)
    if v ~= nil then
@@ -91,6 +95,7 @@ function object.__newindex(t, k, v)
       or k == "proto"
       or k == "x"
       or k == "y"
+      or k == "location"
    then
       error(("'%s' is a reserved field name on map objects."):format(k))
    end

@@ -17,6 +17,7 @@ function test_object__get_reserved_field()
    Assert.eq("base.chara", chara.proto._type)
    Assert.eq(4, chara.x)
    Assert.eq(5, chara.y)
+   Assert.is_truthy(chara.location)
 end
 
 function test_object__set_reserved_field()
@@ -29,4 +30,5 @@ function test_object__set_reserved_field()
    Assert.throws_error(function() chara.proto = "dood" end)
    Assert.throws_error(function() chara.x = "dood" end)
    Assert.throws_error(function() chara.y = "dood" end)
+   Assert.throws_error(function() chara.location = "dood" end)
 end

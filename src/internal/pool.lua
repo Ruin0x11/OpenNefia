@@ -44,23 +44,25 @@ function pool:take_object(obj, x, y)
    assert(x >= 0 and x < self.width)
    assert(y >= 0 and y < self.height)
 
+   local mt = getmetatable(obj)
+
    -- obj:remove_ownership()
    local location = obj:get_location()
    if location then
       if not location:remove_object(obj) then
          return nil
       end
-      obj.location = nil
+      mt.location = nil
    end
 
    -- We make `x` and `y` immutable using `object.__newindex`, to force their
    -- update through IMapObject:set_pos(x, y). This is so `self.positional` can
    -- get updated properly.
-   local mt = getmetatable(obj)
    mt.x = x
    mt.y = y
 
-   obj.location = self
+   -- Same thing for `location`.
+   mt.location = self
 
    local entry = { data = obj, array_index = #self.uids + 1 }
 
@@ -137,7 +139,8 @@ function pool:remove_object(obj)
       self.positional[idx] = nil
    end
 
-   obj_.location = nil
+   local mt = getmetatable(obj_)
+   mt.location = nil
 
    return obj_
 end
@@ -164,8 +167,11 @@ end
 
 function pool:deserialize()
    for _, v in self:iter() do
-      if type(v) == "table" and v._type then
-         v.location = self
+      if type(v) == "table" then
+         local mt = getmetatable(v)
+         if mt.__id == "object" then
+            mt.location = self
+         end
       end
    end
 end
