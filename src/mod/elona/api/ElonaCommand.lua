@@ -20,6 +20,7 @@ local MapgenUtils = require("mod.elona.api.MapgenUtils")
 local Effect = require("mod.elona.api.Effect")
 local Hunger = require("mod.elona.api.Hunger")
 local Quest = require("mod.elona_sys.api.Quest")
+local Save = require("api.Save")
 
 local ElonaCommand = {}
 
@@ -278,6 +279,7 @@ local function do_chara_sleep(chara)
 end
 
 function ElonaCommand.do_sleep(player, bed, params)
+   -- >>>>>>>> shade2/proc.hsp:651 *sleep ...
    params = params or { no_animation = false, sleep_hours = nil }
 
    local map = player:current_map()
@@ -298,16 +300,32 @@ function ElonaCommand.do_sleep(player, bed, params)
 
    local bg = UiTheme.load().base.bg_night
 
+   local fade_in_finished = false
    if not params.no_animation then
-      Draw.run(function(state)
-            if state.i > 20 then
+      local bg_cb = function()
+         while true do
+            if fade_in_finished then
                bg:draw(0, 0, Draw.get_width(), Draw.get_height(), { 255, 255, 255 })
-               return nil
             end
-            bg:draw(0, 0, Draw.get_width(), Draw.get_height(), { 255, 255, 255, state.i * 10 })
-            Draw.wait(20 * 10)
-            return { i = state.i + 1 }
-               end, { i = 0 }, true)
+            Draw.yield(200)
+         end
+      end
+      Gui.start_background_draw_callback(bg_cb, "elona.sleep")
+
+      local cb = function()
+         local i = 0
+         while i <= 20 do
+            if i >= 20 then
+               fade_in_finished = true
+            end
+            bg:draw(0, 0, Draw.get_width(), Draw.get_height(), { 255, 255, 255, i * 10 })
+            local frames_passed = select(3, Draw.yield(200))
+            i = i + frames_passed
+         end
+         fade_in_finished = true
+      end
+      Gui.start_draw_callback(cb)
+      Gui.wait_for_draw_callbacks()
    end
 
    save.elona_sys.awake_hours = 0
@@ -321,31 +339,18 @@ function ElonaCommand.do_sleep(player, bed, params)
    for _ = 1, time_slept do
       World.pass_time_in_seconds(60 * 60, "hour")
       save.base.date.minute = 0
-      save.elona_sys.awake_hours = 0
-
-      if not params.no_animation then
-         Draw.run(function()
-               bg:draw(0, 0, Draw.get_width(), Draw.get_height(), { 255, 255, 255 })
-               Draw.wait(20 * 25)
-         end)
-      end
+      Gui.wait(500)
    end
 
    -- TODO gene
 
-   if not params.no_animation then
-      Draw.run(function()
-            bg:draw(0, 0, Draw.get_width(), Draw.get_height(), { 255, 255, 255 })
-      end)
-   end
-
    Effect.wake_up_everyone()
 
-   local adj = 1
+   local hunger_adj = 1
    if player:has_trait("elona.perm_slow_food") then
-      adj = 2
+      hunger_adj = 2
    end
-   player.nutrition = player.nutrition - math.floor(1500 / adj)
+   player.nutrition = player.nutrition - math.floor(1500 / hunger_adj)
    Gui.mes_c("activity.sleep.slept_for", "Green", time_slept)
 
    local add_potential = true
@@ -367,12 +372,13 @@ function ElonaCommand.do_sleep(player, bed, params)
    end
 
    if not params.no_animation then
-      Gui.mes_halt()
-      -- Gui.play_music()
+      Input.query_more()
+      Gui.play_default_music()
+      Gui.stop_draw_callback("elona.sleep")
    end
 
-   -- TODO autosave
-   -- TODO shop
+   Save.autosave()
+   -- <<<<<<<< shade2/proc.hsp:751 	return ..
 end
 
 local function get_ammo_enchantments(ammo)

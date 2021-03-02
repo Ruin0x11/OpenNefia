@@ -201,12 +201,7 @@ data:add_multi(
                Gui.stop_music()
             else
                if field.is_active then
-                  if field.map then
-                     local music_id = field.map:emit("elona_sys.calc_map_music", {}, field.map.music)
-                     if music_id and data["base.music"][music_id] then
-                        Gui.play_music(music_id)
-                     end
-                  end
+                  Gui.play_default_music()
                else
                   Gui.play_music("elona.opening")
                end

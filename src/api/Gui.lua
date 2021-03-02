@@ -11,6 +11,7 @@ local ansicolors = require("thirdparty.ansicolors")
 local config = require("internal.config")
 local Enum = require("api.Enum")
 local Stopwatch = require("api.Stopwatch")
+local data = require("internal.data")
 
 local Gui = {}
 
@@ -503,6 +504,15 @@ function Gui.play_music(music_id, no_loop)
    end
 
    sound_manager:play_music(music_id)
+end
+
+function Gui.play_default_music()
+   if field.map then
+      local music_id = field.map:emit("elona_sys.calc_map_music", {}, field.map.music)
+      if music_id and data["base.music"][music_id] then
+         Gui.play_music(music_id)
+      end
+   end
 end
 
 --- Stops the currently playing music.
