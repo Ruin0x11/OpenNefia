@@ -3,10 +3,6 @@ local Gui = require("api.Gui")
 local Map = require("api.Map")
 local Input = require("api.Input")
 local state = require("mod.test_room.internal.global.state")
-local Quest = require("mod.elona_sys.api.Quest")
-local Chara = require("api.Chara")
-local Magic = require("mod.elona_sys.api.Magic")
-local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Tools = require("mod.tools.api.Tools")
 
 data:add {

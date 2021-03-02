@@ -251,13 +251,6 @@ function IChara:produce_locale_data()
    }
 end
 
---- Iterates both the character's inventory and equipment.
----
---- @treturn Iterator(IItem)
-function IChara:iter_items()
-   return fun.chain(self:iter_inventory(), self:iter_equipment())
-end
-
 function IChara:refresh_weight()
    local weight = 0
    local cargo_weight = 0
@@ -665,10 +658,6 @@ function IChara:set_item_using(item)
       self.item_using = nil
    end
    self.item_using = item
-end
-
-function IChara:iter()
-   return self:iter_items()
 end
 
 return IChara

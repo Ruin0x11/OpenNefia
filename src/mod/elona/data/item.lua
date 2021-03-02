@@ -11758,7 +11758,7 @@ local item =
 
          events = {
             {
-               id = "elona_sys.on_bash",
+               id = "elona_sys.on_item_bash",
                name = "Fruit tree bash behavior",
 
                callback = function(self)

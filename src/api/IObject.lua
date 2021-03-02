@@ -49,6 +49,7 @@ end
 
 function IObject:instantiate()
    self:emit("base.on_object_instantiated")
+   self:emit("base.on_object_prototype_changed", {old_id=nil})
 end
 
 function IObject:clone_base(owned)

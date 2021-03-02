@@ -15,7 +15,24 @@ ICharaInventory:delegate("inv",
                         })
 
 function ICharaInventory:iter()
-   return self:iter_items()
+   -- HACK for purposes of IObject:instantiate() (see #149)
+   return fun.chain(self:iter_items(), self:iter_shop_inventory())
+end
+
+
+--- Iterates both the character's inventory and equipment.
+---
+--- @treturn Iterator(IItem)
+function ICharaInventory:iter_items()
+   return fun.chain(self:iter_inventory(), self:iter_equipment())
+end
+
+-- HACK see #149
+function ICharaInventory:iter_shop_inventory()
+   if self.shop_inventory == nil then
+      return fun.iter({})
+   end
+   return self.shop_inventory:iter()
 end
 
 function ICharaInventory:get_object(uid)
