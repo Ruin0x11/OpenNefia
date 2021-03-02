@@ -1109,6 +1109,7 @@ function Effect.spoil_items(map)
             Gui.mes("misc.corpse_is_dried_up", item:build_name(), item.amount)
             item.spoilage_date = date_hours + 2160
             item.image = "elona.item_jerky"
+            item:change_prototype("elona.jerky")
             item.params.food_type = nil
             item.params.food_quality = 5
             item:refresh_cell_on_map()

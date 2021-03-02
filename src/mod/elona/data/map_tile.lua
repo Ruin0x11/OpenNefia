@@ -1356,7 +1356,7 @@ local tiles = {
       elona_atlas = 1,
    },
    {
-      _id = "grass_rock",
+      _id = "dryground",
       elona_id = 29,
       elona_atlas = 1,
       kind = TileRole.Dryground

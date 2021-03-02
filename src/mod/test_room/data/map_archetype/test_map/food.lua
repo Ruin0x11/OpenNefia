@@ -104,7 +104,7 @@ function food.on_generate_map(area, floor)
       fairy.nutrition = 0
    end
 
-   MapgenUtils.spray_tile(map, "elona.grass_rock", 30)
+   MapgenUtils.spray_tile(map, "elona.dryground", 30)
 
    return map
 end
