@@ -8,6 +8,7 @@ local Skill = require("mod.elona_sys.api.Skill")
 local CharaMake = require("api.CharaMake")
 local Const = require("api.Const")
 local Map = require("api.Map")
+local Charagen = require("mod.tools.api.Charagen")
 
 local function fix_name_gender_age(chara)
    if chara.proto.has_own_name then
@@ -226,7 +227,6 @@ Event.register(
       if params.quality and params.quality > Enum.Quality.Good then
          params.quality = Enum.Quality.Good
       end
-      local Charagen = require("mod.tools.api.Charagen")
       params.id = Charagen.random_chara_id_raw(params.level, params.filter, params.category)
 
       -- using Chara.create would cause recursion
