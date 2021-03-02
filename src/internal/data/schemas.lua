@@ -1620,3 +1620,8 @@ data:add_type {
    name = "loot_type",
    fields = {}
 }
+
+data:add_type {
+   name = "trait_indicator",
+   fields = {}
+}
