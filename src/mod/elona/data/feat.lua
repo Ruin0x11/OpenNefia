@@ -220,58 +220,81 @@ local function travel(start_pos_fn, set_prev_map)
 
       Gui.play_sound("base.exitmap1")
 
-      local area = Area.get(self.params.area_uid)
-      if area == nil then
-         Log.error("Missing area with UID '%d'", self.params.area_uid)
-         return "player_turn_query"
-      end
-
-      local ok, map = area:load_or_generate_floor(self.params.area_floor)
-      if not ok then
-         local err = map
-         if err == "no_archetype" then
-            Log.error("Area does not specify an archetype, so there is no way to know what kind of map should be generated. Use InstancedArea:set_archetype(archetype_id) to set one.")
-         else
-            error(("Missing map with floor number '%d' in area '%d' (%s)"):format(self.params.area_floor, area.uid, err))
-         end
-         return "player_turn_query"
-      end
-
       local prev_map = self:current_map()
       local prev_area = Area.for_map(prev_map)
-      local starting_pos
+      local start_x, start_y
+      local area, map
 
-      local map_archetype = map:archetype()
-      if map_archetype and map_archetype.starting_pos then
-         start_pos_fn = map_archetype.starting_pos
-      end
+      if self.params.area_uid then
+         area = Area.get(self.params.area_uid)
+         if area == nil then
+            Log.error("Missing area with UID '%d'", self.params.area_uid)
+            return "player_turn_query"
+         end
 
-      -- >>>>>>>> shade2/map.hsp:152 		if feat(1)=objDownstairs :msgTemp+=lang("階段を降りた。 ..
-      if area.uid ~= prev_area.uid then
-         -- If the area we're trying to travel to is the parent of this area, then
-         -- put the player directly on the area's entrance.
-         if Area.parent(prev_area) == area then
-            -- TODO allow configuring ally start positions in Map.travel_to() (mStartWorld)
-            starting_pos = entrance_in_parent_map(map, chara, prev_map)
-            if starting_pos == nil then
-               -- Assume there will be stairs in the connecting map.
+         local ok
+         ok, map = area:load_or_generate_floor(self.params.area_floor)
+         if not ok then
+            local err = map
+            if err == "no_archetype" then
+               Log.error("Area does not specify an archetype, so there is no way to know what kind of map should be generated. Use InstancedArea:set_archetype(archetype_id) to set one.")
+            else
+               error(("Missing map with floor number '%d' in area '%d' (%s)"):format(self.params.area_floor, area.uid, err))
+            end
+            return "player_turn_query"
+         end
+
+         local starting_pos
+         local map_archetype = map:archetype()
+         if map_archetype and map_archetype.starting_pos then
+            start_pos_fn = map_archetype.starting_pos
+         end
+
+         -- >>>>>>>> shade2/map.hsp:152 		if feat(1)=objDownstairs :msgTemp+=lang("階段を降りた。 ..
+         if area.uid ~= prev_area.uid then
+            -- If the area we're trying to travel to is the parent of this area, then
+            -- put the player directly on the area's entrance.
+            if Area.parent(prev_area) == area then
+               -- TODO allow configuring ally start positions in Map.travel_to() (mStartWorld)
+               starting_pos = entrance_in_parent_map(map, chara, prev_map)
+               if starting_pos == nil then
+                  -- Assume there will be stairs in the connecting map.
+                  starting_pos = start_pos_fn(map, chara, prev_map, self)
+               end
+            else
+               -- We're going into a dungeon. Always assume there's stairs there.
+               -- TODO: allow maps to declare arbitrary start positions.
                starting_pos = start_pos_fn(map, chara, prev_map, self)
             end
          else
-            -- We're going into a dungeon. Always assume there's stairs there.
-            -- TODO: allow maps to declare arbitrary start positions.
             starting_pos = start_pos_fn(map, chara, prev_map, self)
          end
-      else
-         starting_pos = start_pos_fn(map, chara, prev_map, self)
-      end
 
-      local start_x, start_y
-      if starting_pos.x and starting_pos.y then
-         start_x = starting_pos.x
-         start_y = starting_pos.y
+         if starting_pos.x and starting_pos.y then
+            start_x = starting_pos.x
+            start_y = starting_pos.y
+         end
+         -- <<<<<<<< shade2/map.hsp:153 		if feat(1)=objUpstairs	 :msgTemp+=lang("階段を昇った。" ..
+      else
+         -- This staircase might have got generated as part of a map
+         -- template. Check to see if this map has a previous map set, and
+         -- use that for the map to travel to.
+         Log.warn("This stair does not have an area UID, trying to travel to previous map.")
+         local prev_map_uid, set_prev_x, set_prev_y = prev_map:previous_map_and_location()
+         if prev_map_uid then
+            local ok
+            ok, map = assert(Map.load(prev_map_uid))
+            if not ok then
+               Log.error("Could not load previous map: %s", map)
+               return "player_turn_query"
+            end
+            start_x = set_prev_x
+            start_y = set_prev_y
+         else
+            Log.error("This staircase doesn't have an area to travel to, and the previous map is not set.")
+            return "player_turn_query"
+         end
       end
-      -- <<<<<<<< shade2/map.hsp:153 		if feat(1)=objUpstairs	 :msgTemp+=lang("階段を昇った。" ..
 
       local travel_params = {
          feat = self,
@@ -624,13 +647,13 @@ data:add {
    is_opaque = false,
 
    params = {
-     plant_id = "string",
-     plant_growth_stage = "number",
-     plant_time_to_growth_days = "number"
+      plant_id = "string",
+      plant_growth_stage = "number",
+      plant_time_to_growth_days = "number"
    },
 
    on_stepped_on = function(self, params)
-     Gui.mes("plant")
+      Gui.mes("plant")
    end,
 
    events = {
@@ -638,7 +661,7 @@ data:add {
          id = "elona.on_harvest_plant",
          name = "Harvest plant.",
          callback = function(self, params)
-           data["elona.plant"]:ensure(self.plant_id).on_harvest(self, params)
+            data["elona.plant"]:ensure(self.plant_id).on_harvest(self, params)
          end
       }
    }

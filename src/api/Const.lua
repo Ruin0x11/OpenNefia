@@ -115,4 +115,8 @@ Const.HUNGER_DECREMENT_AMOUNT = 8
 Const.ALLY_HUNGER_THRESHOLD = 6000
 -- <<<<<<<< shade2/init.hsp:111 	#define global defAllyHunger	6000 ..
 
+-- >>>>>>>> shade2/init.hsp:143 	#define global mealValue	15000 ...
+Const.INNKEEPER_MEAL_NUTRITION = 15000
+-- <<<<<<<< shade2/init.hsp:143 	#define global mealValue	15000 ..
+
 return Const

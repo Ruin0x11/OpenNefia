@@ -28,6 +28,7 @@ data:add {
          player.gold = player.gold - cost
          Gui.play_sound("base.eat1")
 
+         player.nutrition = Const.INNKEEPER_MEAL_NUTRITION
          Gui.mes("talk.npc.innkeeper.eat.results")
          Hunger.show_eating_message(player)
          Hunger.proc_anorexia(player)

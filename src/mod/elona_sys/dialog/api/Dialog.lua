@@ -120,6 +120,8 @@ local function query(talk, text, choices, default_choice)
       end
    end
 
+   Gui.refresh_hud()
+
    -- >>>>>>>> shade2/chat.hsp:60 	chatVal(1)=false,true ..
    local impression, interest
    if talk.speaker:calc("quality") < Enum.Quality.Unique then
