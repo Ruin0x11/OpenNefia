@@ -73,7 +73,7 @@ function class.interface(name, reqs, parents)
    i.all_methods = {}
 
    i.delegate = function(i, field, params)
-      if params == nil or _classes[params] then error("Invalid delegate parameter for " .. c.__name .. "." .. field .. ": " .. tostring(params)) end
+      if params == nil or _classes[params] then error("Invalid delegate parameter for " .. i.__name .. "." .. field .. ": " .. tostring(params)) end
       if _interfaces[params] or type(params) == "string" then params = {params} end
       for _, k in ipairs(params) do
          i.methods[k] = function(self, ...)

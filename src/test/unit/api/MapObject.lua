@@ -56,6 +56,7 @@ function test_MapObject_clone__owned_chara()
    Assert.is_truthy(new.x)
    Assert.is_truthy(new.y)
    Assert.eq(chara.location, new.location)
+   Assert.eq(chara.__iface, new.__iface)
    Assert.eq(map, new:containing_map())
 
    new:set_pos(3, 4)

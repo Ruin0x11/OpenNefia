@@ -13,12 +13,9 @@ local function cycle_aware_copy(t, cache)
    local mt = getmetatable(t)
    for k,v in pairs(t) do
       -- TODO: standardize no-save fields
-      -- NOTE: preserves the UID for now.
-      if k ~= "location" then
-         k = cycle_aware_copy(k, cache)
-         v = cycle_aware_copy(v, cache)
-         res[k] = v
-      end
+      k = cycle_aware_copy(k, cache)
+      v = cycle_aware_copy(v, cache)
+      res[k] = v
    end
    setmetatable(res,mt)
    return res
@@ -40,36 +37,30 @@ function object.make_prototype(obj)
 end
 
 function object.__index(t, k)
+   local mt = getmetatable(t)
+
    if k == "__iface" then
-      local mt = getmetatable(t)
       return mt.__iface
    end
    if k == "__mt" then
-      local mt = getmetatable(t)
       return env.get_require_path(mt.__iface)
    end
    if k == "_id" then
-      local mt = getmetatable(t)
       return mt._id
    end
    if k == "_type" then
-      local mt = getmetatable(t)
       return mt._type
    end
    if k == "proto" then
-      local mt = getmetatable(t)
       return data[mt._type]:ensure(mt._id)
    end
    if k == "x" then
-      local mt = getmetatable(t)
       return mt.x
    end
    if k == "y" then
-      local mt = getmetatable(t)
       return mt.y
    end
    if k == "location" then
-      local mt = getmetatable(t)
       return mt.location
    end
 
@@ -77,12 +68,6 @@ function object.__index(t, k)
    if v ~= nil then
       return v
    end
-
-   local mt = getmetatable(t)
-   -- v = mt.__proto[k]
-   -- if v ~= nil then
-   --    return v
-   -- end
 
    return mt.__iface[k]
 end
@@ -108,6 +93,8 @@ function object.__newindex(t, k, v)
    rawset(t, k, v)
 end
 
+-- TODO remove this, we should always refer to the prototype for function
+-- callbacks instead of copying them to the object instance itself.
 local function extract_functions(instance, serial, proto, cache)
    if type(proto) ~= "table" then
       return
@@ -159,6 +146,11 @@ function object.serialize(self)
    local ret = object.make_prototype(self)
    assert(ret._id, "serialization currently assumes there is a prototype in data[] to load")
 
+   -- for deserialization, removed afterward
+   ret.x = self.x
+   ret.y = self.y
+   assert(ret.location == nil)
+
    local serial = {}
    extract_functions(self, serial, proto, {})
    ret.__serial = serial
@@ -172,6 +164,19 @@ function object.deserialize(self, _type, _id)
       self._type = nil
       self._id = nil
    end
+
+   local x = 0
+   local y = 0
+
+   assert(self.location == nil)
+   if self.x or self.y then
+      assert(self.x and self.y, "Both x and y must be specified")
+      x = self.x
+      y = self.y
+      self.x = nil
+      self.y = nil
+   end
+
    assert(type(_type) == "string")
    assert(type(_id) == "string")
    local proto = data[_type][_id]
@@ -191,35 +196,41 @@ function object.deserialize(self, _type, _id)
       copy_functions(self, serial, proto, {})
    end
 
-   setmetatable(self,
-                {
-                   _id = _id,
-                   _type = _type,
+   local mt = {
+      _id = _id,
+      _type = _type,
 
-                   -- for map objects. these must always be non-nil.
-                   x = 0,
-                   y = 0,
+      -- for map objects. these must always be non-nil.
+      x = x,
+      y = y,
 
-                   __id = "object",
-                   __index = object.__index,
-                   __newindex = object.__newindex,
-                   __proto = proto,
-                   __iface = iface,
-                   __tostring = function(t)
-                      local addr = string.gsub(string.tostring_raw(self), "^table: (.*)", "%1")
-                      return ("<object ('%s', uid %d) %s>"):format(t._type, t.uid, addr)
-                   end,
-                   __inspect = function(t)
-                      local n = {}
-                      for k, v in pairs(t) do
-                         if not (type(k) == "string" and string.match(k, "^__")) then
-                            n[k] = v
-                         end
-                      end
-                      return inspect(n)
-                   end
-   })
-   return self
+      -- to be set by pool:deserialize()
+      location = nil,
+
+      __id = "object",
+      __index = object.__index,
+      __newindex = object.__newindex,
+      __iface = iface,
+      __tostring = object.__tostring,
+      __inspect = object.__inspect
+   }
+
+   return setmetatable(self, mt)
+end
+
+function object.__tostring(t)
+   local addr = string.gsub(string.tostring_raw(self), "^table: (.*)", "%1")
+   return ("<object ('%s', uid %d) %s>"):format(t._type, t.uid, addr)
+end
+
+function object.__inspect(t)
+   local n = {}
+   for k, v in pairs(t) do
+      if not (type(k) == "string" and string.match(k, "^__")) then
+         n[k] = v
+      end
+   end
+   return inspect(n)
 end
 
 if not binser.hasRegistry("object") then

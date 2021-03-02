@@ -20,6 +20,8 @@ local Stopwatch = require("api.Stopwatch")
 local function make_test_env()
    local tests = env.generate_sandbox("__test__")
    tests.require = require
+   tests.getmetatable = getmetatable
+   tests.setmetatable = setmetatable
 
    local disabled = false
    tests.disable = function(reason)

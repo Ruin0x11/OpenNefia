@@ -156,14 +156,29 @@ local function cycle_aware_copy(t, cache, uids, first, opts)
       res.__class = mt
    end
    if mt then
-      local new_mt = {}
       local is_object = mt.__id == "object"
-      for k, v in pairs(mt) do
-         if not is_object or (k ~= "location") then
-            new_mt[k] = v
-         end
+      if is_object then
+         local new_mt = {}
+
+         -- see `object.deserialize()`
+         new_mt.__id = mt.__id
+         new_mt.__index = object.__index
+         new_mt.__newindex = object.__newindex
+         new_mt.__iface = mt.__iface
+         new_mt.__tostring = object.__tostring
+         new_mt.__inspect = object.__inspect
+
+         -- immutable state
+         new_mt.x = mt.x
+         new_mt.y = mt.y
+         new_mt.location = nil
+         new_mt._id = mt._id
+         new_mt._type = mt._type
+
+         setmetatable(res,new_mt)
+      else
+         setmetatable(res,mt)
       end
-      setmetatable(res,new_mt)
    end
 
    return res
