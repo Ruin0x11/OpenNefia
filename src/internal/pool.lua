@@ -53,8 +53,13 @@ function pool:take_object(obj, x, y)
       obj.location = nil
    end
 
-   obj.x = x
-   obj.y = y
+   -- We make `x` and `y` immutable using `object.__newindex`, to force their
+   -- update through IMapObject:set_pos(x, y). This is so `self.positional` can
+   -- get updated properly.
+   local mt = getmetatable(obj)
+   mt.x = x
+   mt.y = y
+
    obj.location = self
 
    local entry = { data = obj, array_index = #self.uids + 1 }
@@ -86,8 +91,12 @@ function pool:move_object(obj, x, y)
    end
    table.insert(self.positional[new_idx], obj)
 
-   obj.x = x
-   obj.y = y
+   -- We make `x` and `y` immutable using `object.__newindex`, to force their
+   -- update through IMapObject:set_pos(x, y). This is so `self.positional` can
+   -- get updated properly.
+   local mt = getmetatable(obj)
+   mt.x = x
+   mt.y = y
 
    return obj
 end

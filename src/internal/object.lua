@@ -60,6 +60,14 @@ function object.__index(t, k)
       local mt = getmetatable(t)
       return data[mt._type]:ensure(mt._id)
    end
+   if k == "x" then
+      local mt = getmetatable(t)
+      return mt.x
+   end
+   if k == "y" then
+      local mt = getmetatable(t)
+      return mt.y
+   end
 
    local v = rawget(t, k)
    if v ~= nil then
@@ -81,6 +89,8 @@ function object.__newindex(t, k, v)
       or k == "_id"
       or k == "_type"
       or k == "proto"
+      or k == "x"
+      or k == "y"
    then
       error(("'%s' is a reserved field name on map objects."):format(k))
    end
@@ -180,6 +190,11 @@ function object.deserialize(self, _type, _id)
                 {
                    _id = _id,
                    _type = _type,
+
+                   -- for map objects. these must always be non-nil.
+                   x = 0,
+                   y = 0,
+
                    __id = "object",
                    __index = object.__index,
                    __newindex = object.__newindex,

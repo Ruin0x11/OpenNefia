@@ -2,6 +2,7 @@ local object = require("internal.object")
 local ILocation = require("api.ILocation")
 local pool = require("internal.pool")
 local IOwned = require("api.IOwned")
+local IMapObject = require("api.IMapObject")
 
 local Event = require("api.Event")
 local Object = require("api.Object")
@@ -95,12 +96,7 @@ function MapObject.clone_base(obj, owned)
 end
 
 function MapObject.is_map_object(t)
-   if type(t) ~= "table" then
-      return false
-   end
-
-   local mt = getmetatable(t)
-   return mt and mt.__index == object.__index and type(t.x) == "number" and type(t.y) == "number" or false
+   return class.is_an(IMapObject, t) or false
 end
 
 -- NOTE: We could have an interface for classes that need special cloning logic.
