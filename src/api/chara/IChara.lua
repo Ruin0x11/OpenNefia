@@ -108,10 +108,14 @@ function IChara:build()
    self.target = nil
 
    -- HACK fallback now to prevent errors. Races should always declare an image,
-   -- but they might not in error. However, `image` should still be nil during
-   -- creation and not have any fallback, in order to potentially override it
-   -- with the male/female image defaults from the character's race.
-   self.image = self.image or "elona.chara_race_slime"
+   -- but they might not in error. However, `image` should still be some special
+   -- fallback (base.default) during creation, in order to potentially override
+   -- it with the male/female image defaults from the character's race.
+   --
+   -- And we can't set a fallback inside `data:add_type {}` because the race's
+   -- properties will not overwrite any properties that already exist on the
+   -- object (even if image = "base.default"), so it has to have a nil fallback.
+   self.image = self.image or "base.default"
 
    self:reset_ai()
 
