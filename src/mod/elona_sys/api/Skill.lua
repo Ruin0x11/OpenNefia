@@ -402,19 +402,19 @@ function Skill.refresh_speed(chara)
    local has_mount = false
    if not has_mount then
       local nutrition = math.floor(chara:calc("nutrition") / 1000 * 1000)
-      if nutrition < 1000 then
+      if nutrition < Const.HUNGER_THRESHOLD_STARVING then
          spd_perc = spd_perc - 30
       end
-      if nutrition < 2000 then
+      if nutrition < Const.HUNGER_THRESHOLD_HUNGRY then
          spd_perc = spd_perc - 10
       end
-      if chara.stamina < 0 then
+      if chara.stamina < Const.FATIGUE_THRESHOLD_HEAVY then
          spd_perc = spd_perc - 30
       end
-      if chara.stamina < 25 then
+      if chara.stamina < Const.FATIGUE_THRESHOLD_MODERATE then
          spd_perc = spd_perc - 20
       end
-      if chara.stamina < 50 then
+      if chara.stamina < Const.FATIGUE_THRESHOLD_LIGHT then
          spd_perc = spd_perc - 10
       end
    end

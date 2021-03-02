@@ -221,6 +221,8 @@ do
             --
             -- if (gWeather=weatherSnow)or(tRole(map(cx(cc),cy(cc),0))=tSnow) : cActionPeriod(cc)=cActionPeriod(cc)*22/10
             --
+            -- But we do the latter check already, inside the base.activity
+            -- "elona.traveling."
             return turns
          end
       end

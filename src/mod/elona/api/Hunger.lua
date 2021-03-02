@@ -422,6 +422,42 @@ function Hunger.apply_general_eating_effect(chara, food)
    -- <<<<<<<< shade2/item.hsp:1206 	return ..
 end
 
+function Hunger.make_player_hungry(chara)
+   -- >>>>>>>> shade2/calculation.hsp:1150 *calcHunger		;hunger (sSurvival) ...
+   if chara:has_trait("elona.perm_slow_food") and Rand.one_in(3) then
+      return
+   end
+
+   local old_level = math.floor(chara.nutrition / 1000)
+   chara.nutrition = chara.nutrition - Const.HUNGER_DECREMENT_AMOUNT
+   local new_level = math.floor(chara.nutrition / 1000)
+   if new_level ~= old_level then
+      if new_level == 1 then
+         Gui.mes("food.hunger_status.starving")
+      elseif new_level == 2 then
+         Gui.mes("food.hunger_status.very_hungry")
+      elseif new_level == 5 then
+         Gui.mes("food.hunger_status.hungry")
+      end
+      Skill.refresh_speed(chara)
+   end
+   -- <<<<<<<< shade2/calculation.hsp:1160 	return ..
+end
+
+function Hunger.make_other_hungry(other)
+   -- >>>>>>>> shade2/main.hsp:890 		if mType!mTypeWorld:cHunger(cc)-=defHungerDec*2: ...
+   local map = other:current_map()
+   if not map or map:has_type("world_map") then
+      return
+   end
+
+   other.nutrition = other.nutrition - Const.HUNGER_DECREMENT_AMOUNT * 2
+   if other.nutrition < Const.ALLY_HUNGER_THRESHOLD and not other:calc("is_anorexic") then
+      other.nutrition = Const.ALLY_HUNGER_THRESHOLD
+   end
+   -- <<<<<<<< shade2/main.hsp:890 		if mType!mTypeWorld:cHunger(cc)-=defHungerDec*2: ..
+end
+
 function Hunger.eat_food(chara, food)
    -- >>>>>>>> shade2/proc.hsp:1128 *insta_eat ..
    Hunger.apply_general_eating_effect(chara, food)
@@ -461,43 +497,9 @@ function Hunger.eat_food(chara, food)
    end
 
    Hunger.proc_anorexia(chara)
+
+   food:emit("elona_sys.after_item_eat", {chara=chara})
    -- <<<<<<<< shade2/proc.hsp:1155 	return ..
-end
-
-function Hunger.make_player_hungry(chara)
-   -- >>>>>>>> shade2/calculation.hsp:1150 *calcHunger		;hunger (sSurvival) ...
-   if chara:has_trait("elona.perm_slow_food") and Rand.one_in(3) then
-      return
-   end
-
-   local old_level = math.floor(chara.nutrition / 1000)
-   chara.nutrition = chara.nutrition - Const.HUNGER_DECREMENT_AMOUNT
-   local new_level = math.floor(chara.nutrition / 1000)
-   if new_level ~= old_level then
-      if new_level == 1 then
-         Gui.mes("food.hunger_status.starving")
-      elseif new_level == 2 then
-         Gui.mes("food.hunger_status.very_hungry")
-      elseif new_level == 5 then
-         Gui.mes("food.hunger_status.hungry")
-      end
-      Skill.refresh_speed(chara)
-   end
-   -- <<<<<<<< shade2/calculation.hsp:1160 	return ..
-end
-
-function Hunger.make_other_hungry(other)
-   -- >>>>>>>> shade2/main.hsp:890 		if mType!mTypeWorld:cHunger(cc)-=defHungerDec*2: ...
-   local map = other:current_map()
-   if not map or map:has_type("world_map") then
-      return
-   end
-
-   other.nutrition = other.nutrition - Const.HUNGER_DECREMENT_AMOUNT * 2
-   if other.nutrition < Const.ALLY_HUNGER_THRESHOLD and not other:calc("is_anorexic") then
-      other.nutrition = Const.ALLY_HUNGER_THRESHOLD
-   end
-   -- <<<<<<<< shade2/main.hsp:890 		if mType!mTypeWorld:cHunger(cc)-=defHungerDec*2: ..
 end
 
 return Hunger

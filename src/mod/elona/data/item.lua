@@ -17736,7 +17736,7 @@ local item =
 
          events = {
             {
-               id = "elona_sys.on_item_eat",
+               id = "elona_sys.after_item_eat",
                name = "Choking behavior",
                priority = 150000,
 
@@ -17749,7 +17749,7 @@ local item =
                         Gui.mes_c("food.mochi.chokes", "Purple", chara)
                         Gui.mes_c("food.mochi.dialog")
                      end
-                     chara:add_effect_turns("elona.choked", 1)
+                     chara:add_effect_turns("elona.choking", 1)
                   end
                   -- <<<<<<<< shade2/proc.hsp:1154 	} ..
                end
@@ -17776,23 +17776,25 @@ local item =
          tags = { "fest" },
 
          events = {
-            id = "elona_sys.on_item_eat",
-            name = "Choking behavior",
-            priority = 150000,
+            {
+               id = "elona_sys.after_item_eat",
+               name = "Choking behavior",
+               priority = 150000,
 
-            callback = function(self, params)
-               -- >>>>>>>> shade2/proc.hsp:1151 	if(iId(ci)=idKagamiMochi and rnd(3))or(iId(ci)=id ...
-               local chance = 10
-               if Rand.one_in(chance) then
-                  local chara = params.chara
-                  if chara:is_in_fov() then
-                     Gui.mes_c("food.mochi.chokes", "Purple", chara)
-                     Gui.mes_c("food.mochi.dialog")
+               callback = function(self, params)
+                  -- >>>>>>>> shade2/proc.hsp:1151 	if(iId(ci)=idKagamiMochi and rnd(3))or(iId(ci)=id ...
+                  local chance = 10
+                  if Rand.one_in(chance) then
+                     local chara = params.chara
+                     if chara:is_in_fov() then
+                        Gui.mes_c("food.mochi.chokes", "Purple", chara)
+                        Gui.mes_c("food.mochi.dialog")
+                     end
+                     chara:add_effect_turns("elona.choking", 1)
                   end
-                  chara:add_effect_turns("elona.choked", 1)
+                  -- <<<<<<<< shade2/proc.hsp:1154 	} ..
                end
-               -- <<<<<<<< shade2/proc.hsp:1154 	} ..
-            end
+            }
          },
 
          categories = {

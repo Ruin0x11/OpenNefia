@@ -102,7 +102,7 @@ data:add {
                if self.food.own_state == Enum.OwnState.NotOwned and chara:is_ally() then
                   Gui.mes("activity.eat.start.in_secret", chara, self.food)
                else
-                  Gui.mes("activity.eat.start.normal", chara, self.food:build_name())
+                  Gui.mes("activity.eat.start.normal", chara, self.food:build_name(1))
                end
             end
 

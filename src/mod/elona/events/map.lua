@@ -10,6 +10,7 @@ local Itemgen = require("mod.tools.api.Itemgen")
 local Equipment = require("mod.elona.api.Equipment")
 local Gui = require("api.Gui")
 local ElonaAction = require("mod.elona.api.ElonaAction")
+local Const = require("api.Const")
 
 local function decrease_nutrition(chara, params, result)
    if not chara:is_player() then
@@ -17,9 +18,11 @@ local function decrease_nutrition(chara, params, result)
    end
 
    local nutrition = chara:calc("nutrition")
-   if nutrition < 2000 then
-      if nutrition < 1000 then
-         chara:damage_hp(Rand.rnd(2) + chara:calc("max_hp") / 50, "elona.hunger")
+   if nutrition < Const.HUNGER_THRESHOLD_HUNGRY then
+      if nutrition < Const.HUNGER_THRESHOLD_STARVING then
+         if not chara:has_activity("elona.eating") then
+            chara:damage_hp(Rand.rnd(2) + chara:calc("max_hp") / 50, "elona.hunger")
+         end
          if save.elona_sys.awake_hours % 10 == 0 then
             -- interrupt action
             if Rand.one_in(50) then
