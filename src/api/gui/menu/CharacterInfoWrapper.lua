@@ -1,7 +1,8 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
-local I18N = require("api.I18N")
 local Chara = require("api.Chara")
+local EquipmentMenu = require("api.gui.menu.EquipmentMenu")
+local FeatsMenu = require("api.gui.menu.FeatsMenu")
 
 local CharacterInfoMenu = require("api.gui.menu.CharacterInfoMenu")
 local IInput = require("api.gui.IInput")
@@ -9,8 +10,6 @@ local IUiLayer = require("api.gui.IUiLayer")
 local IconBar = require("api.gui.menu.IconBar")
 local InputHandler = require("api.gui.InputHandler")
 local UiTheme = require("api.gui.UiTheme")
-local data = require("internal.data")
-local WindowTitle = require("api.gui.menu.WindowTitle")
 
 local CharacterInfoWrapper = class.class("CharacterInfoWrapper", IUiLayer)
 
@@ -27,11 +26,18 @@ function CharacterInfoWrapper:init()
    self.submenu = nil
    self.icon_bar = IconBar:new("inventory_icons")
    self.icon_bar:set_data {
-      { icon = 1, text = "asd" },
-      { icon = 1, text = "asd" },
-      { icon = 1, text = "asd" },
+      { icon = 9,  text = "ui.menu.chara.chara" },
+      { icon = 10, text = "ui.menu.chara.wear"  },
+      { icon = 11, text = "ui.menu.chara.feat" },
+      { icon = 12, text = "ui.menu.chara.material" },
    }
-   self.menu_count = 3
+   self.menus = {
+      { klass = CharacterInfoMenu, sound = "base.chara" },
+      { klass = EquipmentMenu, sound = "base.wear" },
+      { klass = FeatsMenu, sound = "base.feat" },
+      -- TODO material spot
+      { klass = CharacterInfoMenu, sound = "base.chara" },
+   }
 
    self.selected_index = 1
    self:switch_context()
@@ -48,7 +54,7 @@ end
 
 function CharacterInfoWrapper:next_menu()
    self.selected_index = self.selected_index + 1
-   if self.selected_index > self.menu_count then
+   if self.selected_index > #self.menus then
       self.selected_index = 1
    end
 
@@ -58,15 +64,16 @@ end
 function CharacterInfoWrapper:previous_menu()
    self.selected_index = self.selected_index - 1
    if self.selected_index < 1 then
-      self.selected_index = self.menu_count
+      self.selected_index = #self.menus
    end
 
    self:switch_context()
 end
 
 function CharacterInfoWrapper:switch_context()
-   Gui.play_sound("base.chara")
-   self.submenu = CharacterInfoMenu:new(Chara.player())
+   local menu = self.menus[self.selected_index]
+   Gui.play_sound(menu.sound)
+   self.submenu = menu.klass:new(Chara.player())
    self.input:forward_to(self.submenu)
 
    self.icon_bar:select(self.selected_index)
@@ -81,7 +88,7 @@ function CharacterInfoWrapper:relayout(x, y, width, height)
    self.height = height or Draw.get_height()
    self.t = UiTheme.load(self)
 
-   self.icon_bar:relayout(self.width - (44 * self.menu_count + 60), 34, 44 * self.menu_count + 40, 22)
+   self.icon_bar:relayout(self.width - (44 * #self.menus + 60), 34, 44 * #self.menus + 40, 22)
    self.submenu:relayout(self.x, self.y + 25, self.width, self.height)
 end
 

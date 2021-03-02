@@ -13,6 +13,7 @@ local Effect = require("mod.elona.api.Effect")
 local Const = require("api.Const")
 local Pos = require("api.Pos")
 local Save = require("api.Save")
+local Hunger = require("mod.elona.api.Hunger")
 
 local function refresh_hp_mp_stamina(chara, params, result)
    local mp_factor = chara:skill_level("elona.stat_magic") * 2
@@ -312,7 +313,7 @@ local function proc_drunk_behavior(chara, params, result)
 
    if chara:effect_turns("elona.drunk") >= Const.CON_DRUNK_HEAVY or chara.nutrition > Const.HUNGER_THRESHOLD_VOMIT then
       if Rand.one_in(60) then
-         Effect.vomit(chara)
+         Hunger.vomit(chara)
          return { blocked = true }
       end
    end

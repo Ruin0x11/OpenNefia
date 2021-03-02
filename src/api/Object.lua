@@ -19,12 +19,9 @@ local function cycle_aware_copy(t, cache)
    local mt = getmetatable(t)
    for k,v in pairs(t) do
       -- TODO: standardize no-save fields
-      -- NOTE: preserves the UID for now.
-      if k ~= "location" and k ~= "proto" and (string.sub(k, 1, 1) ~= "_" or k == "__method" or k == "__value") then
-         k = cycle_aware_copy(k, cache)
-         v = cycle_aware_copy(v, cache)
-         res[k] = v
-      end
+      k = cycle_aware_copy(k, cache)
+      v = cycle_aware_copy(v, cache)
+      res[k] = v
    end
    setmetatable(res,mt)
    return res

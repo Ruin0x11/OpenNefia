@@ -63,7 +63,7 @@ local function reset_chara_flags(map)
                   if player:calc("level") > chara:calc("level") then
                      Skill.gain_level(chara, false)
                   end
-                  if not player:has_effect("elona.incognito") then
+                  if not player:calc("is_incognito") then
                      chara:set_aggro(player, 200)
                      chara:set_relation_towards(player, Enum.Relation.Enemy)
                   end

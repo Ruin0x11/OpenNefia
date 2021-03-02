@@ -102,8 +102,7 @@ function test_IStackableObject_separate__same_location()
    Assert.eq(item:get_location(), sep:get_location())
 end
 
--- BUG #119
---[[
+disable("Bug #119")
 function test_IStackableObject_can_stack_with__separated()
    local item = Item.create("elona.putitoro", nil, nil, {amount=5,ownerless=true})
    local sep = item:separate(2)
@@ -112,6 +111,7 @@ function test_IStackableObject_can_stack_with__separated()
    Assert.eq(true, sep:can_stack_with(item))
 end
 
+disable("Bug #119")
 function test_IStackableObject_can_stack_with__separated_in_map()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
@@ -122,4 +122,3 @@ function test_IStackableObject_can_stack_with__separated_in_map()
    Assert.eq(true, item:can_stack_with(sep))
    Assert.eq(true, sep:can_stack_with(item))
 end
---]]

@@ -4,8 +4,9 @@ local HspRandomGenerator = require("api.HspRandomGenerator")
 
 local Rand = {}
 
-local rng = LuaRandomGenerator:new()
+local rng_lua = LuaRandomGenerator:new()
 local rng_hsp = HspRandomGenerator:new()
+local rng = rng_lua
 
 --- Returns a random integer in `[0, n)`.
 ---
@@ -43,10 +44,18 @@ end
 --- Sets the seed of the random generator, like HSP's `randomize` function. Pass
 --- in `nil` to set the seed to the current time.
 ---
---- @tparam[opt] int
-function Rand.set_seed(seed)
-   rng:set_seed(seed)
+--- @tparam[opt] int seed
+--- @tparam[opt] string rng_kind "lua" (default), "hsp"
+function Rand.set_seed(seed, rng_kind)
+   rng_lua:set_seed(seed)
    rng_hsp:set_seed(seed)
+   if rng_kind == "hsp" then
+      rng = rng_hsp
+   elseif rng_kind == "lua" or rng_kind == nil then
+      rng = rng_lua
+   else
+      error(("Invalid RNG type '%s'"):format(rng_kind))
+   end
 end
 
 -- Selects a random element out of an arraylike table or iterator. If

@@ -365,4 +365,10 @@ function Calc.will_chara_give_item_back(target, item, amount)
    -- <<<<<<<< shade2/command.hsp:3928  ..
 end
 
+function Calc.calc_innkeeper_meal_cost()
+   -- >>>>>>>> shade2/calculation.hsp:741 #defcfunc calcMealValue  ...
+   return 140
+   -- <<<<<<<< shade2/calculation.hsp:743 	return value ..
+end
+
 return Calc

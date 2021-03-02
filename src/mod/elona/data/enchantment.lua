@@ -13,6 +13,9 @@ local Const = require("api.Const")
 local Chara = require("api.Chara")
 local Gui = require("api.Gui")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local Effect = require("mod.elona.api.Effect")
+local Log = require("api.Log")
+local Hunger = require("mod.elona.api.Hunger")
 
 ---
 --- Parameterized enchantments
@@ -63,7 +66,7 @@ data:add {
 
    localize = function(power, params, item)
       -- >>>>>>>> shade2/item_data.hsp:351 		if val(10)=encModAttb{ ..
-      local adjusted_power = math.ceil(power / 50)
+      local adjusted_power = math.ceil(power / 50) + 1
       local skill_name = "ability." .. params.skill_id .. ".name"
       if item:has_category("elona.food") then
          if adjusted_power < 0 then
@@ -83,9 +86,26 @@ data:add {
 
    on_refresh = function(power, params, item, chara)
       -- >>>>>>>> shade2/calculation.hsp:454 		if rp2=encModAttb	: sdata(rp3,r1)+=calcEncAttb(i ..
-      local adjusted_power = math.floor(power / 50)
+      local adjusted_power = math.floor(power / 50) + 1
       chara:mod_skill_level(params.skill_id, adjusted_power, "add")
       -- <<<<<<<< shade2/calculation.hsp:454 		if rp2=encModAttb	: sdata(rp3,r1)+=calcEncAttb(i ..
+   end,
+
+   on_eat_food = function(power, enc_params, item, chara)
+      -- >>>>>>>> shade2/item.hsp:1192 		if enc2=encModAttb{ ...
+      local adjusted_power = math.floor(power / 50) + 1
+      local exp = adjusted_power * 100
+      if not chara:is_player() then
+         exp = exp * 5
+      end
+      Skill.gain_skill_exp(chara, enc_params.skill_id, exp)
+      local skill_name = "ability." .. enc_params.skill_id .. ".name"
+      if exp >= 0 then
+         Gui.mes_visible("food.effect.ability.develops", chara.x, chara.y, chara, skill_name)
+      else
+         Gui.mes_visible("food.effect.ability.deteriorates", chara.x, chara.y, chara, skill_name)
+      end
+      -- <<<<<<<< shade2/item.hsp:1196 		} ..
    end
 }
 
@@ -241,7 +261,7 @@ data:add {
 
    adjusted_power = function(power)
       -- >>>>>>>> shade2/item_data.hsp:387 			if val(3)=fltFood:s=lang(""+skillName(sId)+"の成長 ...
-      return math.floor(power / 50)
+      return math.floor(power / 50) + 1
       -- <<<<<<<< shade2/item_data.hsp:387 			if val(3)=fltFood:s=lang(""+skillName(sId)+"の成長 ..
    end,
 
@@ -249,7 +269,7 @@ data:add {
 
    localize = function(power, params, item)
       -- >>>>>>>> shade2/item_data.hsp:384 		if val(10)=encSustain{ ..
-      local adjusted_power = math.floor(power / 50)
+      local adjusted_power = math.floor(power / 50) + 1
       local skill_name = "ability." .. params.skill_id .. ".name"
       if item:has_category("elona.food") then
          local grade = adjusted_power / 5
@@ -258,6 +278,25 @@ data:add {
          return I18N.get("enchantment.with_parameters.skill_maintenance.other", skill_name)
       end
       -- <<<<<<<< shade2/item_data.hsp:388 			} ..
+   end,
+
+   on_eat_food = function(power, enc_params, item, chara)
+      -- >>>>>>>> shade2/item.hsp:1197 		if enc2=encSustain{ ...
+      local skill_name = "ability." .. enc_params.skill_id .. ".name"
+      Gui.mes_visible("food.effect.sustains_growth", chara.x, chara.y, chara, skill_name)
+      local adjusted_power = math.floor(power / 50) + 1
+
+      local food_buff = Hunger.food_buff_for_stat(enc_params.skill_id)
+      if food_buff then
+         local buff_power = adjusted_power * 5
+         if not chara:is_player() then
+            buff_power = buff_power * 2
+         end
+         Effect.add_buff(chara, chara, food_buff, buff_power, 2000)
+      else
+         Log.error("Can't find a food buff for skill '%s'", enc_params.skill_id)
+      end
+      -- <<<<<<<< shade2/item.hsp:1201 		} ..
    end
 }
 
@@ -880,6 +919,13 @@ data:add {
       chara:heal_stamina(amount)
       target:damage_sp(amount / 2)
       -- <<<<<<<< shade2/action.hsp:1405 		} ..
+   end,
+
+   on_eat_food = function(power, enc_params, item, chara)
+      -- >>>>>>>> shade2/item.hsp:1169 	if enc=encAbsorbStamina{ ...
+      local heal_amount = Rand.rnd(power / 50 + 1) + 1
+      chara:heal_stamina(heal_amount)
+      -- <<<<<<<< shade2/item.hsp:1173 	} ..
    end
 }
 
@@ -903,6 +949,15 @@ data:add {
          DeferredEvent.add(ragnarok)
       end
       -- <<<<<<<< shade2/action.hsp:1416 		} ..
+   end,
+
+   on_eat_food = function(power, enc_params, item, chara)
+      -- >>>>>>>> shade2/item.hsp:1179 	if enc=encRagnarok{ ...
+      local ragnarok = function()
+         return DeferredEvents.ragnarok(chara)
+      end
+      DeferredEvent.add(ragnarok)
+      -- <<<<<<<< shade2/item.hsp:1182 	} ..
    end
 }
 
@@ -932,6 +987,13 @@ data:add {
          target:damage_mp(amount)
       end
       -- <<<<<<<< shade2/action.hsp:1412 		} ..
+   end,
+
+   on_eat_food = function(power, enc_params, item, chara)
+      -- >>>>>>>> shade2/item.hsp:1174 	if enc=encAbsorbMana{ ...
+      local heal_amount = Rand.rnd(power / 25 + 1) + 1
+      chara:heal_mp(heal_amount/5)
+      -- <<<<<<<< shade2/item.hsp:1178 	} ..
    end
 }
 
@@ -1039,9 +1101,16 @@ data:add {
       -- >>>>>>>> shade2/action.hsp:1417 	if enc=encStopTime:if gTimeStopTime=0{ ..
       if Rand.one_in(25) then
          Gui.mes_c("action.time_stop.begins", "SkyBlue", chara)
-         Gui.mes("TODO")
+         Effect.stop_time(chara, (power / 100) + 1)
       end
       -- <<<<<<<< shade2/action.hsp:1423 		} ..
+   end,
+
+   on_eat_food = function(power, enc_params, item, chara)
+      -- >>>>>>>> shade2/item.hsp:1183 	if enc=encStopTime:if gTimeStopTime=0{ ...
+      Gui.mes_c("action.time_stop.begins", "SkyBlue", chara)
+      Effect.stop_time(chara, (power / 100) + 1)
+      -- <<<<<<<< shade2/item.hsp:1187 	} ..
    end
 }
 

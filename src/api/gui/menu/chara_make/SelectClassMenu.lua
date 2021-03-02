@@ -4,6 +4,7 @@ local I18N = require("api.I18N")
 local Ui = require("api.Ui")
 local config = require("internal.config")
 local data = require("internal.data")
+local Log = require("api.Log")
 
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
@@ -61,17 +62,18 @@ function SelectClassMenu:init(charamake_result)
    self.bg = Ui.random_cm_bg()
 
    self.chip_batch = nil
-   local image = data["base.race"]:ensure(self.race_id).properties.image
+   local props = data["base.race"]:ensure(self.race_id).properties
    self.chip_male = nil
    self.chip_female = nil
 
-   -- TODO remove resolver code
-   if type(image) == "table" and image.male then
-      self.chip_male = image.male
-      self.chip_female = image.female
-   elseif type(image) == "string" then
-      self.chip_male = image
-      self.chip_female = image
+   if props.male_image and props.female_image then
+      self.chip_male = props.male_image
+      self.chip_female = props.female_image
+   elseif props.image then
+      self.chip_male = props.image
+      self.chip_female = props.image
+   else
+      Log.warn("No image defined in race.properties")
    end
 
    self.chip_male_height = 0

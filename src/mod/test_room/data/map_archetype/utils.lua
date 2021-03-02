@@ -45,4 +45,20 @@ function utils.normalize_items(map)
    Item.iter(map):each(normalize)
 end
 
+function utils.roundup(tbl, x, y, width)
+   width = width or 20
+   x = x or Chara.player().x - math.floor(width / 2)
+   y = y or Chara.player().y
+   local max_y = y
+   local i = 1
+   for _, obj in ipairs(tbl) do
+      local tx = (i-1) % width
+      local ty = math.floor((i-1) / width)
+      obj:set_pos(x + tx, y + ty)
+      i = i + 1
+      max_y = math.max(max_y, y + ty)
+   end
+   return x, max_y
+end
+
 return utils

@@ -6,6 +6,7 @@ local Input = require("api.Input")
 local Quest = require("mod.elona_sys.api.Quest")
 local elona_Item = require("mod.elona.api.Item")
 local Skill = require("mod.elona_sys.api.Skill")
+local Hunger = require("mod.elona.api.Hunger")
 
 data:add {
    _id = "performer",
@@ -85,7 +86,7 @@ local function cook(chara, item, cooking_tool)
    end
    food_quality = math.clamp(math.floor(food_quality + cooking_tool.params.cooking_quality/100), 1, 9)
 
-   Effect.make_dish(item, food_quality)
+   Hunger.make_dish(item, food_quality)
 
    Gui.mes("food.cook", name, cooking_tool:build_name(1), item:build_name(1))
    if item.params.food_quality > 2 then

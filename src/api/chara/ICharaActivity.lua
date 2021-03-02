@@ -62,11 +62,11 @@ function ICharaActivity:pass_activity_turn()
          local auto_turn_widget = Gui.hud_widget("hud_auto_turn"):widget()
          if auto_turn == "normal" then
             -- With screen update
-            Gui.wait(self.activity.proto.animation_wait)
+            Gui.wait(self.activity.proto.animation_wait, true)
             auto_turn_widget:pass_turn()
          elseif auto_turn == "high" then
             -- No screen update
-            Gui.wait(self.activity.proto.animation_wait, true)
+            Gui.wait(self.activity.proto.animation_wait)
             auto_turn_widget:pass_turn()
          elseif auto_turn == "highest" then
             -- Don't wait at all

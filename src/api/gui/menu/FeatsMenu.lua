@@ -38,6 +38,9 @@ local UiListExt = function(feats_menu)
 
          text = ("[%s]%s")
             :format(I18N.get("trait.window.category." .. category), item.desc)
+      elseif item.type == "extra" then
+         text = ("[%s]%s")
+            :format(I18N.get("trait.window.category.etc"), item.desc)
       end
 
       return text or ""
@@ -66,7 +69,7 @@ local UiListExt = function(feats_menu)
       end
 
       local color = item.color
-      local icon = TRAIT_ICONS[item.trait.type] or 5
+      local icon = item.icon or 5
 
       local draw_name = item.type == "can_acquire"
 
@@ -134,30 +137,48 @@ local function can_acquire_trait(trait, level, chara)
    return can_acquire
 end
 
+
 function FeatsMenu.generate_list(chara)
    local list = {}
-   local trait_points = 1
 
-   if trait_points > 0 then
+   local sort = function(a, b) return (a.ordering or a.elona_id or 0) < (b.ordering or b.elona_id or 0) end
+
+   if chara.feats_acquirable > 0 then
       list[#list+1] = { type = "header", text = I18N.get("trait.window.available_feats") }
 
-      for _, trait in data["base.trait"]:iter():filter(function(t) return t.type == "feat" end) do
+      for _, trait in data["base.trait"]:iter():filter(function(t) return t.type == "feat" end):into_sorted(sort) do
          local level = chara:trait_level(trait._id)
          if can_acquire_trait(trait, level, chara) then
             local delta = 1
             local color = trait_color(level)
-            list[#list+1] = table.merge({ type = "can_acquire", trait = trait, color = color }, FeatsMenu.localize_trait(trait._id, level+delta, chara))
+            local icon = TRAIT_ICONS[trait.type]
+            list[#list+1] = table.merge({ type = "can_acquire", trait = trait, icon = icon, color = color }, FeatsMenu.localize_trait(trait._id, level+delta, chara))
          end
       end
    end
 
    list[#list+1] = { type = "header", text = I18N.get("trait.window.feats_and_traits") }
 
-   for _, trait in data["base.trait"]:iter() do
+   for _, trait in data["base.trait"]:iter():into_sorted(sort) do
       local level = chara:trait_level(trait._id)
       if level ~= 0 then
          local color = trait_color(level)
-         list[#list+1] = table.merge({ type = "have", trait = trait, color = color }, FeatsMenu.localize_trait(trait._id, level, chara))
+         local icon = TRAIT_ICONS[trait.type]
+         list[#list+1] = table.merge({ type = "have", trait = trait, icon = icon, color = color }, FeatsMenu.localize_trait(trait._id, level, chara))
+      end
+   end
+
+   for _, trait_ind in data["base.trait_indicator"]:iter():into_sorted(sort) do
+      if trait_ind.applies_to(chara) then
+         local indicator = trait_ind.make_indicator(chara)
+         list[#list+1] = {
+            type = "extra",
+            name = "",
+            desc = indicator.desc,
+            menu_desc = "",
+            trait = nil,
+            color = indicator.color or {0, 0, 0}
+         }
       end
    end
 
@@ -220,7 +241,7 @@ function FeatsMenu:draw()
    local is_player = true
    local text
    if is_player then
-      text = I18N.get("trait.window.you_can_acquire", 5)
+      text = I18N.get("trait.window.you_can_acquire", self.chara.feats_acquirable)
    else
       text = I18N.get("trait.window.your_trait", "someone")
    end
@@ -257,7 +278,10 @@ function FeatsMenu:update()
             self.data = FeatsMenu.generate_list(self.chara)
             self.pages:set_data(self.data)
 
-            local index = self.pages:iter_all_pages():enumerate():filter(function(_, i) return i.type == "have" and i.trait._id == item.trait._id end):nth(1)
+            local filter = function(_, i)
+               return i.type == "have" and i.trait._id == item.trait._id
+            end
+            local index = self.pages:iter_all_pages():enumerate():filter(filter):nth(1)
             self.pages:select(index)
 
             if not self.chara_make then

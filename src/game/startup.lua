@@ -69,6 +69,14 @@ local function load_keybinds()
 end
 
 function startup.set_gc_params()
+   -- Apparently the GC parameters only apply to the total amount of memory at
+   -- the point in time they are configured, so set them all at once.
+   --
+   -- For example, the GC pause determines how much memory needs to be in use
+   -- before the garbage collector will be run. www.gammon.com.au says that "[a]
+   -- value of 2 means that the collector waits for the total memory in use to
+   -- double before starting a new cycle." But 'double' in relation to what
+   -- initial amount of memory?
    collectgarbage()
    collectgarbage("setpause", config.base.gc_pause)
    collectgarbage("setstepmul", config.base.gc_step_multiplier)

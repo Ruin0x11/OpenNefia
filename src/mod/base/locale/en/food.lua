@@ -47,11 +47,15 @@ end,
   :format(name(_1), his_owned(_1), _2)
 end
       },
-      bomb_fish = function(_1, _2)
+      sustains_growth = function(_1, _2)
+         return ("%s%s %s enters a period of rapid growth.")
+            :format(name(_1), his_owned(_1), _2)
+      end,
+      fairy_seed = function(_1, _2)
   return ("「Ugh-Ughu」 %s spew%s up %s.")
-  :format(name(_1), s(_1), itemname(_2, 1))
+  :format(name(_1), s(_1), _2)
 end,
-      boring = { "It doesn't taste awful but...", "Very boring food." },
+      uncooked_message = { "It doesn't taste awful but...", "Very boring food." },
       corpse = {
         alien = function(_1)
   return ("Something gets into %s%s body.")
@@ -131,7 +135,7 @@ end,
         morgia = "You feel might coming through your body.",
         spenseweed = "You feel as your sense is sharpened."
       },
-      hero_cheese = "The food is a charm!",
+      kagami_mochi = "The food is a charm!",
       human = {
         delicious = "Delicious!",
         dislike = "Eeeek! It's human flesh!",
@@ -149,7 +153,6 @@ end,
   :format(name(_1), s(_1))
 end
       },
-      powder = "It tastes like...powder...",
       quality = {
         bad = { "Boy, it gives your stomach trouble!", "Ugh! Yuk!", "Awful taste!!" },
         delicious = { "Wow! Terrific food!", "Yummy! Absolutely yummy!", "It tasted like seventh heaven!" },
@@ -157,12 +160,10 @@ end
         great = { "Delicious!", "Gee what a good taste!", "It tasted pretty good!" },
         so_so = { "Uh-uh, the taste is so so.", "The taste is not bad." }
       },
-      raw = "Er...this needs to be cooked.",
       raw_glum = function(_1)
   return ("%s looks glum.")
   :format(name(_1))
 end,
-      raw_meat = "Ugh...Raw meat...",
       rotten = "Ugh! Rotten food!",
       sisters_love_fueled_lunch = function(_1)
   return ("%s%s heart is warmed.")
@@ -230,7 +231,8 @@ end,
                 return ("%s steak")
                    :format(_1)
              end,
-             default_origin = "beast"
+             default_origin = "beast",
+             uncooked_message = "Ugh...Raw meat...",
           },
           vegetable = {
              _1 = function(_1)
@@ -365,7 +367,8 @@ end,
              _7 = "carbonara",
              _8 = "ramen",
              _9 = "meat spaghetti",
-             default_origin = "noodle"
+             default_origin = "noodle",
+             uncooked_message = "Er...this needs to be cooked.",
           },
           fish = {
              _1 = function(_1)
@@ -422,7 +425,8 @@ end,
              _7 = "croquette sandwich",
              _8 = "chocolate babka",
              _9 = "melon flavored bread",
-             default_origin = "bread"
+             default_origin = "bread",
+             uncooked_message = "It tastes like...powder...",
           },
           egg = {
              _1 = function(_1)

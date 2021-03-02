@@ -230,3 +230,25 @@ local function add_quest_delivery_choice(speaker, _, result)
 end
 
 Event.register("elona.calc_dialog_choices", "Add quest delivery choice", add_quest_delivery_choice)
+
+local function set_quest_target_emoicon(chara, params, result)
+   -- >>>>>>>> shade2/calculation.hsp:1284 		if cQuestNpc(r1)!0{ ...
+   if chara:is_player() then
+      return result
+   end
+
+   if chara.is_quest_delivery_target then
+      chara:set_emotion_icon("elona.quest_target")
+   end
+
+   -- TODO move
+   local quest = Quest.for_client(chara)
+   if quest and quest.state == "completed" then
+      chara:set_emotion_icon("elona.quest_client")
+   end
+
+   return result
+   -- <<<<<<<< shade2/calculation.hsp:1288 			} ..
+end
+
+Event.register("base.on_chara_turn_end", "Set quest target emotion icon", set_quest_target_emoicon)

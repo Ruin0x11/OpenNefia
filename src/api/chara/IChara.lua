@@ -107,6 +107,12 @@ function IChara:build()
 
    self.target = nil
 
+   -- HACK fallback now to prevent errors. Races should always declare an image,
+   -- but they might not in error. However, `image` should still be nil during
+   -- creation and not have any fallback, in order to potentially override it
+   -- with the male/female image defaults from the character's race.
+   self.image = self.image or "elona.chara_race_slime"
+
    self:reset_ai()
 
    self:emit("base.on_build_chara")
@@ -286,7 +292,7 @@ end
 ---
 --- @treturn bool
 function IChara:is_player()
-   return field.player and field.player.uid == self.uid
+   return not not (field.player and field.player.uid == self.uid)
 end
 
 --- Attempts to recruit a character as an ally of this character.
@@ -561,6 +567,13 @@ function IChara:revive()
    end
 
    -- >>>>>>>> shade2/chara.hsp:589 *resurrect ..
+
+   -- TODO move?
+   self.is_about_to_explode = false
+   self.is_under_death_word = false
+   self.is_pregnant = false
+   self.is_anorexic = false
+
    self.state = "Alive"
    self.is_solid = true
    self.hp = math.floor(self:calc("max_hp") / 3)

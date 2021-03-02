@@ -13,6 +13,7 @@ local Log = require("api.Log")
 local config_store = require("internal.config_store")
 local save_store = require("internal.save_store")
 local SaveFs = require("api.SaveFs")
+local Stopwatch = require("api.Stopwatch")
 
 -- Make an environment rejecting the setting of global variables except
 -- functions that are named "test_*".
@@ -20,12 +21,19 @@ local function make_test_env()
    local tests = env.generate_sandbox("__test__")
    tests.require = require
 
+   local disabled = false
+   tests.disable = function(reason)
+      assert(type(reason) == "string", "Must provide reason for disabling")
+      disabled = true
+   end
+
    local mt = { __tests = {}, __declared = {} }
 
    function mt.__newindex(t, k, v)
       if type(k) == "string" and string.match(k, "^test_") and type(v) == "function" then
-         table.insert(mt.__tests, {k, v})
+         table.insert(mt.__tests, {name=k, test_fn=v, disabled=disabled})
          rawset(t, k, v)
+         disabled = false
       else
          if not mt.__declared[k] then
             local w = debug.getinfo(2, "S").what
@@ -129,14 +137,18 @@ local function test_file(file, filter_test_name, seed, debug_on_error)
 
    local failures = {}
    local total = 0
+   local disabled = 0
 
-   table.sort(mt.__tests, function(a, b) return a[1] < b[1] end)
+   for _, entry in ipairs(mt.__tests) do
+      local name = entry.name
+      local test_fn = entry.test_fn
+      local is_disabled = entry.disabled
 
-   for _, pair in ipairs(mt.__tests) do
-      local name = pair[1]
-      local test_fn = pair[2]
-
-      if string.match(name, filter_test_name) then
+      if is_disabled then
+         io.write(ansicolors("%{yellow}D%{reset}"))
+         io.flush()
+         disabled = disabled + 1
+      elseif string.match(name, filter_test_name) then
          local success, result = run_test(name, test_fn, seed, debug_on_error)
          if not success then
             failures[#failures+1] = result
@@ -145,7 +157,7 @@ local function test_file(file, filter_test_name, seed, debug_on_error)
       end
    end
 
-   return failures, total
+   return failures, total, disabled
 end
 
 return function(args)
@@ -178,6 +190,7 @@ return function(args)
 
    local failures = {}
    local total = 0
+   local disabled = 0
 
    local function get_files(path)
       local items = fs.get_directory_items(path)
@@ -187,6 +200,8 @@ return function(args)
    end
    local files = get_files("test/unit/")
 
+   local sw = Stopwatch:new()
+
    while #files > 0 do
       local path = files[#files]
       files[#files] = nil
@@ -194,16 +209,26 @@ return function(args)
          table.append(files, get_files(path))
       else
          if string.match(path, filter_file_name) then
-            local failures_, total_ = test_file(path, filter_test_name, seed, args.debug_on_error)
+            local failures_, total_, disabled_ = test_file(path, filter_test_name, seed, args.debug_on_error)
             failures = table.append(failures, failures_)
             total = total + total_
+            disabled = disabled + disabled_
          end
       end
    end
 
    cleanup_globals()
 
+   print("\n")
+
+   local seconds_elapsed = sw:measure() / 1000
+   print(("Finished in %02.08fs."):format(seconds_elapsed))
    print()
+
+   if disabled > 0 then
+      print(ansicolors(("%%{yellow}%d tests disabled.%%{reset}"):format(disabled, total)))
+   end
+
    if total == 0 then
       print(ansicolors("%{red}No tests matched the filter.%{reset}"))
       return 1

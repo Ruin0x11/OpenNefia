@@ -18,6 +18,8 @@ local I18N = require("api.I18N")
 local Mef = require("api.Mef")
 local Pos = require("api.Pos")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
+local Log = require("api.Log")
+local Weather = require("mod.elona.api.Weather")
 
 local Effect = {}
 
@@ -137,115 +139,6 @@ function Effect.modify_karma(chara, delta)
    chara.karma = math.clamp(chara.karma + delta, -100, max)
 end
 
-function Effect.show_eating_message(chara)
-   local nutrition = chara.nutrition
-   if nutrition >= 12000 then
-      Gui.mes_c("food.eating_message.bloated", "Green")
-   elseif nutrition >= 10000 then
-      Gui.mes_c("food.eating_message.satisfied", "Green")
-   elseif nutrition >= 5000 then
-      Gui.mes_c("food.eating_message.normal", "Green")
-   elseif nutrition >= 2000 then
-      Gui.mes_c("food.eating_message.hungry", "Green")
-   elseif nutrition >= 1000 then
-      Gui.mes_c("food.eating_message.very_hungry", "Green")
-   else
-      Gui.mes_c("food.eating_message.starving", "Green")
-   end
-end
-
-function Effect.apply_general_eating_effect(chara, food)
-   -- TODO
-end
-
-function Effect.apply_food_curse_state(chara, curse_state)
-   -- >>>>>>>> shade2/chara_func.hsp:1930 	if cExist(c)!cAlive:return ..
-   if not Chara.is_alive(chara) then
-      return
-   end
-
-   if Effect.is_cursed(curse_state) then
-      chara.nutrition = chara.nutrition - 1500
-      if chara:is_in_fov() then
-         Gui.mes("food.eat_status.bad", chara)
-      end
-      Effect.vomit(chara)
-   elseif curse_state == Enum.CurseState.Blessed then
-      if chara:is_in_fov() then
-         Gui.mes("food.eat_status.good", chara)
-      end
-      if Rand.one_in(5) then
-         Effect.add_buff(chara, chara, "elona.lucky", 100, 500 + Rand.rnd(500))
-      end
-
-      Effect.heal_insanity(chara, 2)
-   end
-   -- <<<<<<<< shade2/chara_func.hsp:1941 	return ..
-end
-
-function Effect.vomit(chara)
-   chara.anorexia_count = chara.anorexia_count + 1
-
-   if chara:is_in_fov() then
-      Gui.play_sound("base.vomit")
-      Gui.mes("food.vomits", chara)
-   end
-
-   if chara.is_pregnant then
-      chara.is_pregnant = false
-      if chara:is_in_fov() then
-         Gui.mes("food.spits_alien_children", chara)
-      end
-   end
-
-   local map = chara:current_map()
-   if not map:has_type("world_map") then
-      local chance = 2
-      for _, item in Item.iter_ground(map) do
-         if Item.is_alive(item) and item._id == "elona.vomit" then
-            chance = chance + 1
-         end
-      end
-      if chara:is_player() or Rand.one_in(chance * chance * chance) then
-         local vomit = Item.create("elona.vomit", chara.x, chara.y)
-         if vomit and not chara:is_player() then
-            vomit.params = { chara_id = chara._id }
-         end
-      end
-   end
-
-   if chara.is_anorexic then
-      Skill.gain_fixed_skill_exp(chara, "elona.stat_strength", -50)
-      Skill.gain_fixed_skill_exp(chara, "elona.stat_constitution", -75)
-      Skill.gain_fixed_skill_exp(chara, "elona.stat_charisma", -100)
-   else
-      if (chara:is_in_player_party() and chara.anorexia_count > 10)
-         or (not chara:is_in_player_party() and Rand.one_in(4))
-      then
-         if Rand.one_in(5) then
-            chara.has_anorexia = true
-            if chara:is_in_fov() then
-               Gui.mes("food.anorexia.develops", chara)
-               Gui.play_sound("base.offer1")
-            end
-         end
-      end
-   end
-
-   chara:apply_effect("elona.dimming", 100)
-   Effect.modify_weight(chara, (1 + Rand.rnd(5)) * -1)
-   if chara.nutrition <= 0 then
-      chara:damage_hp(9999, "elona.vomit")
-   end
-   chara.nutrition = chara.nutrition - 3000
-end
-
-function Effect.proc_anorexia(chara)
-   if chara:calc("is_anorexic") then
-      Effect.vomit(chara)
-   end
-end
-
 function Effect.proc_cursed_drink(chara, curse_state)
    if not Effect.is_cursed(curse_state) then
       return
@@ -254,73 +147,6 @@ function Effect.proc_cursed_drink(chara, curse_state)
       Gui.mes("food.eat_status.cursed_drink", chara)
    end
    chara:apply_effect("elona.sick", 200)
-end
-
-function Effect.get_hungry(chara)
-   if chara:has_trait("elona.perm_slow_food") and Rand.one_in(3) then
-      return
-   end
-
-   local old_level = math.floor(chara.nutrition / 1000)
-   chara.nutrition = chara.nutrition - 8
-   local new_level = math.floor(chara.nutrition / 1000)
-   if new_level ~= old_level then
-      if new_level == 1 then
-         Gui.mes("food.hunger_status.starving")
-      elseif new_level == 2 then
-         Gui.mes("food.hunger_status.very_hungry")
-      elseif new_level == 5 then
-         Gui.mes("food.hunger_status.hungry")
-      end
-      Skill.refresh_speed(chara)
-   end
-end
-
-function Effect.eat_food(chara, food)
-   -- >>>>>>>> shade2/proc.hsp:1128 *insta_eat ..
-   Effect.apply_general_eating_effect(chara, food)
-   food:emit("elona_sys.on_item_eat", {chara=chara})
-
-   if chara:is_player() then
-      Effect.identify_item(food, Enum.IdentifyState.Name)
-   end
-
-   if chara:unequip_item(food) then
-      chara:refresh()
-   end
-
-   food.amount = food.amount - 1
-
-   if chara:is_player() then
-      Effect.show_eating_message(chara)
-   else
-      if chara.item_to_use
-         and chara.item_to_use == food
-      then
-         chara.item_to_use = nil
-      end
-
-      if chara.is_eating_traded_item then
-         chara.is_eating_traded_item = false
-         if food.spoilage_date and food.spoilage_date < World.date_hours() then
-            Gui.mes_c("food.passed_rotten", "SkyBlue")
-            chara:damage_hp(999, "elona.rotten_food")
-            local player = Chara.player()
-            if not Chara.is_alive(chara) and chara:relation_towards() > Enum.Relation.Neutral then
-               Effect.modify_karma(player, -5)
-            else
-               Effect.modify_karma(player, -1)
-            end
-            Skill.modify_impression(chara, -25)
-            return
-         end
-      end
-   end
-
-   Effect.proc_anorexia(chara)
-
-   food:emit("elona.on_eat_item_finish", {chara=chara})
-   -- <<<<<<<< shade2/proc.hsp:1155 	return ..
 end
 
 function Effect.do_identify_item(item, level)
@@ -363,136 +189,6 @@ function Effect.try_to_identify_item(item, power)
    return Effect.identify_item(item, level)
 end
 
--- <<<<<<<< shade2/item.hsp:695 	} ..
-local FOOD_CHIPS = {
-   ["elona.bread"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_sweet_5",
-      [3] = "elona.item_dish_sweet_3",
-      [4] = "elona.item_dish_sweet_5",
-      [5] = "elona.item_dish_bread_5",
-      [6] = "elona.item_dish_bread_6",
-      [7] = "elona.item_dish_bread_7",
-      [8] = "elona.item_dish_bread_8",
-      [9] = "elona.item_dish_bread_9"
-   },
-   ["elona.egg"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_charred",
-      [3] = "elona.item_dish_egg_3",
-      [4] = "elona.item_dish_meat_8",
-      [5] = "elona.item_dish_egg_3",
-      [6] = "elona.item_dish_vegetable_4",
-      [7] = "elona.item_hero_cheese",
-      [8] = "elona.item_dish_egg_8",
-      [9] = "elona.item_dish_meat_7"
-   },
-   ["elona.fish"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_charred",
-      [3] = "elona.item_dish_fish_3",
-      [4] = "elona.item_dish_vegetable_4",
-      [5] = "elona.item_dish_vegetable_4",
-      [6] = "elona.item_dish_fish_3",
-      [7] = "elona.item_dish_fish_7",
-      [8] = "elona.item_dish_fish_3",
-      [9] = "elona.item_dish_fish_3"
-   },
-   ["elona.fruit"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_charred",
-      [3] = "elona.item_dish_meat_8",
-      [4] = "elona.item_dish_fruit_4",
-      [5] = "elona.item_dish_fruit_4",
-      [6] = "elona.item_dish_fruit_6",
-      [7] = "elona.item_dish_fruit_6",
-      [8] = "elona.item_dish_egg_8",
-      [9] = "elona.item_dish_fruit_4"
-   },
-   ["elona.meat"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_charred",
-      [3] = "elona.item_dish_meat_3",
-      [4] = "elona.item_dish_meat_4",
-      [5] = "elona.item_dish_meat_5",
-      [6] = "elona.item_dish_meat_5",
-      [7] = "elona.item_dish_meat_7",
-      [8] = "elona.item_dish_meat_8",
-      [9] = "elona.item_dish_meat_4"
-   },
-   ["elona.pasta"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_meat_8",
-      [3] = "elona.item_dish_pasta_3",
-      [4] = "elona.item_dish_pasta_4",
-      [5] = "elona.item_dish_pasta_4",
-      [6] = "elona.item_dish_pasta_3",
-      [7] = "elona.item_dish_pasta_3",
-      [8] = "elona.item_dish_pasta_4",
-      [9] = "elona.item_dish_pasta_3"
-   },
-   ["elona.sweet"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_charred",
-      [3] = "elona.item_dish_sweet_3",
-      [4] = "elona.item_dish_fruit_4",
-      [5] = "elona.item_dish_sweet_5",
-      [6] = "elona.item_dish_fruit_4",
-      [7] = "elona.item_dish_egg_8",
-      [8] = "elona.item_dish_egg_8",
-      [9] = "elona.item_dish_egg_8"
-   },
-   ["elona.vegetable"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_charred",
-      [3] = "elona.item_dish_meat_8",
-      [4] = "elona.item_dish_vegetable_4",
-      [5] = "elona.item_dish_meat_7",
-      [6] = "elona.item_dish_meat_8",
-      [7] = "elona.item_dish_vegetable_4",
-      [8] = "elona.item_dish_meat_8",
-      [9] = "elona.item_dish_meat_7"
-   }
-}
-
--- >>>>>>>> shade2/text.hsp:645 *item_foodInit ..
-function Item.get_food_image(food_type, food_quality)
-   local t = FOOD_CHIPS[food_type]
-   if not t then
-      return "elona.item_dish_charred"
-   end
-
-   local image = t[food_quality]
-
-   return image or "elona.item_dish_charred"
-end
--- <<<<<<<< shade2/text.hsp:655 	return ...
-
-
--- >>>>>>>> shade2/item_func.hsp:705 #deffunc make_dish int ci,int p ..
-function Effect.make_dish(item, quality)
-   local food_type = item.params and item.params.food_type
-   assert(food_type, ("'%s' isn't a cookable food."):format(item._id))
-
-   item.image = Item.get_food_image(food_type, quality)
-   item.weight = 500
-   if item.spoilage_date and item.spoilage_date >= 0 then
-      item.spoilage_date = 72 + World.date_hours()
-   end
-   item.params.food_quality = quality
-
-   return item
-end
--- <<<<<<<< shade2/item_func.hsp:709 	return ..
-
 --- @hsp dmgSAN chara, delta
 function Effect.damage_insanity(chara, delta)
    if chara:calc("quality") >= Enum.Quality.Great then
@@ -521,10 +217,6 @@ end
 function Effect.heal_insanity(chara, amount)
    amount = math.max(amount or 0, 0)
    chara.insanity = math.max(chara.insanity - amount, 0)
-end
-
-function Effect.eat_rotten_food(chara)
-   -- TODO
 end
 
 function Effect.heal(chara, dice_x, dice_y, bonus)
@@ -796,7 +488,6 @@ function Effect.damage_chara_item_acid(chara)
 
    return Effect.damage_item_acid(target)
    -- <<<<<<<< shade2/chara_func.hsp:1161 	if iType(ci)>=fltHeadItem : return ...
-
 end
 
 function Effect.damage_item_fire(item, fireproof_blanket)
@@ -819,7 +510,8 @@ function Effect.damage_item_fire(item, fireproof_blanket)
       else
          Gui.mes_c_visible("item.item_on_the_ground.get_broiled", item, "Orange", item)
       end
-      Effect.make_dish(item, Rand.rnd(5) + 1)
+      local Hunger = require("mod.elona.api.Hunger")
+      Hunger.make_dish(item, Rand.rnd(5) + 1)
       return true
    end
 
@@ -1108,13 +800,6 @@ function Effect.turn_guards_hostile(map, target)
    -- <<<<<<<< shade2/module.hsp:133 	return ..
 end
 
-function Effect.create_new_building(deed)
-   -- >>>>>>>> shade2/map_user.hsp:30 *building_new ..
-   -- TODO
-   return "player_turn_query"
-   -- <<<<<<<< shade2/map_user.hsp:136 	goto *turn_end ..
-end
-
 local function resists_hex(chara, buff_id, power, duration)
    data["elona_sys.buff"]:ensure(buff_id)
    local magic_resist = chara:resist_level("elona.magic")
@@ -1375,6 +1060,77 @@ function Effect.try_to_set_ai_item(chara, item)
 
    return false
    -- <<<<<<<< shade2/adv.hsp:119 	return ..
+end
+
+function Effect.love_miracle(chara)
+   if Rand.one_in(2) or chara:is_player() then
+      return
+   end
+   Gui.mes_c("misc.love_miracle.uh", "SkyBlue")
+   if Rand.one_in(2) then
+      local item = Item.create("elona.egg", chara.x, chara.y, {}, chara:current_map())
+      if item then
+         item.params.chara_id = chara._id
+         local weight = chara:calc("weight")
+         item.weight = weight * 10 + 250
+         item.value = math.clamp(math.floor(weight * weight / 10000), 200, 40000)
+      end
+   else
+      local item = Item.create("elona.bottle_of_milk", chara.x, chara.y, {}, chara:current_map())
+      if item then
+         item.params.chara_id = chara._id
+      end
+   end
+
+   Gui.play_sound("base.atk_elec")
+   local anim = Anim.load("elona.anim_elec", chara.x, chara.y)
+   Gui.start_draw_callback(anim)
+end
+
+function Effect.stop_time(chara)
+   Log.error("TODO time stop")
+end
+
+function Effect.spoil_items(map)
+   -- >>>>>>>> shade2/item.hsp:403 *item_rot ...
+   local date_hours = World.date_hours()
+
+   local will_rot = function(item)
+      -- TODO remove alive filter, as it's redundant
+      return Item.is_alive(item)
+         and item:calc("material") == "elona.fresh"
+         and item.spoilage_date
+         and item.spoilage_date <= date_hours
+   end
+
+   for _, item in Item.iter(map):filter(will_rot) do
+      if item._id == "elona.corpse" and map:tile(item.x, item.y).kind == Enum.TileRole.Dryground then
+         if Weather.is("elona.sunny") then
+            Gui.mes("misc.corpse_is_dried_up", item:build_name(), item.amount)
+            item.spoilage_date = date_hours + 2160
+            item.image = "elona.item_jerky"
+            item.params.food_type = nil
+            item.params.food_quality = 5
+            item:refresh_cell_on_map()
+         end
+      else
+         item.image = "elona.item_rotten_food"
+         item:refresh_cell_on_map()
+      end
+   end
+
+   for _, chara in Chara.iter(map) do
+      for _, item in chara:iter_items():filter(will_rot) do
+         if chara:is_in_player_party() then
+            Gui.mes("misc.get_rotten", item:build_name(), item.amount)
+         end
+         item.image = "elona.item_rotten_food"
+         if chara:is_player() then
+            -- TODO god harvest
+         end
+      end
+   end
+   -- <<<<<<<< shade2/item.hsp:433 	return ..
 end
 
 return Effect

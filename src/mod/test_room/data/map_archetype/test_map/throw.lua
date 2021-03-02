@@ -8,19 +8,6 @@ local throw = {
    _id = "throw"
 }
 
-local function roundup(tbl, x, y, width)
-   width = width or 20
-   x = x or Chara.player().x - math.floor(width / 2)
-   y = y or Chara.player().y
-   local i = 1
-   for _, obj in ipairs(tbl) do
-      local tx = (i-1) % width
-      local ty = math.floor((i-1) / width)
-      obj:set_pos(x + tx, y + ty)
-       i = i + 1
-   end
-end
-
 local function create_throw(x, y, width, map)
    local filter = function(i)
       return i.on_throw or table.set(i.categories)["elona.drink"]
@@ -38,7 +25,7 @@ local function create_throw(x, y, width, map)
    local items = data["base.item"]:iter():filter(filter):map(create):to_list()
    table.sort(items, sort)
 
-   roundup(items, x, y, width)
+   utils.roundup(items, x, y, width)
 end
 
 function throw.on_generate_map(area, floor)

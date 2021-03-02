@@ -5,15 +5,33 @@ local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Const = require("api.Const")
 
+local COLOR_BLACK = {0, 0, 0}
+local COLOR_LIGHT_RED = {200, 0, 0}
+local COLOR_RED = {250, 0, 0}
 
 local function indicator_nutrition(player)
-   local nutrition_level = math.clamp(math.floor(player:calc("nutrition") / 1000), 0, 12)
+   local nutrition = player:calc("nutrition")
+   local nutrition_level = math.clamp(math.floor(nutrition / 1000), 0, 12)
    if 5 <= nutrition_level and nutrition_level <= 9 then
       return nil
    end
 
+   local color
+   if nutrition >= Const.HUNGER_THRESHOLD_BLOATED then
+      color = COLOR_BLACK
+   elseif nutrition >= Const.HUNGER_THRESHOLD_STARVING then
+      if nutrition <= Const.HUNGER_THRESHOLD_NORMAL - 1000 then
+         color = COLOR_LIGHT_RED
+      else
+         color = COLOR_BLACK
+      end
+   else
+      color = COLOR_RED
+   end
+
    return {
-      text = ("effect.indicator.hunger._%d"):format(nutrition_level)
+      text = ("effect.indicator.hunger._%d"):format(nutrition_level),
+      color = color
    }
 end
 data:add {
@@ -115,6 +133,13 @@ local effect = {
          end
       end,
 
+      -- >>>>>>>> shade2/proc.hsp:682 	healCon tc,conSick,7+rnd(7) ...
+      on_sleep = function(chara)
+         chara:heal_effect("elona.sick", 7 + Rand.rnd(7))
+      end,
+      auto_heal = false,
+      -- <<<<<<<< shade2/proc.hsp:682 	healCon tc,conSick,7+rnd(7) ..
+
       on_turn_end = function(chara)
          -- >>>>>>>> elona122/shade2/calculation.hsp:1201:DONE 	if cSick(r1)>0{ ..
          local result
@@ -163,6 +188,10 @@ local effect = {
 
       stops_activity = true,
 
+      -- >>>>>>>> shade2/proc.hsp:670 	cPoison(tc)	=0 ...
+      on_sleep = "remove",
+      -- <<<<<<<< shade2/proc.hsp:670 	cPoison(tc)	=0 ..
+
       on_turn_end = function(chara)
          -- >>>>>>>> shade2/calculation.hsp:1182 	if cPoison(r1)>0{ ...
          chara:set_emotion_icon("elona.skull")
@@ -192,6 +221,10 @@ local effect = {
 
       stops_activity = true,
 
+      -- >>>>>>>> shade2/proc.hsp:671 	cSleep(tc)	=0 ...
+      on_sleep = "remove",
+      -- <<<<<<<< shade2/proc.hsp:671 	cSleep(tc)	=0 ..
+
       on_turn_start = function(chara)
          local result = { blocked = true }
          if chara:is_player() then
@@ -216,6 +249,10 @@ local effect = {
       emotion_icon = "elona.blind",
 
       stops_activity = true,
+
+      -- >>>>>>>> shade2/proc.hsp:673 	cBlind(tc)	=0 ...
+      on_sleep = "remove",
+      -- <<<<<<<< shade2/proc.hsp:673 	cBlind(tc)	=0 ..
 
       on_add = function(chara)
          -- >>>>>>>> shade2/screen.hsp:1028 	if cBlind(pc)!0 : if (sx!cX(pc)) or (sy!cY(pc)):: ...
@@ -250,6 +287,10 @@ local effect = {
       end,
 
       stops_activity = true,
+
+      -- >>>>>>>> shade2/proc.hsp:674 	cParalyze(tc)	=0 ...
+      on_sleep = "remove"
+      -- <<<<<<<< shade2/proc.hsp:674 	cParalyze(tc)	=0 ..
    },
    {
       _id = "choking",
@@ -265,6 +306,8 @@ local effect = {
          return result, "blocked"
       end,
 
+      auto_heal = false,
+
       on_turn_end = function(chara)
          if chara:effect_turns("elona.choking") % 3 == 0 then
             if chara:is_in_fov() then
@@ -272,7 +315,7 @@ local effect = {
             end
          end
 
-         chara:add_effect_turns("elona.choking", 2)
+         chara:add_effect_turns("elona.choking", 1)
 
          if chara:effect_turns("elona.choking") > 15 then
             chara:damage_hp(500, "elona.choking")
@@ -289,6 +332,10 @@ local effect = {
       emotion_icon = "elona.confuse",
 
       stops_activity = true,
+
+      -- >>>>>>>> shade2/proc.hsp:672 	cConfuse(tc)	=0 ...
+      on_sleep = "remove"
+      -- <<<<<<<< shade2/proc.hsp:672 	cConfuse(tc)	=0 ..
    },
    {
       _id = "fear",
@@ -321,6 +368,7 @@ local effect = {
       end,
 
       on_turn_start = function(chara)
+         -- >>>>>>>> shade2/main.hsp:784 	if (cMochi(cc)>0)or(cSleep(cc)>0)or(cParalyze(cc) ...
          local result = { blocked = true }
          if chara:is_player() then
             result.wait = 60
@@ -328,9 +376,14 @@ local effect = {
          if chara:effect_turns("elona.dimming") > 60 then
             return result, "blocked"
          end
+         -- <<<<<<<< shade2/main.hsp:790 		} ..
       end,
 
       stops_activity = true,
+
+      -- >>>>>>>> shade2/proc.hsp:674 	cParalyze(tc)	=0 ...
+      on_sleep = "remove"
+      -- <<<<<<<< shade2/proc.hsp:674 	cParalyze(tc)	=0 ..
    },
    {
       _id = "fury",
@@ -373,6 +426,10 @@ local effect = {
 
       stops_activity = true,
 
+      -- >>>>>>>> shade2/proc.hsp:677 	cBleed(tc)	=0 ...
+      on_sleep = "remove",
+      -- <<<<<<<< shade2/proc.hsp:677 	cBleed(tc)	=0 ..
+
       on_turn_end = function(chara)
          local turns = chara:effect_turns("elona.bleeding")
          chara:damage_hp(Rand.rnd(chara.hp * (1 + turns / 4) / 100 + 3) + 1, "elona.bleeding")
@@ -381,7 +438,7 @@ local effect = {
          end
 
          return { regeneration = false }
-      end
+      end,
    },
    {
       _id = "insanity",
@@ -435,25 +492,26 @@ local effect = {
       color = {100, 0, 100},
       indicator = "effect.elona.drunk.indicator",
       emotion_icon = "elona.happy",
+
+      -- >>>>>>>> shade2/proc.hsp:676 	cDrunk(tc)	=0 ...
+      on_sleep = "remove"
+      -- <<<<<<<< shade2/proc.hsp:676 	cDrunk(tc)	=0 ..
    },
    {
       _id = "wet",
       ordering = 150000,
       color = {0, 0, 160},
-      indicator = "effect.elona.wet.indicator"
+      indicator = "effect.elona.wet.indicator",
+
+      -- >>>>>>>> shade2/proc.hsp:669 	cWet(tc)	=0 ...
+      on_sleep = "remove"
+      -- <<<<<<<< shade2/proc.hsp:669 	cWet(tc)	=0 ..
    },
    {
       _id = "gravity",
       ordering = 160000,
       color = {0, 80, 80},
       indicator = "effect.elona.gravity.indicator"
-   },
-
-   --- buffs
-
-   {
-      _id = "incognito",
-      ordering = 2000000,
    },
 }
 

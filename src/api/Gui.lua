@@ -11,6 +11,7 @@ local ansicolors = require("thirdparty.ansicolors")
 local config = require("internal.config")
 local Enum = require("api.Enum")
 local Stopwatch = require("api.Stopwatch")
+local data = require("internal.data")
 
 local Gui = {}
 
@@ -77,14 +78,14 @@ end
 ---
 --- @tparam function cb
 --- @tparam string tag
-function Gui.start_background_draw_callback(cb, tag)
+function Gui.start_background_draw_callback(cb, tag, z_order)
    assert(type(tag) == "string")
 
    if Env.is_headless() then
       return
    end
 
-   field:add_async_draw_callback(cb, tag, "background")
+   field:add_async_draw_callback(cb, tag, "background", z_order)
 end
 
 --- Stops a tagged draw callback.
@@ -103,18 +104,26 @@ end
 
 --- Waits for the specified number of milliseconds.
 function Gui.wait(ms, no_update)
-   local frames = ms / 16.66 -- TODO assumes 60 FPS
    local anim = function()
-      local frame = 0
+      if ms <= 0 then
+         return
+      end
+      local total_ms = 16.66
+      local sw = Stopwatch:new()
       while true do
+         sw:measure()
          if not no_update then
-            Gui.update_screen(16.66 / 1000)
+            Gui.update_screen()
+            total_ms = total_ms + sw:measure()
+            if total_ms + 16.66 >= ms then
+               return
+            end
          end
-         if frame >= frames then
+         local _, _, _, dt = Draw.yield(0)
+         total_ms = total_ms + dt * 1000
+         if total_ms + 16.66 >= ms then
             return
          end
-         local _, _, frame_delta = Draw.yield(16.66)
-         frame = frame + frame_delta
       end
    end
    Gui.start_draw_callback(anim)
@@ -157,10 +166,8 @@ function Gui.fade_out(length)
       while frame < length do
          local _, _, frames_passed = Draw.yield(20)
          Draw.set_blend_mode("subtract")
-         for _ = 1, frames_passed do
-            Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255, 10 + frame * 5})
-            frame = frame + 1
-         end
+         frame = frame + frames_passed
+         Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255, 10 + frame * 5})
          Draw.set_blend_mode("alpha")
       end
    end
@@ -399,7 +406,7 @@ function Gui.mes_c_visible(text, x, y, color, ...)
          Gui.mes_c(text, color, obj, ...)
       end
    else
-      if field.map:is_in_fov(x, y) then
+      if field.map and field.map:is_in_fov(x, y) then
          Gui.mes_c(text, color, ...)
       end
    end
@@ -495,6 +502,15 @@ function Gui.play_music(music_id, no_loop)
    end
 
    sound_manager:play_music(music_id)
+end
+
+function Gui.play_default_music()
+   if field.map then
+      local music_id = field.map:emit("elona_sys.calc_map_music", {}, field.map.music)
+      if music_id and data["base.music"][music_id] then
+         Gui.play_music(music_id)
+      end
+   end
 end
 
 --- Stops the currently playing music.

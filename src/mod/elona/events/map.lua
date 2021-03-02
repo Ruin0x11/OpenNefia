@@ -10,27 +10,47 @@ local Itemgen = require("mod.tools.api.Itemgen")
 local Equipment = require("mod.elona.api.Equipment")
 local Gui = require("api.Gui")
 local ElonaAction = require("mod.elona.api.ElonaAction")
+local Const = require("api.Const")
 
 local function decrease_nutrition(chara, params, result)
+   -- >>>>>>>> shade2/calculation.hsp:1274 		if cHunger(r1)<hungerHungry{ ...
    if not chara:is_player() then
-      return result -- TODO nil counts as no modifying result
+      return result
    end
 
    local nutrition = chara:calc("nutrition")
-   if nutrition < 2000 then
-      if nutrition < 1000 then
-         chara:damage_hp(Rand.rnd(2) + chara:calc("max_hp") / 50, "elona.hunger")
-         if save.elona_sys.awake_hours % 10 == 0 then
-            -- interrupt action
-            if Rand.one_in(50) then
-               Effect.modify_weight(chara, -1)
+   if nutrition < Const.HUNGER_THRESHOLD_HUNGRY then
+      if nutrition < Const.HUNGER_THRESHOLD_STARVING then
+         if not chara:has_activity("elona.eating") then
+            chara:damage_hp(Rand.rnd(2) + chara:calc("max_hp") / 50, "elona.hunger")
+            if save.base.play_turns % 10 == 0 then
+               chara:interrupt_activity()
+               if Rand.one_in(50) then
+                  Effect.modify_weight(chara, -1)
+               end
             end
          end
       end
       result.regeneration = false
    end
+   -- <<<<<<<< shade2/calculation.hsp:1277 			} ..
+
+   -- >>>>>>>> shade2/calculation.hsp:1278 		if gSleep>=sleepModerate{ ...
+   if save.elona_sys.awake_hours >= Const.SLEEP_THRESHOLD_MODERATE then
+      if save.base.play_turns % 100 == 0 then
+         Gui.mes("misc.status_ailment.sleepy")
+      end
+      if Rand.one_in(2) then
+         result.regeneration = false
+      end
+      if save.elona_sys.awake_hours >= Const.SLEEP_THRESHOLD_HEAVY then
+         result.regeneration = false
+         chara:damage_sp(1)
+      end
+   end
 
    return result
+   -- <<<<<<<< shade2/calculation.hsp:1282 			} ..
 end
 
 Event.register("base.on_chara_turn_end", "Decrease nutrition", decrease_nutrition)

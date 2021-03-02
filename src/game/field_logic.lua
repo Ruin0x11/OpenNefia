@@ -376,8 +376,11 @@ local function revive_player()
    assert(player:revive())
 
    local success, map = Map.load(save.base.home_map_uid)
-   assert(success, map)
-   Map.travel_to(map)
+   if success then
+      Map.travel_to(map)
+   else
+      Log.error("Game has not been saved yet, reviving in current map instead. Scenarios should always save the game when first starting. (%s)", map)
+   end
 
    player:emit("base.on_player_death_revival")
 end

@@ -47,11 +47,15 @@ return {
                   :format(name(_1), _2)
             end
          },
-         bomb_fish = function(_1, _2)
-            return ("「げふぅ」%sは%sを吐き出した。")
-               :format(name(_1), itemname(_2, 1))
+         sustains_growth = function(_1, _2)
+            return ("%sの%sは成長期に突入した。")
+               :format(name(_1), _2)
          end,
-         boring = { "まずいわけではないが…", "平凡な味だ。" },
+         fairy_seed = function(_1, _2)
+            return ("「げふぅ」%sは%sを吐き出した。")
+               :format(name(_1), _2)
+         end,
+         uncooked_message = { "まずいわけではないが…", "平凡な味だ。" },
          corpse = {
             alien = function(_1)
                return ("何かが%sの体内に入り込んだ。")
@@ -122,7 +126,7 @@ return {
             morgia = "新たな力が湧きあがってくる。",
             spenseweed = "感覚が研ぎ澄まされるようだ。"
          },
-         hero_cheese = "これは縁起がいい！",
+         kagami_mochi = "これは縁起がいい！",
          human = {
             delicious = "ウマイ！",
             dislike = "これは人肉だ…うぇぇ！",
@@ -140,7 +144,6 @@ return {
                   :format(name(_1))
             end
          },
-         powder = "粉の味がする…",
          quality = {
             bad = { "うぅ…腹を壊しそうだ。", "まずい！", "ひどい味だ！" },
             delicious = { "最高に美味しい！", "まさに絶品だ！", "天にも昇る味だ！" },
@@ -148,12 +151,10 @@ return {
             great = { "美味しい！", "これはいける！", "いい味だ！" },
             so_so = { "まあまあの味だ。", "悪くない味だ。" }
          },
-         raw = "生で食べるものじゃないな…",
          raw_glum = function(_1)
             return ("%sは渋い顔をした。")
                :format(name(_1))
          end,
-         raw_meat = "生肉だ…",
          rotten = "うげっ！腐ったものを食べてしまった…うわ…",
          sisters_love_fueled_lunch = function(_1)
             return ("%sの心はすこし癒された。")
@@ -221,7 +222,8 @@ return {
                   return ("%sステーキ")
                      :format(_1)
                end,
-               default_origin = "動物"
+               default_origin = "動物",
+               uncooked_message = "生肉だ…",
             },
             vegetable = {
                _1 = function(_1)
@@ -356,7 +358,8 @@ return {
                _7 = "カルボナーラ",
                _8 = "ラーメン",
                _9 = "ミートスパゲティ",
-               default_origin = "麺"
+               default_origin = "麺",
+               uncooked_message = "生で食べるものじゃないな…",
             },
             fish = {
                _1 = function(_1)
@@ -413,7 +416,8 @@ return {
                _7 = "コロッケパン",
                _8 = "カレーパン",
                _9 = "メロンパン",
-               default_origin = "パン"
+               default_origin = "パン",
+               uncooked_quality = "粉の味がする…",
             },
             egg = {
                _1 = function(_1)

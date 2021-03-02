@@ -10,7 +10,7 @@ end,
   :format(name(_1), _2)
 end,
     caught_by_assassins = "暗殺者につかまった。あなたはクライアントを守らなければならない。",
-    corpse_is_dried_up = function(_1)
+    corpse_is_dried_up = function(_1, _2)
   return ("%sは上手い具合に干された。")
   :format(_1)
 end,
@@ -93,7 +93,7 @@ end,
 end,
       too_difficult = "難解だ！"
     },
-    get_rotten = function(_1)
+    get_rotten = function(_1, _2)
   return ("%sは腐った。")
   :format(_1)
 end,

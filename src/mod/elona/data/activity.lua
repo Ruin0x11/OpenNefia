@@ -25,6 +25,7 @@ local Action = require("api.Action")
 local Ui = require("api.Ui")
 local Const = require("api.Const")
 local Weather = require("mod.elona.api.Weather")
+local Hunger = require("mod.elona.api.Hunger")
 
 local function sex_check_end(chara, partner)
    if not Chara.is_alive(partner)
@@ -101,12 +102,12 @@ data:add {
                if self.food.own_state == Enum.OwnState.NotOwned and chara:is_ally() then
                   Gui.mes("activity.eat.start.in_secret", chara, self.food)
                else
-                  Gui.mes("activity.eat.start.normal", chara, self.food:build_name())
+                  Gui.mes("activity.eat.start.normal", chara, self.food:build_name(1))
                end
             end
 
             chara:set_item_using(self.food)
-            self.food:emit("elona.on_eat_item_begin", {chara=chara})
+            self.food:emit("elona.on_item_eat_begin", {chara=chara})
             -- <<<<<<<< shade2/proc.hsp:1116 		} ..
          end
       },
@@ -150,7 +151,7 @@ data:add {
             end
             params.chara:set_item_using(nil)
 
-            Effect.eat_food(chara, self.food)
+            Hunger.eat_food(chara, self.food)
             -- <<<<<<<< shade2/proc.hsp:1123 	gosub *insta_eat ..
          end
       }

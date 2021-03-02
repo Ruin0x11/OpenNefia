@@ -159,6 +159,7 @@ end
 
 function IEventEmitter:connect_self_multiple(events, force)
    for _, event in ipairs(events) do
+      Log.debug("Connecting callback: %s %s", event.id, event.name)
       self:connect_self(event.id, event.name, event.callback, event.priority or 100000, nil, force)
    end
 end

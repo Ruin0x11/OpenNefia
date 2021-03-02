@@ -3,6 +3,7 @@ local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Effect = require("mod.elona.api.Effect")
 local Skill = require("mod.elona_sys.api.Skill")
+local Hunger = require("mod.elona.api.Hunger")
 
 local eating_effect = {}
 
@@ -14,7 +15,7 @@ end
 
 local function mod_resist_chance(chara, elem, chance)
    if Rand.one_in(chance) then
-      Skill.modify_resist_level(elem, 50)
+      Skill.modify_resist_level(chara, elem, 50)
    end
 end
 
@@ -42,7 +43,7 @@ function eating_effect.holy_one(corpse, params)
 end
 
 function eating_effect.at(corpse, params)
-   eat_message(params.chara, "at", "None")
+   eat_message(params.chara, "at", "White")
 end
 
 function eating_effect.guard(corpse, params)
@@ -58,12 +59,12 @@ function eating_effect.vesda(corpse, params)
       return
    end
    eat_message(params.chara, "vesda", "Green")
-   params.Skill.modify_resist_level("elona.fire", 100)
+   Skill.modify_resist_level(params.chara, "elona.fire", 100)
 end
 
 function eating_effect.insanity(corpse, params)
    eat_message(params.chara, "insanity", "Purple")
-   params.Skill.modify_resist_level("elona.mind", 50)
+   Skill.modify_resist_level(params.chara, "elona.mind", 50)
    Effect.damage_insanity(params.chara, 500)
    params.chara:apply_effect("elona.insanity", 1000)
 end
@@ -98,9 +99,9 @@ function eating_effect.troll(corpse, params)
    Skill.gain_skill_exp(params.chara, "core.healing", 200)
 end
 
-function eating_effect.rotten_one(corpse, params)
+function eating_effect.rotten_one(corpse, params, result)
    eat_message(params.chara, "rotten_one", "Purple")
-   Effect.eat_rotten_food(params.chara)
+   result.exp_gains, result.nutrition = Hunger.add_rotten_food_exp_losses(params.chara, result.exp_gains, result.nutrition)
 end
 
 function eating_effect.beetle(corpse, params)
@@ -147,7 +148,7 @@ function eating_effect.cat(corpse, params)
    if not params.chara:is_player() then
       return
    end
-   eat_message(params.chara, "cat", "None")
+   eat_message(params.chara, "cat", "White")
    Effect.modify_karma(params.chara, -5)
 end
 
@@ -207,7 +208,7 @@ function eating_effect.quickling(corpse, params)
 end
 
 function eating_effect.alien(corpse, params)
-   eat_message(params.chara, "alien", "None")
+   eat_message(params.chara, "alien", "White")
    Effect.impregnate(params.chara)
 end
 

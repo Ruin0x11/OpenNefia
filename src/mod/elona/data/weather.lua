@@ -12,6 +12,7 @@ local SkillCheck = require("mod.elona.api.SkillCheck")
 local Const = require("api.Const")
 local Effect = require("mod.elona.api.Effect")
 local UiTheme = require("api.gui.UiTheme")
+local Hunger = require("mod.elona.api.Hunger")
 
 data:add_type {
    name = "weather",
@@ -220,6 +221,8 @@ do
             --
             -- if (gWeather=weatherSnow)or(tRole(map(cx(cc),cy(cc),0))=tSnow) : cActionPeriod(cc)=cActionPeriod(cc)*22/10
             --
+            -- But we do the latter check already, inside the base.activity
+            -- "elona.traveling."
             return turns
          end
       end
@@ -248,7 +251,7 @@ do
          Gui.play_sound("base.eat1", chara.x, chara.y)
          Gui.mes("action.move.global.weather.snow.eat")
          chara.nutrition = chara.nutrition + 5000
-         Effect.show_eating_message(chara)
+         Hunger.show_eating_message(chara)
          chara:apply_effect("elona.dimming", 1000)
       end
 

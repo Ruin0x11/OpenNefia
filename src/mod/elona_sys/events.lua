@@ -17,6 +17,10 @@ local Calc = require("mod.elona.api.Calc")
 local Chara = require("api.Chara")
 local elona_Quest = require("mod.elona.api.Quest")
 local Enum = require("api.Enum")
+local Hunger = require("mod.elona.api.Hunger")
+local World = require("api.World")
+local Const = require("api.Const")
+local ExHelp = require("mod.elona.api.ExHelp")
 
 --
 --
@@ -54,38 +58,45 @@ local function proc_effects_turn_end(chara, params, result)
       -- <<<<<<<< shade2/calculation.hsp:1174 *calcCondition ..
    end
    for effect_id, _ in pairs(chara.effects) do
-      chara:add_effect_turns(effect_id, -1)
+      local effect = data["base.effect"]:ensure(effect_id)
+      if effect.auto_heal then
+         chara:heal_effect(effect_id, 1)
+      end
    end
 
    return result
 end
 Event.register("base.on_chara_turn_end", "Proc effect on_turn_end", proc_effects_turn_end, { priority = 110000 })
 
-local function proc_player_turn_end(chara, params)
-   -- >>>>>>>> shade2/main.hsp:883 		if cBurden(pc)>=burdenHeavy{ ...
-   if not chara:is_player() then
-      return
-   end
-
-   if chara:calc("inventory_weight_type") >= Enum.Burden.Heavy and not config.base.debug_no_weight then
-      if Rand.one_in(20) then
-         Gui.mes("action.backpack_squashing", chara)
-         local damage = chara:calc("max_hp") * (chara:calc("inventory_weight") * 10 / chara:calc("max_inventory_weight") + 10) / 200 + 1
-         chara:damage_hp(damage, "elona.burden")
+local function proc_chara_turn_end(chara, params)
+   -- >>>>>>>> shade2/main.hsp:880 	if cc=pc{ ...
+   if chara:is_player() then
+      if chara:calc("inventory_weight_type") >= Enum.Burden.Heavy and not config.base.debug_no_weight then
+         if Rand.one_in(20) then
+            Gui.mes("action.backpack_squashing", chara)
+            local damage = chara:calc("max_hp") * (chara:calc("inventory_weight") * 10 / chara:calc("max_inventory_weight") + 10) / 200 + 1
+            chara:damage_hp(damage, "elona.burden")
+         end
       end
+
+      Hunger.make_player_hungry(chara)
+      Skill.refresh_speed(chara)
+   else
+      Hunger.make_other_hungry(chara)
    end
-
-   -- TODO hunger nutrition
-
-   Skill.refresh_speed(chara)
-   -- <<<<<<<< shade2/main.hsp:887 		refreshSpeed cc ..
+   -- <<<<<<<< shade2/main.hsp:891 		} ..
 end
-Event.register("base.on_chara_turn_end", "Proc player burden/hunger/speed", proc_player_turn_end, { priority = 120000 })
+Event.register("base.on_chara_turn_end", "Proc player burden/hunger/speed", proc_chara_turn_end, { priority = 120000 })
 
-local function update_awake_hours()
+local function hourly_events()
    -- >>>>>>>> shade2/main.hsp:627 	if mType=mTypeWorld{ ...
    local s = save.elona_sys
    local map = Map.current()
+
+   -- TODO adventurer
+
+   Effect.spoil_items(map)
+
    if Map.is_world_map(map) then
       if Rand.one_in(3) then
          s.awake_hours = s.awake_hours + 1
@@ -94,14 +105,26 @@ local function update_awake_hours()
          Gui.mes("action.move.global.nap")
          s.awake_hours = math.max(0, s.awake_hours - 3)
       end
+   else
+      if not map:calc("prevents_adding_awake_hours") then
+         s.awake_hours = s.awake_hours + 1
+      end
    end
-   if not map:calc("prevents_adding_awake_hours") then
-      s.awake_hours = s.awake_hours + 1
+
+   if World.date().hour == 8 then
+      Gui.mes_c("action.new_day", "Yellow")
    end
-   -- <<<<<<<< shade2/main.hsp:632 		} ...
+
+   if s.awake_hours >= Const.SLEEP_THRESHOLD_LIGHT then
+      ExHelp.maybe_show(9)
+   end
+   if Chara.player().nutrition < Const.HUNGER_THRESHOLD_NORMAL then
+      ExHelp.maybe_show(10)
+   end
+   -- <<<<<<<< shade2/main.hsp:636 	if cHunger(pc)<hungerNormal	: help 10 ..
 end
 
-Event.register("base.on_hour_passed", "Update awake hours", update_awake_hours)
+Event.register("base.on_hour_passed", "Update awake hours, rot food", hourly_events)
 
 local function init_save()
    local s = save.elona_sys

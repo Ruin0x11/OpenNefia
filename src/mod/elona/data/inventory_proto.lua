@@ -15,6 +15,7 @@ local I18N = require("api.I18N")
 local Equipment = require("mod.elona.api.Equipment")
 local Skill = require("mod.elona_sys.api.Skill")
 local Chara = require("api.Chara")
+local Const = require("api.Const")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
@@ -172,7 +173,16 @@ local inv_eat = {
       return true
    end,
    on_select = function(ctxt, item)
+      -- >>>>>>>> shade2/command.hsp:3735 			if cHunger(pc)>EatLimit:if develop=false:txt la ...
+      if ctxt.chara.nutrition > Const.EATING_NUTRITION_LIMIT
+         and not config.base.development_mode
+      then
+         Gui.mes("ui.inv.eat.too_bloated")
+         return "player_turn_query"
+      end
+
       return ElonaAction.eat(ctxt.chara, item)
+      -- <<<<<<<< shade2/command.hsp:3736 			goto *act_eat ..
    end
 }
 data:add(inv_eat)
