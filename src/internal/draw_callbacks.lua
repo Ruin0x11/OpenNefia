@@ -111,7 +111,6 @@ function draw_callbacks:draw(draw_x, draw_y)
          if not going then
             -- Coroutine error; stop drawing now
             dead[#dead+1] = key
-            break
          else
             dt = (dt or 16.66) / 1000
             co.dt = co.dt + dt
