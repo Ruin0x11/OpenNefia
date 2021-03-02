@@ -19,6 +19,7 @@ local Mef = require("api.Mef")
 local Pos = require("api.Pos")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Log = require("api.Log")
+local Weather = require("mod.elona.api.Weather")
 
 local Effect = {}
 
@@ -1088,6 +1089,49 @@ end
 
 function Effect.stop_time(chara)
    Log.error("TODO time stop")
+end
+
+function Effect.spoil_items(map)
+   -- >>>>>>>> shade2/item.hsp:403 *item_rot ...
+   local date_hours = World.date_hours()
+
+   local will_rot = function(item)
+      -- TODO remove alive filter, as it's redundant
+      return Item.is_alive(item)
+         and item:calc("material") == "elona.fresh"
+         and item.spoilage_date
+         and item.spoilage_date <= date_hours
+   end
+   pause()
+
+   for _, item in Item.iter(map):filter(will_rot) do
+      if item._id == "elona.corpse" and map:tile(item.x, item.y).kind == Enum.TileRole.Dryground then
+         if Weather.is("elona.sunny") then
+            Gui.mes("misc.corpse_is_dried_up", item:build_name(), item.amount)
+            item.spoilage_date = date_hours + 2160
+            item.image = "elona.item_jerky"
+            item.params.food_type = nil
+            item.params.food_quality = 5
+            item:refresh_cell_on_map()
+         end
+      else
+         item.image = "elona.item_rotten_food"
+         item:refresh_cell_on_map()
+      end
+   end
+
+   for _, chara in Chara.iter(map) do
+      for _, item in chara:iter_items():filter(will_rot) do
+         if chara:is_in_player_party() then
+            Gui.mes("misc.get_rotten", item:build_name(), item.amount)
+         end
+         item.image = "elona.item_rotten_food"
+         if chara:is_player() then
+            -- TODO god harvest
+         end
+      end
+   end
+   -- <<<<<<<< shade2/item.hsp:433 	return ..
 end
 
 return Effect

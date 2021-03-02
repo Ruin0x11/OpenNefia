@@ -3,6 +3,7 @@ local utils = require("mod.test_room.data.map_archetype.utils")
 local Chara = require("api.Chara")
 local Hunger = require("mod.elona.api.Hunger")
 local Rand = require("api.Rand")
+local MapgenUtils = require("mod.elona.api.MapgenUtils")
 
 local food = {
    _id = "food"
@@ -102,6 +103,8 @@ function food.on_generate_map(area, floor)
       Chara.player():recruit_as_ally(fairy)
       fairy.nutrition = 0
    end
+
+   MapgenUtils.spray_tile(map, "elona.grass_rock", 30)
 
    return map
 end

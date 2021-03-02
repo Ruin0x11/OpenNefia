@@ -10,9 +10,9 @@ return {
             :format(name(_1), _2)
       end,
       caught_by_assassins = "You are caught by assassins. You have to protect your client.",
-      corpse_is_dried_up = function(_1)
+      corpse_is_dried_up = function(_1, _2)
          return ("%s %s dried up in the sun.")
-            :format(_1, is(_1))
+            :format(_1, is(_2))
       end,
       curse = {
          blood_sucked = function(_1)
@@ -93,9 +93,9 @@ return {
          end,
          too_difficult = "It's too difficult!"
       },
-      get_rotten = function(_1)
+      get_rotten = function(_1, _2)
          return ("%s rot%s.")
-            :format(_1, s(_1))
+            :format(_1, s(_2))
       end,
       hostile_action = {
          get_excited = "Animals get excited!",

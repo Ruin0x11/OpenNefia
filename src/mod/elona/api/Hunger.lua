@@ -28,7 +28,6 @@ function Hunger.food_name(food_type, original_name, food_quality, chara_id)
    if chara_id then
       origin = I18N.get("chara." .. chara_id .. ".name")
    end
-   print(origin, food_type, food_quality)
 
    return I18N.get("food.names." .. food_type .. "._" .. food_quality, origin)
    -- <<<<<<<< shade2/text.hsp:641 	return s ..
@@ -94,14 +93,17 @@ function Hunger.apply_food_curse_state(chara, curse_state)
 
    if Effect.is_cursed(curse_state) then
       chara.nutrition = chara.nutrition - 1500
+
       if chara:is_in_fov() then
          Gui.mes("food.eat_status.bad", chara)
       end
+
       Hunger.vomit(chara)
    elseif curse_state == Enum.CurseState.Blessed then
       if chara:is_in_fov() then
          Gui.mes("food.eat_status.good", chara)
       end
+
       if Rand.one_in(5) then
          Effect.add_buff(chara, chara, "elona.lucky", 100, 500 + Rand.rnd(500))
       end

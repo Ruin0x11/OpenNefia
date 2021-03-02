@@ -12,7 +12,6 @@ local function day_passes()
    if guests < 3 and Rand.one_in(8 + guests * 5) then
       save.elona.waiting_guests = guests + 1
    end
-   Gui.mes_c("action.new_day", "Yellow")
 end
 
 Event.register("base.on_day_passed", "Day passing message/update guests", day_passes, 100000)
