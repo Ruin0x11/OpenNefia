@@ -523,7 +523,7 @@ make_touch {
       local target = params.target
       target.nutrition = target.nutrition - 8 * 100
       Gui.mes_c_visible("magic.hunger", target, "Purple")
-      Hunger.get_hungry(target)
+      Hunger.make_player_hungry(target)
    end
 }
 

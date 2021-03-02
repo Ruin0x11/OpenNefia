@@ -1,6 +1,7 @@
 local Event = require("api.Event")
 local ShopInventory = require("mod.elona.api.ShopInventory")
 local Enum = require("api.Enum")
+local Weather = require("mod.elona.api.Weather")
 
 local role = {
    {
@@ -116,6 +117,15 @@ local role = {
    {
       _id = "innkeeper",
       elona_id = 1005,
+
+      dialog_choices = {
+         {"elona.innkeeper:buy_meal", "talk.npc.innkeeper.choices.eat"},
+         function()
+            if Weather.is_bad_weather() then
+               return {{"elona.innkeeper:shelter", "talk.npc.innkeeper.choices.go_to_shelter"}}
+            end
+         end,
+      }
    },
    {
       _id = "spell_writer",

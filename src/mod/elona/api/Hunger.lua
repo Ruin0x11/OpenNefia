@@ -35,7 +35,7 @@ function Hunger.food_name(food_type, original_name, food_quality, chara_id)
 end
 
 function Hunger.get_food_image(food_type, food_quality)
--- >>>>>>>> shade2/text.hsp:645 *item_foodInit ..
+   -- >>>>>>>> shade2/text.hsp:645 *item_foodInit ..
    local entry = data["elona.food_type"]:ensure(food_type)
 
    local image = entry.item_chips[food_quality]
@@ -114,10 +114,46 @@ end
 function Hunger.proc_anorexia(chara)
    if chara:calc("is_anorexic") then
       Hunger.vomit(chara)
+      return true
    end
+   return false
+end
+
+function Hunger.cure_anorexia(chara)
+   -- >>>>>>>> shade2/chara_func.hsp:1884 #deffunc cure_anorexia int c ...
+   if not chara.is_anorexic then
+      return false
+   end
+
+   chara.is_anorexic = false
+   if chara:is_in_fov() or chara:is_in_player_party() then
+      Gui.mes("food.anorexia.recovers_from", chara)
+      Gui.mes("base.offer1", chara.x, chara.y)
+   end
+
+   return true
+   -- <<<<<<<< shade2/chara_func.hsp:1888 	return ..
+end
+
+-- TODO externalize?
+local stat_to_food_buff = {
+   ["elona.stat_strength"] = "elona.food_str",
+   ["elona.stat_constitution"] = "elona.food_end",
+   ["elona.stat_dexterity"] = "elona.food_dex",
+   ["elona.stat_perception"] = "elona.food_per",
+   ["elona.stat_learning"] = "elona.food_ler",
+   ["elona.stat_will"] = "elona.food_wil",
+   ["elona.stat_magic"] = "elona.food_mag",
+   ["elona.stat_charisma"] = "elona.food_chr",
+   ["elona.stat_speed"] = "elona.food_spd",
+}
+local food_buff_to_stat = {}
+for k, v in pairs(stat_to_food_buff) do
+   food_buff_to_stat[v] = k
 end
 
 function Hunger.vomit(chara)
+   -- >>>>>>>> shade2/chara_func.hsp:1890 #deffunc chara_vomit int c ...
    chara.anorexia_count = chara.anorexia_count + 1
 
    if chara:is_in_fov() then
@@ -132,6 +168,14 @@ function Hunger.vomit(chara)
       end
    end
 
+   local function is_food_buff(buff)
+      return not not food_buff_to_stat[buff._id]
+   end
+
+   for i, buff in chara:iter_buffs():filter(is_food_buff) do
+      assert(chara:remove_buff(i))
+   end
+
    local map = chara:current_map()
    if not map:has_type("world_map") then
       local chance = 2
@@ -140,15 +184,15 @@ function Hunger.vomit(chara)
             chance = chance + 1
          end
       end
-      if chara:is_player() or Rand.one_in(chance * chance * chance) then
+      if chara:is_player() or Rand.one_in(chance ^ 3) then
          local vomit = Item.create("elona.vomit", chara.x, chara.y)
          if vomit and not chara:is_player() then
-            vomit.params = { chara_id = chara._id }
+            vomit.params.chara_id = chara._id
          end
       end
    end
 
-   if chara.is_anorexic then
+   if chara:calc("is_anorexic") then
       Skill.gain_fixed_skill_exp(chara, "elona.stat_strength", -50)
       Skill.gain_fixed_skill_exp(chara, "elona.stat_constitution", -75)
       Skill.gain_fixed_skill_exp(chara, "elona.stat_charisma", -100)
@@ -160,7 +204,7 @@ function Hunger.vomit(chara)
             chara.has_anorexia = true
             if chara:is_in_fov() then
                Gui.mes("food.anorexia.develops", chara)
-               Gui.play_sound("base.offer1")
+               Gui.play_sound("base.offer1", chara.x, chara.y)
             end
          end
       end
@@ -168,36 +212,19 @@ function Hunger.vomit(chara)
 
    chara:apply_effect("elona.dimming", 100)
    Effect.modify_weight(chara, (1 + Rand.rnd(5)) * -1)
+
    if chara.nutrition <= 0 then
-      chara:damage_hp(9999, "elona.vomit")
+      chara:damage_hp(9999, "elona.hunger")
    end
+
    chara.nutrition = chara.nutrition - 3000
+   -- <<<<<<<< shade2/chara_func.hsp:1927 	return ..
 end
 
 function Hunger.add_rotten_food_exp_losses(chara, exp_gains)
    exp_gains = exp_gains or {}
 
    return exp_gains
-end
-
-function Hunger.get_hungry(chara)
-   if chara:has_trait("elona.perm_slow_food") and Rand.one_in(3) then
-      return
-   end
-
-   local old_level = math.floor(chara.nutrition / 1000)
-   chara.nutrition = chara.nutrition - 8
-   local new_level = math.floor(chara.nutrition / 1000)
-   if new_level ~= old_level then
-      if new_level == 1 then
-         Gui.mes("food.hunger_status.starving")
-      elseif new_level == 2 then
-         Gui.mes("food.hunger_status.very_hungry")
-      elseif new_level == 5 then
-         Gui.mes("food.hunger_status.hungry")
-      end
-      Skill.refresh_speed(chara)
-   end
 end
 
 function Hunger.is_human_flesh(food)
@@ -435,6 +462,42 @@ function Hunger.eat_food(chara, food)
 
    Hunger.proc_anorexia(chara)
    -- <<<<<<<< shade2/proc.hsp:1155 	return ..
+end
+
+function Hunger.make_player_hungry(chara)
+   -- >>>>>>>> shade2/calculation.hsp:1150 *calcHunger		;hunger (sSurvival) ...
+   if chara:has_trait("elona.perm_slow_food") and Rand.one_in(3) then
+      return
+   end
+
+   local old_level = math.floor(chara.nutrition / 1000)
+   chara.nutrition = chara.nutrition - Const.HUNGER_DECREMENT_AMOUNT
+   local new_level = math.floor(chara.nutrition / 1000)
+   if new_level ~= old_level then
+      if new_level == 1 then
+         Gui.mes("food.hunger_status.starving")
+      elseif new_level == 2 then
+         Gui.mes("food.hunger_status.very_hungry")
+      elseif new_level == 5 then
+         Gui.mes("food.hunger_status.hungry")
+      end
+      Skill.refresh_speed(chara)
+   end
+   -- <<<<<<<< shade2/calculation.hsp:1160 	return ..
+end
+
+function Hunger.make_other_hungry(other)
+   -- >>>>>>>> shade2/main.hsp:890 		if mType!mTypeWorld:cHunger(cc)-=defHungerDec*2: ...
+   local map = other:current_map()
+   if not map or map:has_type("world_map") then
+      return
+   end
+
+   other.nutrition = other.nutrition - Const.HUNGER_DECREMENT_AMOUNT * 2
+   if other.nutrition < Const.ALLY_HUNGER_THRESHOLD and not other:calc("is_anorexic") then
+      other.nutrition = Const.ALLY_HUNGER_THRESHOLD
+   end
+   -- <<<<<<<< shade2/main.hsp:890 		if mType!mTypeWorld:cHunger(cc)-=defHungerDec*2: ..
 end
 
 return Hunger

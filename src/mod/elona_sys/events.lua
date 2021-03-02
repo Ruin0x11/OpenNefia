@@ -17,6 +17,7 @@ local Calc = require("mod.elona.api.Calc")
 local Chara = require("api.Chara")
 local elona_Quest = require("mod.elona.api.Quest")
 local Enum = require("api.Enum")
+local Hunger = require("mod.elona.api.Hunger")
 
 --
 --
@@ -61,26 +62,25 @@ local function proc_effects_turn_end(chara, params, result)
 end
 Event.register("base.on_chara_turn_end", "Proc effect on_turn_end", proc_effects_turn_end, { priority = 110000 })
 
-local function proc_player_turn_end(chara, params)
-   -- >>>>>>>> shade2/main.hsp:883 		if cBurden(pc)>=burdenHeavy{ ...
-   if not chara:is_player() then
-      return
-   end
-
-   if chara:calc("inventory_weight_type") >= Enum.Burden.Heavy and not config.base.debug_no_weight then
-      if Rand.one_in(20) then
-         Gui.mes("action.backpack_squashing", chara)
-         local damage = chara:calc("max_hp") * (chara:calc("inventory_weight") * 10 / chara:calc("max_inventory_weight") + 10) / 200 + 1
-         chara:damage_hp(damage, "elona.burden")
+local function proc_chara_turn_end(chara, params)
+   -- >>>>>>>> shade2/main.hsp:880 	if cc=pc{ ...
+   if chara:is_player() then
+      if chara:calc("inventory_weight_type") >= Enum.Burden.Heavy and not config.base.debug_no_weight then
+         if Rand.one_in(20) then
+            Gui.mes("action.backpack_squashing", chara)
+            local damage = chara:calc("max_hp") * (chara:calc("inventory_weight") * 10 / chara:calc("max_inventory_weight") + 10) / 200 + 1
+            chara:damage_hp(damage, "elona.burden")
+         end
       end
+
+      Hunger.make_player_hungry(chara)
+      Skill.refresh_speed(chara)
+   else
+      Hunger.make_other_hungry(chara)
    end
-
-   -- TODO hunger nutrition
-
-   Skill.refresh_speed(chara)
-   -- <<<<<<<< shade2/main.hsp:887 		refreshSpeed cc ..
+   -- <<<<<<<< shade2/main.hsp:891 		} ..
 end
-Event.register("base.on_chara_turn_end", "Proc player burden/hunger/speed", proc_player_turn_end, { priority = 120000 })
+Event.register("base.on_chara_turn_end", "Proc player burden/hunger/speed", proc_chara_turn_end, { priority = 120000 })
 
 local function update_awake_hours()
    -- >>>>>>>> shade2/main.hsp:627 	if mType=mTypeWorld{ ...

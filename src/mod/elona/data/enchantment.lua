@@ -15,6 +15,7 @@ local Gui = require("api.Gui")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Effect = require("mod.elona.api.Effect")
 local Log = require("api.Log")
+local Hunger = require("mod.elona.api.Hunger")
 
 ---
 --- Parameterized enchantments
@@ -285,20 +286,7 @@ data:add {
       Gui.mes_visible("food.effect.sustains_growth", chara.x, chara.y, chara, skill_name)
       local adjusted_power = math.floor(power / 50) + 1
 
-      -- TODO externalize?
-      local stat_to_food_buff = {
-         ["elona.stat_strength"] = "elona.food_str",
-         ["elona.stat_constitution"] = "elona.food_end",
-         ["elona.stat_dexterity"] = "elona.food_dex",
-         ["elona.stat_perception"] = "elona.food_per",
-         ["elona.stat_learning"] = "elona.food_ler",
-         ["elona.stat_will"] = "elona.food_wil",
-         ["elona.stat_magic"] = "elona.food_mag",
-         ["elona.stat_charisma"] = "elona.food_chr",
-         ["elona.stat_speed"] = "elona.food_spd",
-      }
-
-      local food_buff = stat_to_food_buff[enc_params.skill_id]
+      local food_buff = Hunger.food_buff_for_stat(enc_params.skill_id)
       if food_buff then
          local buff_power = adjusted_power * 5
          if not chara:is_player() then

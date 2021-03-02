@@ -216,7 +216,7 @@ traveling.events[#traveling.events+1] = {
       chara:emit("elona.on_chara_travel_in_world_map", {activity=self})
 
       -- >>>>>>>> shade2/proc.hsp:849 	if cActionPeriod(cc)>0:gMin++:return ..
-      World.pass_time_in_seconds(60, "none")
+      World.pass_time_in_seconds(60)
       -- <<<<<<<< shade2/proc.hsp:849 	if cActionPeriod(cc)>0:gMin++:return ..
    end
 }

@@ -54,8 +54,6 @@ Const.IMPRESSION_SOULMATE = 300
 Const.MAP_MINOR_RENEW_STEP_HOURS = 24
 Const.PLANT_GROWTH_DAYS = 4
 
-Const.ALLY_HUNGER_THRESHOLD = 6000
-
 Const.AI_RANGED_ATTACK_THRESHOLD = 6
 Const.AI_THROWING_ATTACK_THRESHOLD = 8
 
@@ -111,5 +109,10 @@ Const.SLEEP_THRESHOLD_HEAVY = 50
 -- >>>>>>>> shade2/init.hsp:80 	#define global maxCorrupt	20000 ...
 Const.ETHER_DISEASE_DEATH_THRESHOLD = 20000
 -- <<<<<<<< shade2/init.hsp:80 	#define global maxCorrupt	20000 ..
+
+-- >>>>>>>> shade2/init.hsp:109 	#define global defHungerDec	8 ...
+Const.HUNGER_DECREMENT_AMOUNT = 8
+Const.ALLY_HUNGER_THRESHOLD = 6000
+-- <<<<<<<< shade2/init.hsp:111 	#define global defAllyHunger	6000 ..
 
 return Const

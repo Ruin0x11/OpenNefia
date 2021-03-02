@@ -561,6 +561,13 @@ function IChara:revive()
    end
 
    -- >>>>>>>> shade2/chara.hsp:589 *resurrect ..
+
+   -- TODO move?
+   self.is_about_to_explode = false
+   self.is_under_death_word = false
+   self.is_pregnant = false
+   self.is_anorexic = false
+
    self.state = "Alive"
    self.is_solid = true
    self.hp = math.floor(self:calc("max_hp") / 3)
