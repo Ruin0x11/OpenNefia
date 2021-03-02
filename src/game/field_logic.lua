@@ -53,7 +53,7 @@ function field_logic.quickstart()
    -- We will want to act as if the character making GUI is active, because that
    -- will force the player's equipment to be generated uncursed.
    chara_make.set_is_active_override(true)
-   local ok, err = pcall(function()
+   local ok, err = xpcall(function()
          local me = Chara.create(config.base.quickstart_chara_id, nil, nil, {ownerless=true})
          me:emit("base.on_finalize_player")
          me:emit("base.on_initialize_player")
@@ -65,7 +65,7 @@ function field_logic.quickstart()
          Skill.apply_class_params(me, me.class)
 
          field_logic.setup_new_game(me)
-   end)
+   end, debug.traceback)
    chara_make.set_is_active_override(false)
 
    if not ok then

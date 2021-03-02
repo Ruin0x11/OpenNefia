@@ -9,8 +9,6 @@ local Log = require("api.Log")
 local IMapObject  = class.interface("IMapObject",
                              {
                                 uid = "number",
-                                x = "number",
-                                y = "number",
                                 produce_memory = "function"
                              },
                              {IOwned, IObject})
@@ -18,8 +16,12 @@ local IMapObject  = class.interface("IMapObject",
 function IMapObject:init()
    IObject.init(self)
 
-   self.x = 0
-   self.y = 0
+   -- We make `x` and `y` immutable using `object.__newindex`, to force their
+   -- update through IMapObject:set_pos(x, y). This is so positional indexing
+   -- structures can get updated properly.
+   local mt = getmetatable(self)
+   mt.x = 0
+   mt.y = 0
 end
 
 function IMapObject:refresh_cell_on_map()

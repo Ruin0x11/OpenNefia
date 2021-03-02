@@ -16,6 +16,8 @@ function test_MapObject_clone()
    chara:mod("max_hp", 123, "set")
    Assert.eq(1, map:iter():length())
    Assert.eq(1, chara.location:iter():length())
+   Assert.eq(1, chara.x)
+   Assert.eq(2, chara.y)
    Assert.eq(123, chara:calc("max_hp"))
 
    local new = MapObject.clone(chara)
@@ -25,9 +27,53 @@ function test_MapObject_clone()
    Assert.eq(2, new.y)
    Assert.eq(nil, new.location)
    Assert.eq(123, new:calc("max_hp"))
+
+   new:set_pos(3, 4)
+   Assert.eq(1, chara.x)
+   Assert.eq(2, chara.y)
+   Assert.eq(1, new.x) -- because it's not on the map
+   Assert.eq(2, new.y) -- because it's not on the map
+
+   chara:remove_ownership()
+   Assert.eq(0, map:iter():length())
+   Assert.eq(nil, chara.location)
+   Assert.eq(nil, new.location)
 end
 
-function test_MapObject_clone__owned()
+function test_MapObject_clone__owned_chara()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+
+   local chara = Chara.create("elona.putit", 1, 2, {}, map)
+   Assert.eq(1, map:iter():length())
+   Assert.eq(1, chara.location:iter():length())
+   Assert.is_truthy(chara.location)
+   Assert.eq(map, chara:containing_map())
+
+   local new = MapObject.clone(chara, true)
+   Assert.eq(2, map:iter():length())
+   Assert.eq(2, chara.location:iter():length())
+   Assert.is_truthy(new.x)
+   Assert.is_truthy(new.y)
+   Assert.eq(chara.location, new.location)
+   Assert.eq(chara.__iface, new.__iface)
+   Assert.eq(map, new:containing_map())
+
+   new:set_pos(3, 4)
+   Assert.eq(1, chara.x)
+   Assert.eq(2, chara.y)
+   Assert.eq(3, new.x)
+   Assert.eq(4, new.y)
+
+   chara:remove_ownership()
+   Assert.eq(1, map:iter():length())
+   Assert.eq(nil, chara.location)
+   Assert.is_truthy(new.location)
+   Assert.eq(1, new.location:iter():length())
+   Assert.eq(map, new:containing_map())
+end
+
+function test_MapObject_clone__owned_item()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 

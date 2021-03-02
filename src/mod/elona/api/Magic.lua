@@ -16,6 +16,7 @@ local Enum = require("api.Enum")
 local SkillCheck = require("mod.elona.api.SkillCheck")
 local Log = require("api.Log")
 local Hunger = require("mod.elona.api.Hunger")
+local Const = require("api.Const")
 
 local Magic = {}
 

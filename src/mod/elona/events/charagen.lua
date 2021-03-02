@@ -7,6 +7,8 @@ local I18N = require("api.I18N")
 local Skill = require("mod.elona_sys.api.Skill")
 local CharaMake = require("api.CharaMake")
 local Const = require("api.Const")
+local Map = require("api.Map")
+local Charagen = require("mod.tools.api.Charagen")
 
 local function fix_name_gender_age(chara)
    if chara.proto.has_own_name then
@@ -186,7 +188,7 @@ end
 Event.register("base.on_initialize_player", "Init player defaults", init_player_defaults)
 
 local function init_chara_image(chara)
-   if chara.image == nil then
+   if chara.image == "base.default" then
       if chara.male_image and chara.gender == "male" then
          chara.image = chara.male_image
       end
@@ -219,22 +221,27 @@ Event.register(
          return result
       end
 
-      params.level = params.level * 2
-      if params.quality > Enum.Quality.Good then
+      if params.level then
+         params.level = params.level * 2
+      end
+      if params.quality and params.quality > Enum.Quality.Good then
          params.quality = Enum.Quality.Good
       end
-      local Charagen = require("mod.tools.api.Charagen")
       params.id = Charagen.random_chara_id_raw(params.level, params.filter, params.category)
 
       -- using Chara.create would cause recursion
       local chara = MapObject.generate_from("base.chara", params.id)
 
       chara.is_shade = true
-      chara.title = "shade"
+      chara.name = I18N.get("chara.job.shade")
       chara.image = "elona.chara_shade"
       -- <<<<<<<< shade2/chara.hsp:485 	if cmShade:cnName(rc)=lang("シェイド","shade"):	cPic( ...
 
-      chara = MapObject.build(chara, params.gen_params)
+      if params.where then
+         Map.try_place_chara(chara, params.x, params.y, params.where)
+      end
+
+      MapObject.finalize(chara, params.gen_params)
 
       return chara
 end)

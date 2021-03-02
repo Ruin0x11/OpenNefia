@@ -40,8 +40,8 @@ function test_parties_invalid()
 
    local player = Chara.create("base.player", nil, nil, {ownerless=true})
 
-   Assert.error(function() parties:get_leader(42) end, "unknown party")
-   Assert.error(function() parties:has_member(42, player) end, "unknown party")
+   Assert.throws_error(function() parties:get_leader(42) end, "unknown party")
+   Assert.throws_error(function() parties:has_member(42, player) end, "unknown party")
 end
 
 function test_parties_invalid_operation()
@@ -50,12 +50,12 @@ function test_parties_invalid_operation()
    local player = Chara.create("base.player", nil, nil, {ownerless=true})
    local id = parties:add_party()
 
-   Assert.error(function() parties:set_leader(id, nil) end)
-   Assert.error(function() parties:remove_member(id, player) end)
+   Assert.throws_error(function() parties:set_leader(id, nil) end)
+   Assert.throws_error(function() parties:remove_member(id, player) end)
 
    parties:add_member(id, player)
-   Assert.error(function() parties:add_member(id, player) end, "chara .* is already in party .*")
+   Assert.throws_error(function() parties:add_member(id, player) end, "chara .* is already in party .*")
 
    parties:remove_member(id, player)
-   Assert.error(function() parties:remove_member(id, player) end, "chara .* is not in party .* %(nil%)")
+   Assert.throws_error(function() parties:remove_member(id, player) end, "chara .* is not in party .* %(nil%)")
 end

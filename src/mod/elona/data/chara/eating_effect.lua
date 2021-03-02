@@ -83,7 +83,7 @@ end
 local function eating_effect_poisonous(gain_resist)
    return function(corpse, params)
       eat_message(params.chara, "poisonous", "Purple")
-      params.chara:apply_effect("elona.poisoned", 100)
+      params.chara:apply_effect("elona.poison", 100)
       if gain_resist then
          mod_resist_chance(params.chara, "elona.poison", 6)
       end
@@ -96,7 +96,7 @@ eating_effect.poisonous = eating_effect_poisonous(false)
 
 function eating_effect.troll(corpse, params)
    eat_message(params.chara, "troll", "Green")
-   Skill.gain_skill_exp(params.chara, "core.healing", 200)
+   Skill.gain_skill_exp(params.chara, "elona.healing", 200)
 end
 
 function eating_effect.rotten_one(corpse, params, result)
@@ -111,12 +111,12 @@ end
 
 function eating_effect.mandrake(corpse, params)
    eat_message(params.chara, "mandrake", "Green")
-   Skill.gain_skill_exp(params.chara, "core.meditation", 500)
+   Skill.gain_skill_exp(params.chara, "elona.meditation", 500)
 end
 
 function eating_effect.grudge(corpse, params)
    eat_message(params.chara, "grudge", "Purple")
-   params.chara:apply_effect("elona.confused", 200)
+   params.chara:apply_effect("elona.confusion", 200)
 end
 
 function eating_effect.calm(corpse, params)
@@ -141,7 +141,7 @@ end
 
 function eating_effect.lightning(corpse, params)
    eat_message(params.chara, "lightning", "Purple")
-   params.chara:apply_effect("elona.paralyzed", 300)
+   params.chara:apply_effect("elona.paralysis", 300)
 end
 
 function eating_effect.cat(corpse, params)

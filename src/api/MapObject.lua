@@ -2,6 +2,7 @@ local object = require("internal.object")
 local ILocation = require("api.ILocation")
 local pool = require("internal.pool")
 local IOwned = require("api.IOwned")
+local IMapObject = require("api.IMapObject")
 
 local Event = require("api.Event")
 local Object = require("api.Object")
@@ -17,7 +18,9 @@ function MapObject.generate_from(_type, id, uid_tracker)
    -- params.no_pre_build = true
    local obj = Object.generate_from(_type, id)
 
-   rawset(obj, "uid", uid)
+   local mt = getmetatable(obj)
+   assert(mt.__id == "object")
+   rawset(mt, "uid", uid)
 
    -- class.assert_is_an(IMapObject, data)
 
@@ -34,7 +37,9 @@ function MapObject.generate(proto, uid_tracker)
    -- params.no_pre_build = true
    local obj = Object.generate(proto)
 
-   rawset(obj, "uid", uid)
+   local mt = getmetatable(obj)
+   assert(mt.__id == "object")
+   rawset(mt, "uid", uid)
 
    -- class.assert_is_an(IMapObject, obj)
 
@@ -95,12 +100,7 @@ function MapObject.clone_base(obj, owned)
 end
 
 function MapObject.is_map_object(t)
-   if type(t) ~= "table" then
-      return false
-   end
-
-   local mt = getmetatable(t)
-   return mt and mt.__index == object.__index and type(t.x) == "number" and type(t.y) == "number" or false
+   return class.is_an(IMapObject, t) or false
 end
 
 -- NOTE: We could have an interface for classes that need special cloning logic.
@@ -159,7 +159,32 @@ local function cycle_aware_copy(t, cache, uids, first, opts)
    if t.__class and class.is_class_or_interface(mt) then
       res.__class = mt
    end
-   setmetatable(res,mt)
+   if mt then
+      local is_object = mt.__id == "object"
+      if is_object then
+         local new_mt = {}
+
+         -- see `object.deserialize()`
+         new_mt.__id = mt.__id
+         new_mt.__index = object.__index
+         new_mt.__newindex = object.__newindex
+         new_mt.__iface = mt.__iface
+         new_mt.__tostring = object.__tostring
+         new_mt.__inspect = object.__inspect
+
+         -- immutable state
+         new_mt.uid = nil
+         new_mt.x = mt.x
+         new_mt.y = mt.y
+         new_mt.location = nil
+         new_mt._id = mt._id
+         new_mt._type = mt._type
+
+         setmetatable(res,new_mt)
+      else
+         setmetatable(res,mt)
+      end
+   end
 
    return res
 end
@@ -179,12 +204,12 @@ function MapObject.clone(obj, owned, uid_tracker, cache, opts)
 
    local new_object = cycle_aware_copy(obj, cache or {}, uid_tracker, true, opts)
 
-   if not preserve_uid then
-      new_object.uid = uid_tracker:get_next_and_increment()
+   local mt = getmetatable(new_object)
+   if preserve_uid then
+      mt.uid = obj.uid
+   else
+      mt.uid = uid_tracker:get_next_and_increment()
    end
-
-   local mt = getmetatable(obj)
-   setmetatable(new_object, mt)
 
    local location = obj:get_location()
    if owned and class.is_an("api.IMapObject", obj) and class.is_an("api.ILocation", location) then

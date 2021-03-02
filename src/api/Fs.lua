@@ -17,7 +17,7 @@ function Fs.open(filepath, mode)
    -- love.File:open() does not support "rb"
    mode = mode:gsub("b$", "")
 
-   if not fs.is_absolute(filepath) then
+   if fs.get_global_working_directory() and not fs.is_absolute(filepath) then
       filepath = fs.join(Fs.get_working_directory(), filepath)
    end
 

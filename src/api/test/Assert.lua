@@ -32,7 +32,7 @@ function Assert.lt(expected, actual)
    end
 end
 
-function Assert.error(f, err_match, ...)
+function Assert.throws_error(f, err_match, ...)
    local ok, err = pcall(f, ...)
    if ok then
       error("expected error, but was successful")
