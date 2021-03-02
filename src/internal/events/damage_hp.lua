@@ -3,8 +3,6 @@ local Rand = require("api.Rand")
 local Event = require("api.Event")
 local Enum = require("api.Enum")
 
-Event.register("base.on_damage_chara", "Interrupt activity", function(chara) chara:interrupt_activity() end)
-
 local function after_chara_damaged(victim, params)
    local element = params.element
    if element and element.after_apply_damage then
