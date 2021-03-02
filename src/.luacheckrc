@@ -48,8 +48,13 @@ files["scratch/**/*.lua"].globals = files["mod/**/*.lua"].globals
 files["scratch/**/*.lua"].ignore = {
    "111", -- setting non-standard global variable 'X'
 }
-files["test/unit/**/*.lua"].ignore = {
-   "111", -- setting non-standard global variable 'X'
+files["test/unit/**/*.lua"] = {
+   globals = {
+      "disable"
+   },
+   ignore = {
+      "111", -- setting non-standard global variable 'X'
+   }
 }
 
 files["**/locale/**/*.lua"] = {ignore = {"212"}}
