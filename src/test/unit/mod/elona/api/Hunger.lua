@@ -140,3 +140,50 @@ function test_Hunger_apply_general_eating_effect__food_type_cooked()
    Assert.eq(724, chara:skill_experience("elona.stat_constitution"))
    Assert.eq(8225, chara.nutrition)
 end
+
+function test_Hunger_apply_general_eating_effect___player_eats_rotten()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+
+   local chara = stripped_chara(map)
+   local food = stripped_item(map, "elona.corpse")
+
+   Chara.set_player(chara)
+   food.spoilage_date = -1
+   chara.nutrition = 5000
+   chara:mod_base_skill_level("elona.stat_constitution", 10, "set")
+   chara:mod_skill_experience("elona.stat_constitution", 500, "set")
+   Assert.eq(10, chara:base_skill_level("elona.stat_constitution"))
+   Assert.eq(500, chara:skill_experience("elona.stat_constitution"))
+   Assert.eq(5000, chara.nutrition)
+   Assert.eq(true, chara:is_player())
+
+   Hunger.apply_general_eating_effect(chara, food)
+
+   Assert.eq(10, chara:base_skill_level("elona.stat_constitution"))
+   Assert.eq(400, chara:skill_experience("elona.stat_constitution"))
+   Assert.eq(6000, chara.nutrition)
+end
+
+function test_Hunger_apply_general_eating_effect___nonplayer_eats_rotten()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+
+   local chara = stripped_chara(map)
+   local food = stripped_item(map, "elona.corpse")
+
+   food.spoilage_date = -1
+   chara.nutrition = 5000
+   chara:mod_base_skill_level("elona.stat_constitution", 10, "set")
+   chara:mod_skill_experience("elona.stat_constitution", 500, "set")
+   Assert.eq(10, chara:base_skill_level("elona.stat_constitution"))
+   Assert.eq(500, chara:skill_experience("elona.stat_constitution"))
+   Assert.eq(5000, chara.nutrition)
+   Assert.eq(false, chara:is_player())
+
+   Hunger.apply_general_eating_effect(chara, food)
+
+   Assert.eq(10, chara:base_skill_level("elona.stat_constitution"))
+   Assert.eq(540, chara:skill_experience("elona.stat_constitution"))
+   Assert.eq(8500, chara.nutrition)
+end

@@ -154,6 +154,11 @@ for k, v in pairs(stat_to_food_buff) do
    food_buff_to_stat[v] = k
 end
 
+function Hunger.food_buff_for_stat(skill_id)
+   local buff_id = stat_to_food_buff[skill_id]
+   return buff_id
+end
+
 function Hunger.vomit(chara)
    -- >>>>>>>> shade2/chara_func.hsp:1890 #deffunc chara_vomit int c ...
    chara.anorexia_count = chara.anorexia_count + 1

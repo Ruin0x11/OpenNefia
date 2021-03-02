@@ -292,7 +292,7 @@ end
 ---
 --- @treturn bool
 function IChara:is_player()
-   return field.player and field.player.uid == self.uid
+   return not not (field.player and field.player.uid == self.uid)
 end
 
 --- Attempts to recruit a character as an ally of this character.
