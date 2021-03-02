@@ -114,6 +114,13 @@ local effect = {
          end
       end,
 
+      -- >>>>>>>> shade2/proc.hsp:682 	healCon tc,conSick,7+rnd(7) ...
+      on_sleep = function(chara)
+         chara:heal_effect("elona.sick", 7 + Rand.rnd(7))
+      end,
+      auto_heal = false,
+      -- <<<<<<<< shade2/proc.hsp:682 	healCon tc,conSick,7+rnd(7) ..
+
       on_turn_end = function(chara)
          -- >>>>>>>> elona122/shade2/calculation.hsp:1201:DONE 	if cSick(r1)>0{ ..
          local result
@@ -162,6 +169,10 @@ local effect = {
 
       stops_activity = true,
 
+      -- >>>>>>>> shade2/proc.hsp:670 	cPoison(tc)	=0 ...
+      on_sleep = "remove",
+      -- <<<<<<<< shade2/proc.hsp:670 	cPoison(tc)	=0 ..
+
       on_turn_end = function(chara)
          -- >>>>>>>> shade2/calculation.hsp:1182 	if cPoison(r1)>0{ ...
          chara:set_emotion_icon("elona.skull")
@@ -191,6 +202,10 @@ local effect = {
 
       stops_activity = true,
 
+      -- >>>>>>>> shade2/proc.hsp:671 	cSleep(tc)	=0 ...
+      on_sleep = "remove",
+      -- <<<<<<<< shade2/proc.hsp:671 	cSleep(tc)	=0 ..
+
       on_turn_start = function(chara)
          local result = { blocked = true }
          if chara:is_player() then
@@ -215,6 +230,10 @@ local effect = {
       emotion_icon = "elona.blind",
 
       stops_activity = true,
+
+      -- >>>>>>>> shade2/proc.hsp:673 	cBlind(tc)	=0 ...
+      on_sleep = "remove",
+      -- <<<<<<<< shade2/proc.hsp:673 	cBlind(tc)	=0 ..
 
       on_add = function(chara)
          -- >>>>>>>> shade2/screen.hsp:1028 	if cBlind(pc)!0 : if (sx!cX(pc)) or (sy!cY(pc)):: ...
@@ -249,6 +268,10 @@ local effect = {
       end,
 
       stops_activity = true,
+
+      -- >>>>>>>> shade2/proc.hsp:674 	cParalyze(tc)	=0 ...
+      on_sleep = "remove"
+      -- <<<<<<<< shade2/proc.hsp:674 	cParalyze(tc)	=0 ..
    },
    {
       _id = "choking",
@@ -264,6 +287,8 @@ local effect = {
          return result, "blocked"
       end,
 
+      auto_heal = false,
+
       on_turn_end = function(chara)
          if chara:effect_turns("elona.choking") % 3 == 0 then
             if chara:is_in_fov() then
@@ -271,7 +296,7 @@ local effect = {
             end
          end
 
-         chara:add_effect_turns("elona.choking", 2)
+         chara:add_effect_turns("elona.choking", 1)
 
          if chara:effect_turns("elona.choking") > 15 then
             chara:damage_hp(500, "elona.choking")
@@ -288,6 +313,10 @@ local effect = {
       emotion_icon = "elona.confuse",
 
       stops_activity = true,
+
+      -- >>>>>>>> shade2/proc.hsp:672 	cConfuse(tc)	=0 ...
+      on_sleep = "remove"
+      -- <<<<<<<< shade2/proc.hsp:672 	cConfuse(tc)	=0 ..
    },
    {
       _id = "fear",
@@ -332,6 +361,10 @@ local effect = {
       end,
 
       stops_activity = true,
+
+      -- >>>>>>>> shade2/proc.hsp:674 	cParalyze(tc)	=0 ...
+      on_sleep = "remove"
+      -- <<<<<<<< shade2/proc.hsp:674 	cParalyze(tc)	=0 ..
    },
    {
       _id = "fury",
@@ -374,6 +407,10 @@ local effect = {
 
       stops_activity = true,
 
+      -- >>>>>>>> shade2/proc.hsp:677 	cBleed(tc)	=0 ...
+      on_sleep = "remove",
+      -- <<<<<<<< shade2/proc.hsp:677 	cBleed(tc)	=0 ..
+
       on_turn_end = function(chara)
          local turns = chara:effect_turns("elona.bleeding")
          chara:damage_hp(Rand.rnd(chara.hp * (1 + turns / 4) / 100 + 3) + 1, "elona.bleeding")
@@ -382,7 +419,7 @@ local effect = {
          end
 
          return { regeneration = false }
-      end
+      end,
    },
    {
       _id = "insanity",
@@ -436,25 +473,26 @@ local effect = {
       color = {100, 0, 100},
       indicator = "effect.elona.drunk.indicator",
       emotion_icon = "elona.happy",
+
+      -- >>>>>>>> shade2/proc.hsp:676 	cDrunk(tc)	=0 ...
+      on_sleep = "remove"
+      -- <<<<<<<< shade2/proc.hsp:676 	cDrunk(tc)	=0 ..
    },
    {
       _id = "wet",
       ordering = 150000,
       color = {0, 0, 160},
-      indicator = "effect.elona.wet.indicator"
+      indicator = "effect.elona.wet.indicator",
+
+      -- >>>>>>>> shade2/proc.hsp:669 	cWet(tc)	=0 ...
+      on_sleep = "remove"
+      -- <<<<<<<< shade2/proc.hsp:669 	cWet(tc)	=0 ..
    },
    {
       _id = "gravity",
       ordering = 160000,
       color = {0, 80, 80},
       indicator = "effect.elona.gravity.indicator"
-   },
-
-   --- buffs
-
-   {
-      _id = "incognito",
-      ordering = 2000000,
    },
 }
 

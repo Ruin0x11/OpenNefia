@@ -55,7 +55,10 @@ local function proc_effects_turn_end(chara, params, result)
       -- <<<<<<<< shade2/calculation.hsp:1174 *calcCondition ..
    end
    for effect_id, _ in pairs(chara.effects) do
-      chara:heal_effect(effect_id, 1)
+      local effect = data["base.effect"]:ensure(effect_id)
+      if effect.auto_heal then
+         chara:heal_effect(effect_id, 1)
+      end
    end
 
    return result

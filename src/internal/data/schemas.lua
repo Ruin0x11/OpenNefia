@@ -798,8 +798,17 @@ data:add_type(
 
 data:add_type{
    name = "effect",
-   schema = {
-      indicator = schema.Function,
+   fields = {
+      {
+         name = "auto_heal",
+         default = true,
+         template = true,
+         doc = [[
+If true, this effect will be healed when the turn starts.
+
+False for sickness and choking on mochi.
+]]
+      },
    }
 }
 

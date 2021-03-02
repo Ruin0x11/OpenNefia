@@ -18,6 +18,8 @@ local Command = require("mod.elona_sys.api.Command")
 local FieldMap = require("mod.elona.api.FieldMap")
 local MapgenUtils = require("mod.elona.api.MapgenUtils")
 local Effect = require("mod.elona.api.Effect")
+local Hunger = require("mod.elona.api.Hunger")
+local Quest = require("mod.elona_sys.api.Quest")
 
 local ElonaCommand = {}
 
@@ -239,10 +241,52 @@ function ElonaCommand.increment_sleep_potential(player)
    return grown_count
 end
 
+local function do_chara_sleep(chara)
+   -- >>>>>>>> shade2/proc.hsp:667 	repeat maxSaveChara ...
+   for _, effect_proto in data["base.effect"]:iter() do
+      if chara:has_effect(effect_proto._id) then
+         if effect_proto.on_sleep == "remove" then
+            chara:remove_effect(effect_proto._id)
+         elseif type(effect_proto.on_sleep) == "function" then
+            effect_proto.on_sleep(chara)
+         elseif effect_proto.on_sleep ~= nil then
+            Log.error("Invalid effect.on_sleep callback: %s", tostring(effect_proto.on_sleep))
+         end
+      end
+   end
+
+   chara:heal_to_max()
+
+   if chara.has_anorexia then
+      chara.anorexia_count = chara.anorexia_count - Rand.rnd(6)
+   else
+      chara.anorexia_count = chara.anorexia_count - Rand.rnd(3)
+   end
+   if chara.anorexia_count < 0 then
+      Hunger.cure_anorexia(chara)
+      chara.anorexia_count = 0
+   end
+
+   Effect.heal_insanity(chara, 10)
+
+   if chara:calc("has_lay_hand") then
+      chara.is_lay_hand_available = true
+   end
+
+   chara:emit("elona.on_chara_sleep")
+   -- <<<<<<<< shade2/proc.hsp:691 	loop ..
+end
+
 function ElonaCommand.do_sleep(player, bed, params)
    params = params or { no_animation = false, sleep_hours = nil }
 
-   -- TODO is quest
+   local map = player:current_map()
+
+   local quest = Quest.get_immediate_quest()
+   if quest or map:has_type("quest") then
+      Gui.mes("activity.sleep.but_you_cannot")
+      return "player_turn_query"
+   end
 
    if player:calc("catches_god_signal") then
    end
@@ -266,8 +310,10 @@ function ElonaCommand.do_sleep(player, bed, params)
                end, { i = 0 }, true)
    end
 
+   save.elona_sys.awake_hours = 0
+
    for _, chara in player:iter_party_members() do
-      chara:emit("elona.on_sleep")
+      do_chara_sleep(chara)
    end
 
    local time_slept = params.sleep_hours or 7 + Rand.rnd(5)
