@@ -3,6 +3,11 @@ local Assert = require("api.test.Assert")
 local InstancedMap = require("api.InstancedMap")
 local test_util = require("test.lib.test_util")
 
+function test_object___tostring()
+   local putit = Chara.create("elona.putit", nil, nil, {ownerless=true})
+   Assert.matches("^<object %('base.chara', uid [0-9]+%) .*>$", tostring(putit))
+end
+
 function test_object__get_reserved_field()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")

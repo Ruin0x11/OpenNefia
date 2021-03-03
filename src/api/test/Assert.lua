@@ -32,6 +32,12 @@ function Assert.lt(expected, actual)
    end
 end
 
+function Assert.matches(match, str)
+   if not str:match(match) then
+      error(("expected string to match '%s', got '%s'"):format(match, str))
+   end
+end
+
 function Assert.throws_error(f, err_match, ...)
    local ok, err = pcall(f, ...)
    if ok then
