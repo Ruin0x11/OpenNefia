@@ -14244,7 +14244,7 @@ local item =
          },
          light = light.gate,
 
-         on_enter_action = function(self)
+         on_descend = function(self)
             Log.error("TODO")
          end
       },

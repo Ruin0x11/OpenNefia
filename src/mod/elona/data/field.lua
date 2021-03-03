@@ -63,7 +63,7 @@ data:add_multi(
             { id = "elona.grass_tall_2", density = 2 },
          },
 
-         material_type = "elona.forest",
+         material_spot_type = "elona.forest",
 
          generate = function(self, map)
             map.name = I18N.get("map.unique.elona.fields.forest")
@@ -76,7 +76,7 @@ data:add_multi(
 
          default_tile = "elona.cracked_dirt_1",
          fog = "elona.wall_stone_1_fog",
-         material_type = "elona.forest",
+         material_spot_type = "elona.forest",
 
          generate = function(self, map)
             map.name = I18N.get("map.unique.elona.fields.sea")
@@ -99,7 +99,7 @@ data:add_multi(
             { id = "elona.grass_patch_1", density = 2 },
          },
 
-         material_type = "elona.field",
+         material_spot_type = "elona.field",
 
          generate = function(self, map)
             map.name = I18N.get("map.unique.elona.fields.grassland")
@@ -121,7 +121,7 @@ data:add_multi(
             { id = "elona.desert_flowers_2", density = 2 },
          },
 
-         material_type = "elona.field",
+         material_spot_type = "elona.field",
 
          generate = function(self, map)
             map.name = "desert"

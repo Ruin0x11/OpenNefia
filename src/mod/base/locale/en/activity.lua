@@ -156,7 +156,7 @@ end,
   :format(_1, _2, s(_1))
 end,
       lose_total = function(_1)
-  return ("(Total: %s) ")
+  return ("(%s pieces remaining) ")
   :format(_1)
 end,
       searching = {

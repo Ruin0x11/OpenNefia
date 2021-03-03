@@ -323,6 +323,10 @@ Event.register("base.on_damage_chara", "Damage text and blood", function(chara, 
                                    params.message_tense, params.no_attack_text, params.element, params.extra_attacks,
                                    params.is_third_person)
 
+                  -- >>>>>>>> shade2/chara_func.hsp:1534 		rowAct_Check tc ...
+                  chara:interrupt_activity()
+                  -- <<<<<<<< shade2/chara_func.hsp:1534 		rowAct_Check tc ..
+
                   -- If an event causes character death, switch to
                   -- passive tense or messages like "kills it. kills
                   -- it. " will print.

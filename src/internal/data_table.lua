@@ -675,9 +675,6 @@ function data_table:__index(k)
    if self.proxy_cache[k] then
       return self.proxy_cache[k]
    end
-   if self.schemas[k] == nil then
-      error(("Unknown data type %s"):format(k))
-   end
    self.proxy_cache[k] = proxy:new(k, self)
    return self.proxy_cache[k]
 end

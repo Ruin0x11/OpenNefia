@@ -205,12 +205,9 @@ function EventHolder:trigger(event_id, source, args, default)
    return result, args, status
 end
 
-function EventHolder:responds_to(event_id)
-   local hooks = self.hooks[event_id]
-   return hooks and hooks:count() > 0
-end
-
 function EventHolder:add_observer(event_id, observer)
+   check_event(event_id)
+
    local IEventEmitter = require("api.IEventEmitter")
    class.assert_is_an(IEventEmitter, observer)
 
@@ -219,11 +216,15 @@ function EventHolder:add_observer(event_id, observer)
 end
 
 function EventHolder:remove_observer(event_id, observer)
+   check_event(event_id)
+
    self.observers[event_id] = self.observers[event_id] or setmetatable({}, { __mode = "k" })
    self.observers[event_id][observer] = nil
 end
 
 function EventHolder:disable(event_id, name)
+   check_event(event_id)
+
    local events = self.hooks[event_id]
    if events then
       return events:disable(name)
@@ -231,6 +232,8 @@ function EventHolder:disable(event_id, name)
 end
 
 function EventHolder:enable(event_id, name)
+   check_event(event_id)
+
    local events = self.hooks[event_id]
    if events then
       return events:enable(name)
@@ -238,6 +241,8 @@ function EventHolder:enable(event_id, name)
 end
 
 function EventHolder:has_handler(event_id, name)
+   check_event(event_id)
+
    local events = self.hooks[event_id]
    if events then
       if name == nil and next(events) then
@@ -253,6 +258,7 @@ end
 
 function EventHolder:print(event_id)
    if event_id ~= nil then
+      check_event(event_id)
       if self.hooks[event_id] ~= nil then
          return self.hooks[event_id]:print()
       end

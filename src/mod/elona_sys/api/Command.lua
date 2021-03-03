@@ -13,6 +13,7 @@ local QuickMenuPrompt = require("api.gui.QuickMenuPrompt")
 local Log = require("api.Log")
 local ConfigMenuWrapper = require("api.gui.menu.config.ConfigMenuWrapper")
 local Prompt = require("api.gui.Prompt")
+local Feat = require("api.Feat")
 
 --- Game logic intended for the player only.
 local Command = {}
@@ -141,7 +142,6 @@ function Command.wear(player)
 end
 
 local function feats_surrounding(player, field)
-   local Feat = require("api.Feat")
    return Pos.iter_surrounding(player.x, player.y):flatmap(Feat.at):filter(function(f) return f:calc(field) end)
 end
 
@@ -156,9 +156,12 @@ function Command.close(player)
    end
 end
 
+local function feats_under(player, field)
+   return Feat.at(player.x, player.y, player:current_map()):filter(function(f) return f:calc(field) end)
+end
+
 function Command.search(player)
    -- >>>>>>>> shade2/action.hsp:1482 *act_search ...
-   local Feat = require("api.Feat")
    local map = player:current_map()
 
    Gui.mes_duplicate()
@@ -172,11 +175,17 @@ function Command.search(player)
             local x = player.x + i - 5
             if not (x < 0 or x >= map:width()) then
                for _, f in Feat.at(x, y, map) do
-                  f:emit("elona_sys.on_feat_search", {chara=player})
+                  f:emit("elona_sys.on_feat_search_from_distance", {chara=player})
                end
             end
          end
       end
+   end
+
+   local f = feats_under(player, "can_search"):nth(1)
+   if f then
+      local result = f:emit("elona_sys.on_feat_search", {chara=player}, "player_turn_query")
+      return result or "player_turn_query"
    end
 
    player:emit("elona_sys.on_chara_search")

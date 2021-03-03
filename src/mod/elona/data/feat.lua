@@ -350,7 +350,9 @@ local function gen_stair(down)
 
       on_activate = travel(start_pos_fn),
 
-      [field] = function(self, params) self:on_activate(params.chara) end
+      -- NOTE: assumes polymorphism between params of elona_sys.on_feat_activate
+      -- and elona_sys.on_feat_ascend/elona_sys.on_feat_descend
+      [field] = function(self, params) self:on_activate(params) end
    }
 end
 
@@ -478,7 +480,7 @@ data:add {
    is_solid = false,
    is_opaque = false,
 
-   on_search = function(self, params)
+   on_search_from_distance = function(self, params)
       local chara = params.chara
 
       if math.abs(chara.y - self.y) > 1 or math.abs(chara.x - self.x) > 1 then
@@ -573,7 +575,7 @@ data:add {
    is_solid = false,
    is_opaque = false,
 
-   on_search = function(self, params)
+   on_search_from_distance = function(self, params)
       local chara = params.chara
       if chara.x == self.x and chara.y == self.y then
          Gui.play_sound("base.ding2")
