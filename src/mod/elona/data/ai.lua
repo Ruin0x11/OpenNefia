@@ -523,7 +523,7 @@ local function try_to_heal(chara, params)
    local chance = params.chance or 5
    if chara.hp < threshold then
       if chara.mp > 0 and Rand.one_in(chance) then
-         return Ai.run(params.action.id, chara. params.action)
+         return Ai.run(params.action.id, chara, params.action)
       end
    end
 end

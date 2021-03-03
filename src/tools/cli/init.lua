@@ -34,7 +34,8 @@ local function build_app()
    test_command:option("-f --filter", "Filter for test files and test function names.", ".*:.*")
        :argname("<filter>")
    test_command:flag("-d --debug-on-error", "Starts a REPL on test failure.")
-   test_command:flag("-s --seed", "Seed for random number generators.")
+   test_command:option("-s --seed", "Seed for random number generators.")
+       :argname("<seed>")
    test_command:flag("-m --load-all-mods", "Load all mods when testing.")
 
    do

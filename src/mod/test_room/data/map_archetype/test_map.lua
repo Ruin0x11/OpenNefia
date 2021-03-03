@@ -28,6 +28,7 @@ local function add_test_maps(proto)
    assert(proto.on_generate_map)
 
    -- hotloading support
+   -- BUG but not if you add a new event callback while running
    for k, v in pairs(map) do
       if type(v) == "function" and type(proto[k]) == "function" then
          map[k] = function(...) return proto[k](...) end

@@ -200,7 +200,7 @@ local map_tile = {
    { atlas = 1, id = 19,  name = "desert" },
    { atlas = 1, id = 20,  name = "desert_flowers_1" },
    { atlas = 1, id = 21,  name = "desert_flowers_2" },
-   { atlas = 1, id = 29,  name = "grass_rock" },
+   { atlas = 1, id = 29,  name = "drydock" },
    { atlas = 1, id = 30,  name = "field_1" },
    { atlas = 1, id = 31,  name = "field_2" },
    { atlas = 1, id = 33,  name = "dark_dirt_1" },

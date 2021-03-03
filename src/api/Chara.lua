@@ -35,16 +35,21 @@ function Chara.at(x, y, map)
 end
 
 local function iter(a, i)
-   if i > #a.uids then
-      return nil
-   end
    if a.map == nil then
       return nil
    end
 
-   local d = a.map:get_object_of_type("base.chara", a.uids[i])
-   assert(d ~= nil, a.uids[i])
-   i = i + 1
+   local d
+   while d == nil and i <= #a.uids do
+      -- The object can be nil if we try iterating allies when half the party is
+      -- in one map and the rest is in another.
+      d = a.map:get_object_of_type("base.chara", a.uids[i])
+      i = i + 1
+   end
+
+   if d == nil then
+      return nil
+   end
 
    return i, d
 end

@@ -661,6 +661,14 @@ Event.register("elona_sys.on_apply_effect", "Stop activity", function(chara, par
                   end
 end)
 
+local function proc_confusion_message(chara)
+   if chara:is_player() and chara:has_effect("elona.confusion") then
+      Gui.mes_duplicate()
+      Gui.mes("action.move.confused")
+   end
+end
+Event.register("base.before_chara_moved", "Proc confusion message", proc_confusion_message, { priority = 200000 })
+
 
 require("mod.elona_sys.event.instantiate_feat")
 require("mod.elona_sys.event.instantiate_item")

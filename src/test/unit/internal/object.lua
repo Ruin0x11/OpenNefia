@@ -3,6 +3,11 @@ local Assert = require("api.test.Assert")
 local InstancedMap = require("api.InstancedMap")
 local test_util = require("test.lib.test_util")
 
+function test_object___tostring()
+   local putit = Chara.create("elona.putit", nil, nil, {ownerless=true})
+   Assert.matches("^<object %('base.chara', uid [0-9]+%) .*>$", tostring(putit))
+end
+
 function test_object__get_reserved_field()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
@@ -73,5 +78,35 @@ function test_object_serialize()
       Assert.throws_error(function() player.x = "dood" end, is_reserved)
       Assert.throws_error(function() player.y = "dood" end, is_reserved)
       Assert.throws_error(function() player.location = "dood" end, is_reserved)
+   end
+end
+
+function test_object_change_prototype()
+   do
+      local map = InstancedMap:new(10, 10)
+      map:clear("elona.cobble")
+      test_util.set_player(map)
+      test_util.register_map(map)
+
+      local putit = Chara.create("elona.putit", 5, 5, {}, map)
+      Assert.eq("elona.putit", putit._id)
+      Assert.eq("elona.putit", putit.proto._id)
+
+      -- Headcanon.
+      putit:change_prototype("elona.zeome")
+      Assert.eq("elona.zeome", putit._id)
+      Assert.eq("elona.zeome", putit.proto._id)
+   end
+
+   test_util.save_cycle()
+
+   do
+      local player = Chara.player()
+      local map = player:current_map()
+
+      local zeome = Chara.find("elona.zeome", "all", map)
+      Assert.is_truthy(zeome)
+      Assert.eq("elona.zeome", zeome._id)
+      Assert.eq("elona.zeome", zeome.proto._id)
    end
 end

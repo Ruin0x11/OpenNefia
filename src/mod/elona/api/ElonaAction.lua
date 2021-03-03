@@ -358,7 +358,7 @@ end
 function ElonaAction.bash(chara, x, y)
    -- >>>>>>>> shade2/action.hsp:388     if map(x,y,5)!0{ ..
    for _, item in Item.at(x, y) do
-      local result = item:emit("elona_sys.on_bash", {chara=chara}, nil)
+      local result = item:emit("elona_sys.on_item_bash", {chara=chara}, nil)
       if result then return result end
    end
 
@@ -397,7 +397,7 @@ function ElonaAction.bash(chara, x, y)
    end
 
    for _, feat in Feat.at(x, y) do
-      local result = feat:emit("elona_sys.on_bash", {chara=chara})
+      local result = feat:emit("elona_sys.on_feat_bash", {chara=chara})
       if result then return true end
    end
 

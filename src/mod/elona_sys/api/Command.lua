@@ -179,7 +179,7 @@ function Command.search(player)
       end
    end
 
-   player:emit("elona_sys.on_search")
+   player:emit("elona_sys.on_chara_search")
 
    return "turn_end"
 end

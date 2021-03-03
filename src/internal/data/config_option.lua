@@ -3,6 +3,7 @@ local draw = require("internal.draw")
 local config = require("internal.config")
 local Log = require("api.Log")
 local Draw = require("api.Draw")
+local startup = require("game.startup")
 
 data:add_multi(
    "base.config_option",
@@ -140,8 +141,8 @@ data:add_multi(
          choices = { "windowed", "desktop", "exclusive" },
          default = "windowed",
 
-         on_changed = function(v, startup)
-            if not startup then
+         on_changed = function(v, is_startup)
+            if not is_startup then
                draw.reload_window_mode()
             end
          end
@@ -157,8 +158,8 @@ data:add_multi(
             return fun.iter(modes):filter(filter):map(map):to_list()
          end,
 
-         on_changed = function(v, startup)
-            if not startup and config.base.screen_mode == "exclusive" then
+         on_changed = function(v, is_startup)
+            if not is_startup and config.base.screen_mode == "exclusive" then
                draw.reload_window_mode()
             end
          end
@@ -658,8 +659,8 @@ data:add_multi(
 
          type = "integer",
          default = 100,
-         on_changed = function(v, startup)
-            if not startup then
+         on_changed = function(v, is_startup)
+            if not is_startup then
                startup.set_gc_params()
             end
          end
@@ -669,8 +670,8 @@ data:add_multi(
 
          type = "integer",
          default = 800,
-         on_changed = function(v, startup)
-            if not startup then
+         on_changed = function(v, is_startup)
+            if not is_startup then
                startup.set_gc_params()
             end
          end
