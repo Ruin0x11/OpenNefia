@@ -12857,7 +12857,7 @@ local item =
                   local chara_proto = data["base.chara"]:ensure(chara)
 
                   if chara_proto.on_eat_corpse and Rand.one_in(3) then
-                     chara_proto:on_eat_corpse(self, params, result)
+                     chara_proto.on_eat_corpse(self, params, result)
                   end
 
                   return result
@@ -12932,7 +12932,7 @@ local item =
                   local dat = data["base.chara"]:ensure(chara)
 
                   if dat.on_eat_corpse and Rand.one_in(3) then
-                     dat:on_eat_corpse(self, params, result)
+                     dat.on_eat_corpse(self, params, result)
                   end
 
                   return result
