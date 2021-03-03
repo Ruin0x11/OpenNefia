@@ -29,6 +29,9 @@ function IActivity:interrupt()
 end
 
 function IActivity:get_default_turns(params, chara)
+   -- TODO remove params argument (#133)
+   assert(type(params) == "table")
+   assert(type(chara) == "table")
    local turns
    local d = self.proto.default_turns
    if type(d) == "function" then

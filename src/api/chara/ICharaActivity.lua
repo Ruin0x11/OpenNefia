@@ -89,7 +89,7 @@ function ICharaActivity:start_activity(id, params, turns)
    if turns then
       self.activity.turns = turns
    else
-      self.activity.turns = self.activity:get_default_turns()
+      self.activity.turns = self.activity:get_default_turns(params, self)
    end
 
    self.activity.turns = math.floor(self.activity.turns)
