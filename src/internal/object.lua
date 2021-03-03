@@ -231,12 +231,12 @@ function object.deserialize(self, _type, _id)
    return setmetatable(self, mt)
 end
 
-function object.__tostring(t)
+function object:__tostring(t)
    local addr = string.gsub(string.tostring_raw(self), "^table: (.*)", "%1")
    return ("<object ('%s', uid %d) %s>"):format(t._type, t.uid, addr)
 end
 
-function object.__inspect(t)
+function object:__inspect(t)
    local n = {}
    for k, v in pairs(t) do
       if not (type(k) == "string" and string.match(k, "^__")) then
