@@ -1,224 +1,226 @@
 return {
-  material = {
-    _0 = {
-      desc = "Just garbage.",
-      name = "Garbage"
-    },
-    _1 = {
-      desc = "Chips used in casinos.",
-      name = "Casino chip"
-    },
-    _10 = {
-      desc = "Hard to gather.",
-      name = "Angel's tear"
-    },
-    _11 = {
-      desc = "Never dries up.",
-      name = "Witch's tear"
-    },
-    _12 = {
-      desc = "Very salty.",
-      name = "Seawater"
-    },
-    _13 = {
-      desc = "It's making a whining sound.",
-      name = "Howling weed"
-    },
-    _14 = {
-      desc = "A faintly reddish weed.",
-      name = "Red weed"
-    },
-    _15 = {
-      desc = "A faintly blueish weed.",
-      name = "Blue weed"
-    },
-    _16 = {
-      desc = "A cursed weed.",
-      name = "Curse weed"
-    },
-    _17 = {
-      desc = "It's blessed.",
-      name = "Holy weed"
-    },
-    _18 = {
-      desc = "Scut.",
-      name = "Rabbit's tail"
-    },
-    _19 = {
-      desc = "It's regenerating.",
-      name = "Troll gene"
-    },
-    _2 = {
-      desc = "This is good quality charcoal.",
-      name = "Charcoal"
-    },
-    _20 = {
-      desc = "It won't melt somehow.",
-      name = "Snow"
-    },
-    _21 = {
-      desc = "Fairies leave it.",
-      name = "Fairy dust"
-    },
-    _22 = {
-      desc = "Elemental.",
-      name = "Element fragment"
-    },
-    _23 = {
-      desc = "It is discharging.",
-      name = "Electricity"
-    },
-    _24 = {
-      desc = "It's as black as coal.",
-      name = "Black mist"
-    },
-    _25 = {
-      desc = "Somehow it's not cooling down.",
-      name = "Hot water"
-    },
-    _26 = {
-      desc = "This is hot.",
-      name = "Fire stone"
-    },
-    _27 = {
-      desc = "This is cool.",
-      name = "Ice stone"
-    },
-    _28 = {
-      desc = "It's electrified.",
-      name = "Discharging stone"
-    },
-    _29 = {
-      desc = "Very light.",
-      name = "Floating weed"
-    },
-    _3 = {
-      desc = "Common driftwood.",
-      name = "Driftwood"
-    },
-    _30 = {
-      desc = "Unknown magical mass.",
-      name = "Magic mass"
-    },
-    _31 = {
-      desc = "It's common.",
-      name = "Human gene"
-    },
-    _32 = {
-      desc = "These eyes are still moving.",
-      name = "Witch's eye"
-    },
-    _33 = {
-      desc = "A tanned hide.",
-      name = "Leather"
-    },
-    _34 = {
-      desc = "It's pretty rare.",
-      name = "Sap of Yaggdrasil"
-    },
-    _35 = {
-      desc = "Magical paper.",
-      name = "Magic paper"
-    },
-    _36 = {
-      desc = "Wizards love to use it.",
-      name = "Magic ink"
-    },
-    _37 = {
-      desc = "Almost unusable.",
-      name = "Curved stick"
-    },
-    _38 = {
-      desc = "It never shuts up.",
-      name = "Yelling madman"
-    },
-    _39 = {
-      desc = "Very short.",
-      name = "Bear's tail"
-    },
-    _4 = {
-      desc = "A piece of Feather.",
-      name = "Bird's feather"
-    },
-    _40 = {
-      desc = "Foreign money.",
-      name = "100 Yen coin"
-    },
-    _41 = {
-      desc = "Foreign money.",
-      name = "500 Yen coin"
-    },
-    _42 = {
-      desc = "Slightly cures wounds.",
-      name = "Medicinal weed"
-    },
-    _43 = {
-      desc = "Blank paper.",
-      name = "Paper"
-    },
-    _44 = {
-      desc = "This machine generates something.",
-      name = "Generator"
-    },
-    _45 = {
-      desc = "A piece of cloth.",
-      name = "Cloth"
-    },
-    _46 = {
-      desc = "Broken off of a tree.",
-      name = "Branch"
-    },
-    _47 = {
-      desc = "This doesn't break down easily.",
-      name = "Thick wood"
-    },
-    _48 = {
-      desc = "These are around everywhere.",
-      name = "Pebble"
-    },
-    _49 = {
-      desc = " Reminds you of something.",
-      name = "Memory fragment"
-    },
-    _5 = {
-      desc = "A drop of water.",
-      name = "Waterdrop"
-    },
-    _50 = {
-      desc = "This is magical.",
-      name = "Magic fragment"
-    },
-    _51 = {
-      desc = "Chaotic.",
-      name = "Chaos stone"
-    },
-    _52 = {
-      desc = "A good quality stone.",
-      name = "Fine stone"
-    },
-    _53 = {
-      desc = "Vein.",
-      name = "Vein"
-    },
-    _54 = {
-      desc = "It's sticky.",
-      name = "Adhesive"
-    },
-    _6 = {
-      desc = "A specially shaped piece of wood.",
-      name = "Stick"
-    },
-    _7 = {
-      desc = "Contains mithril.",
-      name = "Mithril fragment"
-    },
-    _8 = {
-      desc = "Contains ether.",
-      name = "Ether fragment"
-    },
-    _9 = {
-      desc = "Contains iron.",
-      name = "Iron fragment"
-    }
-  }
+   material = {
+      elona = {
+         kuzu = {
+            name = "Garbage",
+            desc = "Just garbage."
+         },
+         casino_chip = {
+            name = "Casino chip",
+            desc = "Chips used in casinos."
+         },
+         coin1 = {
+            name = "100 Yen coin",
+            desc = "Foreign money."
+         },
+         coin2 = {
+            name = "500 Yen coin",
+            desc = "Foreign money."
+         },
+         paper = {
+            name = "Paper",
+            desc = "Blank paper."
+         },
+         sumi = {
+            name = "Charcoal",
+            desc = "This is good quality charcoal."
+         },
+         driftwood = {
+            name = "Driftwood",
+            desc = "Common driftwood."
+         },
+         stone = {
+            name = "Pebble",
+            desc = "These are around everywhere."
+         },
+         staff = {
+            name = "Stick",
+            desc = "A specially shaped piece of wood."
+         },
+         cloth = {
+            name = "Cloth",
+            desc = "A piece of cloth."
+         },
+         yellmadman = {
+            name = "Yelling madman",
+            desc = "It never shuts up."
+         },
+         magic_mass = {
+            name = "Magic mass",
+            desc = "Unknown magical mass."
+         },
+         elec = {
+            name = "Electricity",
+            desc = "It is discharging."
+         },
+         generate = {
+            name = "Generator",
+            desc = "This machine generates something."
+         },
+         magic_frag = {
+            name = "Magic fragment",
+            desc = "This is magical."
+         },
+         stick = {
+            name = "Branch",
+            desc = "Broken off of a tree."
+         },
+         leather = {
+            name = "Leather",
+            desc = "A tanned hide."
+         },
+         string = {
+            name = "Vein",
+            desc = "Vein."
+         },
+         tight_wood = {
+            name = "Thick wood",
+            desc = "This doesn't break down easily."
+         },
+         crooked_staff = {
+            name = "Curved stick",
+            desc = "Almost unusable."
+         },
+         adhesive = {
+            name = "Adhesive",
+            desc = "It's sticky."
+         },
+         memory_frag = {
+            name = "Memory fragment",
+            desc = " Reminds you of something."
+         },
+         magic_paper = {
+            name = "Magic paper",
+            desc = "Magical paper."
+         },
+         magic_ink = {
+            name = "Magic ink",
+            desc = "Wizards love to use it."
+         },
+         sea_water = {
+            name = "Seawater",
+            desc = "Very salty."
+         },
+         waterdrop = {
+            name = "Waterdrop",
+            desc = "A drop of water."
+         },
+         tear_angel = {
+            name = "Angel's tear",
+            desc = "Hard to gather."
+         },
+         hot_water = {
+            name = "Hot water",
+            desc = "Somehow it's not cooling down."
+         },
+         tear_witch = {
+            name = "Witch's tear",
+            desc = "Never dries up."
+         },
+         snow = {
+            name = "Snow",
+            desc = "It won't melt somehow."
+         },
+         mithril_frag = {
+            name = "Mithril fragment",
+            desc = "Contains mithril."
+         },
+         steel_frag = {
+            name = "Iron fragment",
+            desc = "Contains iron."
+         },
+         fire_stone = {
+            name = "Fire stone",
+            desc = "This is hot."
+         },
+         ice_stone = {
+            name = "Ice stone",
+            desc = "This is cool."
+         },
+         elec_stone = {
+            name = "Discharging stone",
+            desc = "It's electrified."
+         },
+         good_stone = {
+            name = "Fine stone",
+            desc = "A good quality stone."
+         },
+         ether_frag = {
+            name = "Ether fragment",
+            desc = "Contains ether."
+         },
+         elem_frag = {
+            name = "Element fragment",
+            desc = "Elemental."
+         },
+         chaos_stone = {
+            name = "Chaos stone",
+            desc = "Chaotic."
+         },
+         plant1 = {
+            name = "Howling weed",
+            desc = "It's making a whining sound."
+         },
+         plant2 = {
+            name = "Red weed",
+            desc = "A faintly reddish weed."
+         },
+         plant3 = {
+            name = "Blue weed",
+            desc = "A faintly blueish weed."
+         },
+         plant4 = {
+            name = "Curse weed",
+            desc = "A cursed weed."
+         },
+         plant_heal = {
+            name = "Medicinal weed",
+            desc = "Slightly cures wounds."
+         },
+         flying_grass = {
+            name = "Floating weed",
+            desc = "Very light."
+         },
+         plant5 = {
+            name = "Holy weed",
+            desc = "It's blessed."
+         },
+         black_myst = {
+            name = "Black mist",
+            desc = "It's as black as coal."
+         },
+         sap = {
+            name = "Sap of Yaggdrasil",
+            desc = "It's pretty rare."
+         },
+         feather = {
+            name = "Bird's feather",
+            desc = "A piece of Feather."
+         },
+         tail_rabbit = {
+            name = "Rabbit's tail",
+            desc = "Scut."
+         },
+         gen_human = {
+            name = "Human gene",
+            desc = "It's common."
+         },
+         tail_bear = {
+            name = "Bear's tail",
+            desc = "Very short."
+         },
+         gen_troll = {
+            name = "Troll gene",
+            desc = "It's regenerating."
+         },
+         eye_witch = {
+            name = "Witch's eye",
+            desc = "These eyes are still moving."
+         },
+         fairy_dust = {
+            name = "Fairy dust",
+            desc = "Fairies leave it."
+         },
+      }
+   }
 }
