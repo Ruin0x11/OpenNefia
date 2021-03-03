@@ -176,6 +176,24 @@ function Gui.fade_out(length)
    draw.wait_global_draw_callbacks()
 end
 
+function Gui.fade_in(length)
+   length = length or 50
+   local anim = function()
+     Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height(), {0, 0, 0})
+     local frame = 1
+     while frame < length do
+       local _, _, frames_passed = Draw.yield(10)
+       Draw.set_blend_mode("subtract")
+       Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255, ((50-frame) * 15)})
+       Draw.set_blend_mode("alpha")
+       frame = frame + frames_passed
+     end
+   end
+
+   Draw.add_global_draw_callback(anim)
+   Draw.wait_global_draw_callbacks()
+end
+
 --- Converts from map tile space to screen space.
 ---
 --- @tparam int tx Tile X coordinate

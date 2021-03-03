@@ -4,6 +4,7 @@ local NpcMemory = require("mod.elona_sys.api.NpcMemory")
 local Gui = require("api.Gui")
 local Effect = require("mod.elona.api.Effect")
 local Chara = require("api.Chara")
+local Log = require("api.Log")
 
 Event.register("base.generate_title", "Elona title generation", function(_, params, result)
                   if result and result ~= "" then
@@ -46,7 +47,7 @@ Event.register("base.on_map_leave", "npc memory",
                   if map.is_temporary then
                      for _, v in map:iter_charas() do
                         if Chara.is_alive(v) then
-                           print( "forget " .. v._id)
+                           Log.debug("forgetting chara " .. v._id)
                            NpcMemory.forget_generated(v._id)
                         end
                      end

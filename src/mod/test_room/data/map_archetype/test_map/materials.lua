@@ -12,17 +12,9 @@ function materials.on_generate_map(area, floor)
    local x = 2
    local y = 4
 
-   local spots = {
-      "elona.material_spot",
-      "elona.material_spot_remains",
-      "elona.material_spot_spring",
-      "elona.material_spot_mine",
-      "elona.material_spot_bush",
-   }
-
-   for i, feat_id in ipairs(spots) do
+   for _, i, proto in data["elona.material_spot_feat_info"]:iter():enumerate() do
       for j = 1, 10 do
-         Feat.create(feat_id, x + i, y + j, {}, map)
+         Feat.create("elona.material_spot", x + i, y + j, {params={material_spot_info=proto._id}}, map)
       end
    end
 

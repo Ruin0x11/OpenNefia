@@ -123,10 +123,9 @@ function field_logic.turn_begin()
       return "player_died", player
    end
 
-   if player:has_activity() then
+   if player:has_activity() and config.base.auto_turn_speed ~= "highest" then
       local anim_wait = player.activity:get_animation_wait()
-      local is_auto_turn = anim_wait > 0 and config.base.auto_turn_speed ~= "highest"
-      if is_auto_turn then
+      if anim_wait > 0 then
          dt = coroutine.yield()
          field:update(dt)
       end
@@ -267,7 +266,9 @@ function field_logic.pass_turns()
 
    if chara:has_activity() then
       local turn_result = chara:pass_activity_turn()
-      Gui.update_screen()
+      if config.base.auto_turn_speed ~= "highest" then
+         Gui.update_screen()
+      end
       if turn_result then
          return turn_result, chara
       end

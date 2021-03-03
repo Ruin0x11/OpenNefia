@@ -64,12 +64,6 @@ function ICharaActivity:pass_activity_turn()
             -- With screen update
             Gui.wait(anim_wait, true)
             auto_turn_widget:pass_turn()
-         elseif auto_turn == "high" then
-            -- No screen update
-            Gui.wait(anim_wait)
-            auto_turn_widget:pass_turn()
-         elseif auto_turn == "highest" then
-            -- Don't wait at all
          end
       end
    end
@@ -109,7 +103,7 @@ function ICharaActivity:start_activity(id, params, turns)
       end
    end
 
-   if self:is_player() and not config.base.disable_auto_turn_anim then
+   if self:is_player() and config.base.auto_turn_speed ~= "highest" then
       local anim_wait = self.activity:get_animation_wait()
       if anim_wait > 0 then
          local auto_turn_anim_id = self.activity:get_auto_turn_anim() or nil

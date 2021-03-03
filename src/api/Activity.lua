@@ -12,7 +12,7 @@ function Activity.create(id, params)
       -- everything is implicitly optional for now, until we get a better
       -- typechecker
       if value ~= nil and type(value) ~= ty then
-         error(("Activity %s requires parameter '%s' of type %s, got '%s'"):format(id, property, ty, tostring(value)))
+         error(("Activity '%s' requires parameter '%s' of type %s, got '%s'"):format(id, property, ty, value))
       end
       obj[property] = value
    end

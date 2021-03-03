@@ -391,7 +391,7 @@ data:add
       end
    end,
 
-   on_descend = function(self, params) self:on_activate(params.chara) end,
+   on_descend = function(self, params) self:on_activate(params) end,
 
    events = {
       {
