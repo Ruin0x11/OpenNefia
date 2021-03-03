@@ -85,7 +85,7 @@ function food.on_map_pass_turn(map)
          end
       end
    end
-   player.nutrition = 5000
+   player.nutrition = 100000
 end
 
 function food.on_map_entered_events(map)
