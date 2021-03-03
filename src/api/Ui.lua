@@ -36,12 +36,13 @@ function Ui.params_centered(width, height, tiled)
 end
 
 
-local t
+local t_
 -- @tparam string topic
 -- @tparam int x
 -- @tparam int y
-function Ui.draw_topic(topic, x, y)
-   t = t or UiTheme.load()
+function Ui.draw_topic(topic, x, y, t)
+   t_ = t_ or UiTheme.load() -- TODO pass as argument?
+   t = t or t_
    Draw.set_font(12, "bold")
    Draw.set_color(255, 255, 255)
    t.base.tip_icons:draw_region(1, x, y + 7)

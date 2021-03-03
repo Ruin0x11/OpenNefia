@@ -9,11 +9,11 @@ return {
             name = "Casino chip",
             desc = "Chips used in casinos."
          },
-         coin1 = {
+         coin_1 = {
             name = "100 Yen coin",
             desc = "Foreign money."
          },
-         coin2 = {
+         coin_2 = {
             name = "500 Yen coin",
             desc = "Foreign money."
          },
@@ -157,19 +157,19 @@ return {
             name = "Chaos stone",
             desc = "Chaotic."
          },
-         plant1 = {
+         plant_1 = {
             name = "Howling weed",
             desc = "It's making a whining sound."
          },
-         plant2 = {
+         plant_2 = {
             name = "Red weed",
             desc = "A faintly reddish weed."
          },
-         plant3 = {
+         plant_3 = {
             name = "Blue weed",
             desc = "A faintly blueish weed."
          },
-         plant4 = {
+         plant_4 = {
             name = "Curse weed",
             desc = "A cursed weed."
          },
@@ -181,7 +181,7 @@ return {
             name = "Floating weed",
             desc = "Very light."
          },
-         plant5 = {
+         plant_5 = {
             name = "Holy weed",
             desc = "It's blessed."
          },

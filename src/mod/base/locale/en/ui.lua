@@ -565,7 +565,10 @@ end
     },
     material = {
       detail = "Detail",
-      name = "Name"
+      name = "Name",
+      amount = function(name, amount)
+         return ("%s x %d"):format(name, amount)
+      end
     },
     menu = {
       change = "Change",

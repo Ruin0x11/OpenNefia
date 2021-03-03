@@ -179,8 +179,8 @@ function InventoryMenu:relayout(x, y)
    self.height = 432
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.t = UiTheme.load(self)
-
    self.chip_batch = Draw.make_chip_batch("chip")
+
    -- >>>>>>>> shade2/command.hsp:3569 		x=winPosX(640)+455 ...
    local te_width, te_height = 200, 102
    local te_x, te_y = Ui.params_centered(self.width, self.height)

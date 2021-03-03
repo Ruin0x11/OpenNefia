@@ -259,7 +259,7 @@ function Hunger.add_rotten_food_exp_losses(chara, exp_gains, nutrition)
 end
 
 function Hunger.is_human_flesh(food)
-   if food._id == "elona.corpse" then
+   if food._id == "elona.corpse" and food.params.chara_id then
       local chara_proto = data["base.chara"]:ensure(food.params.chara_id)
       if table.index_of(chara_proto.tags, "man") then
          return true

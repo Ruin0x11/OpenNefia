@@ -3,6 +3,7 @@ local Gui = require("api.Gui")
 local Chara = require("api.Chara")
 local EquipmentMenu = require("api.gui.menu.EquipmentMenu")
 local FeatsMenu = require("api.gui.menu.FeatsMenu")
+local MaterialsMenu = require("api.gui.menu.MaterialsMenu")
 
 local CharacterInfoMenu = require("api.gui.menu.CharacterInfoMenu")
 local IInput = require("api.gui.IInput")
@@ -32,11 +33,10 @@ function CharacterInfoWrapper:init()
       { icon = 12, text = "ui.menu.chara.material" },
    }
    self.menus = {
-      { klass = CharacterInfoMenu, sound = "base.chara" },
-      { klass = EquipmentMenu, sound = "base.wear" },
-      { klass = FeatsMenu, sound = "base.feat" },
-      -- TODO material spot
-      { klass = CharacterInfoMenu, sound = "base.chara" },
+      CharacterInfoMenu,
+      EquipmentMenu,
+      FeatsMenu,
+      MaterialsMenu
    }
 
    self.selected_index = 1
@@ -72,9 +72,9 @@ end
 
 function CharacterInfoWrapper:switch_context()
    local menu = self.menus[self.selected_index]
-   Gui.play_sound(menu.sound)
-   self.submenu = menu.klass:new(Chara.player())
+   self.submenu = menu:new(Chara.player())
    self.input:forward_to(self.submenu)
+   self.submenu:on_query()
 
    self.icon_bar:select(self.selected_index)
 

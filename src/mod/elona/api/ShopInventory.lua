@@ -87,7 +87,7 @@ end
 -- removed.
 ShopInventory.item_exclusions = {
    { _category = "elona.drink", _id = "core.bottle_of_water" },
-   { _category = "elona.food", _category = "elona.crop_seed" }
+   { _category = "elona.crop_seed" }
 }
 
 local function is_excluded(item)

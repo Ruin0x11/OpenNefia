@@ -208,6 +208,10 @@ function FeatsMenu:make_keymap()
    }
 end
 
+function FeatsMenu:on_query()
+   Gui.play_sound("base.feat")
+end
+
 function FeatsMenu:relayout(x, y)
    self.width = 730
    self.height = 430

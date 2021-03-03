@@ -9,11 +9,11 @@ return {
             name = "カジノチップ",
             desc = "カジノで使うチップ"
          },
-         coin1 = {
+         coin_1 = {
             name = "100Yen硬貨",
             desc = "異国のお金"
          },
-         coin2 = {
+         coin_2 = {
             name = "500Yen硬貨",
             desc = "異国のお金"
          },
@@ -157,19 +157,19 @@ return {
             name = "混沌の石",
             desc = "混沌の力が封じられた石"
          },
-         plant1 = {
+         plant_1 = {
             name = "唸る草",
             desc = "変な音を出す草"
          },
-         plant2 = {
+         plant_2 = {
             name = "赤い草",
             desc = "ほんのり赤い草"
          },
-         plant3 = {
+         plant_3 = {
             name = "青い草",
             desc = "ほんのり青い草"
          },
-         plant4 = {
+         plant_4 = {
             name = "呪いの草",
             desc = "呪われた草"
          },
@@ -181,7 +181,7 @@ return {
             name = "浮き草",
             desc = "とても軽い草"
          },
-         plant5 = {
+         plant_5 = {
             name = "聖なる草",
             desc = "祝福された草"
          },

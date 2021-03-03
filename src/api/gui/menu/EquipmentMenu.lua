@@ -184,7 +184,6 @@ function EquipmentMenu:update_from_chara()
 end
 
 function EquipmentMenu:on_query()
-   self.canceled = false
    Gui.play_sound("base.wear");
 end
 
@@ -248,7 +247,10 @@ function EquipmentMenu.message_weapon_stats(chara)
 end
 
 function EquipmentMenu:update()
-   if self.canceled then
+   local canceled = self.canceled
+   self.canceled = false
+
+   if canceled then
       if self.changed_equipment then
          Gui.mes("action.equip.you_change")
          return "turn_end"
@@ -274,8 +276,8 @@ function EquipmentMenu:update()
             end
          end
       else
-         local result, canceled = Input.query_item(self.chara, "elona.inv_equip", { params = {body_part_id = entry.body_part._id} })
-         if not canceled then
+         local result, query_canceled = Input.query_item(self.chara, "elona.inv_equip", { params = {body_part_id = entry.body_part._id} })
+         if not query_canceled then
             local selected_item = result.result
             assert(Action.equip(self.chara, selected_item, slot))
             -- >>>>>>>> shade2/command.hsp:3743 			snd seEquip ..

@@ -1134,7 +1134,7 @@ local function dig_random_site(activity, params)
       end
 
       if id then
-         Material.obtain(chara, id, amount, txt_type)
+         Material.gain(chara, id, amount, txt_type)
       end
    end
 
