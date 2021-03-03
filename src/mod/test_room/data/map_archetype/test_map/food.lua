@@ -88,6 +88,25 @@ function food.on_map_pass_turn(map)
    player.nutrition = 5000
 end
 
+function food.on_map_entered_events(map)
+   if Chara.player():iter_other_party_members(map):all(function(i) return i._id ~= "elona.golden_knight" end) then
+      for _ = 1, 14 do
+         local knight = Chara.create("elona.golden_knight", nil, nil, {}, map)
+         Chara.player():recruit_as_ally(knight)
+         knight.nutrition = 0
+      end
+   end
+
+   local starve = function(chara) chara.nutrition = 0 end
+   for _, ally in Chara.iter_allies(map) do
+      if not ally:is_player() then
+         if not ally:has_event_handler("base.on_chara_turn_end", "set to starving each turn") then
+            ally:connect_self("base.on_chara_turn_end", "set to starving each turn", starve)
+         end
+      end
+   end
+end
+
 function food.on_generate_map(area, floor)
    local map = utils.create_map(20, 30)
    utils.create_stairs(2, 2, area, map)
@@ -113,23 +132,6 @@ function food.on_generate_map(area, floor)
 
    y = y + 2
    x, y = create_on_eat_foods(x, y, 20 - 4, map)
-
-   if Chara.player():iter_other_party_members():all(function(i) return i._id ~= "elona.golden_knight" end) then
-      for _ = 1, 14 do
-         local knight = Chara.create("elona.golden_knight", nil, nil, {}, map)
-         Chara.player():recruit_as_ally(knight)
-         knight.nutrition = 0
-      end
-   end
-
-   local starve = function(chara) chara.nutrition = 0 end
-   for _, ally in Chara.iter_allies() do
-      if not ally:is_player() then
-         if not ally:has_event_handler("base.on_chara_turn_end", "set to starving each turn") then
-            ally:connect_self("base.on_chara_turn_end", "set to starving each turn", starve)
-         end
-      end
-   end
 
    for _, item in Item.iter(map) do
       item.curse_state = Enum.CurseState.Normal

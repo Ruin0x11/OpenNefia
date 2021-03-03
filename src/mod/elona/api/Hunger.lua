@@ -57,7 +57,6 @@ function Hunger.make_dish(item, quality)
    end
 
    item.image = Hunger.get_food_image(food_type, quality)
-   print("setimage", item.image)
    item.weight = 500
    if item.spoilage_date and item.spoilage_date >= 0 then
       item.spoilage_date = 72 + World.date_hours()
