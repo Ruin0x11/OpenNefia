@@ -1124,7 +1124,7 @@ local function dig_random_site(activity, params)
    local site_data = data["elona.material_spot"]:ensure(site)
 
    if Rand.one_in(7) then
-      local choices = nil -- TODO
+      local choices = site_data.materials or {}
       local id, txt_type
       local amount = 1
       if site_data.on_search then

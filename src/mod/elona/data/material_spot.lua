@@ -110,7 +110,7 @@ data:add {
       local mat_level = params.material_level
       local mat_choices = params.material_choices
 
-      return Material.random_material_id(mat_level, 0, mat_choices), "activity.dig"
+      return Material.random_material_id(mat_level, 0, mat_choices)
    end,
    on_finish = "activity.dig",
 
@@ -133,7 +133,7 @@ data:add {
       local mat_level = params.material_level
       local mat_choices = params.material_choices
 
-      return Material.random_material_id(mat_level, 0, mat_choices), "activity.dig"
+      return Material.random_material_id(mat_level, 0, mat_choices)
    end,
    on_finish = "activity.dig",
 
@@ -159,9 +159,10 @@ data:add {
       local mat_level = params.material_level
       local mat_choices = params.material_choices
 
-      return Material.random_material_id(mat_level, 0, mat_choices), "activity.dig"
+      return Material.random_material_id(mat_level, 0, mat_choices)
    end,
    on_finish = "activity.dig",
+   get_verb = "activity.material.get_verb",
 
    materials = {
       "elona.plant_1",
