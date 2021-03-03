@@ -81,7 +81,7 @@ data:add {
          local frame = 0
          local played_sound = false
          while frame < 10 do
-            if frame >= 2 then
+            if frame >= 2 and not played_sound then
                Gui.play_sound("base.dig2")
                played_sound = true
             end

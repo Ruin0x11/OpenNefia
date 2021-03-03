@@ -123,9 +123,9 @@ function field_logic.turn_begin()
       return "player_died", player
    end
 
-   if player:has_activity() then
-      local is_auto_turn = player.activity.proto.animation_wait > 0 and config.base.auto_turn_speed ~= "highest"
-      if is_auto_turn then
+   if player:has_activity() and config.base.auto_turn_speed ~= "highest" then
+      local anim_wait = player.activity:get_animation_wait()
+      if anim_wait > 0 then
          dt = coroutine.yield()
          field:update(dt)
       end
@@ -224,7 +224,7 @@ function field_logic.pass_turns()
    local result = chara:emit("base.before_chara_turn_start", {is_first_turn=is_first_turn}, {blocked=false})
    if result.blocked then
       if result.wait then
-         Gui.wait(result.wait)
+         Gui.wait(result.wait, true)
       end
       return result.turn_result or "turn_end", chara
    end
@@ -266,12 +266,14 @@ function field_logic.pass_turns()
 
    if chara:has_activity() then
       local turn_result = chara:pass_activity_turn()
+      if config.base.auto_turn_speed ~= "highest" then
+         Gui.update_screen()
+      end
       if turn_result then
          return turn_result, chara
       end
       Log.warn("Activity '%s' on chara %d (%s) did not return turn result", chara:get_activity()._id, chara.uid, chara._id)
       return "pass_turns"
-   else
    end
 
    if Chara.is_alive(chara) then

@@ -10,15 +10,16 @@ end
 Event.register("base.on_hotload_object", "reload events for feat", reload_feat_events)
 
 local actions = {
-   "bash",        -- on_bash,        can_bash,        elona_sys.on_feat_bash
-   "activate",    -- on_activate,    can_activate,    elona_sys.on_feat_activate
-   "search",      -- on_search,      can_search,      elona_sys.on_feat_search
-   "open",        -- on_open,        can_open,        elona_sys.on_feat_open
-   "close",       -- on_close,       can_close,       elona_sys.on_feat_close
-   "descend",     -- on_descend,     can_descend,     elona_sys.on_feat_descend
-   "ascend",      -- on_ascend,      can_ascend,      elona_sys.on_feat_ascend
-   "bumped_into", -- on_bumped_into, can_bumped_into, elona_sys.on_feat_bumped_into
-   "stepped_on",  -- on_stepped_on,  can_stepped_on,  elona_sys.on_feat_stepped_on
+   "bash",                 -- on_bash,                 can_bash,                 elona_sys.on_feat_bash
+   "activate",             -- on_activate,             can_activate,             elona_sys.on_feat_activate
+   "search",               -- on_search,               can_search,               elona_sys.on_feat_search
+   "search_from_distance", -- on_search_from_distance, can_search_from_distance, elona_sys.on_feat_search_from_distance
+   "open",                 -- on_open,                 can_open,                 elona_sys.on_feat_open
+   "close",                -- on_close,                can_close,                elona_sys.on_feat_close
+   "descend",              -- on_descend,              can_descend,              elona_sys.on_feat_descend
+   "ascend",               -- on_ascend,               can_ascend,               elona_sys.on_feat_ascend
+   "bumped_into",          -- on_bumped_into,          can_bumped_into,          elona_sys.on_feat_bumped_into
+   "stepped_on",           -- on_stepped_on,           can_stepped_on,           elona_sys.on_feat_stepped_on
 }
 
 local function connect_feat_events(obj)

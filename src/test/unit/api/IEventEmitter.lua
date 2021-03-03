@@ -12,6 +12,12 @@ function test_IEventEmitter_has_event_handler()
    Assert.eq(false, item:has_event_handler("elona_sys.on_item_use"))
 end
 
+function test_IEventEmitter_has_event_handler__throws_if_invalid()
+   local item = Item.create("elona.putitoro", nil, nil, {ownerless=true})
+
+   Assert.throws_error(function() item:has_event_handler("dood") end, "Unknown event type \"dood\"")
+end
+
 function test_IEventEmitter_disconnect_self()
    local item = Item.create("elona.putitoro", nil, nil, {ownerless=true})
    Assert.eq(false, item:has_event_handler("elona_sys.on_item_throw"))

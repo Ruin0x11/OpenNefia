@@ -22,6 +22,7 @@ local event = {
       { _id = "on_feat_bash" },
       { _id = "on_feat_activate" },
       { _id = "on_feat_search" },
+      { _id = "on_feat_search_from_distance" },
       { _id = "on_feat_open" },
       { _id = "on_feat_close" },
       { _id = "on_feat_descend" },

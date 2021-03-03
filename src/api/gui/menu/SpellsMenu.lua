@@ -116,21 +116,26 @@ function SpellsMenu:draw()
    self.pages:draw()
 end
 
-function SpellsMenu:update()
-   if self.canceled then
+function SpellsMenu:update(dt)
+   local canceled = self.canceled
+   local changed = self.pages.changed
+   local chosen = self.pages.chosen
+
+   self.canceled = false
+   self.win:update(dt)
+   self.pages:update(dt)
+
+   if canceled then
       last_index = self.pages:selected_index()
       return nil, "canceled"
    end
 
-   if self.pages.changed then
+   if changed then
       self.win:set_pages(self.pages)
-   elseif self.pages.chosen then
+   elseif chosen then
       last_index = self.pages:selected_index()
       return { type = "spell", _id = self.pages:selected_item()._id }
    end
-
-   self.win:update()
-   self.pages:update()
 end
 
 function SpellsMenu:on_hotload_layer()

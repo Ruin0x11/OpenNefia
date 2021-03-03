@@ -1,4 +1,4 @@
-local function gen_window_regions()
+local function window_regions()
    local quad = {}
 
    quad["fill"] = { 24, 24, 228, 144 }
@@ -527,6 +527,12 @@ local assets = {
       image = "graphic/ie_sheet.bmp",
    },
    {
+      _id = "ie_scroll",
+      image = "graphic/ie_scroll.bmp",
+
+      regions = window_regions()
+   },
+   {
       _id = "ime_status_english",
       source = "graphic/interface.bmp",
       x = 24,
@@ -565,7 +571,7 @@ local assets = {
       y = 48,
       width = 264,
       height = 192,
-      regions = gen_window_regions() -- ()
+      regions = window_regions()
    },
    {
       _id = "window_0",

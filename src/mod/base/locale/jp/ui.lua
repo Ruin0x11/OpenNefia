@@ -565,7 +565,10 @@ return {
       },
       material = {
          detail = "説明",
-         name = "所持マテリアル"
+         name = "所持マテリアル",
+         amount = function(name, amount)
+            return ("%s × %d"):format(name, amount)
+         end
       },
       menu = {
          change = "メニュー切替",

@@ -1,4 +1,5 @@
 --- @module Feat
+local data = require("internal.data")
 
 local Event = require("api.Event")
 local Map = require("api.Map")
@@ -53,6 +54,19 @@ function Feat.is_alive(feat, map)
    return their_map.uid == map.uid
 end
 
+local function copy_params(feat, params)
+   local proto = data["base.feat"]:ensure(feat._id)
+   for property, ty in pairs(proto.params or {}) do
+      local value = params[property]
+      -- everything is implicitly optional for now, until we get a better
+      -- typechecker
+      if value ~= nil and type(value) ~= ty then
+         error(("Feat '%s' requires parameter '%s' of type %s, got '%s'"):format(feat._id, property, ty, value))
+      end
+      feat.params[property] = value
+   end
+end
+
 --- Creates a new feat. Returns the feat on success, or nil if
 --- creation failed.
 ---
@@ -101,6 +115,11 @@ function Feat.create(id, x, y, params, where)
       no_build = params.no_build
    }
    local feat = MapObject.generate_from("base.feat", id)
+
+   feat.params = {}
+   if params.params then
+      copy_params(feat, params.params)
+   end
 
    if where then
       feat = where:take_object(feat, x, y)

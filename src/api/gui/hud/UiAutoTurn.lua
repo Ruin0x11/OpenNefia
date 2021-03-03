@@ -5,6 +5,7 @@ local TopicWindow = require("api.gui.TopicWindow")
 local UiShadowedText = require("api.gui.UiShadowedText")
 local save = require("internal.global.save")
 local data = require("internal.data")
+local Log = require("api.Log")
 
 local UiAutoTurn = class.class("UiAutoTurn", IUiWidget)
 
@@ -47,7 +48,13 @@ function UiAutoTurn:set_shown(shown, auto_turn_anim_id)
    self.first_anim_frame = true
 
    if shown and auto_turn_anim_id then
-      self.auto_turn_anim = data["base.auto_turn_anim"]:ensure(auto_turn_anim_id)
+      local ata = data["base.auto_turn_anim"][auto_turn_anim_id]
+      if ata then
+         self.auto_turn_anim = ata
+      else
+         Log.error("Invalid auto turn animation '%s'", auto_turn_anim_id)
+         self.auto_turn_anim = nil
+      end
    else
       self.auto_turn_anim = nil
    end
