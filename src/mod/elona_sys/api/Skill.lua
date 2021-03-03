@@ -791,6 +791,9 @@ function Skill.modify_resist_level(chara, element_id, delta, no_message)
       end
    end
 
+   if not chara:has_resist(element_id) then
+      chara:gain_resist(element_id)
+   end
    chara.skills["base.element:" .. element_id].level = level
 
    if not no_message then

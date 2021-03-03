@@ -4416,7 +4416,7 @@ local item =
                         Effect.damage_insanity(chara, 15)
                         chara:apply_effect("elona.insanity", 150)
                         if not chara:has_trait("elona.eat_human") and Rand.one_in(5) then
-                           chara:gain_trait("elona.eat_human")
+                           chara:modify_trait_level("elona.eat_human", 1)
                         end
                      end
                   elseif chara:has_trait("elona.eat_human") then

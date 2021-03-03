@@ -4,6 +4,8 @@ local Chara = require("api.Chara")
 local Hunger = require("mod.elona.api.Hunger")
 local Rand = require("api.Rand")
 local MapgenUtils = require("mod.elona.api.MapgenUtils")
+local Map = require("api.Map")
+local Enum = require("api.Enum")
 
 local food = {
    _id = "food"
@@ -72,6 +74,20 @@ local function create_on_eat_foods(x, y, width, map)
    return utils.roundup(items, x, y, width)
 end
 
+function food.on_map_pass_turn(map)
+   local player = Chara.player()
+   for _, chara in player:iter_other_party_members() do
+      if not Chara.is_alive(chara) then
+         local x, y = Map.find_free_position(player.x, player.y, {only_map=true}, map)
+         if x then
+            chara:revive()
+            chara:set_pos(x, y)
+         end
+      end
+   end
+   player.nutrition = 5000
+end
+
 function food.on_generate_map(area, floor)
    local map = utils.create_map(20, 30)
    utils.create_stairs(2, 2, area, map)
@@ -98,10 +114,25 @@ function food.on_generate_map(area, floor)
    y = y + 2
    x, y = create_on_eat_foods(x, y, 20 - 4, map)
 
-   if Chara.player():iter_other_party_members():all(function(i) return i._id ~= "elona.cute_fairy" end) then
-      local fairy = Chara.create("elona.cute_fairy", nil, nil, {}, map)
-      Chara.player():recruit_as_ally(fairy)
-      fairy.nutrition = 0
+   if Chara.player():iter_other_party_members():all(function(i) return i._id ~= "elona.golden_knight" end) then
+      for _ = 1, 14 do
+         local knight = Chara.create("elona.golden_knight", nil, nil, {}, map)
+         Chara.player():recruit_as_ally(knight)
+         knight.nutrition = 0
+      end
+   end
+
+   local starve = function(chara) chara.nutrition = 0 end
+   for _, ally in Chara.iter_allies() do
+      if not ally:is_player() then
+         if not ally:has_event_handler("base.on_chara_turn_end", "set to starving each turn") then
+            ally:connect_self("base.on_chara_turn_end", "set to starving each turn", starve)
+         end
+      end
+   end
+
+   for _, item in Item.iter(map) do
+      item.curse_state = Enum.CurseState.Normal
    end
 
    MapgenUtils.spray_tile(map, "elona.dryground", 30)
