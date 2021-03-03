@@ -34,7 +34,7 @@ function test_object_change_prototype__mef_callbacks_added()
       Chara.set_player(player)
       test_util.register_map(map)
 
-      local mef = Mef.create("base.nonsteppable", nil, nil, {}, map)
+      local mef = Mef.create("base.nonsteppable", 2, 2, {}, map)
       Assert.is_falsy(mef:has_event_handler("elona_sys.on_mef_stepped_on"))
 
       mef:change_prototype("base.steppable")
@@ -61,7 +61,7 @@ function test_object_change_prototype__mef_callbacks_removed()
       Chara.set_player(player)
       test_util.register_map(map)
 
-      local mef = Mef.create("base.steppable", nil, nil, {}, map)
+      local mef = Mef.create("base.steppable", 2, 2, {}, map)
       Assert.is_truthy(mef:has_event_handler("elona_sys.on_mef_stepped_on"))
 
       mef:change_prototype("base.nonsteppable")
@@ -87,7 +87,7 @@ function test_object_change_prototype__mef_callbacks_preserved()
    Chara.set_player(player)
    test_util.register_map(map)
 
-   local mef = Mef.create("base.steppable", nil, nil, {}, map)
+   local mef = Mef.create("base.steppable", 2, 2, {}, map)
    mef:connect_self("elona_sys.on_mef_stepped_on", "Unrelated event", function() end)
    Assert.is_truthy(mef:has_event_handler("elona_sys.on_mef_stepped_on"))
 

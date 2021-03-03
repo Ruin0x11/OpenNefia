@@ -34,7 +34,7 @@ function test_feat_event_emitter_callbacks_restored()
       Chara.set_player(player)
       test_util.register_map(map)
 
-      local feat = Feat.create("base.bashable", nil, nil, {}, map)
+      local feat = Feat.create("base.bashable", 2, 2, {}, map)
       Assert.is_truthy(feat:has_event_handler("elona_sys.on_feat_bash"))
    end
 
@@ -58,7 +58,7 @@ function test_object_change_prototype__feat_callbacks_added()
       Chara.set_player(player)
       test_util.register_map(map)
 
-      local feat = Feat.create("base.nonbashable", nil, nil, {}, map)
+      local feat = Feat.create("base.nonbashable", 2, 2, {}, map)
       Assert.is_falsy(feat:has_event_handler("elona_sys.on_feat_bash"))
 
       feat:change_prototype("base.bashable")
@@ -85,7 +85,7 @@ function test_object_change_prototype__feat_callbacks_removed()
       Chara.set_player(player)
       test_util.register_map(map)
 
-      local feat = Feat.create("base.bashable", nil, nil, {}, map)
+      local feat = Feat.create("base.bashable", 2, 2, {}, map)
       Assert.is_truthy(feat:has_event_handler("elona_sys.on_feat_bash"))
 
       feat:change_prototype("base.nonbashable")
@@ -111,7 +111,7 @@ function test_object_change_prototype__feat_callbacks_preserved()
    Chara.set_player(player)
    test_util.register_map(map)
 
-   local feat = Feat.create("base.bashable", nil, nil, {}, map)
+   local feat = Feat.create("base.bashable", 2, 2, {}, map)
    feat:connect_self("elona_sys.on_feat_bash", "Unrelated event", function() end)
    Assert.is_truthy(feat:has_event_handler("elona_sys.on_feat_bash"))
 
