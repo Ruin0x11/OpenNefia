@@ -565,23 +565,21 @@ function IChara:revive()
 
    -- >>>>>>>> shade2/chara.hsp:589 *resurrect ..
 
-   -- TODO move?
-   self.is_about_to_explode = false
-   self.is_under_death_word = false
-   self.is_pregnant = false
-   self.is_anorexic = false
-
    self.state = "Alive"
    self.is_solid = true
    self.hp = math.floor(self:calc("max_hp") / 3)
    self.mp = math.floor(self:calc("max_mp") / 3)
    self.stamina = math.floor(self:calc("max_stamina") / 3)
-   self:reset("is_pregnant", false)
-   self:reset("is_anorexic", false)
    self.insanity = 0
    self.nutrition = 8000
    self.personal_relations = {}
    self:set_target(nil)
+
+   -- TODO move?
+   self.is_pregnant = false
+   self.is_anorexic = false
+   self.is_about_to_explode = false
+   self.is_under_death_word = false
 
    self:renew_status()
 
