@@ -18,6 +18,7 @@ local the_mine = {
       has_anchored_npcs = true,
       default_ai_calm = 1,
       max_crowd_density = 0,
+      material_spot_type = "elona.dungeon"
    },
 
    events = {
@@ -71,6 +72,7 @@ local the_sewer = {
       is_not_renewable = true,
       default_ai_calm = 1,
       max_crowd_density = 0,
+      material_spot_type = "elona.dungeon"
    },
 
    events = {

@@ -26,6 +26,7 @@ do
          has_anchored_npcs = true,
          default_ai_calm = 0,
          shows_floor_count_in_name = true,
+         material_spot_type = "elona.dungeon"
       }
    }
 
@@ -132,6 +133,7 @@ do
          is_indoor = true,
          default_ai_calm = 0,
          prevents_domination = true,
+         material_spot_type = "elona.dungeon"
       }
    }
 
@@ -193,6 +195,7 @@ do
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,
+         material_spot_type = "elona.building"
       }
    }
 
@@ -263,6 +266,7 @@ do
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,
+         material_spot_type = "elona.dungeon"
       }
    }
 
@@ -333,6 +337,7 @@ do
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,
+         material_spot_type = "elona.building"
       }
    }
 
@@ -408,6 +413,7 @@ do
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,
+         material_spot_type = "elona.dungeon"
       }
    }
 
@@ -464,7 +470,8 @@ do
          types = { "dungeon" },
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 0
+         default_ai_calm = 0,
+         material_spot_type = "elona.dungeon"
       }
    }
    data:add(mountain_pass)
@@ -517,7 +524,8 @@ do
          types = { "dungeon" },
          is_indoor = true,
          default_ai_calm = 0,
-         is_generated_every_time = true
+         is_generated_every_time = true,
+         material_spot_type = "elona.dungeon"
       },
    }
 
@@ -572,6 +580,7 @@ do
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,
+         material_spot_type = "elona.dungeon"
       }
    }
 
@@ -634,6 +643,7 @@ do
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,
+         material_spot_type = "elona.dungeon"
       }
    }
 

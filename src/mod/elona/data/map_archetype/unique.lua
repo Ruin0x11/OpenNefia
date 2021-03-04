@@ -1138,7 +1138,8 @@ do
          is_indoor = true,
          is_not_renewable = true,
          max_crowd_density = 0,
-         default_ai_calm = 0
+         default_ai_calm = 0,
+         material_spot_type = "elona.dungeon"
       },
       events = {
          {
@@ -1209,6 +1210,7 @@ do
          default_ai_calm = 0,
          max_crowd_density = 40,
          prevents_teleport = true,
+         material_spot_type = "elona.dungeon"
       }
    }
 
@@ -1254,6 +1256,7 @@ do
          default_ai_calm = 0,
          max_crowd_density = 0,
          prevents_teleport = true,
+         material_spot_type = "elona.dungeon"
       }
    }
 
