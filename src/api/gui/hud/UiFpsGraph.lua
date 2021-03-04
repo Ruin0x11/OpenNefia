@@ -79,6 +79,7 @@ function UiFpsGraph:draw()
       else
          ratio = 1 - (point / self.max)
       end
+      ratio = math.clamp(ratio, 0.0, 1.0)
       Draw.line(x,
                 self.y + self.height - 2,
                 x,
