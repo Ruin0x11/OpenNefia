@@ -137,6 +137,7 @@ function the_dungeon.on_generate_floor(area, floor)
    map.name = "The Dungeon"
    map.is_indoor = true
    map.default_tile = "elona.wall_stone_3_fog"
+   map.types = { "dungeon" }
 
    if floor == 1 then
       local parent_area = Area.parent(area)

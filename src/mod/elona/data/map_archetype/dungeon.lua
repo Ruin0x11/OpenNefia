@@ -191,7 +191,7 @@ do
       starting_pos = MapEntrance.stairs_up,
 
       properties = {
-         types = { "dungeon_tower" },
+         types = { "dungeon" },
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,
@@ -333,7 +333,7 @@ do
       starting_pos = MapEntrance.stairs_up,
 
       properties = {
-         types = { "dungeon_castle" },
+         types = { "dungeon" },
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,

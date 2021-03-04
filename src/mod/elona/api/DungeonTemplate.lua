@@ -3,6 +3,14 @@ local Rand = require("api.Rand")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Filters = require("mod.elona.api.Filters")
 
+-- Dungeon templates are composable.
+--
+-- Each function here returns a generator function and a list of parameters to
+-- be passed to DungeonMap.generate(). The key thing is that calls to each
+-- generator can be nested. You can pick a generator per floor level or
+-- randomly, and have special random generation logic for each floor. This is
+-- used to great effect, even for complex dungeons like Lesimas with a lot of
+-- special behavior.
 local DungeonTemplate = {}
 
 function DungeonTemplate.type_standard(floor, params)
@@ -18,6 +26,8 @@ end
 
 function DungeonTemplate.type_big_room(floor, params)
    params.level = (params.level or 1) + floor - 1
+
+   -- >>>>>>>> shade2/map_rand.hsp:227 	if rdType=rdBigRoom{	 ...
    params.calc_density = function(map)
       local crowd_density = map:calc("max_crowd_density")
       return {
@@ -25,6 +35,7 @@ function DungeonTemplate.type_big_room(floor, params)
          item = crowd_density / 3
       }
    end
+   -- <<<<<<<< shade2/map_rand.hsp:231 		} ..
 
    return Dungeon.gen_type_big_room, params
 end
@@ -46,6 +57,8 @@ end
 
 function DungeonTemplate.type_long(floor, params)
    params.level = (params.level or 1) + floor - 1
+
+   -- >>>>>>>> shade2/map_rand.hsp:233 	if rdType=rdLong{	 ...
    params.calc_density = function(map)
       local crowd_density = map:calc("max_crowd_density")
       return {
@@ -53,12 +66,15 @@ function DungeonTemplate.type_long(floor, params)
          item = crowd_density / 10
       }
    end
+   -- <<<<<<<< shade2/map_rand.hsp:236 		} ..
 
    return Dungeon.gen_type_long, params
 end
 
 function DungeonTemplate.type_maze(floor, params)
    params.level = (params.level or 1) + floor - 1
+
+   -- >>>>>>>> shade2/map_rand.hsp:243 	if rdType=rdMaze{	 ...
    params.calc_density = function(map)
       local crowd_density = map:calc("max_crowd_density")
       return {
@@ -66,6 +82,8 @@ function DungeonTemplate.type_maze(floor, params)
          item = crowd_density / 10
       }
    end
+   -- <<<<<<<< shade2/map_rand.hsp:246 		} ..
+
    params.after_generate = function(map)
       Itemgen.create(nil, nil, {categories=Rand.choice(Filters.fsetwear), quality=6}, map)
    end
@@ -75,6 +93,8 @@ end
 
 function DungeonTemplate.type_puppy_cave(floor, params)
    params.level = (params.level or 1) + floor - 1
+
+   -- >>>>>>>> shade2/map_rand.hsp:238 	if rdType=rdDog{	 ...
    function params.calc_density(map)
       local crowd_density = map:calc("max_crowd_density")
       return {
@@ -82,6 +102,7 @@ function DungeonTemplate.type_puppy_cave(floor, params)
          item = crowd_density / 6
       }
    end
+   -- <<<<<<<< shade2/map_rand.hsp:241 		} ..
 
    return Dungeon.gen_type_puppy_cave, params
 end
@@ -91,6 +112,9 @@ function DungeonTemplate.nefia_dungeon(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:27 	if areaType(gArea)=mTypeDungeon{ ...
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon"
+   -- >>>>>>>> shade2/proc.hsp:18 	if mType=mTypeDungeon	: atxSpot=atxDungeon1 ...
+   Dungeon.set_template_property(params, "material_spot", "elona.dungeon")
+   -- <<<<<<<< shade2/proc.hsp:18 	if mType=mTypeDungeon	: atxSpot=atxDungeon1 ...
 
    local gen = DungeonTemplate.type_wide
    if Rand.one_in(4) then
@@ -118,6 +142,9 @@ function DungeonTemplate.nefia_forest(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:36 	if areaType(gArea)=mTypeForest{ ...
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon_forest"
+   -- >>>>>>>> shade2/proc.hsp:20 	if mType=mTypeForest	: atxSpot=atxForest1 ...
+   Dungeon.set_template_property(params, "material_spot", "elona.forest")
+   -- <<<<<<<< shade2/proc.hsp:20 	if mType=mTypeForest	: atxSpot=atxForest1 ..
 
    local gen = DungeonTemplate.type_wide
    if Rand.one_in(6) then
@@ -142,6 +169,9 @@ function DungeonTemplate.nefia_tower(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:44 	if areaType(gArea)=mTypeTower{ ...
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.tower_1"
+   -- >>>>>>>> shade2/proc.hsp:19 	if mType=mTypeTower	: atxSpot=atxBuilding1 ...
+   Dungeon.set_template_property(params, "material_spot", "elona.building")
+   -- <<<<<<<< shade2/proc.hsp:19 	if mType=mTypeTower	: atxSpot=atxBuilding1 ..
 
    local gen = DungeonTemplate.type_standard
    if Rand.one_in(5) then
@@ -163,8 +193,12 @@ end
 -- image = "elona.feat_area_tower",
 
 function DungeonTemplate.nefia_fort(floor, params)
+   -- >>>>>>>> shade2/map_rand.hsp:52 	if areaType(gArea)=mTypeFort{ ...
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon_castle"
+   -- >>>>>>>> shade2/proc.hsp:21 	if mType=mTypeFort	: atxSpot=atxBuilding1	 ...
+   Dungeon.set_template_property(params, "material_spot", "elona.building")
+   -- <<<<<<<< shade2/proc.hsp:21 	if mType=mTypeFort	: atxSpot=atxBuilding1	 ..
 
    local gen = DungeonTemplate.type_standard
    if Rand.one_in(5) then
@@ -181,15 +215,19 @@ function DungeonTemplate.nefia_fort(floor, params)
    end
 
    return gen(floor, params)
+   -- <<<<<<<< shade2/map_rand.hsp:58 		} ..
 end
 -- image = "elona.feat_area_temple",
 
 local function scale_density_with_floor(gen_params)
+   -- >>>>>>>> shade2/map_rand.hsp:61 		mModerateCrowd+=gLevel/2 ...
    gen_params.max_crowd_density = gen_params.width * gen_params.height / 100 + gen_params.level / 2
    return gen_params
+   -- <<<<<<<< shade2/map_rand.hsp:61 		mModerateCrowd+=gLevel/2 ..
 end
 
 function DungeonTemplate.lesimas(floor, params)
+   -- >>>>>>>> shade2/map_rand.hsp:60 	if areaId(gArea)=areaLesimas{ ...
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.lesimas"
    params.on_generate_params = scale_density_with_floor
@@ -244,6 +282,7 @@ function DungeonTemplate.lesimas(floor, params)
    end
 
    return gen(floor, params)
+   -- <<<<<<<< shade2/map_rand.hsp:86 		} ..
 end
 -- image = "elona.feat_area_cave",
 

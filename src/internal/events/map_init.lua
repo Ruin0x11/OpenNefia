@@ -134,7 +134,6 @@ local function renew_major(map)
       end
    end
 
-   -- TODO material spot
    map:emit("base.on_map_renew_major")
    -- <<<<<<<< shade2/map.hsp:2221 			} ..
 end

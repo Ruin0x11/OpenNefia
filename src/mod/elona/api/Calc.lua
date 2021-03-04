@@ -371,4 +371,24 @@ function Calc.calc_innkeeper_meal_cost()
    -- <<<<<<<< shade2/calculation.hsp:743 	return value ..
 end
 
+function Calc.calc_random_site_generate_count(map)
+   -- >>>>>>>> shade2/map.hsp:2214 			p=rnd(mHeight*mWidth/400+3)  ...
+   local amount = Rand.rnd(map:width() * map:height() / 400 + 3)
+
+   if map:has_type("world_map") then
+      amount = Rand.rnd(40)
+   end
+
+   if map:has_type("town") then
+      amount = Rand.rnd(Rand.rnd(Rand.rnd(12)+1)+1)
+   end
+
+   if map:has_type("guild") then
+      amount = Rand.rnd(amount + 1)
+   end
+
+   return amount
+   -- <<<<<<<< shade2/map.hsp:2217 			if mType=mTypeVillage	: p=rnd(p+1) ..
+end
+
 return Calc
