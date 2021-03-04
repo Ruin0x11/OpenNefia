@@ -11,6 +11,8 @@ function MapArchetype.generate_map(map_archetype_id, area, floor, params)
    floor = floor or 1
    params = params or {}
 
+   params.is_first_generation = true
+
    local map = map_archetype.on_generate_map(area, floor, params)
    if map._archetype == nil then
       Log.debug("Map archetype unset on new floor, setting to %s", map_archetype_id)

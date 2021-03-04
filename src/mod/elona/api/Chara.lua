@@ -28,6 +28,7 @@ function Chara.random_filter(map)
 end
 
 function Chara.spawn_mobs(map, chara_id)
+-- >>>>>>>> shade2/map.hsp:104 *chara_spawn ...
    map = map or Map.current()
 
    local chara_filter = Chara.random_filter(map)

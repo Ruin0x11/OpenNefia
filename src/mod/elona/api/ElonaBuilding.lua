@@ -110,6 +110,25 @@ function ElonaBuilding.update_shop(area)
       end
    end
 
+   ElonaBuilding.update_shop_map(map, area)
+
+   if needs_save then
+      Map.save(map)
+   end
+end
+
+function ElonaBuilding.update_shop_map(map, area)
+   assert(map)
+   assert(area)
+
+   local shopkeeper_uid = area.metadata.shopkeeper_uid
+
+   if not shopkeeper_uid then
+      Log.debug("Shopkeeper not set in area metadata")
+      shop_message("building.shop.log.no_shopkeeper")
+      return
+   end
+
    local shopkeeper = map:get_object(shopkeeper_uid)
    if not shopkeeper then
       Log.debug("Missing shopkeeper object")
@@ -216,10 +235,6 @@ function ElonaBuilding.update_shop(area)
 
    if total_sold > (110 - shop_rank / 100) / 10 then
       Rank.modify("elona.shop", 30, 2)
-   end
-
-   if needs_save then
-      Map.save(map)
    end
 end
 -- <<<<<<<< shade2/map_user.hsp:616 	return ..
