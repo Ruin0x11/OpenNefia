@@ -119,6 +119,7 @@ data:add {
          elona_Item.ensure_free_item_slot(t.speaker)
          local sep = assert(item:move_some(1, t.speaker))
          t.speaker.item_to_use = sep
+         t.speaker.was_traded_quest_item = true
 
          Chara.player():refresh_weight()
 
