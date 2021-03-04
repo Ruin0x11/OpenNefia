@@ -438,7 +438,7 @@ do
       properties = {
          music = "elona.lonely",
          types = { "player_owned" },
-         is_indoor = false,
+         is_indoor = true,
          item_on_floor_limit = 200,
       }
    }

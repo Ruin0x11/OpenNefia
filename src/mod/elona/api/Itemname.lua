@@ -245,8 +245,11 @@ function itemname.jp(item, amount, no_article)
    -- <<<<<<<< shade2/item_func.hsp:494  ..
 
    -- >>>>>>>> shade2/item_func.hsp:523 	if iMaterial(id)=mtFresh{ ..
-   if item.material == "elona.fresh" and (item.spoilage_date or 0) < 0 then
-      s = s .. "腐った"
+   if item.material == "elona.fresh" then
+      local spoilage_date = item.spoilage_date or 0
+      if spoilage_date < 0 then
+         s = s .. "腐った"
+      end
    end
    -- <<<<<<<< shade2/item_func.hsp:525 		} ..
 
@@ -479,8 +482,11 @@ function itemname.en(item, amount, no_article)
       end
    end
 
-   if item.material == "elona.fresh" and (item.spoilage_date or 0) < World.date_hours() then
-      s = s .. "rotten "
+   if item.material == "elona.fresh" then
+      local spoilage_date = item.spoilage_date or 0
+      if spoilage_date < 0 then
+         s = s .. "rotten "
+      end
    end
    -- <<<<<<<< shade2/item_func.hsp:521 		} ..
 

@@ -8,6 +8,7 @@ local Area = require("api.Area")
 local InstancedMap = require("api.InstancedMap")
 local Feat = require("api.Feat")
 local Item = require("api.Item")
+local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 
 local arc = {
    _type = "base.map_archetype",
@@ -167,7 +168,9 @@ data:add(the_dungeon)
 
 local quest_room = {
    _type = "base.map_archetype",
-   _id = "quest_room"
+   _id = "quest_room",
+
+   starting_pos = MapEntrance.stairs_up,
 }
 
 function quest_room.on_generate_map(area, floor)

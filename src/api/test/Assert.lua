@@ -38,6 +38,12 @@ function Assert.matches(match, str)
    end
 end
 
+function Assert.no_matches(match, str)
+   if str:match(match) then
+      error(("expected string to not match '%s', got '%s'"):format(match, str))
+   end
+end
+
 function Assert.throws_error(f, err_match, ...)
    local ok, err = pcall(f, ...)
    if ok then
