@@ -9,8 +9,8 @@ local Material = {}
 local global_materials = nil
 
 function Material.random_material_id(level, rarity, choices)
-   level = level or 0
-   rarity = rarity or 0
+   level = math.clamp(level or 0, 0, 25)
+   rarity = math.clamp(rarity or 0, 0, 40)
    if choices then
       choices = table.set(choices)
    end

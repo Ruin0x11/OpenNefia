@@ -201,7 +201,7 @@ data:add {
    -- <<<<<<<< shade2/proc.hsp:1007 		if cTurn(cc)¥5=0:txtActDigging ..
 
    -- >>>>>>>> shade2/proc.hsp:32 	if feat(1)=objREremain	:atxLv+=sAnatomy(pc)/3 ...
-   on_calc_materais = function(self, params, result)
+   on_calc_materials = function(self, params, result)
       result.level = math.floor(result.level + params.chara:skill_level("elona.anatomy") / 3)
       return result
    end
