@@ -327,7 +327,7 @@ Skills this character will already know on creation.
          nutrition = 0;
 
          is_quest_target = nil,
-         was_passed_item = nil,
+         was_passed_quest_item = nil,
 
          respawn_date = 0,
 

@@ -506,13 +506,13 @@ function Hunger.eat_food(chara, food)
    if chara:is_player() then
       Hunger.show_eating_message(chara)
    else
-      local is_eating_traded_item = chara.item_to_use and chara.item_to_use == food and chara.was_traded_quest_item
+      local is_eating_traded_item = chara.item_to_use and chara.item_to_use == food and chara.was_passed_quest_item
       if is_eating_traded_item then
          chara.item_to_use = nil
       end
 
       if is_eating_traded_item then
-         chara.was_traded_quest_item = false
+         chara.was_passed_quest_item = false
          if food.spoilage_date and food.spoilage_date < 0 then
             Gui.mes_c("food.passed_rotten", "SkyBlue")
             chara:damage_hp(999, "elona.rotten_food")

@@ -40,7 +40,7 @@ end
 local function reset_chara_flags(map)
    -- >>>>>>>> shade2/map.hsp:1914 		repeat mHeight ..
    for _, chara in Chara.iter_all(map) do
-      chara.was_traded_quest_item = false
+      chara.was_passed_quest_item = false
 
       if chara.state == "CitizenDead" and World.date_hours() >= chara.respawn_date then
          chara:revive()
