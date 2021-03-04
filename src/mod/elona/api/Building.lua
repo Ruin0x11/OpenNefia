@@ -19,22 +19,22 @@ function Building.query_build(deed)
    local map = player:current_map()
    if not Map.is_world_map(map) then
       Gui.mes("building.can_only_use_in_world_map")
-      return false
+      return "player_turn_query"
    end
 
    if Feat.at(x, y, map):length() > 0 then
       Gui.mes("building.cannot_build_it_here")
-      return false
+      return "player_turn_query"
    end
 
    if Building.iter(map):length() > 300 then
       Gui.mes("building.cannot_build_anymore")
-      return false
+      return "player_turn_query"
    end
 
    Gui.mes("building.really_build_it_here")
    if not Input.yes_no() then
-      return false
+      return "player_turn_query"
    end
 
    deed:emit("elona.on_deed_use", {x = x, y = y, map = map})

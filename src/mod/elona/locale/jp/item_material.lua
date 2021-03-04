@@ -5,10 +5,6 @@ return {
            alias = "大地を揺るがす",
            name = "アダマンタイト"
         },
-        artifact_seed = {
-           alias = "",
-           name = "アーティファクト"
-        },
         bone = {
            alias = "不死なる",
            name = "ボーン"
@@ -57,14 +53,6 @@ return {
            alias = "永遠なる",
            name = "エーテル"
         },
-        fruit_seed = {
-           alias = "",
-           name = "果実"
-        },
-        gem_seed = {
-           alias = "",
-           name = "宝石"
-        },
         glass = {
            alias = "透き通る",
            name = "硝子"
@@ -77,10 +65,6 @@ return {
            alias = "翼を折られし",
            name = "翼鳥鱗"
         },
-        herb_seed = {
-           alias = "",
-           name = "ハーブ"
-        },
         iron = {
            alias = "鉄塊と呼ばれる",
            name = "鉄"
@@ -92,10 +76,6 @@ return {
         leather = {
            alias = "全てを包む",
            name = "革"
-        },
-        magical_plant_seed = {
-           alias = "",
-           name = "魔法の木"
         },
         mica = {
            alias = "儚き",
@@ -156,14 +136,6 @@ return {
         titanium = {
            alias = "色褪せぬ",
            name = "チタン"
-        },
-        unknown_plant_seed = {
-           alias = "",
-           name = "謎の物体"
-        },
-        vegetable_seed = {
-           alias = "",
-           name = "野菜"
         },
         wood = {
            alias = "古き",

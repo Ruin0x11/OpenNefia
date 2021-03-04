@@ -9180,7 +9180,7 @@ local item =
          coefficient = 100,
          random_color = "Furniture",
 
-         params = { food_quality = 1, seed_plant_id = "elona.unknown" },
+         params = { food_quality = 1, seed_plant_id = "elona.unknown_plant" },
 
          gods = { "elona.kumiromi" },
 
@@ -12367,7 +12367,7 @@ local item =
          rarity = 250000,
          coefficient = 100,
 
-         params = { food_quality = 1, seed_plant_id = "elona.staff" },
+         params = { food_quality = 1, seed_plant_id = "elona.magical_plant" },
 
          gods = { "elona.kumiromi" },
 

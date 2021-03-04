@@ -106,7 +106,7 @@ function MapgenUtils.spawn_random_site(map, is_first_renewal, x, y)
 
    if map:has_type("town") or map:has_type("guild") then
       if Rand.one_in(3) then
-         Item.create("elona.moongate", x, y, {}, map)
+         Item.create("elona.moon_gate", x, y, {}, map)
          return true
       end
 

@@ -465,15 +465,6 @@ return {
                         :format(_1)
                   end
                },
-               type = {
-                  artifact = "artifact",
-                  fruit = "fruit",
-                  gem = "gem",
-                  herb = "herb",
-                  magic = "magic",
-                  strange = "strange",
-                  vegetable = "vegetable"
-               }
             },
             stair = {
                down = "There is a stair leading downwards here.",
