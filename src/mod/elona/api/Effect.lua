@@ -1099,8 +1099,8 @@ function Effect.spoil_items(map)
       -- TODO remove alive filter, as it's redundant
       return Item.is_alive(item)
          and item:calc("material") == "elona.fresh"
-         and item.spoilage_date
-         and item.spoilage_date <= date_hours
+         and item.spoilage_date >= 0
+         and item.spoilage_date < date_hours
    end
 
    for _, item in Item.iter(map):filter(will_rot) do
@@ -1117,6 +1117,7 @@ function Effect.spoil_items(map)
       else
          item.image = "elona.item_rotten_food"
          item:refresh_cell_on_map()
+         item.spoilage_date = -1
       end
    end
 
@@ -1126,6 +1127,7 @@ function Effect.spoil_items(map)
             Gui.mes("misc.get_rotten", item:build_name(), item.amount)
          end
          item.image = "elona.item_rotten_food"
+         item.spoilage_date = -1
          if chara:is_player() then
             -- TODO god harvest
          end

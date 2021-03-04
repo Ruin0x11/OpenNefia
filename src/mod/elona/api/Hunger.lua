@@ -271,7 +271,7 @@ end
 local function show_player_eating_message(player, food)
    -- >>>>>>>> shade2/item.hsp:919 		p=iParam1(ci)/extFood ...
    local food_quality = food.params.food_quality or 0
-   local is_rotten = food.spoilage_date and food.spoilage_date <= World.date_hours()
+   local is_rotten = food.spoilage_date and food.spoilage_date < 0
 
    if player:has_trait("elona.eat_human") then
       if Hunger.is_human_flesh(food) then
@@ -512,7 +512,7 @@ function Hunger.eat_food(chara, food)
       end
 
       if is_eating_traded_item then
-         if food.spoilage_date and food.spoilage_date < World.date_hours() then
+         if food.spoilage_date and food.spoilage_date < 0 then
             Gui.mes_c("food.passed_rotten", "SkyBlue")
             chara:damage_hp(999, "elona.rotten_food")
             local player = Chara.player()
