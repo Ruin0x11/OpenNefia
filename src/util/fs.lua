@@ -445,4 +445,45 @@ function fs.find_loadable(...)
    return nil
 end
 
+local function case_insensitive(pattern)
+  -- find an optional '%' (group 1) followed by any character (group 2)
+  local p = pattern:gsub("(%%?)(.)", function(percent, letter)
+
+    if percent ~= "" or not letter:match("%a") then
+      -- if the '%' matched, or `letter` is not a letter, return "as is"
+      return percent .. letter
+    else
+      -- else, return a case-insensitive character class of the matched letter
+      return string.format("[%s%s]", letter:lower(), letter:upper())
+    end
+
+  end)
+
+  return p
+end
+
+local WINDOWS_RESERVED = {
+   "con",
+   "prn",
+   "aux",
+   "nul",
+   "com[0-9]",
+   "lpt[0-9]",
+}
+
+-- Converts an arbitrary string to a valid filename, if any.
+function fs.sanitize(path, rep)
+   rep = rep or ""
+   path = path:gsub("[/?<>\\:*|\"]", rep)
+      :gsub("^%.+$", rep)
+      :gsub("[. ]+$", rep)
+
+   for _, pat in ipairs(WINDOWS_RESERVED) do
+      path = path:gsub(case_insensitive(pat) .. "%..*", rep)
+      path = path:gsub(case_insensitive(pat), rep)
+   end
+
+   return path:sub(0, 255)
+end
+
 return fs

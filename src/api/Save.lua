@@ -8,6 +8,7 @@ local Log = require("api.Log")
 local SaveFs = require("api.SaveFs")
 local Env = require("api.Env")
 
+local fs = require("util.fs")
 local config = require("internal.config")
 local field = require("game.field")
 local save_store = require("internal.save_store")
@@ -16,7 +17,8 @@ local Save = {}
 
 --- Saves the game.
 function Save.save_game(save_id)
-   local save_id = save_id or config.base._save_id
+   save_id = save_id or config.base._save_id
+   save_id = fs.sanitize(save_id, "_")
    assert(type(save_id) == "string")
    config.base._save_id = save_id
 
@@ -54,6 +56,7 @@ end
 --- Loads the current save.
 function Save.load_game(save_id)
    save_id = save_id or config.base._save_id
+   save_id = fs.sanitize(save_id, "_")
    assert(type(save_id) == "string")
    config.base._save_id = save_id
 
