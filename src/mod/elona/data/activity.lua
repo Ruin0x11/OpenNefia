@@ -124,6 +124,9 @@ data:add {
 
             -- TODO cargo check
 
+            -- >>>>>>>> shade2/main.hsp:843 		if cRowAct(cc)=rowActEat 	:at 100	:goto *act_eat ...
+            params.chara:set_emotion_icon("elona.eat")
+            -- <<<<<<<< shade2/main.hsp:843 		if cRowAct(cc)=rowActEat 	:at 100	:goto *act_eat ..
             params.chara:set_item_using(self.food)
 
             return "turn_end"
