@@ -426,8 +426,8 @@ do
 end
 
 do
-   local storage = {
-      _id = "storage",
+   local storage_house = {
+      _id = "storage_house",
       _type = "base.map_archetype",
       elona_id = 104,
 
@@ -443,17 +443,17 @@ do
       }
    }
 
-   data:add(storage)
+   data:add(storage_house)
 
    data:add {
       _type = "base.area_archetype",
-      _id = "storage",
+      _id = "storage_house",
       elona_id = 104,
 
       image = "elona.feat_area_storage_house",
 
       floors = {
-         [1] = "elona.storage"
+         [1] = "elona.storage_house"
       },
 
       metadata = {

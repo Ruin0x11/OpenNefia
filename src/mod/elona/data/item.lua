@@ -12085,7 +12085,7 @@ local item =
                id = "elona.on_deed_use",
                name = "Create building",
 
-               callback = deed_callback("elona.storage", "item.info.elona.deed_of_storage_house.building_name")
+               callback = deed_callback("elona.storage_house", "item.info.elona.deed_of_storage_house.building_name")
             },
          }
       },

@@ -1099,7 +1099,7 @@ function Effect.spoil_items(map)
       -- TODO remove alive filter, as it's redundant
       return Item.is_alive(item)
          and item:calc("material") == "elona.fresh"
-         and item.spoilage_date >= 0
+         and (item.spoilage_date or 0) > 0
          and item.spoilage_date < date_hours
    end
 
