@@ -818,7 +818,7 @@ function Tools.print_frequency_2(percents, max)
    for _, pair in ipairs(percents) do
       local percent = pair.percent
       local total = pair.total
-      local amount = ("%.02f%% (%d)"):format(percent * 100, total)
+      local amount = ("%.02f%% (%f)"):format(percent * 100, total)
       local name = tostring(pair.key)
       if name:len() > 25 then
          name = name:sub(1, 25) .. "..."
@@ -868,25 +868,28 @@ function Tools.test_frequency(f, match, inputs, count)
    return Tools.print_frequency_2(percents, max)
 end
 
-function Tools.print_plot(tbl, count, sort)
+function Tools.print_plot(tbl, sort, get_pair, count)
+   get_pair = get_pair or function(k, v) return k, v end
    count = math.clamp(count or 1000, 0, 1000000)
    tbl = get_list(tbl, count)
    local percents = {}
-   local sum = fun.iter(table.values(tbl)):sum()
+   local sum = fun.iter_pairs(tbl):map(function(k, v) local _, v_ = get_pair(k, v); return v_ end):sum()
    local max = 0.0
 
    for k, v in pairs(tbl) do
-      local percent = v / sum
+      local k_, v_ = get_pair(k, v)
+      local percent = v_ / sum
       max = math.max(max, percent)
       percents[#percents+1] = {
          percent = percent,
-         key = k,
-         total = v
+         key = k_,
+         total = v_
       }
+      sum = sum + v_
    end
 
    if sort then
-      table.sort(percents, function(a, b) return a.percent < b.percent end)
+      table.sort(percents, function(a, b) return a.percent > b.percent end)
    end
 
    return Tools.print_frequency_2(percents, max)

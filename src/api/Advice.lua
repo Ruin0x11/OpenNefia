@@ -172,6 +172,9 @@ function Advice.add(where, place, identifier, fn, opts)
    if mod == nil then
       error("This function was not defined on a public module.")
    end
+   if tostring(mod):match("^Interface") then
+      error("You can't currently advise functions defined on interfaces.")
+   end
 
    -- TODO this only checks for the currently loading module, might want to
    -- check recursively if this is in a nested require

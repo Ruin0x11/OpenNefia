@@ -441,18 +441,26 @@ local function gen_require(chunk_loader, can_load_path)
       if type(result) == "table" then
          require_path_cache[result] = req_path
 
-         for k, v in pairs(result) do
-            if type(v) == "function" then
-               -- Save the module and identifier of this function.
-               --
-               -- NOTE: This will overwrite the existing metadata for a function
-               -- defined elsewhere that is later copied to another module. For
-               -- example, the `Draw` module copies a set of functions from the
-               -- internal `draw` module using assignment, instead of defining a
-               -- new function that calls the internal one, so the function
-               -- returned from the two modules will reference the same object
-               -- in memory.
-               fn_to_module[v] = { module = package.loaded[req_path], identifier = k }
+         if tostring(result):match("^Interface") then
+            for k, v in pairs(result.methods) do
+               if type(v) == "function" then
+                  fn_to_module[v] = { module = package.loaded[req_path], identifier = k }
+               end
+            end
+         else
+            for k, v in pairs(result) do
+               if type(v) == "function" then
+                  -- Save the module and identifier of this function.
+                  --
+                  -- NOTE: This will overwrite the existing metadata for a function
+                  -- defined elsewhere that is later copied to another module. For
+                  -- example, the `Draw` module copies a set of functions from the
+                  -- internal `draw` module using assignment, instead of defining a
+                  -- new function that calls the internal one, so the function
+                  -- returned from the two modules will reference the same object
+                  -- in memory.
+                  fn_to_module[v] = { module = package.loaded[req_path], identifier = k }
+               end
             end
          end
       end
