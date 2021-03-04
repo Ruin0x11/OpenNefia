@@ -103,9 +103,9 @@ end
 
 local function renew_major(map)
    -- >>>>>>>> shade2/map.hsp:2180 		proc "renew_major" ..
-   local is_first_renew = map.renew_major_date == 0
+   local is_first_renewal = map.renew_major_date == 0
 
-   if not is_first_renew then
+   if not is_first_renewal then
       Feat.iter(map):filter(function(f) return f.is_temporary end)
                     :each(IMapObject.remove_ownership)
 
@@ -134,7 +134,7 @@ local function renew_major(map)
       end
    end
 
-   map:emit("base.on_map_renew_major")
+   map:emit("base.on_map_renew_major", {is_first_renewal=is_first_renewal})
    -- <<<<<<<< shade2/map.hsp:2221 			} ..
 end
 

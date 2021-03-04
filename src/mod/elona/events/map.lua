@@ -247,11 +247,11 @@ end
 Event.register("elona_sys.on_get", "Scoop up snow", scoop_up_snow)
 -- <<<<<<<< shade2/command.hsp:3228 			} ..
 
-local function spawn_random_sites(map)
+local function spawn_random_sites(map, params)
    local amount = Calc.calc_random_site_generate_count(map)
 
    for _ = 1, amount do
-      MapgenUtils.spawn_random_site(map, true, nil, nil)
+      MapgenUtils.spawn_random_site(map, params.is_first_renewal, nil, nil)
    end
 end
 Event.register("base.on_map_renew_major", "Spawn random sites", spawn_random_sites, { priority = 250000 })

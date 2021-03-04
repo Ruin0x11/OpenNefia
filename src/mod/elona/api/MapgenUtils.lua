@@ -42,7 +42,7 @@ function MapgenUtils.generate_chara(map, x, y, extra_params)
    return Charagen.create(x, y, params, map)
 end
 
-function MapgenUtils.spawn_random_site(map, is_major_renew, x, y)
+function MapgenUtils.spawn_random_site(map, is_first_renewal, x, y)
    -- >>>>>>>> shade2/map_func.hsp:793 #deffunc map_randSite int dx,int dy ...
    if not x or not y then
       local pos = function()
@@ -70,7 +70,7 @@ function MapgenUtils.spawn_random_site(map, is_major_renew, x, y)
    end
 
    if map:has_type("dungeon") then
-      if is_major_renew then
+      if is_first_renewal then
          if Rand.one_in(25) then
             local fountain = Item.create("elona.fountain", x, y, {}, map)
             if fountain then
