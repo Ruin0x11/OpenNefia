@@ -88,6 +88,7 @@ end
 
 
 function DungeonTemplate.nefia_dungeon(floor, params)
+   -- >>>>>>>> shade2/map_rand.hsp:27 	if areaType(gArea)=mTypeDungeon{ ...
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon"
 
@@ -104,37 +105,17 @@ function DungeonTemplate.nefia_dungeon(floor, params)
    if Rand.one_in(25) then
       gen = DungeonTemplate.type_long
    end
-   if Rand.one_in(25) then
+   if Rand.one_in(20) then
       params.tileset = "elona.water"
    end
 
    return gen(floor, params)
+   -- <<<<<<<< shade2/map_rand.hsp:34 		} ..
 end
 -- image = "elona.feat_area_cave",
 
-function DungeonTemplate.nefia_tower(floor, params)
-   params.level = (params.level or 1) + floor - 1
-   params.tileset = "elona.tower_1"
-
-   local gen = DungeonTemplate.type_standard
-   if Rand.one_in(5) then
-      gen = DungeonTemplate.type_resident
-   end
-   if Rand.one_in(10) then
-      gen = DungeonTemplate.type_big_room
-   end
-   if Rand.one_in(25) then
-      gen = DungeonTemplate.type_wide
-   end
-   if Rand.one_in(40) then
-      params.tileset = "elona.water"
-   end
-
-   return gen(floor, params)
-end
--- image = "elona.feat_area_tower",
-
 function DungeonTemplate.nefia_forest(floor, params)
+   -- >>>>>>>> shade2/map_rand.hsp:36 	if areaType(gArea)=mTypeForest{ ...
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon_forest"
 
@@ -153,10 +134,35 @@ function DungeonTemplate.nefia_forest(floor, params)
    end
 
    return gen(floor, params)
+   -- <<<<<<<< shade2/map_rand.hsp:42 		} ..
 end
 -- image = "elona.feat_area_tree",
 
-function DungeonTemplate.nefia_castle(floor, params)
+function DungeonTemplate.nefia_tower(floor, params)
+   -- >>>>>>>> shade2/map_rand.hsp:44 	if areaType(gArea)=mTypeTower{ ...
+   params.level = (params.level or 1) + floor - 1
+   params.tileset = "elona.tower_1"
+
+   local gen = DungeonTemplate.type_standard
+   if Rand.one_in(5) then
+      gen = DungeonTemplate.type_resident
+   end
+   if Rand.one_in(10) then
+      gen = DungeonTemplate.type_big_room
+   end
+   if Rand.one_in(25) then
+      gen = DungeonTemplate.type_wide
+   end
+   if Rand.one_in(40) then
+      params.tileset = "elona.water"
+   end
+
+   return gen(floor, params)
+   -- <<<<<<<< shade2/map_rand.hsp:50 		} ..
+end
+-- image = "elona.feat_area_tower",
+
+function DungeonTemplate.nefia_fort(floor, params)
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon_castle"
 
@@ -242,27 +248,33 @@ end
 -- image = "elona.feat_area_cave",
 
 function DungeonTemplate.tower_of_fire(floor, params)
+   -- >>>>>>>> shade2/map_rand.hsp:88 	if areaId(gArea)=areaFireTrial{ ...
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.tower_of_fire"
    params.on_generate_params = scale_density_with_floor
 
    return Dungeon.gen_type_standard, params
+   -- <<<<<<<< shade2/map_rand.hsp:92 		} ..
 end
 
 function DungeonTemplate.crypt_of_the_damned(floor, params)
+   -- >>>>>>>> shade2/map_rand.hsp:93 	if areaId(gArea)=areaUndeadTrial{ ...
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon"
    params.on_generate_params = scale_density_with_floor
 
    return Dungeon.gen_type_standard, params
+   -- <<<<<<<< shade2/map_rand.hsp:97 		} ..
 end
 
 function DungeonTemplate.ancient_castle(floor, params)
+   -- >>>>>>>> shade2/map_rand.hsp:98 	if areaId(gArea)=areaRogueTrial{ ...
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon_castle"
    params.on_generate_params = scale_density_with_floor
 
    return Dungeon.gen_type_standard, params
+   -- <<<<<<<< shade2/map_rand.hsp:102 		} ..
 end
 
 return DungeonTemplate

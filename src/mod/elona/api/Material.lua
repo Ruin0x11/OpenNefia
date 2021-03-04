@@ -110,7 +110,7 @@ local function calc_base_mat_spot_type(map, chara)
    return mat_spot_id
 end
 
-function Material.dig_random_site(feat, chara)
+function Material.dig_random_site(chara, feat)
    -- >>>>>>>> shade2/proc.hsp:10 *randomSite ..
    local map = chara:current_map()
 

@@ -10,6 +10,7 @@ local NpcMemory = require("mod.elona_sys.api.NpcMemory")
 local Chara = require("api.Chara")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local DungeonTemplate = require("mod.elona.api.DungeonTemplate")
+local Dungeon = require("mod.elona.api.Dungeon")
 
 do
    local lesimas = {
@@ -457,6 +458,8 @@ do
 
       starting_pos = MapEntrance.stairs_down,
 
+      chara_filter = Dungeon.default_chara_filter,
+
       properties = {
          types = { "dungeon" },
          is_indoor = true,
@@ -507,6 +510,8 @@ do
 
       image = "elona.feat_area_dungeon",
       starting_pos = MapEntrance.stairs_up,
+
+      chara_filter = Dungeon.default_chara_filter,
 
       properties = {
          types = { "dungeon" },

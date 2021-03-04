@@ -10,10 +10,12 @@ local Log = require("api.Log")
 local Chara = {}
 
 function Chara.default_filter(map)
+   -- >>>>>>>> shade2/map.hsp:100 	flt calcObjLv(cLevel(pc)),calcFixLv(fixNormal) ...
    return {
       level = Calc.calc_object_level(api_Chara.player():calc("level"), map),
       quality = Calc.calc_object_quality(Enum.Quality.Normal)
    }
+   -- <<<<<<<< shade2/map.hsp:100 	flt calcObjLv(cLevel(pc)),calcFixLv(fixNormal) ..
 end
 
 function Chara.random_filter(map)

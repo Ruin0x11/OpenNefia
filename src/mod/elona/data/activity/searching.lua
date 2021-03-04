@@ -70,7 +70,7 @@ data:add {
                return "turn_end"
             end
 
-            local finished = Material.dig_random_site(self.feat, params.chara)
+            local finished = Material.dig_random_site(params.chara, self.feat)
             if finished then
                self.no_more_materials = true
             end
