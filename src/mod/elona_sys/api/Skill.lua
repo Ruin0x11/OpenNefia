@@ -852,8 +852,8 @@ function Skill.apply_race_params(chara, race_id)
    end
 
    if race_data.resistances then
-      for element_id, amount in ipairs(race_data.resistances) do
-         chara:mod_resist_level(element_id, amount, "set")
+      for element_id, amount in pairs(race_data.resistances) do
+         chara:mod_base_resist_level(element_id, amount, "set")
       end
    end
 

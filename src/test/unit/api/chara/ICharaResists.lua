@@ -20,6 +20,18 @@ function test_ICharaSkills_init__prototype_default_resistances()
    Assert.eq(652, chara:resist_level("elona.lightning"))
 end
 
+function test_ICharaSkills_init__race_intrinsic_resistances()
+   local chara = stripped_chara("elona.stalker")
+
+   Assert.eq(644, chara:resist_level("elona.darkness"))
+   Assert.eq(100, chara:resist_level("elona.magic"))
+
+   chara = stripped_chara("elona.quickling")
+
+   Assert.eq(136, chara:resist_level("elona.darkness"))
+   Assert.eq(636, chara:resist_level("elona.magic"))
+end
+
 function test_ICharaSkills_resist_grade()
    local chara = stripped_chara("elona.putit")
 
@@ -33,6 +45,21 @@ function test_ICharaSkills_resist_grade()
 
    chara:refresh()
    Assert.eq(2, chara:resist_grade("elona.fire"))
+end
+
+function test_ICharaSkills_base_resist_grade()
+   local chara = stripped_chara("elona.putit")
+
+   Assert.eq(2, chara:base_resist_grade("elona.fire"))
+
+   chara:mod_base_resist_level("elona.fire", 100, "add")
+   Assert.eq(4, chara:base_resist_grade("elona.fire"))
+
+   chara:mod_base_resist_level("elona.fire", 400, "set")
+   Assert.eq(8, chara:base_resist_grade("elona.fire"))
+
+   chara:refresh()
+   Assert.eq(8, chara:base_resist_grade("elona.fire"))
 end
 
 function test_ICharaSkills_mod_resist_level()

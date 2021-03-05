@@ -23,6 +23,11 @@ function ICharaResists:base_resist_level(element_id)
    return self.resistances[element_id] and self.resistances[element_id].level or 0
 end
 
+--- Obtains the character's original resist grade, before applying buffs.
+function ICharaResists:base_resist_grade(element_id)
+   return math.floor(self:base_resist_level(element_id) / Const.RESIST_GRADE)
+end
+
 --- Obtains the character's resist level after applying buffs.
 function ICharaResists:resist_level(element_id)
    data["base.element"]:ensure(element_id)

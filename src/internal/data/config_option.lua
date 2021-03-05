@@ -633,6 +633,12 @@ data:add_multi(
          default = false
       },
       {
+         _id = "debug_show_resist_level",
+
+         type = "boolean",
+         default = false
+      },
+      {
          _id = "debug_always_renew_map",
 
          type = "enum",
