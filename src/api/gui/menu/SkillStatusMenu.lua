@@ -172,11 +172,11 @@ function SkillStatusMenu.build_list(chara, mode, trainer_skills)
 
    local resist_power = function(element_id)
       -- >>>>>>>> shade2/command.hsp:2654 				p(1)=limit(sdata(list(0,p),cc)/resistGrade,0,6 ...
-      local grade = math.clamp(chara:base_resist_grade(element_id), 0, 6)
+      local grade = math.clamp(chara:resist_grade(element_id), 0, 6)
       local text = I18N.get(("ui.resistance._%d"):format(grade))
 
       if config.base.debug_show_resist_level then
-         text = ("%s %d"):format(text, chara:base_resist_level(element_id))
+         text = ("%s %d"):format(text, chara:resist_level(element_id))
       end
 
       return text
