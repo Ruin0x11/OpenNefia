@@ -144,6 +144,7 @@ end
 
 local LOVE2D_REQUIRES = table.set {
    "socket",
+   "socket.core",
    "socket.http",
    "socket.https",
    "ltn12",
