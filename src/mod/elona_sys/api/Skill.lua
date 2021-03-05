@@ -857,6 +857,13 @@ function Skill.apply_race_params(chara, race_id)
       end
    end
 
+   if race_data.effect_immunities then
+      for _, effect_id in ipairs(race_data.effect_immunities) do
+         data["base.effect"]:ensure(effect_id)
+         chara.effect_immunities[effect_id] = true
+      end
+   end
+
    chara.age = 1
    if race_data.age_min or race_data.age_max then
       chara.age = Rand.between(race_data.age_min or 1, race_data.age_max or 1)
