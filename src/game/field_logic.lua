@@ -16,6 +16,7 @@ local data = require("internal.data")
 local save = require("internal.global.save")
 local chara_make = require("game.chara_make")
 local Save = require("api.Save")
+local field_logic_state = require("internal.global.field_logic_state")
 
 local DeathMenu = require("api.gui.menu.DeathMenu")
 
@@ -383,6 +384,8 @@ function field_logic.turn_end(chara)
 end
 
 local function revive_player()
+   field_logic_state.player_about_to_respawn = true
+
    local player = Chara.player()
    assert(player:revive())
 
@@ -394,6 +397,8 @@ local function revive_player()
    end
 
    player:emit("base.on_player_death_revival")
+
+   field_logic_state.player_about_to_respawn = false
 end
 
 function field_logic.player_died(player)
