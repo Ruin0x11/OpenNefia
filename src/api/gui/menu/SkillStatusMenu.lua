@@ -146,8 +146,8 @@ function SkillStatusMenu.build_list(chara, mode, trainer_skills)
 
    local right_align = mode == "trainer_train" or mode == "trainer_learn"
 
-   -- >>>>>>>> shade2/command.hsp:2654 				p(1)=limit(sdata(list(0,p),cc)/resistGrade,0,6 ..
    local skill_power = function(skill_id)
+      -- >>>>>>>> shade2/command.hsp:2658 				s=str(sdata(list(0,p)+rangeSdata,cc)) ...
       local base_level = chara:base_skill_level(skill_id)
       local level = chara:skill_level(skill_id)
       local exp = chara:skill_experience(skill_id)
@@ -167,12 +167,21 @@ function SkillStatusMenu.build_list(chara, mode, trainer_skills)
       s = s .. ("(%s%%)"):format(chara:skill_potential(skill_id))
 
       return s
+      -- <<<<<<<< shade2/command.hsp:2664 				s+="("+sGrowth(i,cc)+"%%)" ..
    end
 
-   local resist_power = function(skill_id)
-      return ""
+   local resist_power = function(element_id)
+      -- >>>>>>>> shade2/command.hsp:2654 				p(1)=limit(sdata(list(0,p),cc)/resistGrade,0,6 ...
+      local grade = math.clamp(chara:base_resist_grade(element_id), 0, 6)
+      local text = I18N.get(("ui.resistance._%d"):format(grade))
+
+      if config.base.debug_show_resist_level then
+         text = ("%s %d"):format(text, chara:base_resist_level(element_id))
+      end
+
+      return text
+      -- <<<<<<<< shade2/command.hsp:2656 				if dbg_seeResist:s=""+sdata(list(0,p),cc) ..
    end
-   -- <<<<<<<< shade2/command.hsp:2664 				s+="("+sGrowth(i,cc)+"%)" ..
 
    -- >>>>>>>> shade2/command.hsp:2669 			if (csCtrl=2)or(csCtrl=3){ ..
    local skill_detail = function(skill_id)
