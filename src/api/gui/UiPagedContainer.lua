@@ -75,6 +75,10 @@ function UiPagedContainer:current_sublayer()
    return inner.layer, inner.page
 end
 
+function UiPagedContainer:iter()
+   return fun.iter(self.page_handlers)
+end
+
 function UiPagedContainer:select_page(page)
    self.page = page or self.page
 

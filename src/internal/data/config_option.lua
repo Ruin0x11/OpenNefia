@@ -18,7 +18,7 @@ data:add_multi(
          _id = "show_charamake_extras",
 
          type = "boolean",
-         default = true
+         default = false
       },
       {
          _id = "quickstart_scenario",
