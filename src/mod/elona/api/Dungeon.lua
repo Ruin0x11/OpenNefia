@@ -1341,4 +1341,9 @@ function Dungeon.gen_type_puppy_cave(floor, params)
    return map
 end
 
+function Dungeon.set_template_property(params, property, value)
+   params.properties = params.properties or {}
+   params.properties[property] = value
+end
+
 return Dungeon

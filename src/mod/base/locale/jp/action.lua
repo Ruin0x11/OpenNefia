@@ -465,15 +465,6 @@ end,
   :format(_1)
 end
           },
-          type = {
-            artifact = "アーティファクト",
-            fruit = "果物",
-            gem = "宝石",
-            herb = "ハーブ",
-            magic = "魔法の木",
-            strange = "何か",
-            vegetable = "野菜"
-          }
         },
         stair = {
           down = "降り階段がある。",

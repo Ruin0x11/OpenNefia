@@ -9180,7 +9180,7 @@ local item =
          coefficient = 100,
          random_color = "Furniture",
 
-         params = { food_quality = 1, seed_plant_id = "elona.unknown" },
+         params = { food_quality = 1, seed_plant_id = "elona.unknown_plant" },
 
          gods = { "elona.kumiromi" },
 
@@ -12085,7 +12085,7 @@ local item =
                id = "elona.on_deed_use",
                name = "Create building",
 
-               callback = deed_callback("elona.storage", "item.info.elona.deed_of_storage_house.building_name")
+               callback = deed_callback("elona.storage_house", "item.info.elona.deed_of_storage_house.building_name")
             },
          }
       },
@@ -12367,7 +12367,7 @@ local item =
          rarity = 250000,
          coefficient = 100,
 
-         params = { food_quality = 1, seed_plant_id = "elona.staff" },
+         params = { food_quality = 1, seed_plant_id = "elona.magical_plant" },
 
          gods = { "elona.kumiromi" },
 
@@ -18177,7 +18177,7 @@ local item =
                if map:is_in_fov(params.x, params.y) then
                   Gui.mes_c("action.throw.tomato", "Blue")
                end
-               if self.spoilage_date >= World.date_hours() then
+               if self.spoilage_date < 0 then
                   Gui.mes_c_visible("damage.is_engulfed_in_fury", target, "Blue")
                   target:add_effect_turns("elona.fury", Rand.rnd(10) + 5)
                end

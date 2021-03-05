@@ -16,6 +16,7 @@ function util.generate_122(elona122_map_id)
 end
 
 function util.reload_122_map_geometry(current, elona122_map_id)
+   -- >>>>>>>> shade2/map_func.hsp:255 	if cmapData@(0,cnt)=0:continue ...
    local temp = Elona122Map.generate(elona122_map_id)
    assert(current:width() == temp:width())
    assert(current:height() == temp:height())
@@ -23,6 +24,7 @@ function util.reload_122_map_geometry(current, elona122_map_id)
    for _, x, y, tile in temp:iter_tiles() do
       current:set_tile(x, y, tile)
    end
+   -- <<<<<<<< shade2/map_func.hsp:263 		}  ..
 end
 
 function util.chara_filter_town(callback)

@@ -7,10 +7,11 @@ local I18N = require("api.I18N")
 local Material = {}
 
 local global_materials = nil
+local max_material_level = 25
 
 function Material.random_material_id(level, rarity, choices)
-   level = level or 0
-   rarity = rarity or 0
+   level = math.clamp(level or 0, 0, max_material_level)
+   rarity = math.clamp(rarity or 0, 0, 40)
    if choices then
       choices = table.set(choices)
    end
@@ -76,6 +77,7 @@ end
 local function clear_global_materials_cache(_, params)
    if params.hotloaded_types["elona.material_spot"] or params.hotloaded_types["elona.material"] then
       global_materials = nil
+      max_material_level = data["elona.material"]:iter():extract("level"):max()
    end
 end
 Event.register("base.on_hotload_end", "Clear material to spot cache", clear_global_materials_cache)
@@ -110,7 +112,7 @@ local function calc_base_mat_spot_type(map, chara)
    return mat_spot_id
 end
 
-function Material.dig_random_site(feat, chara)
+function Material.dig_random_site(chara, feat)
    -- >>>>>>>> shade2/proc.hsp:10 *randomSite ..
    local map = chara:current_map()
 

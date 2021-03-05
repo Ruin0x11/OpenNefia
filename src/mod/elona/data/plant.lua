@@ -61,7 +61,7 @@ data:add {
 
 data:add {
    _type = "elona.plant",
-   _id = "staff",
+   _id = "magical_plant",
    growth_difficulty = 25,
    regrowth_difficulty = 30,
    on_harvest = generate_item { categories = "elona.rod" }
@@ -76,7 +76,7 @@ end
 
 data:add {
    _type = "elona.plant",
-   _id = "unknown",
+   _id = "unknown_plant",
    growth_difficulty = 25,
    regrowth_difficulty = 35,
    on_harvest = generate_item(function(plant, params)

@@ -254,6 +254,12 @@ function DungeonMap.generate(area, floor, generator, opts)
 
    DungeonMap.add_mobs_and_traps(map, crowd_density, mob_density, item_density, chara_filter)
 
+   if opts.properties then
+      for k, v in pairs(opts.properties) do
+         map[k] = v
+      end
+   end
+
    if opts.after_generate then
       opts.after_generate(map)
    end

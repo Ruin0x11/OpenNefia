@@ -124,6 +124,9 @@ data:add {
 
             -- TODO cargo check
 
+            -- >>>>>>>> shade2/main.hsp:843 		if cRowAct(cc)=rowActEat 	:at 100	:goto *act_eat ...
+            params.chara:set_emotion_icon("elona.eat")
+            -- <<<<<<<< shade2/main.hsp:843 		if cRowAct(cc)=rowActEat 	:at 100	:goto *act_eat ..
             params.chara:set_item_using(self.food)
 
             return "turn_end"
@@ -765,6 +768,7 @@ local function pos_nearby(x, y, map)
 end
 
 local function get_thrown_item_filter(chara, instrument, audience, activity)
+   -- >>>>>>>> shade2/proc.hsp:285 					if encFindSpec(ci,encStrad)!falseM{ ...
    local level, quality
    local map = chara:current_map()
 
@@ -812,6 +816,7 @@ local function get_thrown_item_filter(chara, instrument, audience, activity)
       categories = categories,
       id = id
    }
+   -- <<<<<<<< shade2/proc.hsp:300 						} ..
 end
 
 local function performance_throw_item(chara, instrument, audience, activity, x, y)

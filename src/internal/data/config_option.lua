@@ -159,7 +159,7 @@ data:add_multi(
          end,
 
          on_changed = function(v, is_startup)
-            if not is_startup and config.base.screen_mode == "exclusive" then
+            if not is_startup and config.base.screen_mode ~= "desktop" then
                draw.reload_window_mode()
             end
          end
@@ -631,6 +631,13 @@ data:add_multi(
 
          type = "boolean",
          default = false
+      },
+      {
+         _id = "debug_always_renew_map",
+
+         type = "enum",
+         choices = { "disabled", "minor", "major" },
+         default = "disabled",
       },
       {
          _id = "show_perf_widgets",

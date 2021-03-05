@@ -14,10 +14,11 @@ local the_mine = {
       types = { "dungeon" },
       level = 3,
       is_indoor = true,
-      is_not_renewable = true,
+      is_temporary = true,
       has_anchored_npcs = true,
       default_ai_calm = 1,
       max_crowd_density = 0,
+      material_spot_type = "elona.dungeon"
    },
 
    events = {
@@ -68,9 +69,10 @@ local the_sewer = {
       types = { "dungeon" },
       level = 20,
       is_indoor = true,
-      is_not_renewable = true,
+      is_temporary = true,
       default_ai_calm = 1,
       max_crowd_density = 0,
+      material_spot_type = "elona.dungeon"
    },
 
    events = {

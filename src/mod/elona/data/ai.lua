@@ -168,9 +168,9 @@ local function do_eat(chara, _, result)
 
    if not chara:is_in_fov() or not Rand.one_in(5) then
       if chara:calc("is_anorexic") then
-         chara.nutrition = chara.nutrition + 5000
-      else
          chara.nutrition = chara.nutrition - 3000
+      else
+         chara.nutrition = chara.nutrition + 5000
       end
    else
       local filter = {
@@ -194,9 +194,9 @@ local function do_eat(chara, _, result)
          else
             chara.item_to_use = item
             if not chara:calc("is_anorexic") then
-               chara.nutrition = chara.nutrition + 5000
-            else
                chara.nutrition = chara.nutrition - 3000
+            else
+               chara.nutrition = chara.nutrition + 5000
             end
          end
       end

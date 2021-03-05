@@ -15,6 +15,7 @@ local config = require("internal.config")
 local data = require("internal.data")
 local save = require("internal.global.save")
 local chara_make = require("game.chara_make")
+local Save = require("api.Save")
 
 local DeathMenu = require("api.gui.menu.DeathMenu")
 
@@ -40,10 +41,13 @@ function field_logic.setup_new_game(player)
    Env.update_play_time()
 
    Event.trigger("base.on_new_game")
+
+   -- >>>>>>>> shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
+   Save.save_game()
+   -- <<<<<<<< shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
 end
 
 function field_logic.quickstart()
-   config.base._save_id = "quickstart"
    field:init_global_data()
 
    save.base.scenario = config.base.quickstart_scenario
@@ -67,6 +71,8 @@ function field_logic.quickstart()
          field_logic.setup_new_game(me)
    end, debug.traceback)
    chara_make.set_is_active_override(false)
+
+   config.base._save_id = "quickstart"
 
    if not ok then
       error(err)
@@ -266,7 +272,10 @@ function field_logic.pass_turns()
 
    if chara:has_activity() then
       local turn_result = chara:pass_activity_turn()
-      if config.base.auto_turn_speed ~= "highest" then
+      if config.base.auto_turn_speed ~= "highest"
+         and chara.activity
+         and chara.activity:get_animation_wait() > 0
+      then
          Gui.update_screen()
       end
       if turn_result then

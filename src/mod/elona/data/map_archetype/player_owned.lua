@@ -12,6 +12,7 @@ local ElonaBuilding = require("mod.elona.api.ElonaBuilding")
 local Event = require("api.Event")
 local Gardening = require("mod.elona.api.Gardening")
 local Chara = require("api.Chara")
+local elona_Chara = require("mod.elona.api.Chara")
 
 --
 -- Your Home
@@ -99,9 +100,9 @@ do
    end
 
    function ranch.on_map_renew_minor(map, params)
-      -- >>>>>>>> elona122/shade2/map.hsp:2228 		if areaId(gArea)=areaRanch : gosub *ranch_update ..
+      -- >>>>>>>> shade2/map.hsp:2228 		if areaId(gArea)=areaRanch : gosub *ranch_update ..
       ElonaBuilding.update_ranch(map, params.renew_steps)
-      -- <<<<<<<< elona122/shade2/map.hsp:2228 		if areaId(gArea)=areaRanch : gosub *ranch_update ..
+      -- <<<<<<<< shade2/map.hsp:2228 		if areaId(gArea)=areaRanch : gosub *ranch_update ..
    end
 
    function ranch.on_map_entered_events(map)
@@ -216,7 +217,7 @@ do
    function museum.on_map_entered_events(map)
       -- >>>>>>>> shade2/map.hsp:2117 	if (areaId(gArea)=areaMuseum)or(areaId(gArea)=are ..
       for _ = 1, 5 do
-         Chara.spawn_mobs(map)
+         elona_Chara.spawn_mobs(map)
       end
       -- <<<<<<<< shade2/map.hsp:2121 		} ..
 
@@ -312,7 +313,7 @@ do
    function shop.on_map_entered_events(map)
       -- >>>>>>>> shade2/map.hsp:2117 	if (areaId(gArea)=areaMuseum)or(areaId(gArea)=are ..
       for _ = 1, 5 do
-         Chara.spawn_mobs(map)
+         elona_Chara.spawn_mobs(map)
       end
       -- <<<<<<<< shade2/map.hsp:2121 		} ..
 
@@ -425,8 +426,8 @@ do
 end
 
 do
-   local storage = {
-      _id = "storage",
+   local storage_house = {
+      _id = "storage_house",
       _type = "base.map_archetype",
       elona_id = 104,
 
@@ -437,22 +438,22 @@ do
       properties = {
          music = "elona.lonely",
          types = { "player_owned" },
-         is_indoor = false,
+         is_indoor = true,
          item_on_floor_limit = 200,
       }
    }
 
-   data:add(storage)
+   data:add(storage_house)
 
    data:add {
       _type = "base.area_archetype",
-      _id = "storage",
+      _id = "storage_house",
       elona_id = 104,
 
       image = "elona.feat_area_storage_house",
 
       floors = {
-         [1] = "elona.storage"
+         [1] = "elona.storage_house"
       },
 
       metadata = {

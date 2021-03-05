@@ -655,7 +655,20 @@ data:add {
    },
 
    on_stepped_on = function(self, params)
-      Gui.mes("plant")
+      -- >>>>>>>> shade2/action.hsp:768 			if feat(1)=objPlant{ ...
+      local name = I18N.get("plant." .. self.plant_id .. ".plant_name")
+
+      local stage = self.plant_growth_stage
+      if stage == 0 then
+         Gui.mes("action.move.feature.seed.growth.seed", name)
+      elseif stage == 1 then
+         Gui.mes("action.move.feature.seed.growth.bud", name)
+      elseif stage == 2 then
+         Gui.mes("action.move.feature.seed.growth.tree", name)
+      else
+         Gui.mes("action.move.feature.seed.growth.withered", name)
+      end
+      -- <<<<<<<< shade2/action.hsp:780 				} ...   end,
    end,
 
    events = {

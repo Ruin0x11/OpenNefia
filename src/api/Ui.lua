@@ -67,8 +67,9 @@ function Ui.draw_note(text, x, y, width, height, x_offset)
              {0, 0, 0})
 end
 
-function Ui.random_cm_bg()
-   t = t or UiTheme.load()
+function Ui.random_cm_bg(t)
+   t_ = t_ or UiTheme.load() -- TODO pass as argument?
+   t = t or t_
    local bg = Rand.rnd(4) + 1
    return t.base[string.format("g%d", bg)]
 end

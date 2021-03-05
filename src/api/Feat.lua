@@ -56,14 +56,24 @@ end
 
 local function copy_params(feat, params)
    local proto = data["base.feat"]:ensure(feat._id)
+   local found = table.set{}
    for property, ty in pairs(proto.params or {}) do
       local value = params[property]
       -- everything is implicitly optional for now, until we get a better
       -- typechecker
       if value ~= nil and type(value) ~= ty then
          error(("Feat '%s' requires parameter '%s' of type %s, got '%s'"):format(feat._id, property, ty, value))
+         found[property] = true
       end
       feat.params[property] = value
+   end
+
+   if table.count(found) ~= table.count(params) then
+      for k, v in pairs(params) do
+         if not proto.params[k] then
+            error(("Feat '%s' does not accept parameter '%s'"):format(feat._id, k))
+         end
+      end
    end
 end
 

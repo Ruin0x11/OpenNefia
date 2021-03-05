@@ -5,6 +5,9 @@ function test_Feat_create__params_validation()
    Assert.throws_error(function() Feat.create("elona.material_spot", nil, nil, {ownerless=true, params={material_spot_info=42}}) end,
          "Feat 'elona.material_spot' requires parameter 'material_spot_info' of type string")
 
+   Assert.throws_error(function() Feat.create("elona.material_spot", nil, nil, {ownerless=true, params={dood=42}}) end,
+         "Feat 'elona.material_spot' does not accept parameter 'dood'")
+
    local feat = Feat.create("elona.material_spot", nil, nil, {ownerless=true,params={material_spot_info="elona.spring"}})
    Assert.eq("elona.spring", feat.params.material_spot_info)
 

@@ -11,6 +11,10 @@ local Equipment = require("mod.elona.api.Equipment")
 local Gui = require("api.Gui")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local Const = require("api.Const")
+local Map = require("api.Map")
+local Feat = require("api.Feat")
+local Filters = require("mod.elona.api.Filters")
+local MapgenUtils = require("mod.elona.api.MapgenUtils")
 
 local function decrease_nutrition(chara, params, result)
    -- >>>>>>>> shade2/calculation.hsp:1274 		if cHunger(r1)<hungerHungry{ ...

@@ -10,6 +10,7 @@ local NpcMemory = require("mod.elona_sys.api.NpcMemory")
 local Chara = require("api.Chara")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local DungeonTemplate = require("mod.elona.api.DungeonTemplate")
+local Dungeon = require("mod.elona.api.Dungeon")
 
 do
    local lesimas = {
@@ -25,6 +26,7 @@ do
          has_anchored_npcs = true,
          default_ai_calm = 0,
          shows_floor_count_in_name = true,
+         material_spot_type = "elona.dungeon"
       }
    }
 
@@ -131,6 +133,7 @@ do
          is_indoor = true,
          default_ai_calm = 0,
          prevents_domination = true,
+         material_spot_type = "elona.dungeon"
       }
    }
 
@@ -188,10 +191,11 @@ do
       starting_pos = MapEntrance.stairs_up,
 
       properties = {
-         types = { "dungeon_tower" },
+         types = { "dungeon" },
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,
+         material_spot_type = "elona.building"
       }
    }
 
@@ -262,6 +266,7 @@ do
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,
+         material_spot_type = "elona.dungeon"
       }
    }
 
@@ -328,10 +333,11 @@ do
       starting_pos = MapEntrance.stairs_up,
 
       properties = {
-         types = { "dungeon_castle" },
+         types = { "dungeon" },
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,
+         material_spot_type = "elona.building"
       }
    }
 
@@ -407,6 +413,7 @@ do
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,
+         material_spot_type = "elona.dungeon"
       }
    }
 
@@ -457,11 +464,14 @@ do
 
       starting_pos = MapEntrance.stairs_down,
 
+      chara_filter = Dungeon.default_chara_filter,
+
       properties = {
          types = { "dungeon" },
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 0
+         default_ai_calm = 0,
+         material_spot_type = "elona.dungeon"
       }
    }
    data:add(mountain_pass)
@@ -508,11 +518,14 @@ do
       image = "elona.feat_area_dungeon",
       starting_pos = MapEntrance.stairs_up,
 
+      chara_filter = Dungeon.default_chara_filter,
+
       properties = {
          types = { "dungeon" },
          is_indoor = true,
          default_ai_calm = 0,
-         is_generated_every_time = true
+         is_generated_every_time = true,
+         material_spot_type = "elona.dungeon"
       },
    }
 
@@ -567,6 +580,7 @@ do
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,
+         material_spot_type = "elona.dungeon"
       }
    }
 
@@ -629,6 +643,7 @@ do
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,
+         material_spot_type = "elona.dungeon"
       }
    }
 

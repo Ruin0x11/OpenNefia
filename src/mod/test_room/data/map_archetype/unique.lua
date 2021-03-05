@@ -8,6 +8,7 @@ local Area = require("api.Area")
 local InstancedMap = require("api.InstancedMap")
 local Feat = require("api.Feat")
 local Item = require("api.Item")
+local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 
 local arc = {
    _type = "base.map_archetype",
@@ -137,6 +138,7 @@ function the_dungeon.on_generate_floor(area, floor)
    map.name = "The Dungeon"
    map.is_indoor = true
    map.default_tile = "elona.wall_stone_3_fog"
+   map.types = { "dungeon" }
 
    if floor == 1 then
       local parent_area = Area.parent(area)
@@ -166,7 +168,9 @@ data:add(the_dungeon)
 
 local quest_room = {
    _type = "base.map_archetype",
-   _id = "quest_room"
+   _id = "quest_room",
+
+   starting_pos = MapEntrance.stairs_up,
 }
 
 function quest_room.on_generate_map(area, floor)

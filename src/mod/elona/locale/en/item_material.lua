@@ -5,10 +5,6 @@ return {
            alias = "earth",
            name = "adamantium"
         },
-        artifact_seed = {
-           alias = "",
-           name = "artifact"
-        },
         bone = {
            alias = "immortal",
            name = "bone"
@@ -57,14 +53,6 @@ return {
            alias = "eternal",
            name = "ether"
         },
-        fruit_seed = {
-           alias = "",
-           name = "fruit"
-        },
-        gem_seed = {
-           alias = "",
-           name = "gem"
-        },
         glass = {
            alias = "transparent",
            name = "glass"
@@ -77,10 +65,6 @@ return {
            alias = "fallen",
            name = "griffon scale"
         },
-        herb_seed = {
-           alias = "",
-           name = "herb"
-        },
         iron = {
            alias = "mass",
            name = "metal"
@@ -92,10 +76,6 @@ return {
         leather = {
            alias = "mysterious",
            name = "leather"
-        },
-        magical_plant_seed = {
-           alias = "",
-           name = "magical plant"
         },
         mica = {
            alias = "ephemeral",
@@ -156,14 +136,6 @@ return {
         titanium = {
            alias = "fadeless",
            name = "titanium"
-        },
-        unknown_plant_seed = {
-           alias = "",
-           name = "unknown plant"
-        },
-        vegetable_seed = {
-           alias = "",
-           name = "vegetable"
         },
         wood = {
            alias = "old",

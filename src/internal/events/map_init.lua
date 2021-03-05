@@ -16,6 +16,8 @@ local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local ExHelp = require("mod.elona.api.ExHelp")
 local save = require("internal.global.save")
 local Effect = require("mod.elona.api.Effect")
+local config = require("internal.config")
+local Log = require("api.Log")
 
 local function relocate_chara(chara, map)
    local x, y
@@ -38,6 +40,8 @@ end
 local function reset_chara_flags(map)
    -- >>>>>>>> shade2/map.hsp:1914 		repeat mHeight ..
    for _, chara in Chara.iter_all(map) do
+      chara.was_passed_quest_item = false
+
       if chara.state == "CitizenDead" and World.date_hours() >= chara.respawn_date then
          chara:revive()
       end
@@ -89,7 +93,7 @@ local function prepare_savable_map(map, load_type)
    local is_first_renewal = map.renew_major_date == 0
 
    -- >>>>>>>> shade2/map.hsp:1896 		if dateID>=mRenew:if mNoRenew=false:if mRenew!0: .
-   if not map.is_not_renewable then
+   if not map.is_temporary then
       if World.date_hours() > map.renew_major_date and not is_first_renewal then
          map:emit("base.on_map_renew_geometry")
       end
@@ -103,9 +107,11 @@ end
 
 local function renew_major(map)
    -- >>>>>>>> shade2/map.hsp:2180 		proc "renew_major" ..
-   local is_first_renew = map.renew_major_date == 0
+   local is_first_renewal = map.renew_major_date == 0
 
-   if not is_first_renew then
+   Log.warn("Running map major renewal for %d. (%s)", map.uid, map._archetype)
+
+   if not is_first_renewal then
       Feat.iter(map):filter(function(f) return f.is_temporary end)
                     :each(IMapObject.remove_ownership)
 
@@ -134,8 +140,7 @@ local function renew_major(map)
       end
    end
 
-   -- TODO material spot
-   map:emit("base.on_map_renew_major")
+   map:emit("base.on_map_renew_major", {is_first_renewal=is_first_renewal})
    -- <<<<<<<< shade2/map.hsp:2221 			} ..
 end
 
@@ -143,10 +148,13 @@ local function renew_minor(map)
   local renew_steps
   -- >>>>>>>> elona122/shade2/map.hsp:2227 		if mRenewMinor=0:renewMulti=1:else:renewMulti=(d ..
   if map.renew_minor_date == 0 then
-    renew_steps = 1
+     renew_steps = 1
   else
-    renew_steps = math.floor((World.date_hours() - map.renew_minor_date) / Const.MAP_RENEW_MINOR_HOURS)
+     renew_steps = math.max(math.floor((World.date_hours() - map.renew_minor_date) / Const.MAP_RENEW_MINOR_HOURS), 1)
   end
+
+   Log.warn("Running map minor renewal for %d. (%s, %d steps)", map.uid, map._archetype, renew_steps)
+
   -- <<<<<<<< elona122/shade2/map.hsp:2227 		if mRenewMinor=0:renewMulti=1:else:renewMulti=(d ..
   map:emit("base.on_map_renew_minor", {renew_steps=renew_steps})
 end
@@ -161,12 +169,17 @@ local function check_renew(map)
       area_meta.arena_seed_renew_date = World.date_hours() + Const.MAP_RENEW_MINOR_HOURS
    end
 
-   if World.date_hours() > map.renew_major_date then
+   local debug_renew = config.base.debug_always_renew_map
+
+   if World.date_hours() > map.renew_major_date or debug_renew == "major" then
       renew_major(map)
       map.renew_major_date = World.date_hours() + Const.MAP_RENEW_MAJOR_HOURS
    end
 
-   if World.date_hours() > map.renew_minor_date then
+   if World.date_hours() > map.renew_minor_date
+      or debug_renew == "major"
+      or debug_renew == "minor"
+   then
       renew_minor(map)
       map.renew_minor_date = World.date_hours() + Const.MAP_RENEW_MINOR_HOURS
    end

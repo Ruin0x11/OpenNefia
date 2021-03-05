@@ -271,7 +271,7 @@ end
 local function show_player_eating_message(player, food)
    -- >>>>>>>> shade2/item.hsp:919 		p=iParam1(ci)/extFood ...
    local food_quality = food.params.food_quality or 0
-   local is_rotten = food.spoilage_date and food.spoilage_date <= World.date_hours()
+   local is_rotten = food.spoilage_date and food.spoilage_date < 0
 
    if player:has_trait("elona.eat_human") then
       if Hunger.is_human_flesh(food) then
@@ -506,17 +506,18 @@ function Hunger.eat_food(chara, food)
    if chara:is_player() then
       Hunger.show_eating_message(chara)
    else
-      local is_eating_traded_item = chara.item_to_use and chara.item_to_use == food
+      local is_eating_traded_item = chara.item_to_use and chara.item_to_use == food and chara.was_passed_quest_item
       if is_eating_traded_item then
          chara.item_to_use = nil
       end
 
       if is_eating_traded_item then
-         if food.spoilage_date and food.spoilage_date < World.date_hours() then
+         chara.was_passed_quest_item = false
+         if food.spoilage_date and food.spoilage_date < 0 then
             Gui.mes_c("food.passed_rotten", "SkyBlue")
             chara:damage_hp(999, "elona.rotten_food")
             local player = Chara.player()
-            if not Chara.is_alive(chara) and chara:relation_towards() > Enum.Relation.Neutral then
+            if not Chara.is_alive(chara) and chara:relation_towards(player) > Enum.Relation.Neutral then
                Effect.modify_karma(player, -5)
             else
                Effect.modify_karma(player, -1)

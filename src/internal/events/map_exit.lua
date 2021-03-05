@@ -6,6 +6,7 @@ local World = require("api.World")
 local Event = require("api.Event")
 local Save = require("api.Save")
 local Area = require("api.Area")
+local Weather = require("mod.elona.api.Weather")
 
 local function proc_area_changed(prev_map, params)
     -- >>>>>>>> shade2/map.hsp:202 	if gArea ! gAreaPrev{ ..
@@ -34,7 +35,7 @@ local function proc_area_changed(prev_map, params)
    local was_killed = false -- TODO player_died
    if was_killed then
       Gui.mes("action.exist_map.delivered_to_your_home")
-      -- TODO weather
+      Weather.change_from_world_map()
    else
       if Map.is_world_map(prev_map) then
          Gui.mes("action.exit_map.entered", params.next_map.name)

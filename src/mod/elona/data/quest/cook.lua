@@ -91,12 +91,13 @@ data:add {
          local quest = cook_quest_for(t.speaker)
          assert(quest)
 
-         local item = find_item(Chara.player(), quest.params.target_item_id)
+         local item = find_item(Chara.player(), quest.params.food_type, quest.params.food_quality)
 
          Gui.mes("talk.npc.common.hand_over", item)
          elona_Item.ensure_free_item_slot(t.speaker)
          local sep = assert(item:move_some(1, t.speaker))
          t.speaker.item_to_use = sep
+         t.speaker.was_passed_quest_item = true
 
          Chara.player():refresh_weight()
 
