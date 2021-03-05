@@ -1,10 +1,9 @@
 --- @classmod IChara
-local Enum = require("api.Enum")
-
 local data = require("internal.data")
 local field = require("game.field")
 local Chara = require("api.Chara")
 local Rand = require("api.Rand")
+local Enum = require("api.Enum")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
@@ -17,6 +16,7 @@ local ICharaInventory = require("api.chara.ICharaInventory")
 local ICharaParty = require("api.chara.ICharaParty")
 local ICharaActivity = require("api.chara.ICharaActivity")
 local ICharaSkills = require("api.chara.ICharaSkills")
+local ICharaResists = require("api.chara.ICharaResists")
 local ICharaTraits = require("api.chara.ICharaTraits")
 local ICharaBuffs = require("api.chara.ICharaBuffs")
 local ICharaRoles = require("api.chara.ICharaRoles")
@@ -44,6 +44,7 @@ local IChara = class.interface("IChara",
                             ICharaEquip,
                             ICharaParty,
                             ICharaSkills,
+                            ICharaResists,
                             ICharaTraits,
                             ICharaEffects,
                             ICharaActivity,
@@ -77,6 +78,7 @@ function IChara:pre_build()
    ICharaEquip.init(self)
    ICharaTalk.init(self)
    ICharaSkills.init(self)
+   ICharaResists.init(self)
    ICharaTraits.init(self)
    ICharaEffects.init(self)
    ICharaActivity.init(self)
@@ -141,6 +143,7 @@ function IChara:refresh()
    IMapObject.on_refresh(self)
    ICharaEquip.on_refresh(self)
    ICharaSkills.on_refresh(self)
+   ICharaResists.on_refresh(self)
    ICharaTraits.on_refresh(self)
 
    self:refresh_weight()
