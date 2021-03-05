@@ -10,6 +10,7 @@ local Log = require("api.Log")
 local SkillCheck = require("mod.elona.api.SkillCheck")
 local Effect = require("mod.elona.api.Effect")
 local Weather = require("mod.elona.api.Weather")
+local Const = require("api.Const")
 
 data:add {
    _type = "base.mef",
@@ -69,7 +70,7 @@ data:add {
          return
       end
 
-      if chara:resist_level("elona.acid") / 50 >= 7 then
+      if chara:resist_level("elona.acid") / 50 >= Const.RESIST_LEVEL_STRONG then
          return
       end
 

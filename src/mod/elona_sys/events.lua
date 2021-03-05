@@ -624,15 +624,16 @@ end
 Event.register("elona_sys.on_quest_check", "Check escort quest targets", check_escort_quest_targets)
 
 local function calc_power_after_resistance(chara, effect, element, power)
-   local resistance = chara:resist_level(element._id)
-   local level = math.floor(resistance / 50)
+-- >>>>>>>> shade2/chara_func.hsp:1008 *conCalc ...
+   local level = chara:resist_grade(element._id)
    power = (Rand.rnd(math.floor(power / 2) + 1) + math.floor(power / 2)) * 100 / (50 + level * 50)
 
-   if level >= 3 and power < 40 then
+   if level >= Const.RESIST_LEVEL_MINIMUM and power < 40 then
       return 0
    end
 
    return power
+   -- <<<<<<<< shade2/chara_func.hsp:1016 	return ..
 end
 
 local function calc_effect_power_resist(chara, params, power)

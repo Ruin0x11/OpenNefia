@@ -198,11 +198,19 @@ local effect = {
       related_element = "elona.posion",
       -- <<<<<<<< shade2/chara_func.hsp:882 		conPower rsResPoison ..
 
-      -- >>>>>>>> shade2/chara_func.hsp:883 		p=p/5 ...
       calc_adjusted_power = function(chara, power)
+         -- >>>>>>>> shade2/chara_func.hsp:880 		if cQuality(tc)>fixGood : if rnd(cLevel(tc)/3+1) ...
+         if chara:calc("quality") > Enum.Quality.Good
+            and not Rand.one_in(chara:calc("level") / 3 + 1)
+         then
+            return 0
+         end
+         -- <<<<<<<< shade2/chara_func.hsp:880 		if cQuality(tc)>fixGood : if rnd(cLevel(tc)/3+1) ..
+
+         -- >>>>>>>> shade2/chara_func.hsp:883 		p=p/5 ...
          return power / 5
+         -- <<<<<<<< shade2/chara_func.hsp:883 		p=p/5 ..
       end,
-      -- <<<<<<<< shade2/chara_func.hsp:883 		p=p/5 ..
 
       -- >>>>>>>> shade2/proc.hsp:670 	cPoison(tc)	=0 ...
       on_sleep = "remove",
@@ -241,11 +249,19 @@ local effect = {
       related_element = "elona.nerve",
       -- <<<<<<<< shade2/chara_func.hsp:901 		conPower rsResNerve ..
 
-      -- >>>>>>>> shade2/chara_func.hsp:902 		p=p/4 ...
       calc_adjusted_power = function(chara, power)
+         -- >>>>>>>> shade2/chara_func.hsp:899 		if cQuality(tc)>fixGood : if rnd(cLevel(tc)/5+1) ...
+         if chara:calc("quality") > Enum.Quality.Good
+            and not Rand.one_in(chara:calc("level") / 5 + 1)
+         then
+            return 0
+         end
+         -- <<<<<<<< shade2/chara_func.hsp:899 		if cQuality(tc)>fixGood : if rnd(cLevel(tc)/5+1) ..
+
+         -- >>>>>>>> shade2/chara_func.hsp:902 		p=p/4 ...
          return power / 4
+         -- <<<<<<<< shade2/chara_func.hsp:902 		p=p/4 ..
       end,
-      -- <<<<<<<< shade2/chara_func.hsp:902 		p=p/4 ..
 
       -- >>>>>>>> shade2/proc.hsp:671 	cSleep(tc)	=0 ...
       on_sleep = "remove",
@@ -280,11 +296,19 @@ local effect = {
       related_element = "elona.darkness",
       -- <<<<<<<< shade2/chara_func.hsp:826 		conPower rsResDarkness ..
 
-      -- >>>>>>>> shade2/chara_func.hsp:827 		p=p/6 ...
       calc_adjusted_power = function(chara, power)
+         -- >>>>>>>> shade2/chara_func.hsp:824 		if cQuality(tc)>fixGood	 : if rnd(cLevel(tc)/2+1 ...
+         if chara:calc("quality") > Enum.Quality.Good
+            and not Rand.one_in(chara:calc("level") / 2 + 1)
+         then
+            return 0
+         end
+         -- <<<<<<<< shade2/chara_func.hsp:824 		if cQuality(tc)>fixGood	 : if rnd(cLevel(tc)/2+1 ..
+
+         -- >>>>>>>> shade2/chara_func.hsp:827 		p=p/6 ...
          return power / 6
+         -- <<<<<<<< shade2/chara_func.hsp:827 		p=p/6 ..
       end,
-      -- <<<<<<<< shade2/chara_func.hsp:827 		p=p/6 ..
 
       -- >>>>>>>> shade2/proc.hsp:673 	cBlind(tc)	=0 ...
       on_sleep = "remove",
@@ -328,11 +352,19 @@ local effect = {
       related_element = "elona.nerve",
       -- <<<<<<<< shade2/chara_func.hsp:863 		conPower rsResNerve ..
 
-      -- >>>>>>>> shade2/chara_func.hsp:864 		p=p/10 ...
       calc_adjusted_power = function(chara, power)
+         -- >>>>>>>> shade2/chara_func.hsp:861 		if cQuality(tc)>fixGood : if rnd(cLevel(tc)+1):  ...
+         if chara:calc("quality") > Enum.Quality.Good
+            and not Rand.one_in(chara:calc("level") + 1)
+         then
+            return 0
+         end
+         -- <<<<<<<< shade2/chara_func.hsp:861 		if cQuality(tc)>fixGood : if rnd(cLevel(tc)+1):  ..
+
+         -- >>>>>>>> shade2/chara_func.hsp:864 		p=p/10 ...
          return power / 10
+         -- <<<<<<<< shade2/chara_func.hsp:864 		p=p/10 ..
       end,
-      -- <<<<<<<< shade2/chara_func.hsp:864 		p=p/10 ..
 
       -- >>>>>>>> shade2/proc.hsp:674 	cParalyze(tc)	=0 ...
       on_sleep = "remove"
@@ -383,11 +415,19 @@ local effect = {
       related_element = "elona.mind",
       -- <<<<<<<< shade2/chara_func.hsp:845 		conPower rsResMind ..
 
-      -- >>>>>>>> shade2/chara_func.hsp:846 		p=p/7 ...
       calc_adjusted_power = function(chara, power)
+         -- >>>>>>>> shade2/chara_func.hsp:843 		if cQuality(tc)>fixGood : if rnd(cLevel(tc)/2+1) ...
+         if chara:calc("quality") > Enum.Quality.Good
+            and not Rand.one_in(chara:calc("level") / 2 + 1)
+         then
+            return 0
+         end
+         -- <<<<<<<< shade2/chara_func.hsp:843 		if cQuality(tc)>fixGood : if rnd(cLevel(tc)/2+1) ..
+
+         -- >>>>>>>> shade2/chara_func.hsp:846 		p=p/7 ...
          return power / 7
+         -- <<<<<<<< shade2/chara_func.hsp:846 		p=p/7 ..
       end,
-      -- <<<<<<<< shade2/chara_func.hsp:846 		p=p/7 ..
 
       -- >>>>>>>> shade2/proc.hsp:672 	cConfuse(tc)	=0 ...
       on_sleep = "remove"
@@ -404,11 +444,19 @@ local effect = {
       related_element = "elona.mind",
       -- <<<<<<<< shade2/chara_func.hsp:922 		conPower rsResMind ..
 
-      -- >>>>>>>> shade2/chara_func.hsp:923 		p=p/7 ...
       calc_adjusted_power = function(chara, power)
+         -- >>>>>>>> shade2/chara_func.hsp:920 		if cQuality(tc)>fixGood : if rnd(cLevel(tc)/5+1) ...
+         if chara:calc("quality") > Enum.Quality.Good
+            and not Rand.one_in(chara:calc("level") / 5 + 1)
+         then
+            return 0
+         end
+         -- <<<<<<<< shade2/chara_func.hsp:920 		if cQuality(tc)>fixGood : if rnd(cLevel(tc)/5+1) ..
+
+         -- >>>>>>>> shade2/chara_func.hsp:923 		p=p/7 ...
          return power / 7
+         -- <<<<<<<< shade2/chara_func.hsp:923 		p=p/7 ..
       end,
-      -- <<<<<<<< shade2/chara_func.hsp:923 		p=p/7 ..
    },
    {
       _id = "dimming",
@@ -451,11 +499,19 @@ local effect = {
       related_element = "elona.sound",
       -- <<<<<<<< shade2/chara_func.hsp:936 		conPower rsResSound ..
 
-      -- >>>>>>>> shade2/chara_func.hsp:937 		p=p/8 ...
       calc_adjusted_power = function(chara, power)
+         -- >>>>>>>> shade2/chara_func.hsp:933 		if cQuality(tc)>fixGood : if rnd(cLevel(tc)/3+1) ...
+         if chara:calc("quality") > Enum.Quality.Good
+            and not Rand.one_in(chara:calc("level") / 3 + 1)
+         then
+            return 0
+         end
+         -- <<<<<<<< shade2/chara_func.hsp:933 		if cQuality(tc)>fixGood : if rnd(cLevel(tc)/3+1) ..
+
+         -- >>>>>>>> shade2/chara_func.hsp:937 		p=p/8 ...
          return power / 8
+         -- <<<<<<<< shade2/chara_func.hsp:937 		p=p/8 ..
       end,
-      -- <<<<<<<< shade2/chara_func.hsp:937 		p=p/8 ..
 
       -- >>>>>>>> shade2/proc.hsp:675 	cDim(tc)	=0 ...
       on_sleep = "remove"

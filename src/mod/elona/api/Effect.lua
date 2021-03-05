@@ -195,8 +195,8 @@ function Effect.damage_insanity(chara, delta)
       return false
    end
 
-   local resistance = chara:resist_level("elona.mind")
-   if resistance > 10 then
+   local resistance = chara:resist_grade("elona.mind")
+   if resistance > Const.RESIST_LEVEL_IMMUNE then
       return false
    end
 

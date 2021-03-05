@@ -37,6 +37,11 @@ function ICharaResists:resist_level(element_id)
    return resist_entry.level or 0
 end
 
+--- Obtains the character's resist grade after applying buffs.
+function ICharaResists:resist_grade(element_id)
+   return math.floor(self:resist_level(element_id) / Const.RESIST_GRADE)
+end
+
 --- Returns true if the character has a resistance. If true, you can call
 --- ICharaResists:resist_level() and get back a non-zero level.
 function ICharaResists:has_resist(element_id)
