@@ -186,7 +186,7 @@ local function calc_damage_resistance(chara, params, result)
    -- >>>>>>>> shade2/chara_func.hsp:1444 	if (ele=false)or(ele>=tailResist){ ..
    local element = params.element
    if element and element.can_resist then
-      local resistance = math.floor(chara:resist_level(element._id) / Const.RESIST_GRADE)
+      local resistance = chara:resist_grade(element._id)
       if resistance < Const.RESIST_LEVEL_MINIMUM then
          result = result * 150 / math.clamp(resistance * 50 + 50, 40, 150)
       elseif resistance < Const.RESIST_LEVEL_IMMUNE then
