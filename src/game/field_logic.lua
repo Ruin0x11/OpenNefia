@@ -15,6 +15,7 @@ local config = require("internal.config")
 local data = require("internal.data")
 local save = require("internal.global.save")
 local chara_make = require("game.chara_make")
+local Save = require("api.Save")
 
 local DeathMenu = require("api.gui.menu.DeathMenu")
 
@@ -40,6 +41,10 @@ function field_logic.setup_new_game(player)
    Env.update_play_time()
 
    Event.trigger("base.on_new_game")
+
+   -- >>>>>>>> shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
+   Save.save_game()
+   -- <<<<<<<< shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
 end
 
 function field_logic.quickstart()

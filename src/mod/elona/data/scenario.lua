@@ -8,6 +8,7 @@ local Scene = require("mod.elona_sys.scene.api.Scene")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
+local Weather = require("mod.elona.api.Weather")
 
 local function load_towns(north_tyris)
    for _, area in Area.iter_in_parent(north_tyris) do
@@ -36,8 +37,8 @@ local function start(self, player)
 
    -- >>>>>>>> shade2/main.hsp:457 		gYear		=initYear,initMonth,initDay,1,10	 ..
    save.base.date = DateTime:new(Const.INITIAL_YEAR, Const.INITIAL_MONTH, Const.INITIAL_DAY, 1, 10)
-   -- TODO weather
-   -- <<<<<<<< shade2/main.hsp:461 		gWorld		=areaNorthTyris ..
+   Weather.change_to("elona.rain", 6)
+   -- <<<<<<<< shade2/main.hsp:467 		gWeather	=weatherRain,6 ..
 
    local north_tyris_area = Area.create_unique("elona.north_tyris", "root")
    local ok, north_tyris = assert(north_tyris_area:load_or_generate_floor(north_tyris_area:starting_floor()))
@@ -71,10 +72,6 @@ local function start(self, player)
    assert(your_home:take_object(player, pos.x, pos.y))
 
    save.base.should_reset_world_map = true
-
-   -- >>>>>>>> shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
-   Save.save_game()
-   -- <<<<<<<< shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
 
    DeferredEvent.add(function()
          local lomias = Chara.find("elona.lomias", "others")
