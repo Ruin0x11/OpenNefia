@@ -322,6 +322,11 @@ function field_logic.player_turn_query()
       return result, player
    end
 
+   if field_logic_state.about_to_autosave then
+      field_logic_state.about_to_autosave = false
+      Save.save_game()
+   end
+
    while going do
       local ran, turn_result = field:run_actions(dt, player)
       field:update(dt)
