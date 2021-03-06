@@ -1,31 +1,17 @@
 local Item = require("api.Item")
-local Enum = require("api.Enum")
 local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
 local Hunger = require("mod.elona.api.Hunger")
 local IOwned = require("api.IOwned")
-
-local function stripped_item(map, id)
-   local food = Item.create(id or "elona.putitoro", nil, nil, {amount=1}, map)
-   food.curse_state = Enum.CurseState.Normal
-   food.spoilage_date = nil
-   return food
-end
-
-local function stripped_chara(map, id)
-   local chara = Chara.create(id or "elona.putit", nil, nil, {}, map)
-   chara:iter_equipment():each(function(i) assert(chara:unequip_item(i)) end)
-   chara:refresh()
-   return chara
-end
+local test_util = require("test.lib.test_util")
 
 function test_Hunger_apply_general_eating_effect__sustain_attribute()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 
-   local chara = stripped_chara(map)
-   local food = stripped_item(map)
+   local chara = test_util.stripped_chara("elona.putit", map)
+   local food = test_util.stripped_item("elona.putitoro", map)
 
    chara:remove_all_buffs()
    Assert.eq(0, chara:iter_buffs():length())
@@ -44,8 +30,8 @@ function test_Hunger_apply_general_eating_effect__modify_attribute()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 
-   local chara = stripped_chara(map)
-   local food = stripped_item(map)
+   local chara = test_util.stripped_chara("elona.putit", map)
+   local food = test_util.stripped_item("elona.putitoro", map)
 
    chara:mod_base_skill_level("elona.stat_strength", 10, "set")
    chara:mod_skill_potential("elona.stat_strength", 100, "set")
@@ -63,8 +49,8 @@ function test_Hunger_apply_general_eating_effect__cute_fairy()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 
-   local chara = stripped_chara(map, "elona.cute_fairy")
-   local food = stripped_item(map)
+   local chara = test_util.stripped_chara("elona.cute_fairy", map)
+   local food = test_util.stripped_item("elona.putitoro", map)
    Item.iter(map):each(IOwned.remove_ownership)
 
    Assert.eq(0, Item.iter(map):length())
@@ -82,8 +68,8 @@ function test_Hunger_apply_general_eating_effect__exp_gains_fixed()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 
-   local chara = stripped_chara(map)
-   local food = stripped_item(map, "elona.morgia")
+   local chara = test_util.stripped_chara("elona.putit", map)
+   local food = test_util.stripped_item("elona.morgia", map)
 
    chara:mod_base_skill_level("elona.stat_strength", 10, "set")
    chara:mod_skill_potential("elona.stat_strength", 100, "set")
@@ -100,8 +86,8 @@ function test_Hunger_apply_general_eating_effect__food_type()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 
-   local chara = stripped_chara(map)
-   local food = stripped_item(map, "elona.raw_noodle")
+   local chara = test_util.stripped_chara("elona.putit", map)
+   local food = test_util.stripped_item("elona.raw_noodle", map)
 
    food.params.food_quality = 0
    chara.nutrition = 0
@@ -123,8 +109,8 @@ function test_Hunger_apply_general_eating_effect__food_type_cooked()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 
-   local chara = stripped_chara(map)
-   local food = stripped_item(map, "elona.raw_noodle")
+   local chara = test_util.stripped_chara("elona.putit", map)
+   local food = test_util.stripped_item("elona.raw_noodle", map)
 
    food.params.food_quality = 9
    chara.nutrition = 0
@@ -145,8 +131,8 @@ function test_Hunger_apply_general_eating_effect___player_eats_rotten()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 
-   local chara = stripped_chara(map)
-   local food = stripped_item(map, "elona.corpse")
+   local chara = test_util.stripped_chara("elona.putit", map)
+   local food = test_util.stripped_item("elona.corpse", map)
 
    Chara.set_player(chara)
    food.spoilage_date = -1
@@ -169,8 +155,8 @@ function test_Hunger_apply_general_eating_effect___nonplayer_eats_rotten()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 
-   local chara = stripped_chara(map)
-   local food = stripped_item(map, "elona.corpse")
+   local chara = test_util.stripped_chara("elona.putit", map)
+   local food = test_util.stripped_item("elona.corpse", map)
 
    food.spoilage_date = -1
    chara.nutrition = 5000
@@ -192,10 +178,10 @@ function test_Hunger_apply_general_eating_effect__corpse_effects()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 
-   local chara = stripped_chara(map)
+   local chara = test_util.stripped_chara("elona.putit", map)
 
    do
-      local food = stripped_item(map, "elona.corpse")
+      local food = test_util.stripped_item("elona.corpse", map)
 
       food.params.chara_id = nil
       chara.nutrition = 5000
@@ -213,7 +199,7 @@ function test_Hunger_apply_general_eating_effect__corpse_effects()
    end
 
    do
-      local food = stripped_item(map, "elona.corpse")
+      local food = test_util.stripped_item("elona.corpse", map)
 
       food.params.chara_id = "elona.troll"
       chara.nutrition = 5000

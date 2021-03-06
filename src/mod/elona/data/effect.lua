@@ -195,7 +195,7 @@ local effect = {
       stops_activity = true,
 
       -- >>>>>>>> shade2/chara_func.hsp:882 		conPower rsResPoison ...
-      related_element = "elona.posion",
+      related_element = "elona.poison",
       -- <<<<<<<< shade2/chara_func.hsp:882 		conPower rsResPoison ..
 
       calc_adjusted_power = function(chara, power)

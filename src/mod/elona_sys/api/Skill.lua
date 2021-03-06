@@ -791,10 +791,7 @@ function Skill.modify_resist_level(chara, element_id, delta, no_message)
       end
    end
 
-   if not chara:has_resist(element_id) then
-      chara:gain_resist(element_id)
-   end
-   chara.skills["base.element:" .. element_id].level = level
+   chara:mod_base_resist_level(element_id, level, "set")
 
    if not no_message then
       Gui.play_sound("base.atk_elec", chara.x, chara.y)

@@ -1,17 +1,10 @@
-local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
 local Enum = require("api.Enum")
-local IOwned = require("api.IOwned")
 local Rand = require("api.Rand")
-
-local function stripped_chara(id)
-   local chara = Chara.create(id, nil, nil, {ownerless=true})
-   chara:iter_items():each(IOwned.remove_ownership)
-   return chara
-end
+local test_util = require("test.lib.test_util")
 
 function test_ICharaEffects_apply_effect__adjusted_power()
-   local chara = stripped_chara("elona.putit")
+   local chara = test_util.stripped_chara("elona.putit")
 
    chara:apply_effect("elona.bleeding", 100)
    Assert.eq(4, chara:effect_turns("elona.bleeding"))
@@ -23,7 +16,7 @@ function test_ICharaEffects_apply_effect__adjusted_power()
 end
 
 function test_ICharaEffects_apply_effect__elemental_resist()
-   local chara = stripped_chara("elona.putit")
+   local chara = test_util.stripped_chara("elona.putit")
 
    Rand.set_seed(0) -- elemental resist is based on random chance
    chara:mod_resist_level("elona.sound", 0, "set")
@@ -39,7 +32,7 @@ function test_ICharaEffects_apply_effect__elemental_resist()
 end
 
 function test_ICharaEffects_apply_effect__racial_immunity()
-   local chara = stripped_chara("elona.steel_golem")
+   local chara = test_util.stripped_chara("elona.steel_golem")
 
    Assert.eq(true, chara:is_immune_to_effect("elona.dimming"))
 
@@ -49,7 +42,7 @@ function test_ICharaEffects_apply_effect__racial_immunity()
 end
 
 function test_ICharaEffects_apply_effect__prototype_immunity()
-   local chara = stripped_chara("elona.mine_dog")
+   local chara = test_util.stripped_chara("elona.mine_dog")
 
    Assert.eq(true, chara:is_immune_to_effect("elona.fear"))
 
@@ -59,7 +52,7 @@ function test_ICharaEffects_apply_effect__prototype_immunity()
 end
 
 function test_ICharaEffects_apply_effect__quality_resist()
-   local chara = stripped_chara("elona.putit")
+   local chara = test_util.stripped_chara("elona.putit")
 
    Rand.set_seed(0)
    chara.level = 1
