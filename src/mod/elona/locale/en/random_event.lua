@@ -49,7 +49,7 @@ return {
                text = "A sweet smell of food floats from nowhere. Your stomach growls but you can't find out where it comes from.",
                title = "Smell of Food"
             },
-            _14 = {
+            strange_feast = {
                choices = {
                   _1 = "(Eat)",
                   _2 = "(Leave)"
