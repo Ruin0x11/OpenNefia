@@ -6218,7 +6218,8 @@ local item =
 
          on_init_params = function(self)
             -- >>>>>>>> shade2/item.hsp:684 		if iId(ci)=idSuitcase : iParam1(ci)=(rnd(10)+1)* ...
-            self.params.chest_item_level = (Rand.rnd(10) + 1) * (Chara.player():calc("level") / 10 + 1)
+            local player = Chara.player()
+            self.params.chest_item_level = (Rand.rnd(10) + 1) * ((player and player:calc("level") or 1) / 10 + 1)
             -- <<<<<<<< shade2/item.hsp:684 		if iId(ci)=idSuitcase : iParam1(ci)=(rnd(10)+1)* ..
             -- >>>>>>>> shade2/item.hsp:687 		if (iId(ci)=idWallet)or(iId(ci)=idSuitcase):iPar ...
             self.params.chest_lockpick_difficulty = Rand.rnd(15)
@@ -9050,7 +9051,8 @@ local item =
          },
 
          on_init_params = function(self)
-            self.params.chest_item_level = Chara.player():calc("level")
+            local player = Chara.player()
+            self.params.chest_item_level = (player and player:calc("level")) or 1
          end,
 
          -- >>>>>>>> shade2/action.hsp:994 	if (iID(ri)=415)or(iID(ri)=416){ ...
@@ -9083,7 +9085,8 @@ local item =
          },
 
          on_init_params = function(self)
-            self.params.chest_item_level = Chara.player():calc("level")
+            local player = Chara.player()
+            self.params.chest_item_level = (player and player:calc("level")) or 1
          end,
 
          -- >>>>>>>> shade2/action.hsp:994 	if (iID(ri)=415)or(iID(ri)=416){ ...
