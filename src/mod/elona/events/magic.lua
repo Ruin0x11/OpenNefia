@@ -69,15 +69,22 @@ local function proc_return(chara)
             return
          end
 
+         local params = {
+            start_x = s.return_destination_map_x or nil,
+            start_y = s.return_destination_map_y or nil
+         }
+
          Gui.play_sound("base.teleport1")
          Gui.mes("magic.return.door_opens")
          Gui.update_screen()
          Input.query_more()
          local map_uid = s.return_destination_map_uid
          s.return_destination_map_uid = nil
+         s.return_destination_map_x = nil
+         s.return_destination_map_y = nil
 
          local _, new_map = assert(Map.load(map_uid))
-         Map.travel_to(new_map)
+         Map.travel_to(new_map, params)
       end
    end
    -- <<<<<<<< shade2/main.hsp:732 			} ..
