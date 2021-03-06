@@ -1,6 +1,7 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local Ui = require("api.Ui")
+local BookMenuMarkup = require("api.gui.menu.BookMenuMarkup")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
@@ -28,44 +29,6 @@ function BookMenu:init(text, elona_compat)
    self.input:bind_keys(self:make_keymap())
 end
 
-local function parse_color(hex)
-   hex = hex:gsub("#","")
-   return {
-      tonumber("0x"..hex:sub(1,2)),
-      tonumber("0x"..hex:sub(3,4)),
-      tonumber("0x"..hex:sub(5,6))
-   }
-end
-
-local function parse_params(line)
-   local params = {}
-
-   while string.sub(line, 1, 1) == "<" do
-      if string.sub(line, 2, 2) == "<" then
-         break
-      end
-      local part = string.sub(line, 1, string.find(line, ">"))
-      print(part,line)
-      local stop = string.find(line, ">")
-      assert(stop ~= nil)
-      line = string.sub(line, stop)
-      part = string.sub(part, 2, string.len(part) - 1)
-      print(part,line)
-      local key, value = table.unpack(string.split(part, "="))
-      if key == "size" then
-         params.size = tonumber(value)
-      elseif key == "style" then
-         params.style = value
-      elseif key == "color" then
-         params.color = parse_color(value)
-      else
-         error(string.format("unknown key %s (%s)", tostring(key), part))
-      end
-   end
-
-   return line, params
-end
-
 function BookMenu:make_keymap()
    return {
       escape = function() self.canceled = true end,
@@ -89,24 +52,7 @@ function BookMenu:on_query()
 end
 
 function BookMenu:set_data(text)
-   local lines = {}
-   local i = 0
-   for line in string.lines(text) do
-      local params
-      line, params = parse_params(line)
-      local font = {}
-      font.size = params.size or 12 -- 12 + sizefix - en * 2
-      local color = params.color or {0, 0, 0}
-      if self.elona_compat then
-         if i == 0 then
-            font = { size = 12, style = "bold" }
-         elseif i == 1 then
-            font = { size = 10 }
-         end
-      end
-      i = i + 1
-      lines[#lines+1] = { font = font, color = color, line = line }
-   end
+   local lines = BookMenuMarkup.parse(text, self.elona_compat)
    self.model:set_data(lines)
 end
 
@@ -129,7 +75,7 @@ function BookMenu:draw()
       i = i - 1
       local x = self.x + 80 + math.floor(i / 20) * 306
       local y = self.y + 45 + i % 20 * 16
-      Draw.set_font(item.font)
+      Draw.set_font(item.font) -- TODO font style
       Draw.text(item.line, x, y)
       if i % 20 == 0 then
          local page = math.floor(i / 20 + 1) + self.model.page * 2
@@ -141,13 +87,13 @@ end
 
 function BookMenu:update()
    local canceled = self.canceled
+
    self.canceled = false
+   self.model.changed = false -- TODO bad, make an :update(dt) method instead?
 
    if canceled then
       return nil, "canceled"
    end
-
-   self.model.changed = false
 end
 
 return BookMenu

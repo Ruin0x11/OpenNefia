@@ -1,3 +1,6 @@
+local Diff = require("api.test.Diff")
+local ansicolors = require("thirdparty.ansicolors")
+
 local Assert = {}
 
 function Assert.is_truthy(actual, msg)
@@ -17,6 +20,39 @@ end
 function Assert.not_eq(lhs, rhs)
    if lhs == rhs then
       error(("expected '%s' ~= '%s', but both were equal"):format(lhs, rhs), 2)
+   end
+end
+
+local MAX_INSPECT_LENGTH = 10000
+
+function Assert.same(lhs, rhs)
+   if type(lhs) == 'table' and type(rhs) == 'table' then
+      local result = table.deepcompare(lhs, rhs, true)
+      if not result then
+         local inspect_args = { max_length = MAX_INSPECT_LENGTH }
+         local lhs_insp = inspect(lhs, inspect_args)
+         local rhs_insp = inspect(rhs, inspect_args)
+         local diff = Diff.diff(lhs_insp, rhs_insp)
+         Diff.cleanup_semantic(diff)
+
+         local function format_line(line)
+            if line[1] == Diff.DIFF_INSERT then
+               return ansicolors(("%%{green}+ %s%%{reset}\n"):format(line[2]))
+            elseif line[1] == Diff.DIFF_DELETE then
+               return ansicolors(("%%{red}- %s%%{reset}\n"):format(line[2]))
+            else
+               return ("  %s\n"):format(line[2])
+            end
+         end
+
+         local output = fun.iter(diff)
+            :map(format_line)
+            :foldl(fun.op.concat, "\n")
+
+         error("Expected both arguments to be the same, but they were different: \n" .. output)
+      end
+   else
+      Assert.eq(lhs, rhs)
    end
 end
 

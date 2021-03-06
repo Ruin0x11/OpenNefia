@@ -310,4 +310,14 @@ function theme.reload_all(log_cb)
    end
 end
 
+function theme.set_themes(themes)
+   themes = themes or {}
+   assert(type(themes) == "table")
+   for _, id in ipairs(themes) do
+      data["base.theme"]:ensure(id)
+   end
+   config.base.themes = themes
+   theme.reload_all()
+end
+
 return theme
