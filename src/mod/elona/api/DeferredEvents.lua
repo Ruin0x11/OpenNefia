@@ -78,6 +78,19 @@ function DeferredEvents.ragnarok(chara)
    -- <<<<<<<< shade2/action.hsp:1416 		} ..
 end
 
+function DeferredEvents.sleep_ambush()
+   -- >>>>>>>> shade2/main.hsp:2047 	case evSleepAmbush ...
+   local player = Chara.player()
+   local map = player:current_map()
+   if not map:has_type("world_map") then
+      Gui.mes("event.beggars")
+      for _ = 1, 3 do
+         Chara.create("elona.robber", player.x, player.y, { level = player.level }, map)
+      end
+   end
+   -- <<<<<<<< shade2/main.hsp:2054 	swbreak ..
+end
+
 function DeferredEvents.first_ally()
    -- >>>>>>>> shade2/main.hsp:1689 	case evFirstAlly ..
    local prompt = RandomEventPrompt:new(

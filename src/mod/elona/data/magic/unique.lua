@@ -123,7 +123,6 @@ data:add {
 }
 
 local function do_curse(self, params)
-   local source = params.source
    local target = params.target
 
    local chance = params.power / 2
@@ -132,7 +131,7 @@ local function do_curse(self, params)
    end
 
    local resistance = 75 + target:skill_level("elona.stat_luck")
-   local enc_power = source:enchantment_power("elona.res_curse")
+   local enc_power = target:enchantment_power("elona.res_curse")
    if enc_power > 0 then
       resistance = resistance + enc_power / 2
    end
@@ -229,7 +228,6 @@ data:add {
    elona_id = 1114,
 
    params = {
-      "source",
       "target"
    },
 

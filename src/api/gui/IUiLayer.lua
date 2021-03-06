@@ -68,7 +68,11 @@ function IUiLayer:query(z_order)
    local success, res, canceled
 
    if Env.is_headless() then
-      res, canceled = Env.pop_ui_result()
+      if self.make_headless_result then
+         res, canceled = self.make_headless_result()
+      else
+         res, canceled = Env.pop_ui_result()
+      end
       Log.info("Returning UI result: %s %s", inspect(res), tostring(canceled))
    else
       while true do

@@ -1,3 +1,5 @@
+local Gui = require("api.Gui")
+
 local RandomEventPrompt = require("api.gui.RandomEventPrompt")
 
 local RandomEvent = {}
@@ -7,7 +9,13 @@ function RandomEvent.trigger(random_event_id)
 
    local choice_count = math.max(proto.choice_count or 1, 1)
    assert(math.type(choice_count) == "integer", "Choice count must be integer")
-   assert(data["base.asset"][proto.asset], ("Random event must declare valid asset, got %s"):format(proto.asset))
+   assert(data["base.asset"][proto.image], ("Random event must declare valid asset, got %s"):format(proto.asset))
+
+   if proto.on_event_triggered then
+      proto.on_event_triggered()
+   end
+
+   Gui.refresh_hud()
 
    local to_choice_text = function(i)
       return ("random_event._.%s.choices._%d"):format(random_event_id, i)
@@ -17,7 +25,7 @@ function RandomEvent.trigger(random_event_id)
    local prompt = RandomEventPrompt:new(
       ("random_event._.%s.title"):format(random_event_id),
       ("random_event._.%s.text"):format(random_event_id),
-      proto.asset,
+      proto.image,
       choice_texts)
 
    local index = prompt:query()

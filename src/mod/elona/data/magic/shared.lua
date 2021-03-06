@@ -1799,7 +1799,6 @@ data:add {
 
    type = "skill",
    params = {
-      "source",
       "target"
    },
 
@@ -1832,7 +1831,6 @@ data:add {
 
    type = "skill",
    params = {
-      "source",
       "target"
    },
 

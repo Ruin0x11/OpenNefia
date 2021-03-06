@@ -12,6 +12,18 @@ Filters.fsetarmor = {
    "elona.equip_shield",
 }
 
+-- >>>>>>>> shade2/item.hsp:48 	fSetRemain=fltAmmo,fltFood,fltFood,fltOre,fltScro ...
+Filters.fsetremain = {
+   "elona.equip_ammo",
+   "elona.food",
+   "elona.food",
+   "elona.ore",
+   "elona.scroll",
+   "elona.drink",
+   "elona.food",
+}
+-- <<<<<<<< shade2/item.hsp:48 	fSetRemain=fltAmmo,fltFood,fltFood,fltOre,fltScro ..
+
 Filters.fsetbarrel = {
    "elona.equip_ammo",
    "elona.food",

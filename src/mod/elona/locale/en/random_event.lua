@@ -10,14 +10,14 @@ return {
       end,
       _ = {
          elona = {
-            _1 = {
+            avoiding_misfortune = {
                choices = {
                   _1 = "Good."
                },
                text = "You sense a bad feeling for a moment but it fades away quickly.",
                title = "Avoiding Misfortune"
             },
-            _10 = {
+            camping_site = {
                choices = {
                   _1 = "(Search)",
                   _2 = "(Leave)"
@@ -25,7 +25,7 @@ return {
                text = "You discover a camping site someone left behind. Chunks of leftovers and junks remain here. You may possibly find some useful items.",
                title = "Camping Site"
             },
-            _11 = {
+            corpse = {
                bury = "You bury the corpse with respect.",
                choices = {
                   _1 = "(Loot)",
@@ -35,14 +35,14 @@ return {
                text = "You find a corpse of an adventurer. There're bones and equipment scatters on the ground waiting to decay.",
                title = "Corpse"
             },
-            _12 = {
+            small_luck = {
                choices = {
                   _1 = "Nice."
                },
                text = "You stumble over a stone and find some materials on the ground. ",
                title = "Small Luck"
             },
-            _13 = {
+            smell_of_food = {
                choices = {
                   _1 = "I'm hungry now!"
                },
@@ -68,7 +68,7 @@ return {
                text = "Suddenly, a painful shriek rises from somewhere in the town. You see several guards hastily run by.",
                title = "Murderer"
             },
-            _16 = {
+            mad_millionaire = {
                choices = {
                   _1 = "What a luck!"
                },
@@ -79,84 +79,84 @@ return {
                      :format(_1)
                end
             },
-            _17 = {
+            wandering_priest = {
                choices = {
                   _1 = "Thanks."
                },
                text = "A priest comes up to you and casts a spell on you. No problem.",
                title = "Wandering Priest"
             },
-            _18 = {
+            gaining_faith = {
                choices = {
                   _1 = "Great."
                },
                text = "In your dream, a saint comes out and blesses you.",
                title = "Gaining Faith"
             },
-            _19 = {
+            treasure_of_dream = {
                choices = {
                   _1 = "Woohoo!"
                },
                text = "You buried treasure in your dream. You quickly get up and write down the location.",
                title = "Treasure of Dream"
             },
-            _2 = {
+            wizards_dream = {
                choices = {
                   _1 = "A weird dream."
                },
                text = "In your dream, you meet a wizard with a red mustache. Who are you? Hmm, I guess I picked up the wrong man's dream. My apology for disturbing your sleep. To make up for this... The wizard draws a circle in the air and vanishes. You feel the effects of a faint headache.",
                title = "Wizard's Dream"
             },
-            _20 = {
+            lucky_day = {
                choices = {
                   _1 = "Woohoo!"
                },
                text = "Mewmewmew!",
                title = "Lucky Day"
             },
-            _21 = {
+            quirk_of_fate = {
                choices = {
                   _1 = "Woohoo!"
                },
                text = "Mewmew? You've found me!",
                title = "Quirk of Fate"
             },
-            _22 = {
+            monster_dream = {
                choices = {
                   _1 = "Urrgh..hh.."
                },
                text = "You are fighting an ugly monster. You are about to thrust a dagger into the neck of the monster. And the monster screams. You are me! I am you! You are awakened by your own low moan.",
                title = "Monster Dream"
             },
-            _23 = {
+            dream_harvest = {
                choices = {
                   _1 = "Sweet."
                },
                text = "In your dream, you harvest materials peacefully.",
                title = "Dream Harvest"
             },
-            _24 = {
+            your_potential = {
                choices = {
                   _1 = "Woohoo!"
                },
                text = "Suddenly you develop your gift!",
                title = "Your Potential"
             },
-            _3 = {
+            development = {
                choices = {
                   _1 = "Good!"
                },
                text = "You lie awake, sunk deep into thought. As memories of your journey flow from one into another, you chance upon a new theory to improve one of your skills.",
                title = "Development"
             },
-            _4 = {
+            creepy_dream = {
                choices = {
                   _1 = "Strange..."
                },
                text = "In your dreams, several pairs of gloomy eyes stare at you and laughter seemingly from nowhere echoes around you.  Keh-la keh-la keh-la I found you...I found you.. keh-la keh-la keh-la After tossing around a couple times, the dream is gone.",
                title = "Creepy Dream"
             },
-            _5 = {
+            cursed_whispering = {
                choices = {
                   _1 = "Can't...sleep..."
                },
@@ -164,21 +164,21 @@ return {
                text = "Your sleep is disturbed by a harshly whispering that comes from nowhere.",
                title = "Cursed Whispering"
             },
-            _6 = {
+            regeneration = {
                choices = {
                   _1 = "Good."
                },
                text = "Your entire body flushes. When you wake up, a scar in your arm is gone.",
                title = "Regeneration"
             },
-            _7 = {
+            meditation = {
                choices = {
                   _1 = "Good."
                },
                text = "In your dream, you meditate and feel inner peace.",
                title = "Meditation"
             },
-            _8 = {
+            malicious_hand = {
                choices = {
                   _1 = "Bloody thieves..."
                },
@@ -190,7 +190,7 @@ return {
                      :format(_1)
                end
             },
-            _9 = {
+            great_luck = {
                choices = {
                   _1 = "What a luck!"
                },

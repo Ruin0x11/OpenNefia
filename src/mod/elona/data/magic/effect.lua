@@ -23,6 +23,7 @@ local Mef = require("api.Mef")
 local Const = require("api.Const")
 local Quest = require("mod.elona.api.Quest")
 local Hunger = require("mod.elona.api.Hunger")
+local Material = require("mod.elona.api.Material")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    assert(type(curse_state) == "number")
@@ -1410,10 +1411,15 @@ data:add {
          times = times + 6
       end
 
+      local map = target:current_map()
+      local level = map:calc("level")
+
       for _ = 1, times do
          Gui.mes_continue_sentence()
 
-         -- TODO material spot
+         local spot_type = "elona.general"
+         local material_id = Material.random_material_id(level, level / 5, spot_type)
+         Material.gain(target, material_id, 1)
       end
 
       return true

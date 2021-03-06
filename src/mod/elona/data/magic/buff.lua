@@ -50,6 +50,10 @@ local function make_buff(opts)
       _type = "elona_sys.magic",
       elona_id = opts.elona_id,
 
+      params = {
+         "target"
+      },
+
       alignment = (opts.type == "hex" and "negative") or "positive",
 
       cast = function(self, params)
