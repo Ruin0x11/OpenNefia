@@ -42,12 +42,14 @@ end
 function test_BookMenuMarkup_parse__markup_color()
    local lines = BookMenuMarkup.parse [[
 <color=#2288CC>Dood
+<color=#cc8822>Dood
 Dood
 ]]
 
    local expected = {
       [1] = { color = {34, 136, 204}, font = { size = 12 }, line = "Dood" },
-      [2] = { color = {0, 0, 0}, font = { size = 12 }, line = "Dood" }
+      [2] = { color = {204, 136, 34}, font = { size = 12 }, line = "Dood" },
+      [3] = { color = {0, 0, 0}, font = { size = 12 }, line = "Dood" }
    }
 
    Assert.same(expected, lines)
@@ -103,7 +105,13 @@ function test_BookMenuMarkup_parse__invalid_markup()
    Assert.throws_error(BookMenuMarkup.parse, "unknown key '' %(%)", "<>")
    Assert.throws_error(BookMenuMarkup.parse, "unknown key 'size 12'", "<size 12>Dood")
    Assert.throws_error(BookMenuMarkup.parse, "unknown key 'dood' %(dood%)", "<dood>Dood")
+end
+
+function test_BookMenuMarkup_parse__validation_size()
    Assert.throws_error(BookMenuMarkup.parse, "invalid value for key 'size' %(nil%)", "<size>Dood")
+end
+
+function test_BookMenuMarkup_parse__validation_color()
    Assert.throws_error(BookMenuMarkup.parse, "invalid value for key 'color' %(#ZZZZZZ%)", "<color=#ZZZZZZ>Dood")
    Assert.throws_error(BookMenuMarkup.parse, "invalid value for key 'color' %(#AAZZZZ%)", "<color=#AAZZZZ>Dood")
 end
