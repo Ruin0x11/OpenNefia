@@ -52,15 +52,24 @@ end
 function JournalMenu:set_data(pages)
    local all_lines = {}
 
+   Draw.set_font(12)
+
    for i, page in ipairs(pages) do
       local lines = BookMenuMarkup.parse(page, false)
 
       for _, line in ipairs(lines) do
-         line.text = Draw.make_text(line.text)
-      end
+         local _, wrapped = Draw.wrap_text(line.line, 280)
 
-      for _, line in ipairs(lines) do
-         all_lines[#all_lines+1] = line
+         if #wrapped == 0 then
+            -- line.line was an empty string ("")
+            all_lines[#all_lines+1] = line
+         else
+            for _, wrap in ipairs(wrapped) do
+               local full_line = table.deepcopy(line)
+               full_line.line = Draw.make_text(wrap)
+               all_lines[#all_lines+1] = full_line
+            end
+         end
       end
 
       if i < #pages then

@@ -523,7 +523,7 @@ function Quest.update_in_map(map)
 end
 
 function Quest.complete(quest, client)
-   local reward_text = get_reward_text(quest)
+   local reward_text = Quest.format_reward_text(quest)
    local next_node = "elona.quest_giver:complete_default"
    if reward_text and client then
       Gui.mes("quest.giver.complete.take_reward", reward_text, client)

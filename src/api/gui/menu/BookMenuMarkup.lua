@@ -20,7 +20,7 @@ local function parse_params(line)
       local part = string.sub(line, 1, string.find(line, ">"))
       local stop = string.find(line, ">")
       if stop == nil then
-         error("Could not find closing '>' in markup")
+         error(("Could not find closing '>' in markup: %s"):format(line))
       end
       stop = stop + 1
       line = string.sub(line, stop)
