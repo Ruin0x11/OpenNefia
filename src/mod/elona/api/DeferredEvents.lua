@@ -85,10 +85,10 @@ function DeferredEvents.first_ally()
       "random_event._.elona.reunion_with_pet.text",
       "base.bg_re13",
       {
-        "random_event._.elona.reunion_with_pet.choices._0",
         "random_event._.elona.reunion_with_pet.choices._1",
         "random_event._.elona.reunion_with_pet.choices._2",
-        "random_event._.elona.reunion_with_pet.choices._3"
+        "random_event._.elona.reunion_with_pet.choices._3",
+        "random_event._.elona.reunion_with_pet.choices._4"
       })
 
    local index = prompt:query()
