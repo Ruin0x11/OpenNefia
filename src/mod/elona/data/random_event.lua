@@ -45,6 +45,11 @@ end
             default = nil,
             template = true,
          },
+         {
+            name = "luck_threshold",
+            type = "integer?",
+            default = nil,
+         },
    }
 }
 
@@ -54,6 +59,10 @@ data:add {
    elona_id = 15,
 
    image = "base.bg_re9",
+
+   -- >>>>>>>> shade2/event.hsp:65 		if rnd(25)=0	:id=revMurder,80 ...
+   luck_threshold = 80,
+   -- <<<<<<<< shade2/event.hsp:65 		if rnd(25)=0	:id=revMurder,80 ..
 
    on_event_triggered = function()
       -- >>>>>>>> shade2/event.hsp:90 	repeat 20 ...
@@ -100,6 +109,10 @@ data:add {
    elona_id = 13,
 
    image = "base.bg_re10",
+
+   -- >>>>>>>> shade2/event.hsp:62 	if rnd(80)=0	:id=revHungry,45 ...
+   luck_threshold = 45,
+   -- <<<<<<<< shade2/event.hsp:62 	if rnd(80)=0	:id=revHungry,45 ..
 
    on_event_triggered = function()
       -- >>>>>>>> shade2/event.hsp:117 	cHunger(pc)-=5000  ...
@@ -202,6 +215,10 @@ data:add {
 
    image = "base.bg_re5",
 
+   -- >>>>>>>> shade2/event.hsp:36 		if rnd(80)=0	:id=revDreamLooseRes,120 ...
+   luck_threshold = 120,
+   -- <<<<<<<< shade2/event.hsp:36 		if rnd(80)=0	:id=revDreamLooseRes,120 ..
+
    on_event_triggered = function()
       -- >>>>>>>> shade2/event.hsp:177 	snd seCurse2 ...
       Gui.play_sound("base.curse2")
@@ -216,6 +233,10 @@ data:add {
    elona_id = 22,
 
    image = "base.bg_re2",
+
+   -- >>>>>>>> shade2/event.hsp:48 		if rnd(90)=0	:id=revDreamMutation,70 ...
+   luck_threshold = 70,
+   -- <<<<<<<< shade2/event.hsp:48 		if rnd(90)=0	:id=revDreamMutation,70 ..
 
    on_event_triggered = function()
       -- >>>>>>>> shade2/event.hsp:186 	snd seCurse2 ...
@@ -280,6 +301,10 @@ data:add {
 
    image = "base.bg_re5",
 
+   -- >>>>>>>> shade2/event.hsp:39 		if rnd(100)=0	:id=revDreamCurse,65 ...
+   luck_threshold = 65,
+   -- <<<<<<<< shade2/event.hsp:39 		if rnd(100)=0	:id=revDreamCurse,65 ..
+
    on_event_triggered = function()
       -- >>>>>>>> shade2/event.hsp:219 	if trait(traitResCurse){ ...
       local player = Chara.player()
@@ -302,6 +327,10 @@ data:add {
    elona_id = 8,
 
    image = "base.bg_re9",
+
+   -- >>>>>>>> shade2/event.hsp:44 		if rnd(70)=0	:id=revStealGold,40 ...
+   luck_threshold = 40,
+   -- <<<<<<<< shade2/event.hsp:44 		if rnd(70)=0	:id=revStealGold,40 ..
 
    on_event_triggered = function()
       -- >>>>>>>> shade2/event.hsp:235 	p=rnd(cGold(pc)/8+1):if  cBit(cResSteal,pc):p=0 ...

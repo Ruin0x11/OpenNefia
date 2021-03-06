@@ -391,4 +391,8 @@ function Calc.calc_random_site_generate_count(map)
    -- <<<<<<<< shade2/map.hsp:2217 			if mType=mTypeVillage	: p=rnd(p+1) ..
 end
 
+function Calc.calc_player_sleep_hours(player)
+   return 7 + Rand.rnd(5)
+end
+
 return Calc

@@ -177,7 +177,7 @@ local function do_curse(self, params)
 
    local item = Rand.choice(considering)
 
-   Gui.mes_visible("magic.curse.apply", target.x, target.y, target, item)
+   Gui.mes_visible("magic.curse.apply", target.x, target.y, target, item:build_name(1, true))
    if item.curse_state == Enum.CurseState.Cursed then
       item.curse_state = Enum.CurseState.Doomed
    else

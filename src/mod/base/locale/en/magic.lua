@@ -157,7 +157,7 @@ end,
     curse = {
       apply = function(_1, _2)
   return ("%s%s %s glows black.")
-     :format(name(_1), his_owned(_1), itemname(_2))
+     :format(name(_1), his_owned(_1), _2)
 end,
       no_effect = "Your prayer nullifies the curse.",
       spell = function(_1, _2)

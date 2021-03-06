@@ -639,6 +639,12 @@ data:add_multi(
          default = false
       },
       {
+         _id = "debug_skip_random_events",
+
+         type = "boolean",
+         default = false
+      },
+      {
          _id = "debug_always_renew_map",
 
          type = "enum",

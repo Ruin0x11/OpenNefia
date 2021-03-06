@@ -23,6 +23,9 @@ local Quest = require("mod.elona_sys.api.Quest")
 local Save = require("api.Save")
 local Const = require("api.Const")
 local Feat = require("api.Feat")
+local global = require("mod.elona.internal.global")
+local RandomEvent = require("mod.elona.api.RandomEvent")
+local Calc = require("mod.elona.api.Calc")
 
 local ElonaCommand = {}
 
@@ -280,22 +283,12 @@ local function do_chara_sleep(chara)
    -- <<<<<<<< shade2/proc.hsp:691 	loop ..
 end
 
-function ElonaCommand.do_sleep(player, bed, params)
-   -- >>>>>>>> shade2/proc.hsp:651 *sleep ...
-   params = params or { no_animation = false, sleep_hours = nil }
-
-   local map = player:current_map()
-
-   local quest = Quest.get_immediate_quest()
-   if quest or map:has_type("quest") then
-      Gui.mes("activity.sleep.but_you_cannot")
-      return "player_turn_query"
-   end
-
+local function do_sleep(player, bed, no_animation, sleep_hours)
    if player:calc("catches_god_signal") then
+      -- TODO god talk
    end
 
-   if not params.no_animation then
+   if not no_animation then
       Gui.play_music("elona.coda")
       Gui.mes_halt()
    end
@@ -303,7 +296,7 @@ function ElonaCommand.do_sleep(player, bed, params)
    local bg = UiTheme.load().base.bg_night
 
    local fade_in_finished = false
-   if not params.no_animation then
+   if not no_animation then
       local bg_cb = function()
          while true do
             if fade_in_finished then
@@ -336,7 +329,7 @@ function ElonaCommand.do_sleep(player, bed, params)
       do_chara_sleep(chara)
    end
 
-   local time_slept = params.sleep_hours or 7 + Rand.rnd(5)
+   local time_slept = sleep_hours or Calc.calc_player_sleep_hours(player)
 
    for _ = 1, time_slept do
       World.pass_time_in_seconds(60 * 60, "hour")
@@ -360,8 +353,7 @@ function ElonaCommand.do_sleep(player, bed, params)
    if not Item.is_alive(bed) then
       add_potential = false
    else
-      local is_bed = true -- TODO
-      if not is_bed then
+      if not bed:has_category("elona.furniture_bed") then
          add_potential = false
       end
    end
@@ -373,13 +365,35 @@ function ElonaCommand.do_sleep(player, bed, params)
       Gui.mes("activity.sleep.wake_up.so_so")
    end
 
-   if not params.no_animation then
+   if not no_animation then
       Input.query_more()
       Gui.play_default_music()
       Gui.stop_draw_callback("elona.sleep")
    end
 
    Save.autosave()
+end
+
+function ElonaCommand.do_sleep(player, bed, no_animation, sleep_hours)
+   -- >>>>>>>> shade2/proc.hsp:651 *sleep ...
+   local map = player:current_map()
+   local quest = Quest.get_immediate_quest()
+   if quest or map:has_type("quest") then
+      Gui.mes("activity.sleep.but_you_cannot")
+      return "player_turn_query"
+   end
+
+   RandomEvent.set_kind("sleep")
+   global.is_player_sleeping = true
+
+   local ok, err = xpcall(do_sleep, debug.traceback, player, bed, no_animation, sleep_hours)
+
+   RandomEvent.set_kind()
+   global.is_player_sleeping = false
+
+   if not ok then
+      error(err)
+   end
    -- <<<<<<<< shade2/proc.hsp:751 	return ..
 end
 
