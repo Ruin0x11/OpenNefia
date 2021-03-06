@@ -81,14 +81,14 @@ end
 function DeferredEvents.first_ally()
    -- >>>>>>>> shade2/main.hsp:1689 	case evFirstAlly ..
    local prompt = RandomEventPrompt:new(
-      "event.popup.reunion_with_pet.title",
-      "event.popup.reunion_with_pet.text",
+      "random_event._.elona.reunion_with_pet.title",
+      "random_event._.elona.reunion_with_pet.text",
       "base.bg_re13",
       {
-        "event.popup.reunion_with_pet.choices._0",
-        "event.popup.reunion_with_pet.choices._1",
-        "event.popup.reunion_with_pet.choices._2",
-        "event.popup.reunion_with_pet.choices._3"
+        "random_event._.elona.reunion_with_pet.choices._0",
+        "random_event._.elona.reunion_with_pet.choices._1",
+        "random_event._.elona.reunion_with_pet.choices._2",
+        "random_event._.elona.reunion_with_pet.choices._3"
       })
 
    local index = prompt:query()

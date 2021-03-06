@@ -49,7 +49,7 @@ function RandomEventPrompt:init(title, text, image, choices)
    self.list = UiList:new(items)
    table.merge(self.list, UiListExt(self))
 
-   self.title = I18N.get("event.popup.title", I18N.get_optional(title) or title)
+   self.title = I18N.get("random_event.title", I18N.get_optional(title) or title)
    self.text = I18N.get_optional(text) or text
    self.image = image
 
