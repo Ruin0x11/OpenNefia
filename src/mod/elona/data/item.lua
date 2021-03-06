@@ -28,6 +28,7 @@ local Const = require("api.Const")
 local Charagen = require("mod.tools.api.Charagen")
 local Mef = require("api.Mef")
 local Hunger = require("mod.elona.api.Hunger")
+local ProductionMenu = require("mod.elona.api.gui.ProductionMenu")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -3047,12 +3048,14 @@ local item =
          image = "elona.item_alchemy_kit",
          value = 1960,
          weight = 900,
-         on_use = function() end,
          category = 59000,
          coefficient = 100,
          random_color = "Furniture",
 
-         elona_function = 2,
+         on_use = function(self, params)
+            ProductionMenu:new(params.chara, "elona.alchemy"):query()
+            return "turn_end"
+         end,
 
          categories = {
             "elona.misc_item"
@@ -3530,12 +3533,14 @@ local item =
          image = "elona.item_sewing_kit",
          value = 780,
          weight = 500,
-         on_use = function() end,
          category = 59000,
          coefficient = 100,
          random_color = "Furniture",
 
-         elona_function = 4,
+         on_use = function(self, params)
+            ProductionMenu:new(params.chara, "elona.tailoring"):query()
+            return "turn_end"
+         end,
 
          categories = {
             "elona.misc_item"
@@ -3547,12 +3552,14 @@ local item =
          image = "elona.item_carpenters_tool",
          value = 1250,
          weight = 500,
-         on_use = function() end,
          category = 59000,
          coefficient = 100,
          random_color = "Furniture",
 
-         elona_function = 1,
+         on_use = function(self, params)
+            ProductionMenu:new(params.chara, "elona.carpentry"):query()
+            return "turn_end"
+         end,
 
          categories = {
             "elona.misc_item"
@@ -8613,12 +8620,14 @@ local item =
          image = "elona.item_gem_cutter",
          value = 2000,
          weight = 500,
-         on_use = function() end,
          category = 59000,
          coefficient = 100,
          random_color = "Furniture",
 
-         elona_function = 3,
+         on_use = function(self, params)
+            ProductionMenu:new(params.chara, "elona.jeweler"):query()
+            return "turn_end"
+         end,
 
          categories = {
             "elona.misc_item"

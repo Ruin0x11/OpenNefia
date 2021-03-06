@@ -72,7 +72,6 @@ data:add {
          callback = function(self, params, result)
             local on_calc_materials = try_get_spot_info(self, "on_calc_materials")
             if on_calc_materials then
-               print("GO")
                return on_calc_materials(self, params, result)
             end
          end

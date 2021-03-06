@@ -6,6 +6,7 @@ local Enum = require("api.Enum")
 local Rand = require("api.Rand")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Skill = require("mod.elona_sys.api.Skill")
+local Effect = require("mod.elona.api.Effect")
 
 function Production.can_create(chara, recipe_id)
    -- >>>>>>>> shade2/material_data.hsp:176 	#module ...
@@ -67,6 +68,7 @@ function Production.produce_item(chara, recipe_id)
 
    local item = Itemgen.create(nil, nil, filter, chara)
    if item then
+      Effect.identify_item(item, Enum.IdentifyState.Name)
       Gui.mes("production.you_crafted", item:build_name(1))
       local exp = Production.calc_skill_exp_gained(chara, recipe.skill_used, materials_used)
       Skill.gain_skill_exp(chara, recipe.skill_used, exp)

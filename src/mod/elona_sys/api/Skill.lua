@@ -749,7 +749,7 @@ function Skill.get_description(skill_id, chara)
    return desc .. I18N.get("ability." .. skill_id .. ".description")
 end
 
-function Skill.gain_skill(chara, skill_id, initial_level, initial_stock)
+function Skill.gain_skill(chara, skill_id, initial_level, initial_stock, initial_potential)
    local skill = data["base.skill"]:ensure(skill_id)
 
    chara.skills[skill_id] = chara.skills[skill_id] or
@@ -771,10 +771,14 @@ function Skill.gain_skill(chara, skill_id, initial_level, initial_stock)
    end
 
    local new_level = math.max(chara:base_skill_level(skill_id) + (initial_level or 0), 1)
-   if skill.type == "spell" then
-      Skill.modify_potential(chara, skill_id, 200)
+   if initial_potential then
+      chara:mod_skill_potential(skill_id, initial_potential, "set")
    else
-      Skill.modify_potential(chara, skill_id, 50)
+      if skill.type == "spell" then
+         Skill.modify_potential(chara, skill_id, 200)
+      else
+         Skill.modify_potential(chara, skill_id, 50)
+      end
    end
    chara.skills[skill_id].level = new_level
    chara:refresh()
