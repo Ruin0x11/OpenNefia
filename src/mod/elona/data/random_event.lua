@@ -51,6 +51,7 @@ end
 data:add {
    _type = "elona.random_event",
    _id = "murderer",
+   elona_id = 15,
 
    image = "base.bg_re9",
 
@@ -75,6 +76,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "strange_feast",
+   elona_id = 14,
 
    image = "base.bg_re10",
 
@@ -95,6 +97,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "smell_of_food",
+   elona_id = 13,
 
    image = "base.bg_re10",
 
@@ -109,6 +112,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "avoiding_misfortune",
+   elona_id = 1,
 
    image = "base.bg_re8",
 }
@@ -116,6 +120,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "your_potential",
+   elona_id = 24,
 
    image = "base.bg_re4",
 
@@ -129,6 +134,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "gaining_faith",
+   elona_id = 18,
 
    image = "base.bg_re12",
 
@@ -142,6 +148,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "small_luck",
+   elona_id = 12,
 
    image = "base.bg_re3",
 
@@ -155,6 +162,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "dream_harvest",
+   elona_id = 23,
 
    image = "base.bg_re3",
 
@@ -168,6 +176,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "camping_site",
+   elona_id = 10,
 
    image = "base.bg_re3",
 
@@ -189,6 +198,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "creepy_dream",
+   elona_id = 4,
 
    image = "base.bg_re5",
 
@@ -203,6 +213,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "monster_dream",
+   elona_id = 22,
 
    image = "base.bg_re2",
 
@@ -217,6 +228,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "treasure_of_dream",
+   elona_id = 19,
 
    image = "base.bg_re15",
 
@@ -233,6 +245,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "lucky_day",
+   elona_id = 20,
 
    image = "base.bg_re12",
 
@@ -246,6 +259,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "quirk_of_fate",
+   elona_id = 21,
 
    image = "base.bg_re15",
 
@@ -262,6 +276,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "cursed_whispering",
+   elona_id = 5,
 
    image = "base.bg_re5",
 
@@ -284,6 +299,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "malicious_hand",
+   elona_id = 8,
 
    image = "base.bg_re9",
 
@@ -309,6 +325,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "corpse",
+   elona_id = 11,
 
    image = "base.bg_re7",
 
@@ -348,6 +365,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "wizards_dream",
+   elona_id = 2,
 
    image = "base.bg_re6",
 
@@ -361,6 +379,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "development",
+   elona_id = 3,
 
    image = "base.bg_re4",
 
@@ -374,6 +393,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "regeneration",
+   elona_id = 6,
 
    image = "base.bg_re4",
 
@@ -387,6 +407,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "meditation",
+   elona_id = 7,
 
    image = "base.bg_re4",
 
@@ -400,6 +421,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "great_luck",
+   elona_id = 9,
 
    image = "base.bg_re1",
 
@@ -414,6 +436,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "mad_millionaire",
+   elona_id = 16,
 
    image = "base.bg_re1",
 
@@ -430,6 +453,7 @@ data:add {
 data:add {
    _type = "elona.random_event",
    _id = "wandering_priest",
+   elona_id = 17,
 
    image = "base.bg_re11",
 
