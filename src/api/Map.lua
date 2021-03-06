@@ -649,20 +649,8 @@ end
 --- @tparam InstancedMap map
 function Map.position_in_parent_map(map)
    local area = Area.for_map(map)
-   local parent = Area.parent(map)
-   if parent == nil then
-      return nil, nil
-   end
 
-   -- Try seeing if there is a custom position set first.
-   if area.parent_x and area.parent_y then
-      return area.parent_x, area.parent_y
-   end
-
-   local floor = area.parent_floor or 1
-
-   -- Look in the area's archetype definition for a child map.
-   return parent:position_of_child(area, floor)
+   return Area.position_in_parent_map(area)
 end
 
 -- @tparam uint hour

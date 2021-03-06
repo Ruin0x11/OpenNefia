@@ -123,7 +123,6 @@ data:add {
 }
 
 local function do_curse(self, params)
-   local source = params.source
    local target = params.target
 
    local chance = params.power / 2
@@ -132,7 +131,7 @@ local function do_curse(self, params)
    end
 
    local resistance = 75 + target:skill_level("elona.stat_luck")
-   local enc_power = source:enchantment_power("elona.res_curse")
+   local enc_power = target:enchantment_power("elona.res_curse")
    if enc_power > 0 then
       resistance = resistance + enc_power / 2
    end
@@ -178,7 +177,7 @@ local function do_curse(self, params)
 
    local item = Rand.choice(considering)
 
-   Gui.mes_visible("magic.curse.apply", target.x, target.y, target, item)
+   Gui.mes_visible("magic.curse.apply", target.x, target.y, target, item:build_name(1, true))
    if item.curse_state == Enum.CurseState.Cursed then
       item.curse_state = Enum.CurseState.Doomed
    else
@@ -229,7 +228,6 @@ data:add {
    elona_id = 1114,
 
    params = {
-      "source",
       "target"
    },
 

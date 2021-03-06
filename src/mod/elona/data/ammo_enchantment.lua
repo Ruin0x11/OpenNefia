@@ -5,7 +5,6 @@ local Chara = require("api.Chara")
 local Action = require("api.Action")
 local Gui = require("api.Gui")
 local ElonaAction = require("mod.elona.api.ElonaAction")
-local Anim = require("mod.elona_sys.api.Anim")
 local Enum = require("api.Enum")
 
 data:add {
@@ -150,25 +149,16 @@ data:add {
             return
          end
 
-         local target = Rand.choice(targets)
-         if chara:is_player() or chara:relation_towards(target) >= Enum.Relation.Neutral then
-            if target:relation_towards(chara) >= Enum.Relation.Neutral and i > 1 then
-               consider = false
-               if Rand.one_in(5) then
-                  max = max + 1
-               end
-            end
-         else
-            if target:relation_towards(chara) <= Enum.Relation.Enemy then
-               consider = false
-               if Rand.one_in(5) then
-                  max = max + 1
-               end
+         local new_target = Rand.choice(targets)
+         if chara:relation_towards(new_target) >= Enum.Relation.Neutral and i > 1 then
+            consider = false
+            if Rand.one_in(5) then
+               max = max + 1
             end
          end
 
          if consider then
-            ElonaAction.physical_attack(chara, weapon, target, skill, 0, 0, true, ammo, ammo_enchantment_id)
+            ElonaAction.physical_attack(chara, weapon, new_target, skill, 0, 0, true, ammo, ammo_enchantment_id)
          end
 
          i = i + 1

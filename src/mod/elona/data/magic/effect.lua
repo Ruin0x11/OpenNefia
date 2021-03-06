@@ -23,6 +23,8 @@ local Mef = require("api.Mef")
 local Const = require("api.Const")
 local Quest = require("mod.elona.api.Quest")
 local Hunger = require("mod.elona.api.Hunger")
+local Material = require("mod.elona.api.Material")
+local Area = require("api.Area")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    assert(type(curse_state) == "number")
@@ -961,15 +963,24 @@ data:add {
             Gui.mes("TODO jail") -- TODO
          end
 
-         Gui.mes("misc.return.air_becomes_charged")
+         local this_area = assert(Area.current())
+         local parent_area = Area.parent(this_area)
 
-         -- TODO map
-         Gui.mes("TODO")
+         if parent_area then
+            local ok, map_metadata = parent_area:get_floor(1)
+            local dest_x, dest_y = Area.position_in_parent_map(this_area)
+            if ok and map_metadata.uid and dest_x and dest_y then
+               Gui.mes("misc.return.air_becomes_charged")
 
-         -- if map_uid then
-         --    s.return_destination_map_uid = map_uid
-         --    s.turns_until_cast_return = 5 + Rand.rnd(10)
-         -- end
+               s.return_destination_map_uid = map_metadata.uid
+               s.return_destination_map_x = dest_x
+               s.return_destination_map_y = dest_y
+               s.return_destination_map_uid = map_metadata.uid
+               s.turns_until_cast_return = 5 + Rand.rnd(10)
+            else
+               Log.error("Could not find destination parent map (%s %s %s)", ok, dest_x, dest_y)
+            end
+         end
       end
 
       return true
@@ -1410,10 +1421,15 @@ data:add {
          times = times + 6
       end
 
+      local map = target:current_map()
+      local level = map:calc("level")
+
       for _ = 1, times do
          Gui.mes_continue_sentence()
 
-         -- TODO material spot
+         local spot_type = "elona.general"
+         local material_id = Material.random_material_id(level, level / 5, spot_type)
+         Material.gain(target, material_id, 1)
       end
 
       return true

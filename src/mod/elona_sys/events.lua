@@ -88,44 +88,6 @@ local function proc_chara_turn_end(chara, params)
 end
 Event.register("base.on_chara_turn_end", "Proc player burden/hunger/speed", proc_chara_turn_end, { priority = 120000 })
 
-local function hourly_events()
-   -- >>>>>>>> shade2/main.hsp:627 	if mType=mTypeWorld{ ...
-   local s = save.elona_sys
-   local map = Map.current()
-
-   -- TODO adventurer
-
-   Effect.spoil_items(map)
-
-   if Map.is_world_map(map) then
-      if Rand.one_in(3) then
-         s.awake_hours = s.awake_hours + 1
-      end
-      if Rand.one_in(15) then
-         Gui.mes("action.move.global.nap")
-         s.awake_hours = math.max(0, s.awake_hours - 3)
-      end
-   else
-      if not map:calc("prevents_adding_awake_hours") then
-         s.awake_hours = s.awake_hours + 1
-      end
-   end
-
-   if World.date().hour == 8 then
-      Gui.mes_c("action.new_day", "Yellow")
-   end
-
-   if s.awake_hours >= Const.SLEEP_THRESHOLD_LIGHT then
-      ExHelp.maybe_show(9)
-   end
-   if Chara.player().nutrition < Const.HUNGER_THRESHOLD_NORMAL then
-      ExHelp.maybe_show(10)
-   end
-   -- <<<<<<<< shade2/main.hsp:636 	if cHunger(pc)<hungerNormal	: help 10 ..
-end
-
-Event.register("base.on_hour_passed", "Update awake hours, rot food", hourly_events)
-
 local function init_save()
    local s = save.elona_sys
    s.awake_hours = 0
@@ -147,7 +109,11 @@ end
 Event.register("base.on_init_save", "Init save (elona_sys)", init_save)
 
 local function show_element_text_damage(target, source, tense, element)
-   Gui.mes("element.damage." .. element._id, target)
+   if element then
+      Gui.mes("element.damage." .. element._id, target)
+   else
+      Gui.mes("element.damage.elona.default", target)
+   end
 end
 
 local function show_element_text_death(target, source, tense, element)
@@ -266,6 +232,7 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
       end
    else
       if not no_attack_text then
+         -- TODO dedup, only damage or was_killed text should be shown (?)
          if tense == "enemy" and chara then
             if weapon then
                local weapon_name = I18N.get_optional("damage.weapon." .. skill .. ".name")
@@ -288,14 +255,18 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
          end
       else
          if target:is_in_fov() then
-            if damage_level == 1 then
-               Gui.mes_c("damage.reactions.screams", "Orange", target)
-            elseif damage_level == 2 then
-               Gui.mes_c("damage.reactions.writhes_in_pain", "Pink", target)
-            elseif damage_level >= 3 then
-               Gui.mes_c("damage.reactions.is_severely_hurt", "Red", target)
-            elseif damage_level == -2 then
-               Gui.mes_c("damage.is_healed", "Blue", target)
+            if damage_level >= 1 then
+               show_element_text_damage(target, txt_source, tense, element)
+            else
+               if damage_level == 1 then
+                  Gui.mes_c("damage.reactions.screams", "Orange", target)
+               elseif damage_level == 2 then
+                  Gui.mes_c("damage.reactions.writhes_in_pain", "Pink", target)
+               elseif damage_level >= 3 then
+                  Gui.mes_c("damage.reactions.is_severely_hurt", "Red", target)
+               elseif damage_level == -2 then
+                  Gui.mes_c("damage.is_healed", "Blue", target)
+               end
             end
          end
       end

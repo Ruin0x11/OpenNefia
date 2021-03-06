@@ -29,7 +29,7 @@ local function update_museum()
    end
 end
 
-Event.register("base.on_hour_passed", "Update museum every hour", update_museum, 100000)
+Event.register("base.on_hour_passed", "Update museum every hour", update_museum, 80000)
 Event.register("base.on_get_item", "Update museum on item take", update_museum, 150000)
 Event.register("base.on_drop_item", "Update museum on item drop", update_museum, 150000)
 -- <<<<<<<< shade2/main.hsp:571 	if areaId(gArea)=areaMuseum 	: gosub *museum_upda ..

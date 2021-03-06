@@ -323,6 +323,14 @@ data:add {
 
 data:add {
    _type = "elona.material_spot",
+   _id = "general",
+
+   materials = {
+   }
+}
+
+data:add {
+   _type = "elona.material_spot",
    _id = "dungeon",
 
    materials = {

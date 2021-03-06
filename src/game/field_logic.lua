@@ -388,9 +388,7 @@ function field_logic.turn_end(chara)
    return "pass_turns"
 end
 
-local function revive_player()
-   field_logic_state.player_about_to_respawn = true
-
+local function do_revive_player()
    local player = Chara.player()
    assert(player:revive())
 
@@ -402,8 +400,16 @@ local function revive_player()
    end
 
    player:emit("base.on_player_death_revival")
+end
 
+local function revive_player()
+   field_logic_state.player_about_to_respawn = true
+   local ok, err = xpcall(do_revive_player, debug.traceback)
    field_logic_state.player_about_to_respawn = false
+
+   if not ok then
+      error(err)
+   end
 end
 
 function field_logic.player_died(player)

@@ -13,6 +13,10 @@ function Material.random_material_id(level, rarity, choices)
    level = math.clamp(level or 0, 0, max_material_level)
    rarity = math.clamp(rarity or 0, 0, 40)
    if choices then
+      if type(choices) == "string" then
+         local proto = data["elona.material_spot"]:ensure(choices)
+         choices = proto.materials or {}
+      end
       choices = table.set(choices)
    end
 

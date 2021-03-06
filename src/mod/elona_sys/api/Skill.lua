@@ -188,9 +188,9 @@ end
 local function skill_change_text(chara, skill_id, is_increase)
    local text
    if is_increase then
-      text = I18N.get("skill." .. skill_id .. ".increase", chara)
+      text = I18N.get_optional("skill." .. skill_id .. ".increase", chara)
    else
-      text = I18N.get("skill." .. skill_id .. ".decrease", chara)
+      text = I18N.get_optional("skill." .. skill_id .. ".decrease", chara)
    end
 
    if text then
@@ -198,7 +198,7 @@ local function skill_change_text(chara, skill_id, is_increase)
    end
 
    if is_increase then
-      return I18N.get("skill.default", chara, "ability." .. skill_id .. ".name")
+      return I18N.get("skill.default.increase", chara, "ability." .. skill_id .. ".name")
    else
       return I18N.get("skill.default.decrease", chara, "ability." .. skill_id .. ".name")
    end

@@ -38,7 +38,7 @@ Event.register("elona.on_chara_travel_in_world_map", "Proc weather travel effect
 local function proc_weather_changing(chara, params)
    Weather.pass_turn()
 end
-Event.register("base.on_hour_passed", "Proc weather changing", proc_weather_changing)
+Event.register("base.on_hour_passed", "Proc weather changing", proc_weather_changing, 70000)
 
 local function proc_weather_from_world_map_pos(map)
    Weather.change_from_world_map()

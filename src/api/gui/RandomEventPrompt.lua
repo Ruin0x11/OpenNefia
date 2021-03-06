@@ -2,13 +2,11 @@ local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local I18N = require("api.I18N")
 local Ui = require("api.Ui")
-local Rand = require("api.Rand")
 local IUiLayer = require("api.gui.IUiLayer")
 local Window = require("api.gui.Window")
+local config = require("internal.config")
 
-local Event = require("api.Event")
 local UiList = require("api.gui.UiList")
-local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
 local UiTheme = require("api.gui.UiTheme")
@@ -49,7 +47,7 @@ function RandomEventPrompt:init(title, text, image, choices)
    self.list = UiList:new(items)
    table.merge(self.list, UiListExt(self))
 
-   self.title = I18N.get("event.popup.title", I18N.get_optional(title) or title)
+   self.title = I18N.get("random_event.title", I18N.get_optional(title) or title)
    self.text = I18N.get_optional(text) or text
    self.image = image
 
@@ -118,19 +116,33 @@ function RandomEventPrompt:draw()
    self.list:draw()
 end
 
-function RandomEventPrompt:update()
-   if self.list.chosen then
-      local index = self.list.selected
+function RandomEventPrompt:update(dt)
+   if config.base.skip_random_event_popups and self.list:len() <= 1 then
+      local index = 1
+      Gui.mes(self.text)
+      Gui.mes("random_event.skip", self.list:get(index))
       return index, nil
    end
 
-   if self.canceled then
-      Rand.set_seed()
-      return nil, "canceled"
+   local chosen = self.list.chosen
+   local canceled = self.canceled
+
+   self.canceled = false
+   self.win:update(dt)
+   self.list:update(dt)
+
+   if chosen then
+      local index = self.list:selected_index()
+      return index, nil
    end
 
-   self.win:update()
-   self.list:update()
+   if canceled then
+      return nil, "canceled"
+   end
+end
+
+function RandomEventPrompt.make_headless_result()
+   return 1, nil
 end
 
 return RandomEventPrompt

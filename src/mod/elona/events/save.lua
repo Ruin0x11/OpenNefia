@@ -5,6 +5,8 @@ local function init_save()
    local s = save.elona
    s.turns_until_cast_return = 0
    s.return_destination_map_uid = nil
+   s.return_destination_map_x = nil
+   s.return_destination_map_y = nil
    s.holy_well_count = 0
    s.guild = nil
    s.artifact_locations = {}

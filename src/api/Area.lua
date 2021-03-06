@@ -88,6 +88,23 @@ function Area.parent(map_or_area)
    return Area.get(area.parent_area)
 end
 
+function Area.position_in_parent_map(area)
+   local parent = Area.parent(area)
+   if parent == nil then
+      return nil, nil
+   end
+
+   -- Try seeing if there is a custom position set first.
+   if area.parent_x and area.parent_y then
+      return area.parent_x, area.parent_y
+   end
+
+   local floor = area.parent_floor or 1
+
+   -- Look in the area's archetype definition for a child map.
+   return parent:position_of_child(area, floor)
+end
+
 function Area.get_root_area(map_or_area)
    local area = get_area(map_or_area)
    while area do
