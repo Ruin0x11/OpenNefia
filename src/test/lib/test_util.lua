@@ -4,6 +4,9 @@ local Area = require("api.Area")
 local Map = require("api.Map")
 local Chara = require("api.Chara")
 local field = require("game.field")
+local IOwned = require("api.IOwned")
+local Item = require("api.Item")
+local Enum = require("api.Enum")
 
 local test_util = {}
 
@@ -30,6 +33,29 @@ end
 function test_util.save_cycle()
    Save.save_game("__test__")
    Save.load_game("__test__")
+end
+
+function test_util.stripped_chara(id, map, x, y)
+   local chara
+   if map then
+      chara = Chara.create(id, x, y, {}, map)
+   else
+      chara = Chara.create(id, nil, nil, {ownerless=true})
+   end
+   chara:iter_items():each(IOwned.remove_ownership)
+   return chara
+end
+
+function test_util.stripped_item(id, map, x, y)
+   local item
+   if map == nil then
+      item = Item.create(id, x, y, {amount=1}, map)
+   else
+      item = Item.create(id, x, y, {ownerless=true,amount=1})
+   end
+   item.curse_state = Enum.CurseState.Normal
+   item.spoilage_date = nil
+   return item
 end
 
 return test_util

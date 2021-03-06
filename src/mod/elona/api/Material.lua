@@ -128,9 +128,12 @@ function Material.dig_random_site(chara, feat)
    local site = calc_base_mat_spot_type(map, chara)
 
    if feat then
-      local ty = feat:calc("material_spot_type")
-      if ty then
-         site = ty
+      local info = feat.params.material_spot_info
+      if info then
+         local ty = data["elona.material_spot_feat_info"]:ensure(info).material_spot_type
+         if ty then
+            site = ty
+         end
       end
       local res = feat:emit("elona.on_feat_calc_materials", {chara=chara}, {level=level,material_spot_type=site})
       if res then
