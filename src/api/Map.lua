@@ -111,31 +111,17 @@ function Map.load(uid)
    return success, map
 end
 
---- Loads a map from the current save, runs a callback on it, and
---- saves it.
----
---- @tparam uid:InstancedMap|InstancedMap uid
---- @tparam function cb
---- @treturn bool success
---- @treturn InstancedMap|string result/error
-function Map.edit(uid, cb)
-   if Map.current().uid == uid then
-      return false, "Map.edit should only be called for maps besides the currently loaded one"
-   end
+function Map.delete(uid)
+   assert(type(uid) == "number")
 
-   local ok, err = Map.load(uid)
-   if not ok then
+   local path = Fs.join("map", tostring(uid))
+   Log.debug("Deleting map %d from %s", uid, path)
+   local success, err = SaveFs.delete(path, "temp")
+   if not success then
       return false, err
    end
 
-   local map = err
-   ok, err = xpcall(function() return cb(map) end, debug.traceback)
-
-   if not ok then
-      return false, err
-   end
-
-   return Map.save(map)
+   return true
 end
 
 --- True if this map is an overworld like North Tyris.
@@ -339,7 +325,7 @@ end
 --- @tparam[opt] InstancedMap map
 function Map.force_clear_pos(x, y, map)
    if not Map.is_floor(x, y, map) then
-      map:set_tile(x, y, "base.floor")
+      map:set_tile(x, y, "base.floor") -- TODO use map tileset instead
    end
 
    local on_cell = Chara.at(x, y, map)
@@ -363,6 +349,7 @@ end
 ---    checking for tile openness.
 ---  - only_map (bool): ignore characters on tiles; only check for
 ---    walls/floors.
+---  - force (bool): if true, force clear a position if none is found.
 --- @tparam[opt] InstancedMap map
 function Map.find_free_position(x, y, params, map)
    -- >>>>>>>> shade2/item.hsp:565 	if (val=-1)&(mode!mode_shop){	;set location ..
@@ -412,6 +399,12 @@ function Map.find_free_position(x, y, params, map)
 
       tries = tries + 1
    until tries == 100
+
+   if params.force then
+      Map.force_clear_pos(sx, sy, map)
+      assert(check_tile(sx, sy, map))
+      return sx, sy
+   end
 
    return nil
    -- <<<<<<<< shade2/item.hsp:593 		} ..

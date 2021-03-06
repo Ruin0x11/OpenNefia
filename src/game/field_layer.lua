@@ -209,6 +209,10 @@ function field_layer:remove_async_draw_callback(tag)
    self.draw_callbacks:remove(tag)
 end
 
+function field_layer:remove_all_async_draw_callbacks()
+   self.draw_callbacks:remove_all()
+end
+
 function field_layer:wait_for_draw_callbacks()
    self.draw_callbacks:wait()
 end

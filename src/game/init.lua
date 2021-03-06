@@ -38,6 +38,7 @@ local function main_title()
       save_store.clear()
 
       Gui.stop_background_sound()
+      Gui.stop_all_draw_callbacks()
 
       local choice = title:query()
 
