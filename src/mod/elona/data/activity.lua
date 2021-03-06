@@ -116,7 +116,7 @@ data:add {
          name = "pass turns",
 
          callback = function(self, params)
-            if not Item.is_alive(self.food, params.chara:current_map()) then
+            if not Item.is_alive(self.food) then
                params.chara:remove_activity()
                params.chara:set_item_using(nil)
                return "turn_end"

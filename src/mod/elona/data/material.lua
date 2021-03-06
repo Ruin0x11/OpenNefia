@@ -18,6 +18,7 @@ data:add_type {
       }
    }
 }
+data:add_index("elona.material", "elona_id")
 
 local materials = {
    -- global
