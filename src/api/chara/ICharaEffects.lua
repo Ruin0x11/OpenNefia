@@ -1,7 +1,5 @@
 local data = require("internal.data")
-local Event = require("api.Event")
 local Gui = require("api.Gui")
-local Rand = require("api.Rand")
 local I18N = require("api.I18N")
 
 local ICharaEffects = class.interface("ICharaEffects")
@@ -9,6 +7,12 @@ local ICharaEffects = class.interface("ICharaEffects")
 function ICharaEffects:init()
    self.effects = {}
    self.effect_immunities = {}
+   if self.proto.effect_immunities then
+      for _, effect_id in ipairs(self.proto.effect_immunities) do
+         data["base.effect"]:ensure(effect_id)
+         self.effect_immunities[effect_id] = true
+      end
+   end
 end
 
 function ICharaEffects:effect_turns(id)

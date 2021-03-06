@@ -97,7 +97,10 @@ end
 
 function CharacterInfoMenu:set_data(chara)
    self.chara = chara or self.chara
-   self.sublayers.sublayers[1]:set_data(self.chara)
+
+   for _, pair in self.sublayers:iter() do
+      pair.layer:set_data(self.chara)
+   end
 end
 
 function CharacterInfoMenu:select_page(page)

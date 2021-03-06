@@ -624,40 +624,42 @@ end
 Event.register("elona_sys.on_quest_check", "Check escort quest targets", check_escort_quest_targets)
 
 local function calc_power_after_resistance(chara, effect, element, power)
-   local resistance = chara:resist_level(element._id)
-   local level = math.floor(resistance / 50)
+-- >>>>>>>> shade2/chara_func.hsp:1008 *conCalc ...
+   local level = chara:resist_grade(element._id)
    power = (Rand.rnd(math.floor(power / 2) + 1) + math.floor(power / 2)) * 100 / (50 + level * 50)
 
-   if level >= 3 and power < 40 then
+   if level >= Const.RESIST_LEVEL_MINIMUM and power < 40 then
       return 0
    end
 
    return power
+   -- <<<<<<<< shade2/chara_func.hsp:1016 	return ..
 end
 
 local function calc_effect_power_resist(chara, params, power)
    local effect = params.effect
 
    if effect.related_element ~= nil then
-      local element = data["base.element"][effect.related_element]
-      if element ~= nil then
-         power = calc_power_after_resistance(chara, effect, element, power)
-      end
+      local element = data["base.element"]:ensure(effect.related_element)
+      power = calc_power_after_resistance(chara, effect, element, power)
    end
 
    return power
 end
 Event.register("elona_sys.calc_effect_power",
                "Effect power from elemental resistance",
-               calc_effect_power_resist)
+               calc_effect_power_resist, { priority = 50000 })
 
 local function calc_effect_power_reduction(chara, params, power)
-   local reduction = params.effect.power_reduction_factor or 1
-   return math.floor(power / reduction)
+   local cb = params.effect.calc_adjusted_power
+   if cb then
+      power = math.floor(cb(chara, power))
+   end
+   return power
 end
 Event.register("elona_sys.calc_effect_power",
                "Effect power from power reduction",
-               calc_effect_power_reduction)
+               calc_effect_power_reduction, { priority = 60000 })
 
 Event.register("elona_sys.on_apply_effect", "Stop activity", function(chara, params)
                   if params.effect.stops_activity then

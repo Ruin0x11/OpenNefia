@@ -16,6 +16,7 @@ local data = require("internal.data")
 local save = require("internal.global.save")
 local chara_make = require("game.chara_make")
 local Save = require("api.Save")
+local field_logic_state = require("internal.global.field_logic_state")
 
 local DeathMenu = require("api.gui.menu.DeathMenu")
 
@@ -321,6 +322,11 @@ function field_logic.player_turn_query()
       return result, player
    end
 
+   if field_logic_state.about_to_autosave then
+      field_logic_state.about_to_autosave = false
+      Save.save_game()
+   end
+
    while going do
       local ran, turn_result = field:run_actions(dt, player)
       field:update(dt)
@@ -383,6 +389,8 @@ function field_logic.turn_end(chara)
 end
 
 local function revive_player()
+   field_logic_state.player_about_to_respawn = true
+
    local player = Chara.player()
    assert(player:revive())
 
@@ -394,6 +402,8 @@ local function revive_player()
    end
 
    player:emit("base.on_player_death_revival")
+
+   field_logic_state.player_about_to_respawn = false
 end
 
 function field_logic.player_died(player)

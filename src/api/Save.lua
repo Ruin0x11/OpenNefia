@@ -12,6 +12,7 @@ local fs = require("util.fs")
 local config = require("internal.config")
 local field = require("game.field")
 local save_store = require("internal.save_store")
+local field_logic_state = require("internal.global.field_logic_state")
 
 local Save = {}
 
@@ -115,7 +116,11 @@ end
 function Save.autosave()
    -- TODO show house
    if config.base.autosave then
-      Save.save_game()
+      -- More than one place could call `Save.autosave()` before the player's
+      -- turn is reached, but we want to make sure we only save one time. The
+      -- save will actually get executed right before control is restored to the
+      -- player in field_logic.player_turn_query().
+      field_logic_state.about_to_autosave = true
    end
 end
 

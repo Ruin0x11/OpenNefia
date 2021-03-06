@@ -1210,8 +1210,7 @@ local chara = {
       race = "elona.slime",
       class = "elona.tourist",
       resistances = {
-         -- Element acid is invalid in vanilla, although it is defined.
-         -- ["elona.acid"] = 500,
+         ["elona.acid"] = 500,
       },
       category = 3,
       rarity = 80000,
@@ -1230,8 +1229,7 @@ local chara = {
       relation = Enum.Relation.Enemy,
       race = "elona.slime",
       resistances = {
-         -- Element acid is invalid in vanilla, although it is defined.
-         -- ["elona.acid"] = 500,
+         ["elona.acid"] = 500,
       },
       color = { 255, 155, 155 },
       category = 3,
@@ -1252,8 +1250,7 @@ local chara = {
       race = "elona.slime",
       class = "elona.predator",
       resistances = {
-         -- Element acid is invalid in vanilla, although it is defined.
-         -- ["elona.acid"] = 500,
+         ["elona.acid"] = 500,
       },
       image = "elona.chara_slime",
       color = { 175, 175, 255 },
@@ -1274,8 +1271,7 @@ local chara = {
       race = "elona.slime",
       class = "elona.predator",
       resistances = {
-         -- Element acid is invalid in vanilla, although it is defined.
-         -- ["elona.acid"] = 500,
+         ["elona.acid"] = 500,
       },
       image = "elona.chara_slime",
       color = { 175, 255, 175 },
@@ -1307,8 +1303,7 @@ local chara = {
       relation = Enum.Relation.Enemy,
       race = "elona.slime",
       resistances = {
-         -- Element acid is invalid in vanilla, although it is defined.
-         -- ["elona.acid"] = 500,
+         ["elona.acid"] = 500,
       },
       image = "elona.chara_bubble",
       rarity = 25000,
@@ -1326,8 +1321,7 @@ local chara = {
       relation = Enum.Relation.Enemy,
       race = "elona.slime",
       resistances = {
-         -- Element acid is invalid in vanilla, although it is defined.
-         -- ["elona.acid"] = 500,
+         ["elona.acid"] = 500,
       },
       image = "elona.chara_bubble",
       color = { 225, 225, 255 },
@@ -3658,7 +3652,7 @@ local chara = {
       },
       color = { 255, 215, 175 },
       coefficient = 400,
-      flags = { "IsFloating", "IsImmuneToFear" },
+      flags = { "IsFloating" },
       on_eat_corpse = eating_effect.electric_cloud,
       ai_actions = {
          main = {
@@ -3672,7 +3666,8 @@ local chara = {
       skills = {
          "elona.spell_lightning_bolt",
          "elona.action_lightning_breath"
-      }
+      },
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "chaos_cloud",
@@ -3686,7 +3681,7 @@ local chara = {
       },
       color = { 225, 195, 255 },
       coefficient = 400,
-      flags = { "IsFloating", "IsImmuneToFear" },
+      flags = { "IsFloating" },
       on_eat_corpse = eating_effect.chaos_cloud,
       ai_actions = {
          main = {
@@ -3700,7 +3695,8 @@ local chara = {
          "elona.spell_chaos_ball"
       },
       unarmed_element_id = "elona.chaos",
-      unarmed_element_power = 300
+      unarmed_element_power = 300,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "floating_eye",
@@ -3716,7 +3712,7 @@ local chara = {
       },
       rarity = 80000,
       coefficient = 400,
-      flags = { "IsFloating", "IsImmuneToFear" },
+      flags = { "IsFloating" },
       on_eat_corpse = eating_effect.floating_eye,
       ai_actions = {
          calm_action = "elona.calm_stand",
@@ -3727,7 +3723,8 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 15,
       unarmed_element_id = "elona.nerve",
-      unarmed_element_power = 250
+      unarmed_element_power = 250,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "chaos_eye",
@@ -3745,7 +3742,7 @@ local chara = {
       color = { 185, 155, 215 },
       rarity = 60000,
       coefficient = 400,
-      flags = { "IsFloating", "IsImmuneToFear" },
+      flags = { "IsFloating" },
       on_eat_corpse = eating_effect.chaos_eye,
       ai_actions = {
          calm_action = "elona.calm_stand",
@@ -3763,7 +3760,8 @@ local chara = {
          "elona.action_eye_of_mutation"
       },
       unarmed_element_id = "elona.chaos",
-      unarmed_element_power = 400
+      unarmed_element_power = 400,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "mad_gaze",
@@ -3781,7 +3779,7 @@ local chara = {
       color = { 175, 175, 255 },
       rarity = 60000,
       coefficient = 400,
-      flags = { "IsFloating", "IsImmuneToFear" },
+      flags = { "IsFloating" },
       on_eat_corpse = eating_effect.mad_gaze,
       ai_actions = {
          calm_action = "elona.calm_stand",
@@ -3799,7 +3797,8 @@ local chara = {
          "elona.action_eye_of_insanity"
       },
       unarmed_element_id = "elona.mind",
-      unarmed_element_power = 300
+      unarmed_element_power = 300,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "death_gaze",
@@ -3818,7 +3817,7 @@ local chara = {
       color = { 255, 155, 155 },
       rarity = 60000,
       coefficient = 400,
-      flags = { "IsFloating", "IsImmuneToFear" },
+      flags = { "IsFloating" },
       on_eat_corpse = eating_effect.floating_eye,
       ai_actions = {
          calm_action = "elona.calm_stand",
@@ -3836,7 +3835,8 @@ local chara = {
          "elona.action_eye_of_mana"
       },
       unarmed_element_id = "elona.nerve",
-      unarmed_element_power = 450
+      unarmed_element_power = 450,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "wyvern",
@@ -4667,7 +4667,6 @@ local chara = {
       image = "elona.chara_baptist",
       color = { 255, 155, 155 },
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       ai_actions = {
          main = {
             { id = "elona.melee" },
@@ -4683,7 +4682,8 @@ local chara = {
       skills = {
          "elona.spell_fire_bolt",
          "elona.spell_short_teleport"
-      }
+      },
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "blue_baptist",
@@ -4700,7 +4700,6 @@ local chara = {
       image = "elona.chara_baptist",
       color = { 175, 175, 255 },
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       ai_actions = {
          main = {
             { id = "elona.melee" },
@@ -4716,7 +4715,8 @@ local chara = {
       skills = {
          "elona.spell_ice_bolt",
          "elona.spell_short_teleport"
-      }
+      },
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "brown_bear",
@@ -4778,10 +4778,10 @@ local chara = {
       class = "elona.warrior",
       rarity = 40000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "steel_mass",
@@ -4795,10 +4795,10 @@ local chara = {
       color = { 225, 225, 255 },
       rarity = 30000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "golden_armor",
@@ -4812,10 +4812,10 @@ local chara = {
       color = { 255, 215, 175 },
       rarity = 30000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "death_armor",
@@ -4828,7 +4828,6 @@ local chara = {
       color = { 255, 225, 225 },
       rarity = 30000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_actions = {
          sub = {
@@ -4840,7 +4839,8 @@ local chara = {
       ai_move_chance = 100,
       skills = {
          "elona.action_touch_of_weakness"
-      }
+      },
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "medusa",
@@ -4925,7 +4925,7 @@ local chara = {
       race = "elona.phantom",
       class = "elona.wizard",
       coefficient = 400,
-      flags = { "IsFloating", "IsImmuneToFear" },
+      flags = { "IsFloating" },
       ai_actions = {
          sub = {
             { id = "elona.skill", skill_id = "elona.buff_slow" }
@@ -4936,7 +4936,8 @@ local chara = {
       ai_move_chance = 100,
       skills = {
          "elona.buff_slow"
-      }
+      },
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "tyrannosaurus",
@@ -5347,10 +5348,10 @@ local chara = {
       color = { 255, 255, 175 },
       rarity = 40000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "stone_golem",
@@ -5363,10 +5364,10 @@ local chara = {
       race = "elona.golem",
       rarity = 40000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "steel_golem",
@@ -5381,10 +5382,10 @@ local chara = {
       color = { 205, 205, 205 },
       rarity = 40000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "golden_golem",
@@ -5398,10 +5399,10 @@ local chara = {
       color = { 255, 215, 175 },
       rarity = 30000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "mithril_golem",
@@ -5415,10 +5416,10 @@ local chara = {
       color = { 225, 225, 255 },
       rarity = 20000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "sky_golem",
@@ -5432,10 +5433,10 @@ local chara = {
       color = { 155, 205, 205 },
       rarity = 15000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "adamantium_golem",
@@ -5449,10 +5450,10 @@ local chara = {
       color = { 175, 255, 175 },
       rarity = 15000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "fire_crab",
@@ -5538,9 +5539,9 @@ local chara = {
       class = "elona.warrior",
       category = Enum.CharaCategory.Zombie,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "skeleton_berserker",
@@ -5557,7 +5558,6 @@ local chara = {
       eqtwohand = 1,
       category = Enum.CharaCategory.Zombie,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       ai_distance = 1,
       ai_move_chance = 100,
 
@@ -5566,7 +5566,8 @@ local chara = {
          if spec then
             spec.is_two_handed = true
          end
-      end
+      end,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "missionary_of_darkness",
@@ -5581,7 +5582,6 @@ local chara = {
       image = "elona.chara_missionary_of_darkness",
       category = Enum.CharaCategory.Zombie,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       ai_actions = {
          main = {
             { id = "elona.melee" },
@@ -5594,7 +5594,8 @@ local chara = {
          "elona.action_touch_of_weakness"
       },
       unarmed_element_id = "elona.mind",
-      unarmed_element_power = 150
+      unarmed_element_power = 150,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "pawn",
@@ -6783,7 +6784,6 @@ local chara = {
       relation = Enum.Relation.Enemy,
       race = "elona.machine",
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
       ai_move_chance = 100,
@@ -6797,7 +6797,8 @@ local chara = {
             equip_spec["elona.girdle"] = { _id = "elona.crimson_plate" }
          end
          -- <<<<<<<< shade2/chara.hsp:176 	if (cId(rc)=186)or(cId(rc)=187)or(cId(rc)=188) :  ..
-      end
+      end,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "blade_alpha",
@@ -6809,7 +6810,6 @@ local chara = {
       class = "elona.predator",
       color = { 225, 225, 255 },
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
       ai_move_chance = 100,
@@ -6823,7 +6823,8 @@ local chara = {
             equip_spec["elona.girdle"] = { _id = "elona.crimson_plate" }
          end
          -- <<<<<<<< shade2/chara.hsp:176 	if (cId(rc)=186)or(cId(rc)=187)or(cId(rc)=188) :  ..
-      end
+      end,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "blade_omega",
@@ -6835,7 +6836,6 @@ local chara = {
       class = "elona.predator",
       color = { 255, 155, 155 },
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
       ai_move_chance = 100,
@@ -6849,7 +6849,8 @@ local chara = {
             equip_spec["elona.girdle"] = { _id = "elona.crimson_plate" }
          end
          -- <<<<<<<< shade2/chara.hsp:176 	if (cId(rc)=186)or(cId(rc)=187)or(cId(rc)=188) :  ..
-      end
+      end,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "kaneda_bike",
@@ -6865,14 +6866,15 @@ local chara = {
       quality = Enum.Quality.Unique,
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
-      flags = { "IsImmuneToFear", "IsSuitableForMount" },
+      flags = { "IsSuitableForMount" },
       on_eat_corpse = eating_effect.iron,
       dialog = "elona.kaneda_bike",
       ai_actions = {
          calm_action = "elona.calm_stand"
       },
       ai_distance = 1,
-      ai_move_chance = 0
+      ai_move_chance = 0,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "cub",
@@ -6887,13 +6889,14 @@ local chara = {
       image = "elona.chara_bike",
       rarity = 5000,
       coefficient = 400,
-      flags = { "IsImmuneToFear", "IsSuitableForMount" },
+      flags = { "IsSuitableForMount" },
       on_eat_corpse = eating_effect.iron,
       ai_actions = {
          calm_action = "elona.calm_stand"
       },
       ai_distance = 1,
-      ai_move_chance = 0
+      ai_move_chance = 0,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "mine_dog",
@@ -6905,8 +6908,6 @@ local chara = {
       image = "elona.chara_mine_dog",
       rarity = 25000,
       coefficient = 400,
-      flags = { "IsImmuneToFear", "CuresMpFrequently" },
-      is_immune_to_mines = true,
       on_eat_corpse = eating_effect.iron,
       ai_actions = {
          main = {
@@ -6920,6 +6921,8 @@ local chara = {
       },
       ai_distance = 3,
       ai_move_chance = 40,
+      ai_regenerates_mana = true,
+      is_immune_to_mines = true,
       skills = {
          "elona.action_drop_mine",
          "elona.spell_gravity"
@@ -6931,7 +6934,8 @@ local chara = {
             drops[#drops+1] = { _id = "elona.mine" }
          end
          -- <<<<<<<< shade2/item.hsp:372 	} ..
-      end
+      end,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "iron_maiden",
@@ -6944,12 +6948,12 @@ local chara = {
       damage_reaction = { id = "elona.cut", power = 250 },
       rarity = 50000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
       ai_move_chance = 100,
       unarmed_element_id = "elona.cut",
-      unarmed_element_power = 150
+      unarmed_element_power = 150,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "deformed_eye",
@@ -6962,7 +6966,7 @@ local chara = {
       image = "elona.chara_deformed_eye",
       rarity = 60000,
       coefficient = 400,
-      flags = { "IsFloating", "IsImmuneToFear" },
+      flags = { "IsFloating" },
       on_eat_corpse = eating_effect.deformed_eye,
       ai_actions = {
          sub = {
@@ -6982,7 +6986,8 @@ local chara = {
             drops[#drops+1] = { _id = "elona.potion_of_evolution" }
          end
          -- <<<<<<<< shade2/item.hsp:366 	} ..
-      end
+      end,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "impure_eye",
@@ -6996,7 +7001,7 @@ local chara = {
       color = { 255, 155, 155 },
       rarity = 60000,
       coefficient = 400,
-      flags = { "IsFloating", "IsImmuneToFear" },
+      flags = { "IsFloating" },
       on_eat_corpse = eating_effect.deformed_eye,
       ai_actions = {
          sub = {
@@ -7008,7 +7013,8 @@ local chara = {
       ai_move_chance = 80,
       skills = {
          "elona.action_eye_of_mutation"
-      }
+      },
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "wisp",
@@ -7023,7 +7029,7 @@ local chara = {
       },
       rarity = 50000,
       coefficient = 400,
-      flags = { "IsFloating", "IsImmuneToFear" },
+      flags = { "IsFloating" },
       on_eat_corpse = eating_effect.ether,
       ai_actions = {
          main = {
@@ -7042,7 +7048,8 @@ local chara = {
          "elona.spell_lightning_bolt",
          "elona.action_lightning_breath",
          "elona.action_eye_of_ether"
-      }
+      },
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "hedgehog",
@@ -7220,7 +7227,6 @@ local chara = {
       rarity = 30000,
       coefficient = 400,
       is_invisible = true,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.stalker,
       ai_actions = {
          main = {
@@ -7228,7 +7234,8 @@ local chara = {
          }
       },
       ai_distance = 2,
-      ai_move_chance = 80
+      ai_move_chance = 80,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "shadow_stalker",
@@ -7244,7 +7251,6 @@ local chara = {
       rarity = 30000,
       coefficient = 400,
       is_invisible = true,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.stalker,
       ai_actions = {
          main = {
@@ -7252,7 +7258,8 @@ local chara = {
          }
       },
       ai_distance = 2,
-      ai_move_chance = 70
+      ai_move_chance = 70,
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "ebon",
@@ -7771,7 +7778,6 @@ local chara = {
       },
       rarity = 20000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.yith,
       ai_actions = {
          main = {
@@ -7785,7 +7791,8 @@ local chara = {
       skills = {
          "elona.action_drain_blood",
          "elona.action_eye_of_insanity"
-      }
+      },
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "shub_niggurath",
@@ -7802,7 +7809,6 @@ local chara = {
       image = "elona.chara_shub_niggurath",
       rarity = 40000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.yith,
       ai_actions = {
          calm_action = "elona.calm_stand",
@@ -7823,7 +7829,8 @@ local chara = {
          "elona.spell_short_teleport",
          "elona.action_eye_of_insanity",
          "elona.spell_summon_monsters"
-      }
+      },
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "gagu",
@@ -7864,7 +7871,6 @@ local chara = {
       image = "elona.chara_spiral_king",
       rarity = 30000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.yith,
       ai_actions = {
          main = {
@@ -7886,7 +7892,8 @@ local chara = {
          "elona.spell_nether_arrow",
          "elona.spell_mutation",
          "elona.action_eye_of_insanity"
-      }
+      },
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "fairy",
@@ -8542,7 +8549,6 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       rarity = 50000,
       coefficient = 400,
-      flags = { "IsImmuneToFear" },
       on_eat_corpse = eating_effect.iron,
       eqammo = { 25020, 3 },
       eqrange = { 496, 4 },
@@ -8553,6 +8559,7 @@ local chara = {
          ["elona.ranged_weapon"] = { _id = "elona.shot_gun", quality = Enum.Quality.Great },
          ["elona.ammo"] = { category = "elona.equip_ammo_bullet", quality = Enum.Quality.Good },
       },
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "little_sister",

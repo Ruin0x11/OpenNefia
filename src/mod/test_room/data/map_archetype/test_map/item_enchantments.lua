@@ -126,6 +126,35 @@ local function make_fixed_enchantments(x, y, map)
    return 2, iy + 2
 end
 
+local function make_resist_enchantments(x, y, map)
+   local ids = {}
+
+   local ix = x
+   local iy = y
+   for _, idx, elem in data["base.element"]:iter():filter(function(e) return e.can_resist end):enumerate() do
+      ix = x + ((idx - 1) % (map:width() - x - 2))
+      iy = y + math.floor((idx - 1) / (map:width() - x - 2))
+      if not map:can_access(ix, iy) then
+         break
+      end
+
+      local categories = { "elona.equip_body" }
+      for _, cat in ipairs(categories) do
+         if ids[cat] == nil then
+            ids[cat] = items_in_category(cat)
+         end
+         local _id = Rand.choice(ids[cat])
+         for i= -1, 1, 2 do
+            local power = 150 * i
+            local item = assert(Item.create(_id, ix, iy, {}, map))
+            item:add_enchantment("elona.modify_resistance", power, { element_id = elem._id })
+         end
+      end
+   end
+
+   return 2, iy + 2
+end
+
 function item_enchantments.on_generate_map(area, floor)
    local map = utils.create_map(20, 30)
    utils.create_stairs(2, 2, area, map)
@@ -139,6 +168,7 @@ function item_enchantments.on_generate_map(area, floor)
    x, y = make_enchantments(x, y, map)
    x, y = make_enchantment_skills(x, y, map)
    x, y = make_fixed_enchantments(x, y, map)
+   x, y = make_resist_enchantments(x, y, map)
 
    Item.iter(map):each(function(i) Effect.identify_item(i, Enum.IdentifyState.Full) end)
 

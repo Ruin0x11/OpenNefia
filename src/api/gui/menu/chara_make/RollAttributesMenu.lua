@@ -129,7 +129,7 @@ function RollAttributesMenu:reroll(play_sound, minimum)
    local skills = calc_rolled_attributes(race, class)
    for _, v in ipairs(self.data) do
       if v.value and not v.locked then
-         local skill = skills["base.skill:" .. v.id]
+         local skill = skills[v.id]
          if skill then
             if minimum then
                skill.level = skill.level - math.floor(skill.level / 2)

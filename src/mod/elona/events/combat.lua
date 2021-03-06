@@ -4,6 +4,7 @@ local Event = require("api.Event")
 local Chara = require("api.Chara")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
+local Const = require("api.Const")
 
 local function retreat_in_fear(chara, params)
    -- >>>>>>>> shade2/chara_func.hsp:1535 		if cHp(tc)<cMhp(tc)/5:if tc!pc:if cFear(tc)=0:if ..
@@ -182,13 +183,13 @@ Event.register("base.hook_calc_damage",
 
 
 local function calc_damage_resistance(chara, params, result)
-   -- >>>>>>>> elona122/shade2/chara_func.hsp:1444 	if (ele=false)or(ele>=tailResist){ ..
+   -- >>>>>>>> shade2/chara_func.hsp:1444 	if (ele=false)or(ele>=tailResist){ ..
    local element = params.element
    if element and element.can_resist then
-      local resistance = math.floor(chara:resist_level(element._id) / 50)
-      if resistance < 3 then
+      local resistance = chara:resist_grade(element._id)
+      if resistance < Const.RESIST_LEVEL_MINIMUM then
          result = result * 150 / math.clamp(resistance * 50 + 50, 40, 150)
-      elseif resistance < 10 then
+      elseif resistance < Const.RESIST_LEVEL_IMMUNE then
          result = result * 100 / (resistance * 50 + 50)
       else
          result = 0
@@ -196,7 +197,7 @@ local function calc_damage_resistance(chara, params, result)
       result = result * 100 / (chara:resist_level("elona.magic") / 2 + 50)
    end
    return result
-   -- <<<<<<<< elona122/shade2/chara_func.hsp:1454 		} ..
+   -- <<<<<<<< shade2/chara_func.hsp:1454 		} ..
 end
 
 Event.register("base.hook_calc_damage",

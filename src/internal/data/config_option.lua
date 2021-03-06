@@ -18,7 +18,7 @@ data:add_multi(
          _id = "show_charamake_extras",
 
          type = "boolean",
-         default = true
+         default = false
       },
       {
          _id = "quickstart_scenario",
@@ -628,6 +628,12 @@ data:add_multi(
       },
       {
          _id = "debug_hp_always_full",
+
+         type = "boolean",
+         default = false
+      },
+      {
+         _id = "debug_show_resist_level",
 
          type = "boolean",
          default = false

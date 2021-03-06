@@ -175,14 +175,14 @@ function Skill.modify_potential_from_level(chara, skill, level_delta)
          potential = math.min(math.floor(potential * (1.0 + (1.0 - Const.POTENTIAL_DECAY_RATE))) + 1, 400)
       end
    end
-   chara.skills["base.skill:" .. skill].potential = potential
+   chara.skills[skill].potential = potential
    return potential
 end
 
 -- TODO replace with ICharaSkills:mod_skill_potential()
 function Skill.modify_potential(chara, skill, delta)
    local potential = math.clamp(math.floor(chara:skill_potential(skill) + delta), 2, 400)
-   chara.skills["base.skill:" .. skill].potential = potential
+   chara.skills[skill].potential = potential
 end
 
 local function skill_change_text(chara, skill_id, is_increase)
@@ -752,7 +752,7 @@ end
 function Skill.gain_skill(chara, skill_id, initial_level, initial_stock)
    local skill = data["base.skill"]:ensure(skill_id)
 
-   chara.skills["base.skill:" .. skill_id] = chara.skills["base.skill:" .. skill_id] or
+   chara.skills[skill_id] = chara.skills[skill_id] or
       {
          level = 0,
          potential = 0,
@@ -776,7 +776,7 @@ function Skill.gain_skill(chara, skill_id, initial_level, initial_stock)
    else
       Skill.modify_potential(chara, skill_id, 50)
    end
-   chara.skills["base.skill:" .. skill_id].level = new_level
+   chara.skills[skill_id].level = new_level
    chara:refresh()
 end
 
@@ -852,8 +852,15 @@ function Skill.apply_race_params(chara, race_id)
    end
 
    if race_data.resistances then
-      for element_id, amount in ipairs(race_data.resistances) do
-         chara:mod_resist_level(element_id, amount, "set")
+      for element_id, amount in pairs(race_data.resistances) do
+         chara:mod_base_resist_level(element_id, amount, "set")
+      end
+   end
+
+   if race_data.effect_immunities then
+      for _, effect_id in ipairs(race_data.effect_immunities) do
+         data["base.effect"]:ensure(effect_id)
+         chara.effect_immunities[effect_id] = true
       end
    end
 

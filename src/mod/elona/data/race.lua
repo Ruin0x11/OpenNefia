@@ -2169,6 +2169,12 @@ local race =
             "elona.waist",
             "elona.leg"
          },
+
+         -- >>>>>>>> shade2/chara_func.hsp:934 		if cnRace(tc)="golem":f=false ...
+         effect_immunities = {
+            "elona.dimming"
+         }
+         -- <<<<<<<< shade2/chara_func.hsp:934 		if cnRace(tc)="golem":f=false ..
       },
       {
          _id = "rock",
