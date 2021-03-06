@@ -84,89 +84,20 @@ end
     },
     info = {
       ["and"] = "と",
-      collect = {
-        target = function(_1)
-  return ("%sに住む人物")
-  :format(_1)
-end,
-        text = function(_1, _2)
-  return ("依頼人のために%sから%sを調達")
-  :format(_2, _1)
-end
-      },
-      conquer = {
-        text = function(_1)
-  return ("%sの討伐")
-  :format(_1)
-end,
-        unknown_monster = "正体不明の存在"
-      },
       days = function(_1)
   return ("%s日")
   :format(_1)
 end,
-      deliver = {
-        deliver = "を配達",
-        text = function(_1, _2, _3)
-  return ("%sに住む%sに%s")
-  :format(_2, _3, _1)
-end
-      },
-      escort = {
-        text = function(_1)
-  return ("クライアントを%sまで護衛")
-  :format(_1)
-end
-      },
       gold_pieces = function(_1)
   return ("金貨%s枚")
   :format(_1)
 end,
-      harvest = {
-        text = function(_1)
-  return ("%sの作物の納入")
-  :format(_1)
-end
-      },
       heavy = "(凄く重い)",
-      hunt = {
-        text = "全ての敵の殲滅"
-      },
-      huntex = {
-        text = "全ての敵の殲滅"
-      },
       no_deadline = "即時",
       now = function(_1)
   return ("(現在%s)")
   :format(_1)
 end,
-      party = {
-        points = function(_1)
-  return ("%sポイント")
-  :format(_1)
-end,
-        text = function(_1)
-  return ("%sの獲得")
-  :format(_1)
-end
-      },
-      supply = {
-        text = function(_1)
-  return ("%sの納入")
-  :format(_1)
-end
-      }
-    },
-    journal = {
-      client = "依頼: ",
-      complete = "依頼 完了",
-      deadline = "期限: ",
-      detail = "内容: ",
-      job = "依頼",
-      location = "場所: ",
-      remaining = "残り",
-      report_to_the_client = "あとは報告するだけだ。",
-      reward = "報酬: "
     },
     journal_updated = "ジャーナルが更新された。",
     lose_fame = function(_1)

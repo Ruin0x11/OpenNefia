@@ -11,7 +11,7 @@ data:add {
          text = function(t)
             local quest = Quest.for_client(t.speaker)
             assert(quest, "Character doesn't have a quest.")
-            local _, desc = Quest.get_name_and_desc(quest, t.speaker, false)
+            local _, desc = Quest.format_name_and_desc(quest, t.speaker, false)
             return {{desc}}
          end,
          choices = {

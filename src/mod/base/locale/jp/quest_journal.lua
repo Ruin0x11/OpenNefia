@@ -1,6 +1,17 @@
 return {
   quest = {
     journal = {
+       common = {
+          client = function(_1) return ("依頼: %s"):format(_1) end,
+          complete = "依頼 完了",
+          deadline = function(_1) return ("期限: %s"):format(_1) end,
+          detail = function(_1) return ("内容: %s"):format(_1) end,
+          job = "依頼",
+          location = function(_1) return ("場所: %s"):format(_1) end,
+          remaining = function(_1) return ("残り%s"):format(_1) end,
+          report_to_the_client = "あとは報告するだけだ。",
+          reward = function(_1) return ("報酬: %s"):format(_1) end
+       },
       item = {
         fools_magic_stone = "愚者の魔石",
         kings_magic_stone = "覇者の魔石",

@@ -1,6 +1,17 @@
 return {
   quest = {
     journal = {
+       common = {
+          client = function(_1) return ("Client  : %s"):format(_1) end,
+          complete = "Complete",
+          deadline = function(_1) return ("Deadline: %s"):format(_1) end,
+          detail = function(_1) return ("Detail  : %s"):format(_1) end,
+          job = "Job",
+          location = function(_1) return ("Location: %s"):format(_1) end,
+          remaining = function(_1) return ("%s"):format(_1) end,
+          report_to_the_client = "Report to the client.",
+          reward = function(_1) return ("Reward  : %s"):format(_1) end
+       },
       item = {
         fools_magic_stone = "Fool's magic stone",
         kings_magic_stone = "King's magic stone",

@@ -415,6 +415,7 @@ function Command.journal(player)
 
    local pages = data["base.journal_page"]:iter():into_sorted(sort):map(render):to_list()
 
+   -- TODO icon bar wrapper
    JournalMenu:new(pages):query()
 
    return "player_turn_query"

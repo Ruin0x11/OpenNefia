@@ -1,5 +1,10 @@
 local quest = {
    cook = {
+      detail = function(params)
+         return ("Give %s to the client.")
+            :format(params.objective)
+      end,
+
       food_type = {
          elona = {
             meat = {
@@ -87,6 +92,15 @@ local quest = {
       }
    },
    collect = {
+      target_in = function(_1)
+         return ("the target in %s")
+            :format(_1)
+      end,
+      detail = function(params)
+         return ("Acquire %s from %s for the client.")
+            :format(params.item_name, params.target_name)
+      end,
+
       _1 = {
          title = "I want it!",
          desc = function(player, speaker, params)
@@ -96,6 +110,12 @@ local quest = {
       },
    },
    conquer = {
+      unknown_monster = "unknown monster",
+      detail = function(params)
+         return ("Slay %s.")
+            :format(params.objective)
+      end,
+
       _1 = {
          title = "Challenge",
          desc = function(player, speaker, params)
@@ -105,6 +125,11 @@ local quest = {
       },
    },
    escort = {
+      detail = function(params)
+         return ("Escort the client to %s.")
+            :format(params.map)
+      end,
+
       type = {
          protect = {
             _1 = {
@@ -136,6 +161,11 @@ local quest = {
       }
    },
    harvest = {
+      detail = function(params)
+         return ("Gather harvests weight %s.")
+            :format(params.required_weight)
+      end,
+
       _1 = {
          title = "The harvest time.",
          desc = function(player, speaker, params)
@@ -145,6 +175,8 @@ local quest = {
       },
    },
    hunt = {
+      detail = "Eliminate monsters.",
+
       _1 = {
          title = "Hunting.",
          desc = function(player, speaker, params)
@@ -154,6 +186,8 @@ local quest = {
       },
    },
    huntex = {
+      detail = "Eliminate monsters",
+
       _1 = {
          title = "Panic.",
          desc = function(player, speaker, params)
@@ -163,6 +197,15 @@ local quest = {
       },
    },
    party = {
+      points = function(_1)
+         return ("%s points")
+            :format(_1)
+      end,
+      detail = function(params)
+         return ("Gather %s.")
+            :format(params.required_points)
+      end,
+
       _1 = {
          title = "Party time!",
          desc = function(player, speaker, params)
@@ -172,6 +215,11 @@ local quest = {
       },
    },
    supply = {
+      detail = function(params)
+         return ("Give %s to the client.")
+            :format(params.objective)
+      end,
+
       _1 = {
          title = "Birthday.",
          desc = function(player, speaker, params)
@@ -181,6 +229,11 @@ local quest = {
       },
    },
    deliver = {
+      detail = function(params)
+         return ("Deliver %s to %s who lives in %s.")
+            :format(params.item_name, params.target_name, params.map)
+      end,
+
       elona = {
          spellbook = {
             _1 = {

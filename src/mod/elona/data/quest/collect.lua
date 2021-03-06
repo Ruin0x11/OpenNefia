@@ -73,9 +73,16 @@ local collect = {
       return true
    end,
    locale_data = function(self)
+      local target_name
+      if self.params.target_name and self.params.target_name ~= "" then
+         target_name = self.params.target_name
+      else
+         target_name = I18N.get("quest.elona.collect.target_in", self.map_name)
+      end
+
       return {
          item_name = Itemname.qualify_article(Itemname.qualify_name(self.params.target_item_id)),
-         target_name = self.params.target_name
+         target_name = target_name
       }
    end
 }

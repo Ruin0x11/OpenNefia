@@ -66,89 +66,20 @@ end
     },
     info = {
       ["and"] = " and ",
-      collect = {
-        target = function(_1)
-  return ("the target in %s")
-  :format(_1)
-end,
-        text = function(_1, _2)
-  return ("Acquire %s from %s for the client.")
-  :format(_1, _2)
-end
-      },
-      conquer = {
-        text = function(_1)
-  return ("Slay %s.")
-  :format(_1)
-end,
-        unknown_monster = "unknown monster"
-      },
       days = function(_1)
   return ("%sd")
   :format(_1)
 end,
-      deliver = {
-        deliver = "",
-        text = function(_1, _2, _3)
-  return ("Deliver %s to %s who lives in %s.")
-  :format(_1, _3, _2)
-end
-      },
-      escort = {
-        text = function(_1)
-  return ("Escort the client to %s.")
-  :format(_1)
-end
-      },
       gold_pieces = function(_1)
   return ("%s gold pieces")
   :format(_1)
 end,
-      harvest = {
-        text = function(_1)
-  return ("Gather harvests weight %s.")
-  :format(_1)
-end
-      },
       heavy = "(Heavy!)",
-      hunt = {
-        text = "Eliminate monsters."
-      },
-      huntex = {
-        text = "Eliminate monsters"
-      },
       no_deadline = "-",
       now = function(_1)
   return (" (Now %s)")
   :format(_1)
 end,
-      party = {
-        points = function(_1)
-  return ("%s points")
-  :format(_1)
-end,
-        text = function(_1)
-  return ("Gather %s.")
-  :format(_1)
-end
-      },
-      supply = {
-        text = function(_1)
-  return ("Give %s to the client.")
-  :format(_1)
-end
-      }
-    },
-    journal = {
-      client = "Client  : ",
-      complete = "Complete",
-      deadline = "Deadline: ",
-      detail = "Detail  : ",
-      job = "Job",
-      location = "Location: ",
-      remaining = "",
-      report_to_the_client = "Report to the client.",
-      reward = "Reward  : "
     },
     journal_updated = "Your journal has been updated.",
     lose_fame = function(_1)

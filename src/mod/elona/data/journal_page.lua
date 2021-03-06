@@ -1,6 +1,7 @@
 local Chara = require("api.Chara")
 local I18N = require("api.I18N")
 local Rank = require("mod.elona.api.Rank")
+local Quest = require("mod.elona_sys.api.Quest")
 
 data:add {
    _type = "base.journal_page",
@@ -20,6 +21,34 @@ data:add {
    end
 }
 
+local function format_quest_status(quest)
+   pause()
+
+   -- >>>>>>>> shade2/text.hsp:1236 		if qStatus(rq)=qSuccess:buff+="@QC["+lang("依頼 完了 ...
+   local status
+   if quest.state == "completed" then
+      status = ("<size=10><color=#006464[%s]"):format(I18N.get("quest.journal.common.complete"))
+   else
+      status = ("<size=10><color=#646400[%s]"):format(I18N.get("quest.journal.common.job"))
+   end
+
+   local client = I18N.get("quest.journal.common.client", quest.client_name)
+   local location = I18N.get("quest.journal.common.client", quest.map_name)
+   local remaining = I18N.get("quest.journal.common.remaining", Quest.format_deadline_text(quest.deadline_days))
+   local reward = I18N.get("quest.journal.common.reward", Quest.format_reward_text(quest.reward))
+
+   local detail
+   if quest.state == "completed" then
+      detail = I18N.get("quest.journal.common.report_to_the_client")
+   else
+      detail = Quest.format_detail_text(quest)
+   end
+   detail = I18N.get("quest.journal.common.detail", detail)
+
+   return table.concat({status, client, location, remaining, reward, detail}, "\n")
+   -- <<<<<<<< shade2/text.hsp:1247 		buff+=s(4)+"¥n" ..
+end
+
 data:add {
    _type = "base.journal_page",
    _id = "quest",
@@ -27,12 +56,24 @@ data:add {
    ordering = 45000,
 
    render = function()
-      -- TODO
+      -- TODO main quest
+      local main_quest_info = ""
+
+      local quest_infos = Quest.iter_accepted():map(format_quest_status):to_list()
+      local quest_info = table.concat(quest_infos, "\n")
+
+      -- TODO sidequests
+      local sub_quest_info = ""
+
       return ([[
  - %s -
 
+%s
 ]]):format(
-         I18N.get("journal._.elona.quest.title")
+         I18N.get("journal._.elona.quest.title"),
+         main_quest_info,
+         quest_info,
+         sub_quest_info
           )
    end
 }
