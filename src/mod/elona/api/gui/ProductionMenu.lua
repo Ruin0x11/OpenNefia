@@ -66,6 +66,7 @@ function ProductionMenu.generate_list(chara, skill)
          color = {160, 10, 10}
       end
       return {
+         item = item,
          recipe = recipe,
          can_create = can_create,
          name = Itemname.qualify_name(recipe.item_id),
@@ -75,7 +76,11 @@ function ProductionMenu.generate_list(chara, skill)
       }
    end
 
-   return data["elona.production_recipe"]:iter():filter(filter):map(map):to_list()
+   local function sort(a, b)
+      return (a.item.elona_id or 0) < (b.item.elona_id or 0)
+   end
+
+   return data["elona.production_recipe"]:iter():filter(filter):map(map):into_sorted(sort):to_list()
 end
 
 function ProductionMenu:init(chara, skill_id)
