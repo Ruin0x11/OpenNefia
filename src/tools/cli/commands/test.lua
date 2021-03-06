@@ -65,6 +65,7 @@ local function cleanup_globals()
    fs.remove(SaveFs.save_path("", "temp"))
    fs.remove(SaveFs.save_path("", "global"))
    field:init_global_data()
+   SaveFs.clear()
 end
 
 local function print_result(result)

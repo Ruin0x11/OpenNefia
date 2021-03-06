@@ -76,7 +76,6 @@ function test_Building_build_home()
       Assert.eq(21, entrances[1].y)
    end
 
-   Log.set_level("debug")
    -- Now let's upgrade our home.
    local new_home_map, new_home_area = Building.build_home("elona.cyber_house", 23, 24, north_tyris_map)
 
@@ -84,6 +83,8 @@ function test_Building_build_home()
    Assert.eq(save.elona.home_rank, "elona.cyber_house")
    Assert.is_truthy(Area.is_created("elona.your_home"))
    Assert.is_falsy(Area.is_registered(your_home_area))
+   Assert.is_truthy(Area.is_registered(new_home_area))
+   Assert.eq(2, table.count(new_home_area.maps))
 
    do
       local area, entrances = Building.find_home_area_and_entrances(north_tyris_map)
