@@ -10,6 +10,8 @@ local Chara = require("api.Chara")
 local Calc = require("mod.elona.api.Calc")
 local Save = require("api.Save")
 local Log = require("api.Log")
+local Effect = require("mod.elona.api.Effect")
+local Const = require("api.Const")
 
 local Home = {}
 
@@ -129,6 +131,7 @@ function Home.update_rank(map)
 end
 
 function Home.add_salary_to_salary_chest(salary_chest_inv)
+   -- >>>>>>>> shade2/event.hsp:425 	invFile=roleFileIncome ...
    salary_chest_inv = salary_chest_inv or Inventory.get_or_create("elona.salary_chest")
 
    local player = Chara.player()
@@ -136,7 +139,10 @@ function Home.add_salary_to_salary_chest(salary_chest_inv)
    local items = Calc.calc_income_items(player)
    local item_count = #items
 
-   assert(Item.create("elona.gold_piece", nil, nil, {amount=gold}, salary_chest_inv))
+   local gold_item = Item.create("elona.gold_piece", nil, nil, {amount=gold}, salary_chest_inv)
+   if not gold_item then
+      Log.error("Salary chest could not receive gold")
+   end
    for _, item in ipairs(items) do
       if not salary_chest_inv:take_object(item) then
          Log.error("Salary chest could not receive item '%s'", item._id)
@@ -157,6 +163,48 @@ function Home.add_salary_to_salary_chest(salary_chest_inv)
       Gui.mes_c(text)
       Save.queue_autosave()
    end
+   -- <<<<<<<< shade2/event.hsp:472 		} ..
+end
+
+function Home.add_monthly_bill_to_salary_chest_and_update(salary_chest_inv, chara)
+   salary_chest_inv = salary_chest_inv or Inventory.get_or_create("elona.salary_chest")
+   chara = chara or Chara.player()
+
+   -- >>>>>>>> shade2/event.hsp:476 		save ...
+   Save.queue_autosave()
+
+   local bill = Item.create("elona.bill", nil, nil, {}, salary_chest_inv)
+   if bill then
+      Gui.mes("misc.tax.bill")
+      save.elona.unpaid_bills = save.elona.unpaid_bills + 1
+   else
+      Log.error("Failed to create bill in salary chest")
+   end
+
+   local unpaid = save.elona.unpaid_bills
+   if unpaid > 1 and unpaid <= 4 then
+      local text_1, text_2
+      if unpaid > 3 then
+         text_1 = I18N.get("misc.tax.warning")
+         text_2 = I18N.space() .. I18N.get("misc.tax.have_to_go_embassy")
+      else
+         text_1 = I18N.get("misc.tax.caution")
+         text_2 = ""
+      end
+      local text = text_1 .. I18N.space() .. I18N.get("misc.tax.left_bills", unpaid - 1) .. text_2
+
+      Gui.mes_c(text, "Red")
+   end
+
+   if unpaid > 4 then
+      Gui.mes_c("misc.tax.accused", "Red", unpaid - 1)
+      local fame_lost = Effect.decrement_fame(chara, 50)
+      Gui.mes_c("misc.tax.lose_fame", "Red", fame_lost)
+
+      -- Turns out to be negative.
+      Effect.modify_karma(chara, Const.KARMA_BAD * 2)
+   end
+   -- <<<<<<<< shade2/event.hsp:500 			} ..
 end
 
 return Home

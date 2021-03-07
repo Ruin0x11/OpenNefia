@@ -6,6 +6,7 @@ local save = require("internal.global.save")
 local Inventory = require("api.Inventory")
 local Rand = require("api.Rand")
 local Rank = require("mod.elona.api.Rank")
+local test_util = require("test.lib.test_util")
 
 function test_Home_is_home()
    local map = InstancedMap:new(10, 10)
@@ -57,4 +58,44 @@ function test_Home_add_salary_to_salary_chest()
    local gold = inv:iter():filter(function(i) return i._id == "elona.gold_piece" end):nth(1)
    Assert.is_truthy(gold)
    Assert.eq(7611, gold.amount)
+end
+
+function test_Home_add_monthly_bill_to_salary_chest_and_update()
+   local chara = test_util.stripped_chara("elona.putit")
+   chara.fame = 1000
+   chara.karma = 20
+
+   local inv = Inventory:new()
+   Assert.eq(0, inv:len())
+   Assert.eq(0, save.elona.unpaid_bills)
+
+   Home.add_monthly_bill_to_salary_chest_and_update(inv, chara)
+   Assert.eq(1, inv:len())
+   Assert.eq(1, save.elona.unpaid_bills)
+   Assert.eq(1000, chara.fame)
+   Assert.eq(20, chara.karma)
+
+   Home.add_monthly_bill_to_salary_chest_and_update(inv, chara)
+   Assert.eq(2, inv:len())
+   Assert.eq(2, save.elona.unpaid_bills)
+   Assert.eq(1000, chara.fame)
+   Assert.eq(20, chara.karma)
+
+   Home.add_monthly_bill_to_salary_chest_and_update(inv, chara)
+   Assert.eq(3, inv:len())
+   Assert.eq(3, save.elona.unpaid_bills)
+   Assert.eq(1000, chara.fame)
+   Assert.eq(20, chara.karma)
+
+   Home.add_monthly_bill_to_salary_chest_and_update(inv, chara)
+   Assert.eq(4, inv:len())
+   Assert.eq(4, save.elona.unpaid_bills)
+   Assert.eq(1000, chara.fame)
+   Assert.eq(20, chara.karma)
+
+   Home.add_monthly_bill_to_salary_chest_and_update(inv, chara)
+   Assert.eq(5, inv:len())
+   Assert.eq(5, save.elona.unpaid_bills)
+   Assert.not_eq(1000, chara.fame)
+   Assert.eq(-40, chara.karma)
 end

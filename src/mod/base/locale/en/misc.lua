@@ -260,11 +260,11 @@ return {
       },
       tax = {
          accused = function(_1)
-            return ("You have been accused for being in arrears with your tax for%s months.")
+            return ("You have been accused for being in arrears with your tax for %s months.")
                :format(_1)
          end,
          bill = "A bill has been sent to your house.",
-         caution = "Caution! ",
+         caution = "Caution!",
          have_to_go_embassy = "You have to go to the Embassy of Palmia and pay tax at once. ",
          left_bills = function(_1)
             return ("You are in arrears with your tax for %s month%s.")
@@ -275,7 +275,7 @@ return {
                :format(_1)
          end,
          no_duty = "You don't have to pay tax until you hit level 6.",
-         warning = "Warning!! "
+         warning = "Warning!!"
       },
       walk_down_stairs = "You walk down the stairs. ",
       walk_up_stairs = "You walk up the stairs. ",

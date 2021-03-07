@@ -49,6 +49,7 @@ function Item.generate_oracle_text(item)
 end
 
 -- >>>>>>>> shade2/item.hsp:708 	if (refType=fltGold)or(refType=fltPlat)or(iId(ci) ..
+-- TODO externalize
 local NORMAL_ITEMS = table.set {
    "elona.platinum_coin",
    "elona.gold_piece",
