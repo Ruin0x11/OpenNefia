@@ -105,14 +105,18 @@ data:add {
    ordering = 55000,
 
    render = function()
+      -- >>>>>>>> shade2/command.hsp:951 	noteadd " - Title & Ranking - ":noteadd "" ...
       local player = Chara.player()
 
       local fame = I18N.get("journal._.elona.title_and_ranking.fame", player:calc("fame"))
 
       local ranks = ""
 
-      for _, rank in Rank.iter() do
-         -- TODO rank
+      for _, rank, exp in Rank.iter() do
+         local rank_text = ([[
+%s Rank.%d
+%s
+]])
       end
 
       -- TODO arena
@@ -132,7 +136,8 @@ data:add {
          I18N.get("journal._.elona.title_and_ranking.title"),
          fame,
          ranks,
-          arena)
+         arena)
+      -- <<<<<<<< shade2/command.hsp:964 	noteadd lang("EXバトル: 勝利 "+gExBattleWin+"回 最高Lv"+g ..
    end
 }
 
@@ -143,6 +148,7 @@ data:add {
    ordering = 60000,
 
    render = function()
+      -- >>>>>>>> shade2/command.hsp:973 	noteadd " - Income & Expense - ":noteadd "" ...
       -- TODO buildings, taxes, bills, hired servants
 
       local salary_gold = 0
@@ -180,6 +186,7 @@ data:add {
          I18N.get("journal._.elona.income_and_expense.bills.sum", total_expenses),
 
          I18N.get("journal._.elona.income_and_expense.bills.unpaid", unpaid_bills))
+      -- <<<<<<<< shade2/command.hsp:1001 	loop ..
    end
 }
 

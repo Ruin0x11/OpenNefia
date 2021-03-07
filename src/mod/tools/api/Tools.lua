@@ -28,6 +28,7 @@ local World = require("api.World")
 local Encounter = require("mod.elona.api.Encounter")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local Hunger = require("mod.elona.api.Hunger")
+local Home = require("mod.elona.api.Home")
 
 local Tools = {}
 
@@ -1083,6 +1084,22 @@ end
 function Tools.track_skill(skill_id)
    data["base.skill"]:ensure(skill_id)
    save.base.tracked_skill_ids[skill_id] = not save.base.tracked_skill_ids[skill_id]
+end
+
+function Tools.most_valuable_items()
+   local map = function(proto)
+      local item = Item.create(proto._id, nil, nil, {ownerless=true})
+      return {
+         _id = proto._id,
+         value = Home.calc_item_value(item)
+      }
+   end
+
+   local function sort(a, b)
+      return a.value > b.value
+   end
+
+   return data["base.item"]:iter():map(map):into_sorted(sort):extract("_id")
 end
 
 return Tools

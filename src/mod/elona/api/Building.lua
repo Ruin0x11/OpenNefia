@@ -8,6 +8,7 @@ local Area = require("api.Area")
 local Item = require("api.Item")
 local Log = require("api.Log")
 local MapEdit = require("mod.elona.api.MapEdit")
+local Prompt = require("api.gui.Prompt")
 
 local Building = {}
 
@@ -218,7 +219,37 @@ function Building.query_house_board()
    local actions = {}
    map:emit("elona.on_build_house_board_actions", {}, actions)
 
-   MapEdit.start()
+   if #actions == 0 then
+      Log.error("No interact actions returned from `elona_sys.on_build_interact_actions`.")
+      Gui.mes("common.it_is_impossible")
+      return "player_turn_query"
+   end
+
+   --[[
+   actions = {
+      { text = "action.interact.choices.talk", key = "a", callback = function(chara) ... end }
+   }
+   --]]
+
+   local to_prompt_item = function(t)
+      assert(type(t.text) == "string", "Action must have 'text' defined")
+      assert(type(t.callback) == "function", "Action must have 'callback' defined")
+      return { text = t.text or "", key = t.key or nil }
+   end
+
+   local prompt_items = fun.iter(actions):map(to_prompt_item):to_list()
+   local result, canceled = Prompt:new(prompt_items):query()
+
+   if canceled then
+      Gui.update_screen()
+      return "player_turn_query"
+   end
+
+   local choice = assert(actions[result.index])
+
+   local turn_result = choice.callback(map) or "player_turn_query"
+
+   return turn_result
    -- <<<<<<<< shade2/map_user.hsp:245  ..
 end
 

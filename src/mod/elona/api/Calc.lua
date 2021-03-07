@@ -6,6 +6,7 @@ local InstancedMap = require("api.InstancedMap")
 local Enum = require("api.Enum")
 local Util = require("mod.elona_sys.api.Util")
 local Const = require("api.Const")
+local Rank = require("mod.elona.api.Rank")
 
 local Calc = {}
 
@@ -411,6 +412,31 @@ function Calc.calc_adjusted_expenses(cost, player)
 
    return math.floor(cost * factor / 100)
    -- <<<<<<<< shade2/calculation.hsp:706 #define calcAccountant 	cost=cost * limit(100-limi ..
+end
+
+function Calc.calc_rank_income(rank_id, rank_exp)
+   -- >>>>>>>> shade2/event.hsp:408 #module ...
+   local exp = rank_exp or Rank.get(rank_id)
+
+   local income = math.floor(100 - (exp / 100))
+   if income == 99 then
+      income = income * 70
+   else
+      income = income * 50
+   end
+
+   local proto = data["elona.rank"]:ensure(rank_id)
+   if proto.calc_income then
+      income = proto.calc_income(income, exp)
+   end
+
+   return math.floor(income)
+   -- <<<<<<<< shade2/event.hsp:421 #global ..
+end
+
+function Calc.calc_total_income()
+   -- TODO
+   return 0
 end
 
 return Calc
