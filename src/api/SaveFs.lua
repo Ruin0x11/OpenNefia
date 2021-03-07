@@ -108,7 +108,10 @@ function SaveFs.delete(path, kind, save)
 
    Log.trace("savefs delete (temp): %s", full_path)
    fs.remove(full_path)
-   touched_paths[path] = nil
+
+   if kind ~= "global" then
+      touched_paths[path] = true
+   end
 
    return true
 end
@@ -146,7 +149,13 @@ function SaveFs.save_game(save)
    for path, _ in pairs(touched_paths) do
       local temp_path = SaveFs.save_path(path, "temp")
       local full_path = SaveFs.save_path(path, "save", save)
-      assert(fs.copy(temp_path, full_path))
+
+      if not fs.exists(temp_path) then
+         -- Path was removed by SaveFs.delete().
+         assert(fs.remove(full_path))
+      else
+         assert(fs.copy(temp_path, full_path))
+      end
    end
 end
 
