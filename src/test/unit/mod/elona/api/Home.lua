@@ -21,6 +21,19 @@ function test_Home_is_home()
    Assert.eq(true, Home.is_home(map))
 end
 
+function test_Home_is_home__multiple_floors()
+   local north_tyris_area = Area.create_unique("elona.north_tyris", "root")
+   local your_home_area = Area.create_unique("elona.your_home", north_tyris_area)
+
+   local _, first_floor = your_home_area:load_or_generate_floor(1)
+   local _, second_floor = your_home_area:load_or_generate_floor(1)
+   local _, third_floor = your_home_area:load_or_generate_floor(1)
+
+   Assert.eq(true, Home.is_home(first_floor))
+   Assert.eq(true, Home.is_home(second_floor))
+   Assert.eq(true, Home.is_home(third_floor))
+end
+
 function test_Home_is_home_area()
    local north_tyris_area = Area.create_unique("elona.north_tyris", "root")
    Assert.eq(false, Home.is_home_area(north_tyris_area))
