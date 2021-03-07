@@ -398,24 +398,6 @@ function Calc.calc_player_sleep_hours(player)
    return 7 + Rand.rnd(5)
 end
 
---- Calculates an expense in gold, taking karma and the Accountant trait into
---- consideration.
-function Calc.calc_adjusted_expenses(cost, player)
-   -- >>>>>>>> shade2/calculation.hsp:706 #define calcAccountant 	cost=cost * limit(100-limi ...
-   player = player or Chara.player()
-   local karma = player:calc("karma")
-   local factor = math.clamp(100 - karma / 2, 0, 50) - (7 * player:trait_level("elona.tax"))
-
-   if karma >= Const.KARMA_GOOD then
-      factor = factor - 5
-   end
-
-   factor = math.clamp(factor, 25, 100)
-
-   return math.floor(cost * factor / 100)
-   -- <<<<<<<< shade2/calculation.hsp:706 #define calcAccountant 	cost=cost * limit(100-limi ..
-end
-
 function Calc.calc_rank_income(rank_id, rank_exp)
    -- >>>>>>>> shade2/event.hsp:408 #module ...
    local exp = rank_exp or Rank.get(rank_id)
@@ -547,6 +529,64 @@ function Calc.calc_income_items(chara)
       :flatmap(function(rank_id) return Calc.calc_rank_income_items(rank_id, chara) end)
       :to_list()
    -- <<<<<<<< shade2/event.hsp:459 	loop ..
+end
+
+--- Calculates an expense in gold, taking karma and the Accountant trait into
+--- consideration.
+function Calc.calc_adjusted_expense(cost, player)
+   -- >>>>>>>> shade2/calculation.hsp:706 #define calcAccountant 	cost=cost * limit(100-limi ...
+   player = player or Chara.player()
+   local karma = player:calc("karma")
+   local factor = math.clamp(100 - karma / 2, 0, 50) - (7 * player:trait_level("elona.tax"))
+
+   if karma >= Const.KARMA_GOOD then
+      factor = factor - 5
+   end
+
+   factor = math.clamp(factor, 25, 100)
+
+   return math.floor(cost * factor / 100)
+   -- <<<<<<<< shade2/calculation.hsp:706 #define calcAccountant 	cost=cost * limit(100-limi ..
+end
+
+function Calc.calc_building_expenses(chara)
+   chara = chara or Chara.player()
+
+   -- >>>>>>>> shade2/calculation.hsp:719 #defcfunc calcCostBuilding ...
+   local cost = 0
+
+   -- TODO building
+
+   return Calc.calc_adjusted_expense(cost, chara)
+   -- <<<<<<<< shade2/calculation.hsp:730 	return cost ..
+end
+
+function Calc.calc_tax_expenses(chara)
+   -- >>>>>>>> shade2/calculation.hsp:733 #defcfunc calcCostTax	 ...
+   chara = chara or Chara.player()
+
+   local cost = 0
+   cost = cost + chara.gold / 1000
+   cost = cost + chara:calc("fame")
+   cost = cost + chara:calc("level") * 200
+
+   return Calc.calc_adjusted_expense(cost, chara)
+   -- <<<<<<<< shade2/calculation.hsp:739 	return cost ..
+end
+
+function Calc.calc_base_bill_amount(chara)
+   local labor_expenses = save.elona.labor_expenses
+   local building_expenses = Calc.calc_building_expenses(chara)
+   local tax_expenses = Calc.calc_tax_expenses(chara)
+
+   return labor_expenses + building_expenses + tax_expenses
+end
+
+function Calc.calc_actual_bill_amount(chara)
+   -- >>>>>>>> shade2/event.hsp:486 		iSubName(ci)=gCostHire+calcCostBuilding()+calcCo ...
+   local base_amount = Calc.calc_base_bill_amount(chara)
+   return math.floor(base_amount * (100 + Rand.rnd(20)) / 100)
+   -- <<<<<<<< shade2/event.hsp:487 		iSubName(ci)=iSubName(ci)*(100+rnd(20))/100 ..
 end
 
 return Calc

@@ -41,3 +41,29 @@ function test_Calc_calc_rank_income_items()
    Rand.set_seed(0)
    Assert.eq(3, #Calc.calc_rank_income_items("elona.arena"))
 end
+
+function test_Calc_calc_actual_bill_amount()
+   local chara = test_util.stripped_chara("elona.putit")
+   chara.level = 1
+   chara.fame = 0
+   chara.gold = 0
+
+   Rand.set_seed(0)
+   Assert.eq(115, Calc.calc_actual_bill_amount(chara))
+
+   chara.level = 10
+   Rand.set_seed(0)
+   Assert.eq(1150, Calc.calc_actual_bill_amount(chara))
+
+   chara.fame = 1000
+   Rand.set_seed(0)
+   Assert.eq(1725, Calc.calc_actual_bill_amount(chara))
+
+   chara.gold = 1000000
+   Rand.set_seed(0)
+   Assert.eq(2300, Calc.calc_actual_bill_amount(chara))
+
+   chara:modify_trait_level("elona.tax", 1)
+   Rand.set_seed(0)
+   Assert.eq(1978, Calc.calc_actual_bill_amount(chara))
+end

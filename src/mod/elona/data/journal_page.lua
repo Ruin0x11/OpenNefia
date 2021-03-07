@@ -171,14 +171,15 @@ data:add {
       -- >>>>>>>> shade2/command.hsp:973 	noteadd " - Income & Expense - ":noteadd "" ...
       -- TODO buildings, taxes, bills, hired servants
 
-      local salary_gold = Calc.calc_displayed_total_income(Chara.player())
+      local player = Chara.player()
+      local salary_gold = Calc.calc_displayed_total_income(player)
 
       local labor_expenses = save.elona.labor_expenses
-      local building_expenses = 0
-      local tax_expenses = 0
-      local total_expenses = labor_expenses + building_expenses + tax_expenses
+      local building_expenses = Calc.calc_building_expenses(player)
+      local tax_expenses = Calc.calc_tax_expenses(player)
+      local total_expenses = Calc.calc_base_bill_amount(player)
 
-      local unpaid_bills = 0
+      local unpaid_bill_count = save.elona.unpaid_bill_count
 
       return ([[
  - %s -
@@ -205,7 +206,7 @@ data:add {
          I18N.get("journal._.elona.income_and_expense.bills.tax", tax_expenses),
          I18N.get("journal._.elona.income_and_expense.bills.sum", total_expenses),
 
-         I18N.get("journal._.elona.income_and_expense.bills.unpaid", unpaid_bills))
+         I18N.get("journal._.elona.income_and_expense.bills.unpaid", unpaid_bill_count))
       -- <<<<<<<< shade2/command.hsp:1001 	loop ..
    end
 }

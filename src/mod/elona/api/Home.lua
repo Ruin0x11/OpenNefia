@@ -176,12 +176,13 @@ function Home.add_monthly_bill_to_salary_chest_and_update(salary_chest_inv, char
    local bill = Item.create("elona.bill", nil, nil, {}, salary_chest_inv)
    if bill then
       Gui.mes("misc.tax.bill")
-      save.elona.unpaid_bills = save.elona.unpaid_bills + 1
+      save.elona.unpaid_bill_count = save.elona.unpaid_bill_count + 1
+      bill.params.bill_gold_amount = Calc.calc_actual_bill_amount(chara)
    else
       Log.error("Failed to create bill in salary chest")
    end
 
-   local unpaid = save.elona.unpaid_bills
+   local unpaid = save.elona.unpaid_bill_count
    if unpaid > 1 and unpaid <= 4 then
       local text_1, text_2
       if unpaid > 3 then

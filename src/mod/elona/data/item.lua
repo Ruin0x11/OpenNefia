@@ -13783,7 +13783,7 @@ local item =
          medal_value = 5,
 
          params = {
-            bill_amount_gold = 0
+            bill_gold_amount = 0
          },
 
          categories = {

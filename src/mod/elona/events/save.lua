@@ -25,7 +25,7 @@ local function init_save()
    s.date_of_last_etherwind = DateTime:new()
    s.next_train_date = 0
    s.labor_expenses = 0
-   s.unpaid_bills = 0
+   s.unpaid_bill_count = 0
 end
 
 Event.register("base.on_init_save", "Init save (elona)", init_save)

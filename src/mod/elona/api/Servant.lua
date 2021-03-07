@@ -149,7 +149,7 @@ function Servant.calc_total_labor_expenses(map)
       total = total + Servant.calc_wage_cost(chara)
    end
 
-   return Calc.calc_adjusted_expenses(total)
+   return Calc.calc_adjusted_expense(total)
    -- <<<<<<<< shade2/calculation.hsp:717 	return ..
 end
 
