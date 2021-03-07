@@ -37,7 +37,7 @@ local function calc_initial_gold(_, params, result)
    local map = params.map or Map.current()
 
    if not owner then
-      local base = map.level * 25
+      local base = (map and map.level or 1) * 25
       local is_shelter = false -- TODO shelter
       if is_shelter then
          base = 1

@@ -26,13 +26,14 @@ local function init_save()
    s.bones = {}
    s.total_killed = 0
    s.total_deaths = 0
-   s.areas = table.set {}
-   s.unique_areas = table.set {}
+   s.areas = {}
+   s.unique_areas = {}
    s.travel_distance = 0
    s.travel_date = 0
    s.travel_date = 0
    s.travel_last_town_name = ""
    s.is_first_turn = false
+   s.inventories = {}
 end
 
 Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0})

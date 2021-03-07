@@ -442,9 +442,12 @@ end
 
 function Calc.calc_fame_income(chara)
    chara = chara or Chara.player()
+   if not chara then
+      return 0
+   end
 
    -- >>>>>>>> shade2/command.hsp:946 	gold=0	 ...
-   local fame = chara:calc("fame")
+   local fame = chara and chara:calc("fame")
    local gold = math.clamp(fame / 10, 100, 25000)
    if fame >= 25000 then
       gold = gold + (fame - 25000) / 100

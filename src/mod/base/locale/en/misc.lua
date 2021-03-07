@@ -121,11 +121,11 @@ return {
       income = {
          sent_to_your_house = function(_1)
             return ("As a salary, %s gold piece%s have been sent to your house.")
-               :format(_1, s(_1))
+               :format(_1, plural(_1))
          end,
          sent_to_your_house2 = function(_1, _2)
             return ("As a salary, %s gold piece%s and %s item%s have been sent to your house.")
-               :format(_1, s(_1), _2, s(_2))
+               :format(_1, plural(_1), _2, plural(_2))
          end
       },
       living_weapon_taste_blood = function(_1)

@@ -3,6 +3,9 @@ local Assert = require("api.test.Assert")
 local Home = require("mod.elona.api.Home")
 local Area = require("api.Area")
 local save = require("internal.global.save")
+local Inventory = require("api.Inventory")
+local Rand = require("api.Rand")
+local Rank = require("mod.elona.api.Rank")
 
 function test_Home_is_home()
    local map = InstancedMap:new(10, 10)
@@ -24,4 +27,21 @@ function test_Home_is_home_area()
 
    local your_home_area = Area.create_unique("elona.your_home", north_tyris_area)
    Assert.eq(true, Home.is_home_area(your_home_area))
+end
+
+function test_Home_add_salary_to_salary_chest()
+   local inv = Inventory:new()
+   Assert.eq(0, inv:len())
+
+   Rand.set_seed(0)
+   Rank.set("elona.arena", 1000)
+   Rank.set("elona.pet_arena", 1000)
+   Rank.set("elona.shop", 1000)
+   Home.add_salary_to_salary_chest(inv)
+
+   Assert.eq(4, inv:len())
+
+   local gold = inv:iter():filter(function(i) return i._id == "elona.gold_piece" end):nth(1)
+   Assert.is_truthy(gold)
+   Assert.eq(7611, gold.amount)
 end

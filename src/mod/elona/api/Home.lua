@@ -5,6 +5,11 @@ local I18N = require("api.I18N")
 local InstancedMap = require("api.InstancedMap")
 local InstancedArea = require("api.InstancedArea")
 local Area = require("api.Area")
+local Inventory = require("api.Inventory")
+local Chara = require("api.Chara")
+local Calc = require("mod.elona.api.Calc")
+local Save = require("api.Save")
+local Log = require("api.Log")
 
 local Home = {}
 
@@ -121,6 +126,37 @@ function Home.update_rank(map)
    Rank.set("elona.home", new_exp, true)
 
    return new_exp, base_value, home_value, furniture_value
+end
+
+function Home.add_salary_to_salary_chest(salary_chest_inv)
+   salary_chest_inv = salary_chest_inv or Inventory.get_or_create("elona.salary_chest")
+
+   local player = Chara.player()
+   local gold = Calc.calc_actual_income(player)
+   local items = Calc.calc_income_items(player)
+   local item_count = #items
+
+   assert(Item.create("elona.gold_piece", nil, nil, {amount=gold}, salary_chest_inv))
+   for _, item in ipairs(items) do
+      if not salary_chest_inv:take_object(item) then
+         Log.error("Salary chest could not receive item '%s'", item._id)
+      end
+   end
+
+   local text
+   if gold > 0 then
+      if item_count > 0 then
+         text = I18N.get("misc.income.sent_to_your_house2", gold, item_count)
+      else
+         text = I18N.get("misc.income.sent_to_your_house", gold)
+      end
+   end
+
+   if text then
+      Gui.play_sound("base.ding2")
+      Gui.mes_c(text)
+      Save.autosave()
+   end
 end
 
 return Home
