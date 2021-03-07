@@ -90,7 +90,7 @@ data:add {
          end
          if Rand.one_in(50) then
             filter = generate_artifact()
-            Save.autosave()
+            Save.queue_autosave()
          end
          return filter
    end)
@@ -105,7 +105,7 @@ data:add {
          local filter = {}
          if Rand.one_in(50) then
             filter = generate_artifact()
-            Save.autosave()
+            Save.queue_autosave()
          end
          return filter
    end)

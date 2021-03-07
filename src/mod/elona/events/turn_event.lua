@@ -401,7 +401,7 @@ local function proc_player_death_penalties(player)
    Effect.decrement_fame(player, 10)
 
    player:refresh()
-   Save.autosave()
+   Save.queue_autosave()
    -- <<<<<<<< shade2/main.hsp:1816 	swbreak ..
 end
 Event.register("base.on_player_death_revival", "Proc player death penalties", proc_player_death_penalties)

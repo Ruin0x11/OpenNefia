@@ -534,7 +534,7 @@ function Quest.complete(quest, client)
    table.iremove_value(save.elona_sys.quest.quests, quest)
    Gui.update_screen()
 
-   Save.autosave()
+   Save.queue_autosave()
 
    return next_node
 end

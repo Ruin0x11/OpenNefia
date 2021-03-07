@@ -113,13 +113,13 @@ function Save.load_game(save_id)
    Event.trigger("base.on_game_initialize")
 end
 
-function Save.autosave()
+function Save.queue_autosave()
    -- TODO show house
    if config.base.autosave then
-      -- More than one place could call `Save.autosave()` before the player's
-      -- turn is reached, but we want to make sure we only save one time. The
-      -- save will actually get executed right before control is restored to the
-      -- player in field_logic.player_turn_query().
+      -- More than one place could call `Save.queue_autosave()` before the
+      -- player's turn is reached, but we want to make sure we only save one
+      -- time. The save will actually get executed right before control is
+      -- restored to the player in field_logic.player_turn_query().
       field_logic_state.about_to_autosave = true
    end
 end

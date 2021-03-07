@@ -26,7 +26,7 @@ local function proc_area_changed(prev_map, params)
    if not next_map:has_type("field")
       and not next_map:has_type("world_map")
    then
-      Save.autosave()
+      Save.queue_autosave()
    end
    -- <<<<<<<< shade2/map.hsp:204 		if (areaType(gArea)!mTypeWorld)&(areaType(gArea) ..
 

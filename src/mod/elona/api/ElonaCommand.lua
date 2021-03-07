@@ -371,7 +371,7 @@ local function do_sleep(player, bed, no_animation, sleep_hours)
       Gui.stop_draw_callback("elona.sleep")
    end
 
-   Save.autosave()
+   Save.queue_autosave()
 end
 
 function ElonaCommand.do_sleep(player, bed, no_animation, sleep_hours)

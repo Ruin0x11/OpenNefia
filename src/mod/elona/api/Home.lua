@@ -155,7 +155,7 @@ function Home.add_salary_to_salary_chest(salary_chest_inv)
    if text then
       Gui.play_sound("base.ding2")
       Gui.mes_c(text)
-      Save.autosave()
+      Save.queue_autosave()
    end
 end
 
