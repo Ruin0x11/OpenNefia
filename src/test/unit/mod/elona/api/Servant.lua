@@ -46,6 +46,19 @@ function test_Servant_is_servant()
    Assert.eq(true, Servant.is_servant(shopkeeper))
 end
 
+function test_Servant_is_servant__story_charas()
+   local north_tyris_area = Area.create_unique("elona.north_tyris", "root")
+
+   local your_home_area = Area.create_unique("elona.your_home", north_tyris_area)
+   local ok, first_floor = your_home_area:load_or_generate_floor(your_home_area:starting_floor())
+
+   local lomias = Chara.create("elona.lomias", 5, 5, {}, first_floor)
+   local larnneire = Chara.create("elona.larnneire", 5, 6, {}, first_floor)
+
+   Assert.eq(false, Servant.is_servant(lomias))
+   Assert.eq(false, Servant.is_servant(larnneire))
+end
+
 function test_Servant_calc_total_labor_expenses()
    local north_tyris_area = Area.create_unique("elona.north_tyris", "root")
 

@@ -5,6 +5,7 @@ local ChooseNpcMenu = require("api.gui.menu.ChooseNpcMenu")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
 local Calc = require("mod.elona.api.Calc")
+local Home = require("mod.elona.api.Home")
 
 local Servant = {}
 
@@ -127,7 +128,12 @@ end
 
 function Servant.is_servant(chara)
    local map = chara:current_map()
-   return (map and map:has_type("player_owned") and chara:has_any_roles()) or false
+   return (map and Home.is_home(map)
+              and chara:has_any_roles()
+              -- Lomias, Larnneire, etc. should not be moveable through the
+              -- house board.
+              and not chara:find_role("elona.special"))
+      or false
 end
 
 function Servant.calc_max_servant_limit(map)
