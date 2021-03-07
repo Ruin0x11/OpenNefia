@@ -8,39 +8,9 @@ end,
     can_only_use_in_world_map = "You can only use it in the world map.",
     cannot_build_anymore = "You can't build a building anymore.",
     cannot_build_it_here = "You can't build it here.",
-    guests = {
-      armory = function(_1)
-  return ("%s of armory")
-  :format(basename(_1))
-end,
-      blackmarket = function(_1)
-  return ("%s of blackmarket")
-  :format(basename(_1))
-end,
-      general_store = function(_1)
-  return ("%s of general store")
-  :format(basename(_1))
-end,
-      goods_store = function(_1)
-  return ("%s of goods store")
-  :format(basename(_1))
-end,
-      magic_store = function(_1)
-  return ("%s of magic store")
-  :format(basename(_1))
-end
-    },
     home = {
       design = {
         help = "Left click to place the tile, right click to pick the tile under your mouse cursor, movement keys to move current position, hit the enter key to show the list of tiles, hit the cancel key to exit."
-      },
-      hire = {
-        too_many_guests = "You already have too many guests in your home.",
-        who = "Who do you want to hire?",
-        you_hire = function(_1)
-  return ("You hire %s.")
-  :format(basename(_1))
-end
       },
       move = {
         dont_touch_me = function(_1)
@@ -141,7 +111,6 @@ end
       _572 = "ranch",
       _712 = "dungeon"
     },
-    not_enough_money = "You don't have enough money...",
     ranch = {
       current_breeder = function(_1)
   return ("Current breeder is %s.")

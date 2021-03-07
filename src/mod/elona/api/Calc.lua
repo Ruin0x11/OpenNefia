@@ -395,4 +395,22 @@ function Calc.calc_player_sleep_hours(player)
    return 7 + Rand.rnd(5)
 end
 
+--- Calculates an expense in gold, taking karma and the Accountant trait into
+--- consideration.
+function Calc.calc_adjusted_expenses(cost, player)
+   -- >>>>>>>> shade2/calculation.hsp:706 #define calcAccountant 	cost=cost * limit(100-limi ...
+   player = player or Chara.player()
+   local karma = player:calc("karma")
+   local factor = math.clamp(100 - karma / 2, 0, 50) - (7 * player:trait_level("elona.tax"))
+
+   if karma >= Const.KARMA_GOOD then
+      factor = factor - 5
+   end
+
+   factor = math.clamp(factor, 25, 100)
+
+   return math.floor(cost * factor / 100)
+   -- <<<<<<<< shade2/calculation.hsp:706 #define calcAccountant 	cost=cost * limit(100-limi ..
+end
+
 return Calc

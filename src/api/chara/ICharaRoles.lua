@@ -7,9 +7,9 @@ function ICharaRoles:init()
 end
 
 function ICharaRoles:iter_roles(role_id)
-   data["base.role"]:ensure(role_id)
    local filter = function() return true end
    if role_id then
+      data["base.role"]:ensure(role_id)
       filter = function(role) return role._id == role_id end
    end
    return fun.iter(self.roles):filter(filter)

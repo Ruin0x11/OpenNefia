@@ -39,7 +39,7 @@ function test_Building_build_home()
    save.base.home_map_uid = first_floor.uid
 
    -- Let's create some valuables on both floors.
-   Assert.is_truthy(Item.create("elona.putitoro", 10, 10, {amount=2}, first_floor))
+   Assert.is_truthy(Item.create("elona.putitoro", 10, 10, {}, first_floor))
    Assert.is_truthy(Item.create("elona.ragnarok", 10, 11, {}, first_floor))
    Assert.is_truthy(Item.create("elona.bow_of_vindale", 10, 12, {}, first_floor))
 
@@ -96,7 +96,7 @@ function test_Building_build_home()
       Assert.eq(24, entrances[1].y)
    end
 
-   -- And make sure that all of our items and servants have survived the move.
+   -- And make sure that all of our items and servants survived the move.
    local ok, new_first_floor = assert(new_home_area:load_or_generate_floor(new_home_area:starting_floor()))
    local ok, new_second_floor = assert(new_home_area:load_or_generate_floor(new_home_area:starting_floor() + 1))
 

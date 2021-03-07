@@ -1061,7 +1061,8 @@ data:add {
          return chara.state == "PetDead" or chara.state == "CitizenDead"
       end
 
-      local ally, canceled = ChooseNpcMenu:new(filter):query()
+      local charas = Chara.iter_all(map):filter(filter):to_list()
+      local ally, canceled = ChooseNpcMenu:new(charas):query()
 
       if not ally or canceled then
          Gui.mes("common.nothing_happens")

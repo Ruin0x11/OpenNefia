@@ -147,7 +147,7 @@ data:add {
 
       local salary_gold = 0
 
-      local labor_expenses = 0
+      local labor_expenses = save.elona.labor_expenses
       local building_expenses = 0
       local tax_expenses = 0
       local total_expenses = 0

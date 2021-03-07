@@ -561,7 +561,7 @@ local function choose_command_dwim(player)
       end
    end
 
-   if map:has_type("world_map") then
+   if command == nil and map:has_type("world_map") then
       return enter_field_map
    end
 
