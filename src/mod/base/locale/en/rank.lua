@@ -1,44 +1,50 @@
 return {
    rank = {
       elona = {
-         _0 = {
-            _0 = "Arena champion",
-            _1 = "Super elite gladiator",
-            _10 = "Arena",
-            _2 = "Star gladiator",
-            _3 = "Elite gladiator",
-            _4 = "Veteran gladiator",
-            _5 = "Popular gladiator",
-            _6 = "New hope",
-            _7 = "Darkhorse",
-            _8 = "Low class fighter",
-            _9 = "Unknown fighter"
+         arena = {
+            name = "Arena",
+            titles = {
+               _0 = "Arena champion",
+               _1 = "Super elite gladiator",
+               _2 = "Star gladiator",
+               _3 = "Elite gladiator",
+               _4 = "Veteran gladiator",
+               _5 = "Popular gladiator",
+               _6 = "New hope",
+               _7 = "Darkhorse",
+               _8 = "Low class fighter",
+               _9 = "Unknown fighter"
+            }
          },
-         _1 = {
-            _0 = "King of tamer",
-            _1 = "Super elite tamer",
-            _10 = "Pet Arena",
-            _2 = "Prince of animals",
-            _3 = "Chief of animals",
-            _4 = "Elite tamer",
-            _5 = "Notorious tamer",
-            _6 = "New hope",
-            _7 = "Average tamer",
-            _8 = "Petty tamer",
-            _9 = "Unknown tamer"
+         pet_arena = {
+            name = "Pet Arena",
+            titles = {
+               _0 = "King of tamer",
+               _1 = "Super elite tamer",
+               _2 = "Prince of animals",
+               _3 = "Chief of animals",
+               _4 = "Elite tamer",
+               _5 = "Notorious tamer",
+               _6 = "New hope",
+               _7 = "Average tamer",
+               _8 = "Petty tamer",
+               _9 = "Unknown tamer"
+            }
          },
-         _2 = {
-            _0 = "King of Nefia",
-            _1 = "Champion of labyrinth",
-            _10 = "Crawler",
-            _2 = "Dungeon master",
-            _3 = "Famous adventurer",
-            _4 = "Children's star",
-            _5 = "Guide of Nefia",
-            _6 = "Notorious tomb robber",
-            _7 = "Tomb robber",
-            _8 = "Famous tourist",
-            _9 = "Tourist"
+         crawler = {
+            name = "Crawler",
+            titles = {
+               _0 = "King of Nefia",
+               _1 = "Champion of labyrinth",
+               _2 = "Dungeon master",
+               _3 = "Famous adventurer",
+               _4 = "Children's star",
+               _5 = "Guide of Nefia",
+               _6 = "Notorious tomb robber",
+               _7 = "Tomb robber",
+               _8 = "Famous tourist",
+               _9 = "Tourist"
+            }
          },
          museum = {
             name = "Museum",
@@ -85,31 +91,35 @@ return {
                _9 = "Unknown shop",
             }
          },
-         _6 = {
-            _0 = "Boss",
-            _1 = "King's advisor",
-            _10 = "Community",
-            _2 = "Elite consultant",
-            _3 = "Famous consultant",
-            _4 = "Model voter",
-            _5 = "Nice voter",
-            _6 = "Infamous voter",
-            _7 = "Average voter",
-            _8 = "Indifferent voter",
-            _9 = "Almost voter"
+         vote = {
+            name = "Community",
+            titles = {
+               _0 = "Boss",
+               _1 = "King's advisor",
+               _2 = "Elite consultant",
+               _3 = "Famous consultant",
+               _4 = "Model voter",
+               _5 = "Nice voter",
+               _6 = "Infamous voter",
+               _7 = "Average voter",
+               _8 = "Indifferent voter",
+               _9 = "Almost voter"
+            }
          },
-         _8 = {
-            _0 = "Grand master",
-            _1 = "Master",
-            _10 = "Guild",
-            _2 = "Adept",
-            _3 = "Expert",
-            _4 = "Journeyman",
-            _5 = "Senior",
-            _6 = "Apprentice",
-            _7 = "Official member",
-            _8 = "Candidate",
-            _9 = "Thug"
+         guild = {
+            name = "Guild",
+            titles = {
+               _0 = "Grand master",
+               _1 = "Master",
+               _2 = "Adept",
+               _3 = "Expert",
+               _4 = "Journeyman",
+               _5 = "Senior",
+               _6 = "Apprentice",
+               _7 = "Official member",
+               _8 = "Candidate",
+               _9 = "Thug"
+            }
          }
       }
    }

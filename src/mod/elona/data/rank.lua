@@ -118,3 +118,11 @@ data:add {
 
    ordering = 100000 + 7 * 10000
 }
+
+data:add {
+   _type = "elona.rank",
+   _id = "guild",
+   elona_id = 8,
+
+   ordering = 100000 + 8 * 10000
+}
