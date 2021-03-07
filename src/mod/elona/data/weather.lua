@@ -59,7 +59,8 @@ do
 
    function sunny.on_weather_change()
       -- >>>>>>>> shade2/main.hsp:589 		if p=weatherSunny{ ...
-      if Chara.player():has_trait("elona.ether_rain") and Rand.one_in(4) then
+      local player = Chara.player()
+      if player and player:has_trait("elona.ether_rain") and Rand.one_in(4) then
          Gui.mes("action.weather.rain.draw_cloud")
          return "elona.rain"
       end

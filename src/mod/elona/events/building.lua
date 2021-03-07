@@ -9,6 +9,7 @@ local Feat = require("api.Feat")
 local Building = require("mod.elona.api.Building")
 local Chara = require("api.Chara")
 local Servant = require("mod.elona.api.Servant")
+local Home = require("mod.elona.api.Home")
 
 local function day_passes()
    local guests = save.elona.waiting_guests
@@ -26,7 +27,7 @@ Event.register("base.on_day_passed", "Update shop every day", function() ElonaBu
 -- >>>>>>>> shade2/main.hsp:571 	if areaId(gArea)=areaMuseum 	: gosub *museum_upda ..
 local function update_museum()
    local map = Map.current()
-   if Building.map_is_building(map, "elona.museum") then
+   if map and Building.map_is_building(map, "elona.museum") then
       ElonaBuilding.update_museum(map)
    end
 end
@@ -113,11 +114,11 @@ Event.register("elona.on_house_board_queried", "Show ranch info", house_board_ra
 
 local function house_board_your_home_info(map)
    -- >>>>>>>> shade2/map_user.hsp:206 	if areaId(gArea)=areaShop{ ...
-   if not map._archetype == "elona.your_home" then
+   if not Home.is_home(map) then
       return
    end
 
-   local servants = Chara.iter_all(map):filter(Servant.is_servant):length()
+   local servants = Chara.iter_others(map):filter(Servant.is_servant):length()
    local max = Servant.calc_max_servant_limit(map)
 
    Gui.mes("building.home.staying.count", servants, max)

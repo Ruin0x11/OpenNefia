@@ -4,7 +4,7 @@ local Gui = require("api.Gui")
 local MapEdit = {}
 
 function MapEdit.start()
-   local MapEditLayer = require("api.gui.MapEditLayer")
+   local MapEditLayer = require("mod.elona.api.gui.MapEditLayer")
 
    Gui.mes_newline()
    Gui.mes("building.home.design.help")

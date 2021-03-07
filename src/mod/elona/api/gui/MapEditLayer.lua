@@ -6,12 +6,11 @@ local Gui = require("api.Gui")
 local Input = require("api.Input")
 local MapEdit = require("mod.elona.api.MapEdit")
 
-local MapEditTileList = require("api.gui.MapEditTileList")
+local MapEditTileList = require("mod.elona.api.gui.MapEditTileList")
 local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 local UiTheme = require("api.gui.UiTheme")
-local data = require("internal.data")
 
 local MapEditLayer = class.class("MapEditLayer", IUiLayer)
 

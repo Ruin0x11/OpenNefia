@@ -7,6 +7,7 @@ local Weather = require("mod.elona.api.Weather")
 local Rand = require("api.Rand")
 local Magic = require("mod.elona_sys.api.Magic")
 local Hunger = require("mod.elona.api.Hunger")
+local Home = require("mod.elona.api.Home")
 
 local function proc_auto_eat_cargo_food(chara)
    -- >>>>>>>> shade2/proc.hsp:795 	if cHunger(pc)<=hungerNormal{ ...
@@ -76,8 +77,7 @@ local function proc_etherwind(chara, params)
             end
          end
       else
-         local archetype = map._archetype
-         if Rand.one_in(1500) and not (archetype == "elona.your_home" or archetype == "elona.shelter") then
+         if Rand.one_in(1500) and not (Home.is_home(map) or map._archetype == "elona.shelter") then
             Effect.modify_corruption(chara, 10)
          end
       end
