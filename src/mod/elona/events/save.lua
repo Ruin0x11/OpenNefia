@@ -19,22 +19,13 @@ local function init_save()
    s.waiting_guests = 0
    s.player_owned_buildings = {}
    s.is_lomias_easter_egg_enabled = false
-   s.ranks = {
-      ["elona.arena"] = 0,
-      ["elona.pet_arena"] = 0,
-      ["elona.crawler"] = 0,
-      ["elona.museum"] = 0,
-      ["elona.home"] = 0,
-      ["elona.shop"] = 0,
-      ["elona.vote"] = 0,
-      ["elona.fishing"] = 0,
-      ["elona.guild"] = 0
-   }
+   s.ranks = {}
    s.weather_id = "elona.sunny"
    s.turns_until_weather_changes = 0
    s.date_of_last_etherwind = DateTime:new()
    s.next_train_date = 0
    s.labor_expenses = 0
+
 end
 
 Event.register("base.on_init_save", "Init save (elona)", init_save)

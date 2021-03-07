@@ -13711,8 +13711,8 @@ local item =
 
          elona_function = 8,
          on_use = function()
-            local MapEdit = require("api.MapEdit")
-            MapEdit.start()
+            Building.query_house_board()
+            return "player_turn_query"
          end,
 
          categories = {

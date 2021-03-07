@@ -23,13 +23,13 @@ return {
          end
       },
       hire = {
-        too_many_guests = "You already have too many guests in your home.",
-        who = "Who do you want to hire?",
-        not_enough_money = "You don't have enough money...",
-        you_hire = function(_1)
-  return ("You hire %s.")
-  :format(basename(_1))
-end
+         too_many_guests = "You already have too many guests in your home.",
+         who = "Who do you want to hire?",
+         not_enough_money = "You don't have enough money...",
+         you_hire = function(_1)
+            return ("You hire %s.")
+               :format(basename(_1))
+         end
       },
    }
 }

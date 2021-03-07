@@ -34,6 +34,8 @@ local event = {
    { _id = "before_chara_drop_items" },
    { _id = "on_chara_generate_loot_drops" },
    { _id = "on_chara_initialize_equipment" },
+   { _id = "on_house_board_queried" },
+   { _id = "on_build_house_board_actions" },
 }
 
 data:add_multi("base.event", event)

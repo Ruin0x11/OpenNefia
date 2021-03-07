@@ -130,6 +130,10 @@ function Servant.is_servant(chara)
    return (map and map:has_type("player_owned") and chara:has_any_roles()) or false
 end
 
+function Servant.calc_max_servant_limit(map)
+   return (map.home_scale or 0) + 2
+end
+
 -- TODO support multiple homes
 function Servant.calc_total_labor_expenses(map)
    -- >>>>>>>> shade2/calculation.hsp:708 #deffunc calcCostHire ...

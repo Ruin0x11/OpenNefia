@@ -6,6 +6,9 @@ local Map = require("api.Map")
 local Area = require("api.Area")
 local Gardening = require("mod.elona.api.Gardening")
 local Feat = require("api.Feat")
+local Building = require("mod.elona.api.Building")
+local Chara = require("api.Chara")
+local Servant = require("mod.elona.api.Servant")
 
 local function day_passes()
    local guests = save.elona.waiting_guests
@@ -23,8 +26,7 @@ Event.register("base.on_day_passed", "Update shop every day", function() ElonaBu
 -- >>>>>>>> shade2/main.hsp:571 	if areaId(gArea)=areaMuseum 	: gosub *museum_upda ..
 local function update_museum()
    local map = Map.current()
-   local area = Area.for_map(map)
-   if area._archetype == "elona.museum" then
+   if Building.map_is_building(map, "elona.museum") then
       ElonaBuilding.update_museum(map)
    end
 end
@@ -58,5 +60,66 @@ local function get_plant(chara, params, result)
 
    return result
 end
-
 Event.register("elona_sys.on_get", "Get plant", get_plant)
+
+local function house_board_shop_info(map)
+   -- >>>>>>>> shade2/map_user.hsp:206 	if areaId(gArea)=areaShop{ ...
+   if not Building.map_is_building(map, "elona.shop") then
+      return
+   end
+
+   local area = assert(Area.for_map(map))
+   local shopkeeper_uid = area.metadata.shopkeeper_uid
+
+   if shopkeeper_uid then
+      local shopkeeper = map:get_object(shopkeeper_uid)
+      if shopkeeper then
+         Gui.mes("building.shop.current_shopkeeper", shopkeeper)
+      else
+         area.metadata.shopkeeper_uid = nil
+      end
+   end
+
+   if area.metadata.shopkeeper_uid == nil then
+      Gui.mes("building.shop.no_assigned_shopkeeper")
+   end
+   -- <<<<<<<< shade2/map_user.hsp:208 		} ..
+end
+Event.register("elona.on_house_board_queried", "Show shop info", house_board_shop_info)
+
+local function house_board_ranch_info(map)
+   -- >>>>>>>> shade2/map_user.hsp:206 	if areaId(gArea)=areaShop{ ...
+   if not Building.map_is_building(map, "elona.ranch") then
+      return
+   end
+
+   local area = assert(Area.for_map(map))
+   local breeder_uid = area.metadata.ranch_breeder_uid
+
+   if breeder_uid then
+      local breeder = map:get_object(breeder_uid)
+      if breeder then
+         Gui.mes("building.ranch.current_breeder", breeder)
+      else
+         area.metadata.breeder_uid = nil
+      end
+   end
+
+   if area.metadata.breeder_uid == nil then
+      Gui.mes("building.ranch.no_assigned_breeder")
+   end
+end
+Event.register("elona.on_house_board_queried", "Show ranch info", house_board_ranch_info)
+
+local function house_board_your_home_info(map)
+   -- >>>>>>>> shade2/map_user.hsp:206 	if areaId(gArea)=areaShop{ ...
+   if not map._archetype == "elona.your_home" then
+      return
+   end
+
+   local servants = Chara.iter_all(map):filter(Servant.is_servant):length()
+   local max = Servant.calc_max_servant_limit(map)
+
+   Gui.mes("building.home.staying.count", servants, max)
+end
+Event.register("elona.on_house_board_queried", "Show Your Home info", house_board_your_home_info)

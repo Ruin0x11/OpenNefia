@@ -1,6 +1,5 @@
 local Enum = require("api.Enum")
 local Gui = require("api.Gui")
-local data = require("internal.data")
 
 local MapEdit = {}
 

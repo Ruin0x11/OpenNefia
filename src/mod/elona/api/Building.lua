@@ -7,6 +7,7 @@ local InstancedArea = require("api.InstancedArea")
 local Area = require("api.Area")
 local Item = require("api.Item")
 local Log = require("api.Log")
+local MapEdit = require("mod.elona.api.MapEdit")
 
 local Building = {}
 
@@ -44,20 +45,47 @@ end
 
 function Building.build_area(area_archetype_id, x, y, map)
    local area = InstancedArea:new(area_archetype_id)
+   local floor = 1
+
    area.metadata.is_player_owned = true
    Area.register(area, { parent = Area.for_map(map) })
-   Area.create_entrance(area, 1, x, y, {}, map)
+   Area.create_entrance(area, floor, x, y, {}, map)
 
+   -- TODO make this into table instead of list, to force uniqueness per
+   -- area/map?
    local metadata = {
       area_archetype_id = area._archetype,
       area_uid = area.uid,
       name = area.name,
-      tax_cost = area.metadata.tax_cost or 0
+      tax_cost = area.metadata.tax_cost or 0,
+      floor = floor
    }
 
    table.insert(save.elona.player_owned_buildings, metadata)
 
    return area, metadata
+end
+
+function Building.iter_in_area(area)
+   return fun.iter(save.elona.player_owned_buildings):filter(function(m) return m.area_uid == area.uid end)
+end
+
+function Building.for_map(map)
+   local area = Area.for_map(map)
+   if area == nil then
+      return nil
+   end
+   local floor = Map.floor_number(map)
+   if floor == nil then
+      return nil
+   end
+   return Building.iter_in_area(area):filter(function(i) return i.floor == floor end):nth(1)
+end
+
+function Building.map_is_building(map, area_archetype_id)
+   data["base.area_archetype"]:ensure(area_archetype_id)
+   local building = Building.for_map(map)
+   return building and building.area_archetype_id == area_archetype_id
 end
 
 function Building.find_home_area_and_entrances(world_map)
@@ -153,6 +181,45 @@ function Building.build_home(home_id, x, y, world_map)
 
    Area.set_unique("elona.your_home", new_home_area, world_area)
    return new_home_map, new_home_area
+end
+
+function Building.query_house_board()
+   -- >>>>>>>> shade2/action.hsp:1808 	case effShop ...
+   local map = Map.current()
+
+   if not map or not map:has_type("player_owned") then
+      Gui.mes("action.use.house_board.cannot_use_it_here")
+      return
+   end
+   -- <<<<<<<< shade2/action.hsp:1811 	swbreak ..
+
+
+   -- >>>>>>>> shade2/map_user.hsp:192 *com_home ...
+   if not map:has_type("player_owned") and not config.base.development_mode then
+      Gui.mes("building.house_board.only_use_in_home")
+      return
+   end
+
+   local function is_furniture(item)
+      return item:has_category("elona.furniture")
+   end
+
+   local items = Item.iter(map)
+   local item_count = items:length()
+   local furniture_count = items:filter(is_furniture):length()
+   local max_item_count = map:calc("item_on_floor_limit") or 0
+
+   Gui.mes("building.house_board.item_count", map.name, item_count, furniture_count, max_item_count)
+
+   map:emit("elona.on_house_board_queried")
+
+   Gui.mes("building.house_board.what_do")
+
+   local actions = {}
+   map:emit("elona.on_build_house_board_actions", {}, actions)
+
+   MapEdit.start()
+   -- <<<<<<<< shade2/map_user.hsp:245  ..
 end
 
 return Building
