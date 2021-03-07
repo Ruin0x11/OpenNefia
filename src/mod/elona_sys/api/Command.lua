@@ -368,8 +368,7 @@ function Command.interact(player)
    local actions = {}
    target:emit("elona_sys.on_build_interact_actions", {player=player}, actions)
 
-   if #actions > 0 then
-   else
+   if #actions == 0 then
       Log.error("No interact actions returned from `elona_sys.on_build_interact_actions`.")
       Gui.mes("common.it_is_impossible")
       return "player_turn_query"
@@ -397,8 +396,7 @@ function Command.interact(player)
 
    local choice = assert(actions[result.index])
 
-   local params = {player=player}
-   local turn_result = choice.callback(target, params) or "player_turn_query"
+   local turn_result = choice.callback(target, player) or "player_turn_query"
 
    return turn_result
    -- <<<<<<<< shade2/command.hsp:1867 	if (develop)or(gWizard):promptAdd lang("情報","Info ..

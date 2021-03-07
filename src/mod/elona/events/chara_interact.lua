@@ -13,35 +13,35 @@ local Item = require("api.Item")
 -- Interact Actions
 --
 
-local function interact_talk(chara, params)
+local function interact_talk(chara, player)
 -- >>>>>>>> shade2/command.hsp:1872 	if p=0:gosub *screen_draw:gosub *chat:if chatTele ...
-   local turn_result = Effect.try_to_chat(chara, params.player)
+   local turn_result = Effect.try_to_chat(chara, player)
 
    return turn_result or "turn_end"
 -- <<<<<<<< shade2/command.hsp:1872 	if p=0:gosub *screen_draw:gosub *chat:if chatTele ..
 end
 
-local function interact_attack(chara, params)
+local function interact_attack(chara, player)
    -- >>>>>>>> shade2/command.hsp:1873 	if p=1:gosub *screen_draw:gosub *act_melee:goto * ...
-   ElonaAction.melee_attack(params.player, chara)
+   ElonaAction.melee_attack(player, chara)
 
    return "turn_end"
    -- <<<<<<<< shade2/command.hsp:1873 	if p=1:gosub *screen_draw:gosub *act_melee:goto * ..
 end
 
-local function interact_inventory(chara, params)
+local function interact_inventory(chara, player)
    -- >>>>>>>> shade2/command.hsp:1876 	if p=4:goto *com_allyInventory ...
-   return ElonaCommand.do_give_ally(params.player, chara)
+   return ElonaCommand.do_give_ally(player, chara)
    -- <<<<<<<< shade2/command.hsp:1876 	if p=4:goto *com_allyInventory ..
 end
 
-local function interact_give(chara, params)
+local function interact_give(chara, player)
    -- >>>>>>>> shade2/command.hsp:1874 	if p=2:gosub *screen_draw:invCtrl=10:snd seInv:go ...
-   return ElonaCommand.do_give_other(params.player, chara)
+   return ElonaCommand.do_give_other(player, chara)
    -- <<<<<<<< shade2/command.hsp:1874 	if p=2:gosub *screen_draw:invCtrl=10:snd seInv:go ..
 end
 
-local function interact_info(chara, params)
+local function interact_info(chara, player)
    -- >>>>>>>> shade2/command.hsp:1883 		csCtrl=4:pop:cc=tc:gosub *com_charainfo:cc=pc:go ...
    CharacterInfoMenu:new(chara):query()
 
@@ -49,9 +49,9 @@ local function interact_info(chara, params)
    -- <<<<<<<< shade2/command.hsp:1883 		csCtrl=4:pop:cc=tc:gosub *com_charainfo:cc=pc:go ..
 end
 
-local function interact_bring_out(chara, params)
+local function interact_bring_out(chara, player)
    -- >>>>>>>> shade2/command.hsp:1877 	if p=5{ ...
-   local player = params.player
+   local player = player
 
    player:recruit_as_ally(chara)
    Gui.update_screen()
@@ -60,7 +60,7 @@ local function interact_bring_out(chara, params)
    -- <<<<<<<< shade2/command.hsp:1880 		} ...
 end
 
-local function interact_appearance(chara, params)
+local function interact_appearance(chara, player)
    -- >>>>>>>> shade2/command.hsp:1897 	if p=8{ ...
    ChangeAppearanceMenu:new({chara = chara}):query()
 
@@ -68,7 +68,7 @@ local function interact_appearance(chara, params)
    -- <<<<<<<< shade2/command.hsp:1903 		} ..
 end
 
-local function interact_teach_words(chara, params)
+local function interact_teach_words(chara, player)
    -- >>>>>>>> shade2/command.hsp:1885 	if p=7{ ...
    Gui.mes("action.interact.change_tone.prompt", chara)
 
@@ -90,7 +90,7 @@ local function interact_teach_words(chara, params)
    -- <<<<<<<< shade2/command.hsp:1896 		} ..
 end
 
-local function interact_change_tone(chara, params)
+local function interact_change_tone(chara, player)
    -- >>>>>>>> shade2/command.hsp:1910 	if p=10:gosub *com_tone ...
    -- TODO talk text
    Gui.mes_c("TODO", "Yellow")
@@ -99,7 +99,7 @@ local function interact_change_tone(chara, params)
    -- <<<<<<<< shade2/command.hsp:1910 	if p=10:gosub *com_tone ..
 end
 
-local function interact_release(chara, params)
+local function interact_release(chara, player)
    -- >>>>>>>> shade2/command.hsp:1904 	if p=9{ ...
    Gui.play_sound("base.build1", chara.x, chara.y)
    chara.is_hung_on_sandbag = false
@@ -111,9 +111,9 @@ local function interact_release(chara, params)
    -- <<<<<<<< shade2/command.hsp:1909 		} ..
 end
 
-local function interact_name(chara, params)
+local function interact_name(chara, player)
    -- >>>>>>>> shade2/command.hsp:1875 	if p=3:gosub *screen_draw:goto *com_name ...
-   return ElonaCommand.name(params.player, chara)
+   return ElonaCommand.name(player, chara)
    -- <<<<<<<< shade2/command.hsp:1875 	if p=3:gosub *screen_draw:goto *com_name ..
 end
 
