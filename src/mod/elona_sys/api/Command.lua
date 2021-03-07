@@ -218,12 +218,29 @@ function Command.quit_game()
    -- >>>>>>>> shade2/command.hsp:4351 *com_save ..
    Gui.mes_newline()
    Gui.mes("action.exit.prompt")
-   local choices = {
-      { text = "ui.yes", key = "y" },
-      { text = "ui.no", key = "n" },
-      { text = "action.exit.choices.game_setting", key = "c" },
-      { text = "action.exit.choices.return_to_title", key = "t" },
-   }
+
+   local choice_yes = { text = "ui.yes", key = "y", index = 1 }
+   local choice_no = { text = "ui.no", key = "n", index = 2 }
+   local choice_setting = { text = "action.exit.choices.game_setting", key = "c", index = 3 }
+   local choice_title = { text = "action.exit.choices.return_to_title", key = "t", index = 4 }
+
+   local choices
+   if config.base.default_return_to_title then
+      choices = {
+         choice_title,
+         choice_yes,
+         choice_no,
+         choice_setting,
+      }
+   else
+      choices = {
+         choice_yes,
+         choice_no,
+         choice_setting,
+         choice_title,
+      }
+   end
+
    local res = Input.prompt(choices)
    if res.index == 1 then
       local can_save = true -- TODO showroom

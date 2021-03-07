@@ -36,12 +36,12 @@ local KEYS = "abcdefghijklmnopqr"
 
 function Prompt.make_list(choices)
    local map = function(index, choice)
-      if type(choice) == "string" then
-         return { index = index, text = choice, key = KEYS:sub(index, index), data = nil }
+      if type(choice) ~= "table" then
+         return { index = index, text = tostring(choice), key = KEYS:sub(index, index), data = nil }
       end
 
       return {
-         text = I18N.get_optional(choice.text) or choice.text,
+         text = I18N.get_optional(choice.text) or tostring(choice.text),
          key = choices.key or nil,
          index = choice.index or index
       }
@@ -69,6 +69,7 @@ function Prompt:init(choices, width)
       if indices[choice.index] then
          error("Choice index " .. choice.index .. " was already registered")
       end
+      indices[choice.index] = true
    end
 
    self.list = UiList:new(choices, 20)
