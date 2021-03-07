@@ -2,6 +2,7 @@ local Chara = require("api.Chara")
 local I18N = require("api.I18N")
 local Rank = require("mod.elona.api.Rank")
 local Quest = require("mod.elona_sys.api.Quest")
+local Calc = require("mod.elona.api.Calc")
 
 data:add {
    _type = "base.journal_page",
@@ -98,6 +99,31 @@ data:add {
    end
 }
 
+local function format_rank(rank_proto, rank)
+   local rank_id = rank_proto._id
+   local place = Rank.get(rank_id)
+   if place >= 10000 then
+      return nil
+   end
+
+   local rank_title = Rank.title(rank_id)
+   if rank_title == nil then
+      return nil
+   end
+   local rank_position = math.floor(place / 100)
+   local rank_income = I18N.get("journal._.elona.title_and_ranking.pay", Calc.calc_rank_income(rank_id))
+   local rank_deadline = ""
+   if Rank.get_decay_period_days(rank_id) then
+      local days_left = rank.days_until_decay
+      rank_deadline = ("\n%s"):format(I18N.get("journal._.elona.title_and_ranking.deadline", days_left))
+   end
+
+   return ([[
+%s Rank.%d
+%s%s
+]]):format(rank_title, rank_position, rank_income, rank_deadline)
+end
+
 data:add {
    _type = "base.journal_page",
    _id = "title_and_ranking",
@@ -110,14 +136,8 @@ data:add {
 
       local fame = I18N.get("journal._.elona.title_and_ranking.fame", player:calc("fame"))
 
-      local ranks = ""
-
-      for _, rank, exp in Rank.iter() do
-         local rank_text = ([[
-%s Rank.%d
-%s
-]])
-      end
+      local rank_texts = Rank.iter():map(format_rank):filter(fun.op.truth):to_list()
+      local ranks = table.concat(rank_texts, "\n\n")
 
       -- TODO arena
       local ex_battle_wins = 0
@@ -151,12 +171,12 @@ data:add {
       -- >>>>>>>> shade2/command.hsp:973 	noteadd " - Income & Expense - ":noteadd "" ...
       -- TODO buildings, taxes, bills, hired servants
 
-      local salary_gold = 0
+      local salary_gold = Calc.calc_displayed_total_income(Chara.player())
 
       local labor_expenses = save.elona.labor_expenses
       local building_expenses = 0
       local tax_expenses = 0
-      local total_expenses = 0
+      local total_expenses = labor_expenses + building_expenses + tax_expenses
 
       local unpaid_bills = 0
 

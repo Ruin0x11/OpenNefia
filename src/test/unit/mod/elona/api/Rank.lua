@@ -30,6 +30,9 @@ function test_Rank_title()
 
    Rank.set("elona.home", 100)
    Assert.eq(I18N.get("rank.elona.home.titles._0"), Rank.title("elona.home"))
+
+   -- Fishing doesn't have a title for some reason.
+   Assert.eq(nil, Rank.title("elona.fishing"))
 end
 
 function test_Rank_get_decay_period_days()

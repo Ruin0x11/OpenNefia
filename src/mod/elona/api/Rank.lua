@@ -49,7 +49,7 @@ function Rank.title(rank_id, exp)
       index = 9
    end
 
-   return I18N.get("rank." .. rank_id .. ".titles._" .. index)
+   return I18N.get_optional("rank." .. rank_id .. ".titles._" .. index)
    -- <<<<<<<< shade2/init.hsp:1897 	#global ..
 end
 
