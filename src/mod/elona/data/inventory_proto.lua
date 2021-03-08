@@ -838,6 +838,56 @@ local inv_harvest_delivery_chest = {
 }
 data:add(inv_harvest_delivery_chest)
 
+local inv_put_tax_box = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_put_tax_box",
+   elona_id = 24,
+   elona_sub_id = 2,
+
+   sources = { "chara" },
+   icon = 17,
+   show_money = false,
+   query_amount = true,
+   window_title = "ui.inventory_command.put",
+   query_text = "ui.inv.title.put",
+
+   filter = function(ctxt, item)
+      return item._id == "elona.bill"
+   end,
+
+   can_select = function(ctxt, item)
+      -- >>>>>>>> shade2/command.hsp:3907 				if cGold(pc)<iSubName(ci):snd seFail1:txt lang ...
+      if ctxt.chara.gold < item.params.bill_gold_amount then
+         Gui.play_sound("base.fail1")
+         Gui.mes("ui.inv.put.tax.not_enough_money")
+         return false
+      end
+
+      -- This can happen if you buy an extra bill from Miral.
+      if save.elona.unpaid_bill_count <= 0 then
+         Gui.play_sound("base.fail1")
+         Gui.mes("ui.inv.put.tax.not_enough_money")
+         return false
+      end
+      -- <<<<<<<< shade2/command.hsp:3908 				if gBill<=0 : snd seFail1:txt lang("まだ納税する必要はな ..
+
+      return true
+   end,
+
+   on_select = function(ctxt, item, amount)
+      -- >>>>>>>> shade2/command.hsp:3909 				cGold(pc)-=iSubName(ci) ...
+      ctxt.chara.gold = math.floor(ctxt.chara.gold - item.params.bill_gold_amount)
+      Gui.play_sound("base.paygold1")
+      Gui.mes_c("ui.inv.put.tax.you_pay", "Green", item:build_name())
+      item:remove(1)
+      save.elona.unpaid_bill_count = save.elona.unpaid_bill_count - 1
+
+      return "inventory_continue"
+      -- <<<<<<<< shade2/command.hsp:3915 				goto *com_inventory ..
+   end
+}
+data:add(inv_put_tax_box)
+
 local inv_put_four_dimensional_pocket = {
    _type = "elona_sys.inventory_proto",
    _id = "inv_put_four_dimensional_pocket",

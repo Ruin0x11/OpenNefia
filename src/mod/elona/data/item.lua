@@ -12182,13 +12182,12 @@ local item =
          coefficient = 100,
 
          on_open = function(self, params)
-            local chara = params.chara
-
-            -- Only allow taking, not putting. (provide "nil" to inventory group ID)
+            -- >>>>>>>> shade2/action.hsp:896 	if iId(ci)=idTaxBox  :invCtrl=24,2:snd seInv:goto ...
             local inv = Inventory.get_or_create("elona.salary_chest")
-            Input.query_inventory(chara, "elona.inv_get_container", { container = inv }, nil)
+            Input.query_inventory(params.chara, "elona.inv_get_container", { container = inv }, nil)
 
             return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:896 	if iId(ci)=idTaxBox  :invCtrl=24,2:snd seInv:goto ..
          end,
 
          categories = {
@@ -13785,6 +13784,13 @@ local item =
          category = 72000,
          rarity = 100000,
          coefficient = 100,
+
+         on_open = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ..
+            Input.query_inventory(params.chara, "elona.inv_put_tax_box", nil, nil)
+            -- <<<<<<<< shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ..
+            return "player_turn_query"
+         end,
 
          is_precious = true,
 
