@@ -529,9 +529,9 @@ function itemname.en(item, amount, no_article)
             end
 
             if quality ~= Quality.Unique and quality >= Quality.Great then
-               s = s .. I18N.get("item_material." .. item.material .. ".alias")
+               s = s .. I18N.get("item_material." .. item.material .. ".alias") .. " "
             else
-               s = s .. I18N.get("item_material." .. item.material .. ".name")
+               s = s .. I18N.get("item_material." .. item.material .. ".name") .. " "
             end
          end
       end
