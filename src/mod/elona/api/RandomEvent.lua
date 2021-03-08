@@ -26,6 +26,9 @@ function RandomEvent.random_event_id(kind)
    end
 
    local map = player:current_map()
+   if map == nil then
+      return nil
+   end
 
    if player.current_speed < 10 then
       return nil

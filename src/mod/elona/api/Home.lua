@@ -160,7 +160,7 @@ function Home.add_salary_to_salary_chest(salary_chest_inv)
 
    if text then
       Gui.play_sound("base.ding2")
-      Gui.mes_c(text)
+      Gui.mes_c(text, "Yellow")
       Save.queue_autosave()
    end
    -- <<<<<<<< shade2/event.hsp:472 		} ..

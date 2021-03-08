@@ -10,6 +10,7 @@ local Event = require("api.Event")
 local global = require("mod.elona.internal.global")
 local RandomEvent = require("mod.elona.api.RandomEvent")
 local Rank = require("mod.elona.api.Rank")
+local Home = require("mod.elona.api.Home")
 
 local function hourly_events()
    -- >>>>>>>> shade2/main.hsp:627 	if mType=mTypeWorld{ ...
@@ -91,3 +92,36 @@ local function update_rank_decays(_, params)
    -- <<<<<<<< shade2/main.hsp:651 		loop ..
 end
 Event.register("base.on_day_passed", "Update rank decays", update_rank_decays, 100000)
+
+local function create_income(_, params)
+   -- >>>>>>>> shade2/main.hsp:660 		if (gDay=1)or(gDay=15)	:gosub *event_income ...
+   local day = save.base.date.day
+
+   -- NOTE: Because of the way events are fired when time passes, this will only
+   -- get triggered if the day isn't skipped over in a single call to
+   -- World.pass_time_in_seconds(). For example, if the current day is the 31st
+   -- and you pass three days' worth of time, then you won't receive a bill or
+   -- salary for the 1st day. (This is also vanilla's behavior.)
+   --
+   -- To change this we'd add a new :pass_time() method to DateTime and somehow
+   -- allow stepping through each day from the previous time point to the
+   -- current one.
+   if not (day == 1 or day == 15) then
+      return
+   end
+
+   local player = Chara.player()
+
+   Home.add_salary_to_salary_chest()
+
+   if day == 1 then
+      local receives_bill = player.level > 5
+      if receives_bill then
+         Home.add_monthly_bill_to_salary_chest_and_update()
+      else
+         Gui.mes("misc.tax.no_duty")
+      end
+   end
+   -- <<<<<<<< shade2/main.hsp:660 		if (gDay=1)or(gDay=15)	:gosub *event_income ..
+end
+Event.register("base.on_day_passed", "create_income", create_income, 200000)
