@@ -140,13 +140,19 @@ end
 --- Queries the player for a position.
 ---
 --- @tparam[opt] IChara chara Defaults to the player.
+--- @tparam[opt] integer init_x
+--- @tparam[opt] integer init_y
 --- @treturn[opt] int x
 --- @treturn[opt] int y
 --- @treturn[opt] boolean can_see
 --- @treturn[opt] string error
-function Input.query_position(chara)
-   chara = chara or Chara.player()
-   local result, canceled = PositionPrompt:new(chara.x, chara.y, nil, nil, chara):query()
+function Input.query_position(chara, init_x, init_y)
+   chara = chara or assert(Chara.player())
+   if init_x == nil then
+      init_x = chara.x
+      init_y = chara.y
+   end
+   local result, canceled = PositionPrompt:new(init_x, init_y, nil, nil, chara):query()
    if canceled then
       return nil, canceled
    end
