@@ -103,6 +103,7 @@ love.audio.newSource = function(path)
    }
 end
 love.audio.play = function() end
+love.audio.stop = function() end
 love.keyboard.setKeyRepeat = function() end
 love.keyboard.setTextInput = function() end
 love.data.compress = function(_, _, obj)
