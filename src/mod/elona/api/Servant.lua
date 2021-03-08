@@ -82,7 +82,7 @@ function Servant.generate_hiring_candidates(map)
    local set_seed = not config.base.development_mode
 
    local function generate(i)
-      if set_seed then Rand.set_seed(save.base.date.hour) end
+      if set_seed then Rand.set_seed(save.base.date.day + i) end
 
       if Rand.one_in(2) then
          return nil
@@ -93,7 +93,7 @@ function Servant.generate_hiring_candidates(map)
          candidate = CANDIDATES[1] -- maid
       end
 
-      if set_seed then Rand.set_seed(save.base.date.hour) end
+      if set_seed then Rand.set_seed(save.base.date.day + i) end
       local cand = Servant.generate(candidate)
 
       if Chara.iter_all(map):any(roles_match(cand)) then
@@ -161,6 +161,13 @@ function Servant.query_hire()
       return
    end
 
+   local servant_count = Chara.iter_others(map):filter(Servant.is_servant):length()
+   local max = Servant.calc_max_servant_limit(map)
+   if servant_count >= max then
+      Gui.mes("servant.hire.too_many_guests")
+      return
+   end
+
    local function format_hire_cost_and_wage(chara)
       -- >>>>>>>> shade2/command.hsp:1235 		if allyCtrl=1:	s=""+(calcHireCost(i)*20)+"("+cal ...
       local hire_cost = Servant.calc_hire_cost(chara)
@@ -188,7 +195,7 @@ function Servant.query_hire()
          Gui.play_sound("base.paygold1")
          player.gold = math.floor(player.gold - hire_cost)
          Gui.wait(250)
-         Gui.mes_c("building.home.hire.you_hire", "Green", servant)
+         Gui.mes_c("servant.hire.you_hire", "Green", servant)
          Map.try_place_chara(servant, player.x, player.y, map)
          Gui.play_sound("base.pray1")
       end

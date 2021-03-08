@@ -5,6 +5,7 @@ local I18N = require("api.I18N")
 local Map = require("api.Map")
 local Home = require("mod.elona.api.Home")
 local HomeRankMenu = require("mod.elona.api.gui.HomeRankMenu")
+local Servant = require("mod.elona.api.Servant")
 
 local function shop_assign_shopkeeper(map)
 end
@@ -28,6 +29,7 @@ local function your_home_allies(map)
 end
 
 local function your_home_recruit_servant(map)
+   Servant.query_hire()
 end
 
 local function your_home_move_stayer(map)

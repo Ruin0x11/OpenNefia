@@ -34,7 +34,8 @@ local UiListExt = function(choose_npc_menu)
       choose_npc_menu.chip_batch:add(entry.icon, x - 44, y - 7, nil, nil, entry.color, true)
       UiList.draw_item_text(self, text, entry, i, x, y, x_offset)
 
-      Draw.text(entry.info, x + 288, y + 3)
+      Draw.text(entry.info, x + 288, y + 2)
+      Draw.text(entry.info2, x + 428, y + 2)
    end
    function E:draw()
       UiList.draw(self)
