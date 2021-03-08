@@ -741,7 +741,7 @@ local inv_get_container = {
    on_menu_exit = function(ctxt)
       -- >>>>>>>> shade2/command.hsp:4018 		if invCtrl=22:if invCtrl(1)=0:if listMax>0{ ...
       local item_count = ctxt.container:iter():length()
-      if item_count > 0 then
+      if item_count > 0 and ctxt.params.query_leftover then
          Gui.mes("ui.inv.take.really_leave")
          if not Input.yes_no() then
             return "inventory_continue"

@@ -29,6 +29,7 @@ local Charagen = require("mod.tools.api.Charagen")
 local Mef = require("api.Mef")
 local Hunger = require("mod.elona.api.Hunger")
 local ProductionMenu = require("mod.elona.api.gui.ProductionMenu")
+local Inventory = require("api.Inventory")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -11371,13 +11372,6 @@ local item =
          category = 72000,
          coefficient = 100,
 
-         -- >>>>>>>> shade2/item.hsp:680 	if iId(ci)=idBagOfHolding		:iFile(ci)=roleFileGen ..
-         container_params = {
-            type = "shared",
-            id = "elona.heir_trunk"
-         },
-         -- <<<<<<<< shade2/item.hsp:680 	if iId(ci)=idBagOfHolding		:iFile(ci)=roleFileGen ..
-
          categories = {
             "elona.container",
             "elona.no_generate"
@@ -12187,12 +12181,15 @@ local item =
          category = 72000,
          coefficient = 100,
 
-         -- >>>>>>>> shade2/item.hsp:682 	if iId(ci)=idChestIncome		:iFile(ci)=roleFileInco ..
-         container_params = {
-            type = "shared",
-            id = "elona.salary_chest"
-         },
-         -- <<<<<<<< shade2/item.hsp:682 	if iId(ci)=idChestIncome		:iFile(ci)=roleFileInco ..
+         on_open = function(self, params)
+            local chara = params.chara
+
+            -- Only allow taking, not putting. (provide "nil" to inventory group ID)
+            local inv = Inventory.get_or_create("elona.salary_chest")
+            Input.query_inventory(chara, "elona.inv_get_container", { container = inv }, nil)
+
+            return "turn_end"
+         end,
 
          categories = {
             "elona.container",
@@ -12578,13 +12575,6 @@ local item =
          fltselect = 1,
          category = 72000,
          coefficient = 100,
-
-         -- >>>>>>>> shade2/item.hsp:681 	if iId(ci)=idChestShopIncome		:iFile(ci)=roleFile ..
-         container_params = {
-            type = "shared",
-            id = "elona.shop_strongbox"
-         },
-         -- <<<<<<<< shade2/item.hsp:681 	if iId(ci)=idChestShopIncome		:iFile(ci)=roleFile ..
 
          prevent_sell_in_own_shop = true,
 
@@ -13063,13 +13053,6 @@ local item =
          category = 72000,
          rarity = 50000,
          coefficient = 100,
-
-         -- >>>>>>>> shade2/item.hsp:683 	if iId(ci)=idFreezer			:iFile(ci)=roleFileFreezer ..
-         container_params = {
-            type = "shared",
-            id = "elona.freezer"
-         },
-         -- <<<<<<<< shade2/item.hsp:683 	if iId(ci)=idFreezer			:iFile(ci)=roleFileFreezer ..
 
          categories = {
             "elona.container",
@@ -14488,10 +14471,6 @@ local item =
          category = 72000,
          rarity = 50000,
          coefficient = 100,
-
-         container_params = {
-            type = "local"
-         },
 
          is_precious = true,
          quality = Enum.Quality.Unique,
