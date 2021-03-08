@@ -525,13 +525,13 @@ function itemname.en(item, amount, no_article)
             s = s .. "エターナルフォース" .. I18N.space()
          else
             if item.ego_minor_enchantment then
-               s = I18N.get("enchantment.item_ego.minor." .. item.ego_minor_enchantment, s) .. " "
+               s = I18N.get("enchantment.item_ego.minor." .. item.ego_minor_enchantment, s)
             end
 
             if quality ~= Quality.Unique and quality >= Quality.Great then
-               s = s .. I18N.get("item_material." .. item.material .. ".alias") .. " "
+               s = s .. I18N.get("item_material." .. item.material .. ".alias")
             else
-               s = s .. I18N.get("item_material." .. item.material .. ".name") .. " "
+               s = s .. I18N.get("item_material." .. item.material .. ".name")
             end
          end
       end
