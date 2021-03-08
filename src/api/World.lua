@@ -71,7 +71,7 @@ function World.pass_time_in_seconds(seconds, events)
             end
 
             if next_days >= 31 then
-               local months_passed = math.floor(next_days / 31)
+               local months_passed = math.floor((next_days-1) / 30)
                local next_months = date.month + months_passed
                date.month = (next_months-1) % 13 + 1
 
@@ -80,9 +80,8 @@ function World.pass_time_in_seconds(seconds, events)
                end
 
                if next_months >= 13 then
-                  local years_passed = math.floor(next_months / 13)
+                  local years_passed = math.floor((next_months-1) / 12)
                   date.year = date.year + years_passed
-                  date.month = date.month % 13
 
                   if events >= 0 then
                      Event.trigger("base.on_year_passed", {years=years_passed})
