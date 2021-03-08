@@ -115,12 +115,14 @@ local function renew_major(map)
       Feat.iter(map):filter(function(f) return f.is_temporary end)
                     :each(IMapObject.remove_ownership)
 
-      for _, item in Item.iter(map) do
-         -- Restocks fruit trees.
-         item:emit("base.on_item_renew_major")
+      if map:has_type("town") or map:has_type("guild") then
+         for _, item in Item.iter(map) do
+            -- Restocks fruit trees.
+            item:emit("base.on_item_renew_major")
 
-         if item.own_state == Enum.OwnState.None then
-            item:remove()
+            if item.own_state == Enum.OwnState.None then
+               item:remove()
+            end
          end
       end
    end

@@ -2,6 +2,7 @@ local Chara = require("api.Chara")
 local I18N = require("api.I18N")
 local Rank = require("mod.elona.api.Rank")
 local Quest = require("mod.elona_sys.api.Quest")
+local Calc = require("mod.elona.api.Calc")
 
 data:add {
    _type = "base.journal_page",
@@ -98,6 +99,31 @@ data:add {
    end
 }
 
+local function format_rank(rank_proto, rank)
+   local rank_id = rank_proto._id
+   local place = Rank.get(rank_id)
+   if place >= 10000 then
+      return nil
+   end
+
+   local rank_title = Rank.title(rank_id)
+   if rank_title == nil then
+      return nil
+   end
+   local rank_position = math.floor(place / 100)
+   local rank_income = I18N.get("journal._.elona.title_and_ranking.pay", Calc.calc_rank_income(rank_id))
+   local rank_deadline = ""
+   if Rank.get_decay_period_days(rank_id) then
+      local days_left = rank.days_until_decay
+      rank_deadline = ("\n%s"):format(I18N.get("journal._.elona.title_and_ranking.deadline", days_left))
+   end
+
+   return ([[
+%s Rank.%d
+%s%s
+]]):format(rank_title, rank_position, rank_income, rank_deadline)
+end
+
 data:add {
    _type = "base.journal_page",
    _id = "title_and_ranking",
@@ -105,15 +131,13 @@ data:add {
    ordering = 55000,
 
    render = function()
+      -- >>>>>>>> shade2/command.hsp:951 	noteadd " - Title & Ranking - ":noteadd "" ...
       local player = Chara.player()
 
       local fame = I18N.get("journal._.elona.title_and_ranking.fame", player:calc("fame"))
 
-      local ranks = ""
-
-      for _, rank in Rank.iter() do
-         -- TODO rank
-      end
+      local rank_texts = Rank.iter():map(format_rank):filter(fun.op.truth):to_list()
+      local ranks = table.concat(rank_texts, "\n\n")
 
       -- TODO arena
       local ex_battle_wins = 0
@@ -132,7 +156,8 @@ data:add {
          I18N.get("journal._.elona.title_and_ranking.title"),
          fame,
          ranks,
-          arena)
+         arena)
+      -- <<<<<<<< shade2/command.hsp:964 	noteadd lang("EXバトル: 勝利 "+gExBattleWin+"回 最高Lv"+g ..
    end
 }
 
@@ -143,16 +168,18 @@ data:add {
    ordering = 60000,
 
    render = function()
+      -- >>>>>>>> shade2/command.hsp:973 	noteadd " - Income & Expense - ":noteadd "" ...
       -- TODO buildings, taxes, bills, hired servants
 
-      local salary_gold = 0
+      local player = Chara.player()
+      local salary_gold = Calc.calc_displayed_total_income(player)
 
-      local labor_expenses = 0
-      local building_expenses = 0
-      local tax_expenses = 0
-      local total_expenses = 0
+      local labor_expenses = save.elona.labor_expenses
+      local building_expenses = Calc.calc_building_expenses(player)
+      local tax_expenses = Calc.calc_tax_expenses(player)
+      local total_expenses = Calc.calc_base_bill_amount(player)
 
-      local unpaid_bills = 0
+      local unpaid_bill_count = save.elona.unpaid_bill_count
 
       return ([[
  - %s -
@@ -179,7 +206,8 @@ data:add {
          I18N.get("journal._.elona.income_and_expense.bills.tax", tax_expenses),
          I18N.get("journal._.elona.income_and_expense.bills.sum", total_expenses),
 
-         I18N.get("journal._.elona.income_and_expense.bills.unpaid", unpaid_bills))
+         I18N.get("journal._.elona.income_and_expense.bills.unpaid", unpaid_bill_count))
+      -- <<<<<<<< shade2/command.hsp:1001 	loop ..
    end
 }
 

@@ -34,22 +34,42 @@ end
 
 local KEYS = "abcdefghijklmnopqr"
 
+function Prompt.make_list(choices)
+   local map = function(index, choice)
+      if type(choice) ~= "table" then
+         return { index = index, text = tostring(choice), key = KEYS:sub(index, index), data = nil }
+      end
+
+      return {
+         text = I18N.get_optional(choice.text) or tostring(choice.text),
+         key = choices.key or nil,
+         index = choice.index or index
+      }
+   end
+
+   return fun.iter(choices):enumerate():map(map):to_list()
+end
+
 function Prompt:init(choices, width)
    self.can_cancel = true
    self.width = width or 160
 
-   Draw.set_font(14) -- 14 - en * 2
-   for i, choice in ipairs(choices) do
-      if type(choice) == "string" then
-         choice = { text = choice, key = KEYS:sub(i, i), data = nil }
-         choices[i] = choice
-      end
-      choice.text = I18N.get_optional(choice.text) or choice.text
+   choices = Prompt.make_list(choices)
 
-      local width = Draw.text_width(choice.text)
-      if width + 26 + 33 + 44 > self.width then
-         self.width = width + 26 + 33 + 44
+   local indices = table.set {}
+
+   Draw.set_font(14) -- 14 - en * 2
+   for _, choice in ipairs(choices) do
+      local text_width = Draw.text_width(choice.text)
+      if text_width + 26 + 33 + 44 > self.width then
+         self.width = text_width + 26 + 33 + 44
       end
+
+      assert(math.type(choice.index) == "integer", "Choice index must be integer, got " .. tostring(choice.index))
+      if indices[choice.index] then
+         error("Choice index " .. choice.index .. " was already registered")
+      end
+      indices[choice.index] = true
    end
 
    self.list = UiList:new(choices, 20)
@@ -112,7 +132,8 @@ end
 
 function Prompt:update()
    if self.list.chosen then
-      return { index = self.list.selected, item = self.list:selected_item() }
+      local item = self.list:selected_item()
+      return { index = item.index, item = item }
    end
 
    if self.canceled then

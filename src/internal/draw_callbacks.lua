@@ -59,6 +59,12 @@ function draw_callbacks:remove(tag)
    self:_reorder_callbacks()
 end
 
+function draw_callbacks:remove_all()
+   self.draw_callbacks = {}
+
+   self:_reorder_callbacks()
+end
+
 local function resume_coroutine(co, draw_x, draw_y, frame_delta, dt_this_frame)
    local ok, dt = coroutine.resume(co.thread, draw_x, draw_y, frame_delta, dt_this_frame)
    local is_dead = coroutine.status(co.thread) == "dead"

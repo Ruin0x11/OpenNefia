@@ -73,6 +73,9 @@ local function on_game_start(self, player)
       Map.save(north_tyris_map)
    end
 
+   local your_home = Area.create_unique("elona.your_home", north_tyris)
+   assert(Area.create_entrance(your_home, 1, 23, 23, {}, map))
+
    Map.set_map(map)
    map:take_object(player, 25, 25)
 end

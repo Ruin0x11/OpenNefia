@@ -187,7 +187,7 @@ function Gardening.get_plant(plant, chara)
 
    -- TODO artifact
    if plant.plant_id == "elona.artifact" then
-      Save.autosave()
+      Save.queue_autosave()
    end
 
    chara:refresh_weight()

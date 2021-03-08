@@ -34,7 +34,8 @@ local UiListExt = function(choose_npc_menu)
       choose_npc_menu.chip_batch:add(entry.icon, x - 44, y - 7, nil, nil, entry.color, true)
       UiList.draw_item_text(self, text, entry, i, x, y, x_offset)
 
-      Draw.text(entry.info, x + 288, y + 3)
+      Draw.text(entry.info, x + 288, y + 2)
+      Draw.text(entry.info2, x + 428, y + 2)
    end
    function E:draw()
       UiList.draw(self)
@@ -45,12 +46,8 @@ local UiListExt = function(choose_npc_menu)
    return E
 end
 
-function ChooseNpcMenu.generate_list(filter)
+function ChooseNpcMenu.generate_list(charas, topic)
    local filter_ = function(chara)
-      if filter and not filter(chara) then
-         return false
-      end
-
       -- >>>>>>>> shade2/command.hsp:1185 	if cnt=0		: continue ...
       if chara:is_player() then
          return false
@@ -64,16 +61,24 @@ function ChooseNpcMenu.generate_list(filter)
       return true
    end
 
-   local list = Chara.iter_all():filter(filter_)
+   local list = fun.iter(charas):filter(filter_)
       :map(function(chara)
             local gender = I18N.capitalize(I18N.get("ui.sex3." .. chara:calc("gender")))
             local age = I18N.get("ui.npc_list.age_counter", chara:calc("age"))
+            local info2
+
+            if topic then
+               info2 = topic.formatter(chara)
+            else
+               info2 = ""
+            end
+
             return {
                text = utf8.wide_sub(chara:calc("name"), 0, 36),
                icon = chara:calc("image"),
                color = {255, 255, 255},
                info = ("Lv.%d %s%s"):format(chara:calc("level"), gender, age),
-               info2 = "", -- TODO hire cost
+               info2 = info2,
                chara = chara,
                ordering = chara:calc("level")
             }
@@ -85,10 +90,14 @@ function ChooseNpcMenu.generate_list(filter)
    return list
 end
 
-function ChooseNpcMenu:init(filter)
-   self.data = ChooseNpcMenu.generate_list(filter)
+function ChooseNpcMenu:init(charas, topic)
+   self.data = ChooseNpcMenu.generate_list(charas, topic)
    self.pages = UiList:new_paged(self.data, 16)
-   self.filter = filter
+   self.custom_topic = topic or nil
+   if self.custom_topic then
+      assert(type(self.custom_topic.title) == "string")
+      assert(type(self.custom_topic.formatter) == "function")
+   end
 
    self.window = UiWindow:new("title", true, "hint")
    table.merge(self.pages, UiListExt(self))
@@ -126,12 +135,8 @@ function ChooseNpcMenu:draw()
    Ui.draw_topic("ui.npc_list.name", self.x + 28, self.y + 36)
    Ui.draw_topic("ui.npc_list.info", self.x + 350, self.y + 36)
 
-   -- TODO hire
-   local ctrl
-   if ctrl == "hire" then
-      Ui.draw_topic("ui.npc_list.init_cost", self.x + 490, self.y + 36)
-   elseif ctrl == "list" then
-      Ui.draw_topic("ui.npc_list.wage", self.x + 490, self.y + 36)
+   if self.custom_topic then
+      Ui.draw_topic(self.custom_topic.title, self.x + 490, self.y + 36)
    end
 
    self.pages:draw()

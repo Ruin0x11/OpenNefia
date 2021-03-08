@@ -165,7 +165,7 @@ function Elona122Map.generate(name)
 
    for _ = 1, 400 do
       local buf = obj:read(4 * 5)
-      if buf == "" then
+      if buf == nil or buf == "" then
          -- There is not enough space for 400 items in the .obj file, so bail
          -- out early.
          break

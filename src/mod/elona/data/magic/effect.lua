@@ -449,7 +449,7 @@ local function proc_treasure_map(map, params)
 
       Gui.mes("common.something_is_put_on_the_ground")
       treasure_map.amount = treasure_map.amount - 1
-      Save.save_game() -- TODO autosave
+      Save.queue_autosave()
    end
    -- <<<<<<<< shade2/proc.hsp:1033 		} ..
 end
@@ -594,7 +594,7 @@ data:add {
          return true, { obvious = false }
       end
 
-      Save.autosave()
+      Save.queue_autosave()
 
       return true
    end
@@ -654,7 +654,7 @@ data:add {
       end
 
       target:refresh()
-      Save.autosave()
+      Save.queue_autosave()
 
       return true
    end
@@ -825,7 +825,7 @@ data:add {
       end
 
       target:refresh()
-      Save.autosave()
+      Save.queue_autosave()
 
       return true
    end
@@ -896,7 +896,7 @@ data:add {
          end
       end
 
-      Save.autosave()
+      Save.queue_autosave()
 
       return true
    end
@@ -1414,7 +1414,7 @@ data:add {
       Gui.play_sound("base.ding2")
       Gui.mes("magic.create_material.apply", mes)
 
-      Save.autosave()
+      Save.queue_autosave()
 
       local times = Rand.rnd(3) + 3
       if params.curse_state == Enum.CurseState.Blessed then
@@ -1561,7 +1561,7 @@ data:add {
          return true, { obvious = false }
       end
 
-      Save.autosave()
+      Save.queue_autosave()
 
       local item = result.result
 
@@ -1638,7 +1638,7 @@ data:add {
          return true, { obvious = false }
       end
 
-      Save.autosave()
+      Save.queue_autosave()
 
       item:separate()
 

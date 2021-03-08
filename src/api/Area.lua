@@ -54,11 +54,15 @@ function Area.is_area_entrance(feat)
    return feat.params and feat.params.area_uid and feat.params.area_floor
 end
 
+function Area.iter_entrances_in_parent(parent_map)
+   return parent_map:iter_feats():filter(Area.is_area_entrance)
+end
+
 function Area.iter_in_parent(parent_map)
    local to_area = function(feat)
       return Area.get(feat.params.area_uid)
    end
-   return parent_map:iter_feats():filter(Area.is_area_entrance):map(to_area)
+   return Area.iter_entrances_in_parent(parent_map):map(to_area)
 end
 
 function Area.metadata(map)
@@ -286,19 +290,59 @@ function Area.create_unique(area_archetype_id, parent)
       return Area.get_unique(area_archetype_id)
    end
 
+   local area = InstancedArea:new(area_archetype_id)
+   return Area.set_unique(area_archetype_id, area, parent)
+end
+
+function Area.set_unique(area_archetype_id, new_area, parent)
+   if Area.is_created(area_archetype_id) then
+      Area.unregister(Area.get_unique(area_archetype_id))
+   end
+
    data["base.area_archetype"]:ensure(area_archetype_id)
 
    assert(parent == "root" or class.is_an(InstancedArea, parent), "Invalid parent area")
 
-   local area = InstancedArea:new(area_archetype_id)
-   Area.register(area, { parent = parent })
+   Area.register(new_area, { parent = parent })
 
    save.base.unique_areas[area_archetype_id] = {
-      area_uid = area.uid,
+      area_uid = new_area.uid,
       entrance_was_generated = false
    }
 
-   return area
+   return new_area
+end
+
+function Area.unregister(area)
+   assert(Area.is_registered(area))
+
+   for area_archetype_id, metadata in pairs(save.base.unique_areas) do
+      if metadata.area_uid == area.uid then
+         save.base.unique_areas[area_archetype_id] = nil
+         break
+      end
+   end
+
+   Log.debug("Unregistering area '%s' with maps: %s", area.name, inspect(fun.iter(area.maps):extract("uid"):to_list()))
+
+   local areas = save.base.areas
+   areas[area.uid] = nil
+end
+
+function Area.delete(area)
+   if Area.is_registered(area) then
+      Area.unregister(area)
+   end
+
+   Log.debug("Deleting area '%s' with maps: %s", area.name, inspect(fun.iter(area.maps):extract("uid"):to_list()))
+
+   local Map = require("api.Map")
+   for floor, metadata in pairs(area.maps) do
+      Map.delete(metadata.uid)
+   end
+
+   area.maps = {}
+   area.deepest_level_visited = 0
 end
 
 return Area

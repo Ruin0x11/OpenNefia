@@ -334,7 +334,9 @@ local function do_sleep(player, bed, no_animation, sleep_hours)
    for _ = 1, time_slept do
       World.pass_time_in_seconds(60 * 60, "hour")
       save.base.date.minute = 0
-      Gui.wait(500)
+      if not no_animation then
+         Gui.wait(500)
+      end
    end
 
    -- TODO gene
@@ -371,7 +373,7 @@ local function do_sleep(player, bed, no_animation, sleep_hours)
       Gui.stop_draw_callback("elona.sleep")
    end
 
-   Save.autosave()
+   Save.queue_autosave()
 end
 
 function ElonaCommand.do_sleep(player, bed, no_animation, sleep_hours)
@@ -381,6 +383,10 @@ function ElonaCommand.do_sleep(player, bed, no_animation, sleep_hours)
    if quest or map:has_type("quest") then
       Gui.mes("activity.sleep.but_you_cannot")
       return "player_turn_query"
+   end
+
+   if config.base.skip_sleep_animation then
+      no_animation = true
    end
 
    RandomEvent.set_kind("sleep")
@@ -506,6 +512,24 @@ function ElonaCommand.ammo(player)
    -- <<<<<<<< elona122/shade2/command.hsp:4739 	goto *pc_turn ..
 end
 
+local function enter_field_map(player)
+   local stood_tile = Map.tile(player.x, player.y)
+   local map = FieldMap.generate(stood_tile, 34, 22, Map.current())
+
+   -- >>>>>>>> shade2/map.hsp:1586 		if encounter=0{ ...
+   for _ = 1, map:calc("max_crowd_density") do
+      MapgenUtils.generate_chara(map)
+   end
+   -- <<<<<<<< shade2/map.hsp:1591 			} ..
+
+   map:set_previous_map_and_location(Map.current(), player.x, player.y)
+
+   Gui.play_sound("base.exitmap1")
+   assert(Map.travel_to(map))
+
+   return "turn_begin"
+end
+
 local function choose_command_dwim(player)
    -- >>>>>>>> shade2/main.hsp:1242 		inv_getHeader -1 :p=0 ..
    local command
@@ -543,6 +567,10 @@ local function choose_command_dwim(player)
       end
    end
 
+   if command == nil and map:has_type("world_map") then
+      return enter_field_map
+   end
+
    return command or Command.search
    -- <<<<<<<< shade2/main.hsp:1255 		loop ..
 end
@@ -559,7 +587,7 @@ function ElonaCommand.descend(player)
    end
 
    for _, item in Item.at(player.x, player.y, player:current_map())
-        :filter(function(i) return i:calc("can_descend") end)
+   :filter(function(i) return i:calc("can_descend") end)
    do
       local result = item:emit("elona_sys.on_item_descend", {chara=player}, nil)
       if result then
@@ -579,7 +607,7 @@ function ElonaCommand.ascend(player)
    end
 
    for _, item in Item.at(player.x, player.y, player:current_map())
-        :filter(function(i) return i:calc("can_ascend") end)
+   :filter(function(i) return i:calc("can_ascend") end)
    do
       local result = item:emit("elona_sys.on_item_ascend", {chara=player}, nil)
       if result then
@@ -592,27 +620,7 @@ function ElonaCommand.ascend(player)
 end
 
 function ElonaCommand.enter_action(player)
-   local is_world_map = Map.current():has_type("world_map")
-
    local command = choose_command_dwim(player)
-
-   if command == nil and is_world_map then
-      local stood_tile = Map.tile(player.x, player.y)
-      local map = FieldMap.generate(stood_tile, 34, 22, Map.current())
-
-      -- >>>>>>>> shade2/map.hsp:1586 		if encounter=0{ ...
-      for _ = 1, map:calc("max_crowd_density") do
-         MapgenUtils.generate_chara(map)
-      end
-      -- <<<<<<<< shade2/map.hsp:1591 			} ..
-
-      map:set_previous_map_and_location(Map.current(), player.x, player.y)
-
-      Gui.play_sound("base.exitmap1")
-      assert(Map.travel_to(map))
-
-      return "turn_begin"
-   end
 
    return command(player)
 end

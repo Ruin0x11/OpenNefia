@@ -53,7 +53,19 @@ data:add_multi(
          default = false
       },
       {
-         _id = "_save_id",
+         _id = "default_return_to_title",
+
+         type = "boolean",
+         default = false
+      },
+      {
+         _id = "skip_sleep_animation",
+
+         type = "boolean",
+         default = false
+      },
+      {
+         _id = "_save_id", -- TODO move to private state
 
          type = "string",
          optional = true,

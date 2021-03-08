@@ -1,16 +1,10 @@
-local MapEdit = require("api.MapEdit")
-local Map = require("api.Map")
-local Chara = require("api.Chara")
-local Pos = require("api.Pos")
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
-local Input = require("api.Input")
+local MapEdit = require("mod.elona.api.MapEdit")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
-local UiTheme = require("api.gui.UiTheme")
-local data = require("internal.data")
 
 local MapEditTileList = class.class("MapEditTileList", IUiLayer)
 

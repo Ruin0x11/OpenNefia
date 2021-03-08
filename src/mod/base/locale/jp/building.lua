@@ -8,39 +8,9 @@ end,
     can_only_use_in_world_map = "それはワールドマップでしか使えない。",
     cannot_build_anymore = "もうこれ以上建物は建てられない。",
     cannot_build_it_here = "その場所には建てられない。",
-    guests = {
-      armory = function(_1)
-  return ("武具店の%s")
-  :format(basename(_1))
-end,
-      blackmarket = function(_1)
-  return ("ブラックマーケットの%s")
-  :format(basename(_1))
-end,
-      general_store = function(_1)
-  return ("雑貨屋の%s")
-  :format(basename(_1))
-end,
-      goods_store = function(_1)
-  return ("何でも屋の%s")
-  :format(basename(_1))
-end,
-      magic_store = function(_1)
-  return ("魔法店の%s")
-  :format(basename(_1))
-end
-    },
     home = {
       design = {
         help = "マウスの左クリックでタイルの敷設、右クリックでタイルの取得、移動キーでスクリーン移動、決定キーでタイル一覧、キャンセルキーで終了。"
-      },
-      hire = {
-        too_many_guests = "家はすでに人であふれかえっている。",
-        who = "誰を雇用する？",
-        you_hire = function(_1)
-  return ("%sを家に迎えた。")
-  :format(basename(_1))
-end
       },
       move = {
         dont_touch_me = function(_1)
@@ -141,7 +111,6 @@ end
       _572 = "牧場",
       _712 = "ダンジョン"
     },
-    not_enough_money = "お金が足りない…",
     ranch = {
       current_breeder = function(_1)
   return ("現在のブリーダーは%sだ。")

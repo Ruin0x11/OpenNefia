@@ -218,12 +218,29 @@ function Command.quit_game()
    -- >>>>>>>> shade2/command.hsp:4351 *com_save ..
    Gui.mes_newline()
    Gui.mes("action.exit.prompt")
-   local choices = {
-      { text = "ui.yes", key = "y" },
-      { text = "ui.no", key = "n" },
-      { text = "action.exit.choices.game_setting", key = "c" },
-      { text = "action.exit.choices.return_to_title", key = "t" },
-   }
+
+   local choice_yes = { text = "ui.yes", key = "y", index = 1 }
+   local choice_no = { text = "ui.no", key = "n", index = 2 }
+   local choice_setting = { text = "action.exit.choices.game_setting", key = "c", index = 3 }
+   local choice_title = { text = "action.exit.choices.return_to_title", key = "t", index = 4 }
+
+   local choices
+   if config.base.default_return_to_title then
+      choices = {
+         choice_title,
+         choice_yes,
+         choice_no,
+         choice_setting,
+      }
+   else
+      choices = {
+         choice_yes,
+         choice_no,
+         choice_setting,
+         choice_title,
+      }
+   end
+
    local res = Input.prompt(choices)
    if res.index == 1 then
       local can_save = true -- TODO showroom
@@ -368,8 +385,7 @@ function Command.interact(player)
    local actions = {}
    target:emit("elona_sys.on_build_interact_actions", {player=player}, actions)
 
-   if #actions > 0 then
-   else
+   if #actions == 0 then
       Log.error("No interact actions returned from `elona_sys.on_build_interact_actions`.")
       Gui.mes("common.it_is_impossible")
       return "player_turn_query"
@@ -397,8 +413,7 @@ function Command.interact(player)
 
    local choice = assert(actions[result.index])
 
-   local params = {player=player}
-   local turn_result = choice.callback(target, params) or "player_turn_query"
+   local turn_result = choice.callback(target, player) or "player_turn_query"
 
    return turn_result
    -- <<<<<<<< shade2/command.hsp:1867 	if (develop)or(gWizard):promptAdd lang("情報","Info ..

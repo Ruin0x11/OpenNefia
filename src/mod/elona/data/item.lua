@@ -29,6 +29,7 @@ local Charagen = require("mod.tools.api.Charagen")
 local Mef = require("api.Mef")
 local Hunger = require("mod.elona.api.Hunger")
 local ProductionMenu = require("mod.elona.api.gui.ProductionMenu")
+local Inventory = require("api.Inventory")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -37,7 +38,7 @@ local function calc_initial_gold(_, params, result)
    local map = params.map or Map.current()
 
    if not owner then
-      local base = map.level * 25
+      local base = (map and map.level or 1) * 25
       local is_shelter = false -- TODO shelter
       if is_shelter then
          base = 1
@@ -62,9 +63,23 @@ local hook_calc_initial_gold =
                      nil,
                      calc_initial_gold)
 
-local function deed_callback(area_archetype_id, name)
-   return function(self, params)
-      Building.build_area(area_archetype_id, name, params.x, params.y, params.map)
+local function deed_callback(building_id, building_name)
+   return function(item, params)
+      if not Building.query_build(item) then
+         return "player_turn_query"
+      end
+
+      item.amount = item.amount - 1
+
+      local chara = params.chara
+      local map = chara:current_map()
+      Building.build_area(building_id, chara.x, chara.y, map)
+
+      Gui.update_screen()
+      Gui.play_sound("base.build1", chara.x, chara.y)
+      Gui.mes_c("building.built_new", "Yellow", building_name)
+
+      return "turn_end"
    end
 end
 
@@ -7275,19 +7290,42 @@ local item =
          subcategory = 53100,
          coefficient = 100,
 
+         can_read_in_world_map = true,
          prevent_sell_in_own_shop = true,
 
-         on_read = function(self)
-            return Effect.create_building(self)
+         on_read = function(self, params)
+            if not Building.query_build(self) then
+               return "player_turn_query"
+            end
+
+            self.amount = self.amount - 1
+
+            local chara = params.chara
+            local map = chara:current_map()
+            local new_home_map = Building.build_home(self.params.deed_home_id, chara.x, chara.y, map)
+
+            Gui.play_sound("base.build1", chara.x, chara.y)
+            Gui.mes_c("building.built_new_house", "Green")
+            Input.query_more()
+
+            Gui.play_sound("base.exitmap1")
+            new_home_map:set_previous_map_and_location(map, chara.x, chara.y)
+            Map.travel_to(new_home_map)
+
+            return "turn_end"
          end,
 
          params = { deed_home_id = "elona.cave" },
 
          on_init_params = function(self, params)
             -- >>>>>>>> shade2/item.hsp:644 	if iId(ci)=idDeedHouse{ ..
-            self.params.deed_home_id = "elona.cave" -- TODO
+            local can_create = function(home)
+               return home._id ~= "elona.cave"
+            end
+
+            self.params.deed_home_id = Rand.choice(data["elona.home"]:iter():filter(can_create))._id
             if not params.is_shop then
-               self.params.deed_home_id = "elona.cave" -- TODO
+               self.params.deed_home_id = "elona.shack"
             end
             local home_data = data["elona.home"]:ensure(self.params.deed_home_id)
             self.value = home_data.value
@@ -11334,13 +11372,6 @@ local item =
          category = 72000,
          coefficient = 100,
 
-         -- >>>>>>>> shade2/item.hsp:680 	if iId(ci)=idBagOfHolding		:iFile(ci)=roleFileGen ..
-         container_params = {
-            type = "shared",
-            id = "elona.heir_trunk"
-         },
-         -- <<<<<<<< shade2/item.hsp:680 	if iId(ci)=idBagOfHolding		:iFile(ci)=roleFileGen ..
-
          categories = {
             "elona.container",
             "elona.no_generate"
@@ -11630,9 +11661,7 @@ local item =
          image = "elona.item_deed",
          value = 140000,
          weight = 500,
-         on_read = function(self)
-            return Building.query_build(self)
-         end,
+         on_read = deed_callback("elona.museum", "item.info.elona.deed_of_museum.building_name"),
          fltselect = 1,
          category = 53000,
          subcategory = 53100,
@@ -11650,15 +11679,6 @@ local item =
             "elona.scroll_deed",
             "elona.no_generate"
          },
-
-         events = {
-            {
-               id = "elona.on_deed_use",
-               name = "Create building",
-
-               callback = deed_callback("elona.museum", "item.info.elona.deed_of_museum.building_name")
-            },
-         }
       },
       {
          _id = "deed_of_shop",
@@ -11666,9 +11686,7 @@ local item =
          image = "elona.item_deed",
          value = 200000,
          weight = 500,
-         on_read = function(self)
-            return Building.query_build(self)
-         end,
+         on_read = deed_callback("elona.shop", "item.info.elona.deed_of_shop.building_name"),
          fltselect = 1,
          category = 53000,
          subcategory = 53100,
@@ -11686,15 +11704,6 @@ local item =
             "elona.scroll_deed",
             "elona.no_generate"
          },
-
-         events = {
-            {
-               id = "elona.on_deed_use",
-               name = "Create building",
-
-               callback = deed_callback("elona.shop", "item.info.elona.deed_of_shop.building_name")
-            },
-         }
       },
       {
          _id = "tree_of_beech",
@@ -12039,9 +12048,7 @@ local item =
          image = "elona.item_deed",
          value = 45000,
          weight = 500,
-         on_read = function(self)
-            return Building.query_build(self)
-         end,
+         on_read = deed_callback("elona.crop", "item.info.elona.deed_of_farm.building_name"),
          fltselect = 1,
          category = 53000,
          subcategory = 53100,
@@ -12057,15 +12064,6 @@ local item =
             "elona.scroll_deed",
             "elona.no_generate"
          },
-
-         events = {
-            {
-               id = "elona.on_deed_use",
-               name = "Create building",
-
-               callback = deed_callback("elona.crop", "item.info.elona.deed_of_farm.building_name")
-            },
-         }
       },
       {
          _id = "deed_of_storage_house",
@@ -12073,9 +12071,7 @@ local item =
          image = "elona.item_deed",
          value = 10000,
          weight = 500,
-         on_read = function(self)
-            return Building.query_build(self)
-         end,
+         on_read = deed_callback("elona.storage_house", "item.info.elona.deed_of_storage_house.building_name"),
          fltselect = 1,
          category = 53000,
          subcategory = 53100,
@@ -12091,15 +12087,6 @@ local item =
             "elona.scroll_deed",
             "elona.no_generate"
          },
-
-         events = {
-            {
-               id = "elona.on_deed_use",
-               name = "Create building",
-
-               callback = deed_callback("elona.storage_house", "item.info.elona.deed_of_storage_house.building_name")
-            },
-         }
       },
       {
          _id = "disc",
@@ -12194,12 +12181,14 @@ local item =
          category = 72000,
          coefficient = 100,
 
-         -- >>>>>>>> shade2/item.hsp:682 	if iId(ci)=idChestIncome		:iFile(ci)=roleFileInco ..
-         container_params = {
-            type = "shared",
-            id = "elona.salary_chest"
-         },
-         -- <<<<<<<< shade2/item.hsp:682 	if iId(ci)=idChestIncome		:iFile(ci)=roleFileInco ..
+         on_open = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:896 	if iId(ci)=idTaxBox  :invCtrl=24,2:snd seInv:goto ...
+            local inv = Inventory.get_or_create("elona.salary_chest")
+            Input.query_inventory(params.chara, "elona.inv_get_container", { container = inv }, nil)
+
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:896 	if iId(ci)=idTaxBox  :invCtrl=24,2:snd seInv:goto ..
+         end,
 
          categories = {
             "elona.container",
@@ -12586,13 +12575,6 @@ local item =
          category = 72000,
          coefficient = 100,
 
-         -- >>>>>>>> shade2/item.hsp:681 	if iId(ci)=idChestShopIncome		:iFile(ci)=roleFile ..
-         container_params = {
-            type = "shared",
-            id = "elona.shop_strongbox"
-         },
-         -- <<<<<<<< shade2/item.hsp:681 	if iId(ci)=idChestShopIncome		:iFile(ci)=roleFile ..
-
          prevent_sell_in_own_shop = true,
 
          categories = {
@@ -12888,9 +12870,7 @@ local item =
          image = "elona.item_deed",
          value = 80000,
          weight = 500,
-         on_read = function(self)
-            return Building.query_build(self)
-         end,
+         on_read = deed_callback("elona.ranch", "item.info.elona.deed_of_ranch.building_name"),
          fltselect = 1,
          category = 53000,
          subcategory = 53100,
@@ -12906,15 +12886,6 @@ local item =
             "elona.scroll_deed",
             "elona.no_generate"
          },
-
-         events = {
-            {
-               id = "elona.on_deed_use",
-               name = "Create building",
-
-               callback = deed_callback("elona.ranch", "item.info.elona.deed_of_ranch.building_name")
-            },
-         }
       },
       {
          _id = "egg",
@@ -13081,13 +13052,6 @@ local item =
          category = 72000,
          rarity = 50000,
          coefficient = 100,
-
-         -- >>>>>>>> shade2/item.hsp:683 	if iId(ci)=idFreezer			:iFile(ci)=roleFileFreezer ..
-         container_params = {
-            type = "shared",
-            id = "elona.freezer"
-         },
-         -- <<<<<<<< shade2/item.hsp:683 	if iId(ci)=idFreezer			:iFile(ci)=roleFileFreezer ..
 
          categories = {
             "elona.container",
@@ -13729,8 +13693,8 @@ local item =
 
          elona_function = 8,
          on_use = function()
-            local MapEdit = require("api.MapEdit")
-            MapEdit.start()
+            Building.query_house_board()
+            return "player_turn_query"
          end,
 
          categories = {
@@ -13801,7 +13765,7 @@ local item =
          medal_value = 5,
 
          params = {
-            bill_amount_gold = 0
+            bill_gold_amount = 0
          },
 
          categories = {
@@ -13820,6 +13784,13 @@ local item =
          category = 72000,
          rarity = 100000,
          coefficient = 100,
+
+         on_open = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ..
+            Input.query_inventory(params.chara, "elona.inv_put_tax_box", nil, nil)
+            -- <<<<<<<< shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ..
+            return "player_turn_query"
+         end,
 
          is_precious = true,
 
@@ -14506,10 +14477,6 @@ local item =
          category = 72000,
          rarity = 50000,
          coefficient = 100,
-
-         container_params = {
-            type = "local"
-         },
 
          is_precious = true,
          quality = Enum.Quality.Unique,
@@ -16418,9 +16385,7 @@ local item =
          image = "elona.item_deed",
          value = 500000,
          weight = 500,
-         on_read = function(self)
-            return Building.query_build(self)
-         end,
+         on_read = deed_callback("elona.dungeon", "item.info.elona.deed_of_.building_name"),
          fltselect = 1,
          category = 53000,
          subcategory = 53100,
@@ -16436,15 +16401,6 @@ local item =
             "elona.scroll_deed",
             "elona.no_generate"
          },
-
-         events = {
-            {
-               id = "elona.on_deed_use",
-               name = "Create building",
-
-               callback = deed_callback("elona.dungeon", "item.info.elona.deed_of_.building_name")
-            },
-         }
       },
       {
          _id = "shuriken",

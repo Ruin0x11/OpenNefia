@@ -6,6 +6,9 @@ local InstancedMap = require("api.InstancedMap")
 local Enum = require("api.Enum")
 local Util = require("mod.elona_sys.api.Util")
 local Const = require("api.Const")
+local Rank = require("mod.elona.api.Rank")
+local Filters = require("mod.elona.api.Filters")
+local Itemgen = require("mod.tools.api.Itemgen")
 
 local Calc = {}
 
@@ -67,9 +70,9 @@ function Calc.filter(level, quality, rest, map)
    map = map or Map.current()
 
    return table.merge({
-      level = Calc.calc_object_level(level, map),
-      quality = Calc.calc_object_quality(quality),
-   }, rest or {})
+         level = Calc.calc_object_level(level, map),
+         quality = Calc.calc_object_quality(quality),
+                      }, rest or {})
 end
 
 function Calc.calc_fame_gained(chara, base)
@@ -122,7 +125,7 @@ function Calc.calc_item_value(item, mode, is_shop)
    local curse = item:calc("curse_state")
    local base_value = item:calc("value")
    local value
-  
+
    -- shade2/calculation.hsp:595 #defcfunc calcItemValue int id ,int mode ..
    if identify == Enum.IdentifyState.None then
       if mode == "player_shop" then
@@ -393,6 +396,197 @@ end
 
 function Calc.calc_player_sleep_hours(player)
    return 7 + Rand.rnd(5)
+end
+
+function Calc.calc_rank_income(rank_id, rank_exp)
+   -- >>>>>>>> shade2/event.hsp:408 #module ...
+   local exp = rank_exp or Rank.get(rank_id)
+
+   if exp >= 10000 then
+      return 0
+   end
+
+   local income = math.floor(100 - (exp / 100))
+   if income == 99 then
+      income = income * 70
+   else
+      income = income * 50
+   end
+
+   local proto = data["elona.rank"]:ensure(rank_id)
+   if proto.calc_income then
+      income = proto.calc_income(income, exp)
+   end
+
+   return math.floor(income)
+   -- <<<<<<<< shade2/event.hsp:421 #global ..
+end
+
+function Calc.calc_fame_income(chara)
+   chara = chara or Chara.player()
+   if not chara then
+      return 0
+   end
+
+   -- >>>>>>>> shade2/command.hsp:946 	gold=0	 ...
+   local fame = chara and chara:calc("fame")
+   local gold = math.clamp(fame / 10, 100, 25000)
+   if fame >= 25000 then
+      gold = gold + (fame - 25000) / 100
+   end
+
+   return math.floor(gold)
+   -- <<<<<<<< shade2/command.hsp:949 	gold+=p		 ..
+end
+
+--- Calculates the salary amount displayed in the journal.
+function Calc.calc_displayed_total_income(chara)
+   -- >>>>>>>> shade2/command.hsp:946 	gold=0	 ...
+   local fame_income = Calc.calc_fame_income(chara)
+   local rank_income = Rank.iter():map(function(r) return Calc.calc_rank_income(r._id) end):sum()
+
+   return fame_income + rank_income
+   -- <<<<<<<< shade2/command.hsp:970 	loop ..
+end
+
+function Calc.calc_actual_rank_income(rank_id)
+   local base_income = Calc.calc_rank_income(rank_id)
+   return base_income + Rand.rnd(base_income / 3 + 1) - Rand.rnd(base_income / 3 + 1)
+end
+
+--- Calculates the actual gold income accounting for randomization
+function Calc.calc_actual_income(chara)
+   -- >>>>>>>> shade2/event.hsp:439 	income=0,0 ...
+   local fame_income = Calc.calc_fame_income(chara)
+
+   local rank_income = Rank.iter()
+     :extract("_id")
+     :map(Calc.calc_actual_rank_income):sum()
+
+   return fame_income + rank_income
+   -- <<<<<<<< shade2/event.hsp:465 		} ..
+end
+
+function Calc.generate_rank_income_item(rank_id, chara, place)
+   -- >>>>>>>> shade2/event.hsp:451 	dbId=0 ...
+   place = place or Rank.get(rank_id)
+
+   local level = (100 - (place / 100)) / 2 + 1
+   local quality = Enum.Quality.Good
+   if chara and Rand.rnd(12) < chara:trait_level("elona.good_pay") then
+      quality = Enum.Quality.Great
+   end
+
+   local filter = {
+      level = Calc.calc_object_level(level),
+      quality = Calc.calc_object_quality(quality),
+      categories = Rand.choice(Filters.fsetincome),
+      is_shop = true
+   }
+   if Rand.one_in(5) then
+      filter.categories = Rand.choice(Filters.fsetwear)
+   end
+   if Rand.rnd(100 + place / 5) < 2 then
+      filter.id = "elona.potion_of_cure_corruption"
+   end
+
+   filter.ownerless = true
+   return Itemgen.create(nil, nil, filter)
+   -- <<<<<<<< shade2/event.hsp:457 	item_create -1 ,dbId: income(1)++ ..
+end
+
+function Calc.calc_rank_income_item_amount(rank_id, chara)
+   -- >>>>>>>> shade2/event.hsp:449 	p=rnd(rnd(3)+1)+1:cnt2=cnt	 ...
+   return Rand.rnd(Rand.rnd(3) + 1) + 1
+   -- <<<<<<<< shade2/event.hsp:449 	p=rnd(rnd(3)+1)+1:cnt2=cnt	 ..
+end
+
+function Calc.calc_rank_income_items(rank_id, chara, place)
+   chara = chara or Chara.player()
+   place = place or Rank.get(rank_id)
+   local proto = data["elona.rank"]:ensure(rank_id)
+
+   if place >= 10000 then
+      return {}
+   end
+
+   if not proto.provides_salary_items then
+      return {}
+   end
+
+   local gen_item = function()
+      return Calc.generate_rank_income_item(rank_id, chara)
+   end
+
+   local amount = Calc.calc_rank_income_item_amount(rank_id, chara)
+   return fun.tabulate(gen_item):take(amount):to_list()
+end
+
+function Calc.calc_income_items(chara)
+   -- >>>>>>>> shade2/event.hsp:440 	repeat tailRank ...
+   return Rank.iter()
+      :extract("_id")
+      :flatmap(function(rank_id) return Calc.calc_rank_income_items(rank_id, chara) end)
+      :to_list()
+   -- <<<<<<<< shade2/event.hsp:459 	loop ..
+end
+
+--- Calculates an expense in gold, taking karma and the Accountant trait into
+--- consideration.
+function Calc.calc_adjusted_expense(cost, player)
+   -- >>>>>>>> shade2/calculation.hsp:706 #define calcAccountant 	cost=cost * limit(100-limi ...
+   player = player or Chara.player()
+   local karma = player:calc("karma")
+   local factor = math.clamp(100 - karma / 2, 0, 50) - (7 * player:trait_level("elona.tax"))
+
+   if karma >= Const.KARMA_GOOD then
+      factor = factor - 5
+   end
+
+   factor = math.clamp(factor, 25, 100)
+
+   return math.floor(cost * factor / 100)
+   -- <<<<<<<< shade2/calculation.hsp:706 #define calcAccountant 	cost=cost * limit(100-limi ..
+end
+
+function Calc.calc_building_expenses(chara)
+   chara = chara or Chara.player()
+
+   -- >>>>>>>> shade2/calculation.hsp:719 #defcfunc calcCostBuilding ...
+   local cost = 0
+
+   -- TODO building
+
+   return Calc.calc_adjusted_expense(cost, chara)
+   -- <<<<<<<< shade2/calculation.hsp:730 	return cost ..
+end
+
+function Calc.calc_tax_expenses(chara)
+   -- >>>>>>>> shade2/calculation.hsp:733 #defcfunc calcCostTax	 ...
+   chara = chara or Chara.player()
+
+   local cost = 0
+   cost = cost + chara.gold / 1000
+   cost = cost + chara:calc("fame")
+   cost = cost + chara:calc("level") * 200
+
+   return Calc.calc_adjusted_expense(cost, chara)
+   -- <<<<<<<< shade2/calculation.hsp:739 	return cost ..
+end
+
+function Calc.calc_base_bill_amount(chara)
+   local labor_expenses = save.elona.labor_expenses
+   local building_expenses = Calc.calc_building_expenses(chara)
+   local tax_expenses = Calc.calc_tax_expenses(chara)
+
+   return labor_expenses + building_expenses + tax_expenses
+end
+
+function Calc.calc_actual_bill_amount(chara)
+   -- >>>>>>>> shade2/event.hsp:486 		iSubName(ci)=gCostHire+calcCostBuilding()+calcCo ...
+   local base_amount = Calc.calc_base_bill_amount(chara)
+   return math.floor(base_amount * (100 + Rand.rnd(20)) / 100)
+   -- <<<<<<<< shade2/event.hsp:487 		iSubName(ci)=iSubName(ci)*(100+rnd(20))/100 ..
 end
 
 return Calc

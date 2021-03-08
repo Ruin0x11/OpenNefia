@@ -21,7 +21,14 @@ end
 -- @tparam string kind "normal" (default), "sleep"
 function RandomEvent.random_event_id(kind)
    local player = Chara.player()
+   if player == nil then
+      return nil
+   end
+
    local map = player:current_map()
+   if map == nil then
+      return nil
+   end
 
    if player.current_speed < 10 then
       return nil

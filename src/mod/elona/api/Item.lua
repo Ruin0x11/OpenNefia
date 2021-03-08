@@ -49,6 +49,7 @@ function Item.generate_oracle_text(item)
 end
 
 -- >>>>>>>> shade2/item.hsp:708 	if (refType=fltGold)or(refType=fltPlat)or(iId(ci) ..
+-- TODO externalize
 local NORMAL_ITEMS = table.set {
    "elona.platinum_coin",
    "elona.gold_piece",
@@ -481,7 +482,7 @@ function Item.open_chest(item, gen_filter_cb, item_count, loot_level, seed, sile
       api_Item.create("elona.small_medal", x, y, { amount = 1 }, map)
    end
 
-   Save.autosave()
+   Save.queue_autosave()
    -- <<<<<<<< shade2/action.hsp:1022 	iParam1(ri)=0 ..
 end
 

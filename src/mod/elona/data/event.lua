@@ -19,7 +19,6 @@ local event = {
    { _id = "calc_return_forbidden" },
    { _id = "before_physical_attack" },
    { _id = "on_item_created_from_wish" },
-   { _id = "on_deed_use" },
    { _id = "on_harvest_plant" },
    { _id = "on_ai_dir_check" },
    { _id = "before_default_ai_action" },
@@ -35,6 +34,8 @@ local event = {
    { _id = "before_chara_drop_items" },
    { _id = "on_chara_generate_loot_drops" },
    { _id = "on_chara_initialize_equipment" },
+   { _id = "on_house_board_queried" },
+   { _id = "on_build_house_board_actions" },
 }
 
 data:add_multi("base.event", event)

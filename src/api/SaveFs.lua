@@ -99,6 +99,23 @@ function SaveFs.read(path, kind, save)
    return true, result
 end
 
+function SaveFs.delete(path, kind, save)
+   local full_path = load_path(path, kind, save)
+
+   if not fs.exists(full_path) then
+      return false, ("file does not exist: %s"):format(full_path)
+   end
+
+   Log.trace("savefs delete (temp): %s", full_path)
+   fs.remove(full_path)
+
+   if kind ~= "global" then
+      touched_paths[path] = true
+   end
+
+   return true
+end
+
 function SaveFs.exists(path, kind, save)
    local full_path = load_path(path, kind, save)
    return fs.exists(full_path)
@@ -132,7 +149,13 @@ function SaveFs.save_game(save)
    for path, _ in pairs(touched_paths) do
       local temp_path = SaveFs.save_path(path, "temp")
       local full_path = SaveFs.save_path(path, "save", save)
-      assert(fs.copy(temp_path, full_path))
+
+      if not fs.exists(temp_path) then
+         -- Path was removed by SaveFs.delete().
+         assert(fs.remove(full_path))
+      else
+         assert(fs.copy(temp_path, full_path))
+      end
    end
 end
 

@@ -25,34 +25,50 @@ end
 
 local MAX_INSPECT_LENGTH = 10000
 
+local function error_diff(lhs, rhs, message)
+   local inspect_args = { max_length = MAX_INSPECT_LENGTH }
+   local lhs_insp = inspect(lhs, inspect_args)
+   local rhs_insp = inspect(rhs, inspect_args)
+   local diff = Diff.diff(lhs_insp, rhs_insp)
+   Diff.cleanup_semantic(diff)
+
+   local function format_line(line)
+      if line[1] == Diff.DIFF_INSERT then
+         return ansicolors(("%%{green}+ %s%%{reset}\n"):format(line[2]))
+      elseif line[1] == Diff.DIFF_DELETE then
+         return ansicolors(("%%{red}- %s%%{reset}\n"):format(line[2]))
+      else
+         return ("  %s\n"):format(line[2])
+      end
+   end
+
+   local output = fun.iter(diff)
+      :map(format_line)
+      :foldl(fun.op.concat, "\n")
+
+   error(message .. ": \n" .. output, 3)
+end
+
 function Assert.same(lhs, rhs)
    if type(lhs) == 'table' and type(rhs) == 'table' then
       local result = table.deepcompare(lhs, rhs, true)
       if not result then
-         local inspect_args = { max_length = MAX_INSPECT_LENGTH }
-         local lhs_insp = inspect(lhs, inspect_args)
-         local rhs_insp = inspect(rhs, inspect_args)
-         local diff = Diff.diff(lhs_insp, rhs_insp)
-         Diff.cleanup_semantic(diff)
-
-         local function format_line(line)
-            if line[1] == Diff.DIFF_INSERT then
-               return ansicolors(("%%{green}+ %s%%{reset}\n"):format(line[2]))
-            elseif line[1] == Diff.DIFF_DELETE then
-               return ansicolors(("%%{red}- %s%%{reset}\n"):format(line[2]))
-            else
-               return ("  %s\n"):format(line[2])
-            end
-         end
-
-         local output = fun.iter(diff)
-            :map(format_line)
-            :foldl(fun.op.concat, "\n")
-
-         error("Expected both arguments to be the same, but they were different: \n" .. output)
+         error_diff(lhs, rhs, "Expected both arguments to be the same, but they were different")
       end
    else
       Assert.eq(lhs, rhs)
+   end
+end
+
+function Assert.subset(subset, superset)
+   local need = table.set(subset)
+   local have = table.set(superset)
+   for k, _ in pairs(have) do
+      need[k] = nil
+   end
+   local remain = table.count(need)
+   if remain > 0 then
+      error_diff(subset, superset, ("Expected subset, but %d items were not found (%s)"):format(remain, inspect(table.keys(need))))
    end
 end
 

@@ -169,7 +169,7 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
 
    map:emit("base.on_generate_area_floor", {area=self, floor_number=floor, is_first_generation=params.is_first_generation})
 
-   Log.debug("Generated area floor with map archetype %s", map._archetype)
+   Log.debug("Generated area %d's floor %d with map archetype %s", self.uid, floor, map._archetype)
 
    return true, map
 end

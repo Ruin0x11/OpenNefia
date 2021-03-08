@@ -1,4 +1,3 @@
-local Area = require("api.Area")
 local Chara = require("api.Chara")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
@@ -7,11 +6,12 @@ local Item = require("api.Item")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local Enum = require("api.Enum")
+local Home = require("mod.elona.api.Home")
 
 local common = require("mod.elona.data.dialog.common")
 
 local function is_digging_tutorial_step(map)
-   return Area.current()._archetype == "elona.your_home" and Sidequest.progress("elona.tutorial") == 2
+   return Home.is_home(map) and Sidequest.progress("elona.tutorial") == 2
 end
 
 

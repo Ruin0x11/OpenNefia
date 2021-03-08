@@ -93,6 +93,11 @@ function Gui.stop_draw_callback(tag)
    field:remove_async_draw_callback(tag)
 end
 
+--- Stops a tagged draw callback.
+function Gui.stop_all_draw_callbacks()
+   field:remove_all_async_draw_callbacks()
+end
+
 --- Waits for all draw callbacks to finish before continuing.
 function Gui.wait_for_draw_callbacks()
    if Env.is_headless() then

@@ -165,7 +165,7 @@ local function item_name_sub(s, item, jp)
       local home_name = "ui.home." .. item.params.deed_home_id
       s = s .. I18N.get("item.info." .. _id .. ".title", home_name)
    elseif _id == "elona.bill" then
-      s = s .. I18N.get("item.info." .. _id .. ".title", item.params.bill_amount_gold)
+      s = s .. I18N.get("item.info." .. _id .. ".title", item.params.bill_gold_amount)
    elseif _id == "elona.vomit" and item.params.chara_id then
       local chara_name = I18N.get("chara." .. item.params.chara_id .. ".name")
       if not jp then
@@ -525,7 +525,7 @@ function itemname.en(item, amount, no_article)
             s = s .. "エターナルフォース" .. I18N.space()
          else
             if item.ego_minor_enchantment then
-               s = I18N.get("enchantment.item_ego.minor." .. item.ego_minor_enchantment, s) .. " "
+               s = I18N.get("enchantment.item_ego.minor." .. item.ego_minor_enchantment, s)
             end
 
             if quality ~= Quality.Unique and quality >= Quality.Great then
