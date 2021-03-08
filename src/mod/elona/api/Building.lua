@@ -228,7 +228,7 @@ function Building.query_house_board()
 
       --[[
          actions = {
-         { text = "action.interact.choices.talk", key = "a", callback = function(chara) ... end }
+         { text = "action.interact.choices.talk", key = "a", callback = function(map) ... end }
          }
       --]]
 
@@ -249,8 +249,6 @@ function Building.query_house_board()
 
       choice.callback(map)
    end
-
-   Gui.update_screen()
 
    return "player_turn_query"
    -- <<<<<<<< shade2/map_user.hsp:245  ..

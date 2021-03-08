@@ -126,7 +126,7 @@ local function house_board_your_home_info(map)
       return
    end
 
-   local servants = Chara.iter_others(map):filter(Servant.is_servant):length()
+   local servants = Servant.iter(map):length()
    local max = Servant.calc_max_servant_limit(map)
 
    Gui.mes("building.home.staying.count", servants, max)

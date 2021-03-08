@@ -9,18 +9,21 @@ function test_StayingCharas_register()
    local staying = StayingCharas:new()
 
    local map = InstancedMap:new(10, 10)
-   local chara = Chara.create("elona.putit", nil, nil, nil, map)
+   local chara = Chara.create("elona.putit", 2, 7, nil, map)
 
    Assert.eq(0, staying:iter():length())
-   Assert.eq(nil, staying:get_staying_map_uid_for(chara))
+   Assert.eq(nil, staying:get_staying_map_for(chara))
+   Assert.eq(false, staying:is_staying_in_map(chara, map))
 
    staying:register(chara, map)
    Assert.eq(0, staying:iter():length())
-   Assert.eq(map.uid, staying:get_staying_map_uid_for(chara))
+   Assert.eq(map.uid, staying:get_staying_map_for(chara).map_uid)
+   Assert.eq(true, staying:is_staying_in_map(chara, map))
 
    staying:unregister(chara, map)
    Assert.eq(0, staying:iter():length())
-   Assert.eq(nil, staying:get_staying_map_uid_for(chara))
+   Assert.eq(nil, staying:get_staying_map_for(chara))
+   Assert.eq(false, staying:is_staying_in_map(chara, map))
 end
 
 function test_StayingCharas_do_transfer()
@@ -28,7 +31,7 @@ function test_StayingCharas_do_transfer()
 
    local inside = InstancedMap:new(10, 10)
    local outside = InstancedMap:new(10, 10)
-   local chara = Chara.create("elona.putit", nil, nil, nil, inside)
+   local chara = Chara.create("elona.putit", 2, 7, nil, inside)
 
    staying:register(chara, inside)
 
@@ -51,6 +54,8 @@ function test_StayingCharas_do_transfer()
    Assert.eq(0, Chara.iter_all(outside):length())
    Assert.eq(0, staying:iter():length())
    Assert.eq("Alive", chara.state)
+   Assert.eq(2, chara.x)
+   Assert.eq(7, chara.y)
 end
 
 function test_StayingCharas_do_transfer__will_not_transfer_dead()
@@ -58,7 +63,7 @@ function test_StayingCharas_do_transfer__will_not_transfer_dead()
 
    local inside = InstancedMap:new(10, 10)
    local outside = InstancedMap:new(10, 10)
-   local chara = Chara.create("elona.putit", nil, nil, nil, inside)
+   local chara = Chara.create("elona.putit", 2, 7, nil, inside)
 
    staying:register(chara, inside)
    chara.state = "Dead"

@@ -33,11 +33,11 @@ function test_IChara_kill__unregisters_staying()
    local chara = Chara.create("base.player", 1, 2, {}, map)
    StayingCharas.register_global(chara, map)
 
-   Assert.eq(map.uid, save.base.staying_charas:get_staying_map_uid_for(chara))
+   Assert.eq(map.uid, save.base.staying_charas:get_staying_map_for(chara).map_uid)
 
    chara:kill()
 
-   Assert.eq(nil, save.base.staying_charas:get_staying_map_uid_for(chara))
+   Assert.eq(nil, save.base.staying_charas:get_staying_map_for(chara))
 end
 
 function test_IChara_vaniquish__unregisters_staying()
@@ -47,11 +47,11 @@ function test_IChara_vaniquish__unregisters_staying()
    local chara = Chara.create("base.player", 1, 2, {}, map)
    StayingCharas.register_global(chara, map)
 
-   Assert.eq(map.uid, save.base.staying_charas:get_staying_map_uid_for(chara))
+   Assert.eq(map.uid, save.base.staying_charas:get_staying_map_for(chara).map_uid)
 
    chara:vanquish()
 
-   Assert.eq(nil, save.base.staying_charas:get_staying_map_uid_for(chara))
+   Assert.eq(nil, save.base.staying_charas:get_staying_map_for(chara))
 end
 
 function test_IChara_remove_ownership__unregisters_staying()
@@ -61,9 +61,9 @@ function test_IChara_remove_ownership__unregisters_staying()
    local chara = Chara.create("base.player", 1, 2, {}, map)
    StayingCharas.register_global(chara, map)
 
-   Assert.eq(map.uid, save.base.staying_charas:get_staying_map_uid_for(chara))
+   Assert.eq(map.uid, save.base.staying_charas:get_staying_map_for(chara).map_uid)
 
    chara:remove_ownership()
 
-   Assert.eq(nil, save.base.staying_charas:get_staying_map_uid_for(chara))
+   Assert.eq(nil, save.base.staying_charas:get_staying_map_for(chara))
 end

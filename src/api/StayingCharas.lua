@@ -33,7 +33,15 @@ function StayingCharas.unregister_global(chara)
 end
 
 function StayingCharas.iter_global()
-   save.base.staying_charas:iter()
+   return save.base.staying_charas:iter()
+end
+
+function StayingCharas.get_staying_map_for_global(chara)
+   return save.base.staying_charas:get_staying_map_for(chara)
+end
+
+function StayingCharas.is_staying_in_map_global(chara, map)
+   return save.base.staying_charas:is_staying_in_map(chara, map)
 end
 
 function StayingCharas:register(chara, map)
@@ -45,11 +53,14 @@ function StayingCharas:register(chara, map)
       self.chara_uid_to_map_uid[chara.uid] = nil
    end
 
+   chara.initial_x = chara.x
+   chara.initial_y = chara.y
+
    self.map_uid_to_chara_uids[map.uid] = self.map_uid_to_chara_uids[map.uid] or {}
    self.map_uid_to_chara_uids[map.uid][chara.uid] = true
    self.chara_uid_to_map_uid[chara.uid] = {
       map_uid = map.uid,
-      map_name = map.name or I18N.get("ui.adventurers.unknown")
+      map_name = map.name or I18N.get("ui.adventurers.unknown"),
    }
 end
 
@@ -73,7 +84,24 @@ function StayingCharas:get_staying_map_for(chara)
       return nil
    end
 
-   return { map_uid = map.map_uid, map_name = map.map_name }
+   return {
+      map_uid = map.map_uid,
+      map_name = map.map_name,
+      start_x = map.start_x,
+      start_y = map.start_y
+   }
+end
+
+function StayingCharas:is_staying_in_map(chara, map)
+   assert(MapObject.is_map_object(chara, "base.chara"))
+   class.assert_is_an(InstancedMap, map)
+
+   local staying_map = self:get_staying_map_for(chara)
+   if staying_map == nil then
+      return false
+   end
+
+   return staying_map.map_uid == map.uid
 end
 
 function StayingCharas:do_transfer(map)
@@ -100,13 +128,11 @@ function StayingCharas:do_transfer(map)
    end
 
    local function place(chara)
-      -- TODO building original position
-      local x = nil
-      local y = nil
+      local x = chara.initial_x
+      local y = chara.initial_y
       if Map.try_place_chara(chara, x, y, map) then
          chara.state = "Alive"
       else
-         assert(chara:get_location() == self)
          Log.warn("Could not restore staying character %d (%s)", chara.uid, chara.name)
       end
    end
