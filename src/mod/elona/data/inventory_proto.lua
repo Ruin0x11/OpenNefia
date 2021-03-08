@@ -435,6 +435,33 @@ local inv_sell = {
    show_money = true,
    window_title = "ui.inventory_command.sell",
    query_text = "ui.inv.title.sell",
+
+   filter = function(ctxt, item)
+      -- >>>>>>>> shade2/command.hsp:3368 		if shopTrade{ ...
+      if (item:calc("cargo_weight") or 0) > 0 then
+         return false
+      end
+
+      if item:calc("value") <= 1 then
+         return false
+      end
+
+      if item:calc("is_precious") then
+         return false
+      end
+
+      if (item.spoilage_date or 0) < 0 then
+         return false
+      end
+
+      if item:calc("quality") == Enum.Quality.Unique then
+         return false
+      end
+
+      return true
+      -- <<<<<<<< shade2/command.hsp:3377 		if iQuality(cnt)=fixUnique	:continue ..
+   end,
+
    can_select = function(ctxt, item)
       if item:calc("is_no_drop") then
          return false, "marked as no drop"
