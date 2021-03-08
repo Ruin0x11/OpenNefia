@@ -334,7 +334,9 @@ local function do_sleep(player, bed, no_animation, sleep_hours)
    for _ = 1, time_slept do
       World.pass_time_in_seconds(60 * 60, "hour")
       save.base.date.minute = 0
-      Gui.wait(500)
+      if not no_animation then
+         Gui.wait(500)
+      end
    end
 
    -- TODO gene
@@ -381,6 +383,10 @@ function ElonaCommand.do_sleep(player, bed, no_animation, sleep_hours)
    if quest or map:has_type("quest") then
       Gui.mes("activity.sleep.but_you_cannot")
       return "player_turn_query"
+   end
+
+   if config.base.skip_sleep_animation then
+      no_animation = true
    end
 
    RandomEvent.set_kind("sleep")

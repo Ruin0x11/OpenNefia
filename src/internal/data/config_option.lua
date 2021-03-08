@@ -59,6 +59,12 @@ data:add_multi(
          default = false
       },
       {
+         _id = "skip_sleep_animation",
+
+         type = "boolean",
+         default = false
+      },
+      {
          _id = "_save_id", -- TODO move to private state
 
          type = "string",
