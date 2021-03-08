@@ -31,6 +31,10 @@ end
 
 function test_Calc_calc_rank_income_items__no_provides()
    Assert.eq(0, #Calc.calc_rank_income_items("elona.shop"))
+
+   Rank.set("elona.shop", 100)
+   Rand.set_seed(0)
+   Assert.eq(0, #Calc.calc_rank_income_items("elona.arena"))
 end
 
 function test_Calc_calc_rank_income_items()
