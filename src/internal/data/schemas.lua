@@ -1634,3 +1634,8 @@ data:add_type {
    name = "trait_indicator",
    fields = {}
 }
+
+data:add_type {
+   name = "journal_page",
+   fields = {}
+}

@@ -14,6 +14,7 @@ local Log = require("api.Log")
 local ConfigMenuWrapper = require("api.gui.menu.config.ConfigMenuWrapper")
 local Prompt = require("api.gui.Prompt")
 local Feat = require("api.Feat")
+local JournalMenu = require("api.gui.menu.JournalMenu")
 
 --- Game logic intended for the player only.
 local Command = {}
@@ -401,6 +402,23 @@ function Command.interact(player)
 
    return turn_result
    -- <<<<<<<< shade2/command.hsp:1867 	if (develop)or(gWizard):promptAdd lang("情報","Info ..
+end
+
+function Command.journal(player)
+   local sort = function(a, b)
+      return a.ordering < b.ordering
+   end
+
+   local render = function(page)
+      return page.render()
+   end
+
+   local pages = data["base.journal_page"]:iter():into_sorted(sort):map(render):to_list()
+
+   -- TODO icon bar wrapper
+   JournalMenu:new(pages):query()
+
+   return "player_turn_query"
 end
 
 return Command

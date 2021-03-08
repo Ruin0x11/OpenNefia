@@ -339,5 +339,8 @@ Gui.bind_keys {
    end,
    quick_menu = function(_, me)
       return Command.quick_menu(me)
+   end,
+   journal = function(_, me)
+      return Command.journal(me)
    end
 }

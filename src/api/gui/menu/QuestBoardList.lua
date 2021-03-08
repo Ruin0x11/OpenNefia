@@ -33,14 +33,8 @@ function QuestBoardList:init(quests)
       -- <<<<<<<< shade2/command.hsp:1069 	if cExist(rc)!cAlive : continue ..
       :map(function(q)
             local speaker = assert(Chara.find(q.client_uid))
-            local title, desc = Quest.get_name_and_desc(q, speaker, false)
-
-            local deadline
-            if q.deadline_days == nil then
-               deadline = I18N.get("quest.info.no_deadline")
-            else
-               deadline = I18N.get("quest.info.days", q.deadline_days)
-            end
+            local title, desc = Quest.format_name_and_desc(q, speaker, false)
+            local deadline = Quest.format_deadline_text(q.deadline_days)
 
             return {
                quest = q,

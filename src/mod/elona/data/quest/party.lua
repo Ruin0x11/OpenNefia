@@ -71,7 +71,7 @@ local party = {
    expiration_hours = function() return (Rand.rnd(6) + 2) * 24 end,
 
    locale_data = function(self)
-      local required_points = ("%d%s%s"):format(self.params.required_points, I18N.space(), I18N.get("quest.party.points"))
+      local required_points = I18N.get("quest.types.elona.party.points", self.params.required_points)
       return { required_points = required_points }
    end,
 

@@ -182,7 +182,7 @@ function Quest.generate_from_proto(proto_id, chara, map)
    return quest, nil
 end
 
-local function get_reward_text(quest)
+function Quest.format_reward_text(quest)
    local reward = I18N.get("quest.info.gold_pieces", quest.reward_gold)
    if quest.reward ~= nil then
       local reward_proto = data["elona_sys.quest_reward"]:ensure(quest.reward._id)
@@ -198,13 +198,18 @@ local function get_reward_text(quest)
    return reward
 end
 
+function Quest.format_detail_text(quest)
+   local locale_params = Quest.get_locale_params(quest, true)
+   return I18N.get("quest.types." .. quest._id .. ".detail", locale_params)
+end
+
 function Quest.get_locale_params(quest, is_active)
    local proto = data["elona_sys.quest"]:ensure(quest._id)
    local params = {}
 
    params.map = quest.map_name
 
-   local reward = get_reward_text(quest)
+   local reward = Quest.format_reward_text(quest)
    params.reward = reward
 
    local locale_key = "quest.types." .. quest._id
@@ -223,7 +228,7 @@ function Quest.get_locale_params(quest, is_active)
    return params, locale_key
 end
 
-function Quest.get_name_and_desc(quest, speaker, is_active)
+function Quest.format_name_and_desc(quest, speaker, is_active)
    local params, locale_key = Quest.get_locale_params(quest, speaker, is_active)
 
    -- Count how many entries under the key that exist containing a
@@ -245,6 +250,14 @@ function Quest.get_name_and_desc(quest, speaker, is_active)
    local desc = I18N.get(locale_key .. "._" .. index .. ".desc", player, speaker, params)
 
    return title, desc
+end
+
+function Quest.format_deadline_text(deadline_days)
+   if deadline_days == nil then
+      return I18N.get("quest.info.no_deadline")
+   else
+      return I18N.get("quest.info.days", deadline_days)
+   end
 end
 
 function Quest.generate(chara, map)
@@ -510,7 +523,7 @@ function Quest.update_in_map(map)
 end
 
 function Quest.complete(quest, client)
-   local reward_text = get_reward_text(quest)
+   local reward_text = Quest.format_reward_text(quest)
    local next_node = "elona.quest_giver:complete_default"
    if reward_text and client then
       Gui.mes("quest.giver.complete.take_reward", reward_text, client)

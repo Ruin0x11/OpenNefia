@@ -46,7 +46,13 @@ local conquer = {
       return true
    end,
    locale_data = function(self)
-      local objective = I18N.get("chara." .. self.params.enemy_id .. ".name")
+      local objective
+      local is_unknown = false
+      if is_unknown then
+         objective = I18N.get("quest.types.elona.conquer.unknown_monster")
+      else
+         objective = I18N.get("chara." .. self.params.enemy_id .. ".name")
+      end
       return { objective = objective, enemy_level = self.params.enemy_level }
    end,
 

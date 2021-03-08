@@ -452,55 +452,6 @@ end
       drink = "Drink",
       zap = "Zap"
     },
-    journal = {
-      income = {
-        bills = {
-          labor = function(_1)
-  return ("@RE  Labor  : About %s GP")
-  :format(_1)
-end,
-          maintenance = function(_1)
-  return ("@RE  Maint. : About %s GP")
-  :format(_1)
-end,
-          sum = function(_1)
-  return ("@RE  Sum    : About %s GP")
-  :format(_1)
-end,
-          tax = function(_1)
-  return ("@RE  Tax    : About %s GP")
-  :format(_1)
-end,
-          title = "Bills  (Issued every 1st day)",
-          unpaid = function(_1)
-  return ("You have %s unpaid bills.")
-  :format(_1)
-end
-        },
-        salary = {
-          sum = function(_1)
-  return ("@BL  Sum    : About %s GP")
-  :format(_1)
-end,
-          title = "Salary (Paid every 1st and 15th day)"
-        }
-      },
-      rank = {
-        arena = function(_1, _2)
-  return ("EX Arena Wins:%s  Highest Level:%s")
-  :format(_1, _2)
-end,
-        deadline = function(_1)
-  return ("\nDeadline: %s Days left")
-  :format(_1)
-end,
-        fame = "Fame",
-        pay = function(_1)
-  return ("Pay: About %s gold pieces ")
-  :format(_1)
-end
-      }
-    },
     manual = {
       keys = {
         action = {

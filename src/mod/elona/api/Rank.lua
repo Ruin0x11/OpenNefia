@@ -1,5 +1,9 @@
 local Rank = {}
 
+function Rank.iter()
+   return fun.iter({}) -- TODO rank
+end
+
 function Rank.get(rank_id)
    return save.elona.ranks[rank_id]
 end

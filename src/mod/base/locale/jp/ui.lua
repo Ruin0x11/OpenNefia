@@ -452,55 +452,6 @@ return {
          drink = "飲む",
          zap = "振る"
       },
-      journal = {
-         income = {
-            bills = {
-               labor = function(_1)
-                  return ("@RE　人件費  : 約 %s gold")
-                     :format(_1)
-               end,
-               maintenance = function(_1)
-                  return ("@RE　運営費  : 約 %s gold")
-                     :format(_1)
-               end,
-               sum = function(_1)
-                  return ("@RE　合計　  : 約 %s gold")
-                     :format(_1)
-               end,
-               tax = function(_1)
-                  return ("@RE　税金    : 約 %s gold")
-                     :format(_1)
-               end,
-               title = "◆ 請求書内訳(毎月1日に発行)",
-               unpaid = function(_1)
-                  return ("現在未払いの請求書は%s枚")
-                     :format(_1)
-               end
-            },
-            salary = {
-               sum = function(_1)
-                  return ("@BL　合計　　 : 約 %s gold")
-                     :format(_1)
-               end,
-               title = "◆ 給料(毎月1日と15日に支給)"
-            }
-         },
-         rank = {
-            arena = function(_1, _2)
-               return ("EXバトル: 勝利 %s回 最高Lv%s")
-                  :format(_1, _2)
-            end,
-            deadline = function(_1)
-               return ("ノルマ: %s日以内")
-                  :format(_1)
-            end,
-            fame = "名声",
-            pay = function(_1)
-               return ("給料: 約 %s gold  ")
-                  :format(_1)
-            end
-         }
-      },
       manual = {
          keys = {
             action = {

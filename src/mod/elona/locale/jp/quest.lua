@@ -1,5 +1,10 @@
 local quest = {
    cook = {
+      detail = function(params)
+         return ("%sの納入")
+            :format(params.objective)
+      end,
+
       food_type = {
          elona = {
             meat = {
@@ -150,6 +155,13 @@ local quest = {
       }
    },
    collect = {
+      target_in = function(_1)
+         return ("%sに住む人物"):format(_1)
+      end,
+      detail = function(params)
+         return ("依頼人のために%sから%sを調達"):format(params.target_name, params.item_name)
+      end,
+
       _1 = {
          title = "物凄く欲しい物",
          desc = function(player, speaker, params)
@@ -166,6 +178,11 @@ local quest = {
       },
    },
    conquer = {
+      unknown_monster = "正体不明の存在",
+      detail = function(params)
+         return ("%sの討伐"):format(params.objective)
+      end,
+
       _1 = {
          title = "討伐の依頼",
          desc = function(player, speaker, params)
@@ -189,6 +206,11 @@ local quest = {
       }
    },
    escort = {
+      detail = function(params)
+         return ("クライアントを%sまで護衛")
+            :format(params.map)
+      end,
+
       type = {
          protect = {
             _1 = {
@@ -262,6 +284,11 @@ local quest = {
       }
    },
    harvest = {
+      detail = function(params)
+         return ("%sの作物の納入")
+            :format(params.required_weight)
+      end,
+
       _1 = {
          title = "農作業の手伝い",
          desc = function(player, speaker, params)
@@ -285,6 +312,8 @@ local quest = {
       },
    },
    hunt = {
+      detail = "全ての敵の殲滅",
+
       _1 = {
          title = "森の清浄化",
          desc = function(player, speaker, params)
@@ -309,6 +338,8 @@ local quest = {
       }
    },
    huntex = {
+      detail = "全ての敵の殲滅",
+
       _1 = {
          title = "街の危機",
          desc = function(player, speaker, params)
@@ -332,6 +363,15 @@ local quest = {
       }
    },
    party = {
+      points = function(_1)
+         return ("%sポイント")
+            :format(_1)
+      end,
+      detail = function(params)
+         return ("%sの獲得")
+            :format(params.required_points)
+      end,
+
       _1 = {
          title = "ベイベー！",
          desc = function(player, speaker, params)
@@ -355,6 +395,11 @@ local quest = {
       }
    },
    supply = {
+      detail = function(params)
+         return ("%sの納入")
+            :format(params.objective)
+      end,
+
       _1 = {
          title = "恋人への贈り物",
          desc = function(player, speaker, params)
@@ -399,6 +444,10 @@ local quest = {
       },
    },
    deliver = {
+      detail = function(params)
+         return ("%sに住む%sに%sを配達")
+            :format(params.map, params.target_name, params.item_name)
+      end,
       elona = {
          spellbook = {
             _1 = {
