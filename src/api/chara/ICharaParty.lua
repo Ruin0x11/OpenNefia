@@ -1,5 +1,7 @@
 local Chara = require("api.Chara")
 local save = require("internal.global.save")
+local Map = require("api.Map")
+local InstancedMap = require("api.InstancedMap")
 
 local ICharaParty = class.interface("ICharaParty", {})
 

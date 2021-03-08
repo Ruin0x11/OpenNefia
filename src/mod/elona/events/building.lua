@@ -10,6 +10,7 @@ local Building = require("mod.elona.api.Building")
 local Chara = require("api.Chara")
 local Servant = require("mod.elona.api.Servant")
 local Home = require("mod.elona.api.Home")
+local Log = require("api.Log")
 
 local function day_passes()
    local guests = save.elona.waiting_guests
@@ -69,7 +70,13 @@ local function house_board_shop_info(map)
       return
    end
 
-   local area = assert(Area.for_map(map))
+   -- TODO multiple building maps per area (#178)
+   local area = Area.for_map(map)
+   if area == nil then
+      Log.error("Shop map '%d' is not in an area.", map.uid)
+      return
+   end
+
    local shopkeeper_uid = area.metadata.shopkeeper_uid
 
    if shopkeeper_uid then
@@ -94,6 +101,7 @@ local function house_board_ranch_info(map)
       return
    end
 
+   -- TODO multiple building maps per area (#178)
    local area = assert(Area.for_map(map))
    local breeder_uid = area.metadata.ranch_breeder_uid
 

@@ -6,8 +6,27 @@ local Map = require("api.Map")
 local Home = require("mod.elona.api.Home")
 local HomeRankMenu = require("mod.elona.api.gui.HomeRankMenu")
 local Servant = require("mod.elona.api.Servant")
+local MapEdit = require("mod.elona.api.MapEdit")
+local Gui = require("api.Gui")
+local Area = require("api.Area")
+local Log = require("api.Log")
+local ChooseAllyMenu = require("api.gui.menu.ChooseAllyMenu")
+local Chara = require("api.Chara")
 
 local function shop_assign_shopkeeper(map)
+   if not Building.map_is_building(map, "elona.shop") then
+      Gui.mes("common.it_is_impossible")
+      return
+   end
+
+   -- TODO multiple shop maps per area (#178)
+   local area = Area.for_map(map)
+   if area == nil then
+      Log.error("Shop map '%d' is not in an area.", map.uid)
+      Gui.mes("common.it_is_impossible")
+      return
+   end
+
 end
 
 local function shop_reform(map)
@@ -17,6 +36,7 @@ local function ranch_assign_breeder(map)
 end
 
 local function design(map)
+   MapEdit.start()
 end
 
 local function your_home_home_rank(map)

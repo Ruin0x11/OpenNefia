@@ -214,42 +214,45 @@ function Building.query_house_board()
 
    map:emit("elona.on_house_board_queried")
 
-   Gui.mes("building.house_board.what_do")
+   while true do
+      Gui.mes("building.house_board.what_do")
 
-   local actions = {}
-   map:emit("elona.on_build_house_board_actions", {}, actions)
+      local actions = {}
+      map:emit("elona.on_build_house_board_actions", {}, actions)
 
-   if #actions == 0 then
-      Log.error("No interact actions returned from `elona_sys.on_build_interact_actions`.")
-      Gui.mes("common.it_is_impossible")
-      return "player_turn_query"
+      if #actions == 0 then
+         Log.error("No interact actions returned from `elona_sys.on_build_interact_actions`.")
+         Gui.mes("common.it_is_impossible")
+         break
+      end
+
+      --[[
+         actions = {
+         { text = "action.interact.choices.talk", key = "a", callback = function(chara) ... end }
+         }
+      --]]
+
+      local to_prompt_item = function(t)
+         assert(type(t.text) == "string", "Action must have 'text' defined")
+         assert(type(t.callback) == "function", "Action must have 'callback' defined")
+         return { text = t.text or "", key = t.key or nil }
+      end
+
+      local prompt_items = fun.iter(actions):map(to_prompt_item):to_list()
+      local result, canceled = Prompt:new(prompt_items):query()
+
+      if canceled then
+         break
+      end
+
+      local choice = assert(actions[result.index])
+
+      choice.callback(map)
    end
 
-   --[[
-   actions = {
-      { text = "action.interact.choices.talk", key = "a", callback = function(chara) ... end }
-   }
-   --]]
+   Gui.update_screen()
 
-   local to_prompt_item = function(t)
-      assert(type(t.text) == "string", "Action must have 'text' defined")
-      assert(type(t.callback) == "function", "Action must have 'callback' defined")
-      return { text = t.text or "", key = t.key or nil }
-   end
-
-   local prompt_items = fun.iter(actions):map(to_prompt_item):to_list()
-   local result, canceled = Prompt:new(prompt_items):query()
-
-   if canceled then
-      Gui.update_screen()
-      return "player_turn_query"
-   end
-
-   local choice = assert(actions[result.index])
-
-   local turn_result = choice.callback(map) or "player_turn_query"
-
-   return turn_result
+   return "player_turn_query"
    -- <<<<<<<< shade2/map_user.hsp:245  ..
 end
 

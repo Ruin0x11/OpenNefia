@@ -5,6 +5,7 @@ local UidTracker = require("api.UidTracker")
 local Rand = require("api.Rand")
 local save = require("internal.global.save")
 local parties = require("internal.parties")
+local StayingCharas = require("api.StayingCharas")
 
 local function init_save()
    local s = save.base
@@ -34,6 +35,7 @@ local function init_save()
    s.travel_last_town_name = ""
    s.is_first_turn = false
    s.inventories = {}
+   s.staying_charas = StayingCharas:new(nil)
 end
 
 Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0})

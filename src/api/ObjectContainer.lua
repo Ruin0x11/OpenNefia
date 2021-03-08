@@ -1,13 +1,19 @@
 --- @module ObjectContainer
 
 local ILocation = require("api.ILocation")
+local IOwned = require("api.IOwned")
 local pool = require("internal.pool")
 
 local ObjectContainer = class.class("ObjectContainer", ILocation)
 
 --- @tparam string ty
-function ObjectContainer:init(ty)
-   self.pool = pool:new(ty, 1, 1)
+function ObjectContainer:init(ty, owner)
+   if owner then
+      assert(class.is_an(IOwned, owner))
+      self._parent = owner
+   end
+
+   self.pool = pool:new(ty, 1, 1, self)
 end
 
 --

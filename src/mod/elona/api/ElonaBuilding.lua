@@ -18,6 +18,7 @@ local ElonaBuilding = {}
 
 -- >>>>>>>> shade2/map_user.hsp:473 *shop_turn ..
 function ElonaBuilding.update_shops()
+   -- TODO multiple shop maps per area (#178)
    for _, building in ipairs(save.elona.player_owned_buildings) do
       if building.area_archetype_id == "elona.shop" then
          ElonaBuilding.update_shop(building.area_uid)
@@ -89,6 +90,7 @@ function ElonaBuilding.update_shop(area)
       return
    end
 
+   -- TODO multiple shop maps per area (#178)
    local ok, floor = area:get_floor(1)
    if not ok then
       Log.debug("Missing shop floor 1")

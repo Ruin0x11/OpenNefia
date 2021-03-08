@@ -156,7 +156,16 @@ local function place_tile(map, tx, ty, tile_id)
     Gui.play_sound("base.offer1")
   end
   map:set_tile(tx, ty, tile_id)
+
   map:reveal_tile(tx, ty)
+
+  -- Reveal everything surrounding also, to make sure wall tiles don't bug out.
+  for _, x, y in Pos.iter_surrounding(tx, ty) do
+     if map:is_in_bounds(x, y) then
+        map:reveal_tile(x, y)
+     end
+  end
+
   Gui.update_screen()
 end
 
