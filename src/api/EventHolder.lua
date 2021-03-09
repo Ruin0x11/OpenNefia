@@ -6,6 +6,8 @@ local Log = require("api.Log")
 
 local EventHolder = class.class("EventHolder")
 
+EventHolder.DEFAULT_PRIORITY = 100000
+
 function EventHolder:init()
    self.hooks = {}
    self.observers = {}
@@ -106,7 +108,7 @@ function EventHolder:register(event_id, name, cb, opts)
    end
 
    -- BUG: unnecessary if the sort is stable, and incorrect anyways
-   local priority = opts.priority or 100000
+   local priority = opts.priority or EventHolder.DEFAULT_PRIORITY
 
    self.hooks[event_id] = self.hooks[event_id] or EventTree:new()
 

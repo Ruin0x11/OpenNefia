@@ -104,24 +104,55 @@ function locations.filter_return(fn, old_fn, ...)
 end
 
 
-local function get_module_and_ident(place)
-   local orig_fn
-   local advice = advice_state.advice[place]
-
-   if advice then
-      -- This function was previously advised, and `place` refers to
-      -- `advice.merged_fn`, a function object.
-      orig_fn = advice.original_fn
-   else
-      -- This function hasn't been advised yet.
-      orig_fn = place
+local function get_module_and_fn(require_path, fn_name)
+   local ok, module_ = pcall(require, require_path)
+   if not ok or module_ == nil then
+      error("This module was not defined publicly.")
    end
 
-   return Env.get_module_of_member(orig_fn)
+   local original_fn = module_[fn_name]
+   if not type(original_fn) == "function" then
+      error(("The thing at '%s:%s' was not a function."):format(require_path, fn_name))
+   end
+
+   local fns = advice_state.for_module[require_path]
+
+   if fns then
+      local advice = fns[fn_name]
+      if advice then
+         -- This function was previously advised, and `place` refers to
+         -- `advice.merged_fn`, a function object.
+         original_fn = advice.original_fn
+      end
+   end
+
+   return module_, original_fn
 end
 
-function Advice.is_advised(place)
-   return advice_state.advice[place] ~= nil
+function Advice.is_advised(require_path, fn_name, mod, identifier)
+   assert(require_path and fn_name, "At least 'require_path' and 'fn_name' must be specified")
+
+   if mod then
+      assert(mod and identifier, "If 'mod' is specified, then 'mod' and 'identifier' must both be specified")
+   end
+
+   local fns = advice_state.for_module[require_path]
+   if not fns then
+      return false
+   end
+
+   local advice = fns[fn_name]
+   if mod == nil then
+      return advice ~= nil
+   end
+
+   for _, advice_fn in ipairs(advice.advice_fns) do
+      if advice_fn.originating_mod == mod and advice_fn.identifier == identifier then
+         return true
+      end
+   end
+
+   return false
 end
 
 -- Rebuilds the final merged advice callback from a sequence of locations and
@@ -142,6 +173,8 @@ local function rebuild_merged_advice_fn(advice)
    return merged_fns[#merged_fns]
 end
 
+Advice.DEFAULT_PRIORITY = 100000
+
 --- Adds new code to a publicly exported function in a module or class.
 ---
 --- See the following for details on the possible values of `where` (with dashes
@@ -155,7 +188,7 @@ end
 --- @tparam function fn
 --- @tparam[opt] {priority=uint} opts
 --- @treturn boolean
-function Advice.add(where, place, identifier, fn, opts)
+function Advice.add(where, require_path, fn_name, identifier, fn, opts)
    opts = opts or {}
 
    -- TODO: Do not add advice for functions in a module that is currently being
@@ -166,14 +199,10 @@ function Advice.add(where, place, identifier, fn, opts)
    end
 
    assert(locations[where] ~= nil, "Invalid advice location")
-   assert(type(place) == "function")
+   assert(env.is_loaded(require_path), ("Path %s is not loaded"):format(require_path))
    assert(type(fn) == "function")
 
-   local module_, ident = get_module_and_ident(place)
-   if module_ == nil then
-      error("This function was not defined on a public module.")
-   end
-
+   local module_, original_fn = get_module_and_fn(require_path, fn_name)
    local calling_mod, calling_loc = env.find_calling_mod(1, true)
 
    -- TODO this only checks for the currently loading module, might want to
@@ -182,20 +211,20 @@ function Advice.add(where, place, identifier, fn, opts)
       error("You can't add advice to a function defined in a module that's still being loaded.")
    end
 
-   local advice = advice_state.advice[place]
+   advice_state.for_module[require_path] = advice_state.for_module[require_path] or {}
+   local advice = advice_state.for_module[require_path][fn_name]
+
    if advice == nil then
       -- This function has not been advised yet. Set up new advice metadata for
       -- it.
       advice = {
-         original_fn = place,
+         original_fn = original_fn,
          module = module_,
-         ident = ident,
+         ident = fn_name,
          advice_fns = {},
          merged_fn = nil
       }
-
-      advice_state.for_module[module_] = advice_state.for_module[module_] or setmetatable({}, { __mode = "kv" })
-      advice_state.for_module[module_][ident] = advice
+      advice_state.for_module[require_path][fn_name] = advice
    end
 
    local pred = function(advice_fn)
@@ -204,7 +233,7 @@ function Advice.add(where, place, identifier, fn, opts)
 
    table.iremove_by(advice.advice_fns, pred)
 
-   local priority = opts.priority or 100000
+   local priority = opts.priority or Advice.DEFAULT_PRIORITY
    advice.advice_fns[#advice.advice_fns+1] = {
       priority = priority,
       where = where,
@@ -218,14 +247,11 @@ function Advice.add(where, place, identifier, fn, opts)
 
    advice.merged_fn = rebuild_merged_advice_fn(advice)
 
-   advice_state.advice[place] = nil
-   advice_state.advice[advice.merged_fn] = advice
-
    -- It's important that the replacement is a function instead of a table,
    -- because it would cause code like `type(thing) == "function"` to break. We
    -- use this function itself as the key into the advice table to get the
    -- advice's metadata.
-   module_[ident] = advice.merged_fn
+   module_[fn_name] = advice.merged_fn
 
    return true
 end
@@ -235,24 +261,31 @@ end
 --- @tparam function place
 --- @tparam function|string identifier
 --- @treturn boolean
-function Advice.remove(place, mod, fn_or_identifier)
-   assert(place and mod and fn_or_identifier, "At least 'place', `mod` and 'fn_or_identifier' must be specified")
+function Advice.remove(require_path, fn_name, mod, identifier)
+   assert(require_path and fn_name and mod and identifier,
+          "At least 'require_path', 'fn_name', `mod` and 'identifier' must be specified")
 
-   local advice = advice_state.advice[place]
+   local module_, original_fn = get_module_and_fn(require_path, fn_name)
+
+   local fns = advice_state.for_module[require_path]
+   if not fns then
+      return false
+   end
+   local advice = fns[fn_name]
    if not advice then
       return false
    end
 
    local pred = function(advice_fn)
-      return advice_fn.orignating_mod == mod
-         and (advice_fn.fn == fn_or_identifier or advice_fn.identifier == fn_or_identifier)
+      return advice_fn.originating_mod == mod
+         and advice_fn.identifier == identifier
    end
 
    local inds = table.iremove_by(advice.advice_fns, pred)
 
    if #inds > 0 then
       if #advice.advice_fns == 0 then
-         Advice.remove_all(place)
+         Advice.remove_all(require_path, fn_name)
       end
 
       return true
@@ -269,15 +302,17 @@ function Advice.remove_by_mod(mod)
    end
 
    local did_something = false
-   for place, advice in pairs(advice_state.advice) do
-      local inds = table.iremove_by(advice.advice_fns, pred)
+   for require_path, fns in pairs(advice_state.for_module) do
+      for fn_name, advice in pairs(fns) do
+         local inds = table.iremove_by(advice.advice_fns, pred)
 
-      if #inds > 0 then
-         if #advice.advice_fns == 0 then
-            Advice.remove_all(place)
+         if #inds > 0 then
+            if #advice.advice_fns == 0 then
+               Advice.remove_all(require_path, fn_name)
+            end
+
+            did_something = true
          end
-
-         did_something = true
       end
    end
 
@@ -288,18 +323,26 @@ end
 ---
 --- @tparam function place
 --- @treturn boolean
-function Advice.remove_all(place)
-   local advice = advice_state.advice[place]
+function Advice.remove_all(require_path, fn_name)
+   assert(require_path and fn_name, "At least 'require_path' and 'fn_name' must be specified")
+
+   local fns = advice_state.for_module[require_path]
+   if not fns then
+      return false
+   end
+   local advice = fns[fn_name]
    if not advice then
       return false
    end
 
+   -- Reset the API table's function to be the original.
+   -- Equivalent to `Rand["rnd"] = function(n) ... end`.
    advice.module[advice.ident] = advice.original_fn
-   local advice_for_mod = advice_state.for_module[advice.module]
-   if advice_for_mod then
-      advice_for_mod[advice.ident] = nil
+
+   fns[advice.ident] = nil
+   if table.count(fns) == 0 then
+      advice_state.for_module[require_path] = nil
    end
-   advice_state.advice[advice.merged_fn] = nil
 
    return true
 end
@@ -311,19 +354,20 @@ local function update_hotloaded_module_advice(_, params)
    if type(params.result) ~= "table" then
       return
    end
-   local mod = params.result.module -- this is a table in package.loaded
+   local require_path = params.result.require_path
+   local module_ = params.result.module
 
-   local advice_for_mod = advice_state.for_module[mod]
+   local advice_for_mod = advice_state.for_module[require_path]
    if advice_for_mod == nil then
       return
    end
 
-   for ident, field in pairs(mod) do
+   for ident, field in pairs(module_) do
       local advice = advice_for_mod[ident]
       if advice and type(field) == "function" then
          advice.original_fn = field
          advice.merged_fn = rebuild_merged_advice_fn(advice)
-         mod[ident] = advice.merged_fn
+         module_[ident] = advice.merged_fn
          advice_state.advice[advice.merged_fn] = advice
       end
    end

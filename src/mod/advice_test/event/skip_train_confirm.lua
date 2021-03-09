@@ -26,7 +26,6 @@ local function skip_train_confirm(_, params, next_node)
 end
 Event.register("elona_sys.on_step_dialog", "Go back to train menu after selection", skip_train_confirm)
 
-local CharacterInfoMenu = require("api.gui.menu.CharacterInfoMenu")
 local SkillStatusMenu = require("api.gui.menu.SkillStatusMenu")
 
 local menu_position = nil
@@ -40,7 +39,7 @@ local function restore_menu_position(self)
    end
 end
 
-Advice.add("after", CharacterInfoMenu.init, "Restore menu position", restore_menu_position)
+Advice.add("after", "api.gui.menu.CharacterInfoMenu", "init", "Restore menu position", restore_menu_position)
 
 local function save_menu_position(self)
    if (self.mode == "trainer_learn" or self.mode == "trainer_train") then
@@ -51,4 +50,4 @@ local function save_menu_position(self)
    end
 end
 
-Advice.add("after", CharacterInfoMenu.update, "Save menu position", save_menu_position)
+Advice.add("after", "api.gui.menu.CharacterInfoMenu", "update", "Save menu position", save_menu_position)

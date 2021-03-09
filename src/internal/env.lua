@@ -142,9 +142,6 @@ function env.find_calling_mod(offset, tset)
    else
       local info
       local i = 2
-      if tset then
-         print("BEGIN +++++++++++++")
-      end
       repeat
          info = debug.getinfo(i, "S")
          if info then
