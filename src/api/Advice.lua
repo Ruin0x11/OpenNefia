@@ -1,6 +1,7 @@
 local advice_state = require("internal.global.advice_state")
 local Env = require("api.Env")
 local Event = require("api.Event")
+local env = require("internal.env")
 
 --- Advice system.
 ---
@@ -103,7 +104,7 @@ function locations.filter_return(fn, old_fn, ...)
 end
 
 
-local function get_mod_and_ident(place)
+local function get_module_and_ident(place)
    local orig_fn
    local advice = advice_state.advice[place]
 
@@ -168,14 +169,16 @@ function Advice.add(where, place, identifier, fn, opts)
    assert(type(place) == "function")
    assert(type(fn) == "function")
 
-   local mod, ident = get_mod_and_ident(place)
-   if mod == nil then
+   local module_, ident = get_module_and_ident(place)
+   if module_ == nil then
       error("This function was not defined on a public module.")
    end
 
+   local calling_mod, calling_loc = env.find_calling_mod(1, true)
+
    -- TODO this only checks for the currently loading module, might want to
    -- check recursively if this is in a nested require
-   if Env.is_hotloading() == Env.get_require_path(mod) then
+   if Env.is_hotloading() == Env.get_require_path(module_) then
       error("You can't add advice to a function defined in a module that's still being loaded.")
    end
 
@@ -185,18 +188,18 @@ function Advice.add(where, place, identifier, fn, opts)
       -- it.
       advice = {
          original_fn = place,
-         mod = mod,
+         module = module_,
          ident = ident,
          advice_fns = {},
          merged_fn = nil
       }
 
-      advice_state.for_module[mod] = advice_state.for_module[mod] or setmetatable({}, { __mode = "kv" })
-      advice_state.for_module[mod][ident] = advice
+      advice_state.for_module[module_] = advice_state.for_module[module_] or setmetatable({}, { __mode = "kv" })
+      advice_state.for_module[module_][ident] = advice
    end
 
    local pred = function(advice_fn)
-      return advice_fn.identifier == identifier
+      return advice_fn.identifier == identifier and advice_fn.originating_mod == calling_mod
    end
 
    table.iremove_by(advice.advice_fns, pred)
@@ -206,7 +209,9 @@ function Advice.add(where, place, identifier, fn, opts)
       priority = priority,
       where = where,
       fn = fn,
-      identifier = identifier
+      identifier = identifier,
+      originating_mod = calling_mod,
+      originating_location = calling_loc
    }
 
    table.sort(advice.advice_fns, function(a, b) return a.priority < b.priority end)
@@ -220,7 +225,7 @@ function Advice.add(where, place, identifier, fn, opts)
    -- because it would cause code like `type(thing) == "function"` to break. We
    -- use this function itself as the key into the advice table to get the
    -- advice's metadata.
-   mod[ident] = advice.merged_fn
+   module_[ident] = advice.merged_fn
 
    return true
 end
@@ -230,15 +235,17 @@ end
 --- @tparam function place
 --- @tparam function|string identifier
 --- @treturn boolean
-function Advice.remove(place, fn_or_identifier)
+function Advice.remove(place, mod, fn_or_identifier)
+   assert(place and mod and fn_or_identifier, "At least 'place', `mod` and 'fn_or_identifier' must be specified")
+
    local advice = advice_state.advice[place]
    if not advice then
       return false
    end
 
    local pred = function(advice_fn)
-      return advice_fn.fn == fn_or_identifier
-         or advice_fn.identifier == fn_or_identifier
+      return advice_fn.orignating_mod == mod
+         and (advice_fn.fn == fn_or_identifier or advice_fn.identifier == fn_or_identifier)
    end
 
    local inds = table.iremove_by(advice.advice_fns, pred)
@@ -254,6 +261,29 @@ function Advice.remove(place, fn_or_identifier)
    return false
 end
 
+function Advice.remove_by_mod(mod)
+   assert(mod, "At least 'mod' must be specified")
+
+   local pred = function(advice_fn)
+      return advice_fn.originating_mod == mod
+   end
+
+   local did_something = false
+   for place, advice in pairs(advice_state.advice) do
+      local inds = table.iremove_by(advice.advice_fns, pred)
+
+      if #inds > 0 then
+         if #advice.advice_fns == 0 then
+            Advice.remove_all(place)
+         end
+
+         did_something = true
+      end
+   end
+
+   return did_something
+end
+
 --- Removes all advice from a publicly exported function.
 ---
 --- @tparam function place
@@ -264,8 +294,8 @@ function Advice.remove_all(place)
       return false
    end
 
-   advice.mod[advice.ident] = advice.original_fn
-   local advice_for_mod = advice_state.for_module[advice.mod]
+   advice.module[advice.ident] = advice.original_fn
+   local advice_for_mod = advice_state.for_module[advice.module]
    if advice_for_mod then
       advice_for_mod[advice.ident] = nil
    end
