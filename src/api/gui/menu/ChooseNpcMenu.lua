@@ -95,11 +95,11 @@ function ChooseNpcMenu:init(charas, topic)
    self.pages = UiList:new_paged(self.data, 16)
    self.custom_topic = topic or nil
    if self.custom_topic then
-      assert(type(self.custom_topic.title) == "string")
+      assert(type(self.custom_topic.header_status) == "string")
       assert(type(self.custom_topic.formatter) == "function")
    end
 
-   self.window = UiWindow:new("title", true, "hint")
+   self.window = UiWindow:new("ui.npc_list.title", true, "key help")
    table.merge(self.pages, UiListExt(self))
 
    self.chip_batch = nil
@@ -136,7 +136,7 @@ function ChooseNpcMenu:draw()
    Ui.draw_topic("ui.npc_list.info", self.x + 350, self.y + 36)
 
    if self.custom_topic then
-      Ui.draw_topic(self.custom_topic.title, self.x + 490, self.y + 36)
+      Ui.draw_topic(self.custom_topic.header_status, self.x + 490, self.y + 36)
    end
 
    self.pages:draw()

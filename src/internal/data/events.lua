@@ -134,5 +134,6 @@ data:add_multi(
       { _id = "on_player_death_revival" },
       { _id = "on_theme_switched" },
       { _id = "on_object_prototype_changed" },
+      { _id = "on_chara_calc_can_recruit_allies" },
    }
 )

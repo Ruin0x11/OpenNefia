@@ -589,4 +589,10 @@ function Calc.calc_actual_bill_amount(chara)
    -- <<<<<<<< shade2/event.hsp:487 		iSubName(ci)=iSubName(ci)*(100+rnd(20))/100 ..
 end
 
+function Calc.calc_ally_limit(chara)
+   -- >>>>>>>> shade2/init.hsp:3174 #define global followerLimit limit(sCHR(pc)/5+1,2, ...
+   return math.floor(math.clamp(chara:skill_level("elona.stat_charisma") / 5 + 1, 2, Const.MAX_CHARAS_ALLY))
+   -- <<<<<<<< shade2/init.hsp:3174 #define global followerLimit limit(sCHR(pc)/5+1,2, ..
+end
+
 return Calc

@@ -1,5 +1,7 @@
 local Chara = require("api.Chara")
 local save = require("internal.global.save")
+local Map = require("api.Map")
+local InstancedMap = require("api.InstancedMap")
 
 local ICharaParty = class.interface("ICharaParty", {})
 
@@ -128,7 +130,10 @@ function ICharaParty:can_recruit_allies()
       return false
    end
 
-   return #party.members < 16
+   local can_recruit = true
+   can_recruit = self:emit("base.on_chara_calc_can_recruit_allies", nil, can_recruit)
+
+   return can_recruit
 end
 
 return ICharaParty

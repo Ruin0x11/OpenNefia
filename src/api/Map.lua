@@ -67,7 +67,12 @@ function Map.save(map)
       Log.debug("Autogenerating new area for map '%d'", map.uid)
       local area = InstancedArea:new()
       area:add_floor(map)
-      Area.register(area)
+      local parent = Area.for_map(map)
+      if parent == nil then
+         Log.debug("Generating new root area since this map isn't part of an area.")
+         parent = "root"
+      end
+      Area.register(area, { parent = parent })
    end
 
    return ok, err
@@ -498,8 +503,6 @@ function Map.try_place_chara(chara, x, y, map)
       assert(can_place_chara_at(real_x, real_y, map))
 
       Log.debug("Place %s %d,%d --> %d,%d", chara._id, x, y, real_x, real_y)
-      chara.initial_x = real_x
-      chara.initial_y = real_y
 
       local result = map:take_object(chara, real_x, real_y)
       if result then
@@ -571,7 +574,12 @@ function Map.travel_to(map, params)
       area.parent_y = player.y
       area.parent_floor = floor
       area:add_floor(map)
-      Area.register(area, { parent = Area.for_map(current) })
+      local parent = Area.for_map(current)
+      if parent == nil then
+         Log.debug("Generating new root area since this map isn't part of an area.")
+         parent = "root"
+      end
+      Area.register(area, { parent = parent })
    end
 
    -- >>>>>>>> shade2/map.hsp:1863 	randomize ..

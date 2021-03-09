@@ -2,6 +2,8 @@ local Event = require("api.Event")
 local LootDrops = require("mod.elona.api.LootDrops")
 local Skill = require("mod.elona_sys.api.Skill")
 local Equipment = require("mod.elona.api.Equipment")
+local Calc = require("mod.elona.api.Calc")
+local StayingCharas = require("api.StayingCharas")
 
 local function initialize_equipment(chara, params, equip_spec)
    -- NOTE: the 'kind' is unique for each spec entry, so that an earlier spec
@@ -51,3 +53,20 @@ local function generate_loot(chara, params)
    LootDrops.drop_loot(chara, params.attacker)
 end
 Event.register("base.on_kill_chara", "Generate loot and drop held items", generate_loot)
+
+
+local function calc_can_recruit_allies(leader)
+   local limit = Calc.calc_ally_limit(leader)
+
+   local party_uid = assert(leader:get_party())
+   local party = assert(save.base.parties:get(party_uid))
+   local other_member_count = #party.members - 1
+
+   local is_party_leader_of = function(other)
+      return leader:is_party_leader_of(other)
+   end
+   local stayers = StayingCharas.iter_global():filter(is_party_leader_of):length()
+
+   return other_member_count + stayers < limit
+end
+Event.register("base.on_chara_calc_can_recruit_allies", "Calc can recruit allies", calc_can_recruit_allies)

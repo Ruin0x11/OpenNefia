@@ -12,10 +12,10 @@ local test_util = {}
 
 function test_util.set_player(map, x, y)
    if map == nil then
-      field.player = assert(Chara.create("base.player", x, y, {ownerless=true}))
+      field.player = assert(test_util.stripped_chara("base.player", nil, x, y))
       return field.player
    else
-      local player = assert(Chara.create("base.player", x, y, {}, map))
+      local player = assert(test_util.stripped_chara("base.player", map, x, y))
       Chara.set_player(player)
       return player
    end

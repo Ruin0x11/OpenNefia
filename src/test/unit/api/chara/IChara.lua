@@ -1,6 +1,8 @@
 local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
+local StayingCharas = require("api.StayingCharas")
+local save = require("internal.global.save")
 
 function test_IChara_swap_places()
    local map = InstancedMap:new(10, 10)
@@ -22,4 +24,46 @@ function test_IChara_swap_places()
 
    ally:set_pos(0, 1)
    Assert.eq(nil, Chara.at(1, 2, map))
+end
+
+function test_IChara_kill__unregisters_staying()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+
+   local chara = Chara.create("base.player", 1, 2, {}, map)
+   StayingCharas.register_global(chara, map)
+
+   Assert.eq(map.uid, save.base.staying_charas:get_staying_map_for(chara).map_uid)
+
+   chara:kill()
+
+   Assert.eq(nil, save.base.staying_charas:get_staying_map_for(chara))
+end
+
+function test_IChara_vaniquish__unregisters_staying()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+
+   local chara = Chara.create("base.player", 1, 2, {}, map)
+   StayingCharas.register_global(chara, map)
+
+   Assert.eq(map.uid, save.base.staying_charas:get_staying_map_for(chara).map_uid)
+
+   chara:vanquish()
+
+   Assert.eq(nil, save.base.staying_charas:get_staying_map_for(chara))
+end
+
+function test_IChara_remove_ownership__unregisters_staying()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+
+   local chara = Chara.create("base.player", 1, 2, {}, map)
+   StayingCharas.register_global(chara, map)
+
+   Assert.eq(map.uid, save.base.staying_charas:get_staying_map_for(chara).map_uid)
+
+   chara:remove_ownership()
+
+   Assert.eq(nil, save.base.staying_charas:get_staying_map_for(chara))
 end

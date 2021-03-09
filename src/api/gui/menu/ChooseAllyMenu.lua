@@ -1,7 +1,7 @@
+local Chara = require("api.Chara")
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
-local Chara = require("api.Chara")
-local Input = require("api.Input")
+local StayingCharas = require("api.StayingCharas")
 local Ui = require("api.Ui")
 
 local IUiLayer = require("api.gui.IUiLayer")
@@ -29,7 +29,7 @@ local UiListExt = function(choose_ally_menu)
       UiList.draw_item_text(self, text, entry, i, x, y, x_offset)
 
       -- TODO x offset can differ based on operation
-      Draw.text(entry.info, x + 500, y + 2)
+      Draw.text(entry.info, x + 272, y + 2)
    end
    function E:draw()
       UiList.draw(self)
@@ -40,56 +40,58 @@ local UiListExt = function(choose_ally_menu)
    return E
 end
 
-function ChooseAllyMenu:should_display_ally(ally)
-   if self.filter then
-      self.filter(ally)
+local function format_name_and_area(chara)
+   -- >>>>>>>> shade2/command.hsp:545 		s=""+cnAka(i)+" "+cnName(i)  ...
+   local name = ("%s %s"):format(chara.title, chara.name)
+   local staying_map = StayingCharas.get_staying_map_for_global(chara)
+   if staying_map then
+      name = name .. ("(%s)"):format(staying_map.map_name)
    end
-
-   return true
+   return name
+   -- <<<<<<<< shade2/command.hsp:546 		if cArea(i)!0:s=s+"("+mapName(cArea(i))+")" ..
 end
 
-function ChooseAllyMenu:make_list()
+function ChooseAllyMenu.make_list(charas, topic, multi_select)
    local result = {}
 
-   if self.multi_select then
+   if multi_select then
       result[#result+1] = { kind = "proceed", text = "Proceed" }
    end
 
-   for _, ally in Chara.iter_allies() do
-      if self:should_display_ally(ally) then
-         result[#result+1] = {
-            kind = "ally",
-            text = string.format("%s %s Lv.%s", ally.title, ally.name, ally:calc("level")),
-            icon = ally:calc("image"),
-            color = {255, 255, 255},
-            info = "info",
-            ally = ally
-         }
+   for _, ally in ipairs(charas) do
+      local info
+      if topic and topic.info_formatter then
+         info = topic.info_formatter(ally)
+      else
+         info = ""
       end
+
+      local name
+      if topic and topic.name_formatter then
+         name = topic.name_formatter(ally)
+      else
+         name = format_name_and_area(ally)
+      end
+
+      result[#result+1] = {
+         kind = "ally",
+         text = name,
+         icon = ally:calc("image"),
+         color = ally:calc("color"),
+         info = info,
+         ally = ally
+      }
    end
 
-   table.insertion_sort(result, function(a, b) return a:calc("level") > b:calc("level") end)
-
-   if self.multi_select then
-      -- select the first N allies by default until max is reached
-      local selected = 0
-      for i, ally in ipairs(result) do
-         if selected >= self.multi_select_count then
-            break
-         end
-         if ally.state ~= "PetDead" then
-            self.multi_select_selected[i] = true
-            selected = selected + 1
-         end
-      end
-   end
+   table.insertion_sort(result, function(a, b) return a.ally:calc("level") > b.ally:calc("level") end)
 
    return result
 end
 
-function ChooseAllyMenu:init(filter)
+function ChooseAllyMenu:init(charas, topic)
+   charas = charas or Chara.iter_allies():to_list()
    self.pages = UiList:new_paged({}, 16)
-   self.filter = filter
+   self.topic = self.topic or nil
 
    self.multi_select = false
    self.multi_select_count = 2
@@ -100,7 +102,8 @@ function ChooseAllyMenu:init(filter)
       "sell.value"
    }
 
-   self.window = UiWindow:new("title", true, "hint")
+   local title = (self.topic and self.topic.window_title) or "ui.ally_list.title"
+   self.window = UiWindow:new(title, true, "key help")
    table.merge(self.pages, UiListExt(self))
 
    self.chip_batch = nil
@@ -109,7 +112,23 @@ function ChooseAllyMenu:init(filter)
    self.input:forward_to(self.pages)
    self.input:bind_keys(self:make_keymap())
 
-   self.pages:set_data(self:make_list())
+   local list = ChooseAllyMenu.make_list(charas, topic, self.multi_select)
+
+   if self.multi_select then
+      -- select the first N allies by default until max is reached
+      local selected = 0
+      for i, ally in ipairs(list) do
+         if selected >= self.multi_select_count then
+            break
+         end
+         if ally.state ~= "PetDead" then
+            self.multi_select_selected[i] = true
+            selected = selected + 1
+         end
+      end
+   end
+
+   self.pages:set_data(list)
 end
 
 function ChooseAllyMenu:make_keymap()
@@ -137,6 +156,12 @@ end
 
 function ChooseAllyMenu:draw()
    self.window:draw()
+
+   Ui.draw_topic("ui.ally_list.name", self.x + 28, self.y + 36)
+
+   local header_status = (self.topic and self.topic.header_status) or "ui.ally_list.status"
+   Ui.draw_topic(header_status, self.x + 350, self.y + 36)
+
    self.pages:draw()
 end
 
@@ -197,7 +222,7 @@ function ChooseAllyMenu:update()
    if self.pages.chosen then
       local result = self:on_select(self.pages.selected)
       if result then
-         return { ally = result.ally }
+         return { chara = result.ally }
       end
    end
 

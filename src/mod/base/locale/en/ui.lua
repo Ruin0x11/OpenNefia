@@ -62,6 +62,7 @@ end,
         prompt = "Who stays in your home?",
         title = "Ally List"
       },
+      title = "Ally List",
       waiting = "Waiting"
     },
     analysis = {

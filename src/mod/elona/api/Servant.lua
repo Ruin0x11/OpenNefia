@@ -130,10 +130,15 @@ function Servant.is_servant(chara)
    local map = chara:current_map()
    return (map and Home.is_home(map)
               and chara:has_any_roles()
+              and not chara:is_in_player_party()
               -- Lomias, Larnneire, etc. should not be moveable through the
               -- house board.
               and not chara:find_role("elona.special"))
       or false
+end
+
+function Servant.iter(map)
+   return Chara.iter_others(map):filter(Servant.is_servant)
 end
 
 function Servant.calc_max_servant_limit(map)
@@ -145,12 +150,20 @@ function Servant.calc_total_labor_expenses(map)
    -- >>>>>>>> shade2/calculation.hsp:708 #deffunc calcCostHire ...
    local total = 0
 
-   for _, chara in Chara.iter(map):filter(Servant.is_servant) do
+   for _, chara in Servant.iter(map) do
       total = total + Servant.calc_wage_cost(chara)
    end
 
    return Calc.calc_adjusted_expense(total)
    -- <<<<<<<< shade2/calculation.hsp:717 	return ..
+end
+
+local function format_hire_cost_and_wage(chara)
+   -- >>>>>>>> shade2/command.hsp:1235 		if allyCtrl=1:	s=""+(calcHireCost(i)*20)+"("+cal ...
+   local hire_cost = Servant.calc_hire_cost(chara)
+   local wage = Servant.calc_wage_cost(chara)
+   return I18N.get("ui.npc_list.gold_counter", ("%d(%d)"):format(hire_cost, wage))
+   -- <<<<<<<< shade2/command.hsp:1236 		pos wX+512,wY+66+cnt*19+2:mes s+lang(" gold","gp ..
 end
 
 function Servant.query_hire()
@@ -161,23 +174,15 @@ function Servant.query_hire()
       return
    end
 
-   local servant_count = Chara.iter_others(map):filter(Servant.is_servant):length()
+   local servant_count = Servant.iter(map):length()
    local max = Servant.calc_max_servant_limit(map)
    if servant_count >= max then
       Gui.mes("servant.hire.too_many_guests")
       return
    end
 
-   local function format_hire_cost_and_wage(chara)
-      -- >>>>>>>> shade2/command.hsp:1235 		if allyCtrl=1:	s=""+(calcHireCost(i)*20)+"("+cal ...
-      local hire_cost = Servant.calc_hire_cost(chara)
-      local wage = Servant.calc_wage_cost(chara)
-      return I18N.get("ui.npc_list.gold_counter", ("%d(%d)"):format(hire_cost, wage))
-      -- <<<<<<<< shade2/command.hsp:1236 		pos wX+512,wY+66+cnt*19+2:mes s+lang(" gold","gp ..
-   end
-
    local topic = {
-      title = "ui.npc_list.init_cost",
+      header_status = "ui.npc_list.init_cost",
       formatter = format_hire_cost_and_wage
    }
 
@@ -194,7 +199,7 @@ function Servant.query_hire()
       else
          Gui.play_sound("base.paygold1")
          player.gold = math.floor(player.gold - hire_cost)
-         Gui.wait(250)
+         Gui.wait(250, true)
          Gui.mes_c("servant.hire.you_hire", "Green", servant)
          Map.try_place_chara(servant, player.x, player.y, map)
          Gui.play_sound("base.pray1")

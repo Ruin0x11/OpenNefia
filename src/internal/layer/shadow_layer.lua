@@ -165,7 +165,7 @@ function shadow_layer:draw(draw_x, draw_y, offx, offy)
       end
    end
 
-   self.shadow_batch:draw(draw_x, draw_y, 0, 0)
+   self.shadow_batch:draw(draw_x + offy, draw_y + offy, 0, 0)
 end
 
 return shadow_layer

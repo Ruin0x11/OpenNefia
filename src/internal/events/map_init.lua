@@ -163,7 +163,10 @@ end
 
 local function check_renew(map)
    local area = Area.for_map(map)
-   assert(area)
+   if area == nil then
+      return
+   end
+
    local area_meta = area.metadata
    -- >>>>>>>> shade2/map.hsp:2173 *check_renew ..
    if area_meta.arena_seed_renew_date and World.date_hours() >= area_meta.arena_seed_renew_date then
@@ -238,8 +241,9 @@ end
 local function proc_map_entered(map)
    -- >>>>>>>> shade2/map.hsp:286 	if gDeepest<gLevel:if gArea!areaShelter:gDeepest= ..
    local area = Area.for_map(map)
-   assert(area)
-   area.deepest_level_visited = math.max(area.deepest_level_visited, Map.floor_number(map))
+   if area then
+      area.deepest_level_visited = math.max(area.deepest_level_visited, Map.floor_number(map))
+   end
    -- <<<<<<<< shade2/map.hsp:287 	if areaDeepest(gArea)<gLevel:areaDeepest(gArea)=g ..
 
    if Map.is_world_map(map) then

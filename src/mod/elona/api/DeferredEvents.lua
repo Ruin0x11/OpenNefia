@@ -11,6 +11,8 @@ local Enum = require("api.Enum")
 local Charagen = require("mod.tools.api.Charagen")
 local RandomEventPrompt = require("api.gui.RandomEventPrompt")
 local Weather = require("mod.elona.api.Weather")
+local Servant = require("mod.elona.api.Servant")
+local StayingCharas = require("api.StayingCharas")
 
 local DeferredEvents = {}
 
@@ -118,6 +120,38 @@ function DeferredEvents.first_ally()
    local player = Chara.player()
    local ally = Chara.create(id, player.x, player.y, { level = player:calc("level") * 2 / 3 + 1 }, player:current_map())
    player:recruit_as_ally(ally)
+end
+
+function DeferredEvents.welcome_home(map)
+   -- >>>>>>>> shade2/main.hsp:1910 	case evWelcome ...
+   local can_welcome = function(chara)
+      return Chara.is_alive(chara)
+         and not chara:find_role("elona.special")
+         and not chara:find_role("elona.adventurer")
+         and (Servant.is_servant(chara)
+                 or chara:relation_towards(Chara.player()) == Enum.Relation.Neutral
+                 or StayingCharas.is_staying_in_map_global(chara, map))
+   end
+
+   local extra_talks = 0
+
+   local welcome = function(chara)
+      chara:set_emotion_icon("elona.happy", 20)
+      -- TODO custom talk
+      local has_talk = false
+      if not has_talk then
+         extra_talks = extra_talks + 1
+      end
+   end
+
+   Chara.iter_all(map):filter(can_welcome):each(welcome)
+
+   for _ = 1, extra_talks do
+      Gui.mes_c("event.okaeri", "SkyBlue")
+   end
+
+   -- TODO maid guests
+   -- <<<<<<<< shade2/main.hsp:1932 	swbreak ..
 end
 
 return DeferredEvents

@@ -99,8 +99,16 @@ function MapObject.clone_base(obj, owned)
    return new_object
 end
 
-function MapObject.is_map_object(t)
-   return class.is_an(IMapObject, t) or false
+function MapObject.is_map_object(t, _type)
+   if not class.is_an(IMapObject, t) then
+      return false
+   end
+
+   if _type == nil then
+      return true
+   end
+
+   return _type == t._type
 end
 
 -- NOTE: We could have an interface for classes that need special cloning logic.

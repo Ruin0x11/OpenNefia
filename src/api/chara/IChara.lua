@@ -10,6 +10,7 @@ local Map = require("api.Map")
 local I18N = require("api.I18N")
 local Const = require("api.Const")
 local World = require("api.World")
+local StayingCharas = require("api.StayingCharas")
 local ICharaEffects = require("api.chara.ICharaEffects")
 local ICharaEquip = require("api.chara.ICharaEquip")
 local ICharaInventory = require("api.chara.ICharaInventory")
@@ -528,6 +529,7 @@ function IChara:kill(source)
       self.state = "Dead"
    end
    self.is_solid = nil
+   StayingCharas.unregister_global(self)
 
    self:refresh_cell_on_map()
 
@@ -548,6 +550,7 @@ function IChara:vanquish()
 
    self.state = "Dead"
    self.is_solid = nil
+   StayingCharas.unregister_global(self)
 
    self:refresh_cell_on_map()
 
@@ -577,6 +580,7 @@ function IChara:revive()
    self.nutrition = 8000
    self.personal_relations = {}
    self:set_target(nil)
+   StayingCharas.unregister_global(self)
 
    -- TODO move?
    self.is_pregnant = false
@@ -659,6 +663,11 @@ function IChara:set_item_using(item)
       self.item_using = nil
    end
    self.item_using = item
+end
+
+function IChara:remove_ownership()
+   StayingCharas.unregister_global(self)
+   return IMapObject.remove_ownership(self)
 end
 
 return IChara

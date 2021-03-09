@@ -59,6 +59,7 @@ return {
             prompt = "誰を滞在させる？",
             title = "滞在状態の変更"
          },
+         title = "仲間",
          waiting = "待機"
       },
       analysis = {
