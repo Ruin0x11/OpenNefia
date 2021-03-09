@@ -89,7 +89,7 @@ function ChooseAllyMenu.make_list(charas, topic, multi_select)
 end
 
 function ChooseAllyMenu:init(charas, topic)
-   charas = charas or Chara.iter_allies():to_list()
+   charas = charas or Chara.iter_allies():filter(Chara.is_alive):to_list()
    self.pages = UiList:new_paged({}, 16)
    self.topic = self.topic or nil
 

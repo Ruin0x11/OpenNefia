@@ -150,10 +150,10 @@ function SaveFs.save_game(save)
       local temp_path = SaveFs.save_path(path, "temp")
       local full_path = SaveFs.save_path(path, "save", save)
 
-      if not fs.exists(temp_path) then
-         -- Path was removed by SaveFs.delete().
+      if fs.exists(full_path) then
          assert(fs.remove(full_path))
-      else
+      end
+      if fs.exists(temp_path) then
          assert(fs.copy(temp_path, full_path))
       end
    end

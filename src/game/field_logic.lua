@@ -328,6 +328,14 @@ function field_logic.player_turn_query()
    end
 
    while going do
+      if field.map_changed then
+         -- Game was loaded while we were querying for input; clear the list of
+         -- characters to act and start again from "turn_begin".
+         result = "player_turn_query"
+         going = false
+         break
+      end
+
       local ran, turn_result = field:run_actions(dt, player)
       field:update(dt)
 
