@@ -107,11 +107,11 @@ end
 local function get_module_and_fn(require_path, fn_name)
    local ok, module_ = pcall(require, require_path)
    if not ok or module_ == nil then
-      error("This module was not defined publicly.")
+      error(("The module at require path '%s' was not defined publicly."):format(require_path))
    end
 
    local original_fn = module_[fn_name]
-   if not type(original_fn) == "function" then
+   if type(original_fn) ~= "function" then
       error(("The thing at '%s:%s' was not a function."):format(require_path, fn_name))
    end
 
@@ -194,16 +194,25 @@ function Advice.add(where, require_path, fn_name, identifier, fn, opts)
    -- TODO: Do not add advice for functions in a module that is currently being
    -- required/hotloaded.
 
+   assert(type(identifier) == "string")
+   assert(type(require_path) == "string")
+   assert(type(fn_name) == "string")
+
    if identifier:len() > MAX_IDENTIFIER_LEN then
       error(("Identifier cannot exceed %d characters. This is to better allow for removing advice using an identifier, like Advice.remove(fn, 'some long identifier...')"):format(MAX_IDENTIFIER_LEN))
    end
 
-   assert(locations[where] ~= nil, "Invalid advice location")
-   assert(env.is_loaded(require_path), ("Path %s is not loaded"):format(require_path))
+   if locations[where] == nil then
+      error(("Invalid advice location '%s'"):format(where))
+   end
    assert(type(fn) == "function")
 
    local module_, original_fn = get_module_and_fn(require_path, fn_name)
    local calling_mod, calling_loc = env.find_calling_mod(1, true)
+
+   if not env.is_loaded(require_path) then
+      error(("Path '%s' is not loaded."):format(require_path))
+   end
 
    -- TODO this only checks for the currently loading module, might want to
    -- check recursively if this is in a nested require
@@ -228,7 +237,10 @@ function Advice.add(where, require_path, fn_name, identifier, fn, opts)
    end
 
    local pred = function(advice_fn)
-      return advice_fn.identifier == identifier and advice_fn.originating_mod == calling_mod
+      return advice_fn.originating_mod == calling_mod and advice_fn.identifier == identifier
+   end
+   if fun.iter(advice.advice_fns):any(pred) then
+      error(("Advice already exists for mod '%s' and identifier '%s'."):format(calling_mod, identifier))
    end
 
    table.iremove_by(advice.advice_fns, pred)
@@ -286,6 +298,9 @@ function Advice.remove(require_path, fn_name, mod, identifier)
    if #inds > 0 then
       if #advice.advice_fns == 0 then
          Advice.remove_all(require_path, fn_name)
+      else
+         advice.merged_fn = rebuild_merged_advice_fn(advice)
+         module_[fn_name] = advice.merged_fn
       end
 
       return true
@@ -304,11 +319,16 @@ function Advice.remove_by_mod(mod)
    local did_something = false
    for require_path, fns in pairs(advice_state.for_module) do
       for fn_name, advice in pairs(fns) do
+         local module_, original_fn = get_module_and_fn(require_path, fn_name)
+
          local inds = table.iremove_by(advice.advice_fns, pred)
 
          if #inds > 0 then
             if #advice.advice_fns == 0 then
                Advice.remove_all(require_path, fn_name)
+            else
+               advice.merged_fn = rebuild_merged_advice_fn(advice)
+               module_[fn_name] = advice.merged_fn
             end
 
             did_something = true
