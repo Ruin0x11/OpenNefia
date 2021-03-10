@@ -10,6 +10,9 @@ local Enum = require("api.Enum")
 
 local test_util = {}
 
+test_util.TEST_MOD_ID = "@test@"
+test_util.TEST_SAVE_ID = "__test__"
+
 function test_util.set_player(map, x, y)
    if map == nil then
       field.player = assert(test_util.stripped_chara("base.player", nil, x, y))
@@ -31,8 +34,8 @@ function test_util.register_map(map)
 end
 
 function test_util.save_cycle()
-   Save.save_game("__test__")
-   Save.load_game("__test__")
+   Save.save_game(test_util.TEST_SAVE_ID)
+   Save.load_game(test_util.TEST_SAVE_ID)
 end
 
 function test_util.stripped_chara(id, map, x, y)

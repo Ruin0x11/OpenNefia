@@ -14,18 +14,21 @@ local config_store = require("internal.config_store")
 local save_store = require("internal.save_store")
 local SaveFs = require("api.SaveFs")
 local Stopwatch = require("api.Stopwatch")
+local test_util = require("test.lib.test_util")
+local Advice = require("api.Advice")
+local main_state = require("internal.global.main_state")
 
 -- Make an environment rejecting the setting of global variables except
 -- functions that are named "test_*".
 local function make_test_env()
-   local tests = env.generate_sandbox("__test__")
+   local tests = env.generate_sandbox(test_util.TEST_MOD_ID)
    tests.require = require
    tests.getmetatable = getmetatable
    tests.setmetatable = setmetatable
 
    local disabled = false
    tests.disable = function(reason)
-      assert(type(reason) == "string", "Must provide reason for disabling")
+      assert(type(reason) == "string", "Must provide reason for disabling test")
       disabled = true
    end
 
@@ -58,13 +61,19 @@ local function make_test_env()
    return setmetatable(tests, mt), mt
 end
 
+local function load_test_mod()
+   -- TODO this will have its own manifest loaded "virtually" at some point
+   main_state.loaded_mods[test_util.TEST_MOD_ID] = true
+end
+
 local function cleanup_globals()
    config_store.clear()
    save_store.clear()
-   fs.remove(fs.parent(SaveFs.save_path("", "save", "__test__")))
+   fs.remove(fs.parent(SaveFs.save_path("", "save", test_util.TEST_SAVE_ID)))
    fs.remove(SaveFs.save_path("", "temp"))
    fs.remove(SaveFs.save_path("", "global"))
    field:init_global_data()
+   Advice.remove_by_mod(test_util.TEST_MOD_ID)
 end
 
 local function print_result(result)
@@ -175,6 +184,8 @@ return function(args)
    end
    local mods = mod.scan_mod_dir(enabled_mods)
    startup.run_all(mods)
+
+   load_test_mod()
 
    Event.trigger("base.on_startup")
    field:init_global_data()

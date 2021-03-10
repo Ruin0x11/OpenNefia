@@ -4,11 +4,15 @@ local ansicolors = require("thirdparty.ansicolors")
 local Assert = {}
 
 function Assert.is_truthy(actual, msg)
-   assert(actual, msg)
+   if not actual then
+      error(msg or "assertion failed!", 2)
+   end
 end
 
 function Assert.is_falsy(actual, msg)
-   assert(not actual, msg)
+   if actual then
+      error(msg or "assertion failed!", 2)
+   end
 end
 
 function Assert.eq(expected, actual)

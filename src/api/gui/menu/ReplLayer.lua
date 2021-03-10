@@ -582,7 +582,7 @@ function ReplLayer:submit()
    end
 
    self.is_executing = true
-   local success, results = self.mode:submit(text, self.env, self.measure_perf)
+   local success, results = self.mode:submit(text, self.measure_perf)
    self.is_executing = false
 
    local result_text = ReplLayer.format_results(results, true, self.show_metatables)

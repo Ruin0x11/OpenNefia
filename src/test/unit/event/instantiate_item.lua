@@ -58,7 +58,7 @@ function test_item_event_emitter_callbacks_restored()
       Chara.set_player(player)
       test_util.register_map(map)
 
-      local item = Item.create("base.useable", nil, nil, {}, player)
+      local item = Item.create("@test@.useable", nil, nil, {}, player)
       Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
    end
 
@@ -67,7 +67,7 @@ function test_item_event_emitter_callbacks_restored()
    do
       local player = Chara.player()
       local map = player:current_map()
-      local item = Item.find("base.useable", "all", map)
+      local item = Item.find("@test@.useable", "all", map)
 
       Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
 
@@ -79,7 +79,7 @@ function test_item_event_emitter_callbacks_restored()
    do
       local player = Chara.player()
       local map = player:current_map()
-      local item = Item.find("base.useable", "all", map)
+      local item = Item.find("@test@.useable", "all", map)
 
       Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
    end
@@ -94,10 +94,10 @@ function test_object_change_prototype__item_callbacks_added()
       Chara.set_player(player)
       test_util.register_map(map)
 
-      local item = Item.create("base.nonuseable", nil, nil, {}, player)
+      local item = Item.create("@test@.nonuseable", nil, nil, {}, player)
       Assert.is_falsy(item:has_event_handler("elona_sys.on_item_use"))
 
-      item:change_prototype("base.useable")
+      item:change_prototype("@test@.useable")
       Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
    end
 
@@ -106,7 +106,7 @@ function test_object_change_prototype__item_callbacks_added()
    do
       local player = Chara.player()
       local map = player:current_map()
-      local item = Item.find("base.useable", "all", map)
+      local item = Item.find("@test@.useable", "all", map)
 
       Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
    end
@@ -121,10 +121,10 @@ function test_object_change_prototype__item_callbacks_removed()
       Chara.set_player(player)
       test_util.register_map(map)
 
-      local item = Item.create("base.useable", nil, nil, {}, player)
+      local item = Item.create("@test@.useable", nil, nil, {}, player)
       Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
 
-      item:change_prototype("base.nonuseable")
+      item:change_prototype("@test@.nonuseable")
       Assert.is_falsy(item:has_event_handler("elona_sys.on_item_use"))
    end
 
@@ -133,7 +133,7 @@ function test_object_change_prototype__item_callbacks_removed()
    do
       local player = Chara.player()
       local map = player:current_map()
-      local item = Item.find("base.nonuseable", "all", map)
+      local item = Item.find("@test@.nonuseable", "all", map)
 
       Assert.is_falsy(item:has_event_handler("elona_sys.on_item_use"))
    end
@@ -147,10 +147,10 @@ function test_object_change_prototype__item_callbacks_preserved()
    Chara.set_player(player)
    test_util.register_map(map)
 
-   local item = Item.create("base.useable", nil, nil, {}, player)
+   local item = Item.create("@test@.useable", nil, nil, {}, player)
    item:connect_self("elona_sys.on_item_use", "Unrelated event", function() end)
    Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
 
-   item:change_prototype("base.nonuseable")
+   item:change_prototype("@test@.nonuseable")
    Assert.is_truthy(item:has_event_handler("elona_sys.on_item_use"))
 end

@@ -48,13 +48,13 @@ function test_IObject_change_prototype__IEventEmitter_prototype_callbacks_added(
       local map = InstancedMap:new(10, 10)
       map:clear("elona.cobble")
 
-      local player = Chara.create("base.noneventful", 5, 5, {}, map)
+      local player = Chara.create("@test@.noneventful", 5, 5, {}, map)
       Chara.set_player(player)
       test_util.register_map(map)
 
       Assert.is_falsy(player:has_event_handler("elona.on_chara_displaced"))
 
-      player:change_prototype("base.eventful")
+      player:change_prototype("@test@.eventful")
       Assert.is_truthy(player:has_event_handler("elona.on_chara_displaced"))
    end
 
@@ -72,13 +72,13 @@ function test_IObject_change_prototype__IEventEmitter_prototype_callbacks_remove
       local map = InstancedMap:new(10, 10)
       map:clear("elona.cobble")
 
-      local player = Chara.create("base.eventful", 5, 5, {}, map)
+      local player = Chara.create("@test@.eventful", 5, 5, {}, map)
       Chara.set_player(player)
       test_util.register_map(map)
 
       Assert.is_truthy(player:has_event_handler("elona.on_chara_displaced"))
 
-      player:change_prototype("base.noneventful")
+      player:change_prototype("@test@.noneventful")
       Assert.is_falsy(player:has_event_handler("elona.on_chara_displaced"))
    end
 
@@ -95,13 +95,13 @@ function test_IObject_change_prototype__IEventEmitter_prototype_callbacks_preser
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 
-   local player = Chara.create("base.eventful", 5, 5, {}, map)
+   local player = Chara.create("@test@.eventful", 5, 5, {}, map)
    Chara.set_player(player)
    test_util.register_map(map)
 
    player:connect_self("elona.on_chara_displaced", "Unrelated event", function() end)
    Assert.is_truthy(player:has_event_handler("elona.on_chara_displaced"))
 
-   player:change_prototype("base.noneventful")
+   player:change_prototype("@test@.noneventful")
    Assert.is_truthy(player:has_event_handler("elona.on_chara_displaced"))
 end

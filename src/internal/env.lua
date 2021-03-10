@@ -126,17 +126,47 @@ function env.find_calling_mod(offset)
       return path_is_in_mod(hotload_path) or "base"
    end
 
-   for i = #LOADING_STACK-offset, 1, -1 do
-      local path = LOADING_STACK[i]
-      local mod_name = path_is_in_mod(path)
-      if mod_name then
-         local info = debug.getinfo(i, "S")
-         local loc
-         if info.what == "main" then
-            loc = info
+   if #LOADING_STACK > 0 then
+      for i = #LOADING_STACK-offset, 1, -1 do
+         local path = LOADING_STACK[i]
+         local mod_name = path_is_in_mod(path)
+         if mod_name then
+            local info = debug.getinfo(i, "S")
+            local loc
+            if info.what == "main" then
+               loc = info
+            end
+            return mod_name, loc
          end
-         return mod_name, loc
       end
+   else
+      local info
+      local i = offset + 1
+      repeat
+         info = debug.getinfo(i, "S")
+         if info then
+            local mod_name = nil
+            local loc
+            local funcinfo = debug.getinfo(i, "f")
+            if funcinfo then
+               local funcenv = getfenv(funcinfo.func)
+               if funcenv then
+                  local mn = rawget(funcenv, "_MOD_NAME")
+                  if mn then
+                     mod_name = mn
+                     loc = info
+                  end
+               end
+            end
+            if info.what == "main" then
+               loc = info
+            end
+            if mod_name then
+               return mod_name, loc
+            end
+         end
+         i = i + 1
+      until not info
    end
 
    return "base", debug.getinfo(2, "S")

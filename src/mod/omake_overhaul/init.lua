@@ -29,7 +29,7 @@ local function init()
          return table.unpack(results)
       end
 
-      Advice.add("around", Skill.gain_skill_exp,
+      Advice.add("around", "mod.elona_sys.api.Skill", "gain_skill_exp",
                  "In omake overhaul, allies can also gain extra skill experience when an ally gains skill experience based on Learning.",
                  gain_skill_exp_in_party)
       -- <<<<<<<< oomSEST/src/southtyris.hsp:101723 	return p(86) ..
