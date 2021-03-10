@@ -74,6 +74,8 @@ function Repl.wrap_last_input_as_iterator()
    return fun.tabulate(f)
 end
 
+Repl.MOD_ID = "@repl@"
+
 --- Queues a code block that runs the next time execution enters the
 --- player's control. If the code returns a turn result, it is used as
 --- the player's turn.
@@ -84,7 +86,7 @@ end
 function Repl.generate_env(locals)
    locals = locals or {}
 
-   local repl_env = env.generate_sandbox("repl")
+   local repl_env = env.generate_sandbox(Repl.MOD_ID)
    local apis = repl.require_all_apis("api", true)
    repl_env = table.merge(repl_env, apis)
 

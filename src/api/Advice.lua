@@ -273,8 +273,6 @@ function Advice.add(where, require_path, fn_name, identifier, fn, opts)
    -- use this function itself as the key into the advice table to get the
    -- advice's metadata.
    module_[fn_name] = advice.merged_fn
-
-   return true
 end
 
 --- Removes a piece of advice from a publicly exported function.
@@ -290,11 +288,11 @@ function Advice.remove(require_path, fn_name, mod, identifier)
 
    local fns = advice_state.for_module[require_path]
    if not fns then
-      return false
+      error(("Advice from mod '%s' with identifier '%s' does not exist."):format(mod, identifier))
    end
    local advice = fns[fn_name]
    if not advice then
-      return false
+      error(("Advice from mod '%s' with identifier '%s' does not exist."):format(mod, identifier))
    end
 
    local pred = function(advice_fn)
@@ -311,11 +309,9 @@ function Advice.remove(require_path, fn_name, mod, identifier)
          advice.merged_fn = rebuild_merged_advice_fn(advice)
          module_[fn_name] = advice.merged_fn
       end
-
-      return true
+   else
+      error(("Advice from mod '%s' with identifier '%s' does not exist."):format(mod, identifier))
    end
-
-   return false
 end
 
 function Advice.set_enabled(require_path, fn_name, mod, identifier, enabled)

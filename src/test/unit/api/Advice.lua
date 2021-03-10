@@ -26,7 +26,7 @@ function test_Advice_add()
    Assert.eq(3050, Calc.calc_fame_income(player))
    Assert.eq(fn, Calc.calc_fame_income)
 
-   Assert.is_truthy(Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income))
+   Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income)
    Assert.eq(6100, Calc.calc_fame_income(player))
    Assert.not_eq(fn, Calc.calc_fame_income)
 end
@@ -57,21 +57,11 @@ function test_Advice_remove()
 
    local fn = Calc.calc_fame_income
 
-   Assert.is_truthy(Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income))
-   Assert.is_truthy(Advice.remove("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Double fame income"))
+   Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income)
+   Advice.remove("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Double fame income")
 
    Assert.eq(false, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income"))
    Assert.eq(3050, Calc.calc_fame_income(player))
-   Assert.eq(fn, Calc.calc_fame_income)
-end
-
-function test_Advice_remove_invalid()
-   local player = Chara.create("elona.putit", nil, nil, {ownerless=true})
-   player.fame = 30000
-
-   local fn = Calc.calc_fame_income
-
-   Assert.is_falsy(Advice.remove("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Double fame income"))
    Assert.eq(fn, Calc.calc_fame_income)
 end
 
@@ -79,8 +69,8 @@ function test_Advice_add__multi()
    local player = Chara.create("elona.putit", nil, nil, {ownerless=true})
    player.fame = 30000
 
-   Assert.is_truthy(Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income))
-   Assert.is_truthy(Advice.add("override", "mod.elona.api.Calc", "calc_fame_income", "Flat fame income", flat_fame_income))
+   Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income)
+   Advice.add("override", "mod.elona.api.Calc", "calc_fame_income", "Flat fame income", flat_fame_income)
 
    Assert.eq(9999, Calc.calc_fame_income(player))
 end
@@ -89,8 +79,8 @@ function test_Advice_add__multi_2()
    local player = Chara.create("elona.putit", nil, nil, {ownerless=true})
    player.fame = 30000
 
-   Assert.is_truthy(Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income))
-   Assert.is_truthy(Advice.add("override", "mod.elona.api.Calc", "calc_fame_income", "Flat fame income", flat_fame_income))
+   Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income)
+   Advice.add("override", "mod.elona.api.Calc", "calc_fame_income", "Flat fame income", flat_fame_income)
 
    Assert.eq(9999, Calc.calc_fame_income(player))
 end
@@ -99,8 +89,8 @@ function test_Advice_add__multi_priority()
    local player = Chara.create("elona.putit", nil, nil, {ownerless=true})
    player.fame = 30000
 
-   Assert.is_truthy(Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income, { priority = 100000 }))
-   Assert.is_truthy(Advice.add("override", "mod.elona.api.Calc", "calc_fame_income", "Flat fame income", flat_fame_income, { priority = 50000 }))
+   Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income, { priority = 100000 })
+   Advice.add("override", "mod.elona.api.Calc", "calc_fame_income", "Flat fame income", flat_fame_income, { priority = 50000 })
 
    Assert.eq(19998, Calc.calc_fame_income(player))
 end
@@ -144,9 +134,9 @@ function test_Advice_add__multi_remove()
    local player = Chara.create("elona.putit", nil, nil, {ownerless=true})
    player.fame = 30000
 
-   Assert.is_truthy(Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income, { priority = 100000 }))
-   Assert.is_truthy(Advice.add("override", "mod.elona.api.Calc", "calc_fame_income", "Flat fame income", flat_fame_income, { priority = 50000 }))
-   Assert.is_truthy(Advice.remove("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Flat fame income"))
+   Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income, { priority = 100000 })
+   Advice.add("override", "mod.elona.api.Calc", "calc_fame_income", "Flat fame income", flat_fame_income, { priority = 50000 })
+   Advice.remove("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Flat fame income")
 
    Assert.eq(6100, Calc.calc_fame_income(player))
 end
@@ -157,6 +147,15 @@ function test_Advice_add__validation()
    Assert.throws_error(function() Advice.add("override", "dood", "calc_fame_income", "Flat fame income", flat_fame_income) end,
       "The module at require path 'dood' was not defined publicly.")
    Assert.throws_error(function() Advice.add("override", "mod.elona.api.Calc", "dood", "Flat fame income", flat_fame_income) end,
+      "The thing at 'mod.elona.api.Calc:dood' was not a function")
+end
+
+function test_Advice_remove__validation()
+   Assert.throws_error(function() Advice.remove("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Flat fame income") end,
+      "Advice from mod '@test@' with identifier 'Flat fame income' does not exist.")
+   Assert.throws_error(function() Advice.remove("dood", "calc_fame_income", "Flat fame income", flat_fame_income) end,
+      "The module at require path 'dood' was not defined publicly.")
+   Assert.throws_error(function() Advice.remove("mod.elona.api.Calc", "dood", "Flat fame income", flat_fame_income) end,
       "The thing at 'mod.elona.api.Calc:dood' was not a function")
 end
 
@@ -173,7 +172,7 @@ function test_Advice__locations_before()
       Assert.eq(false, arg.called)
       return "dood", 100
    end
-   Assert.is_truthy(Advice.add("before", "test.unit.api.Advice_TestModule", "test", "Test before", before))
+   Advice.add("before", "test.unit.api.Advice_TestModule", "test", "Test before", before)
 
    local result1, result2 = Advice_TestModule.test(arg)
 
@@ -189,7 +188,7 @@ function test_Advice__locations_after()
       Assert.eq(true, arg.called)
       return "dood", 100
    end
-   Assert.is_truthy(Advice.add("after", "test.unit.api.Advice_TestModule", "test", "Test after", after))
+   Advice.add("after", "test.unit.api.Advice_TestModule", "test", "Test after", after)
 
    local result1, result2 = Advice_TestModule.test(arg)
 
@@ -207,7 +206,7 @@ function test_Advice__locations_around()
       Assert.eq(true, arg.called)
       return "dood", 100
    end
-   Assert.is_truthy(Advice.add("around", "test.unit.api.Advice_TestModule", "test", "Test around", around))
+   Advice.add("around", "test.unit.api.Advice_TestModule", "test", "Test around", around)
 
    local result1, result2 = Advice_TestModule.test(arg)
 
@@ -223,7 +222,7 @@ function test_Advice__locations_override()
       Assert.eq(false, arg.called)
       return "dood", 100
    end
-   Assert.is_truthy(Advice.add("override", "test.unit.api.Advice_TestModule", "test", "Test override", override))
+   Advice.add("override", "test.unit.api.Advice_TestModule", "test", "Test override", override)
 
    local result1, result2 = Advice_TestModule.test(arg)
 
@@ -241,7 +240,7 @@ function test_Advice__locations_before_while()
       Assert.eq(false, arg.called)
       return do_return
    end
-   Assert.is_truthy(Advice.add("before_while", "test.unit.api.Advice_TestModule", "test", "Test before while", before_while))
+   Advice.add("before_while", "test.unit.api.Advice_TestModule", "test", "Test before while", before_while)
 
    do_return = false
    local result1, result2 = Advice_TestModule.test(arg)
@@ -270,7 +269,7 @@ function test_Advice__locations_before_until()
          return "dood", 100
       end
    end
-   Assert.is_truthy(Advice.add("before_until", "test.unit.api.Advice_TestModule", "test", "Test before until", before_until))
+   Advice.add("before_until", "test.unit.api.Advice_TestModule", "test", "Test before until", before_until)
 
    do_return = false
    local result1, result2 = Advice_TestModule.test(arg)
@@ -297,7 +296,7 @@ function test_Advice__locations_after_while()
       Assert.eq(true, arg.called)
       return "dood", 100
    end
-   Assert.is_truthy(Advice.add("after_while", "test.unit.api.Advice_TestModule", "test", "Test after while", after_while))
+   Advice.add("after_while", "test.unit.api.Advice_TestModule", "test", "Test after while", after_while)
 
    called = false
    local result1, result2 = Advice_TestModule.test(arg)
@@ -325,7 +324,7 @@ function test_Advice__locations_after_while_false()
       called = true
       return "dood", 100
    end
-   Assert.is_truthy(Advice.add("after_while", "test.unit.api.Advice_TestModule", "test_false", "Test after while (false)", after_while))
+   Advice.add("after_while", "test.unit.api.Advice_TestModule", "test_false", "Test after while (false)", after_while)
 
    called = false
    local result1, result2 = Advice_TestModule.test_false(arg)
@@ -344,7 +343,7 @@ function test_Advice__locations_after_until()
       called = true
       return "dood", 100
    end
-   Assert.is_truthy(Advice.add("after_until", "test.unit.api.Advice_TestModule", "test", "Test after until", after_until))
+   Advice.add("after_until", "test.unit.api.Advice_TestModule", "test", "Test after until", after_until)
 
    called = false
    local result1, result2 = Advice_TestModule.test(arg)
@@ -372,7 +371,7 @@ function test_Advice__locations_after_until_false()
       called = true
       return "dood", 100
    end
-   Assert.is_truthy(Advice.add("after_until", "test.unit.api.Advice_TestModule", "test_false", "Test after until (false)", after_until))
+   Advice.add("after_until", "test.unit.api.Advice_TestModule", "test_false", "Test after until (false)", after_until)
 
    called = false
    local result1, result2 = Advice_TestModule.test_false(arg)
@@ -393,7 +392,7 @@ function test_Advice__locations_filter_args()
       arg1.extra = 42
       return arg1, 100
    end
-   Assert.is_truthy(Advice.add("filter_args", "test.unit.api.Advice_TestModule", "test_args", "Test filter args", filter_args))
+   Advice.add("filter_args", "test.unit.api.Advice_TestModule", "test_args", "Test filter args", filter_args)
 
    called = false
    local result1, result2 = Advice_TestModule.test_args(arg, 5)
@@ -415,7 +414,7 @@ function test_Advice__locations_filter_return()
       Assert.eq(42, result2)
       return "dood", 100
    end
-   Assert.is_truthy(Advice.add("filter_return", "test.unit.api.Advice_TestModule", "test", "Test filter return", filter_return))
+   Advice.add("filter_return", "test.unit.api.Advice_TestModule", "test", "Test filter return", filter_return)
 
    called = false
    local result1, result2 = Advice_TestModule.test(arg)

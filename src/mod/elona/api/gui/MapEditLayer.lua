@@ -173,6 +173,7 @@ function MapEditLayer:update(dt)
   if self.finished then
     local player = Chara.player()
     player:set_pos(self.save_x, self.save_y)
+    Gui.update_screen()
     return true
   end
 
