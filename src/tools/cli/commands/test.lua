@@ -16,6 +16,7 @@ local SaveFs = require("api.SaveFs")
 local Stopwatch = require("api.Stopwatch")
 local test_util = require("test.lib.test_util")
 local Advice = require("api.Advice")
+local main_state = require("internal.global.main_state")
 
 -- Make an environment rejecting the setting of global variables except
 -- functions that are named "test_*".
@@ -58,6 +59,11 @@ local function make_test_env()
    end
 
    return setmetatable(tests, mt), mt
+end
+
+local function load_test_mod()
+   -- TODO this will have its own manifest loaded "virtually" at some point
+   main_state.loaded_mods[test_util.TEST_MOD_ID] = true
 end
 
 local function cleanup_globals()
@@ -178,6 +184,8 @@ return function(args)
    end
    local mods = mod.scan_mod_dir(enabled_mods)
    startup.run_all(mods)
+
+   load_test_mod()
 
    Event.trigger("base.on_startup")
    field:init_global_data()

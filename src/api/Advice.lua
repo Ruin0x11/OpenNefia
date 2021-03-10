@@ -2,6 +2,7 @@ local advice_state = require("internal.global.advice_state")
 local Env = require("api.Env")
 local Event = require("api.Event")
 local env = require("internal.env")
+local mod = require("internal.mod")
 
 --- Advice system.
 ---
@@ -163,10 +164,14 @@ local function rebuild_merged_advice_fn(advice)
    -- in a recursive manner.
    local merged_fns = {advice.original_fn}
    for i, advice_fn in ipairs(advice.advice_fns) do
-      local next_fn = advice_fn.fn
-      local loc = locations[advice_fn.where]
-      merged_fns[i+1] = function(...)
-         return loc(next_fn, merged_fns[i], ...)
+      if advice_fn.enabled then
+         local next_fn = advice_fn.fn
+         local loc = locations[advice_fn.where]
+         merged_fns[i+1] = function(...)
+            return loc(next_fn, merged_fns[i], ...)
+         end
+      else
+         merged_fns[i+1] = merged_fns[i]
       end
    end
 
@@ -213,6 +218,9 @@ function Advice.add(where, require_path, fn_name, identifier, fn, opts)
    if not env.is_loaded(require_path) then
       error(("Path '%s' is not loaded."):format(require_path))
    end
+   if not mod.is_loaded(calling_mod) then
+      error(("Mod '%s' is not loaded."):format(calling_mod))
+   end
 
    -- TODO this only checks for the currently loading module, might want to
    -- check recursively if this is in a nested require
@@ -252,7 +260,8 @@ function Advice.add(where, require_path, fn_name, identifier, fn, opts)
       fn = fn,
       identifier = identifier,
       originating_mod = calling_mod,
-      originating_location = calling_loc
+      originating_location = calling_loc,
+      enabled = true
    }
 
    table.sort(advice.advice_fns, function(a, b) return a.priority < b.priority end)
@@ -307,6 +316,43 @@ function Advice.remove(require_path, fn_name, mod, identifier)
    end
 
    return false
+end
+
+function Advice.set_enabled(require_path, fn_name, mod, identifier, enabled)
+   assert(require_path and fn_name and mod and identifier,
+          "At least 'require_path', 'fn_name', `mod` and 'identifier' must be specified")
+
+   local module_, original_fn = get_module_and_fn(require_path, fn_name)
+
+   local fns = advice_state.for_module[require_path]
+   if not fns then
+      error(("Advice from mod '%s' with identifier '%s' does not exist."):format(mod, identifier))
+   end
+   local advice = fns[fn_name]
+   if not advice then
+      error(("Advice from mod '%s' with identifier '%s' does not exist."):format(mod, identifier))
+   end
+
+   local pred = function(advice_fn)
+      return advice_fn.originating_mod == mod
+         and advice_fn.identifier == identifier
+   end
+
+   local advice_fn = fun.iter(advice.advice_fns):filter(pred):nth(1)
+
+   if not advice_fn then
+      error(("Advice from mod '%s' with identifier '%s' does not exist."):format(mod, identifier))
+   end
+
+   local new_value = not not enabled
+   local needs_rebuild = advice_fn.enabled ~= new_value
+
+   advice_fn.enabled = new_value
+
+   if needs_rebuild then
+      advice.merged_fn = rebuild_merged_advice_fn(advice)
+      module_[fn_name] = advice.merged_fn
+   end
 end
 
 function Advice.remove_by_mod(mod)
