@@ -59,6 +59,13 @@ function test_Servant_is_servant__story_charas()
    Assert.eq(false, Servant.is_servant(larnneire))
 end
 
+function test_Servant_calc_max_servant_limit()
+   Assert.eq(2, Servant.calc_max_servant_limit())
+
+   save.elona.home_rank = "elona.small_castle"
+   Assert.eq(7, Servant.calc_max_servant_limit())
+end
+
 function test_Servant_calc_total_labor_expenses()
    local north_tyris_area = Area.create_unique("elona.north_tyris", "root")
 

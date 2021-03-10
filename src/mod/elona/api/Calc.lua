@@ -272,7 +272,8 @@ function Calc.calc_building_expenses(player)
    -- >>>>>>>> shade2/calculation.hsp:719 #defcfunc calcCostBuilding ...
    local cost = 0
 
-   local scale = data["elona.home"]:ensure(save.elona.home_rank).properties.home_scale or 0
+   local home = data["elona.home"]:ensure(save.elona.home_rank)
+   local scale = home.home_scale or 0
    cost = cost + scale ^ 2 * 200
    for _, building in ipairs(save.elona.player_owned_buildings) do
       cost = cost + (building.tax_cost or 0)

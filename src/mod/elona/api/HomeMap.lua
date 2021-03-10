@@ -21,9 +21,9 @@ data:add {
    map = "home0",
    value = value(0),
    image = "elona.feat_area_your_dungeon",
+   home_scale = 0,
 
    properties = {
-      home_scale = 0,
       item_on_floor_limit = 100,
       home_rank_points = 1000
    },
@@ -60,10 +60,10 @@ data:add {
    map = "home1",
    value = value(1),
    image = "elona.feat_area_town",
+   home_scale = 1,
 
    -- >>>>>>>> shade2/map_user.hsp:7 	if gHomeLevel=1{ ..
    properties = {
-      home_scale = 1,
       item_on_floor_limit = 150,
       home_rank_points = 3000
    },
@@ -76,10 +76,10 @@ data:add {
 
    map = "home2",
    value = value(2),
+   home_scale = 2,
 
    -- >>>>>>>> shade2/map_user.hsp:11 	if gHomeLevel=2{ ..
    properties = {
-      home_scale = 2,
       item_on_floor_limit = 200,
       home_rank_points = 5000
    },
@@ -92,10 +92,10 @@ data:add {
 
    map = "home3",
    value = value(3),
+   home_scale = 3,
 
    -- >>>>>>>> shade2/map_user.hsp:15 	if gHomeLevel=3{ ..
    properties = {
-      home_scale = 3,
       item_on_floor_limit = 300,
       home_rank_points = 7000
    },
@@ -109,10 +109,10 @@ data:add {
    map = "home4",
    value = value(4),
    image = "elona.feat_area_tent",
+   home_scale = 4,
 
    -- >>>>>>>> shade2/map_user.hsp:19 	if gHomeLevel=4{ ..
    properties = {
-      home_scale = 4,
       item_on_floor_limit = 350,
       home_rank_points = 8000,
       tileset = "elona.sf"
@@ -129,10 +129,10 @@ data:add {
    value = value(5) * 2,
    -- <<<<<<<< shade2/item.hsp:648 		if iParam1(ci)=5:iValue(ci)*=2 ..
    image = "elona.feat_area_castle",
+   home_scale = 5,
 
    -- >>>>>>>> shade2/map_user.hsp:24 	if gHomeLevel=5{ ..
    properties = {
-      home_scale = 0,
       item_on_floor_limit = 100,
       home_rank_points = 1000
    },
