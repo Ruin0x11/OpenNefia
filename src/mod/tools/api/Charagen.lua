@@ -132,7 +132,7 @@ end
 --- @tparam[opt] ILocation where
 --- @treturn[opt] IChara
 function Charagen.create(x, y, params, where)
-   params = params or {}
+   params = params and table.deepcopy(params) or {}
 
    params.quality = params.quality or Enum.Quality.Bad
    params.level = params.level or 0

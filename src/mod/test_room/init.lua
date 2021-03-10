@@ -1,4 +1,5 @@
 --- Code for the quickstart scenario.
+local Building = require("mod.elona.api.Building")
 
 local Enum = require("api.Enum")
 local Item = require("api.Item")
@@ -67,11 +68,15 @@ local function on_game_start(self, player)
 
    local north_tyris = Area.create_unique("elona.north_tyris", "root")
    assert(Area.create_entrance(north_tyris, 1, 25, 23, {}, map))
+   local ok, north_tyris_map = assert(north_tyris:load_or_generate_floor(north_tyris:starting_floor()))
    if config.test_room.load_towns then
-      local ok, north_tyris_map = assert(north_tyris:load_or_generate_floor(north_tyris:starting_floor()))
       load_towns(north_tyris_map)
-      Map.save(north_tyris_map)
    end
+
+   for _, i, building in data["elona.building"]:iter():enumerate() do
+      Building.build(building._id, 50 + i, 22, north_tyris_map)
+   end
+   Map.save(north_tyris_map)
 
    local your_home = Area.create_unique("elona.your_home", north_tyris)
    assert(Area.create_entrance(your_home, 1, 23, 23, {}, map))

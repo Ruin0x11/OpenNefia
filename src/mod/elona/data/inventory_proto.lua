@@ -85,7 +85,10 @@ local inv_drop = {
          return false, "marked as no drop"
       end
 
-      if not Map.can_drop_items() and not item:has_type("base.furniture") then
+      local map = ctxt.chara:current_map()
+      if not Map.can_drop_items(map) and not item:has_category("elona.furniture") then
+         Gui.play_sound("base.fail1")
+         Gui.mes("ui.inv.drop.cannot_anymore")
          return false, "Map is full."
       end
 

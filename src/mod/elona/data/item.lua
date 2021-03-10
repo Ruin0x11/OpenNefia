@@ -63,7 +63,7 @@ local hook_calc_initial_gold =
                      nil,
                      calc_initial_gold)
 
-local function deed_callback(building_id, building_name)
+local function deed_callback(building_id)
    return function(item, params)
       if not Building.query_build(item) then
          return "player_turn_query"
@@ -73,10 +73,11 @@ local function deed_callback(building_id, building_name)
 
       local chara = params.chara
       local map = chara:current_map()
-      Building.build_area(building_id, chara.x, chara.y, map)
+      Building.build(building_id, chara.x, chara.y, map)
 
       Gui.update_screen()
       Gui.play_sound("base.build1", chara.x, chara.y)
+      local building_name = ("building._.%s.name"):format(building_id)
       Gui.mes_c("building.built_new", "Yellow", building_name)
 
       return "turn_end"
@@ -11661,7 +11662,7 @@ local item =
          image = "elona.item_deed",
          value = 140000,
          weight = 500,
-         on_read = deed_callback("elona.museum", "item.info.elona.deed_of_museum.building_name"),
+         on_read = deed_callback("elona.museum"),
          fltselect = 1,
          category = 53000,
          subcategory = 53100,
@@ -11686,7 +11687,7 @@ local item =
          image = "elona.item_deed",
          value = 200000,
          weight = 500,
-         on_read = deed_callback("elona.shop", "item.info.elona.deed_of_shop.building_name"),
+         on_read = deed_callback("elona.shop"),
          fltselect = 1,
          category = 53000,
          subcategory = 53100,
@@ -12048,7 +12049,7 @@ local item =
          image = "elona.item_deed",
          value = 45000,
          weight = 500,
-         on_read = deed_callback("elona.crop", "item.info.elona.deed_of_farm.building_name"),
+         on_read = deed_callback("elona.crop"),
          fltselect = 1,
          category = 53000,
          subcategory = 53100,
@@ -12071,7 +12072,7 @@ local item =
          image = "elona.item_deed",
          value = 10000,
          weight = 500,
-         on_read = deed_callback("elona.storage_house", "item.info.elona.deed_of_storage_house.building_name"),
+         on_read = deed_callback("elona.storage_house"),
          fltselect = 1,
          category = 53000,
          subcategory = 53100,
@@ -12577,6 +12578,15 @@ local item =
 
          prevent_sell_in_own_shop = true,
 
+         on_open = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ...
+            local inv = Inventory.get_or_create("elona.shop_strongbox")
+            Input.query_inventory(params.chara, "elona.inv_get_container", { container = inv }, nil)
+
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ..
+         end,
+
          categories = {
             "elona.container",
             "elona.no_generate"
@@ -12588,7 +12598,10 @@ local item =
          image = "elona.item_register",
          value = 1500,
          weight = 20000,
-         on_use = function() end,
+         on_use = function()
+            Building.query_house_board()
+            return "player_turn_query"
+         end,
          fltselect = 1,
          category = 59000,
          coefficient = 100,
@@ -12870,7 +12883,7 @@ local item =
          image = "elona.item_deed",
          value = 80000,
          weight = 500,
-         on_read = deed_callback("elona.ranch", "item.info.elona.deed_of_ranch.building_name"),
+         on_read = deed_callback("elona.ranch"),
          fltselect = 1,
          category = 53000,
          subcategory = 53100,
@@ -16385,7 +16398,7 @@ local item =
          image = "elona.item_deed",
          value = 500000,
          weight = 500,
-         on_read = deed_callback("elona.dungeon", "item.info.elona.deed_of_.building_name"),
+         on_read = deed_callback("elona.dungeon"),
          fltselect = 1,
          category = 53000,
          subcategory = 53100,

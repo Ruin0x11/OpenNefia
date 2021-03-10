@@ -13,8 +13,16 @@ local Map = require("api.Map")
 local Draw = require("api.Draw")
 local Chara = require("api.Chara")
 local Charagen = require("mod.tools.api.Charagen")
+local Building = require("mod.elona.api.Building")
+local Inventory = require("api.Inventory")
 
 local ElonaBuilding = {}
+
+function ElonaBuilding.calc_shop_extend_cost(map)
+   -- >>>>>>>> shade2/module.hsp:381 	return mMaxInv*100+1000 ...
+   return map.item_on_floor_limit * 100 + 1000
+   -- <<<<<<<< shade2/module.hsp:381 	return mMaxInv*100+1000 ..
+end
 
 -- >>>>>>>> shade2/map_user.hsp:473 *shop_turn ..
 function ElonaBuilding.update_shops()
@@ -78,62 +86,26 @@ end
 
 -- >>>>>>>> shade2/map_user.hsp:483 *shop_turn_main ..
 function ElonaBuilding.update_shop(area)
-   if type(area) == "number" then
-      area = Area.get(area)
-   end
-
-   local shopkeeper_uid = area.metadata.shopkeeper_uid
-
-   if not shopkeeper_uid then
-      Log.debug("Shopkeeper not set in area metadata")
+   local success = Building.update_map(area, 1, ElonaBuilding.update_shop_map)
+   if not success then
       shop_message("building.shop.log.no_shopkeeper")
-      return
-   end
-
-   -- TODO multiple shop maps per area (#178)
-   local ok, floor = area:get_floor(1)
-   if not ok then
-      Log.debug("Missing shop floor 1")
-      shop_message("building.shop.log.no_shopkeeper")
-      return
-   end
-
-   -- Be careful not to load the map from disk again if it's loaded already.
-   local map, needs_save
-   if floor.uid == Map.current().uid then
-      map = Map.current()
-   else
-      needs_save = true
-      ok, map = area:load_floor(1)
-      if not ok then
-         Log.debug("Missing shop floor 1")
-         shop_message("building.shop.log.no_shopkeeper")
-         return
-      end
-   end
-
-   ElonaBuilding.update_shop_map(map, area)
-
-   if needs_save then
-      Map.save(map)
    end
 end
 
-function ElonaBuilding.update_shop_map(map, area)
-   assert(map)
-   assert(area)
-
-   local shopkeeper_uid = area.metadata.shopkeeper_uid
+function ElonaBuilding.update_shop_map(map)
+   -- TODO move somewhere else
+   local shopkeeper_uid = map.shopkeeper_uid
 
    if not shopkeeper_uid then
-      Log.debug("Shopkeeper not set in area metadata")
+      Log.debug("Shopkeeper not set in map properties")
       shop_message("building.shop.log.no_shopkeeper")
       return
    end
 
-   local shopkeeper = map:get_object(shopkeeper_uid)
+   local shopkeeper = Building.find_worker(map, shopkeeper_uid)
    if not shopkeeper then
-      Log.debug("Missing shopkeeper object")
+      map.shopkeeper_uid = nil
+      Log.warn("Could not find worker %d in shop map or stayers.", shopkeeper_uid)
       shop_message("building.shop.log.no_shopkeeper")
       return
    end
@@ -166,7 +138,7 @@ function ElonaBuilding.update_shop_map(map, area)
 
          if Rand.one_in(4) then
             local major_categories = item:major_categories()
-            if #major_categories > 1 then
+            if #major_categories > 0 then
                items_to_create[#items_to_create+1] = {
                   filter = {
                      level = item:calc("level"),
@@ -185,15 +157,17 @@ function ElonaBuilding.update_shop_map(map, area)
       end
    end
 
+   local shop_strongbox = Inventory.get_or_create("elona.shop_strongbox")
+
    -- TODO containers
    if income > 0 then
-      Item.create("elona.gold_piece", nil, nil, { amount = income }, map)
+      Item.create("elona.gold_piece", nil, nil, { amount = income }, shop_strongbox)
    end
 
    for _, item_to_create in ipairs(items_to_create) do
       local found = false
       for _ = 1, 4 do
-         local item = Itemgen.create(nil, nil, item_to_create.filter, map)
+         local item = Itemgen.create(nil, nil, item_to_create.filter, shop_strongbox)
          if item == nil then
             break
          end
@@ -207,7 +181,7 @@ function ElonaBuilding.update_shop_map(map, area)
       end
 
       if not found then
-         Item.create("elona.gold_piece", nil, nil, { amount = item_to_create.value }, map)
+         Item.create("elona.gold_piece", nil, nil, { amount = item_to_create.value }, shop_strongbox)
          income = income + item_to_create.value
       else
          items_created = items_created + 1
@@ -382,12 +356,16 @@ function ElonaBuilding.update_ranch(map, days_passed)
    map = map or Map.current()
    days_passed = days_passed or 1
 
-   local area = Area.for_map(map)
-   local breeder_uid = area.metadata.breeder_uid
+   -- TODO move somewhere else
+   local breeder_uid = map.breeder_uid
 
    local breeder
    if breeder_uid then
-      breeder = map:get_object(breeder_uid)
+      breeder = Building.find_worker(map, breeder_uid)
+      if breeder == nil then
+         map.breeder_uid = nil
+         Log.warn("Could not find worker %d in ranch map or stayers.", breeder_uid)
+      end
    end
 
    local is_livestock = function(c) return c.is_livestock end

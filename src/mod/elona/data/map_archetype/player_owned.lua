@@ -13,6 +13,7 @@ local Event = require("api.Event")
 local Gardening = require("mod.elona.api.Gardening")
 local Chara = require("api.Chara")
 local elona_Chara = require("mod.elona.api.Chara")
+local Rank = require("mod.elona.api.Rank")
 
 --
 -- Your Home
@@ -123,10 +124,6 @@ do
       floors = {
          [1] = "elona.ranch"
       },
-
-      metadata = {
-         tax_cost = 1000
-      }
    }
 end
 
@@ -256,10 +253,6 @@ do
       floors = {
          [1] = "elona.museum"
       },
-
-      metadata = {
-         tax_cost = 1500
-      }
    }
 end
 
@@ -318,7 +311,7 @@ do
       -- <<<<<<<< shade2/map.hsp:2121 		} ..
 
       -- >>>>>>>> shade2/map_user.hsp:620 *shop_update ..
-      map.max_crowd_density = math.floor((100 - save.elona.ranks["elona.shop"] / 100) / 4 + 1)
+      map.max_crowd_density = math.floor((100 - Rank.get("elona.shop") / 100) / 4 + 1)
 
       for _, item in Item.iter(map) do
          item:refresh_cell_on_map()
@@ -365,10 +358,6 @@ do
       floors = {
          [1] = "elona.shop"
       },
-
-      metadata = {
-         tax_cost = 5000
-      }
    }
 end
 
@@ -408,10 +397,6 @@ do
       floors = {
          [1] = "elona.crop"
       },
-
-      metadata = {
-         tax_cost = 750
-      }
    }
 
    local function grow_plants(map, params)
@@ -455,9 +440,5 @@ do
       floors = {
          [1] = "elona.storage_house"
       },
-
-      metadata = {
-         tax_cost = 750
-      }
    }
 end

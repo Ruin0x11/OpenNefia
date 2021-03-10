@@ -226,7 +226,17 @@ end
 --- @tparam[opt] InstancedMap map
 --- @treturn bool
 function Map.can_drop_items(map)
+   -- >>>>>>>> shade2/command.hsp:3669 			if mMaxInv!0:if inv_sum(-1)>mMaxInv : if iType( ...
+   local max_item_count = map:calc("item_on_floor_limit")
+   if max_item_count == nil then
+      return true
+   end
+   local Item = require("api.Item")
+   if Item.iter(map):length() >= max_item_count then
+      return false
+   end
    return true
+   -- <<<<<<<< shade2/command.hsp:3669 			if mMaxInv!0:if inv_sum(-1)>mMaxInv : if iType( ..
 end
 
 --- True if a character can walk on top of the given position.

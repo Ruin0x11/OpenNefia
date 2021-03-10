@@ -70,25 +70,20 @@ local function house_board_shop_info(map)
       return
    end
 
-   -- TODO multiple building maps per area (#178)
-   local area = Area.for_map(map)
-   if area == nil then
-      Log.error("Shop map '%d' is not in an area.", map.uid)
-      return
-   end
-
-   local shopkeeper_uid = area.metadata.shopkeeper_uid
+   -- TODO move elsewhere
+   local shopkeeper_uid = map.shopkeeper_uid
 
    if shopkeeper_uid then
-      local shopkeeper = map:get_object(shopkeeper_uid)
-      if shopkeeper then
+      local shopkeeper = Building.find_worker(map, shopkeeper_uid)
+      if Chara.is_alive(shopkeeper) then
          Gui.mes("building.shop.current_shopkeeper", shopkeeper)
       else
-         area.metadata.shopkeeper_uid = nil
+         Log.warn("Could not find worker %d in shop map or stayers.", shopkeeper_uid)
+         map.shopkeeper_uid = nil
       end
    end
 
-   if area.metadata.shopkeeper_uid == nil then
+   if map.shopkeeper_uid == nil then
       Gui.mes("building.shop.no_assigned_shopkeeper")
    end
    -- <<<<<<<< shade2/map_user.hsp:208 		} ..
@@ -101,20 +96,20 @@ local function house_board_ranch_info(map)
       return
    end
 
-   -- TODO multiple building maps per area (#178)
-   local area = assert(Area.for_map(map))
-   local breeder_uid = area.metadata.ranch_breeder_uid
+   -- TODO move elsewhere
+   local breeder_uid = map.breeder_uid
 
    if breeder_uid then
-      local breeder = map:get_object(breeder_uid)
-      if breeder then
+      local breeder = Building.find_worker(map, breeder_uid)
+      if Chara.is_alive(breeder) then
          Gui.mes("building.ranch.current_breeder", breeder)
       else
-         area.metadata.breeder_uid = nil
+         Log.warn("Could not find worker %d in shop map or stayers.", breeder_uid)
+         map.breeder_uid = nil
       end
    end
 
-   if area.metadata.breeder_uid == nil then
+   if map.breeder_uid == nil then
       Gui.mes("building.ranch.no_assigned_breeder")
    end
 end

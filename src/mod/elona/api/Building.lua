@@ -7,13 +7,60 @@ local InstancedArea = require("api.InstancedArea")
 local Area = require("api.Area")
 local Item = require("api.Item")
 local Log = require("api.Log")
-local MapEdit = require("mod.elona.api.MapEdit")
 local Prompt = require("api.gui.Prompt")
 
 local Building = {}
 
 function Building.iter(map)
    return Area.iter(map):filter(function(_, a) return a.metadata.is_player_owned end)
+end
+
+function Building.find_worker(map, chara_uid)
+   local obj = map:get_object_of_type("base.chara", chara_uid)
+   if Chara.is_alive(obj) then
+      return obj
+   end
+
+   obj = save.base.staying_charas:get_object(chara_uid)
+   if obj then
+      return obj
+   end
+
+   return nil
+end
+
+function Building.update_map(area, floor_no, cb)
+   if type(area) == "number" then
+      area = Area.get(area)
+   end
+
+   -- TODO multiple shop maps per area (#178)
+   local ok, floor = area:get_floor(floor_no)
+   if not ok then
+      Log.warn("Missing building floor %d", floor_no)
+      return false
+   end
+
+   -- Be careful not to load the map from disk again if it's loaded already.
+   local map, needs_save
+   if floor.uid == Map.current().uid then
+      map = Map.current()
+   else
+      needs_save = true
+      ok, map = area:load_floor(floor_no)
+      if not ok then
+         Log.warn("Missing building floor %d", floor_no)
+         return false
+      end
+   end
+
+   cb(map, area)
+
+   if needs_save then
+      Map.save(map)
+   end
+
+   return true
 end
 
 function Building.query_build(deed)
@@ -44,7 +91,13 @@ function Building.query_build(deed)
    return true
 end
 
-function Building.build_area(area_archetype_id, x, y, map)
+function Building.build(building_id, x, y, map)
+   local proto = data["elona.building"]:ensure(building_id)
+
+   return Building.build_area(proto.area_archetype_id, x, y, map, proto.tax_cost)
+end
+
+function Building.build_area(area_archetype_id, x, y, map, tax_cost)
    local area = InstancedArea:new(area_archetype_id)
    local floor = 1
 
@@ -58,8 +111,8 @@ function Building.build_area(area_archetype_id, x, y, map)
       area_archetype_id = area._archetype,
       area_uid = area.uid,
       name = area.name,
-      tax_cost = area.metadata.tax_cost or 0,
-      floor = floor
+      tax_cost = tax_cost or 0,
+      floor = floor,
    }
 
    table.insert(save.elona.player_owned_buildings, metadata)

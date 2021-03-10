@@ -120,7 +120,7 @@ local function renew_major(map)
             -- Restocks fruit trees.
             item:emit("base.on_item_renew_major")
 
-            if item.own_state == Enum.OwnState.None then
+            if item.amount == 0 or item.own_state == Enum.OwnState.None then
                item:remove()
             end
          end

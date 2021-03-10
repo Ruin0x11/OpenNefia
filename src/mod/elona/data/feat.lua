@@ -352,7 +352,7 @@ local function gen_stair(down)
 
       -- NOTE: assumes polymorphism between params of elona_sys.on_feat_activate
       -- and elona_sys.on_feat_ascend/elona_sys.on_feat_descend
-      [field] = function(self, params) self:on_activate(params) end
+      [field] = function(self, params) self.proto.on_activate(self, params) end
    }
 end
 
@@ -380,18 +380,20 @@ data:add
 
    on_activate = travel(MapEntrance.stairs_up, true),
 
+   on_descend = function(self, params) self.proto.on_activate(self, params) end,
+
    on_stepped_on = function(self, params)
-      local area = Area.get(self.params.area_uid)
-      local is_nefia = false -- TODO area metadata: type
-      if is_nefia then
-         ExHelp.maybe_show("elona.random_dungeon")
-      end
-      if area then
-         Gui.mes(get_map_display_name(area, true))
+      if params.chara:is_player() and self.params.area_uid then
+         local area = Area.get(self.params.area_uid)
+         local is_nefia = false -- TODO area metadata: type
+         if is_nefia then
+            ExHelp.maybe_show("elona.random_dungeon")
+         end
+         if area then
+            Gui.mes(get_map_display_name(area, true))
+         end
       end
    end,
-
-   on_descend = function(self, params) self:on_activate(params) end,
 
    events = {
       {

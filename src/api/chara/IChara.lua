@@ -318,6 +318,7 @@ function IChara:recruit_as_ally(target, no_message)
    end
 
    if not self:can_recruit_allies() then
+      Gui.mes("action.ally_joins.party_full")
       return false
    end
 
@@ -348,6 +349,9 @@ function IChara:swap_places(other)
    local ox, oy = other.x, other.y
    location:move_object(self, ox, oy)
    location:move_object(other, sx, sy)
+
+   self:emit("base.on_chara_moved", {prev_x=sx, prev_y=sy, x=self.x, y=self.y})
+   other:emit("base.on_chara_moved", {prev_x=ox, prev_y=oy, x=other.x, y=other.y})
 
    return true
 end
