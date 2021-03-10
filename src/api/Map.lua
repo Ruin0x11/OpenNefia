@@ -5,6 +5,7 @@
 --- map by omitting this argument.
 ---
 --- @module Map
+local object = require("internal.object")
 
 local field = require("game.field")
 local Chara = require("api.Chara")
@@ -104,6 +105,8 @@ end
 function Map.load(uid)
    assert(type(uid) == "number")
 
+   object.clear_last_deserialized_objects()
+
    local path = Fs.join("map", tostring(uid))
    Log.debug("Loading map %d from %s", uid, path)
    local success, map = SaveFs.read(path, "temp")
@@ -112,6 +115,14 @@ function Map.load(uid)
    end
 
    map:emit("base.on_map_loaded")
+
+   -- Instantiate every object that was loaded by the deserializer, to ensure
+   -- things like event handlers that get loaded from the prototype are
+   -- restored.
+   local deserialized = object.get_last_deserialized_objects()
+   for _, obj in ipairs(deserialized) do
+      obj:instantiate()
+   end
 
    return success, map
 end

@@ -50,6 +50,8 @@ files["scratch/**/*.lua"].ignore = {
 }
 files["test/unit/**/*.lua"] = {
    globals = {
+      "save",
+      "config",
       "disable"
    },
    ignore = {

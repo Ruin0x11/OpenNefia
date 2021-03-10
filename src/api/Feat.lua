@@ -143,8 +143,6 @@ function Feat.create(id, x, y, params, where)
 
    MapObject.finalize(feat, gen_params)
 
-   feat:instantiate()
-
    feat:refresh()
 
    return feat

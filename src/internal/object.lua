@@ -97,56 +97,7 @@ function object.__newindex(t, k, v)
    rawset(t, k, v)
 end
 
--- TODO remove this, we should always refer to the prototype for function
--- callbacks instead of copying them to the object instance itself.
-local function extract_functions(instance, serial, proto, cache)
-   if type(proto) ~= "table" then
-      return
-   end
-
-   -- protect against recursive tables
-   if cache[instance] or cache[proto] then
-      return
-   end
-   cache[instance] = true
-   cache[proto] = true
-
-   for k, v in pairs(instance) do
-      if type(k) == "string" then
-         if type(v) == "function" and proto[k] == v then
-            serial[k] = "copy_from_proto"
-         elseif type(v) == "table" and type(instance) == "table" then
-            serial[k] = {}
-            extract_functions(serial[k], v, proto[k], cache)
-         end
-      end
-   end
-end
-
-local function copy_functions(instance, serial, proto, cache)
-   if type(proto) ~= "table" then
-      return
-   end
-
-   -- protect against recursive tables
-   if cache[instance] or cache[proto] then
-      return
-   end
-   cache[instance] = true
-   cache[proto] = true
-
-   for k, v in pairs(serial) do
-      if v == "copy_from_proto" then
-         instance[k] = proto[k]
-      elseif type(v) == "table" and type(instance[k]) == "table" then
-         copy_functions(instance[k], v, proto[k], cache)
-      end
-   end
-end
-
 function object.serialize(self)
-   local proto = self.proto
-
    local ret = object.make_prototype(self)
    assert(ret._id, "serialization currently assumes there is a prototype in data[] to load")
 
@@ -156,11 +107,13 @@ function object.serialize(self)
    ret.uid = self.uid
    assert(ret.location == nil)
 
-   local serial = {}
-   extract_functions(self, serial, proto, {})
-   ret.__serial = serial
    return ret
 end
+
+-- This is a hack so we can ensure everything that gets deserialized will have
+-- 'base.on_object_instantiated' called on it, no matter if it's in the map or
+-- inside a container in `save`.
+local _FOUND_OBJECTS = {}
 
 function object.deserialize(self, _type, _id)
    if self._type and self._id then
@@ -198,16 +151,6 @@ function object.deserialize(self, _type, _id)
    local iface = data[_type]:interface()
    assert(iface)
 
-   -- functions on the prototype table are not serialized, so they
-   -- must be copied from the prototype to the instance on
-   -- deserialization if they were unchanged from the prototype's
-   -- version on save.
-   local serial = self.__serial
-   if serial then
-      self.__serial = nil
-      copy_functions(self, serial, proto, {})
-   end
-
    local mt = {
       _id = _id,
       _type = _type,
@@ -228,7 +171,20 @@ function object.deserialize(self, _type, _id)
       __inspect = object.__inspect
    }
 
-   return setmetatable(self, mt)
+   local obj = setmetatable(self, mt)
+   _FOUND_OBJECTS[#_FOUND_OBJECTS+1] = obj
+
+   return obj
+end
+
+function object.clear_last_deserialized_objects()
+   _FOUND_OBJECTS = {}
+end
+
+function object.get_last_deserialized_objects()
+   local result = _FOUND_OBJECTS
+   _FOUND_OBJECTS = {}
+   return result
 end
 
 function object:__tostring()

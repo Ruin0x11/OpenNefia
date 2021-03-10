@@ -2,6 +2,9 @@ local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
 local InstancedMap = require("api.InstancedMap")
 local test_util = require("test.lib.test_util")
+local Item = require("api.Item")
+local Inventory = require("api.Inventory")
+local Map = require("api.Map")
 
 function test_object___tostring()
    local putit = Chara.create("elona.putit", nil, nil, {ownerless=true})
@@ -108,5 +111,55 @@ function test_object_change_prototype()
       Assert.is_truthy(zeome)
       Assert.eq("elona.zeome", zeome._id)
       Assert.eq("elona.zeome", zeome.proto._id)
+   end
+end
+
+function test_object_instantiate_events_save()
+   do
+      local map = InstancedMap:new(10, 10)
+      map:clear("elona.cobble")
+      test_util.set_player(map)
+      test_util.register_map(map)
+
+      local inv = Inventory.get_or_create("@test@.test")
+      local gold = Item.create("elona.gold_piece", 5, 5, {}, inv)
+
+      Assert.eq(true, gold:has_event_handler("base.on_get_item"))
+   end
+
+   test_util.save_cycle()
+
+   do
+      local inv = Inventory.get_or_create("@test@.test")
+      local gold = inv:iter():nth(1)
+      Assert.is_truthy(gold)
+      Assert.eq("elona.gold_piece", gold._id)
+      Assert.eq(true, gold:has_event_handler("base.on_get_item"))
+   end
+end
+
+function test_object_instantiate_events_map_load()
+   local map_uid
+
+   do
+      local map = InstancedMap:new(10, 10)
+      map:clear("elona.cobble")
+      test_util.set_player(map)
+      test_util.register_map(map)
+
+      local gold = Item.create("elona.gold_piece", 5, 5, {}, map)
+
+      Assert.eq(true, gold:has_event_handler("base.on_get_item"))
+
+      Map.save(map)
+      map_uid = map.uid
+   end
+
+   do
+      local _, map = assert(Map.load(map_uid))
+
+      local gold = Item.find("elona.gold_piece", "all", map)
+      Assert.is_truthy(gold)
+      Assert.eq(true, gold:has_event_handler("base.on_get_item"))
    end
 end

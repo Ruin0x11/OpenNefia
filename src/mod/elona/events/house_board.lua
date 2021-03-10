@@ -205,7 +205,7 @@ local function your_home_move_stayer(map)
       formatter = format_wage
    }
 
-   local candidates = Servant.iter(map):to_list()
+   local candidates = Servant.iter(map):filter(Chara.is_alive):to_list()
 
    Gui.mes("building.home.move.who")
    local servant, canceled = ChooseNpcMenu:new(candidates, topic):query()

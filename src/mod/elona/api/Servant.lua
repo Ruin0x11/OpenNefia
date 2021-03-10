@@ -142,7 +142,8 @@ function Servant.iter(map)
 end
 
 function Servant.calc_max_servant_limit(map)
-   return (map.home_scale or 0) + 2
+   local home = data["elona.home"]:ensure(save.elona.home_rank)
+   return (home.home_scale or 0) + 2
 end
 
 -- TODO support multiple homes

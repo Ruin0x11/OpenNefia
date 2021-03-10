@@ -133,8 +133,6 @@ function Mef.create(id, x, y, params, where)
 
    MapObject.finalize(mef, gen_params)
 
-   mef:instantiate()
-
    mef:refresh()
 
    return mef

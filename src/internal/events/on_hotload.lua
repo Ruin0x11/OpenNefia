@@ -30,26 +30,6 @@ Event.register("base.on_object_prototype_changed", "reload events for object", f
                   end
 end)
 
-Event.register("base.on_map_loaded", "init all event callbacks",
-               function(map)
-                  local objs = map:iter():to_list()
-                  while #objs > 0 do
-                     local v = objs[#objs]
-                     objs[#objs] = nil
-
-                     -- Event callbacks will not be serialized since
-                     -- they are functions, so they have to be copied
-                     -- from the prototype each time.
-                     if class.is_an(IEventEmitter, v) then
-                        IEventEmitter.init(v)
-                     end
-                     v:instantiate()
-                     if class.is_an(ILocation, v) then
-                        table.append(objs, v:iter():to_list())
-                     end
-                  end
-               end)
-
 Event.register("base.on_hotload_end", "Notify objects in map of prototype hotload",
                function(_, params)
                   local map = Map.current()
@@ -76,6 +56,7 @@ Event.register("base.on_hotload_end", "Notify objects in map of prototype hotloa
                               and hotloaded[thing._type][thing._id]
                            then
                               Log.debug("Load " .. thing._type .. " " .. thing._id)
+                              thing:instantiate()
                               thing:emit("base.on_hotload_object", params)
                            end
 

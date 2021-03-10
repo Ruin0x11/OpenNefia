@@ -268,25 +268,19 @@ function Calc.calc_trainer_skills(trainer, player)
    return skills
 end
 
-function Calc.calc_tax_multiplier(player)
-   -- >>>>>>>> shade2/calculation.hsp:710 #define calcAccountant 	cost=cost * limit(100-limi ..
-   local karma = player:calc("karma")
-   local tax_trait_level = player:trait_level("elona.tax")
-   return math.clamp(100 - math.clamp(karma/2, 0, 50) - (7 * tax_trait_level) - (((karma >= Const.KARMA_GOOD) and 5) or 0), 25, 200) / 100
-   -- <<<<<<<< shade2/calculation.hsp:710 #define calcAccountant 	cost=cost * limit(100-limi ..
-end
-
-function Calc.calc_building_taxes(player)
+function Calc.calc_building_expenses(player)
+   -- >>>>>>>> shade2/calculation.hsp:719 #defcfunc calcCostBuilding ...
    local cost = 0
 
-   cost = cost + save.elona.home_rank ^ 2 * 200
+   local home = data["elona.home"]:ensure(save.elona.home_rank)
+   local scale = home.home_scale or 0
+   cost = cost + scale ^ 2 * 200
    for _, building in ipairs(save.elona.player_owned_buildings) do
-      cost = cost + building.tax_cost
+      cost = cost + (building.tax_cost or 0)
    end
 
-   cost = cost * Calc.calc_tax_multiplier(player)
-
-   return cost
+   return Calc.calc_adjusted_expense(cost, player)
+   -- <<<<<<<< shade2/calculation.hsp:730 	return cost ..
 end
 
 function Calc.calc_living_weapon_required_exp(level)
@@ -547,18 +541,6 @@ function Calc.calc_adjusted_expense(cost, player)
 
    return math.floor(cost * factor / 100)
    -- <<<<<<<< shade2/calculation.hsp:706 #define calcAccountant 	cost=cost * limit(100-limi ..
-end
-
-function Calc.calc_building_expenses(chara)
-   chara = chara or Chara.player()
-
-   -- >>>>>>>> shade2/calculation.hsp:719 #defcfunc calcCostBuilding ...
-   local cost = 0
-
-   -- TODO building
-
-   return Calc.calc_adjusted_expense(cost, chara)
-   -- <<<<<<<< shade2/calculation.hsp:730 	return cost ..
 end
 
 function Calc.calc_tax_expenses(chara)

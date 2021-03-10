@@ -564,6 +564,8 @@ function IChara:vanquish()
    end
 
    self:emit("base.on_chara_vanquished")
+
+   self:remove_ownership()
 end
 
 --- Revives this character.

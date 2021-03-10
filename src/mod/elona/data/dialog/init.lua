@@ -25,6 +25,7 @@ data:add {
 require("mod.elona.data.dialog.special.default")
 require("mod.elona.data.dialog.special.quest_giver")
 require("mod.elona.data.dialog.special.sex")
+require("mod.elona.data.dialog.special.servant")
 
 require("mod.elona.data.dialog.role.guard")
 require("mod.elona.data.dialog.role.prostitute")
