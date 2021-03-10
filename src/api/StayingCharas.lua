@@ -100,6 +100,17 @@ function StayingCharas:get_staying_map_for(chara)
    }
 end
 
+function StayingCharas:unregister_for_map(uid)
+   assert(math.type(uid) == "integer")
+
+   self.map_uid_to_chara_uids[uid] = nil
+   for chara_uid, map_data in pairs(self.chara_uid_to_map_uid) do
+      if map_data.map_uid == uid then
+         self.chara_uid_to_map_uid[chara_uid] = nil
+      end
+   end
+end
+
 function StayingCharas:is_staying_in_map(chara, map)
    assert(MapObject.is_map_object(chara, "base.chara"))
    class.assert_is_an(InstancedMap, map)

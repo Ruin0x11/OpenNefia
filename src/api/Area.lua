@@ -4,6 +4,7 @@ local field = require("game.field")
 local save = require("internal.global.save")
 local Log = require("api.Log")
 local data = require("internal.data")
+local Event = require("api.Event")
 
 --- An area is a collection of maps. Areas commonly represent dungeons or world
 --- maps.
@@ -75,10 +76,12 @@ function Area.metadata(map)
    return area.metadata
 end
 
-local function get_area(map_or_area)
-   local area = map_or_area
-   if class.is_an(InstancedMap, map_or_area) then
-      area = Area.for_map(map_or_area)
+local function get_area(map_or_area_or_uid)
+   local area = map_or_area_or_uid
+   if class.is_an(InstancedMap, map_or_area_or_uid) then
+      area = Area.for_map(map_or_area_or_uid)
+   elseif math.type(map_or_area_or_uid) == "integer" then
+      area = Area.get(map_or_area_or_uid)
    end
    assert(area == nil or class.is_an(InstancedArea, area))
    return area
@@ -252,6 +255,7 @@ function Area.create_entrance(area, map_or_floor_number, x, y, params, map)
 end
 
 function Area.create_stairs_down(area, floor_number, x, y, params, map)
+   area = get_area(area)
    local Feat = require("api.Feat")
    local stairs = Feat.create("elona.stairs_down", x, y, params, map)
    if stairs then
@@ -262,6 +266,7 @@ function Area.create_stairs_down(area, floor_number, x, y, params, map)
 end
 
 function Area.create_stairs_up(area, floor_number, x, y, params, map)
+   area = get_area(area)
    local Feat = require("api.Feat")
    local stairs = Feat.create("elona.stairs_up", x, y, params, map)
    if stairs then
@@ -314,6 +319,7 @@ function Area.set_unique(area_archetype_id, new_area, parent)
 end
 
 function Area.unregister(area)
+   area = get_area(area)
    assert(Area.is_registered(area))
 
    for area_archetype_id, metadata in pairs(save.base.unique_areas) do
@@ -323,18 +329,19 @@ function Area.unregister(area)
       end
    end
 
-   Log.debug("Unregistering area '%s' with maps: %s", area.name, inspect(fun.iter(area.maps):extract("uid"):to_list()))
+   Log.debug("Unregistering area %d (%s) with maps: %s", area.uid, area.name, inspect(fun.iter(area.maps):extract("uid"):to_list()))
 
    local areas = save.base.areas
    areas[area.uid] = nil
 end
 
 function Area.delete(area)
+   area = get_area(area)
    if Area.is_registered(area) then
       Area.unregister(area)
    end
 
-   Log.debug("Deleting area '%s' with maps: %s", area.name, inspect(fun.iter(area.maps):extract("uid"):to_list()))
+   Log.debug("Deleting area %d (%s) with maps: %s", area.uid, area.name, inspect(fun.iter(area.maps):extract("uid"):to_list()))
 
    local Map = require("api.Map")
    for floor, metadata in pairs(area.maps) do
@@ -343,6 +350,8 @@ function Area.delete(area)
 
    area.maps = {}
    area.deepest_level_visited = 0
+
+   Event.trigger("base.on_area_deleted", {area=area})
 end
 
 return Area

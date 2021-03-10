@@ -13,6 +13,7 @@ function events.require_all()
    require("internal.events.item_refresh")
    require("internal.events.chara_activity")
    require("internal.events.debug")
+   require("internal.events.map_delete")
 end
 
 return events
