@@ -3,6 +3,9 @@ local Rand = require("api.Rand")
 local Assert = require("api.test.Assert")
 local test_util = require("test.lib.test_util")
 local Rank = require("mod.elona.api.Rank")
+local save = require("internal.global.save")
+local Area = require("api.Area")
+local Building = require("mod.elona.api.Building")
 
 function test_Calc_calc_fame_income()
    local chara = test_util.stripped_chara("elona.putit")
@@ -46,6 +49,32 @@ function test_Calc_calc_rank_income_items()
    Assert.eq(3, #Calc.calc_rank_income_items("elona.arena"))
 end
 
+function test_Calc_calc_building_expenses()
+   local north_tyris_area = Area.create_unique("elona.north_tyris", "root")
+   local ok, north_tyris_map = assert(north_tyris_area:load_or_generate_floor(north_tyris_area:starting_floor()))
+
+   local chara = test_util.stripped_chara("elona.putit")
+   Assert.eq(0, Calc.calc_building_expenses(chara))
+
+   save.elona.home_rank = "elona.cyber_house"
+   Assert.eq(1600, Calc.calc_building_expenses(chara))
+
+   Building.build("elona.storage_house", 50, 23, north_tyris_map)
+   Assert.eq(1975, Calc.calc_building_expenses(chara))
+
+   Building.build("elona.dungeon", 50, 24, north_tyris_map)
+   Assert.eq(1975, Calc.calc_building_expenses(chara))
+
+   Building.build("elona.shop", 50, 25, north_tyris_map)
+   Assert.eq(4475, Calc.calc_building_expenses(chara))
+
+   chara.karma = 30
+   Assert.eq(4027, Calc.calc_building_expenses(chara))
+
+   chara:modify_trait_level("elona.tax", 1)
+   Assert.eq(3401, Calc.calc_building_expenses(chara))
+end
+
 function test_Calc_calc_actual_bill_amount()
    local chara = test_util.stripped_chara("elona.putit")
    chara.level = 1
@@ -70,4 +99,8 @@ function test_Calc_calc_actual_bill_amount()
    chara:modify_trait_level("elona.tax", 1)
    Rand.set_seed(0)
    Assert.eq(1978, Calc.calc_actual_bill_amount(chara))
+
+   chara.karma = 30
+   Rand.set_seed(0)
+   Assert.eq(1748, Calc.calc_actual_bill_amount(chara))
 end
