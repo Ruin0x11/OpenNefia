@@ -173,7 +173,7 @@ end
 --- @tparam[opt] ILocation where
 --- @treturn[opt] IItem
 function Itemgen.create(x, y, params, where)
-   params = params or {}
+   params = params and table.deepcopy(params) or {}
 
    params.quality = params.quality or Enum.Quality.Bad
    params.level = params.level or 1
