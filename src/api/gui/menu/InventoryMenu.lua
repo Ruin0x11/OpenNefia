@@ -373,7 +373,6 @@ function InventoryMenu:update(dt)
          -- This is a turn result, like "turn_end".
          return can_select
       elseif not can_select then
-         Gui.mes("Can't select: " .. reason)
       else
          if self.returns_item then
             return self:selected_item_object()

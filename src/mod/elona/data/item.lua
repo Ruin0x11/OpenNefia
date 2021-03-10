@@ -12578,6 +12578,15 @@ local item =
 
          prevent_sell_in_own_shop = true,
 
+         on_open = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ...
+            local inv = Inventory.get_or_create("elona.shop_strongbox")
+            Input.query_inventory(params.chara, "elona.inv_get_container", { container = inv }, nil)
+
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ..
+         end,
+
          categories = {
             "elona.container",
             "elona.no_generate"

@@ -17,7 +17,7 @@ end
 
 function Building.find_worker(map, chara_uid)
    local obj = map:get_object_of_type("base.chara", chara_uid)
-   if obj then
+   if Chara.is_alive(obj) then
       return obj
    end
 

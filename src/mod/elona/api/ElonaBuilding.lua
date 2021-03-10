@@ -14,6 +14,7 @@ local Draw = require("api.Draw")
 local Chara = require("api.Chara")
 local Charagen = require("mod.tools.api.Charagen")
 local Building = require("mod.elona.api.Building")
+local Inventory = require("api.Inventory")
 
 local ElonaBuilding = {}
 
@@ -156,15 +157,17 @@ function ElonaBuilding.update_shop_map(map)
       end
    end
 
+   local shop_strongbox = Inventory.get_or_create("elona.shop_strongbox")
+
    -- TODO containers
    if income > 0 then
-      Item.create("elona.gold_piece", nil, nil, { amount = income }, map)
+      Item.create("elona.gold_piece", nil, nil, { amount = income }, shop_strongbox)
    end
 
    for _, item_to_create in ipairs(items_to_create) do
       local found = false
       for _ = 1, 4 do
-         local item = Itemgen.create(nil, nil, item_to_create.filter, map)
+         local item = Itemgen.create(nil, nil, item_to_create.filter, shop_strongbox)
          if item == nil then
             break
          end
@@ -178,7 +181,7 @@ function ElonaBuilding.update_shop_map(map)
       end
 
       if not found then
-         Item.create("elona.gold_piece", nil, nil, { amount = item_to_create.value }, map)
+         Item.create("elona.gold_piece", nil, nil, { amount = item_to_create.value }, shop_strongbox)
          income = income + item_to_create.value
       else
          items_created = items_created + 1
