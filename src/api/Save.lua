@@ -52,6 +52,10 @@ function Save.save_game(save_id)
 
    Gui.play_sound("base.write1")
    Gui.mes("action.quicksave")
+
+   if config.base.debug_load_after_save then
+      Save.load_game(save_id)
+   end
 end
 
 --- Loads the current save.

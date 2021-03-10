@@ -664,6 +664,12 @@ data:add_multi(
          default = "disabled",
       },
       {
+         _id = "debug_load_after_save",
+
+         type = "boolean",
+         default = false,
+      },
+      {
          _id = "show_perf_widgets",
 
          type = "boolean",

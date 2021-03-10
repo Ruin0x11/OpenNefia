@@ -28,8 +28,8 @@ function StayingCharas.register_global(chara, map)
    save.base.staying_charas:register(chara, map)
 end
 
-function StayingCharas.unregister_global(chara)
-   save.base.staying_charas:unregister(chara)
+function StayingCharas.unregister_global(chara, map)
+   save.base.staying_charas:unregister(chara, map)
 end
 
 function StayingCharas.iter_global()
@@ -53,8 +53,13 @@ function StayingCharas:register(chara, map)
       self.chara_uid_to_map_uid[chara.uid] = nil
    end
 
-   chara.initial_x = chara.x
-   chara.initial_y = chara.y
+   if chara:current_map() == map then
+      chara.initial_x = chara.x
+      chara.initial_y = chara.y
+   else
+      chara.initial_x = math.floor(map:width() / 2)
+      chara.initial_y = math.floor(map:height() / 2)
+   end
 
    self.map_uid_to_chara_uids[map.uid] = self.map_uid_to_chara_uids[map.uid] or {}
    self.map_uid_to_chara_uids[map.uid][chara.uid] = true
@@ -64,10 +69,13 @@ function StayingCharas:register(chara, map)
    }
 end
 
-function StayingCharas:unregister(chara)
+function StayingCharas:unregister(chara, map)
    assert(MapObject.is_map_object(chara, "base.chara"))
    local old_map = self:get_staying_map_for(chara)
    if not old_map then
+      return
+   end
+   if map and old_map.map_uid ~= map.uid then
       return
    end
 
@@ -123,8 +131,19 @@ function StayingCharas:do_transfer(map)
 
    local is_inside_staying_map = function(chara)
       local staying_map = self:get_staying_map_for(chara)
-      return staying_map
-         and staying_map.map_uid == map.uid
+      if staying_map == nil then
+         -- In cases where staying map was unregistered but the character was
+         -- not moved back into the game world.
+         Log.warn("Transferring unregistered stayer to current map. (%d)", chara.uid)
+         chara.initial_x = nil
+         chara.initial_y = nil
+         local player = Chara.player()
+         if player then
+            chara.initial_x = player.x
+            chara.initial_y = player.y
+         end
+      end
+      return (staying_map == nil or staying_map.map_uid == map.uid)
    end
 
    local function place(chara)

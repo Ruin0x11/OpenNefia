@@ -13,10 +13,10 @@ local function bump_into_chara(player, params, result)
       or (relation == Enum.Relation.Dislike and (not config.base.attack_neutral_npcs or Gui.player_is_running()))
    then
       if not on_cell:calc("is_hung_on_sandbag") then
+         Gui.mes("action.move.displace.text", on_cell)
          if player:swap_places(on_cell) then
-            Gui.mes("action.move.displace.text", on_cell)
-            Gui.set_scroll()
             on_cell:emit("elona.on_chara_displaced", {chara=player})
+            Gui.set_scroll()
          end
          return "turn_end"
       end

@@ -149,7 +149,7 @@ local fallbacks = {
    has_anchored_npcs = false,
    reveals_fog = false,
    name = "",
-   item_on_ground_limit = nil,
+   item_on_floor_limit = nil,
 
    is_generated_every_time = false,
    is_not_regenerated = false,

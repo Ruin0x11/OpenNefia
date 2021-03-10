@@ -1399,7 +1399,6 @@ local item = {
       }
     },
     name = "farm",
-    building_name = "crop"
   },
   deed_of_heirship = {
     desc = {
@@ -1416,7 +1415,6 @@ local item = {
       }
     },
     name = "museum",
-    building_name = "museum"
   },
   deed_of_ranch = {
     desc = {
@@ -1425,7 +1423,6 @@ local item = {
       }
     },
     name = "ranch",
-    building_name = "ranch"
   },
   deed_of_shop = {
     desc = {
@@ -1434,7 +1431,6 @@ local item = {
       }
     },
     name = "shop",
-    building_name = "shop"
   },
   deed_of_storage_house = {
     desc = {
@@ -1443,7 +1439,6 @@ local item = {
       }
     },
     name = "storage house",
-    building_name = "storage"
   },
   deer_head = {
     name = "deer head"

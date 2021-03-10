@@ -18,6 +18,10 @@ local ChooseNpcMenu = require("api.gui.menu.ChooseNpcMenu")
 local Enum = require("api.Enum")
 local Input = require("api.Input")
 
+local function is_alive_or_staying(chara)
+   return chara.state == "Alive" or chara.state == "Staying"
+end
+
 local function iter_staying_allies()
    return StayingCharas.iter_global():filter(ICharaParty.is_in_player_party)
 end
@@ -27,13 +31,100 @@ local function iter_allies_and_stayers(map)
 end
 
 
+local function format_info_shopkeeper(chara)
+   -- >>>>>>>> shade2/command.hsp:560 			if areaId(gArea)=areaShop	:s="   "+sCHR(i)+" /  ...
+   return ("   %d / %d"):format(chara:skill_level("elona.stat_charisma"), chara:skill_level("elona.negotiation"))
+   -- <<<<<<<< shade2/command.hsp:560 			if areaId(gArea)=areaShop	:s="   "+sCHR(i)+" /  ..
+end
+
 local function shop_assign_shopkeeper(map)
+   Gui.mes("ui.ally_list.shop.prompt")
+
+   local topic = {
+      info_formatter = format_info_shopkeeper,
+      window_title = "ui.ally_list.shop.title",
+      header_status = "ui.ally_list.shop.chr_negotiation",
+      x_offset = 20
+   }
+
+   local allies = iter_allies_and_stayers(map):filter(is_alive_or_staying):to_list()
+   local result, canceled = ChooseAllyMenu:new(allies, topic):query()
+
+   if result and not canceled then
+      Gui.play_sound("base.ok1")
+      local ally = result.chara
+      -- TODO move elsewhere
+      if map.shopkeeper_uid == ally.uid then
+         StayingCharas.unregister_global(ally, map)
+         map.shopkeeper_uid = nil
+         Gui.mes("building.home.staying.remove.worker", ally)
+      else
+         if map.shopkeeper_uid then
+            local existing = Building.find_worker(map, map.shopkeeper_uid)
+            if existing then
+               StayingCharas.unregister_global(existing, map)
+            end
+         end
+         StayingCharas.register_global(ally, map)
+         map.shopkeeper_uid = ally.uid
+         Gui.mes("building.home.staying.add.worker", ally)
+      end
+   end
 end
 
 local function shop_reform(map)
+   local player = Chara.player()
+   local reform_cost = ElonaBuilding.calc_shop_extend_cost(map)
+   if player.gold < reform_cost then
+      Gui.mes("servant.hire.not_enough_money")
+      return
+   end
+
+   Gui.play_sound("base.paygold1")
+   player.gold = player.gold - reform_cost
+   map.item_on_floor_limit = math.clamp(map.item_on_floor_limit + 10, 1, 400)
+   Gui.mes_c("building.shop.extend", "Green", map.item_on_floor_limit)
+end
+
+local function format_info_breeder(chara)
+   -- >>>>>>>> shade2/command.hsp:561 			if areaId(gArea)=areaRanch	:s="   "+cBreeder(i) ...
+   return ("   %d"):format(chara:calc("breed_power"))
+   -- <<<<<<<< shade2/command.hsp:561 			if areaId(gArea)=areaRanch	:s="   "+cBreeder(i) ..
 end
 
 local function ranch_assign_breeder(map)
+   Gui.mes("ui.ally_list.shop.prompt")
+
+   local topic = {
+      info_formatter = format_info_breeder,
+      window_title = "ui.ally_list.ranch.title",
+      header_status = "ui.ally_list.ranch.breed_power",
+      x_offset = 20
+   }
+
+   local allies = iter_allies_and_stayers(map):filter(is_alive_or_staying):to_list()
+   local result, canceled = ChooseAllyMenu:new(allies, topic):query()
+
+   if result and not canceled then
+      Gui.play_sound("base.ok1")
+      local ally = result.chara
+      -- TODO move elsewhere
+      if map.breeder_uid == ally.uid then
+         StayingCharas.unregister_global(ally, map)
+         map.breeder_uid = nil
+         Gui.mes("building.home.staying.remove.worker", ally)
+      else
+         if map.breeder_uid then
+            local existing = Building.find_worker(map, map.breeder_uid)
+            if existing then
+               StayingCharas.unregister_global(existing, map)
+            end
+         end
+         StayingCharas.register_global(ally, map)
+         map.breeder_uid = ally.uid
+         Gui.mes("building.home.staying.add.worker", ally)
+      end
+   end
 end
 
 local function design(map)
@@ -74,6 +165,7 @@ local function your_home_allies(map)
    local topic = {
       info_formatter = format_info_status,
       window_title = "ui.ally_list.stayer.title",
+      x_offset = 20
    }
 
    local allies = iter_allies_and_stayers(map):filter(Chara.is_alive):to_list()

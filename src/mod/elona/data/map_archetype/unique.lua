@@ -1092,7 +1092,7 @@ do
          has_anchored_npcs = true,
          default_ai_calm = 1,
          max_crowd_density = 0,
-         item_on_ground_limit = 5,
+         item_on_floor_limit = 5,
 
          reveals_fog = true,
          prevents_return = true,

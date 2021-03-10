@@ -26,6 +26,28 @@ function test_StayingCharas_register()
    Assert.eq(false, staying:is_staying_in_map(chara, map))
 end
 
+function test_StayingCharas_unregister__different_map()
+   local staying = StayingCharas:new()
+
+   local map = InstancedMap:new(10, 10)
+   local map2 = InstancedMap:new(10, 10)
+   local chara = Chara.create("elona.putit", 2, 7, nil, map)
+
+   Assert.eq(0, staying:iter():length())
+   Assert.eq(nil, staying:get_staying_map_for(chara))
+   Assert.eq(false, staying:is_staying_in_map(chara, map))
+
+   staying:register(chara, map)
+   Assert.eq(0, staying:iter():length())
+   Assert.eq(map.uid, staying:get_staying_map_for(chara).map_uid)
+   Assert.eq(true, staying:is_staying_in_map(chara, map))
+
+   staying:unregister(chara, map2)
+   Assert.eq(0, staying:iter():length())
+   Assert.eq(map.uid, staying:get_staying_map_for(chara).map_uid)
+   Assert.eq(true, staying:is_staying_in_map(chara, map))
+end
+
 function test_StayingCharas_do_transfer()
    local staying = StayingCharas:new()
 
@@ -109,6 +131,41 @@ function test_StayingCharas_do_transfer__will_not_transfer_player()
 
    Assert.eq(0, Chara.iter_all(inside):length())
    Assert.eq(1, Chara.iter_all(outside):length())
+   Assert.eq(0, staying:iter():length())
+   Assert.eq("Alive", chara.state)
+end
+
+function test_StayingCharas_do_transfer__fixes_leftover()
+   local staying = StayingCharas:new()
+
+   local inside = InstancedMap:new(10, 10)
+   local outside = InstancedMap:new(10, 10)
+   local other = InstancedMap:new(10, 10)
+   local chara = Chara.create("elona.putit", 2, 7, nil, inside)
+
+   staying:register(chara, inside)
+
+   Assert.eq(1, Chara.iter_all(inside):length())
+   Assert.eq(0, Chara.iter_all(outside):length())
+   Assert.eq(0, Chara.iter_all(other):length())
+   Assert.eq(0, staying:iter():length())
+   Assert.eq("Alive", chara.state)
+
+   Assert.is_truthy(Map.try_place_chara(chara, 5, 5, outside))
+   staying:do_transfer(outside)
+
+   Assert.eq(0, Chara.iter_all(inside):length())
+   Assert.eq(0, Chara.iter_all(outside):length())
+   Assert.eq(0, Chara.iter_all(other):length())
+   Assert.eq(1, staying:iter():length())
+   Assert.eq("Staying", chara.state)
+
+   staying:unregister(chara)
+   staying:do_transfer(other)
+
+   Assert.eq(0, Chara.iter_all(inside):length())
+   Assert.eq(0, Chara.iter_all(outside):length())
+   Assert.eq(1, Chara.iter_all(other):length())
    Assert.eq(0, staying:iter():length())
    Assert.eq("Alive", chara.state)
 end

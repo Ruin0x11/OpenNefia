@@ -2430,7 +2430,6 @@ local item = {
       }
     },
     name = "ダンジョンの権利書",
-    building_name = "ダンジョン"
   },
   deed_of_farm = {
     desc = {
@@ -2448,7 +2447,6 @@ local item = {
       }
     },
     name = "畑の権利書",
-    building_name = "畑"
   },
   deed_of_heirship = {
     desc = {
@@ -2479,7 +2477,6 @@ local item = {
       }
     },
     name = "博物館の権利書",
-    building_name = "博物館"
   },
   deed_of_ranch = {
     desc = {
@@ -2493,7 +2490,6 @@ local item = {
       }
     },
     name = "牧場の権利書",
-    building_name = "牧場"
   },
   deed_of_shop = {
     desc = {
@@ -2507,7 +2503,6 @@ local item = {
       }
     },
     name = "店の権利書",
-    building_name = "店"
   },
   deed_of_storage_house = {
     desc = {
@@ -2521,7 +2516,6 @@ local item = {
       }
     },
     name = "倉庫の権利書",
-    building_name = "倉庫"
   },
   deer_head = {
     desc = {
