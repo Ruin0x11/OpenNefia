@@ -391,7 +391,7 @@ end
             yes = "Yes."
           },
           prompt = function(_1)
-  return ("(%s looks at you sadly. Really dismiss %s? )")
+  return ("(%s looks at you sadly. Really dismiss %s?)")
   :format(name(_1), him(_1))
 end,
           you_dismiss = function(_1)
