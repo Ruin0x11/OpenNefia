@@ -231,7 +231,8 @@ function Map.can_drop_items(map)
    if max_item_count == nil then
       return true
    end
-   if map:iter_items():length() >= max_item_count then
+   local Item = require("api.Item")
+   if Item.iter(map):length() >= max_item_count then
       return false
    end
    return true

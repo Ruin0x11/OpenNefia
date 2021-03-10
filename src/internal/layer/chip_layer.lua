@@ -232,8 +232,10 @@ function chip_layer:draw_stacking(ind, map, stack, chip_type, found)
          if not map:is_in_fov(x, y) then
             show = show and CONFIG[chip_type].show_memory
          end
-         to_show[i] = show
-         show_count = show_count + 1
+         if show then
+            to_show[i] = show
+            show_count = show_count + 1
+         end
       end
    end
 

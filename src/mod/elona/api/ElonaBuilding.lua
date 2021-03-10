@@ -138,7 +138,7 @@ function ElonaBuilding.update_shop_map(map)
 
          if Rand.one_in(4) then
             local major_categories = item:major_categories()
-            if #major_categories > 1 then
+            if #major_categories > 0 then
                items_to_create[#items_to_create+1] = {
                   filter = {
                      level = item:calc("level"),
