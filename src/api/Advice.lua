@@ -213,7 +213,7 @@ function Advice.add(where, require_path, fn_name, identifier, fn, opts)
    assert(type(fn) == "function")
 
    local module_, original_fn = get_module_and_fn(require_path, fn_name)
-   local calling_mod, calling_loc = env.find_calling_mod(1, true)
+   local calling_mod, calling_loc = env.find_calling_mod(1)
 
    if not env.is_loaded(require_path) then
       error(("Path '%s' is not loaded."):format(require_path))

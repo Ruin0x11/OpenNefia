@@ -141,10 +141,7 @@ local _diff_compute,
       _diff_commonSuffix,
       _diff_commonOverlap,
       _diff_xIndex,
-      _diff_text1,
-      _diff_text2,
-      _diff_toDelta,
-      _diff_fromDelta
+      _diff_bisectSplit
 
 --[[
 * Find the differences between two texts.  Simplifies the problem by stripping

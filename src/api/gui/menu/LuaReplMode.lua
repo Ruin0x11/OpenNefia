@@ -42,7 +42,7 @@ local function trim_traceback(err)
    return new
 end
 
-function LuaReplMode:submit(text, env, measure_perf)
+function LuaReplMode:submit(text, measure_perf)
    -- WARNING: massive backdoor waiting to happen. All someone has to
    -- do is load this API and arbitrary code execution is possible.
    local chunk, err = loadstring("return " .. text)
