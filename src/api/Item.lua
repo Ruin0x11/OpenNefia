@@ -138,8 +138,7 @@ function Item.create(id, x, y, params, where)
 
    MapObject.finalize(item, gen_params)
 
-   item:instantiate()
-   item:emit("base.on_generate", params)
+   item:emit("base.on_item_generate", params)
 
    -- >>>>>>>> shade2/item.hsp:728 	if initNum!0:iNum(ci)=initNum ..
    if type(params.amount) == "number" then

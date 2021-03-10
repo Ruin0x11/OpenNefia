@@ -69,7 +69,7 @@ local function set_item_image_on_generate(obj, params)
    end
 end
 
-Event.register("base.on_generate", "Set item image to FFHP override", set_item_image_on_generate)
+Event.register("base.on_item_generate", "Set item image to FFHP override", set_item_image_on_generate)
 
 local function set_item_images(map)
    for _, item in Item.iter_in_everything(map) do

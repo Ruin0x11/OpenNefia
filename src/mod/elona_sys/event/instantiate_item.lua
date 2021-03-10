@@ -1,12 +1,4 @@
-local IItem = require("api.item.IItem")
 local Event = require("api.Event")
-
-local function reload_item_events(obj)
-   if class.is_an(IItem, obj) then
-      obj:instantiate()
-   end
-end
-Event.register("base.on_hotload_object", "reload events for item", reload_item_events)
 
 -- This is where the callbacks on item prototypes
 -- like "on_use" and "on_drink" get used. It might

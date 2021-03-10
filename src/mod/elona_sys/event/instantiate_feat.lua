@@ -1,13 +1,5 @@
 local Event = require("api.Event")
 local Feat = require("api.Feat")
-local IFeat = require("api.feat.IFeat")
-
-local function reload_feat_events(obj)
-   if class.is_an(IFeat, obj) then
-      obj:instantiate()
-   end
-end
-Event.register("base.on_hotload_object", "reload events for feat", reload_feat_events)
 
 local actions = {
    "bash",                 -- on_bash,                 can_bash,                 elona_sys.on_feat_bash

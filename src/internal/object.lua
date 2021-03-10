@@ -162,6 +162,11 @@ function object.serialize(self)
    return ret
 end
 
+-- This is a hack so we can ensure everything that gets deserialized will have
+-- 'base.on_object_instantiated' called on it, no matter if it's in the map or
+-- inside a container in `save`.
+local _FOUND_OBJECTS = {}
+
 function object.deserialize(self, _type, _id)
    if self._type and self._id then
       _type = self._type
@@ -228,7 +233,20 @@ function object.deserialize(self, _type, _id)
       __inspect = object.__inspect
    }
 
-   return setmetatable(self, mt)
+   local obj = setmetatable(self, mt)
+   _FOUND_OBJECTS[#_FOUND_OBJECTS+1] = obj
+
+   return obj
+end
+
+function object.clear_last_deserialized_objects()
+   _FOUND_OBJECTS = {}
+end
+
+function object.get_last_deserialized_objects()
+   local result = _FOUND_OBJECTS
+   _FOUND_OBJECTS = {}
+   return result
 end
 
 function object:__tostring()

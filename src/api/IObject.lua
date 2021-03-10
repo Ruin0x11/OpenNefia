@@ -1,5 +1,6 @@
 --- @module IObject
 
+local IEventEmitter = require("api.IEventEmitter")
 local IModDataHolder = require("api.IModDataHolder")
 local IModdable = require("api.IModdable")
 local data = require("internal.data")
@@ -48,8 +49,10 @@ function IObject:finalize(build_params)
 end
 
 function IObject:instantiate()
-   self:emit("base.on_object_instantiated")
-   self:emit("base.on_object_prototype_changed", {old_id=nil})
+   if class.is_an(IEventEmitter, self) then
+      self:emit("base.on_object_instantiated")
+      self:emit("base.on_object_prototype_changed", {old_id=nil})
+   end
 end
 
 function IObject:clone_base(owned)
@@ -71,7 +74,9 @@ function IObject:change_prototype(new_id)
    local mt = getmetatable(self)
    local old_id = mt._id
    mt._id = new_id
-   self:emit("base.on_object_prototype_changed", {old_id=old_id})
+   if class.is_an(IEventEmitter, self) then
+      self:emit("base.on_object_prototype_changed", {old_id=old_id})
+   end
 end
 
 return IObject

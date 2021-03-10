@@ -7,12 +7,14 @@ local Map = require("api.Map")
 local Log = require("api.Log")
 local SaveFs = require("api.SaveFs")
 local Env = require("api.Env")
+local IEventEmitter = require("api.IEventEmitter")
 
 local fs = require("util.fs")
 local config = require("internal.config")
 local field = require("game.field")
 local save_store = require("internal.save_store")
 local field_logic_state = require("internal.global.field_logic_state")
+local object = require("internal.object")
 
 local Save = {}
 
@@ -74,7 +76,20 @@ function Save.load_game(save_id)
       error(err)
    end
 
+   object.clear_last_deserialized_objects()
+
    assert(save_store.load())
+
+   -- Instantiate every object that was loaded by the deserializer, to ensure
+   -- things like event handlers that get loaded from the prototype are
+   -- restored. It's hard to do this in the general case, because the objects
+   -- could be lying anywhere in the serialized data, like some container nested
+   -- inside a mod's `save` table that would not otherwise be touched by the
+   -- engine.
+   local deserialized = object.get_last_deserialized_objects()
+   for _, obj in ipairs(deserialized) do
+      obj:instantiate()
+   end
 
    local base = save_store.for_mod("base")
    local map_uid = base.map
@@ -83,7 +98,7 @@ function Save.load_game(save_id)
 
    Log.trace("load map: %d  player %d", map_uid, player_uid)
 
-   success, map = Map.load(map_uid)
+    success, map = Map.load(map_uid)
    if not success then
       error("Load error: " .. map)
    end
