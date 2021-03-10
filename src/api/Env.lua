@@ -15,7 +15,7 @@ function Env.commit_hash()
       return commit
    end
 
-   return nil
+   return "(unknown)"
 end
 
 --- Returns the current version of OpenNefia's API as an integer.

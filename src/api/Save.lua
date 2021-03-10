@@ -34,7 +34,7 @@ function Save.save_game(save_id)
       global.play_time = Env.update_play_time(global.play_time)
 
       global.api_version = Env.api_version()
-      global.commit = Env.commit_hash() or "unknown"
+      global.commit = Env.commit_hash()
 
       Log.info("Saving game '%s'.", save_id)
       Log.trace("save map: %d  player %d", global.map, global.player)
