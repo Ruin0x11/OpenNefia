@@ -463,10 +463,6 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
-
-      calc_armor_penalty = function(self, chara)
-         return 17 - chara:skill_level(self._id) / 5
-      end
    },
    {
       _id = "medium_armor",
@@ -476,10 +472,6 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
-
-      calc_armor_penalty = function(self, chara)
-         return 12 - chara:skill_level(self._id) / 5
-      end
    },
    {
       _id = "light_armor",
