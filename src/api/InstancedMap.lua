@@ -635,9 +635,8 @@ function InstancedMap:refresh_tile(x, y)
             tile_light.brightness = tile_light.brightness or 0
             tile_light.power = tile_light.power or 0
             tile_light.flicker = tile_light.flicker or 0
+            self._light[ind] = tile_light
          end
-
-         self._light[ind] = tile_light
       end
    end
    if solid == false then

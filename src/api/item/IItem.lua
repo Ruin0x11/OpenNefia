@@ -399,4 +399,10 @@ function IItem:has_tag(tag)
    return table.set(self.tags)[tag]
 end
 
+function IItem:remove_ownership()
+   local result = IMapObject.remove_ownership(self)
+   self:refresh_cell_on_map()
+   return result
+end
+
 return IItem
