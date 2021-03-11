@@ -581,16 +581,45 @@ local inv_dip_source = {
    icon = 6,
    window_title = "ui.inventory_command.dip_source",
    query_text = "ui.inv.title.dip_source",
+   on_shortcut = fail_in_world_map,
    filter = function(ctxt, item)
-      return item:has_category("elona.drink")
-         or item:calc("can_dip_source")
+      return item:calc("can_dip_into")
    end,
    on_select = function(ctxt, item, amount, rest)
-      Gui.mes("TODO")
-      return "player_turn_query" -- ElonaAction.dip(ctxt.chara, item)
+      local result, canceled = Input.query_inventory(ctxt.chara, "elona.inv_dip", {chara=ctxt.chara, params={dip_item=item}})
+      if result and not canceled then
+         return "player_turn_query"
+      end
+      return "inventory_cancel"
    end
 }
 data:add(inv_dip_source)
+
+local inv_dip = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_dip",
+   elona_id = 18,
+
+   sources = { "chara", "ground", "equipment" },
+   params = { dip_item = "table" },
+   icon = nil,
+   query_amount = false,
+   window_title = "ui.inventory_command.dip",
+   query_text = function(ctxt)
+      -- >>>>>>>> shade2/command.hsp:3473 		if invCtrl=18:valN=itemName(ciDip,1):else:if inv ...
+      return I18N.get("ui.inv.title.dip", ctxt.params.dip_item:build_name(1))
+      -- <<<<<<<< shade2/command.hsp:3473 		if invCtrl=18:valN=itemName(ciDip,1):else:if inv ..
+   end,
+   filter = function(ctxt, item)
+      local can_dip = true
+      can_dip = ctxt.params.dip_item:emit("elona_sys.calc_item_can_dip_into", {item=item}, can_dip)
+      return can_dip
+   end,
+   on_select = function(ctxt, item, amount, rest)
+      return ElonaAction.dip(ctxt.chara, ctxt.params.dip_item, item)
+   end
+}
+data:add(inv_dip)
 
 local inv_trade = {
    _type = "elona_sys.inventory_proto",
@@ -619,7 +648,7 @@ local inv_present = {
    elona_id = 20,
 
    sources = { "chara" },
-   params = { trade_item = "api.item.IItem" },
+   params = { trade_item = "table" },
    window_title = "ui.inventory_command.present",
 
    query_text = function(ctxt)

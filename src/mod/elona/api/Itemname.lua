@@ -87,6 +87,7 @@ local function item_name_sub(s, item, jp)
    if _id == "elona.kitty_bank" then
       s = s .. I18N.get("item.info." .. _id .. ".amount", "item.info." .. _id .. ".names._" .. item.params.bank_gold_increment)
    elseif _id == "elona.bait" then
+      s = s .. I18N.space() .. I18N.get("item.info." .. _id .. ".title", "bait._." .. item.params.bait_type .. ".name")
    elseif _id == "elona.ancient_book" then
       if jp and item.params.ancient_book_is_decoded then
          s = s .. "解読済みの"
@@ -342,8 +343,8 @@ function itemname.jp(item, amount, no_article)
 
    -- >>>>>>>> shade2/item_func.hsp:640 	if iId(id)=idFishingPole{ ..
    if _id == "elona.fishing_pole" then
-      if item.charges > 0 then
-         s = s .. I18N.get("item.info." .. _id .. ".remaining", "item.info.elona.bait.rank." .. item.params.fishing_pole_bait, item.charges)
+      if item.params.bait_amount > 0 then
+         s = s .. I18N.get("item.info." .. _id .. ".remaining", "bait._." .. item.params.bait_type .. ".name", item.params.bait_amount)
       end
    elseif _id == "elona.monster_ball" then
       local chara_id = item.params.monster_ball_captured_chara_id
@@ -606,8 +607,8 @@ function itemname.en(item, amount, no_article)
 
    -- >>>>>>>> shade2/item_func.hsp:640 	if iId(id)=idFishingPole{ ..
    if _id == "elona.fishing_pole" then
-      if item.has_charge and item.charges then
-         s = s .. I18N.get("item.info." .. _id .. ".remaining", "item.info.elona.bait.rank." .. item.params.fishing_pole_bait, item.charges)
+      if item.params.bait_amount > 0 then
+         s = s .. I18N.get("item.info." .. _id .. ".remaining", "bait._." .. item.params.bait_type .. ".name", item.params.bait_amount)
       end
    elseif _id == "elona.monster_ball" then
       local chara_id = item.params.monster_ball_captured_chara_id

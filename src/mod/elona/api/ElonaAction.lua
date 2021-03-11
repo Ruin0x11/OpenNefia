@@ -467,9 +467,9 @@ function ElonaAction.open(chara, item)
    return result
 end
 
-function ElonaAction.dip(chara, item)
-   Gui.mes("common.nothing_happens")
-   return "player_turn_query"
+function ElonaAction.dip(chara, dip_item, target_item)
+   local result = dip_item:emit("elona_sys.on_item_dip_into", {chara=chara, target_item=target_item}, "turn_end")
+   return result
 end
 
 function ElonaAction.throw(chara, item, tx, ty)

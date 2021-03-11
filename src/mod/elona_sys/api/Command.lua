@@ -138,6 +138,14 @@ function Command.drop(player)
    return result.result
 end
 
+function Command.dip(player)
+   local result, canceled = Input.query_inventory(player, "elona.inv_dip_source", nil, "elona.main")
+   if canceled then
+      return nil, canceled
+   end
+   return result.result
+end
+
 function Command.wear(player)
    return EquipmentMenu:new(player):query()
 end

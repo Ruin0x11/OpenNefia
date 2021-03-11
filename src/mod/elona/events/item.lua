@@ -44,6 +44,14 @@ end
 
 Event.register("base.on_item_instantiated", "Make potion throwable", make_potion_throwable)
 
+local function make_potion_dip_sourceable(item)
+   if item:has_category("elona.drink") then
+      item.can_dip_source = true
+   end
+end
+
+Event.register("base.on_item_instantiated", "Make potion dip sourceable", make_potion_dip_sourceable)
+
 local function on_potion_thrown(item, params, result)
    if result or not item:has_category("elona.drink") or item.proto.on_throw then
       return result

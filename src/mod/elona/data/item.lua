@@ -7254,7 +7254,7 @@ local item =
          category = 59000,
          coefficient = 100,
 
-         charges = 0,
+         params = { bait_type = "elona.water_flea", bait_amount = 0 },
 
          elona_function = 16,
          param1 = 60,
@@ -11540,6 +11540,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "bottle",
 
+         prevent_dip = true,
          on_drink = function(item, params)
             return Magic.drink_potion("elona.effect_water", 100, item, params)
          end,
@@ -13817,41 +13818,67 @@ local item =
       {
          _id = "bait",
          elona_id = 617,
-         image = "elona.item_bait_rank_0",
+         image = "elona.item_bait_water_flea",
          value = 1000,
          weight = 250,
          fltselect = 1,
          category = 64000,
          coefficient = 100,
 
-         on_calc_dip_targets = function(self)
-            return {}
+         on_dip_into = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:1600 	if iId(ciDip)=idBite{	 ...
+            local target_item = params.target_item
+            target_item = target_item:separate()
+            self:remove(1)
+            Gui.play_sound("base.equip1")
+            Gui.mes("action.dip.result.bait_attachment", target_item:build_name(), self:build_name(1))
+
+            if target_item.params.bait_type == self.params.bait_type then
+               target_item.params.bait_amount = target_item.params.bait_amount + Rand.rnd(10) + 15
+            else
+               target_item.params.bait_amount = Rand.rnd(10) + 15
+               target_item.params.bait_type = self.params.bait_type
+            end
+
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:1605 		} ..
          end,
 
-         params = { bait_rank = 0 },
+         params = { bait_type = "elona.water_flea" },
 
-         on_init_params = function(self, params)
+         on_init_params = function(self)
             -- >>>>>>>> shade2/item.hsp:638:DONE 	if iId(ci)=idBite{ ..
-            self.params.bait_rank = Rand.rnd(6)
-
-            local BAIT_IMAGES = {
-               "elona.item_bait_rank_0",
-               "elona.item_bait_rank_1",
-               "elona.item_bait_rank_2",
-               "elona.item_bait_rank_3",
-               "elona.item_bait_rank_4",
-               "elona.item_bait_rank_5",
+            self.params.bait_type = Rand.choice {
+               "elona.water_flea",
+               "elona.grasshopper",
+               "elona.ladybug",
+               "elona.dragonfly",
+               "elona.locust",
+               "elona.beetle",
             }
-            self.image = BAIT_IMAGES[self.params.bait_rank+1]
 
-            self.value = self.params.bait_rank * self.params.bait_rank * 500 + 200
+            local proto = data["elona.bait"]:ensure(self.params.bait_type)
+            self.image = proto.image or self.image
+
+            self.value = proto.value or proto.rank * proto.rank * 500 + 200
             -- <<<<<<<< shade2/item.hsp:642 		} ..
          end,
 
          categories = {
             "elona.no_generate",
             "elona.junk"
-         }
+         },
+
+         events = {
+            {
+               id = "elona_sys.calc_item_can_dip_into",
+               name = "Bait dipping",
+
+               callback = function(self, params)
+                  return params.item._id == "elona.fishing_pole"
+               end
+            },
+         },
       },
       {
          _id = "fish_a",
