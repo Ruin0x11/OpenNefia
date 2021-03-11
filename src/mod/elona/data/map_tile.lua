@@ -1359,19 +1359,22 @@ local tiles = {
       _id = "dryground",
       elona_id = 29,
       elona_atlas = 1,
-      kind = TileRole.Dryground
+      kind = TileRole.Dryground,
+      show_name = true
    },
    {
       _id = "field_1",
       elona_id = 30,
       elona_atlas = 1,
-      kind = TileRole.Crop
+      kind = TileRole.Crop,
+      show_name = true
    },
    {
       _id = "field_2",
       elona_id = 31,
       elona_atlas = 1,
-      kind = TileRole.Crop
+      kind = TileRole.Crop,
+      show_name = true
    },
    {
       _id = "dark_dirt_1",

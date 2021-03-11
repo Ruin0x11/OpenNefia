@@ -62,6 +62,8 @@ function asset_drawable:init(proto)
             q = q + 1
          end
       end
+   else
+      self.quads[1] = love.graphics.newQuad(0, 0, iw, ih, iw, ih)
    end
    self.count_x = count_x
    self.count_y = count_y

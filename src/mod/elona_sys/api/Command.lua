@@ -31,14 +31,14 @@ function Command.move(player, x, y)
       x, y = Pos.add_direction(x, player.x, player.y)
    end
 
+   player.direction = Pos.pack_direction(Pos.direction_in(player.x, player.y, x, y))
+
    -- Try to modify the final position or prevent movement. This is caused by
    -- status effects like confusion, or being overweight, respectively.
    local next_pos = player:emit("elona_sys.before_player_move", {}, {x=x,y=y,result=nil})
    if next_pos.result then
       return next_pos.result or "player_turn_query"
    end
-
-   player.direction = Pos.pack_direction(Pos.direction_in(player.x, player.y, next_pos.x, next_pos.y))
 
    -- At this point the next position is final.
 

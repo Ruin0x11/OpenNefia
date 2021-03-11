@@ -199,15 +199,9 @@ local item = {
       }
     },
     name = "bait",
-
-    rank = {
-      _0 = "water flea",
-      _1 = "grasshopper",
-      _2 = "ladybug",
-      _3 = "dragonfly",
-      _4 = "locust",
-      _5 = "beetle"
-    },
+    title = function(_1)
+       return ("<%s>"):format(_1)
+    end,
   },
   banded_mail = {
     desc = {

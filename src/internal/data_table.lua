@@ -27,7 +27,7 @@ local function script_path()
    return str, info.linedefined
 end
 
-function data_table:error(mes, ...)
+function data_table:error(mes, level, ...)
    local file, line = script_path()
    mes = string.format(mes, ...)
    table.insert(self.errors,
@@ -38,7 +38,7 @@ function data_table:error(mes, ...)
                    message = mes,
                 }
    )
-   error("data error: " .. mes)
+   error("data error: " .. mes, level)
 end
 
 function data_table:init()
@@ -309,7 +309,7 @@ function data_table:add(dat)
    end
 
    if not is_valid_ident(_id) then
-      self:error("'%s' is not a valid identifier (must consist of lowercase letters, numbers and underscores only, cannot start with a number)", _id)
+      self:error("'%s' is not a valid identifier (must consist of lowercase letters, numbers and underscores only, cannot start with a number)", 3, _id)
       return nil
    end
 

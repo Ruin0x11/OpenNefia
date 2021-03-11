@@ -85,6 +85,10 @@ function theme_holder:__index(namespace)
       return load_asset(namespace)
    end
 
+   if namespace:find("%.") then
+      return nil
+   end
+
    if holder_cache[namespace] then
       return holder_cache[namespace]
    end

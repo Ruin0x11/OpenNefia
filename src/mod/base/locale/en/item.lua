@@ -41,10 +41,6 @@ return {
       harvest_grown = function(weight)
          return (" grown %s"):format(weight)
       end,
-      chip = {
-         dryrock = "a dryrock",
-         field = "a field"
-      },
       coldproof_blanket = {
          protects_item = function(_1, _2)
             return ("%s protects %s%s stuff from cold.")

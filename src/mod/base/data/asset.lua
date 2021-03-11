@@ -1204,6 +1204,61 @@ local assets = {
    },
 
    {
+      _id = "effect_map_ripple",
+      source = "graphic/interface.bmp",
+      x = 144,
+      y = 624,
+      width = 32 * 4,
+      height = 32,
+      count_x = 4
+   },
+   {
+      _id = "effect_map_foot",
+      source = "graphic/interface.bmp",
+      x = 272,
+      y = 624,
+      width = 32 * 1,
+      height = 32,
+      count_x = 1
+   },
+   {
+      _id = "effect_map_snow_1",
+      source = "graphic/interface.bmp",
+      x = 304,
+      y = 624,
+      width = 32 * 1,
+      height = 32,
+      count_x = 1
+   },
+   {
+      _id = "effect_map_snow_2",
+      source = "graphic/interface.bmp",
+      x = 304 + 32,
+      y = 624,
+      width = 32 * 1,
+      height = 32,
+      count_x = 1
+   },
+   {
+      _id = "effect_map_splash",
+      source = "graphic/interface.bmp",
+      x = 368,
+      y = 624,
+      width = 32 * 3,
+      height = 32,
+      count_x = 3
+   },
+   {
+      _id = "effect_map_splash_2",
+      source = "graphic/interface.bmp",
+      x = 464,
+      y = 624,
+      width = 32 * 3,
+      height = 32,
+      count_x = 3
+   },
+
+   {
       _id = "light_port_light",
       source = "graphic/interface.bmp",
       x = 192,

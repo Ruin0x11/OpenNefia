@@ -65,6 +65,8 @@ end
 
 local function proc_moved_onto_water(chara, params)
    -- >>>>>>>> shade2/action.hsp:639  	if tRole(p)=tWater{ ...
+   chara.y_offset = nil
+
    local map = chara:current_map()
    if not map then
       return
@@ -72,13 +74,20 @@ local function proc_moved_onto_water(chara, params)
 
    local tile = map:tile(chara.x, chara.y)
    if tile.kind == Enum.TileRole.Water then
+      -- >>>>>>>> shade2/module.hsp:826 					gmode 2,32,48:pos px+24,py+8:grotate selPcc,a ...
+      chara.y_offset = 8
+      -- <<<<<<<< shade2/module.hsp:826 					gmode 2,32,48:pos px+24,py+8:grotate selPcc,a ..
+
       if tile.kind2 == Enum.TileRole.MountainWater then
          Effect.heal_insanity(chara, 1)
       end
-      -- TODO efmap
+
+      Gui.add_effect_map("base.effect_map_ripple", chara.x, chara.y)
+
       if not chara:has_effect("elona.wet") then
          Effect.get_wet(chara, 20)
       end
+
       -- >>>>>>>> shade2/action.hsp:746 			if p=tWater:snd seWater ...
       Gui.play_sound("base.water2", chara.x, chara.y)
       -- <<<<<<<< shade2/action.hsp:746 			if p=tWater:snd seWater ..

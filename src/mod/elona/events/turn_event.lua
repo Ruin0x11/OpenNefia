@@ -81,18 +81,39 @@ Event.register("elona_sys.before_player_move", "Player scroll speed", set_player
 local footstep = 0
 local footsteps = {"base.foot1a", "base.foot1b"}
 local snow_footsteps = {"base.foot2a", "base.foot2b", "base.foot2c"}
+local snow_efmaps = { "base.effect_map_snow_1", "base.effect_map_snow_2" }
+
+local function direction_to_angle(dir)
+   if     dir == "North"     then return 0
+   elseif dir == "Northeast" then return 45
+   elseif dir == "East"      then return 90
+   elseif dir == "Southeast" then return 135
+   elseif dir == "South"     then return 180
+   elseif dir == "Southwest" then return 225
+   elseif dir == "West"      then return 270
+   elseif dir == "Northwest" then return 315
+   else                           return 360
+   end
+end
 
 local function leave_footsteps(chara, _, result)
+   -- >>>>>>>> shade2/action.hsp:747 			if p=tSnow :addEfMap cX(cc),cY(cc),mefSnow,10,d ...
    local map = chara:current_map()
    if (chara.x ~= result.x or chara.y ~= result.y)
       and Map.can_access(result.x, result.y, map)
    then
-      local tile = map:tile(chara.x, chara.y)
+      local angle = direction_to_angle(chara.direction)
+      local tile = map:tile(result.x, result.y)
+      if tile.show_name then
+         Gui.mes("action.move.walk_into", "map_tile._." .. tile._id .. ".name")
+      end
       if tile.kind == Enum.TileRole.Snow then
+         Gui.add_effect_map(Rand.choice(snow_efmaps), result.x, result.y, 10, angle, "fade")
          Gui.play_sound(snow_footsteps[footstep%2+1])
          footstep = footstep + Rand.rnd(2)
       else
          if map:has_type("world_map") then
+            Gui.add_effect_map("base.effect_map_foot", result.x, result.y, 10, angle, "fade")
             Gui.play_sound(footsteps[footstep%2+1])
             footstep = footstep + 1
          end
@@ -100,6 +121,7 @@ local function leave_footsteps(chara, _, result)
    end
 
    return result
+   -- <<<<<<<< shade2/action.hsp:753 			} ..
 end
 Event.register("elona_sys.before_player_move", "Leave footsteps", leave_footsteps)
 
