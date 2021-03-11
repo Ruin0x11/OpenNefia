@@ -237,7 +237,7 @@ data:add {
       item = item:separate()
       item.params.bait_amount = item.params.bait_amount - 1
 
-      source:start_activity("elona.fishing", {x=x,y=y,fishing_pole=item})
+      source:start_activity("elona.fishing", {x=x,y=y,fishing_pole=item,no_animation=config.elona.skip_fishing_animation})
 
       return true
       -- <<<<<<<< shade2/proc.hsp:2309 	swbreak ..

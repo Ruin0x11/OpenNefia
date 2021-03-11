@@ -12,6 +12,7 @@ data:add_multi(
    {
       { _id = "hide_shop_results", type = "enum", choices = {"none", "could_not_sell", "all"}, default = "none" },
       { _id = "hide_autoidentify", type = "enum", choices = {"none", "quality", "all"}, default = "none" },
+      { _id = "skip_fishing_animation", type = "boolean", default = false },
 
       { _id = "debug_living_weapon", type = "boolean", default = false },
       { _id = "debug_always_drop_figure_card", type = "boolean", default = false },

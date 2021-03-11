@@ -126,7 +126,7 @@ local function item_name_sub(s, item, jp)
       if is_cooked_dish then
          skip = true
          if _id == "elona.fish" then
-            local fish_name = "??? fish" -- TODO fishing
+            local fish_name = "fish._." .. item.params.fish_id .. ".name"
             s = s .. Hunger.food_name(item.params.food_type, fish_name, item.params.food_quality)
          else
             local original_name = "item.info." .. _id .. ".name"
@@ -143,8 +143,7 @@ local function item_name_sub(s, item, jp)
    end
 
    if _id == "elona.fish" or _id == "elona.fish_junk" then
-      local fish_name = "??? fish" -- TODO fishing
-      s = s .. fish_name
+      s = s .. I18N.get("fish._." .. item.params.fish_id .. ".name")
    end
 
    if item.params.chara_id and item.own_state ~= Enum.OwnState.Quest then

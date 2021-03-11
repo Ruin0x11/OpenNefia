@@ -50,6 +50,7 @@ function Fishing.create_fish(fish_id, where, x, y)
    local fish = data["elona.fish"]:ensure(fish_id)
    local item = Item.create(fish.item_id, x, y, {}, where)
    if item then
+      item.params.fish_id = fish_id
       item.value = fish.value
       item.weight = fish.weight
    end

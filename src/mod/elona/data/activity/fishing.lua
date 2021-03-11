@@ -140,7 +140,7 @@ data:add {
    _id = "fishing",
    elona_id = 7,
 
-   params = { x = "number", y = "number", fishing_pole = "table" },
+   params = { x = "number", y = "number", fishing_pole = "table", no_animation = "boolean" },
    default_turns = 100,
 
    animation_wait = 40,
@@ -190,18 +190,20 @@ data:add {
 
             if p.state == 1 then
                if Rand.one_in(5) then
-                  local cb = function()
-                     local dt = 0
-                     for _ = 1, 4 + Rand.rnd(4) do
-                        p.animation = 1
-                        p.animation_frame = 3 + Rand.rnd(3)
-                        Gui.add_effect_map("base.effect_map_splash", p.x, p.y, 2)
-                        _, _, _, dt = Draw.yield(config.base.general_wait * 2)
-                        Gui.step_effect_map()
-                        Gui.update_screen(dt)
+                  if not p.no_animation then
+                     local cb = function()
+                        local dt = 0
+                        for _ = 1, 4 + Rand.rnd(4) do
+                           p.animation = 1
+                           p.animation_frame = 3 + Rand.rnd(3)
+                           Gui.add_effect_map("base.effect_map_splash", p.x, p.y, 2)
+                           _, _, _, dt = Draw.yield(config.base.general_wait * 2)
+                           Gui.step_effect_map()
+                           Gui.update_screen(dt)
+                        end
                      end
+                     Gui.start_draw_callback(cb)
                   end
-                  Gui.start_draw_callback(cb)
 
                   if Rand.one_in(3) then
                      p.state = 2
@@ -217,15 +219,17 @@ data:add {
                Gui.play_sound("base.water2", p.x, p.y)
                params.chara:set_emotion_icon("elona.notice", 2)
 
-               local cb = function()
-                  local dt = 0
-                  for _ = 1, 8 + Rand.rnd(10) do
-                     _, _, _, dt = Draw.yield(config.base.general_wait * 2)
-                     Gui.update_screen(dt)
-                     Gui.step_effect_map()
+               if not p.no_animation then
+                  local cb = function()
+                     local dt = 0
+                     for _ = 1, 8 + Rand.rnd(10) do
+                        _, _, _, dt = Draw.yield(config.base.general_wait * 2)
+                        Gui.update_screen(dt)
+                        Gui.step_effect_map()
+                     end
                   end
+                  Gui.start_draw_callback(cb)
                end
-               Gui.start_draw_callback(cb)
 
                if not Rand.one_in(10) then
                   p.state = 3
@@ -237,31 +241,32 @@ data:add {
             if p.state == 3 then
                p.animation = 3
 
-               local cb = function()
-                  local _
-                  local dt = 0
-                  local frames_passed = 0
-                  for i = 1, 28 + Rand.rnd(15) do
-                     if (i-1) % 7 == 0 then
-                        Gui.play_sound("base.fish_fight", p.x, p.y)
-                     end
-                     p.animation_frame = i - 1
+               if not p.no_animation then
+                  local cb = function()
+                     local _
+                     local dt = 0
+                     for i = 1, 28 + Rand.rnd(15) do
+                        if (i-1) % 7 == 0 then
+                           Gui.play_sound("base.fish_fight", p.x, p.y)
+                        end
+                        p.animation_frame = i - 1
 
-                     -- >>>>>>>> shade2/module.hsp:825 					if fishAnime@=3:if fishAnime@(1)¥8<4:py-=(fis ...
-                     if p.animation_frame % 8 < 4 then
-                        params.chara.y_offset = p.chara_y_offset - (p.animation_frame % 4) ^ 2
-                     else
-                        params.chara.y_offset = p.chara_y_offset + ((p.animation_frame % 4) ^ 2 - 9)
-                     end
-                     -- <<<<<<<< shade2/module.hsp:825 					if fishAnime@=3:if fishAnime@(1)¥8<4:py-=(fis ..
+                        -- >>>>>>>> shade2/module.hsp:825 					if fishAnime@=3:if fishAnime@(1)¥8<4:py-=(fis ...
+                        if p.animation_frame % 8 < 4 then
+                           params.chara.y_offset = p.chara_y_offset - (p.animation_frame % 4) ^ 2
+                        else
+                           params.chara.y_offset = p.chara_y_offset + ((p.animation_frame % 4) ^ 2 - 9)
+                        end
+                        -- <<<<<<<< shade2/module.hsp:825 					if fishAnime@=3:if fishAnime@(1)¥8<4:py-=(fis ..
 
-                     Gui.add_effect_map("base.effect_map_splash_2", p.x, p.y, 2)
-                     _, _, frames_passed, dt = Draw.yield(config.base.general_wait * 2)
-                     Gui.update_screen(dt)
-                     Gui.step_effect_map()
+                        Gui.add_effect_map("base.effect_map_splash_2", p.x, p.y, 2)
+                        _, _, _, dt = Draw.yield(config.base.general_wait * 2)
+                        Gui.update_screen(dt)
+                        Gui.step_effect_map()
+                     end
                   end
+                  Gui.start_draw_callback(cb)
                end
-               Gui.start_draw_callback(cb)
 
                local difficulty = data["elona.fish"]:ensure(p.fish).power
                if difficulty >= Rand.rnd(params.chara:skill_level("elona.fishing") + 1) then
@@ -275,20 +280,22 @@ data:add {
                p.animation_frame = 0
                Gui.play_sound("base.fish_get", params.chara.x, params.chara.y)
 
-               local cb = function()
-                  local _
-                  local dt = 0
-                  for i = 1, 21 do
-                     p.animation_frame = i - 1
-                     if i == 2 then
-                        Gui.add_effect_map("base.effect_map_ripple", p.x, p.y, 3)
+               if not p.no_animation then
+                  local cb = function()
+                     local _
+                     local dt = 0
+                     for i = 1, 21 do
+                        p.animation_frame = i - 1
+                        if i == 2 then
+                           Gui.add_effect_map("base.effect_map_ripple", p.x, p.y, 3)
+                        end
+                        _, _, _, dt = Draw.yield(config.base.general_wait * 2)
+                        Gui.update_screen(dt)
+                        Gui.step_effect_map()
                      end
-                     _, _, _, dt = Draw.yield(config.base.general_wait * 2)
-                     Gui.update_screen(dt)
-                     Gui.step_effect_map()
                   end
+                  Gui.start_draw_callback(cb)
                end
-               Gui.start_draw_callback(cb)
 
                Gui.play_sound(Rand.choice({"base.get1", "base.get2"}))
                get_fish(params.chara, p.fishing_pole)

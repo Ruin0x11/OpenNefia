@@ -1,12 +1,17 @@
 return {
    map_tile = {
-      elona = {
-         dryrock = {
-            name = "a dryrock",
+      _ = {
+         elona = {
+            dryground = {
+               name = "a dryrock",
+            },
+            field_1 = {
+               name = "a field"
+            },
+            field_2 = {
+               name = "a field"
+            }
          },
-         field = {
-            name = "a field"
-         }
-      },
+      }
    }
 }
