@@ -13885,7 +13885,7 @@ local item =
          },
       },
       {
-         _id = "fish_a",
+         _id = "fish",
          elona_id = 618,
          image = "elona.item_fish",
          value = 1200,
@@ -13897,7 +13897,7 @@ local item =
          rarity = 300000,
          coefficient = 100,
 
-         params = { food_type = "elona.fish" },
+         params = { food_type = "elona.fish", fish_id = "elona.bug" },
          spoilage_hours = 4,
 
          gods = { "elona.ehekatl" },
@@ -13910,7 +13910,7 @@ local item =
          }
       },
       {
-         _id = "fish_b",
+         _id = "fish_junk",
          elona_id = 619,
          image = "elona.item_fish",
          value = 1200,

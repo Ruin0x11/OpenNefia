@@ -1349,6 +1349,41 @@ local assets = {
       width = 48,
       height = 48
    },
+
+   {
+      _id = "fishing_pole",
+      source = "graphic/fishing.bmp",
+      x = 0,
+      y = 0,
+      width = 48,
+      height = 48,
+   },
+   {
+      _id = "fishing_line",
+      source = "graphic/fishing.bmp",
+      x = 48,
+      y = 0,
+      width = 48,
+      height = 48,
+   },
+   {
+      _id = "fishing_bob",
+      source = "graphic/fishing.bmp",
+      x = 116,
+      y = 18,
+      width = 14,
+      height = 14,
+   },
+   {
+      _id = "fishing_fish",
+      source = "graphic/fishing.bmp",
+      x = 144,
+      y = 0,
+      width = 48 * 2,
+      height = 48,
+      count_x = 2
+   },
+
    {
       _id = "attribute_font",
       type = "font",

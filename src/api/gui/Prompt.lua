@@ -37,7 +37,7 @@ local KEYS = "abcdefghijklmnopqr"
 function Prompt.make_list(choices)
    local map = function(index, choice)
       if type(choice) ~= "table" then
-         return { index = index, text = tostring(choice), key = KEYS:sub(index, index), data = nil }
+         return { index = index, text = I18N.get_optional(choice) or tostring(choice), key = KEYS:sub(index, index), data = nil }
       end
 
       return {

@@ -20,6 +20,7 @@ end
 
 function emotion_icon_layer:relayout()
    self.asset = UiTheme.load().base.emotion_icons:make_instance()
+   self.batch = self.asset:make_batch(self.parts)
 end
 
 function emotion_icon_layer:reset()

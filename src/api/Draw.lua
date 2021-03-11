@@ -250,7 +250,7 @@ function Draw.image_region(image, quad, x, y, width, height, color, centered, ro
    local ox, oy
    if centered then
       ox = (width or qw) / 2
-      oy = (width or qh) / 2
+      oy = (height or qh) / 2
    end
    return love.graphics.draw(image, quad, x, y, math.rad(rotation or 0), sx, sy, ox, oy)
 end

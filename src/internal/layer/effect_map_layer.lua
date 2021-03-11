@@ -52,13 +52,11 @@ function effect_map_layer:add(asset_id, sx, sy, max_frames, rotation, kind)
       max_frames = max_frames,
       rotation = rotation,
       kind = kind,
-      alpha = 255
+      alpha = 150
    }
 end
 
-function effect_map_layer:update(dt, screen_updated)
-   local frames = dt * config.base.screen_refresh
-
+function effect_map_layer:step_all(frames)
    local size = #self.efmap
    local i = 1
    while i <= size do
@@ -86,6 +84,12 @@ function effect_map_layer:update(dt, screen_updated)
          i = i + 1
       end
    end
+end
+
+function effect_map_layer:update(dt, screen_updated)
+   local frames = dt / (config.base.screen_refresh * (16.66 / 1000))
+
+   self:step_all(frames)
 end
 
 function effect_map_layer:draw(draw_x, draw_y, offx, offy)

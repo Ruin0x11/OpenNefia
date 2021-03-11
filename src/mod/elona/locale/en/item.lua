@@ -1699,10 +1699,10 @@ local item = {
     },
     name = "fireproof liquid"
   },
-  fish_a = {
+  fish = {
     name = ""
   },
-  fish_b = {
+  fish_junk = {
     name = ""
   },
   fishing_pole = {

@@ -3050,10 +3050,10 @@ local item = {
     },
     name = "耐熱コーティング液"
   },
-  fish_a = {
+  fish = {
     name = ""
   },
-  fish_b = {
+  fish_junk = {
     name = ""
   },
   fishing_pole = {

@@ -125,7 +125,7 @@ local function item_name_sub(s, item, jp)
          item:has_category("elona.food") and item.params.food_type and (item.params.food_quality or 0) > 0
       if is_cooked_dish then
          skip = true
-         if _id == "elona.fish_a" then
+         if _id == "elona.fish" then
             local fish_name = "??? fish" -- TODO fishing
             s = s .. Hunger.food_name(item.params.food_type, fish_name, item.params.food_quality)
          else
@@ -142,7 +142,7 @@ local function item_name_sub(s, item, jp)
       end
    end
 
-   if _id == "elona.fish_a" or _id == "elona.fish_b" then
+   if _id == "elona.fish" or _id == "elona.fish_junk" then
       local fish_name = "??? fish" -- TODO fishing
       s = s .. fish_name
    end
@@ -588,7 +588,7 @@ function itemname.en(item, amount, no_article)
       end
    end
 
-   if s2 == "" and item._id ~= "elona.fish_a" and amount > 1 then
+   if s2 == "" and item._id ~= "elona.fish" and amount > 1 then
       s = s .. "s"
    end
 

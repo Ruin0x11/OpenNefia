@@ -225,13 +225,14 @@ data:add {
          return false
       end
 
-      source.direction = Pos.direction_in(source.x, source.y, x, y)
-      Gui.add_effect_map("base.effect_map_ripple", x, y, 3)
+      source.direction = Pos.pack_direction(Pos.direction_in(source.x, source.y, x, y))
 
       if source:is_player() and not Effect.do_stamina_check(source, self.cost) then
          Gui.mes("magic.common.too_exhausted")
          return true
       end
+
+      Gui.add_effect_map("base.effect_map_ripple", x, y, 3)
 
       item = item:separate()
       item.params.bait_amount = item.params.bait_amount - 1

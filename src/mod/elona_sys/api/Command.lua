@@ -253,6 +253,7 @@ function Command.quit_game()
    if res.index == 1 then
       local can_save = true -- TODO showroom
       if can_save then
+         config.base.debug_load_after_save = false
          Save.save_game()
          Gui.mes("action.exit.saved")
          Gui.mes("action.exit.you_close_your_eyes")

@@ -638,7 +638,7 @@ data:add {
             return false
          end
 
-         if item._id == "elona.fish_a" then
+         if item._id == "elona.fish" then
             return true
          end
       end

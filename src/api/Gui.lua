@@ -482,6 +482,15 @@ function Gui.add_effect_map(asset_id, tx, ty, max_frames, rotation, kind)
    layer:add(asset_id, sx + tw / 2, sy + th / 2, max_frames, rotation, kind)
 end
 
+function Gui.step_effect_map(frames)
+   frames = frames or 1
+   local layer = field.renderer:find_layer("internal.layer.effect_map_layer")
+   if layer == nil then
+      return
+   end
+   layer:step_all(frames * (16.66 / 1000))
+end
+
 --- Plays a sound. You can optionally provide a position, so that if
 --- positional audio is enabled in the settings then it will be panned
 --- according to the relative position of the player.

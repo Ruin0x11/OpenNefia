@@ -161,7 +161,7 @@ function TextPrompt:draw()
 end
 
 function TextPrompt:update(dt)
-   self.frames = self.frames + dt * config.base.screen_refresh
+   self.frames = self.frames + (dt / (config.base.screen_refresh * (16.66 / 1000))) * 4
    self.caret_alpha = math.sin(self.frames) * 255 * 2 -- TODO
 
    if self.finished then

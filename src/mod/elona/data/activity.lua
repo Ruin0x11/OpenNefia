@@ -273,96 +273,6 @@ local function proc_world_map_travel(chara, params, result)
 end
 Event.register("base.before_chara_moved", "Proc world map travel", proc_world_map_travel, { priority = 150000 })
 
-data:add {
-   _type = "base.activity",
-   _id = "fishing",
-   elona_id = 7,
-
-   params = { x = "number", y = "number", fishing_pole = "table" },
-   default_turns = 100,
-
-   animation_wait = 40,
-   auto_turn_anim = "base.fishing",
-
-   on_interrupt = "prompt",
-   events = {
-      {
-         id = "base.on_activity_start",
-         name = "start",
-
-         callback = function(self, params)
-            Gui.mes("start fishing")
-         end
-      },
-      {
-         id = "base.on_activity_pass_turns",
-         name = "pass turns",
-
-         callback = function(self, params)
-            if Rand.one_in(5) then
-               self.params.state = 1
-               self.params.fish = "the fish"
-            end
-
-            if self.params.state == 1 then
-               if Rand.one_in(5) then
-                  Gui.mes("fishwait")
-                  if Rand.one_in(3) then
-                     self.params.state = 2
-                  end
-                  if Rand.one_in(6) then
-                     self.params.state = 0
-                  end
-                  self.params.animation = 0
-               end
-            end
-            if self.params.state == 2 then
-               self.params.animation = 2
-               Gui.play_sound("base.water2")
-               Gui.mes("fishwait2")
-               if Rand.one_in(10) then
-                  self.params.state = 3
-               else
-                  self.params.state = 0
-               end
-               self.params.animation = 0
-            end
-            if self.params.state == 3 then
-               self.params.animation = 3
-               Gui.mes("fishwait3")
-               local difficulty = 10
-               if difficulty >= Rand.rnd(params.chara:skill_level("elona.fishing") + 1) then
-                  self.params.state = 0
-               else
-                  self.params.state = 4
-               end
-            end
-            if self.params.state == 4 then
-               Gui.play_sound("base.fish_get")
-               Gui.mes("fishwait5")
-               Gui.play_sound(Rand.choice({"base.get1", "base.get2"}))
-               Skill.gain_skill_exp(params.chara, "elona.fishing", 100)
-               params.chara:remove_activity()
-               return "turn_end"
-            end
-            if Rand.one_in(10) then
-               params.chara:damage_sp(1)
-            end
-
-            return "turn_end"
-         end
-      },
-      {
-         id = "base.on_activity_finish",
-         name = "finish",
-
-         callback = function(self, params)
-            Gui.mes("fishing failed")
-         end
-      }
-   }
-}
-
 local function calc_dig_success(map, params, result)
    local chara = params.chara
    local x = params.dig_x
@@ -1762,4 +1672,5 @@ data:add {
    }
 }
 
+require("mod.elona.data.activity.fishing")
 require("mod.elona.data.activity.searching")
