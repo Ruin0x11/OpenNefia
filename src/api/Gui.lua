@@ -104,6 +104,10 @@ function Gui.wait_for_draw_callbacks()
       return
    end
 
+   if field:has_draw_callbacks() then
+      Gui.update_screen()
+   end
+
    field:wait_for_draw_callbacks()
 end
 

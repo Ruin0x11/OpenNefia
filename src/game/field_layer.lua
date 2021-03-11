@@ -218,6 +218,10 @@ function field_layer:wait_for_draw_callbacks()
    self.draw_callbacks:wait()
 end
 
+function field_layer:has_draw_callbacks()
+   return self.draw_callbacks:has_more()
+end
+
 function field_layer:update_draw_callbacks(dt)
    return self.draw_callbacks:update(dt)
 end
