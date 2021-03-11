@@ -102,6 +102,7 @@ function ICharaActivity:start_activity(id, params, turns)
       if not ok then
          Log.error("Error starting activity: %s", result)
       end
+      return
    end
 
    local auto_turn_anim_id = self.activity:get_auto_turn_anim() or nil

@@ -6,6 +6,8 @@ local Activity = {}
 function Activity.create(id, params)
    local obj = Object.generate_from("base.activity", id)
    Object.finalize(obj)
+
+   obj.params = {}
    local activity = data["base.activity"]:ensure(id)
    for property, ty in pairs(activity.params or {}) do
       local value = params[property]
@@ -14,8 +16,9 @@ function Activity.create(id, params)
       if value ~= nil and type(value) ~= ty then
          error(("Activity '%s' requires parameter '%s' of type %s, got '%s'"):format(id, property, ty, value))
       end
-      obj[property] = value
+      obj.params[property] = value
    end
+
    return obj
 end
 

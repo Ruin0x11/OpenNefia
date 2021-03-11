@@ -136,16 +136,18 @@ end
 
 function ItemMaterial.change_item_material(item, new_material)
    -- >>>>>>>> shade2/item_data.hsp:1175 	iCol(ci)=0 ..
-   local cur_material = data["elona.item_material"]:ensure(item.material)
-   local proto = item.proto
-   item.weight = proto.weight or 0
-   item.hit_bonus = proto.hit_bonus or 0
-   item.damage_bonus = proto.damage_bonus or 0
-   item.dv = proto.dv or 0
-   item.pv = proto.pv or 0
-   item.dice_y = proto.dice_y or 0
-   item.color = proto.color or nil
-   item.value = math.floor(item.value * 100 / cur_material.value)
+   if item.material then
+      local cur_material = data["elona.item_material"]:ensure(item.material)
+      local proto = item.proto
+      item.weight = proto.weight or 0
+      item.hit_bonus = proto.hit_bonus or 0
+      item.damage_bonus = proto.damage_bonus or 0
+      item.dv = proto.dv or 0
+      item.pv = proto.pv or 0
+      item.dice_y = proto.dice_y or 0
+      item.color = proto.color or nil
+      item.value = math.floor(item.value * 100 / cur_material.value)
+   end
 
    new_material = new_material or ItemMaterial.choose_random_material(item)
 

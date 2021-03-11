@@ -23,16 +23,16 @@ data:add {
    params = { feat = "table", no_more_materials = "boolean" },
 
    default_turns = function(self)
-      return try_get_spot_info(self.feat, "activity_default_turns") or 20
+      return try_get_spot_info(self.params.feat, "activity_default_turns") or 20
    end,
    animation_wait = function(self)
-      return try_get_spot_info(self.feat, "activity_animation_wait") or 15
+      return try_get_spot_info(self.params.feat, "activity_animation_wait") or 15
    end,
    auto_turn_anim = function(self)
-      return try_get_spot_info(self.feat, "activity_auto_turn_anim") or "base.searching"
+      return try_get_spot_info(self.params.feat, "activity_auto_turn_anim") or "base.searching"
    end,
    localize = function(self)
-      return try_get_spot_info(self.feat, "activity_name") or "activity._.elona.searching.verb"
+      return try_get_spot_info(self.params.feat, "activity_name") or "activity._.elona.searching.verb"
    end,
 
    on_interrupt = "stop",
@@ -43,18 +43,18 @@ data:add {
 
          callback = function(self, params)
             -- >>>>>>>> shade2/proc.hsp:996 	if cRowAct(cc)=false{ ..
-            self.no_more_materials = false
+            self.params.no_more_materials = false
 
-            if not Feat.is_alive(self.feat) then
+            if not Feat.is_alive(self.params.feat) then
                return "stop"
             end
 
-            local on_start_text = try_get_spot_info(self.feat, "on_start_gather_text") or "activity.dig_spot.start.other"
+            local on_start_text = try_get_spot_info(self.params.feat, "on_start_gather_text") or "activity.dig_spot.start.other"
             Gui.mes(on_start_text)
 
-            local on_start_sound = try_get_spot_info(self.feat, "on_start_gather_sound")
+            local on_start_sound = try_get_spot_info(self.params.feat, "on_start_gather_sound")
             if on_start_sound then
-               Gui.play_sound(on_start_sound, self.feat.x, self.feat.y)
+               Gui.play_sound(on_start_sound, self.params.feat.x, self.params.feat.y)
             end
             -- <<<<<<<< shade2/proc.hsp:1002 		} ..
          end
@@ -65,17 +65,17 @@ data:add {
 
          callback = function(self, params)
             -- >>>>>>>> shade2/proc.hsp:1004 	if rowActRE!false:gosub *randomSite:return ..
-            if not Feat.is_alive(self.feat) then
+            if not Feat.is_alive(self.params.feat) then
                params.chara:remove_activity()
                return "turn_end"
             end
 
-            local finished = Material.dig_random_site(params.chara, self.feat)
+            local finished = Material.dig_random_site(params.chara, self.params.feat)
             if finished then
-               self.no_more_materials = true
+               self.params.no_more_materials = true
             end
 
-            if self.no_more_materials then
+            if self.params.no_more_materials then
                -- HACK We need to run the "finish" callback the next turn, so
                -- set turns to 0.
                self.turns = 0
@@ -83,7 +83,7 @@ data:add {
             end
 
             if self.turns % 5 == 0 then
-               local sound_text = try_get_spot_info(self.feat, "on_gather_sound_text")
+               local sound_text = try_get_spot_info(self.params.feat, "on_gather_sound_text")
                if sound_text then
                   Gui.mes_c(sound_text, "Blue")
                end
@@ -98,11 +98,11 @@ data:add {
 
          callback = function(self, params)
             -- >>>>>>>> shade2/proc.hsp:1035: 	spillFrag refX,refY,1 ..
-            if self.no_more_materials then
-               local on_finish_text = try_get_spot_info(self.feat, "on_gather_no_more_text") or "activity.material.searching.no_more"
+            if self.params.no_more_materials then
+               local on_finish_text = try_get_spot_info(self.params.feat, "on_gather_no_more_text") or "activity.material.searching.no_more"
                Gui.mes(on_finish_text)
-               if Feat.is_alive(self.feat) then
-                  self.feat:remove_ownership()
+               if Feat.is_alive(self.params.feat) then
+                  self.params.feat:remove_ownership()
                end
             end
             -- <<<<<<<< shade2/proc.hsp:1037 	return ..

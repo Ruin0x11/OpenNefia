@@ -37,7 +37,7 @@ data:add {
    end,
 
    on_finish = function(self, params)
-      Smithing.upgrade_hammer(self.hammer, self.chara)
+      Smithing.upgrade_hammer(self.params.hammer, params.chara)
    end
 }
 
@@ -53,7 +53,7 @@ data:add {
    on_interrupt = "prompt",
 
    on_start = function(self, params)
-      self.extend = self.extend or 0
+      self.params.extend = self.params.extend or 0
    end,
 
    on_pass_turns = function(self, params)
@@ -72,15 +72,15 @@ data:add {
          end
       end
 
-      if Rand.one_in(Smithing.calc_smith_extend_chance(self.hammer, self.extend)) then
-         self.extend = self.extend + Rand.rnd(3)
+      if Rand.one_in(Smithing.calc_smith_extend_chance(self.params.hammer, self.params.extend)) then
+         self.params.extend = self.params.extend + Rand.rnd(3)
       end
 
       return "turn_end"
    end,
 
    on_finish = function(self, params)
-      Smithing.create_equipment(self.hammer, params.chara, self.target_item, self.material_item, self.categories, self.extend)
+      Smithing.create_equipment(self.params.hammer, params.chara, self.params.target_item, self.params.material_item, self.params.categories, self.params.extend)
    end
 }
 
@@ -118,7 +118,7 @@ data:add {
    end,
 
    on_finish = function(self, params)
-      Smithing.repair_furniture(self.hammer, params.chara, self.target_item, self.material_item)
+      Smithing.repair_furniture(self.params.hammer, params.chara, self.params.target_item, self.params.material_item)
    end
 }
 
@@ -156,6 +156,6 @@ data:add {
    end,
 
    on_finish = function(self, params)
-      Smithing.repair_equipment(self.hammer, params.chara, self.target_item, self.power)
+      Smithing.repair_equipment(self.params.hammer, params.chara, self.params.target_item, self.params.power)
    end
 }
