@@ -358,11 +358,11 @@ data:add_multi(
 
          type = "integer",
          -- >>>>>>>> elona122/shade2/help.hsp:773 	if cfg_scrSync=0	:cfg_scrSync=3 ...
-         default = 3,
+         default = 20,
          -- <<<<<<<< elona122/shade2/help.hsp:773 	if cfg_scrSync=0	:cfg_scrSync=3 ..
          -- >>>>>>>> elona122/shade2/help.hsp:1241 			if cs=3:configSelect cfg_scrSync,"scr_sync.",p, ...
-         min_value = 2,
-         max_value = 25,
+         min_value = 1,
+         max_value = 250,
          -- <<<<<<<< elona122/shade2/help.hsp:1241 			if cs=3:configSelect cfg_scrSync,"scr_sync.",p, ..
       },
       {
