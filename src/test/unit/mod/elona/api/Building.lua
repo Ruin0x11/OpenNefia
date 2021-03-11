@@ -116,3 +116,16 @@ function test_Building_build_home()
    Assert.subset({ "elona.shopkeeper", "elona.bartender", "elona.trainer" }, first_floor_charas)
    Assert.subset({ "elona.putit", "elona.beggar", "elona.punk" }, second_floor_charas)
 end
+
+function test_Building_build()
+   local north_tyris_area = Area.create_unique("elona.north_tyris", "root")
+   local ok, north_tyris_map = assert(north_tyris_area:load_or_generate_floor(north_tyris_area:starting_floor()))
+
+   local building_area, metadata = Building.build("elona.storage_house", 50, 22, north_tyris_map)
+
+   Assert.eq(true, Building.area_is_building(building_area, "elona.storage_house"))
+   Assert.eq(true, Building.area_is_building(building_area.uid, "elona.storage_house"))
+
+   local ok, building_map = assert(building_area:load_or_generate_floor(building_area:starting_floor()))
+   Assert.eq(true, Building.map_is_building(building_map, "elona.storage_house"))
+end

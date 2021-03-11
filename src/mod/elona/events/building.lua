@@ -11,6 +11,8 @@ local Chara = require("api.Chara")
 local Servant = require("mod.elona.api.Servant")
 local Home = require("mod.elona.api.Home")
 local Log = require("api.Log")
+local Item = require("api.Item")
+local Input = require("api.Input")
 
 local function day_passes()
    local guests = save.elona.waiting_guests
@@ -51,16 +53,19 @@ Event.register("elona_sys.on_item_use", "Use seeds", use_seed)
 -- <<<<<<<< elona122/shade2/action.hsp:1729 	if iTypeMinor(ci)=fltSeed	:goto *item_seed ..
 
 local function get_plant(chara, params, result)
-   local is_plant = function(feat) return feat._id == "elona.plant" end
-   local plant = Feat.at(chara.x, chara.y):filter(is_plant):nth(1)
+   local map = chara:current_map()
+   if Item.at(chara.x, chara.y, map):length() == 0 then
+      local is_plant = function(feat) return feat._id == "elona.plant" end
+      local plant = Feat.at(chara.x, chara.y, map):filter(is_plant):nth(1)
 
-   if plant then
-      if Gardening.get_plant(plant, chara) then
-         return true
+      if plant then
+         if Gardening.get_plant(plant, chara) then
+            return true
+         end
       end
-   end
 
-   return result
+      return result
+   end
 end
 Event.register("elona_sys.on_get", "Get plant", get_plant)
 
@@ -127,3 +132,36 @@ local function house_board_your_home_info(map)
    Gui.mes("building.home.staying.count", servants, max)
 end
 Event.register("elona.on_house_board_queried", "Show Your Home info", house_board_your_home_info)
+
+local function prompt_remove_building(chara, params, result)
+   -- >>>>>>>> shade2/command.hsp:3208 		if mType=mTypeWorld:if feat(1)=objArea:if ((feat ...
+   local map = chara:current_map()
+   if map:has_type("world_map") and Item.at(chara.x, chara.y, map):length() == 0 then
+      local is_building_entrance = function(feat)
+         return feat._id == "elona.map_entrance"
+            and feat.params.area_uid
+            and Building.area_is_building(feat.params.area_uid)
+      end
+      local entrance = Feat.at(chara.x, chara.y, map):filter(is_building_entrance):nth(1)
+      if entrance then
+         Gui.mes("action.get.building.prompt")
+         if Input.yes_no() then
+            entrance:remove_ownership()
+            Area.delete(entrance.params.area_uid)
+            -- TODO world map nefia refresh
+            Gui.play_sound("base.build1", entrance.x, entrance.y)
+            Gui.mes("action.get.building.remove")
+            return "turn_end"
+         end
+      end
+   end
+
+   return result
+   -- <<<<<<<< shade2/command.hsp:3218 			} ..
+end
+Event.register("elona_sys.on_get", "Remove building", prompt_remove_building, { priority = 200000 })
+
+local function remove_building_area(_, params)
+   Building.remove_for_area(params.area.uid)
+end
+Event.register("base.on_area_deleted", "Remove building", remove_building_area)

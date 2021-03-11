@@ -65,7 +65,7 @@ function test_Calc_calc_building_expenses()
    Building.build("elona.dungeon", 50, 24, north_tyris_map)
    Assert.eq(1975, Calc.calc_building_expenses(chara))
 
-   Building.build("elona.shop", 50, 25, north_tyris_map)
+   local area = Building.build("elona.shop", 50, 25, north_tyris_map)
    Assert.eq(4475, Calc.calc_building_expenses(chara))
 
    chara.karma = 30
@@ -73,6 +73,9 @@ function test_Calc_calc_building_expenses()
 
    chara:modify_trait_level("elona.tax", 1)
    Assert.eq(3401, Calc.calc_building_expenses(chara))
+
+   Area.delete(area)
+   Assert.eq(1501, Calc.calc_building_expenses(chara))
 end
 
 function test_Calc_calc_actual_bill_amount()

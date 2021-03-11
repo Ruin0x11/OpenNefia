@@ -112,7 +112,6 @@ function Building.build_area(area_archetype_id, x, y, map, tax_cost)
       area_uid = area.uid,
       name = area.name,
       tax_cost = tax_cost or 0,
-      floor = floor,
    }
 
    table.insert(save.elona.player_owned_buildings, metadata)
@@ -120,8 +119,21 @@ function Building.build_area(area_archetype_id, x, y, map, tax_cost)
    return area, metadata
 end
 
-function Building.iter_in_area(area)
-   return fun.iter(save.elona.player_owned_buildings):filter(function(m) return m.area_uid == area.uid end)
+function Building.for_area(area)
+   return fun.iter(save.elona.player_owned_buildings):filter(function(m) return m.area_uid == area.uid end):nth(1)
+end
+
+function Building.remove_for_area(area)
+   local area_uid
+   if class.is_an(InstancedArea, area) then
+      area_uid = area.uid
+   elseif math.type(area) == "integer" then
+      area_uid = area
+   else
+      error("Must provide area or area UID")
+   end
+   local filter = function(m) return m.area_uid ~= area_uid end
+   save.elona.player_owned_buildings = fun.iter(save.elona.player_owned_buildings):filter(filter):to_list()
 end
 
 function Building.for_map(map)
@@ -129,17 +141,34 @@ function Building.for_map(map)
    if area == nil then
       return nil
    end
-   local floor = Map.floor_number(map)
-   if floor == nil then
-      return nil
+   return Building.for_area(area)
+end
+
+function Building.area_is_building(area, area_archetype_id)
+   if type(area) == "number" then
+      local area_uid = area
+      area = Area.get(area_uid)
+      if area == nil then
+         error(("Area '%s' does not exist"):format(area_uid))
+      end
    end
-   return Building.iter_in_area(area):filter(function(i) return i.floor == floor end):nth(1)
+   local building = Building.for_area(area)
+   if building == nil then
+      return false
+   end
+   if area_archetype_id == nil then
+      return true
+   end
+   data["base.area_archetype"]:ensure(area_archetype_id)
+   return building.area_archetype_id == area_archetype_id
 end
 
 function Building.map_is_building(map, area_archetype_id)
-   data["base.area_archetype"]:ensure(area_archetype_id)
-   local building = Building.for_map(map)
-   return building and building.area_archetype_id == area_archetype_id
+   local area = Area.for_map(map)
+   if area == nil then
+      return false
+   end
+   return Building.area_is_building(area, area_archetype_id)
 end
 
 function Building.find_home_area_and_entrances(world_map)

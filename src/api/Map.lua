@@ -6,6 +6,7 @@
 ---
 --- @module Map
 local object = require("internal.object")
+local Event = require("api.Event")
 
 local field = require("game.field")
 local Chara = require("api.Chara")
@@ -129,6 +130,8 @@ end
 
 function Map.delete(uid)
    assert(type(uid) == "number")
+
+   Event.trigger("base.on_map_deleted", {map_uid=uid})
 
    local path = Fs.join("map", tostring(uid))
    Log.debug("Deleting map %d from %s", uid, path)
