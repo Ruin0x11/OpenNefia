@@ -42,7 +42,7 @@ function Prompt.make_list(choices)
 
       return {
          text = I18N.get_optional(choice.text) or tostring(choice.text),
-         key = choices.key or nil,
+         key = choice.key or nil,
          index = choice.index or index
       }
    end
