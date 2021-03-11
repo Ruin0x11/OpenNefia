@@ -11791,7 +11791,7 @@ local item =
                callback = function(self)
                   self = self:separate()
                   Gui.play_sound("base.bash1")
-                  Gui.mes("action.bash.tree.execute", self)
+                  Gui.mes("action.bash.tree.execute", self:build_name(1))
                   local fruits = self.params.fruit_tree_amount
                   if self:calc("own_state") == "unobtainable" or fruits <= 0 then
                      Gui.mes("action.bash.tree.no_fruits")
