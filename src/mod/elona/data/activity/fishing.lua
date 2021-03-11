@@ -170,6 +170,10 @@ data:add {
 
             local draw_cb = fishing_draw_cb(self.params, params.chara)
             Gui.start_background_draw_callback(draw_cb, "elona.fishing", 100000)
+
+            if self.params.no_animation then
+               Gui.update_screen()
+            end
          end
       },
       {
@@ -187,6 +191,8 @@ data:add {
 
             -- TODO pass flag to disable LOS recalculation in
             -- Gui.update_screen()
+            --
+            -- TODO more efficient Gui.update_screen() in general
 
             if p.state == 1 then
                if Rand.one_in(5) then
