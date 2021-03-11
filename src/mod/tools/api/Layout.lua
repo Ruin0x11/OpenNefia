@@ -39,7 +39,7 @@ function Layout.to_image_data(layout)
       local b = i
       tile_to_pixel[k] = { r, g, b }
 
-      local number = Color:new_rgb_float(r, g, b, 1):to_number()
+      local number = Color.to_number(Draw.color_to_bytes(r, g, b, 1))
       color_to_tile[number] = layout.tileset[k]
    end
 
