@@ -7256,6 +7256,10 @@ local item =
 
          params = { bait_type = "elona.water_flea", bait_amount = 0 },
 
+         on_use = function(self, params)
+            elona_sys_Magic.cast("elona.fishing", { source = params.chara, item = self })
+         end,
+
          elona_function = 16,
          param1 = 60,
          categories = {

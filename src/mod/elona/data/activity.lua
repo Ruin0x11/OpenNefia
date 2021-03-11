@@ -279,7 +279,7 @@ data:add {
    _id = "fishing",
    elona_id = 7,
 
-   params = {},
+   params = { x = "number", y = "number", fishing_pole = "table" },
    default_turns = 100,
 
    animation_wait = 40,
