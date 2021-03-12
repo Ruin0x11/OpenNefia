@@ -23,6 +23,7 @@ local ExHelp = require("mod.elona.api.ExHelp")
 local Area = require("api.Area")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local Filters = require("mod.elona.api.Filters")
+local NefiaCompletionDrawable = require("mod.elona.api.gui.NefiaCompletionDrawable")
 
 local function get_map_display_name(area, description)
    if area.is_hidden then
@@ -414,6 +415,14 @@ data:add
 
             return get_map_display_name(area, true)
             -- <<<<<<<< shade2/command.hsp:53 				} ..
+         end
+      },
+      {
+         id = "base.on_object_instantiated",
+         name = "Add nefia completion drawable",
+
+         callback = function(self)
+            self:set_drawable("elona.nefia_completion", NefiaCompletionDrawable:new(), "after", 200000)
          end
       }
    }
