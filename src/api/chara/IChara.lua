@@ -30,6 +30,8 @@ local IFactioned = require("api.IFactioned")
 local IMapObject = require("api.IMapObject")
 local IEventEmitter = require("api.IEventEmitter")
 local save = require("internal.global.save")
+local IDrawable = require("api.gui.IDrawable")
+local PriorityMap = require("api.PriorityMap")
 
 -- TODO: move out of api
 local IChara = class.interface("IChara",
@@ -119,6 +121,8 @@ function IChara:build()
    -- properties will not overwrite any properties that already exist on the
    -- object (even if image = "base.default"), so it has to have a nil fallback.
    self.image = self.image or "base.default"
+
+   self.drawables = PriorityMap:new()
 
    self:reset_ai()
 

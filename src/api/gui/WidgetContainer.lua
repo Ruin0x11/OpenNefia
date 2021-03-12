@@ -2,27 +2,25 @@ local Env = require("api.Env")
 local IUiElement = require("api.gui.IUiElement")
 local WidgetHolder = require("api.gui.WidgetHolder")
 local IUiWidget = require("api.gui.IUiWidget")
+local PriorityMap = require("api.PriorityMap")
 
 local WidgetContainer = class.class("WidgetContainer", IUiElement)
 
 function WidgetContainer:init()
-   -- {<WidgetHolder>...}
-   self.holders = {}
-
-   self.tag_to_idx = {}
+   self.map = PriorityMap:new()
 end
 
 function WidgetContainer:iter()
-   return fun.iter(self.holders)
+   return self.map:iter()
 end
 
 function WidgetContainer:iter_type(req_path)
-   return self:iter():filter(function(holder) return Env.get_require_path(holder:widget()) == req_path end)
+   return fun.wrap(self:iter()):filter(function(holder) return Env.get_require_path(holder:widget()) == req_path end)
 end
 
 function WidgetContainer:get(tag)
    assert(type(tag) == "string")
-   return self.holders[self.tag_to_idx[tag]]
+   return self.map:get(tag)
 end
 
 function WidgetContainer:get_by_type(req_path)
@@ -34,7 +32,7 @@ function WidgetContainer:add(widget, tag, opts)
    assert(class.is_an(IUiWidget, widget))
    assert(type(tag) == "string")
 
-   if self.tag_to_idx[tag] then
+   if self.map:get(tag) then
       if Env.is_hotloading() then
          return
       else
@@ -42,36 +40,20 @@ function WidgetContainer:add(widget, tag, opts)
       end
    end
 
-   local idx = #self.holders+1
-   self.holders[idx] = WidgetHolder:new(widget,
-                                        tag,
-                                        opts.z_order or widget:default_widget_z_order(),
-                                        opts.position or nil,
-                                        opts.refresh or nil,
-                                        opts.enabled)
+   local holder = WidgetHolder:new(widget,
+                                   tag,
+                                   opts.z_order or widget:default_widget_z_order(),
+                                   opts.position or nil,
+                                   opts.refresh or nil,
+                                   opts.enabled)
 
-   self:update_sorting()
+   self.map:set(tag, holder, holder:z_order())
 end
 
 function WidgetContainer:remove(tag)
    assert(type(tag) == "string")
-   if self.tag_to_idx[tag] then
-      return
-   end
 
-   local idx = self.tag_to_idx[tag]
-   table.remove(self.holders, idx)
-   self.tag_to_idx[tag] = nil
-
-   self:update_sorting()
-end
-
-function WidgetContainer:update_sorting()
-   table.sort(self.holders, function(a, b) return a:z_order() < b:z_order() end)
-   for idx, holder in ipairs(self.holders) do
-      self.tag_to_idx[holder._tag] = idx
-   end
-   self.updated = false
+   self.map:set(tag, nil)
 end
 
 function WidgetContainer:relayout(x, y, width, height)
@@ -82,7 +64,6 @@ function WidgetContainer:relayout(x, y, width, height)
 
       holder:widget():relayout(_x, _y, _width, _height)
    end
-   self:update_sorting()
 end
 
 function WidgetContainer:refresh(player)

@@ -145,6 +145,7 @@ function IItem:produce_memory(memory)
    memory.shadow_type = "drop_shadow"
    memory.shadow = shadow_angle
    memory.stack_height = stack_height
+   memory.drawables = self.drawables
 end
 
 function IItem:produce_locale_data()

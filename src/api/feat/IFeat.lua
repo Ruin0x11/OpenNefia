@@ -40,6 +40,7 @@ function IFeat:produce_memory(memory)
    memory.image = (self:calc("image") or "")
    memory.color = self:calc("color")
    memory.shadow_type = self:calc("shadow_type")
+   memory.drawables = self.drawables
 end
 
 return IFeat

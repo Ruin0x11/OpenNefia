@@ -35,11 +35,14 @@ function effect_map_layer:add(asset_id, sx, sy, max_frames, rotation, kind)
    end
 
    rotation = rotation or 0
+   local alpha
 
    if kind == "anime" then
       max_frames = math.clamp(max_frames or #asset.quads, 0, #asset.quads)
+      alpha = 150
    else
       max_frames = math.max(max_frames or 10, 0)
+      alpha = max_frames * 12 + 30
    end
 
    self.efmap[#self.efmap+1] = {
@@ -52,7 +55,7 @@ function effect_map_layer:add(asset_id, sx, sy, max_frames, rotation, kind)
       max_frames = max_frames,
       rotation = rotation,
       kind = kind,
-      alpha = 150
+      alpha = alpha
    }
 end
 

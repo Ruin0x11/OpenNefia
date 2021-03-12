@@ -168,7 +168,6 @@ function object.deserialize(self, _type, _id)
       __newindex = object.__newindex,
       __iface = iface,
       __tostring = object.__tostring,
-      __inspect = object.__inspect
    }
 
    local obj = setmetatable(self, mt)
@@ -190,16 +189,6 @@ end
 function object:__tostring()
    local addr = string.tostring_raw(self):gsub("^table: (.*)", "%1")
    return ("<object ('%s', uid %d) %s>"):format(self._type, self.uid, addr)
-end
-
-function object:__inspect()
-   local n = {}
-   for k, v in pairs(self) do
-      if not (type(k) == "string" and string.match(k, "^__")) then
-         n[k] = v
-      end
-   end
-   return inspect(n)
 end
 
 if not binser.hasRegistry("object") then

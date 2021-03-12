@@ -208,9 +208,9 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
                batch:flush()
                batch = nil
             end
-            for _, entry in ipairs(dr[ind]) do
+            for _, drawable in dr[ind]:iter() do
                self.to_draw_inds[#self.to_draw_inds+1] = ind
-               self.to_draw_drawables[#self.to_draw_drawables+1] = entry.drawable
+               self.to_draw_drawables[#self.to_draw_drawables+1] = drawable
             end
          end
 

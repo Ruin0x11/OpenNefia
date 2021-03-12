@@ -18,11 +18,24 @@ local field_logic = require("game.field_logic")
 local save_store = require("internal.save_store")
 local draw = require("internal.draw")
 local main_state = require("internal.global.main_state")
+local field = require("game.field")
 
 -- TODO: this module isn't hotloadable since game.loop gets run in a
 -- coroutine. Would be better to just put game.loop() into a
 -- standalone function.
 local game = {}
+
+local function reset_global_state()
+   field.map = nil
+   field.player = nil
+
+   -- Clear the global save.
+   SaveFs.clear()
+   save_store.clear()
+
+   Gui.stop_background_sound()
+   Gui.stop_all_draw_callbacks()
+end
 
 local function main_title()
    -- enable on low power mode
@@ -33,12 +46,7 @@ local function main_title()
    local action
    local going = true
    while going do
-      -- Clear the global save.
-      SaveFs.clear()
-      save_store.clear()
-
-      Gui.stop_background_sound()
-      Gui.stop_all_draw_callbacks()
+      reset_global_state()
 
       local choice = title:query()
 

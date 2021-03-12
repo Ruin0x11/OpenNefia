@@ -1,9 +1,8 @@
 --- @interface IMapObject
 
-local multi_pool = require("internal.multi_pool")
 local IOwned = require("api.IOwned")
 local IObject = require("api.IObject")
-local Log = require("api.Log")
+local IDrawableHolder = require("api.IDrawableHolder")
 
 -- An IObject that can be displayed on a tilemap.
 local IMapObject  = class.interface("IMapObject",
@@ -11,7 +10,7 @@ local IMapObject  = class.interface("IMapObject",
                                 uid = "number",
                                 produce_memory = "function"
                              },
-                             {IOwned, IObject})
+                             {IOwned, IObject, IDrawableHolder})
 
 function IMapObject:init()
    IObject.init(self)

@@ -256,7 +256,11 @@ function InstancedMap:tile(x, y)
 end
 
 function InstancedMap:memory(x, y, kind)
-   return self._memory[kind][y*self._width+x+1]
+   local memory = self._memory[kind]
+   if memory == nil then
+      return nil
+   end
+   return memory[y*self._width+x+1]
 end
 
 function InstancedMap:light(x, y)
