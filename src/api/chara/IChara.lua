@@ -241,6 +241,7 @@ function IChara:produce_memory(memory)
    memory.hp_ratio = self.hp / self:calc("max_hp")
    memory.shadow_type = "normal"
    memory.drawables = self.drawables
+   memory.drawables_after = self.drawables_after
 end
 
 --- @treturn table

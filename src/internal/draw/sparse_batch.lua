@@ -22,6 +22,7 @@ function sparse_batch:init(width, height, offset_x, offset_y)
    self.colors_b = {}
    self.z_orders = {}
    self.drawables = {}
+   self.drawables_after = {}
 
    self.free_indices = {}
    self.free_anims = {}
@@ -97,6 +98,7 @@ function sparse_batch:add_tile(params)
    self.colors_b[ind] = (params.color[3] or 255) / 255
    self.z_orders[ind] = z_order
    self.drawables[ind] = params.drawables or nil
+   self.drawables_after[ind] = params.drawables_after or nil
    self.updated = true
    return ind
 end
@@ -198,6 +200,7 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
       local cg = self.colors_g
       local cb = self.colors_b
       local dr = self.drawables
+      local dra = self.drawables_after
 
       for _, _, ind in self.ordering:iterate() do
          local tile = self_tiles[ind]
@@ -269,6 +272,18 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
                             ttw / 2,
                             tth / 2)
                end
+            end
+         end
+
+         if dra[ind] then
+            if batch ~= nil then
+               batch:setColor(1, 1, 1)
+               batch:flush()
+               batch = nil
+            end
+            for _, drawable in dra[ind]:iter() do
+               self.to_draw_inds[#self.to_draw_inds+1] = ind
+               self.to_draw_drawables[#self.to_draw_drawables+1] = drawable
             end
          end
       end

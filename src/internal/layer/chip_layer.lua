@@ -166,7 +166,8 @@ function chip_layer:draw_one(ind, x, y, i, chip_type, stack_height)
          y_offset = y_offset,
          color = i.color,
          z_order = z_order,
-         drawables = i.drawables
+         drawables = i.drawables,
+         drawables_after = i.drawables_after,
       }
 
       -- Extra data needed for rendering non-chip things like

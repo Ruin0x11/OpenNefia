@@ -55,6 +55,7 @@ function IMef:produce_memory(memory)
    memory.color = self:calc("color")
    memory.shadow_type = self:calc("shadow_type")
    memory.drawables = self.drawables
+   memory.drawables_after = self.drawables_after
 end
 
 --- Sets this mef's position. Use this function instead of updating x and y manually.
