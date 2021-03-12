@@ -89,7 +89,9 @@ local function proc_moved_onto_water(chara, params)
       end
 
       -- >>>>>>>> shade2/action.hsp:746 			if p=tWater:snd seWater ...
-      Gui.play_sound("base.water2", chara.x, chara.y)
+      if chara:is_player() then
+         Gui.play_sound("base.water2", chara.x, chara.y)
+      end
       -- <<<<<<<< shade2/action.hsp:746 			if p=tWater:snd seWater ..
    end
    -- <<<<<<<< shade2/action.hsp:642 		} ...end

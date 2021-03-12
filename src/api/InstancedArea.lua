@@ -18,7 +18,8 @@ function InstancedArea:init(archetype_id, area_generator, uids)
    self.parent_area = nil
    self.parent_x = nil
    self.parent_y = nil
-   self.deepest_level_visited = 0
+   self.deepest_floor_visited = 0
+   self._deepest_floor = nil
 
    if archetype_id then
       self:set_archetype(archetype_id, { set_properties = true })
@@ -64,27 +65,25 @@ function InstancedArea:set_archetype(area_archetype_id, params)
 end
 
 function InstancedArea:deepest_floor()
-   if #self.maps == 0 then
-      local archetype = self:archetype()
-      if archetype and archetype.floors then
-         return fun.iter(table.keys(archetype.floors)):max()
-      end
-
-      return 1
+   if self._deepest_floor then
+      return self._deepest_floor
    end
-   return fun.iter(table.keys(self.maps)):max()
+
+   local archetype = self:archetype()
+   if archetype and archetype.floors then
+      return fun.iter(table.keys(archetype.floors)):max()
+   end
+
+   return 1
 end
 
 function InstancedArea:starting_floor()
-   if #self.maps == 0 then
-      local archetype = self:archetype()
-      if archetype and archetype.floors then
-         return fun.iter(table.keys(archetype.floors)):min()
-      end
-
-      return 1
+   local archetype = self:archetype()
+   if archetype and archetype.floors then
+      return fun.iter(table.keys(archetype.floors)):min()
    end
-   return fun.iter(table.keys(self.maps)):min()
+
+   return 1
 end
 
 function InstancedArea:iter_maps()

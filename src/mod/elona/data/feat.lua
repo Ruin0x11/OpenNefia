@@ -24,6 +24,7 @@ local Area = require("api.Area")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local Filters = require("mod.elona.api.Filters")
 local NefiaCompletionDrawable = require("mod.elona.api.gui.NefiaCompletionDrawable")
+local Nefia = require("mod.elona.api.Nefia")
 
 local function get_map_display_name(area, description)
    if area.is_hidden then
@@ -47,9 +48,8 @@ local function get_map_display_name(area, description)
    end
 
    local text
-   local is_nefia = false -- TODO area metadata: type
-   if is_nefia then
-      text = I18N.get("map.you_see_an_entrance", name, 999999)
+   if Nefia.get_type(area) then
+      text = I18N.get("map.you_see_an_entrance", name, Nefia.get_level(area))
    elseif desc then
       text = desc
    else
@@ -386,11 +386,10 @@ data:add
    on_stepped_on = function(self, params)
       if params.chara:is_player() and self.params.area_uid then
          local area = Area.get(self.params.area_uid)
-         local is_nefia = false -- TODO area metadata: type
-         if is_nefia then
-            ExHelp.maybe_show("elona.random_dungeon")
-         end
          if area then
+            if Nefia.get_type(area) then
+               ExHelp.maybe_show("elona.random_dungeon")
+            end
             Gui.mes(get_map_display_name(area, true))
          end
       end
@@ -422,7 +421,20 @@ data:add
          name = "Add nefia completion drawable",
 
          callback = function(self)
-            self:set_drawable("elona.nefia_completion", NefiaCompletionDrawable:new(), "after", 200000)
+            if self.params.area_uid ~= nil then
+               local area = Area.get(self.params.area_uid)
+               if area and Nefia.get_type(area) then
+                  local state
+                  if area.deepest_floor_visited == area:deepest_floor() then
+                     state = "conquered"
+                  elseif area.deepest_floor_visited > 0 then
+                     state = "in_progress"
+                  end
+                  self:set_drawable("elona.nefia_completion", NefiaCompletionDrawable:new(state), "above", 200000)
+               else
+                  self:set_drawable("elona.nefia_completion", nil)
+               end
+            end
          end
       }
    }

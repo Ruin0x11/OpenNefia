@@ -338,7 +338,7 @@ function Effect.can_return_to(area_uid)
       return false
    end
 
-   if (area.deepest_level_visited or 0) == 0 then
+   if (area.deepest_floor_visited or 0) == 0 then
       return false
    end
 
@@ -364,7 +364,7 @@ function Effect.query_return_location(chara)
       maps = Area.iter_all_contained_in(world_area)
          :filter(Effect.can_return_to)
          :map(function(uid, area)
-               local deepest = area.deepest_level_visited
+               local deepest = area.deepest_floor_visited
                local text = I18N.get("misc.dungeon_level", area.name, deepest)
                local ok, map_meta = assert(area:get_floor(deepest))
                return {

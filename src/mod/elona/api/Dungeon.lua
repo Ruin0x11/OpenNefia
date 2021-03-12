@@ -8,6 +8,7 @@ local Rand = require("api.Rand")
 local Charagen = require("mod.tools.api.Charagen")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Calc = require("mod.elona.api.Calc")
+local I18N = require("api.I18N")
 
 -- functions for nefia generation used by Elona 1.22's map generators.
 local Dungeon = {}
@@ -397,10 +398,6 @@ function Dungeon.place_stairs_up_in_room(room, map)
 end
 
 function Dungeon.place_stairs_down_in_room(room, map)
-   if map.is_deepest_level then -- TODO
-      return nil
-   end
-
    local x = Rand.rnd(room.width - 2) + room.x + 1
    local y = Rand.rnd(room.height - 2) + room.y + 1
    room.has_stairs_down = true
@@ -1344,6 +1341,12 @@ end
 function Dungeon.set_template_property(params, property, value)
    params.properties = params.properties or {}
    params.properties[property] = value
+end
+
+function Dungeon.map_level_text(level)
+   -- >>>>>>>> shade2/text.hsp:415 	if areaType(gArea)!mTypeTown:if (areaId(gArea)=ar ...
+   return I18N.get("nefia.level", level)
+   -- <<<<<<<< shade2/text.hsp:417 	} ..
 end
 
 return Dungeon

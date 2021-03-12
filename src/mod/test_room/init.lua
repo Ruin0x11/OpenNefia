@@ -1,12 +1,13 @@
 --- Code for the quickstart scenario.
-local Building = require("mod.elona.api.Building")
-
 local Enum = require("api.Enum")
 local Item = require("api.Item")
 local Map = require("api.Map")
 local Text = require("mod.elona.api.Text")
 local Area = require("api.Area")
 local ItemMaterial = require("mod.elona.api.ItemMaterial")
+local Building = require("mod.elona.api.Building")
+local Nefia = require("mod.elona.api.Nefia")
+local Rand = require("api.Rand")
 
 require("mod.test_room.data")
 
@@ -75,6 +76,9 @@ local function on_game_start(self, player)
 
    for _, i, building in data["elona.building"]:iter():enumerate() do
       Building.build(building._id, 50 + i, 22, north_tyris_map)
+   end
+   for _, i, nefia in data["elona.nefia"]:iter():enumerate() do
+      Nefia.create(nefia._id, 50 + i, 20, north_tyris_map, Rand.rnd(10) + 1, 5)
    end
    Map.save(north_tyris_map)
 

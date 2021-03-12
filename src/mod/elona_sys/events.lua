@@ -410,7 +410,7 @@ local function add_player_light(player, params)
       params.previous_player:set_drawable("elona.player_light", nil)
    end
 
-   player:set_drawable("elona.player_light", PlayerLightDrawable:new(), "before", 10000)
+   player:set_drawable("elona.player_light", PlayerLightDrawable:new(), "below", 10000)
 end
 
 Event.register("base.on_set_player", "Add player light", add_player_light)

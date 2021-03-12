@@ -349,7 +349,7 @@ function Area.delete(area)
    end
 
    area.maps = {}
-   area.deepest_level_visited = 0
+   area.deepest_floor_visited = 0
 
    Event.trigger("base.on_area_deleted", {area=area})
 end

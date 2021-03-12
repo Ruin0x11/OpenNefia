@@ -9,14 +9,18 @@ function IDrawableHolder:init()
 end
 
 function IDrawableHolder:set_drawable(tag, drawable, where, priority)
-   where = where or "before"
-   local drawables = where == "after" and "drawables_after" or "drawables"
+   where = where or "below"
+   local drawables = where == "above" and "drawables_after" or "drawables"
 
    if drawable then
       class.assert_is_an(IDrawable, drawable)
 
       if self[drawables] == nil then
          self[drawables] = PriorityMap:new()
+      end
+   else
+      if self[drawables] == nil then
+         return
       end
    end
 
@@ -28,8 +32,8 @@ function IDrawableHolder:set_drawable(tag, drawable, where, priority)
 end
 
 function IDrawableHolder:get_drawable(tag, where)
-   where = where or "before"
-   local drawables = where == "after" and "drawables_after" or "drawables"
+   where = where or "below"
+   local drawables = where == "above" and "drawables_after" or "drawables"
 
    if self[drawables] then
       return self[drawables]:get(tag)

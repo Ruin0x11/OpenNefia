@@ -44,9 +44,9 @@ function UiStatsBar:set_data(player)
    local map = player:current_map()
    self.map_name = map and map.name or ""
 
-   local map_level = "B.12"
+   self.map_level = map and map.level_text or ""
    local max_width = 16
-   if string.nonempty(map_level) then
+   if string.nonempty(self.map_level) then
       max_width = 12
    end
    if utf8.wide_len(self.map_name) > max_width then

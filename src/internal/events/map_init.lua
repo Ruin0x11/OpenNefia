@@ -243,7 +243,7 @@ local function proc_map_entered(map)
    -- >>>>>>>> shade2/map.hsp:286 	if gDeepest<gLevel:if gArea!areaShelter:gDeepest= ..
    local area = Area.for_map(map)
    if area then
-      area.deepest_level_visited = math.max(area.deepest_level_visited, Map.floor_number(map))
+      area.deepest_floor_visited = math.max(area.deepest_floor_visited, Map.floor_number(map))
    end
    -- <<<<<<<< shade2/map.hsp:287 	if areaDeepest(gArea)<gLevel:areaDeepest(gArea)=g ..
 
