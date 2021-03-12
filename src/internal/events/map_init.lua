@@ -18,6 +18,7 @@ local save = require("internal.global.save")
 local Effect = require("mod.elona.api.Effect")
 local config = require("internal.config")
 local Log = require("api.Log")
+local IFeat = require("api.feat.IFeat")
 
 local function relocate_chara(chara, map)
    local x, y
@@ -113,7 +114,7 @@ local function renew_major(map)
 
    if not is_first_renewal then
       Feat.iter(map):filter(function(f) return f.is_temporary end)
-                    :each(IMapObject.remove_ownership)
+                    :each(IFeat.remove_ownership)
 
       if map:has_type("town") or map:has_type("guild") then
          for _, item in Item.iter(map) do

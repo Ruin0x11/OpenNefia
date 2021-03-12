@@ -29,6 +29,7 @@ local Encounter = require("mod.elona.api.Encounter")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local Hunger = require("mod.elona.api.Hunger")
 local Home = require("mod.elona.api.Home")
+local IMef = require("api.mef.IMef")
 
 local Tools = {}
 
@@ -641,7 +642,7 @@ function Tools.fill_with_mef(id, duration, power)
 end
 
 function Tools.clear_mefs()
-   Mef.iter():each(IOwned.remove_ownership)
+   Mef.iter():each(IMef.remove_ownership)
 end
 
 function Tools.player_pos()

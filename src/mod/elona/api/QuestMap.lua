@@ -21,6 +21,8 @@ local Quest = require("mod.elona_sys.api.Quest")
 local MapgenUtils = require("mod.elona.api.MapgenUtils")
 local Filters = require("mod.elona.api.Filters")
 local Itemgen = require("mod.tools.api.Itemgen")
+local IFeat = require("api.feat.IFeat")
+local IChara = require("api.chara.IChara")
 
 local QuestMap = {}
 
@@ -283,8 +285,8 @@ function QuestMap.generate_derived_hunt(map_archetype_id, create_cb)
    map.name = I18N.get("map.quest.urban_area")
    Rand.set_seed()
 
-   map:iter_feats():each(IOwned.remove_ownership)
-   map:iter_charas():each(IOwned.remove_ownership)
+   map:iter_feats():each(IFeat.remove_ownership)
+   map:iter_charas():each(IChara.remove_ownership)
 
    create_cb(map)
 
