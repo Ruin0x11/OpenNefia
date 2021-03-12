@@ -29,9 +29,7 @@ end
 function IFeat:refresh()
    IMapObject.on_refresh(self)
    IModdable.on_refresh(self)
-   if self.on_refresh then
-      self:on_refresh()
-   end
+   self:emit("elona_sys.on_feat_refresh") -- TODO move or rename
 end
 
 function IFeat:produce_memory(memory)

@@ -85,13 +85,14 @@ data:add {
       self:reset("can_close", self.opened, "set")
       self:reset("is_solid", not self.opened, "set")
       self:reset("is_opaque", not self.opened, "set")
+
       if self.opened then
          self:reset("image", self.opened_tile)
       else
          self:reset("image", self.closed_tile)
       end
    end,
-   on_bumped_into = function(self, params) self:on_open(params) end,
+   on_bumped_into = function(self, params) self.proto.on_open(self, params) end,
 
    on_open = function(self, params)
       if self.opened then return end
