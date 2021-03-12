@@ -124,7 +124,7 @@ function field_layer:set_camera_pos(x, y)
    self:refresh_hud()
 end
 
-function field_layer:update_screen(scroll, dt)
+function field_layer:update_screen(dt, and_draw, scroll)
    if not self.is_active or not self.renderer then return end
 
    if scroll == nil or self.no_scroll then
@@ -167,7 +167,9 @@ function field_layer:update_screen(scroll, dt)
       while going do
          self.keys:update_repeats(dt)
          going = self.renderer:update(dt)
-         dt = coroutine.yield() or 0
+         if and_draw then
+            dt = coroutine.yield() or 0
+         end
       end
 
       self:refresh_hud()

@@ -179,6 +179,7 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
    local yc = self.ycoords
    local xo = self.xoffs
    local yo = self.yoffs
+   local rots = self.rotations
 
    local sx, sy, ox, oy = self.coords:get_start_offset(x, y, Draw.get_width(), Draw.get_height())
    local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, self.width, self.height)
@@ -195,7 +196,6 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
       local batch_ind = 1
       local self_tiles = self.tiles
       local tiles = self.atlas.tiles
-      local rots = self.rotations
       local cr = self.colors_r
       local cg = self.colors_g
       local cb = self.colors_b
@@ -302,7 +302,11 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
       if drawable.draw then
          local i, j = self.coords:tile_to_screen(xc[ind] - tx, yc[ind] - ty)
          drawable:draw(sx + ox - tw + offset_x + i + xo[ind],
-                       sy + oy - th + offset_y + j + yo[ind])
+                       sy + oy - th + offset_y + j + yo[ind],
+                       nil,
+                       nil,
+                       false,
+                       rots[ind])
       else
          love.graphics.draw(drawable,
                             sx + ox - tw + offset_x,

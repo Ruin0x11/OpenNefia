@@ -17,6 +17,10 @@ function PlayerLightDrawable:init()
    self.offset_y = math.floor(th / 2)
 end
 
+function PlayerLightDrawable:is_drawable_in_ui()
+   return false
+end
+
 function PlayerLightDrawable:update(dt)
    self.frames = self.frames + dt / (config.base.screen_refresh * (16.66 / 1000))
    if self.frames > 1 then
@@ -34,7 +38,7 @@ function PlayerLightDrawable:update(dt)
    end
 end
 
-function PlayerLightDrawable:draw(x, y)
+function PlayerLightDrawable:draw(x, y, w, h, centered, rot)
    Draw.set_blend_mode("add")
    Draw.set_color(self.color)
    self.t.base.player_light:draw(x + self.offset_x, y + self.offset_y, nil, nil, nil, true)

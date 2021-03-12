@@ -112,7 +112,6 @@ function Encounter.start(encounter_id, outer_map, outer_x, outer_y, level)
    end
 
    assert(Map.travel_to(map))
-   Gui.update_screen()
 
    encounter_data.on_map_entered(map, encounter_level, outer_map, outer_x, outer_y)
 

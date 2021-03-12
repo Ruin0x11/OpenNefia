@@ -25,7 +25,14 @@ function Nefia.get_boss_uid(area)
    return area.metadata.nefia_boss_uid or nil
 end
 
-function Nefia.make_name(level, nefia_id)
+function Nefia.set_boss_uid(area, uid)
+   class.assert_is_an(InstancedArea, area)
+   assert(math.type(uid) == "integer")
+
+   area.metadata.nefia_boss_uid = uid
+end
+
+function Nefia.random_name(level, nefia_id)
    local rank_factor = 5
    local kind = Rand.rnd(2)
    local rank = math.clamp(math.floor(level / rank_factor), 0, 5)
@@ -36,7 +43,7 @@ function Nefia.calc_random_nefia_type()
    return Rand.choice(data["elona.nefia"]:iter())._id
 end
 
-function Nefia.calc_random_nefia_level(player)
+function Nefia.calc_random_nefia_level(player, nefia_id)
    -- >>>>>>>> shade2/map.hsp:3258 	if rnd(3){ ...
    local level
    if Rand.one_in(3) then
@@ -51,7 +58,7 @@ function Nefia.calc_random_nefia_level(player)
    -- <<<<<<<< shade2/map.hsp:3263 		} ..
 end
 
-function Nefia.calc_random_nefia_floor_count()
+function Nefia.calc_random_nefia_floor_count(nefia_id)
    -- >>>>>>>> shade2/map.hsp:3265 	areaMaxLevel(p)		=areaMinLevel(p)+rnd(4)+2 ...
    return Rand.rnd(4) + 2
    -- <<<<<<<< shade2/map.hsp:3265 	areaMaxLevel(p)		=areaMinLevel(p)+rnd(4)+2 ..
@@ -60,6 +67,7 @@ end
 function Nefia.calc_nefia_map_level(floor, nefia_level)
    -- In OpenNefia, we start dungeons on floor 1. Nefia level is what used to be
    -- "starting floor", so a nefia of level 5 would start on the fifth floor.
+   -- This means (nefia_level + floor) would be off by one, so subtract 1.
    return (nefia_level or 1) + floor - 1
 end
 
@@ -82,7 +90,7 @@ function Nefia.create(nefia_id, x, y, world_map, level, floor_count)
    area.metadata.nefia_type = nefia_id
    area.metadata.nefia_level = level
    area.metadata.nefia_boss_uid = nil
-   area.name = Nefia.make_name(level, nefia_id)
+   area.name = Nefia.random_name(level, nefia_id)
    area._deepest_floor = floor_count
 
    Area.register(area, { parent = Area.for_map(world_map) })
@@ -95,8 +103,8 @@ end
 
 function Nefia.create_random(x, y, world_map)
    local nefia_id = Nefia.calc_random_nefia_type()
-   local level = Nefia.calc_random_nefia_level(Chara.player())
-   local floor_count = Nefia.calc_random_nefia_floor_count()
+   local level = Nefia.calc_random_nefia_level(Chara.player(), nefia_id)
+   local floor_count = Nefia.calc_random_nefia_floor_count(nefia_id)
 
    return Nefia.create(nefia_id, x, y, world_map, level, floor_count)
 end

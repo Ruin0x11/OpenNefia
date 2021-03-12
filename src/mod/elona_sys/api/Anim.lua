@@ -285,7 +285,7 @@ function Anim.bolt(positions, color, sound, chara_x, chara_y, target_x, target_y
          if draw then
             for j = 1, #frames do
                if frames[j] == "stop" then break
-               else
+               elseif frames[j] then
                   if frames[j].frame < 6 then
                      t.base.anim_shock:draw_region(frames[j].frame, draw_x + frames[j].x, draw_y + frames[j].y, nil, nil, color, true, rotation)
                   end

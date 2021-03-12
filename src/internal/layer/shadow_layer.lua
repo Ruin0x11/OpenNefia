@@ -107,7 +107,7 @@ function shadow_layer:update_light_flicker()
 end
 
 function shadow_layer:update(dt, screen_updated, scroll_frames)
-   self.frames = self.frames + dt * config.base.screen_refresh
+   self.frames = self.frames + dt / (config.base.screen_refresh * (16.66 / 1000))
    if self.frames > 1 then
       self.frames = math.fmod(self.frames, 1)
       self.reupdate_light = true

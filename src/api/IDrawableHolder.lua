@@ -10,7 +10,15 @@ end
 
 function IDrawableHolder:set_drawable(tag, drawable, where, priority)
    where = where or "below"
-   local drawables = where == "above" and "drawables_after" or "drawables"
+
+   local drawables
+   if where == "above" then
+      drawables = "drawables_after"
+   elseif where == "below" then
+      drawables = "drawables"
+   else
+      error("Invalid drawable position " .. tostring(where))
+   end
 
    if drawable then
       class.assert_is_an(IDrawable, drawable)
@@ -33,7 +41,15 @@ end
 
 function IDrawableHolder:get_drawable(tag, where)
    where = where or "below"
-   local drawables = where == "above" and "drawables_after" or "drawables"
+
+   local drawables
+   if where == "above" then
+      drawables = "drawables_after"
+   elseif where == "below" then
+      drawables = "drawables"
+   else
+      error("Invalid drawable position " .. tostring(where))
+   end
 
    if self[drawables] then
       return self[drawables]:get(tag)

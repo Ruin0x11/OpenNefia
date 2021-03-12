@@ -20,13 +20,13 @@ local capitalize = true
 local newline = true
 
 --- Refreshes and scrolls the screen and recalculates FOV.
-function Gui.update_screen(dt)
+function Gui.update_screen(dt, and_draw)
    local sw
    if Log.has_level("debug") then
       sw = Stopwatch:new()
    end
 
-   field:update_screen(scroll, dt)
+   field:update_screen(dt, and_draw, scroll)
    scroll = false
 
    if sw then
@@ -105,7 +105,7 @@ function Gui.wait_for_draw_callbacks()
    end
 
    if field:has_draw_callbacks() then
-      Gui.update_screen()
+      Gui.update_screen(nil, true)
    end
 
    field:wait_for_draw_callbacks()

@@ -3,6 +3,7 @@ local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local StayingCharas = require("api.StayingCharas")
 local Ui = require("api.Ui")
+local MapObjectBatch = require("api.draw.MapObjectBatch")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local InputHandler = require("api.gui.InputHandler")
@@ -24,7 +25,7 @@ local UiListExt = function(choose_ally_menu)
    end
    function E:draw_item_text(text, entry, i, x, y, x_offset)
       if entry.kind == "ally" then
-         choose_ally_menu.chip_batch:add(entry.icon, x - 44, y + 8, nil, nil, entry.color, true)
+         choose_ally_menu.map_object_batch:add(entry.ally, x - 44, y + 8, nil, nil, entry.color, true)
       end
       UiList.draw_item_text(self, text, entry, i, x, y, x_offset)
 
@@ -33,8 +34,8 @@ local UiListExt = function(choose_ally_menu)
    end
    function E:draw()
       UiList.draw(self)
-      choose_ally_menu.chip_batch:draw()
-      choose_ally_menu.chip_batch:clear()
+      choose_ally_menu.map_object_batch:draw()
+      choose_ally_menu.map_object_batch:clear()
    end
 
    return E
@@ -106,7 +107,7 @@ function ChooseAllyMenu:init(charas, topic)
    self.window = UiWindow:new(title, true, "key help")
    table.merge(self.pages, UiListExt(self))
 
-   self.chip_batch = nil
+   self.map_object_batch = nil
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -145,7 +146,7 @@ function ChooseAllyMenu:relayout()
 
    self.t = UiTheme.load(self)
 
-   self.chip_batch = Draw.make_chip_batch("chip")
+   self.map_object_batch = MapObjectBatch:new()
 
    self.window:relayout(self.x, self.y, self.width, self.height)
    self.pages:relayout(self.x + 58, self.y + 66, self.width, self.height)

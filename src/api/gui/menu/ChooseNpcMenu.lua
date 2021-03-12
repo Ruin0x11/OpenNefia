@@ -1,9 +1,7 @@
 local Draw = require("api.Draw")
-local Gui = require("api.Gui")
-local Chara = require("api.Chara")
 local I18N = require("api.I18N")
-local Input = require("api.Input")
 local Ui = require("api.Ui")
+local MapObjectBatch = require("api.draw.MapObjectBatch")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local InputHandler = require("api.gui.InputHandler")
@@ -31,7 +29,7 @@ local UiListExt = function(choose_npc_menu)
       UiList.draw_select_key(self, item, i, key_name, x, y)
    end
    function E:draw_item_text(text, entry, i, x, y, x_offset)
-      choose_npc_menu.chip_batch:add(entry.icon, x - 44, y - 7, nil, nil, entry.color, true)
+      choose_npc_menu.map_object_batch:add(entry.chara, x - 44, y - 7, nil, nil, entry.color, true)
       UiList.draw_item_text(self, text, entry, i, x, y, x_offset)
 
       Draw.text(entry.info, x + 288, y + 2)
@@ -39,8 +37,8 @@ local UiListExt = function(choose_npc_menu)
    end
    function E:draw()
       UiList.draw(self)
-      choose_npc_menu.chip_batch:draw()
-      choose_npc_menu.chip_batch:clear()
+      choose_npc_menu.map_object_batch:draw()
+      choose_npc_menu.map_object_batch:clear()
    end
 
    return E
@@ -102,7 +100,7 @@ function ChooseNpcMenu:init(charas, topic)
    self.window = UiWindow:new("ui.npc_list.title", true, "key help")
    table.merge(self.pages, UiListExt(self))
 
-   self.chip_batch = nil
+   self.map_object_batch = nil
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -123,7 +121,7 @@ function ChooseNpcMenu:relayout()
 
    self.t = UiTheme.load(self)
 
-   self.chip_batch = Draw.make_chip_batch("chip")
+   self.map_object_batch = MapObjectBatch:new()
 
    self.window:relayout(self.x, self.y, self.width, self.height)
    self.pages:relayout(self.x + 58, self.y + 66, self.width, self.height)

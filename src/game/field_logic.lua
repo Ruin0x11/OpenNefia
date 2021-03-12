@@ -314,7 +314,7 @@ function field_logic.player_turn_query()
       return "player_died", player
    end
 
-   Gui.update_screen(dt)
+   Gui.update_screen(dt, true)
 
    result = Event.trigger("base.on_player_turn")
    if result then

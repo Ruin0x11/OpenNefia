@@ -4,6 +4,7 @@ local Ui = require("api.Ui")
 local I18N = require("api.I18N")
 local InventoryTargetEquipWindow = require("api.gui.menu.InventoryTargetEquipWindow")
 local Chara = require("api.Chara")
+local MapObjectBatch = require("api.draw.MapObjectBatch")
 
 local IInput = require("api.gui.IInput")
 local UiList = require("api.gui.UiList")
@@ -37,7 +38,7 @@ local UiListExt = function(inventory_menu)
 
       UiList.draw_select_key(self, entry, i, key_name, x, y)
 
-      inventory_menu.chip_batch:add(entry.icon, x - 21, y + 11, nil, nil, entry.color, true)
+      inventory_menu.map_object_batch:add(entry.item, x - 21, y + 11, nil, nil, entry.color, true)
 
       if entry.source.on_draw then
          entry.source:on_draw(x, y, entry.item, inventory_menu)
@@ -65,8 +66,8 @@ local UiListExt = function(inventory_menu)
    end
    function E:draw()
       UiList.draw(self)
-      inventory_menu.chip_batch:draw()
-      inventory_menu.chip_batch:clear()
+      inventory_menu.map_object_batch:draw()
+      inventory_menu.map_object_batch:clear()
    end
 
    return E
@@ -95,7 +96,7 @@ function InventoryMenu:init(ctxt, returns_item)
 
    self.result = nil
 
-   self.chip_batch = nil
+   self.map_object_batch = nil
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -179,7 +180,7 @@ function InventoryMenu:relayout(x, y)
    self.height = 432
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.t = UiTheme.load(self)
-   self.chip_batch = Draw.make_chip_batch("chip")
+   self.map_object_batch = MapObjectBatch:new()
 
    -- >>>>>>>> shade2/command.hsp:3569 		x=winPosX(640)+455 ...
    local te_width, te_height = 200, 102
@@ -192,14 +193,6 @@ function InventoryMenu:relayout(x, y)
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.pages:relayout(self.x + 58, self.y + 60)
    self.win:set_pages(self.pages)
-end
-
-function InventoryMenu:update_icons_this_page()
-   for _, entry in self.pages:iter() do
-      if not entry.icon then
-         entry.icon = entry.item:calc("image")
-      end
-   end
 end
 
 function InventoryMenu.filter_item(ctxt, item)
@@ -261,7 +254,6 @@ function InventoryMenu:update_filtering()
    local filtered = InventoryMenu.build_list(self.ctxt)
 
    self.pages:set_data(filtered)
-   self:update_icons_this_page()
    --
    -- TODO: Determine when to display weight. Inventory contexts can
    -- be created out of any number of sources that might exclude a
@@ -363,7 +355,6 @@ end
 
 function InventoryMenu:update(dt)
    if self.pages.changed_page then
-      self:update_icons_this_page()
       self.win:set_pages(self)
    end
 
@@ -418,7 +409,7 @@ function InventoryMenu:update(dt)
 end
 
 function InventoryMenu:release()
-   self.chip_batch:release()
+   self.map_object_batch:release()
 end
 
 return InventoryMenu
