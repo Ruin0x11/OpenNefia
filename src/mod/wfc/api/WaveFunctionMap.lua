@@ -31,14 +31,15 @@ function WaveFunctionMap.generate_overlapping_layout(layout, width, height, opts
 
    local final = model:to_image_data()
 
-   return Layout.from_image_data(final, color_to_tile), nil
+   local new_layout = Layout.from_image_data(final, color_to_tile)
+   return new_layout
 end
 
 function WaveFunctionMap.generate_overlapping(layout, width, height, opts)
    local new_layout, err = WaveFunctionMap.generate_overlapping_layout(layout, width, height, opts)
 
    if not new_layout then
-      error(err)
+      return nil, err
    end
 
    return Layout.to_map(new_layout)

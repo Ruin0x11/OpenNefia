@@ -279,7 +279,10 @@ local function calc_dig_success(map, params, result)
    local y = params.dig_y
    local dig_count = params.dig_count
    local success = false
-   local flag = false -- kind == 6
+
+   if map:calc("prevents_mining") then
+      return false
+   end
 
    local tile = map:tile(x, y)
 

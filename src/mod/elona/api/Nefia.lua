@@ -114,6 +114,7 @@ function Nefia.create_entrance(area, x, y, world_map)
    local entrance = Area.create_entrance(area, starting_floor, x, y, {}, world_map)
 
    entrance.image = nefia_proto.image or "elona.feat_area_tower"
+   entrance.color = nefia_proto.color or { 255, 255, 255 }
 
    return entrance
 end

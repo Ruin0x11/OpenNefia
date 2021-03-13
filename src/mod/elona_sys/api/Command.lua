@@ -58,7 +58,7 @@ function Command.move(player, x, y)
    local prev_map_uid, prev_x, prev_y = map:previous_map_and_location()
 
    if not Map.is_in_bounds(next_pos.x, next_pos.y, map) then
-      local can_exit_from_edge = not Map.is_world_map(map) and Map.exists(prev_map_uid)
+      local can_exit_from_edge = not Map.is_world_map(map) and Map.exists(prev_map_uid) and not map:calc("is_indoor")
       if can_exit_from_edge then
          local ok, prev_map = Map.load(prev_map_uid)
          if prev_map and prev_x and prev_y then

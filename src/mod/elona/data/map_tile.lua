@@ -4278,7 +4278,7 @@ data:add_multi(
       {
          _id = "mapgen_floor",
          image = "graphic/default/floor.png",
-         is_solid = true
+         is_solid = false
       },
       {
          _id = "mapgen_tunnel",

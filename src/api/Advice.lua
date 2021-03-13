@@ -3,6 +3,7 @@ local Env = require("api.Env")
 local Event = require("api.Event")
 local env = require("internal.env")
 local mod = require("internal.mod")
+local Log = require("api.Log")
 
 --- Advice system.
 ---
@@ -218,9 +219,6 @@ function Advice.add(where, require_path, fn_name, identifier, fn, opts)
    if not env.is_loaded(require_path) then
       error(("Path '%s' is not loaded."):format(require_path))
    end
-   if not mod.is_loaded(calling_mod) then
-      error(("Mod '%s' is not loaded."):format(calling_mod))
-   end
 
    -- TODO this only checks for the currently loading module, might want to
    -- check recursively if this is in a nested require
@@ -247,13 +245,22 @@ function Advice.add(where, require_path, fn_name, identifier, fn, opts)
    local pred = function(advice_fn)
       return advice_fn.originating_mod == calling_mod and advice_fn.identifier == identifier
    end
+
    if fun.iter(advice.advice_fns):any(pred) then
-      error(("Advice already exists for mod '%s' and identifier '%s'."):format(calling_mod, identifier))
+      if Env.is_hotloading() then
+         Log.debug("Replacing advice callback for for %s:%s - \":%s\"", require_path, fn_name, identifier)
+         table.iremove_by(advice.advice_fns, pred)
+      else
+         error(("Advice already exists for mod '%s' and identifier '%s'."):format(calling_mod, identifier))
+      end
    end
 
-   table.iremove_by(advice.advice_fns, pred)
-
    local priority = opts.priority or Advice.DEFAULT_PRIORITY
+   local enabled = true
+   if opts.enabled ~= nil then
+      enabled = not not opts.enabled
+   end
+
    advice.advice_fns[#advice.advice_fns+1] = {
       priority = priority,
       where = where,
@@ -261,7 +268,7 @@ function Advice.add(where, require_path, fn_name, identifier, fn, opts)
       identifier = identifier,
       originating_mod = calling_mod,
       originating_location = calling_loc,
-      enabled = true
+      enabled = enabled
    }
 
    table.sort(advice.advice_fns, function(a, b) return a.priority < b.priority end)

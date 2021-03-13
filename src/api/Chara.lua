@@ -211,6 +211,10 @@ local hook_generate_chara =
 ---   - copy (table): A dict of fields to copy to the newly created item. Overrides level and quality.
 ---   - level (int): Level of the character.
 ---   - quality (int): Quality of the character (1-6).
+---   - no_modify (bool): Indicates that the generated character should not be
+---     touched by things like `level` or events/hooks that modify its
+---     properties. Examples include unique characters like the strange
+---     scientist that should not get automatically leveled up inside The Void.
 --- @tparam[opt] ILocation map Where to instantiate this item. Defaults to the current map.
 --- @treturn[opt] IChara
 --- @treturn[opt] string error
@@ -245,8 +249,10 @@ function Chara.create(id, x, y, params, where)
    if chara == nil then
       chara = MapObject.generate_from("base.chara", id)
 
-      chara.level = params.level or chara.level
-      chara.quality = params.quality or chara.quality
+      if not params.no_modify then
+         chara.level = params.level or chara.level
+         chara.quality = params.quality or chara.quality
+      end
 
       if where then
          -- TODO: may want to return status

@@ -9,6 +9,9 @@ end
 
 love.graphics.getWidth = function() return 800 end
 love.graphics.getHeight = function() return 600 end
+love.graphics.getCanvas = function() return {} end
+love.graphics.getBlendMode = function() return "alpha" end
+love.graphics.getScissor = function() return 0, 0, 800, 600 end
 love.graphics.getFont = function()
    return
       {
@@ -21,6 +24,7 @@ love.graphics.setFont = function() end
 love.graphics.setColor = function() end
 love.graphics.setCanvas = function() end
 love.graphics.setBlendMode = function() end
+love.graphics.setScissor = function() end
 love.graphics.line = function() end
 love.graphics.polygon = function() end
 love.graphics.print = function() end
