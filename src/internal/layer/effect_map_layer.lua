@@ -46,7 +46,10 @@ function effect_map_layer:add(asset_id, tx, ty, max_frames, rotation, kind)
       alpha = max_frames * 12 + 30
    end
 
+   local tw, th = self.coords:get_size()
    local sx, sy = self.coords:tile_to_screen(tx + 1, ty + 1)
+   sx = sx + tw / 2
+   sy = sy + th / 2
    local map = Map.current()
    local show = map:is_in_fov(tx, ty)
 
