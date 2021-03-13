@@ -78,7 +78,8 @@ local function on_game_start(self, player)
       Building.build(building._id, 50 + i, 22, north_tyris_map)
    end
    for _, i, nefia in data["elona.nefia"]:iter():enumerate() do
-      Nefia.create(nefia._id, 50 + i, 20, north_tyris_map, Rand.rnd(10) + 1, 5)
+      local nefia_area = Nefia.create(nefia._id,  north_tyris, Rand.rnd(10) + 1, 5)
+      Nefia.create_entrance(nefia_area, 50 + i, 20, north_tyris_map)
    end
    Map.save(north_tyris_map)
 

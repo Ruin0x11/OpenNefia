@@ -2,6 +2,12 @@ local Area = require("api.Area")
 local I18N = require("api.I18N")
 local Rand = require("api.Rand")
 local Chara = require("api.Chara")
+local Enum = require("api.Enum")
+local Charagen = require("mod.tools.api.Charagen")
+local Gui = require("api.Gui")
+local Itemgen = require("mod.tools.api.Itemgen")
+local Calc = require("mod.elona.api.Calc")
+local Item = require("api.Item")
 
 local InstancedArea = require("api.InstancedArea")
 
@@ -27,7 +33,7 @@ end
 
 function Nefia.set_boss_uid(area, uid)
    class.assert_is_an(InstancedArea, area)
-   assert(math.type(uid) == "integer")
+   assert(math.type(uid) == "integer" or uid == nil)
 
    area.metadata.nefia_boss_uid = uid
 end
@@ -71,15 +77,14 @@ function Nefia.calc_nefia_map_level(floor, nefia_level)
    return (nefia_level or 1) + floor - 1
 end
 
-function Nefia.create(nefia_id, x, y, world_map, level, floor_count)
-   local nefia_proto = data["elona.nefia"]:ensure(nefia_id)
+function Nefia.create(nefia_id, world_area, level, floor_count)
+   data["elona.nefia"]:ensure(nefia_id)
    assert(math.type(level) == "integer")
    assert(math.type(floor_count) == "integer")
    level = math.max(level, 1)
    floor_count = math.max(floor_count, 1)
 
    local area = InstancedArea:new("elona.nefia")
-   local starting_floor = 1
 
    -- TODO: what I want is to be able to specify "this area has a dungeon boss"
    -- without having some weird unschematized variables stuck in `area.metadata`
@@ -93,20 +98,88 @@ function Nefia.create(nefia_id, x, y, world_map, level, floor_count)
    area.name = Nefia.random_name(level, nefia_id)
    area._deepest_floor = floor_count
 
-   Area.register(area, { parent = Area.for_map(world_map) })
+   Area.register(area, { parent = world_area })
+
+   return area
+end
+
+function Nefia.create_entrance(area, x, y, world_map)
+   local nefia_id = Nefia.get_type(area)
+   if nefia_id == nil then
+      error(("Area %d is not a nefia"):format(area.uid))
+   end
+
+   local starting_floor = 1
+   local nefia_proto = data["elona.nefia"]:ensure(nefia_id)
    local entrance = Area.create_entrance(area, starting_floor, x, y, {}, world_map)
 
    entrance.image = nefia_proto.image or "elona.feat_area_tower"
 
-   return area, entrance
+   return entrance
 end
 
-function Nefia.create_random(x, y, world_map)
+function Nefia.create_random(world_area)
    local nefia_id = Nefia.calc_random_nefia_type()
    local level = Nefia.calc_random_nefia_level(Chara.player(), nefia_id)
    local floor_count = Nefia.calc_random_nefia_floor_count(nefia_id)
 
-   return Nefia.create(nefia_id, x, y, world_map, level, floor_count)
+   return Nefia.create(nefia_id, world_area, level, floor_count)
+end
+
+function Nefia.spawn_boss(map)
+   -- >>>>>>>> shade2/main.hsp:1741 	case evRandBoss ...
+   local boss
+   while boss == nil do
+      local filter = {
+         quality = Enum.Quality.Great,
+         initial_level = map:calc("level") + Rand.rnd(5)
+      }
+      boss = Charagen.create(nil, nil, filter, map)
+   end
+
+   boss.is_precious = true
+   boss.name = ("%s Lv%d"):format(boss.name, boss.level)
+
+   return boss
+   -- <<<<<<<< shade2/main.hsp:1749 	swbreak ..
+end
+
+function Nefia.calc_boss_platinum_amount(player)
+   return math.clamp(Rand.rnd(3) + player:calc("level") / 10, 1, 6)
+end
+
+function Nefia.calc_boss_fame_gained(player, map)
+   -- >>>>>>>> shade2/main.hsp:1763 	gQuestFame	=calcFame(pc,gLevel*30+200) ...
+   map = map or player:current_map()
+   return Calc.calc_fame_gained(player, map:calc("level") * 30 + 200)
+   -- <<<<<<<< shade2/main.hsp:1763 	gQuestFame	=calcFame(pc,gLevel*30+200) ..
+end
+
+function Nefia.create_boss_rewards(player, boss)
+   -- >>>>>>>> shade2/main.hsp:1751 	case evRandBossWin ...
+   player = player or Chara.player()
+   local map = player:current_map()
+
+   local filter = {
+      level = Calc.calc_object_level(nil, map),
+      quality = Calc.calc_object_quality(),
+      categories = "elona.spellbook"
+   }
+   Itemgen.create(player.x, player.y, filter, map)
+
+   local scroll = Item.create("elona.scroll_of_return", player.x, player.y, {}, map)
+
+   local gold_amount = 200 + scroll.amount * 5 -- XXX: ...What?
+   Item.create("elona.gold_piece", player.x, player.y, {amount=gold_amount}, map)
+
+   local platinum_amount = Nefia.calc_boss_platinum_amount(player)
+   Item.create("elona.platinum_coin", player.x, player.y, {amount=platinum_amount}, map)
+
+   local chest = Item.create("elona.bejeweled_chest", player.x, player.y, {}, map)
+   if chest then
+      chest.params.chest_lockpick_difficulty = 0
+   end
+   -- <<<<<<<< shade2/main.hsp:1765 	cFame(pc)+=gQuestFame ..
 end
 
 return Nefia

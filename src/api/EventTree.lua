@@ -108,8 +108,16 @@ function EventTree:unregister(name)
    self.dirty = true
 end
 
+local function sort_events(a, b)
+   if a.priority == b.priority then
+      return a.name < b.name
+   end
+
+   return a.priority < b.priority
+end
+
 function EventTree:sort()
-   table.sort(self.cbs, function(a, b) return a.priority < b.priority end)
+   table.sort(self.cbs, sort_events)
    self.cache = {}
    for _, v in ipairs(self.cbs) do
       local i = #self.cache+1

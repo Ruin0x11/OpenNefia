@@ -181,7 +181,7 @@ data:add {
 
          player:recruit_as_ally(target)
          target.is_being_escorted = true
-         target.is_not_changeable = true
+         target.is_precious = true
          quest.params.escort_chara_uid = target.uid
          -- <<<<<<<< shade2/chat.hsp:3035 			qParam2(rq)=cId(rc) ..
 

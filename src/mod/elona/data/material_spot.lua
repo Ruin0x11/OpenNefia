@@ -40,6 +40,13 @@ data:add {
 
    params = { material_spot_info = "string" },
 
+   on_stepped_on = function(self, params)
+      if params.chara:is_player() then
+         local mes = try_get_spot_info(self, "on_stepped_on_text") or "action.move.feature.material.spot"
+         Gui.mes(mes)
+      end
+   end,
+
    on_search = function(self, params)
       local chara = params.chara
 
@@ -117,6 +124,12 @@ data:add_type {
          name = "material_spot_type",
          type = "id:elona.material_spot?",
          default = nil,
+         template = true
+      },
+      {
+         name = "on_stepped_on_text",
+         type = "locale_key",
+         default = "action.move.feature.material.spot",
          template = true
       },
       {
@@ -199,6 +212,10 @@ data:add {
    on_gather_sound_text = "activity.dig_spot.sound",
    -- <<<<<<<< shade2/proc.hsp:1007 		if cTurn(cc)¥5=0:txtActDigging ..
 
+   -- >>>>>>>> shade2/action.hsp:763 			if feat(1)=objREremain		:txt lang("何かの残骸がある。"," ...
+   on_stepped_on_text = "action.move.feature.material.remains",
+   -- <<<<<<<< shade2/action.hsp:763 			if feat(1)=objREremain		:txt lang("何かの残骸がある。"," ..
+
    -- >>>>>>>> shade2/proc.hsp:32 	if feat(1)=objREremain	:atxLv+=sAnatomy(pc)/3 ...
    on_calc_materials = function(self, params, result)
       result.level = math.floor(result.level + params.chara:skill_level("elona.anatomy") / 3)
@@ -232,8 +249,12 @@ data:add {
    -- <<<<<<<< shade2/proc.hsp:890 		cRowAct(cc)=rowActFish ..
 
    -- >>>>>>>> shade2/proc.hsp:57 		if feat(1)=objREspring	:s=lang("泉は干上がった。","The s ...
-   on_gather_no_more_text = "activity.material.fishing.no_more"
+   on_gather_no_more_text = "activity.material.fishing.no_more",
    -- <<<<<<<< shade2/proc.hsp:57 		if feat(1)=objREspring	:s=lang("泉は干上がった。","The s ..
+
+   -- >>>>>>>> shade2/action.hsp:765 			if feat(1)=objREspring		:txt lang("泉がある。","You  ...
+   on_stepped_on_text = "action.move.feature.material.remains"
+   -- <<<<<<<< shade2/action.hsp:765 			if feat(1)=objREspring		:txt lang("泉がある。","You  ..
 }
 
 data:add {
@@ -264,8 +285,12 @@ data:add {
    -- <<<<<<<< shade2/proc.hsp:1098 			if cTurn(cc)¥5=0:txtActDigging ..
 
    -- >>>>>>>> shade2/proc.hsp:58 		if feat(1)=objREmine	:s=lang("鉱石を掘りつくした。","There ...
-   on_gather_no_more_text = "activity.material.digging.no_more"
+   on_gather_no_more_text = "activity.material.digging.no_more",
    -- <<<<<<<< shade2/proc.hsp:58 		if feat(1)=objREmine	:s=lang("鉱石を掘りつくした。","There ..
+
+   -- >>>>>>>> shade2/action.hsp:764 			if feat(1)=objREmine		:txt lang("採掘場がある。","You  ...
+   on_stepped_on_text = "action.move.feature.material.mining"
+   -- <<<<<<<< shade2/action.hsp:764 			if feat(1)=objREmine		:txt lang("採掘場がある。","You  ..
 }
 
 data:add {
@@ -292,8 +317,12 @@ data:add {
    -- <<<<<<<< shade2/proc.hsp:984 		txt lang("採取を始めた。","You start to search the spot ..
 
    -- >>>>>>>> shade2/proc.hsp:59 		if feat(1)=objREbush	:s=lang("もう目ぼしい植物は見当たらない。", ...
-   on_gather_no_more_text = "activity.material.harvesting.no_more"
+   on_gather_no_more_text = "activity.material.harvesting.no_more",
    -- <<<<<<<< shade2/proc.hsp:59 		if feat(1)=objREbush	:s=lang("もう目ぼしい植物は見当たらない。", ..
+
+   -- >>>>>>>> shade2/action.hsp:766 			if feat(1)=objREbush		:txt lang("色んな植物が生えている。", ...
+   on_stepped_on_text = "action.move.feature.material.plants"
+   -- <<<<<<<< shade2/action.hsp:766 			if feat(1)=objREbush		:txt lang("色んな植物が生えている。", ..
 }
 
 -- These are special; they can always be found no matter what material spot is

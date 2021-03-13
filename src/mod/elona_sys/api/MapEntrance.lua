@@ -93,7 +93,7 @@ function MapEntrance.stairs_up(map, chara, prev)
    local feat = find_stairs("elona.stairs_up", prev_area, this_floor, map)
    if not feat then
       Log.warn("No stairs up on were found in map.")
-      return MapEntrance.center(map, chara, prev)
+      return nil
    end
 
    return { x = feat.x, y = feat.y }
@@ -106,7 +106,7 @@ function MapEntrance.stairs_down(map, chara, prev)
    local feat = find_stairs("elona.stairs_down", prev_area, this_floor, map)
    if not feat then
       Log.warn("No stairs down were found in map.")
-      return MapEntrance.center(map, chara, prev)
+      return nil
    end
 
    return { x = feat.x, y = feat.y }

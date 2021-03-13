@@ -220,6 +220,11 @@ local function travel(start_pos_fn, set_prev_map)
       local chara = params.chara
       if not chara:is_player() then return end
 
+      local result = self:emit("elona.before_travel_using_feat", {chara=chara}, { blocked = false, turn_result = nil })
+      if result.blocked then
+         return result.turn_result or "player_turn_query"
+      end
+
       Gui.play_sound("base.exitmap1")
 
       local prev_map = self:current_map()
@@ -248,8 +253,16 @@ local function travel(start_pos_fn, set_prev_map)
 
          local starting_pos
          local map_archetype = map:archetype()
-         if map_archetype and map_archetype.starting_pos then
-            start_pos_fn = map_archetype.starting_pos
+
+         local function start_pos_or_archetype(map, chara, prev_map, self)
+            local pos = start_pos_fn(map, chara, prev_map, self)
+            if pos == nil then
+               Log.debug("No stairs found in connecting map, attempting to use map archetype's starting position.")
+               if map_archetype and map_archetype.starting_pos then
+                  pos = map_archetype.starting_pos(map, chara, prev_map, self)
+               end
+            end
+            return pos
          end
 
          -- >>>>>>>> shade2/map.hsp:152 		if feat(1)=objDownstairs :msgTemp+=lang("階段を降りた。 ..
@@ -260,16 +273,18 @@ local function travel(start_pos_fn, set_prev_map)
                -- TODO allow configuring ally start positions in Map.travel_to() (mStartWorld)
                starting_pos = entrance_in_parent_map(map, chara, prev_map)
                if starting_pos == nil then
-                  -- Assume there will be stairs in the connecting map.
-                  starting_pos = start_pos_fn(map, chara, prev_map, self)
+                  -- Assume there will be stairs in the connecting map, and if
+                  -- not fall back to the archetype's declared map start
+                  -- position.
+                  starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
                end
             else
-               -- We're going into a dungeon. Always assume there's stairs there.
-               -- TODO: allow maps to declare arbitrary start positions.
-               starting_pos = start_pos_fn(map, chara, prev_map, self)
+               -- We're going into a dungeon. Assume there's stairs there, and
+               -- if not fall back to the archetype.
+               starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
             end
          else
-            starting_pos = start_pos_fn(map, chara, prev_map, self)
+            starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
          end
 
          if starting_pos.x and starting_pos.y then
@@ -322,6 +337,7 @@ local function gen_stair(down)
    local elona_id = (down and 11) or 10
    local image = (down and "elona.feat_stairs_down") or "elona.feat_stairs_up"
    local start_pos_fn = (down and MapEntrance.stairs_up) or MapEntrance.stairs_down
+   local stepped_on_mes = (down and "action.move.feature.stair.down") or "action.move.feature.stair.up"
 
    return {
       _type = "base.feat",
@@ -345,7 +361,7 @@ local function gen_stair(down)
          if params.chara:is_player() and self.params.area_uid then
             local area = Area.get(self.params.area_uid)
             if area then
-               Gui.mes(("This leads to: %s floor %s"):format(area, self.params.area_floor))
+               Gui.mes(stepped_on_mes)
             end
          end
       end,
@@ -388,9 +404,11 @@ data:add
       if params.chara:is_player() and self.params.area_uid then
          local area = Area.get(self.params.area_uid)
          if area then
+            -- >>>>>>>> shade2/action.hsp:758 			if feat(1)=objArea		:txt mapName(feat(2)+feat(3 ...
             if Nefia.get_type(area) then
                ExHelp.maybe_show("elona.random_dungeon")
             end
+            -- <<<<<<<< shade2/action.hsp:758 			if feat(1)=objArea		:txt mapName(feat(2)+feat(3 ..
             Gui.mes(get_map_display_name(area, true))
          end
       end
@@ -418,7 +436,7 @@ data:add
          end
       },
       {
-         id = "base.on_object_instantiated",
+         id = "base.on_feat_instantiated",
          name = "Add nefia completion drawable",
 
          callback = function(self)

@@ -25,6 +25,7 @@ local Quest = require("mod.elona.api.Quest")
 local Hunger = require("mod.elona.api.Hunger")
 local Material = require("mod.elona.api.Material")
 local Area = require("api.Area")
+local Nefia = require("mod.elona.api.Nefia")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    assert(type(curse_state) == "number")
@@ -971,6 +972,17 @@ data:add {
             local dest_x, dest_y = Area.position_in_parent_map(this_area)
             if ok and map_metadata.uid and dest_x and dest_y then
                Gui.mes("misc.return.air_becomes_charged")
+
+               local map = target:current_map()
+               if map then
+                  local area = Area.for_map(map)
+                  if area and Nefia.get_type(area) then
+                     local boss_uid = Nefia.get_boss_uid(area)
+                     if boss_uid and boss_uid >= 0 then
+                        Gui.mes("magic.escape.lord_may_disappear")
+                     end
+                  end
+               end
 
                s.return_destination_map_uid = map_metadata.uid
                s.return_destination_map_x = dest_x

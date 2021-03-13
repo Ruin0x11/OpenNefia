@@ -475,11 +475,7 @@ function Gui.add_effect_map(asset_id, tx, ty, max_frames, rotation, kind)
       return
    end
 
-   local coords = Draw.get_coords()
-   local tw, th = coords:get_size()
-   local sx, sy = coords:tile_to_screen(tx + 1, ty + 1)
-
-   layer:add(asset_id, sx + tw / 2, sy + th / 2, max_frames, rotation, kind)
+   layer:add(asset_id, tx, ty, max_frames, rotation, kind)
 end
 
 function Gui.step_effect_map(frames)

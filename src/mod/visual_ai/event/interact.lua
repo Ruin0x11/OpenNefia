@@ -6,7 +6,7 @@ local function add_interact_action(chara, params, actions)
       table.insert(actions, { text = text, callback = callback })
    end
 
-   if chara:is_in_player_party() then
+   if chara:is_in_player_party() and not chara:is_player() then
       add_option("visual_ai.interact_action", VisualAI.edit)
    end
 

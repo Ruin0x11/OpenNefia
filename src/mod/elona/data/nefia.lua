@@ -77,7 +77,8 @@ data:add {
       turn_cost = 10000,
       is_temporary = false,
       has_anchored_npcs = false,
-      is_indoor = true
+      is_indoor = true,
+      types = { "dungeon" },
    }
 }
 
@@ -88,8 +89,13 @@ local area_nefia = {
    image = "elona.feat_area_cave",
 }
 
-local function remove_down_stairs(map)
-   Feat.iter(map):filter(function(i) return i._id == "elona.stairs_down" end):each(IFeat.remove_ownership)
+
+local function remove_down_stairs(map, area)
+   local filter = function(feat)
+      return feat._id == "elona.stairs_down"
+         and feat.params.area_uid == area.uid
+   end
+   Feat.iter(map):filter(filter):each(IFeat.remove_ownership)
 end
 
 function area_nefia.on_generate_floor(area, floor)
@@ -107,12 +113,11 @@ function area_nefia.on_generate_floor(area, floor)
       map:set_archetype("elona.nefia", { set_properties = true })
    end
 
-   -- TODO map level text
    map.name = area.name
    map.level_text = Dungeon.map_level_text(floor)
 
    if area:deepest_floor() == floor then
-      remove_down_stairs(map)
+      remove_down_stairs(map, area)
    end
 
    return map

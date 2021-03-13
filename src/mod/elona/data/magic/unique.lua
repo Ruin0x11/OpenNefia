@@ -20,6 +20,8 @@ local Skill = require("mod.elona_sys.api.Skill")
 local I18N = require("api.I18N")
 local Wish = require("mod.elona.api.Wish")
 local Quest = require("mod.elona.api.Quest")
+local Area = require("api.Area")
+local Nefia = require("mod.elona.api.Nefia")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
@@ -284,7 +286,18 @@ data:add {
 
          if map_uid then
             Gui.mes("misc.return.air_becomes_charged")
-            -- TODO dungeon boss
+
+            local map = target:current_map()
+            if map then
+               local area = Area.for_map(map)
+               if area and Nefia.get_type(area) then
+                  local boss_uid = Nefia.get_boss_uid(area)
+                  if boss_uid and boss_uid >= 0 then
+                     Gui.mes("magic.escape.lord_may_disappear")
+                  end
+               end
+            end
+
             s.return_destination_map_uid = map_uid
             s.turns_until_cast_return = 15 + Rand.rnd(15)
          end

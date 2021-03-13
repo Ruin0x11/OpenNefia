@@ -5,7 +5,6 @@ local Enum = require("api.Enum")
 local Chara = require("api.Chara")
 local Calc = require("mod.elona.api.Calc")
 local Itemgen = require("mod.tools.api.Itemgen")
-local Filters = require("mod.elona.api.Filters")
 local Skill = require("mod.elona_sys.api.Skill")
 local FigureDrawable = require("mod.elona.api.gui.FigureDrawable")
 local CardDrawable = require("mod.elona.api.gui.CardDrawable")
@@ -26,7 +25,7 @@ end
 
 function LootDrops.should_drop_card_or_figure(chara)
    local quality = chara:calc("quality")
-   return Rand.one_in(175) or true
+   return Rand.one_in(175)
       or quality == Enum.Quality.Unique
       or config.elona.debug_always_drop_figure_card
       or (quality == Enum.Quality.Great and Rand.one_in(2))
