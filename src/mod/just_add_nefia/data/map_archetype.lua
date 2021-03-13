@@ -50,9 +50,12 @@ function firey_life.on_map_entered_events(map)
    end
 end
 
-local function fire_anim(positions)
+local function fire_anim(positions, map)
    local tw, th = Draw.get_coords():get_size()
    local make_flame = function(pos)
+      if not map:is_in_fov(pos.x, pos.y) then
+         return nil
+      end
       local sx, sy = Gui.tile_to_screen(pos.x, pos.y)
       return {
          x = sx - tw / 2,
@@ -60,7 +63,7 @@ local function fire_anim(positions)
          frame = 0 - Rand.rnd(3)
       }
    end
-   local flames = fun.iter(positions):map(make_flame):to_list()
+   local flames = fun.iter(positions):map(make_flame):filter(fun.op.truth):to_list()
    local cb = Anim.ragnarok(flames, true)
    Gui.start_draw_callback(cb)
 end
@@ -72,8 +75,9 @@ local function cause_fire(map)
    local to_pos = function(x, y)
       return { x = x, y = y }
    end
+   Gui.update_screen()
    local positions = map:iter_tiles():filter(filter):map(to_pos):to_list()
-   fire_anim(positions)
+   fire_anim(positions, map)
    for _, pos in ipairs(positions) do
       local x, y = pos.x, pos.y
       Effect.damage_map_fire(x, y, nil, map)

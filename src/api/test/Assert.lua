@@ -7,6 +7,7 @@ function Assert.is_truthy(actual, msg)
    if not actual then
       error(msg or "assertion failed!", 2)
    end
+   return actual
 end
 
 function Assert.is_falsy(actual, msg)

@@ -406,13 +406,17 @@ function Quest.register_town(map)
    if map.is_generated_every_time then
       return nil, "Map must be able to be regenerated (is_generated_every_time = false)"
    end
-   local parent = Area.parent(map)
-   if not parent then
-      return nil, "Map must have parent_area"
+   local area = Area.for_map(map)
+   if not area then
+      return nil, "Map must have area"
+   end
+   local parent = Area.parent(area)
+   if not area then
+      return nil, "Map must have parent area"
    end
 
-   local x, y = Map.position_in_parent_map(map)
-   assert(x, "Town must have an area archetype with `parent_area` set")
+   local x, y, floor = parent:child_area_position(area)
+   assert(x, "Town must have a parent area and position set")
 
    Log.debug("Register quest endpoint %d", map.uid)
 
@@ -423,6 +427,7 @@ function Quest.register_town(map)
       world_map_area_uid = parent.uid,
       world_map_x = x,
       world_map_y = y,
+      world_map_floor = floor
    }
 
    save.elona_sys.quest.towns[map.uid] = town

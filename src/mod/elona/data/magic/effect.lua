@@ -968,8 +968,8 @@ data:add {
          local parent_area = Area.parent(this_area)
 
          if parent_area then
-            local ok, map_metadata = parent_area:get_floor(1)
-            local dest_x, dest_y = Area.position_in_parent_map(this_area)
+            local dest_x, dest_y, dest_floor = Area.position_in_parent_map(this_area)
+            local ok, map_metadata = parent_area:get_floor(dest_floor)
             if ok and map_metadata.uid and dest_x and dest_y then
                Gui.mes("misc.return.air_becomes_charged")
 

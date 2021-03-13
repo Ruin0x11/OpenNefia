@@ -255,6 +255,7 @@ function Building.build_home(home_id, x, y, world_map)
    end
 
    -- TODO world map nefia refresh
+   Area.set_unique("elona.your_home", new_home_area, world_area)
 
    local entrance = assert(Area.create_entrance(new_home_area, 1, x, y, {}, world_map))
    entrance.image = home_proto.image
@@ -262,7 +263,6 @@ function Building.build_home(home_id, x, y, world_map)
    local ok, new_home_map = assert(new_home_area:load_or_generate_floor(new_home_area:starting_floor()))
    save.base.home_map_uid = new_home_map.uid
 
-   Area.set_unique("elona.your_home", new_home_area, world_area)
    return new_home_map, new_home_area
 end
 

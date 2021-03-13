@@ -101,15 +101,7 @@ function Area.position_in_parent_map(area)
       return nil, nil
    end
 
-   -- Try seeing if there is a custom position set first.
-   if area.parent_x and area.parent_y then
-      return area.parent_x, area.parent_y
-   end
-
-   local floor = area.parent_floor or 1
-
-   -- Look in the area's archetype definition for a child map.
-   return parent:position_of_child(area, floor)
+   return parent:child_area_position(area)
 end
 
 function Area.get_root_area(map_or_area)
@@ -194,6 +186,7 @@ function Area.register(area, opts)
 
    if class.is_an(InstancedArea, opts.parent) then
       area.parent_area = opts.parent.uid
+      opts.parent:add_child_area(area)
    end
 
    if area.parent_area == nil and opts.parent ~= "root" then
@@ -249,6 +242,11 @@ function Area.create_entrance(area, map_or_floor_number, x, y, params, map)
    feat.params.area_floor = floor
    if area.image then
       feat.image = area.image
+   end
+
+   local parent_area = Area.for_map(map)
+   if parent_area and parent_area:child_area_position(area) == nil then
+      parent_area:set_child_area_position(area, x, y, floor)
    end
 
    return feat, nil
@@ -330,6 +328,11 @@ function Area.unregister(area)
    end
 
    Log.debug("Unregistering area %d (%s) with maps: %s", area.uid, area.name, inspect(fun.iter(area.maps):extract("uid"):to_list()))
+
+   local parent = Area.parent(area)
+   if parent then
+      parent:remove_child_area(area)
+   end
 
    local areas = save.base.areas
    areas[area.uid] = nil
