@@ -268,7 +268,7 @@ end
 function ElonaBuilding.update_museum(map)
    local original_rank = Rank.get("elona.museum")
    local new_rank = ElonaBuilding.calc_museum_rank(map)
-   Rank.set("elona.museum", new_rank)
+   Rank.set("elona.museum", new_rank, true)
 
    if original_rank ~= new_rank then
       local color
@@ -277,8 +277,7 @@ function ElonaBuilding.update_museum(map)
       else
          color = "Purple"
       end
-      -- TODO
-      Gui.mes_c("building.museum.rank_change", color, math.floor(original_rank / 100), math.floor(new_rank / 100), "???")
+      Gui.mes_c("building.museum.rank_change", color, math.floor(original_rank / 100), math.floor(new_rank / 100), Rank.title("elona.museum"))
    end
 
    map.max_crowd_density = (100 - new_rank / 100) / 2 + 1
