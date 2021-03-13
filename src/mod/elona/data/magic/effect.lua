@@ -964,33 +964,34 @@ data:add {
             Gui.mes("TODO jail") -- TODO
          end
 
-         local this_area = assert(Area.current())
-         local parent_area = Area.parent(this_area)
+         local this_area = Area.current()
+         if this_area then
+            local parent_area = Area.parent(this_area)
+            if parent_area then
+               local dest_x, dest_y, dest_floor = parent_area:child_area_position(this_area)
+               local ok, map_metadata = parent_area:get_floor(dest_floor)
+               if ok and map_metadata.uid and dest_x and dest_y then
+                  Gui.mes("misc.return.air_becomes_charged")
 
-         if parent_area then
-            local dest_x, dest_y, dest_floor = Area.position_in_parent_map(this_area)
-            local ok, map_metadata = parent_area:get_floor(dest_floor)
-            if ok and map_metadata.uid and dest_x and dest_y then
-               Gui.mes("misc.return.air_becomes_charged")
-
-               local map = target:current_map()
-               if map then
-                  local area = Area.for_map(map)
-                  if area and Nefia.get_type(area) then
-                     local boss_uid = Nefia.get_boss_uid(area)
-                     if boss_uid and boss_uid >= 0 then
-                        Gui.mes("magic.escape.lord_may_disappear")
+                  local map = target:current_map()
+                  if map then
+                     local area = Area.for_map(map)
+                     if area and Nefia.get_type(area) then
+                        local boss_uid = Nefia.get_boss_uid(area)
+                        if boss_uid and boss_uid >= 0 then
+                           Gui.mes("magic.escape.lord_may_disappear")
+                        end
                      end
                   end
-               end
 
-               s.return_destination_map_uid = map_metadata.uid
-               s.return_destination_map_x = dest_x
-               s.return_destination_map_y = dest_y
-               s.return_destination_map_uid = map_metadata.uid
-               s.turns_until_cast_return = 5 + Rand.rnd(10)
-            else
-               Log.error("Could not find destination parent map (%s %s %s)", ok, dest_x, dest_y)
+                  s.return_destination_map_uid = map_metadata.uid
+                  s.return_destination_map_x = dest_x
+                  s.return_destination_map_y = dest_y
+                  s.return_destination_map_uid = map_metadata.uid
+                  s.turns_until_cast_return = 5 + Rand.rnd(10)
+               else
+                  Log.error("Could not find destination parent map (%s %s %s)", ok, dest_x, dest_y)
+               end
             end
          end
       end

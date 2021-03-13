@@ -95,15 +95,6 @@ function Area.parent(map_or_area)
    return Area.get(area.parent_area)
 end
 
-function Area.position_in_parent_map(area)
-   local parent = Area.parent(area)
-   if parent == nil then
-      return nil, nil
-   end
-
-   return parent:child_area_position(area)
-end
-
 function Area.get_root_area(map_or_area)
    local area = get_area(map_or_area)
    while area do
@@ -245,7 +236,7 @@ function Area.create_entrance(area, map_or_floor_number, x, y, params, map)
    end
 
    local parent_area = Area.for_map(map)
-   if parent_area and parent_area:child_area_position(area) == nil then
+   if parent_area and parent_area:has_child_area(area) and parent_area:child_area_position(area) == nil then
       parent_area:set_child_area_position(area, x, y, floor)
    end
 
@@ -352,6 +343,7 @@ function Area.delete(area)
    end
 
    area.maps = {}
+   area._children = {}
    area.deepest_floor_visited = 0
 
    Event.trigger("base.on_area_deleted", {area=area})

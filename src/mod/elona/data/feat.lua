@@ -190,18 +190,11 @@ data:add {
 }
 
 
-local function entrance_in_parent_map(map, chara, prev)
-   local x, y
-   local prev_area = Area.for_map(prev)
-   local find_area_entrance = function(feat)
-      return feat.params.area_uid == prev_area.uid
-   end
-   local entrance = map:iter_feats():filter(find_area_entrance):nth(1)
-   if entrance == nil then
+local function entrance_in_parent_map(map, area, parent_area, chara, prev)
+   local x, y, floor = parent_area:child_area_position(area)
+   print("GET", map.uid, area, parent_area, x, y, floor)
+   if x == nil or floor ~= parent_area:floor_of_map(map.uid) then
       return nil
-   else
-      x = entrance.x
-      y = entrance.y
    end
 
    local index = 0
@@ -229,6 +222,7 @@ local function travel(start_pos_fn, set_prev_map)
 
       local prev_map = self:current_map()
       local prev_area = Area.for_map(prev_map)
+      local parent_area = Area.parent(prev_area)
       local start_x, start_y
       local area, map
 
@@ -269,9 +263,9 @@ local function travel(start_pos_fn, set_prev_map)
          if area.uid ~= prev_area.uid then
             -- If the area we're trying to travel to is the parent of this area, then
             -- put the player directly on the area's entrance.
-            if Area.parent(prev_area) == area then
+            if parent_area == area then
                -- TODO allow configuring ally start positions in Map.travel_to() (mStartWorld)
-               starting_pos = entrance_in_parent_map(map, chara, prev_map)
+               starting_pos = entrance_in_parent_map(map, prev_area, parent_area, chara, prev_map)
                if starting_pos == nil then
                   -- Assume there will be stairs in the connecting map, and if
                   -- not fall back to the archetype's declared map start
@@ -282,6 +276,12 @@ local function travel(start_pos_fn, set_prev_map)
                -- We're going into a dungeon. Assume there's stairs there, and
                -- if not fall back to the archetype.
                starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
+
+               if prev_area:has_child_area(area) then
+                  -- `prev_area` contains the entrance to this area.
+                  local floor = assert(Map.floor_number(prev_map))
+                  prev_area:set_child_area_position(area, chara.x, chara.y, floor)
+               end
             end
          else
             starting_pos = start_pos_or_archetype(map, chara, prev_map, self)

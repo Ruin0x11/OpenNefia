@@ -541,7 +541,7 @@ function Map.try_place_chara(chara, x, y, map)
 end
 
 local function rebuild_map(map, params)
-   Log.error("TODO")
+   Log.error("TODO rebuild map")
 end
 
 --- Cleans up the current map and moves the player and allies to a

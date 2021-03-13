@@ -16,8 +16,9 @@ function test_Nefia_create__sets_position_in_parent_map()
    ElonaCommand.descend(player)
 
    Assert.eq(nefia_area, Area.current())
+   Assert.eq(north_tyris, Area.parent(nefia_area))
 
-   local x, y, floor = Area.position_in_parent_map(Area.current())
+   local x, y, floor = Area.parent(nefia_area):child_area_position(nefia_area)
    Assert.eq(50, x)
    Assert.eq(20, y)
    Assert.eq(1, floor)
