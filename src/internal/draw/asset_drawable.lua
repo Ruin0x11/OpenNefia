@@ -11,6 +11,7 @@ local function crop(proto)
                                       base:getWidth(), base:getHeight())
    assert(proto.width > 0)
    local canvas = love.graphics.newCanvas(proto.width, proto.height)
+   local old_canvas = love.graphics.getCanvas()
 
    -- Reset global drawing state to be clean so the asset gets copied correctly
    local blend_mode = love.graphics.getBlendMode()
@@ -23,7 +24,7 @@ local function crop(proto)
 
    love.graphics.setBlendMode(blend_mode)
    love.graphics.setScissor(sx, sy, sw, sh)
-   love.graphics.setCanvas()
+   love.graphics.setCanvas(old_canvas)
 
    local image = love.graphics.newImage(canvas:newImageData())
 
