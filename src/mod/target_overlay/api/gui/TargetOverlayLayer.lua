@@ -2,7 +2,6 @@ local Draw = require("api.Draw")
 local IDrawLayer = require("api.gui.IDrawLayer")
 local Chara = require("api.Chara")
 local Map = require("api.Map")
-local Log = require("api.Log")
 
 local TargetOverlayLayer = class.class("TargetOverlayLayer", IDrawLayer)
 

@@ -336,6 +336,16 @@ local function extract_mod_name(path)
    return string.match(path, "^mod%.([^.]+)[%.]?")
 end
 
+function env.is_valid_ident(ident)
+   return string.match(ident, "^[_a-z][_a-z0-9]*$")
+end
+
+function env.assert_is_valid_ident(ident)
+   if not env.is_valid_ident(ident) then
+      error(("'%s' is not a valid identifier (must consist of lowercase letters, numbers and underscores only, cannot start with a number)"):format(ident), 2)
+   end
+end
+
 --- Loads a chunk without updating the global package.loaded table.
 --- The load method chosen depends on the path prefix: "api" will load
 --- with the global environment, "mod" will use a sandboxed

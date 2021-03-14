@@ -38,6 +38,8 @@ end
 
 function UiMessageWindow:relayout(x, y, width, height)
    if self.canvas == nil or width ~= self.width or height ~= self.height then
+      width = math.max(width, 1)
+      height = math.max(height, 1)
       self.canvas = Draw.create_canvas(width, height)
       self.redraw = true
    end

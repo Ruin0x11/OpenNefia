@@ -1,3 +1,3 @@
-local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 
-Draw.register_draw_layer("mod.target_overlay.api.gui.TargetOverlayLayer")
+Gui.register_draw_layer("target_overlay", "mod.target_overlay.api.gui.TargetOverlayLayer")

@@ -1,22 +1,24 @@
 local Draw = require("api.Draw")
 local Log = require("api.Log")
+local PriorityMap = require("api.PriorityMap")
 
 local sound_manager = require("internal.global.global_sound_manager")
 
 local field_renderer = class.class("field_renderer")
 
-function field_renderer:init(map_width, map_height, layers)
+function field_renderer:init(map_width, map_height, layers, hud)
    local coords = Draw.get_coords()
 
-   self.width = map_width
-   self.height = map_height
+   self.map_width = map_width
+   self.map_height = map_height
    self.coords = coords
    self.draw_x = 0
    self.draw_y = 0
 
    self.screen_updated = true
 
-   self.layers = {}
+   self.layers = PriorityMap:new()
+   self.enabled = {}
 
    self.scroll = nil
    self.scroll_frames = 0
@@ -24,12 +26,12 @@ function field_renderer:init(map_width, map_height, layers)
    self.scroll_x = 0
    self.scroll_y = 0
 
-   for _, require_path in ipairs(layers) do
+   for tag, entry in pairs(layers) do
       -- WARNING: This needs to be sanitized by moving all the layers
       -- to the public API, to prevent usage of the global require.
-      local ok, layer = pcall(require, require_path)
+      local ok, layer = pcall(require, entry.require_path)
       if not ok then
-         error("Could not load draw layer " .. require_path .. ":\n\t" .. layer)
+         error("Could not load draw layer " .. entry.require_path .. ":\n\t" .. layer)
       end
       local IDrawLayer = require("api.gui.IDrawLayer")
 
@@ -39,31 +41,51 @@ function field_renderer:init(map_width, map_height, layers)
       -- TODO
       instance:on_theme_switched(coords)
       instance:reset()
-      instance:relayout()
+      instance:relayout(self.x, self.y, self.width, self.height)
 
-      self.layers[#self.layers+1] = instance
+      self.layers:set(tag, instance, entry.priority)
+      self.enabled[tag] = entry.enabled
    end
+
+   self.hud = hud
+   self.hud:on_theme_switched(coords)
+   self.hud:reset()
+   self.layers:set("hud", self.hud, 10000000) -- Gui.LAYER_PRIORITY_HUD
 end
 
 function field_renderer:on_theme_switched()
    local coords = Draw.get_coords()
-   for _, layer in ipairs(self.layers) do
+   for _, layer in self.layers:iter() do
       layer:on_theme_switched(coords)
-      layer:relayout()
+      layer:relayout(self.x, self.y, self.width, self.height)
    end
 end
 
-function field_renderer:find_layer(id)
-   for _, layer in ipairs(self.layers) do
-      if class.is_an(id, layer) then
-         return layer
-      end
+function field_renderer:relayout(x, y, width, height)
+   self.x = x
+   self.y = y
+   self.width = width
+   self.height = height
+   for _, layer in self.layers:iter() do
+      layer:relayout(self.x, self.y, self.width, self.height)
    end
-   return nil
 end
 
-function field_renderer:set_map(map, layers)
-   self:init(map:width(), map:height(), layers)
+function field_renderer:get_layer(tag)
+   assert(type(tag) == "string")
+   return self.layers:get(tag)
+end
+
+function field_renderer:set_layer_enabled(tag, enabled)
+   assert(type(tag) == "string")
+   if not self.layers:get(tag) then
+      error(("Layer '%s' isn't registered"):format(tag))
+   end
+   self.enabled[tag] = not not enabled
+end
+
+function field_renderer:set_map(map, layers, hud)
+   self:init(map:width(), map:height(), layers, hud)
 end
 
 function field_renderer:set_scroll(dx, dy, scroll_frames)
@@ -75,8 +97,8 @@ end
 function field_renderer:update_draw_pos(player_x, player_y, scroll_frames)
    local draw_x, draw_y = self.coords:get_draw_pos(player_x,
                                                    player_y,
-                                                   self.width,
-                                                   self.height,
+                                                   self.map_width,
+                                                   self.map_height,
                                                    Draw.get_width(),
                                                    Draw.get_height())
 
@@ -107,10 +129,12 @@ function field_renderer:draw()
    local draw_y = self.draw_y
    local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
 
-   for _, l in ipairs(self.layers) do
-      local ok, result = xpcall(function() l:draw(draw_x, draw_y, self.scroll_x, self.scroll_y) end, debug.traceback)
-      if not ok then
-         Log.error("%s", result)
+   for _, l, tag in self.layers:iter() do
+      if self.enabled[tag] ~= false then
+         local ok, result = xpcall(function() l:draw(draw_x, draw_y, self.scroll_x, self.scroll_y) end, debug.traceback)
+         if not ok then
+            Log.error("%s", result)
+         end
       end
    end
 end
@@ -137,15 +161,13 @@ function field_renderer:update(dt)
    end
 
    local going = false
-   for _, l in ipairs(self.layers) do
-      local result = l:update(dt, self.screen_updated, self.scroll_frames)
-      if result then -- not nil or false
-         going = true
+   for _, l, tag in self.layers:iter() do
+      if self.enabled[tag] ~= false then
+         local result = l:update(dt, self.screen_updated, self.scroll_frames)
+         if result then -- not nil or false
+            going = true
+         end
       end
-      if self.screen_updated then
-      end
-   end
-   if self.screen_updated then
    end
 
    if not going then

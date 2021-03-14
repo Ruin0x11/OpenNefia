@@ -286,6 +286,11 @@ local function travel(start_pos_fn, set_prev_map)
             starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
          end
 
+         if starting_pos == nil then
+            Log.error("Map does not declare a start position. Defaulting to the center of the map.")
+            starting_pos = MapEntrance.center(map, chara, prev_map, self)
+         end
+
          if starting_pos.x and starting_pos.y then
             start_x = starting_pos.x
             start_y = starting_pos.y

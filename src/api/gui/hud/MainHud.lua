@@ -4,7 +4,6 @@ local InputHandler = require("api.gui.InputHandler")
 local UiBar = require("api.gui.hud.UiBar")
 local UiBuffs = require("api.gui.hud.UiBuffs")
 local UiClock = require("api.gui.hud.UiClock")
-local UiFpsCounter = require("api.gui.hud.UiFpsCounter")
 local UiGoldPlatinum = require("api.gui.hud.UiGoldPlatinum")
 local UiLevel = require("api.gui.hud.UiLevel")
 local UiMessageWindow = require("api.gui.hud.UiMessageWindow")
@@ -50,8 +49,12 @@ function MainHud:init()
       self:set_data(player.mp, player:calc("max_mp"))
    end
    self.widgets:add(UiBar:new("hud_mp_bar", 0, 0, true), "hud_mp_bar", { position = position, refresh = refresh })
+end
 
-   self.widgets:add(UiFpsCounter:new(), "fps_counter")
+function MainHud:reset()
+end
+
+function MainHud:on_theme_switched()
 end
 
 function MainHud:make_keymap()
@@ -75,8 +78,8 @@ function MainHud:refresh(player)
    self.widgets:refresh(player)
 end
 
-function MainHud:draw()
-   self.widgets:draw()
+function MainHud:draw(draw_x, draw_y)
+   self.widgets:draw(draw_x, draw_y)
 end
 
 function MainHud:update(dt)

@@ -62,6 +62,12 @@ Env.get_module_of_member = env.get_module_of_member
 -- @function Env.get_time
 Env.get_time = socket.gettime
 
+-- @function Env.is_valid_ident
+Env.is_valid_ident = env.is_valid_ident
+
+-- @function Env.assert_is_valid_ident
+Env.assert_is_valid_ident = env.assert_is_valid_ident
+
 local time_begin = Env.get_time()
 
 function Env.get_play_time(old_play_time)
