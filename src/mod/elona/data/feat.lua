@@ -436,7 +436,7 @@ data:add
       },
       {
          id = "base.on_feat_instantiated",
-         name = "Add nefia completion drawable",
+         name = "Add nefia completion drawable and light",
 
          callback = function(self)
             if self.params.area_uid ~= nil then
@@ -452,6 +452,43 @@ data:add
                else
                   self:set_drawable("elona.nefia_completion", nil)
                end
+
+               local function is_area_town_or_guild(area)
+                  local archetype = area:archetype()
+                  if archetype and archetype.floors then
+                     for _, map_archetype_id in pairs(archetype.floors) do
+                        local map_archetype = data["base.map_archetype"][map_archetype_id]
+                        if map_archetype
+                           and map_archetype.properties
+                           and map_archetype.properties.types
+                        then
+                           local set = table.set(map_archetype.properties.types)
+                           if set["town"] or set["guild"] then
+                              return true
+                           end
+                        end
+                     end
+                  end
+                  return false
+               end
+
+               -- >>>>>>>> shade2/map.hsp:2442 	if (areaType(cnt)=mTypeTown)or(areaType(cnt)=mTyp ...
+               if area then
+                  local has_light = area.metadata.has_light or is_area_town_or_guild(area)
+
+                  if has_light then
+                     self.light = {
+                        chip = "light_town_light",
+                        bright = 140,
+                        offset_y = 48 - 48,
+                        power = 10,
+                        flicker = 20,
+                        always_on = false
+                     }
+                     self:refresh_cell_on_map()
+                  end
+               end
+               -- <<<<<<<< shade2/map.hsp:2442 	if (areaType(cnt)=mTypeTown)or(areaType(cnt)=mTyp ..
             end
          end
       }
