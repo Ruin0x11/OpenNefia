@@ -2,6 +2,7 @@ local Env = require("api.Env")
 local Log = require("api.Log")
 local IDrawable = require("api.gui.IDrawable")
 local IInput = require("api.gui.IInput")
+local config = require("internal.config")
 
 local draw = require("internal.draw")
 
@@ -97,6 +98,12 @@ function IUiLayer:query(z_order)
 
          success, res, canceled = xpcall(
             function()
+               if config.base.update_unfocused_ui_layers then
+                  local layers = draw.get_layers()
+                  for i = 1, #layers-1 do
+                     layers[i].layer:update(dt, false)
+                  end
+               end
                local ran = self:run_actions(dt)
                return self:update(dt, ran)
             end,

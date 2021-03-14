@@ -381,6 +381,12 @@ data:add_multi(
          default = "always_wait",
       },
       {
+         _id = "update_unfocused_ui_layers",
+
+         type = "boolean",
+         default = false
+      },
+      {
          _id = "background_effect_wait",
 
          type = "integer",

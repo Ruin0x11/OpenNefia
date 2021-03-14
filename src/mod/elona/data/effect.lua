@@ -146,6 +146,12 @@ local effect = {
       end,
       -- <<<<<<<< shade2/chara_func.hsp:995 		p=power/10 ..
 
+      -- >>>>>>>> shade2/chara_func.hsp:1001 				cSick(tc)+=p/10+1 ...
+      calc_additive_power = function(chara, power)
+         return power / 10 + 1
+      end,
+      -- <<<<<<<< shade2/chara_func.hsp:1001 				cSick(tc)+=p/10+1 ..
+
       on_turn_end = function(chara)
          -- >>>>>>>> elona122/shade2/calculation.hsp:1201:DONE 	if cSick(r1)>0{ ..
          local result
@@ -212,6 +218,12 @@ local effect = {
          -- <<<<<<<< shade2/chara_func.hsp:883 		p=p/5 ..
       end,
 
+      -- >>>>>>>> shade2/chara_func.hsp:890 				cPoison(tc)+=p/3+3 ...
+      calc_additive_power = function(chara, power)
+         return power / 3 + 3
+      end,
+      -- <<<<<<<< shade2/chara_func.hsp:890 				cPoison(tc)+=p/3+3 ..
+
       -- >>>>>>>> shade2/proc.hsp:670 	cPoison(tc)	=0 ...
       on_sleep = "remove",
       -- <<<<<<<< shade2/proc.hsp:670 	cPoison(tc)	=0 ..
@@ -263,6 +275,12 @@ local effect = {
          -- <<<<<<<< shade2/chara_func.hsp:902 		p=p/4 ..
       end,
 
+      -- >>>>>>>> shade2/chara_func.hsp:909 				cSleep(tc)+=p/3+1 ...
+      calc_additive_power = function(chara, power)
+         return power / 3 + 1
+      end,
+      -- <<<<<<<< shade2/chara_func.hsp:909 				cSleep(tc)+=p/3+1 ..
+
       -- >>>>>>>> shade2/proc.hsp:671 	cSleep(tc)	=0 ...
       on_sleep = "remove",
       -- <<<<<<<< shade2/proc.hsp:671 	cSleep(tc)	=0 ..
@@ -309,6 +327,12 @@ local effect = {
          return power / 6
          -- <<<<<<<< shade2/chara_func.hsp:827 		p=p/6 ..
       end,
+
+      -- >>>>>>>> shade2/chara_func.hsp:833 				cBind(tc)+=p/3+1 ...
+      calc_additive_power = function(chara, power)
+         return power / 3 + 1
+      end,
+      -- <<<<<<<< shade2/chara_func.hsp:833 				cBind(tc)+=p/3+1 ..
 
       -- >>>>>>>> shade2/proc.hsp:673 	cBlind(tc)	=0 ...
       on_sleep = "remove",
@@ -365,6 +389,12 @@ local effect = {
          return power / 10
          -- <<<<<<<< shade2/chara_func.hsp:864 		p=p/10 ..
       end,
+
+      -- >>>>>>>> shade2/chara_func.hsp:871 				cParalyze(tc)+=p/3+1 ...
+      calc_additive_power = function(chara, power)
+         return power / 3 + 1
+      end,
+      -- <<<<<<<< shade2/chara_func.hsp:871 				cParalyze(tc)+=p/3+1 ..
 
       -- >>>>>>>> shade2/proc.hsp:674 	cParalyze(tc)	=0 ...
       on_sleep = "remove"
@@ -428,6 +458,12 @@ local effect = {
          return power / 7
          -- <<<<<<<< shade2/chara_func.hsp:846 		p=p/7 ..
       end,
+
+      -- >>>>>>>> shade2/chara_func.hsp:852 				cConfuse(tc)+=p/3+1 ...
+      calc_additive_power = function(chara, power)
+         return power / 3 + 1
+      end,
+      -- <<<<<<<< shade2/chara_func.hsp:852 				cConfuse(tc)+=p/3+1 ..
 
       -- >>>>>>>> shade2/proc.hsp:672 	cConfuse(tc)	=0 ...
       on_sleep = "remove"
@@ -512,6 +548,12 @@ local effect = {
          return power / 8
          -- <<<<<<<< shade2/chara_func.hsp:937 		p=p/8 ..
       end,
+
+      -- >>>>>>>> shade2/chara_func.hsp:944 				cDim(tc)+=p/3+1 ...
+      calc_additive_power = function(chara, power)
+         return power / 3 + 1
+      end,
+      -- <<<<<<<< shade2/chara_func.hsp:944 				cDim(tc)+=p/3+1 ..
 
       -- >>>>>>>> shade2/proc.hsp:675 	cDim(tc)	=0 ...
       on_sleep = "remove"
@@ -611,6 +653,12 @@ local effect = {
          return power / 8
       end,
       -- <<<<<<<< shade2/chara_func.hsp:981 		p=power/8 ..
+
+      -- >>>>>>>> shade2/chara_func.hsp:987 				cInsane(tc)+=p/3+1 ...
+      calc_additive_power = function(chara, power)
+         return power / 3 + 1
+      end,
+      -- <<<<<<<< shade2/chara_func.hsp:987 				cInsane(tc)+=p/3+1 ..
 
       on_turn_end = function(chara)
          -- >>>>>>>> shade2/calculation.hsp:1253 		if sync(r1) : if rnd(3)=0{ ...
