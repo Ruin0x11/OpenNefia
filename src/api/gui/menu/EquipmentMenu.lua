@@ -236,9 +236,14 @@ function EquipmentMenu.message_weapon_stats(chara)
    -- <<<<<<<< shade2/command.hsp:3074 	return ..
 end
 
-function EquipmentMenu:update()
+function EquipmentMenu:update(dt)
    local canceled = self.canceled
+   local chosen = self.pages.chosen
+   local changed_page = self.pages.changed_page
+
    self.canceled = false
+   self.win:update(dt)
+   self.pages:update(dt)
 
    if canceled then
       if self.changed_equipment then
@@ -249,7 +254,7 @@ function EquipmentMenu:update()
       return "player_turn_query"
    end
 
-   if self.pages.chosen then
+   if chosen then
       local slot = self.pages.selected
       local entry = self.pages:selected_item()
 
@@ -293,12 +298,9 @@ function EquipmentMenu:update()
       end
    end
 
-   if self.pages.changed_page then
+   if changed_page then
       self.win:set_pages(self)
    end
-
-   self.win:update()
-   self.pages:update()
 end
 
 function EquipmentMenu:release()
