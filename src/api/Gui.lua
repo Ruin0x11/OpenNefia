@@ -474,7 +474,7 @@ function Gui.mes_alert()
 end
 
 function Gui.add_effect_map(asset_id, tx, ty, max_frames, rotation, kind)
-   local layer = field.renderer:get_layer("internal.layer.effect_map_layer")
+   local layer = field.renderer:get_layer("base.effect_map_layer")
    if layer == nil then
       return
    end
@@ -484,7 +484,7 @@ end
 
 function Gui.step_effect_map(frames)
    frames = frames or 1
-   local layer = field.renderer:get_layer("internal.layer.effect_map_layer")
+   local layer = field.renderer:get_layer("base.effect_map_layer")
    if layer == nil then
       return
    end
