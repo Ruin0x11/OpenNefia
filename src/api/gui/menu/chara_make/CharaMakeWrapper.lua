@@ -203,7 +203,7 @@ function CharaMakeWrapper:update(dt)
       -- that can cause all sorts of weirdness. We have to use
       -- `MapObject.clone()` instead, since it has awareness of things like
       -- location reparenting and not trying to clone class definition tables.
-      local new_cm_result = MapObject.deepcopy(in_progress_result, nil, { preserve_uid = true })
+      local new_cm_result = MapObject.deepcopy(in_progress_result, nil, nil, nil, { preserve_uid = true })
       new_cm_result = self.submenu:get_charamake_result(new_cm_result, result) or in_progress_result
 
       assert(type(new_cm_result) == "table", "Charamake menu result must be table")

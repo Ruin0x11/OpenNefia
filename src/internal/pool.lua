@@ -1,8 +1,9 @@
+local ICloneable = require("api.ICloneable")
 local ILocation = require("api.ILocation")
 
 -- Low-level storage for map objects of the same types. Pretty much
 -- anything that needs to store map objects uses this internally.
-local pool = class.class("pool", ILocation, { no_inspect = false })
+local pool = class.class("pool", { ILocation, ICloneable }, { no_inspect = false })
 
 -- serialization ID for binser
 pool.__id = "pool"
@@ -213,6 +214,20 @@ end
 
 function pool:can_take_object(obj)
    return true
+end
+
+function pool:clone(uids, cache, uid_mapping, opts)
+   local MapObject = require("api.MapObject")
+
+   local new_pool = pool:new(self.type_id, self.width, self.height)
+
+   for _, obj in self:iter() do
+      local new_obj = MapObject.clone(obj, false, uids, cache, uid_mapping, opts)
+      uid_mapping[obj.uid] = new_obj.uid
+      assert(new_pool:take_object(new_obj, obj.x, obj.y))
+   end
+
+   return new_pool
 end
 
 return pool

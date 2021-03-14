@@ -3,6 +3,7 @@ local ILocation = require("api.ILocation")
 local pool = require("internal.pool")
 local IOwned = require("api.IOwned")
 local IMapObject = require("api.IMapObject")
+local ICloneable = require("api.ICloneable")
 
 local Event = require("api.Event")
 local Object = require("api.Object")
@@ -111,36 +112,25 @@ function MapObject.is_map_object(t, _type)
    return _type == t._type
 end
 
--- NOTE: We could have an interface for classes that need special cloning logic.
-local function clone_pool(the_pool, uids, cache, opts)
-   local new_pool = pool:new(the_pool.type_id, the_pool.width, the_pool.height)
-
-   for _, obj in the_pool:iter() do
-      local new_obj = MapObject.clone(obj, false, uids, cache, opts)
-      assert(new_pool:take_object(new_obj, obj.x, obj.y))
-   end
-
-   return new_pool
-end
-
 -- Another modification of penlight's algorithm that also calls :clone() on any
 -- map objects it finds in the table.
-local function cycle_aware_copy(t, cache, uids, first, opts)
+local function cycle_aware_copy(t, uids, cache, uid_mapping, first, opts)
    if type(t) ~= 'table' then return t end
    if cache[t] then return cache[t] end
    if class.is_class_or_interface(t) then
       cache[t] = t
       return t
    end
-   if not first and MapObject.is_map_object(t) then
-      local new_obj = MapObject.clone(t, false, uids, cache, opts)
-      cache[t] = new_obj
-      return new_obj
-   end
-   if class.is_an(pool, t) then
-      local new_pool = clone_pool(t, uids, cache, opts)
-      cache[t] = new_pool
-      return new_pool
+   if not first then
+      if MapObject.is_map_object(t) then
+         local new_obj = MapObject.clone(t, false, uids, cache, uid_mapping, opts)
+         cache[t] = new_obj
+         return new_obj
+      elseif class.is_an(ICloneable, t) then
+         local new = t:clone(uids, cache, uid_mapping, opts)
+         cache[t] = new
+         return new
+      end
    end
    local res = {}
    cache[t] = res
@@ -153,8 +143,8 @@ local function cycle_aware_copy(t, cache, uids, first, opts)
       if k == "__memoized" then
          res[k] = {}
       elseif k ~= "location" then
-         local nk = cycle_aware_copy(k, cache, uids, false)
-         local nv = cycle_aware_copy(v, cache, uids, false)
+         local nk = cycle_aware_copy(k, uids, cache, uid_mapping, false)
+         local nv = cycle_aware_copy(v, uids, cache, uid_mapping, false)
          res[nk] = nv
 
          -- Special case for classes like `EquipSlots` that have a `_parent`
@@ -198,19 +188,23 @@ local function cycle_aware_copy(t, cache, uids, first, opts)
 end
 
 --- Similar to `table.deepcopy()`, but has awareness of map objects.
-function MapObject.deepcopy(t, uid_tracker, opts)
+function MapObject.deepcopy(t, uid_tracker, cache, uid_mapping, opts)
+   cache = cache or {}
+   uid_mapping = uid_mapping or {}
+
    if MapObject.is_map_object(t) then
-      return MapObject.clone(t, false, uid_tracker, {}, opts)
+      return MapObject.clone(t, false, uid_tracker, cache, uid_mapping, opts)
    end
 
-   return cycle_aware_copy(t, {}, uid_tracker, true, opts)
+   return cycle_aware_copy(t, uid_tracker, cache, uid_mapping, true, opts)
 end
 
-function MapObject.clone(obj, owned, uid_tracker, cache, opts)
+function MapObject.clone(obj, owned, uid_tracker, cache, uid_mapping, opts)
    uid_tracker = uid_tracker or require("internal.global.save").base.uids
+   uid_mapping = uid_mapping or {}
    local preserve_uid = (opts and opts.preserve_uid) or false
 
-   local new_object = cycle_aware_copy(obj, cache or {}, uid_tracker, true, opts)
+   local new_object = cycle_aware_copy(obj, uid_tracker, cache or {}, uid_mapping, true, opts)
 
    local mt = getmetatable(new_object)
    if preserve_uid then
@@ -218,6 +212,7 @@ function MapObject.clone(obj, owned, uid_tracker, cache, opts)
    else
       mt.uid = uid_tracker:get_next_and_increment()
    end
+   uid_mapping[obj.uid] = mt.uid
 
    local location = obj:get_location()
    if owned and class.is_an("api.IMapObject", obj) and class.is_an("api.ILocation", location) then
