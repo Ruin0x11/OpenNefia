@@ -45,7 +45,7 @@ do
       local map = Elona122Map.generate("grave_1")
       map:set_archetype("elona.lumiest_graveyard", { set_properties = true })
 
-      for _=1,math.floor(map:calc("max_crowd_density"/2)) do
+      for _=1,math.floor(map:calc("max_crowd_density")/2) do
          MapgenUtils.generate_chara(map)
       end
 
@@ -599,7 +599,6 @@ do
          default_ai_calm = 1,
          has_snow = true,
          max_crowd_density = 0,
-         is_hidden_in_world_map = true
       }
    }
 
@@ -641,6 +640,7 @@ do
 
       metadata = {
          can_return_to = true,
+         is_hidden = true
       },
 
       parent_area = {
@@ -804,7 +804,7 @@ do
          Chara.create("elona.hot_spring_maniac", nil, nil, nil, map)
       end
 
-      for _=1,math.floor(map:calc("max_crowd_density"/2)) do
+      for _=1,math.floor(map:calc("max_crowd_density")/2) do
          MapgenUtils.generate_chara(map)
       end
 
