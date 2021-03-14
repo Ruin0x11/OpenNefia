@@ -421,6 +421,8 @@ local inv_buy = {
       ctxt.chara.gold = ctxt.chara.gold - cost
       ctxt.target.gold = ctxt.target.gold + cost
 
+      Gui.refresh_hud()
+
       return "inventory_continue"
    end
 }

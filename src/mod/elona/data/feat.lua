@@ -27,7 +27,7 @@ local NefiaCompletionDrawable = require("mod.elona.api.gui.NefiaCompletionDrawab
 local Nefia = require("mod.elona.api.Nefia")
 
 local function get_map_display_name(area, description)
-   if area.is_hidden then
+   if area.metadata.is_hidden then
       return ""
    end
 
@@ -494,6 +494,10 @@ data:add
                   end
                end
                -- <<<<<<<< shade2/map.hsp:2442 	if (areaType(cnt)=mTypeTown)or(areaType(cnt)=mTyp ..
+
+               if area.metadata.is_hidden then
+                  self.image = nil
+               end
             end
          end
       }
