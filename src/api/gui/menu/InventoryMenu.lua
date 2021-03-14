@@ -354,11 +354,22 @@ function InventoryMenu:draw()
 end
 
 function InventoryMenu:update(dt)
-   if self.pages.changed_page then
+   local changed_page = self.pages.changed_page
+   local chosen = self.pages.chosen
+   local result = self.result
+   local canceled = self.canceled
+
+   self.win:update(dt)
+   self.pages:update(dt)
+   self.target_equip:update(dt)
+   self.result = nil
+   self.canceled = nil
+
+   if changed_page then
       self.win:set_pages(self)
    end
 
-   if self.pages.chosen then
+   if chosen then
       local can_select, reason = self:can_select()
       if type(can_select) == "string" then
          -- This is a turn result, like "turn_end".
@@ -383,17 +394,14 @@ function InventoryMenu:update(dt)
       end
    end
 
-   if self.result and self.result ~= "inventory_continue" then
-      if self.result == "inventory_cancel" then
+   if result and result ~= "inventory_continue" then
+      if result == "inventory_cancel" then
          return nil, "canceled"
       end
-      return self.result
+      return result
    end
 
-   self.result = nil
-
-   if self.canceled then
-      self.canceled = false
+   if canceled then
       if self.returns_item then
          return nil, "canceled"
       end
@@ -403,9 +411,6 @@ function InventoryMenu:update(dt)
          return result, "canceled"
       end
    end
-
-   self.target_equip:update(dt)
-   self.pages:update(dt)
 end
 
 function InventoryMenu:release()
