@@ -34,13 +34,13 @@ local function make_buff(opts)
                params.power[i] = math.floor(params.power[i])
             end
          else
-            params.power = math.floor(params.power)
+            params.power = { math.floor(params.power) }
          end
 
          return tostring(math.floor(params.duration))
             .. I18N.get("ui.spell.turn_counter")
             .. I18N.space()
-            .. I18N.get("buff." .. "elona" .. "." .. opts._id .. ".description", params.power)
+            .. I18N.get("buff." .. "elona" .. "." .. opts._id .. ".description", table.unpack(params.power))
       end,
 
       effect_id = "elona.buff_" .. opts._id,

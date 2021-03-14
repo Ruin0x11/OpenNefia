@@ -121,7 +121,7 @@ return {
                   :format(name(_1))
             end,
             description = function(_1, _2)
-               return ("%sの鈍足/PVを%s%減少")
+               return ("%sの鈍足/PVを%s%%減少")
                   :format(_1, _2)
             end,
             name = "天罰"
@@ -170,7 +170,7 @@ return {
                   :format(name(_1))
             end,
             description = function(_1)
-               return ("致命傷を負ったとき%s%の確率でダメージ分回復。")
+               return ("致命傷を負ったとき%s%%の確率でダメージ分回復。")
                   :format(_1)
             end,
             name = "契約"
@@ -189,7 +189,7 @@ return {
          food_str = {
             apply = "",
             description = function(_1)
-               return ("筋力の成長率を%s%上昇")
+               return ("筋力の成長率を%s%%上昇")
                   :format(_1)
             end,
             name = "筋力の成長"
@@ -197,7 +197,7 @@ return {
          food_end = {
             apply = "",
             description = function(_1)
-               return ("耐久の成長率を%s%上昇")
+               return ("耐久の成長率を%s%%上昇")
                   :format(_1)
             end,
             name = "耐久の成長"
@@ -205,7 +205,7 @@ return {
          food_dex = {
             apply = "",
             description = function(_1)
-               return ("器用の成長率を%s%上昇")
+               return ("器用の成長率を%s%%上昇")
                   :format(_1)
             end,
             name = "器用の成長"
@@ -213,7 +213,7 @@ return {
          food_per = {
             apply = "",
             description = function(_1)
-               return ("感覚の成長率を%s%上昇")
+               return ("感覚の成長率を%s%%上昇")
                   :format(_1)
             end,
             name = "感覚の成長"
@@ -221,7 +221,7 @@ return {
          food_ler = {
             apply = "",
             description = function(_1)
-               return ("習得の成長率を%s%上昇")
+               return ("習得の成長率を%s%%上昇")
                   :format(_1)
             end,
             name = "習得の成長"
@@ -229,7 +229,7 @@ return {
          food_wil = {
             apply = "",
             description = function(_1)
-               return ("意思の成長率を%s%上昇")
+               return ("意思の成長率を%s%%上昇")
                   :format(_1)
             end,
             name = "意思の成長"
@@ -237,7 +237,7 @@ return {
          food_mag = {
             apply = "",
             description = function(_1)
-               return ("魔力の成長率を%s%上昇")
+               return ("魔力の成長率を%s%%上昇")
                   :format(_1)
             end,
             name = "魔力の成長"
@@ -245,7 +245,7 @@ return {
          food_chr = {
             apply = "",
             description = function(_1)
-               return ("魅力の成長率を%s%上昇")
+               return ("魅力の成長率を%s%%上昇")
                   :format(_1)
             end,
             name = "魅力の成長"
@@ -253,7 +253,7 @@ return {
          food_spd = {
             apply = "",
             description = function(_1)
-               return ("速度の成長率を%s%上昇")
+               return ("速度の成長率を%s%%上昇")
                   :format(_1)
             end,
             name = "速度の成長"
