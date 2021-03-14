@@ -74,7 +74,7 @@ function Nefia.calc_random_nefia_level(player, nefia_id)
    -- >>>>>>>> shade2/map.hsp:3258 	if rnd(3){ ...
    local level
    if Rand.one_in(3) then
-      level = Rand.rnd(player:calc("level") + 5) + 1
+      level = Rand.rnd((player and player:calc("level") or 1) + 5) + 1
    else
       level = Rand.rnd(50) + 1
       if Rand.one_in(5) then

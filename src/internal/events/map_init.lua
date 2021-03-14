@@ -232,7 +232,10 @@ end
 local function proc_map_entered_events(map)
    -- >>>>>>>> shade2/map.hsp:2084 	proc "Map:Update area" ..
    Effect.wake_up_everyone(map)
-   Chara.player():reset_ai()
+   local player = Chara.player()
+   if player then
+      player:reset_ai()
+   end
 
    -- TODO
    map:emit("base.on_map_entered_events")
