@@ -601,8 +601,10 @@ Gui.LAYER_PRIORITY_TILEMAP = 100000
 Gui.LAYER_PRIORITY_USER = 500000
 Gui.LAYER_PRIORITY_HUD = 10000000
 
-function Gui.register_draw_layer(tag, layer, priority)
-   field:register_draw_layer(tag, layer, priority or Gui.LAYER_PRIORITY_USER)
+function Gui.register_draw_layer(tag, layer, opts)
+   local priority = opts and opts.priority or Gui.LAYER_PRIORITY_USER
+   local enabled = opts and opts.enabled
+   field:register_draw_layer(tag, layer, priority, enabled)
 end
 
 function Gui.set_draw_layer_enabled(tag, enabled)
