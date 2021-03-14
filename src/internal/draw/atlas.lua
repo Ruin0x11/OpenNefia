@@ -91,7 +91,7 @@ function atlas:insert_tile(id, anim_id, frame_id, spec, load_tile_cb, offset_x, 
    if rect == nil then
       rect = self.binpack:insert(tw, th)
    end
-   assert(rect, inspect(spec))
+   assert(rect)
    self.rects[full_id] = rect
 
    if class.is_an(asset_drawable, tile) then

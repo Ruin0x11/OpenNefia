@@ -12,6 +12,7 @@ local actions = {
    "ascend",               -- on_ascend,               can_ascend,               elona_sys.on_feat_ascend
    "bumped_into",          -- on_bumped_into,          can_bumped_into,          elona_sys.on_feat_bumped_into
    "stepped_on",           -- on_stepped_on,           can_stepped_on,           elona_sys.on_feat_stepped_on
+   "refresh",              -- on_refresh,              can_refresh,              elona_sys.on_feat_refresh
 }
 
 local function connect_feat_events(obj)

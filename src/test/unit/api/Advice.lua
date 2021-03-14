@@ -31,6 +31,17 @@ function test_Advice_add()
    Assert.not_eq(fn, Calc.calc_fame_income)
 end
 
+function test_Advice_add__disabled()
+   local player = Chara.create("elona.putit", nil, nil, {ownerless=true})
+   player.fame = 30000
+
+   local fn = Calc.calc_fame_income
+
+   Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income, { enabled = false })
+   Assert.eq(3050, Calc.calc_fame_income(player))
+   Assert.eq(fn, Calc.calc_fame_income)
+end
+
 function test_Advice_add__cleared_between_test_runs()
    Assert.eq(false, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income"))
 end

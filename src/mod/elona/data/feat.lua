@@ -23,6 +23,8 @@ local ExHelp = require("mod.elona.api.ExHelp")
 local Area = require("api.Area")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local Filters = require("mod.elona.api.Filters")
+local NefiaCompletionDrawable = require("mod.elona.api.gui.NefiaCompletionDrawable")
+local Nefia = require("mod.elona.api.Nefia")
 
 local function get_map_display_name(area, description)
    if area.is_hidden then
@@ -46,9 +48,8 @@ local function get_map_display_name(area, description)
    end
 
    local text
-   local is_nefia = false -- TODO area metadata: type
-   if is_nefia then
-      text = I18N.get("map.you_see_an_entrance", name, 999999)
+   if Nefia.get_type(area) then
+      text = I18N.get("map.you_see_an_entrance", name, Nefia.get_level(area))
    elseif desc then
       text = desc
    else
@@ -84,13 +85,14 @@ data:add {
       self:reset("can_close", self.opened, "set")
       self:reset("is_solid", not self.opened, "set")
       self:reset("is_opaque", not self.opened, "set")
+
       if self.opened then
          self:reset("image", self.opened_tile)
       else
          self:reset("image", self.closed_tile)
       end
    end,
-   on_bumped_into = function(self, params) self:on_open(params) end,
+   on_bumped_into = function(self, params) self.proto.on_open(self, params) end,
 
    on_open = function(self, params)
       if self.opened then return end
@@ -188,18 +190,10 @@ data:add {
 }
 
 
-local function entrance_in_parent_map(map, chara, prev)
-   local x, y
-   local prev_area = Area.for_map(prev)
-   local find_area_entrance = function(feat)
-      return feat.params.area_uid == prev_area.uid
-   end
-   local entrance = map:iter_feats():filter(find_area_entrance):nth(1)
-   if entrance == nil then
+local function entrance_in_parent_map(map, area, parent_area, chara, prev)
+   local x, y, floor = parent_area:child_area_position(area)
+   if x == nil or floor ~= parent_area:floor_of_map(map.uid) then
       return nil
-   else
-      x = entrance.x
-      y = entrance.y
    end
 
    local index = 0
@@ -218,10 +212,16 @@ local function travel(start_pos_fn, set_prev_map)
       local chara = params.chara
       if not chara:is_player() then return end
 
+      local result = self:emit("elona.before_travel_using_feat", {chara=chara}, { blocked = false, turn_result = nil })
+      if result.blocked then
+         return result.turn_result or "player_turn_query"
+      end
+
       Gui.play_sound("base.exitmap1")
 
       local prev_map = self:current_map()
       local prev_area = Area.for_map(prev_map)
+      local parent_area = Area.parent(prev_area)
       local start_x, start_y
       local area, map
 
@@ -246,28 +246,44 @@ local function travel(start_pos_fn, set_prev_map)
 
          local starting_pos
          local map_archetype = map:archetype()
-         if map_archetype and map_archetype.starting_pos then
-            start_pos_fn = map_archetype.starting_pos
+
+         local function start_pos_or_archetype(map, chara, prev_map, self)
+            local pos = start_pos_fn(map, chara, prev_map, self)
+            if pos == nil then
+               Log.debug("No stairs found in connecting map, attempting to use map archetype's starting position.")
+               if map_archetype and map_archetype.starting_pos then
+                  pos = map_archetype.starting_pos(map, chara, prev_map, self)
+               end
+            end
+            return pos
          end
 
          -- >>>>>>>> shade2/map.hsp:152 		if feat(1)=objDownstairs :msgTemp+=lang("階段を降りた。 ..
          if area.uid ~= prev_area.uid then
             -- If the area we're trying to travel to is the parent of this area, then
             -- put the player directly on the area's entrance.
-            if Area.parent(prev_area) == area then
+            if parent_area == area then
                -- TODO allow configuring ally start positions in Map.travel_to() (mStartWorld)
-               starting_pos = entrance_in_parent_map(map, chara, prev_map)
+               starting_pos = entrance_in_parent_map(map, prev_area, parent_area, chara, prev_map)
                if starting_pos == nil then
-                  -- Assume there will be stairs in the connecting map.
-                  starting_pos = start_pos_fn(map, chara, prev_map, self)
+                  -- Assume there will be stairs in the connecting map, and if
+                  -- not fall back to the archetype's declared map start
+                  -- position.
+                  starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
                end
             else
-               -- We're going into a dungeon. Always assume there's stairs there.
-               -- TODO: allow maps to declare arbitrary start positions.
-               starting_pos = start_pos_fn(map, chara, prev_map, self)
+               -- We're going into a dungeon. Assume there's stairs there, and
+               -- if not fall back to the archetype.
+               starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
+
+               if prev_area:has_child_area(area) then
+                  -- `prev_area` contains the entrance to this area.
+                  local floor = assert(Map.floor_number(prev_map))
+                  prev_area:set_child_area_position(area, chara.x, chara.y, floor)
+               end
             end
          else
-            starting_pos = start_pos_fn(map, chara, prev_map, self)
+            starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
          end
 
          if starting_pos.x and starting_pos.y then
@@ -320,6 +336,7 @@ local function gen_stair(down)
    local elona_id = (down and 11) or 10
    local image = (down and "elona.feat_stairs_down") or "elona.feat_stairs_up"
    local start_pos_fn = (down and MapEntrance.stairs_up) or MapEntrance.stairs_down
+   local stepped_on_mes = (down and "action.move.feature.stair.down") or "action.move.feature.stair.up"
 
    return {
       _type = "base.feat",
@@ -343,7 +360,7 @@ local function gen_stair(down)
          if params.chara:is_player() and self.params.area_uid then
             local area = Area.get(self.params.area_uid)
             if area then
-               Gui.mes(("This leads to: %s floor %s"):format(area, self.params.area_floor))
+               Gui.mes(stepped_on_mes)
             end
          end
       end,
@@ -385,11 +402,12 @@ data:add
    on_stepped_on = function(self, params)
       if params.chara:is_player() and self.params.area_uid then
          local area = Area.get(self.params.area_uid)
-         local is_nefia = false -- TODO area metadata: type
-         if is_nefia then
-            ExHelp.maybe_show("elona.random_dungeon")
-         end
          if area then
+            -- >>>>>>>> shade2/action.hsp:758 			if feat(1)=objArea		:txt mapName(feat(2)+feat(3 ...
+            if Nefia.get_type(area) then
+               ExHelp.maybe_show("elona.random_dungeon")
+            end
+            -- <<<<<<<< shade2/action.hsp:758 			if feat(1)=objArea		:txt mapName(feat(2)+feat(3 ..
             Gui.mes(get_map_display_name(area, true))
          end
       end
@@ -414,6 +432,27 @@ data:add
 
             return get_map_display_name(area, true)
             -- <<<<<<<< shade2/command.hsp:53 				} ..
+         end
+      },
+      {
+         id = "base.on_feat_instantiated",
+         name = "Add nefia completion drawable",
+
+         callback = function(self)
+            if self.params.area_uid ~= nil then
+               local area = Area.get(self.params.area_uid)
+               if area and Nefia.get_type(area) then
+                  local state
+                  if area.deepest_floor_visited == area:deepest_floor() then
+                     state = "conquered"
+                  elseif area.deepest_floor_visited > 0 then
+                     state = "in_progress"
+                  end
+                  self:set_drawable("elona.nefia_completion", NefiaCompletionDrawable:new(state), "above", 200000)
+               else
+                  self:set_drawable("elona.nefia_completion", nil)
+               end
+            end
          end
       }
    }

@@ -8,6 +8,7 @@ local Rand = require("api.Rand")
 local Charagen = require("mod.tools.api.Charagen")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Calc = require("mod.elona.api.Calc")
+local I18N = require("api.I18N")
 
 -- functions for nefia generation used by Elona 1.22's map generators.
 local Dungeon = {}
@@ -70,6 +71,10 @@ local room_kinds = {
       door = Dungeon.DoorType.None
    },
 }
+
+function Dungeon.calc_door_difficulty(map)
+   return Rand.rnd(math.floor(math.abs(map.level * 3 / 2)) + 1)
+end
 
 function Dungeon.default_chara_filter(dungeon)
    -- >>>>>>>> shade2/map.hsp:89 	if mType>=headDungeon{ ..
@@ -377,7 +382,7 @@ function Dungeon.create_room_door(room, dir, place_door, map)
       if success then
          Map.set_tile(x, y, "elona.mapgen_room", map)
          if place_door then
-            local difficulty = Rand.rnd(math.floor(math.abs(map.level * 3 / 2)) + 1)
+            local difficulty = Dungeon.calc_door_difficulty(map)
             Feat.create("elona.door", x, y, {difficulty = difficulty}, map)
          end
          return true
@@ -397,10 +402,6 @@ function Dungeon.place_stairs_up_in_room(room, map)
 end
 
 function Dungeon.place_stairs_down_in_room(room, map)
-   if map.is_deepest_level then -- TODO
-      return nil
-   end
-
    local x = Rand.rnd(room.width - 2) + room.x + 1
    local y = Rand.rnd(room.height - 2) + room.y + 1
    room.has_stairs_down = true
@@ -1291,9 +1292,6 @@ function Dungeon.gen_type_puppy_cave(floor, params)
       end
    end
 
-
-   local door_difficulty_max = math.floor(math.abs(map:calc("level") * 3 / 2)) + 1
-
    local try_place_door = function(x, y)
       if map:tile(x, y)._id ~= "elona.mapgen_tunnel" then
          return
@@ -1308,7 +1306,7 @@ function Dungeon.gen_type_puppy_cave(floor, params)
          if map:tile(x, y - 1)._id == "elona.mapgen_floor"
             and map:tile(x, y + 1)._id == "elona.mapgen_floor"
          then
-            Feat.create("elona.door", x, y, {difficulty = Rand.rnd(door_difficulty_max)}, map)
+            Feat.create("elona.door", x, y, {difficulty = Dungeon.calc_door_difficulty(map)}, map)
          end
 
          return
@@ -1320,7 +1318,7 @@ function Dungeon.gen_type_puppy_cave(floor, params)
          if map:tile(x - 1, y)._id == "elona.mapgen_floor"
             and map:tile(x + 1, y)._id == "elona.mapgen_floor"
          then
-            Feat.create("elona.door", x, y, {difficulty = Rand.rnd(door_difficulty_max)}, map)
+            Feat.create("elona.door", x, y, {difficulty = Dungeon.calc_door_difficulty(map)}, map)
          end
 
          return
@@ -1344,6 +1342,12 @@ end
 function Dungeon.set_template_property(params, property, value)
    params.properties = params.properties or {}
    params.properties[property] = value
+end
+
+function Dungeon.map_level_text(level)
+   -- >>>>>>>> shade2/text.hsp:415 	if areaType(gArea)!mTypeTown:if (areaId(gArea)=ar ...
+   return I18N.get("nefia.level", level)
+   -- <<<<<<<< shade2/text.hsp:417 	} ..
 end
 
 return Dungeon

@@ -176,7 +176,7 @@ function Building.find_home_area_and_entrances(world_map)
    local home_area
 
    local world_area = Area.for_map(world_map)
-   for _, _, area in Area.iter_children(world_area) do
+   for _, area in Area.iter_children(world_area) do
       for floor, map_metadata in pairs(area.maps) do
          if map_metadata.uid == home_map_uid then
             home_area = area
@@ -255,6 +255,7 @@ function Building.build_home(home_id, x, y, world_map)
    end
 
    -- TODO world map nefia refresh
+   Area.set_unique("elona.your_home", new_home_area, world_area)
 
    local entrance = assert(Area.create_entrance(new_home_area, 1, x, y, {}, world_map))
    entrance.image = home_proto.image
@@ -262,7 +263,6 @@ function Building.build_home(home_id, x, y, world_map)
    local ok, new_home_map = assert(new_home_area:load_or_generate_floor(new_home_area:starting_floor()))
    save.base.home_map_uid = new_home_map.uid
 
-   Area.set_unique("elona.your_home", new_home_area, world_area)
    return new_home_map, new_home_area
 end
 

@@ -2,6 +2,7 @@ local IDrawLayer = require("api.gui.IDrawLayer")
 local UiTheme = require("api.gui.UiTheme")
 local Draw = require("api.Draw")
 local config = require("internal.config")
+local Map = require("api.Map")
 
 local effect_map_layer = class.class("effect_map_layer", IDrawLayer)
 
@@ -23,7 +24,7 @@ function effect_map_layer:reset()
    self.efmap = {}
 end
 
-function effect_map_layer:add(asset_id, sx, sy, max_frames, rotation, kind)
+function effect_map_layer:add(asset_id, tx, ty, max_frames, rotation, kind)
    local asset = self.t[asset_id]
    if asset == nil then
       error(("Asset '%s' doesn't exist."):format(asset_id))
@@ -35,24 +36,37 @@ function effect_map_layer:add(asset_id, sx, sy, max_frames, rotation, kind)
    end
 
    rotation = rotation or 0
+   local alpha
 
    if kind == "anime" then
       max_frames = math.clamp(max_frames or #asset.quads, 0, #asset.quads)
+      alpha = 150
    else
       max_frames = math.max(max_frames or 10, 0)
+      alpha = max_frames * 12 + 30
    end
+
+   local tw, th = self.coords:get_size()
+   local sx, sy = self.coords:tile_to_screen(tx + 1, ty + 1)
+   sx = sx + tw / 2
+   sy = sy + th / 2
+   local map = Map.current()
+   local show = map:is_in_fov(tx, ty)
 
    self.efmap[#self.efmap+1] = {
       asset = asset,
       dt = 0,
       x = sx,
       y = sy,
+      tx = tx,
+      ty = ty,
+      show = show,
       asset_frame = 1,
       frame = 1,
       max_frames = max_frames,
       rotation = rotation,
       kind = kind,
-      alpha = 150
+      alpha = alpha
    }
 end
 
@@ -90,6 +104,15 @@ function effect_map_layer:update(dt, screen_updated)
    local frames = dt / (config.base.screen_refresh * (16.66 / 1000))
 
    self:step_all(frames)
+
+   if not screen_updated then
+      return
+   end
+
+   local map = Map.current()
+   for _, ef in ipairs(self.efmap) do
+      ef.show = map:is_in_fov(ef.tx, ef.ty)
+   end
 end
 
 function effect_map_layer:draw(draw_x, draw_y, offx, offy)
@@ -97,8 +120,10 @@ function effect_map_layer:draw(draw_x, draw_y, offx, offy)
    local sx, sy, ox, oy = self.coords:get_start_offset(draw_x, draw_y, Draw.get_width(), Draw.get_height())
 
    for _, ef in ipairs(self.efmap) do
-      Draw.set_color(255, 255, 255, ef.alpha)
-      ef.asset:draw_region(ef.asset_frame, ef.x - draw_x + sx, ef.y - draw_y + sy, nil, nil, nil, true, ef.rotation)
+      if ef.show then
+         Draw.set_color(255, 255, 255, ef.alpha)
+         ef.asset:draw_region(ef.asset_frame, ef.x - draw_x + sx, ef.y - draw_y + sy, nil, nil, nil, true, ef.rotation)
+      end
    end
 end
 

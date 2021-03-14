@@ -46,12 +46,11 @@ function Area.current()
 end
 
 function Area.iter()
-   return fun.iter_pairs(save.base.areas)
+   return fun.iter_pairs(save.base.areas):map(function(uid, area) return area end)
 end
 
 function Area.is_area_entrance(feat)
-   -- TODO: this might be too permissive of a filter, but that's
-   -- what I get for using a dynamic language...
+   -- TODO implement as a capability
    return feat.params and feat.params.area_uid and feat.params.area_floor
 end
 
@@ -95,23 +94,6 @@ function Area.parent(map_or_area)
    return Area.get(area.parent_area)
 end
 
-function Area.position_in_parent_map(area)
-   local parent = Area.parent(area)
-   if parent == nil then
-      return nil, nil
-   end
-
-   -- Try seeing if there is a custom position set first.
-   if area.parent_x and area.parent_y then
-      return area.parent_x, area.parent_y
-   end
-
-   local floor = area.parent_floor or 1
-
-   -- Look in the area's archetype definition for a child map.
-   return parent:position_of_child(area, floor)
-end
-
 function Area.get_root_area(map_or_area)
    local area = get_area(map_or_area)
    while area do
@@ -125,7 +107,7 @@ end
 
 function Area.iter_children(map_or_area)
    local area = get_area(map_or_area)
-   return Area.iter():filter(function(uid, a) return a.parent_area == area.uid end)
+   return Area.iter():filter(function(a) return a.parent_area == area.uid end)
 end
 
 function Area.iter_all_contained_in(map_or_area)
@@ -140,7 +122,7 @@ function Area.iter_all_contained_in(map_or_area)
          result[#result+1] = area
          found[area] = true
          for _, child in Area.iter_children(area) do
-            stack[#stack+1] = Area.get(child)
+            stack[#stack+1] = child
          end
       end
    end
@@ -194,6 +176,7 @@ function Area.register(area, opts)
 
    if class.is_an(InstancedArea, opts.parent) then
       area.parent_area = opts.parent.uid
+      opts.parent:add_child_area(area)
    end
 
    if area.parent_area == nil and opts.parent ~= "root" then
@@ -249,6 +232,11 @@ function Area.create_entrance(area, map_or_floor_number, x, y, params, map)
    feat.params.area_floor = floor
    if area.image then
       feat.image = area.image
+   end
+
+   local parent_area = Area.for_map(map)
+   if parent_area and parent_area:has_child_area(area) and parent_area:child_area_position(area) == nil then
+      parent_area:set_child_area_position(area, x, y, floor)
    end
 
    return feat, nil
@@ -331,6 +319,11 @@ function Area.unregister(area)
 
    Log.debug("Unregistering area %d (%s) with maps: %s", area.uid, area.name, inspect(fun.iter(area.maps):extract("uid"):to_list()))
 
+   local parent = Area.parent(area)
+   if parent then
+      parent:remove_child_area(area)
+   end
+
    local areas = save.base.areas
    areas[area.uid] = nil
 end
@@ -349,7 +342,8 @@ function Area.delete(area)
    end
 
    area.maps = {}
-   area.deepest_level_visited = 0
+   area._children = {}
+   area.deepest_floor_visited = 0
 
    Event.trigger("base.on_area_deleted", {area=area})
 end

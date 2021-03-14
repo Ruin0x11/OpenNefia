@@ -13,6 +13,9 @@ local RandomEventPrompt = require("api.gui.RandomEventPrompt")
 local Weather = require("mod.elona.api.Weather")
 local Servant = require("mod.elona.api.Servant")
 local StayingCharas = require("api.StayingCharas")
+local Area = require("api.Area")
+local Nefia = require("mod.elona.api.Nefia")
+local Rank = require("mod.elona.api.Rank")
 
 local DeferredEvents = {}
 
@@ -152,6 +155,60 @@ function DeferredEvents.welcome_home(map)
 
    -- TODO maid guests
    -- <<<<<<<< shade2/main.hsp:1932 	swbreak ..
+end
+
+function DeferredEvents.nefia_boss(map, boss_uid)
+   local area = Area.for_map(map)
+   if area == nil then
+      return
+   end
+
+   local boss
+   if boss_uid and boss_uid >= 0 then
+      boss = map:get_object_of_type("base.chara", map)
+   end
+
+   if boss == nil then
+      boss = Nefia.spawn_boss(map)
+      Nefia.set_boss_uid(area, boss.uid)
+   end
+
+   -- >>>>>>>> shade2/main.hsp:1747 	txt lang("どうやら最深層まで辿り着いたらしい…","It seems you have  ...
+   Gui.mes("event.reached_deepest_level")
+   Gui.mes_c("event.guarded_by_lord", "Red", map.name, boss)
+   -- <<<<<<<< shade2/main.hsp:1748 	txtEf coRed : txtMore:txt lang("気をつけろ！この階は"+mapNa ..
+end
+
+function DeferredEvents.nefia_boss_defeated(map)
+   local area = Area.for_map(map)
+   if area == nil then
+      return
+   end
+
+   Gui.play_sound("base.complete1")
+
+   local player = Chara.player()
+   local uid = Nefia.get_boss_uid(area)
+   local boss
+   if math.type(uid) == "integer" and uid >= 0 then
+      boss = map:get_object_of_type("base.chara", uid)
+   end
+
+   Nefia.create_boss_rewards(player, boss)
+
+   -- >>>>>>>> shade2/main.hsp:1762 	txtEf coGreen:txtQuestComplete:txtMore:txtQuestIt ...
+   Gui.mes_c("quest.completed", "Green")
+   Gui.mes("common.something_is_put_on_the_ground")
+   Rank.modify("elona.crawler", 300, 8)
+
+   local fame_gained = Nefia.calc_boss_fame_gained(player)
+   Gui.mes_c("quest.gain_fame", "Green", fame_gained)
+   player.fame = player.fame + fame_gained
+   -- <<<<<<<< shade2/main.hsp:1765 	cFame(pc)+=gQuestFame ..
+
+   -- >>>>>>>> shade2/main.hsp:1771 	}else{ ...
+   Nefia.set_boss_uid(area, -1) -- No more bosses in this map.
+   -- <<<<<<<< shade2/main.hsp:1773 	} ..
 end
 
 return DeferredEvents

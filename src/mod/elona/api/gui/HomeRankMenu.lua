@@ -3,6 +3,7 @@ local I18N = require("api.I18N")
 local Ui = require("api.Ui")
 local Home = require("mod.elona.api.Home")
 local UiShadowedText = require("api.gui.UiShadowedText")
+local MapObjectBatch = require("api.draw.MapObjectBatch")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local UiWindow = require("api.gui.UiWindow")
@@ -19,8 +20,7 @@ function HomeRankMenu.generate_list(most_valuable)
       -- { item = item, value = 850 }
       local item = entry.item
       return {
-         chip_id = item:calc("image"),
-         chip_color = item:calc("color"),
+         item = item,
          rank_text = I18N.get("building.home.rank.place", i),
          item_name = item:build_name()
       }
@@ -39,7 +39,7 @@ function HomeRankMenu:init(most_valuable, base_value, home_value, furniture_valu
    self.win = UiWindow:new("building.home.rank.title", true, "building.home.rank.enter_key")
 
    self.star = nil
-   self.chip_batch = nil
+   self.map_object_batch = nil
 
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
@@ -64,7 +64,7 @@ function HomeRankMenu:relayout(x, y)
    self.x, self.y = Ui.params_centered(self.width, self.height)
 
    self.t = UiTheme.load(self)
-   self.chip_batch = Draw.make_chip_batch("chip")
+   self.map_object_batch = MapObjectBatch:new()
 
    Draw.set_font(14)
    local star = I18N.get("building.home.rank.star")
@@ -127,7 +127,7 @@ function HomeRankMenu:draw()
    Draw.set_font(12) -- 12 + sizeFix
    Draw.set_color(0, 0, 0)
 
-   self.chip_batch:clear()
+   self.map_object_batch:clear()
    for i, entry in ipairs(self.data) do
       if i > 10 then
          break
@@ -135,11 +135,11 @@ function HomeRankMenu:draw()
 
       local y_offset = (i-1) * 16
 
-      self.chip_batch:add(entry.chip_id, self.x + 37, self.y + 138 + y_offset, nil, nil, entry.chip_color, true)
+      self.map_object_batch:add(entry.item, self.x + 37, self.y + 138 + y_offset, nil, nil, nil, true)
       Draw.text(entry.rank_text, self.x + 68, self.y + 138 + y_offset)
       Draw.text(entry.item_name, self.x + 110, self.y + 138 + y_offset)
    end
-   self.chip_batch:draw()
+   self.map_object_batch:draw()
 end
 
 function HomeRankMenu:update(dt)
@@ -153,7 +153,7 @@ function HomeRankMenu:update(dt)
 end
 
 function HomeRankMenu:release()
-   self.chip_batch:release()
+   self.map_object_batch:release()
 end
 
 return HomeRankMenu

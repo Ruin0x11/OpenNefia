@@ -212,7 +212,7 @@ function AiUtil.move_towards_target(chara, target, retreat)
    end
 
    if not chara:is_in_player_party() then
-      if chara.quality > Enum.Quality.Great and chara:relation_towards(chara:get_target()) <= Enum.Relation.Hate then
+      if chara:calc("quality") > Enum.Quality.Good and chara:relation_towards(chara:get_target()) <= Enum.Relation.Hate then
          if map:is_in_bounds(nx, ny) then
             if Rand.one_in(4) then
                local tile = MapTileset.get("elona.mapgen_tunnel", map)

@@ -29,6 +29,7 @@ local event = {
       { _id = "on_feat_descend" },
       { _id = "on_feat_ascend" },
       { _id = "on_feat_bumped_into" },
+      { _id = "on_feat_refresh" },
       { _id = "on_feat_stepped_on" },
       { _id = "on_quest_completed" },
       { _id = "on_quest_failed" },

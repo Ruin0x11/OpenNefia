@@ -1,14 +1,15 @@
+local IDrawable = require("api.gui.IDrawable")
 local Draw = require("api.Draw")
 local Rand = require("api.Rand")
 local UiTheme = require("api.gui.UiTheme")
 local config = require("internal.config")
 local save = require("internal.global.save")
 
-local PlayerLightDrawable = class.class("PlayerLightDrawable")
+local PlayerLightDrawable = class.class("PlayerLightDrawable", IDrawable)
 
 function PlayerLightDrawable:init()
    self.frames = 0
-   self.color = {255, 255, 255, 0}
+   self.color = {255, 255, 255, 50}
    self.t = UiTheme.load(self)
    local coords = Draw.get_coords()
    local tw, th = coords:get_size()
@@ -16,8 +17,12 @@ function PlayerLightDrawable:init()
    self.offset_y = math.floor(th / 2)
 end
 
+function PlayerLightDrawable:is_drawable_in_ui()
+   return false
+end
+
 function PlayerLightDrawable:update(dt)
-   self.frames = self.frames + dt * config.base.screen_refresh
+   self.frames = self.frames + dt / (config.base.screen_refresh * (16.66 / 1000))
    if self.frames > 1 then
       self.frames = math.fmod(self.frames, 1)
       local hour = save.base.date.hour
@@ -33,9 +38,10 @@ function PlayerLightDrawable:update(dt)
    end
 end
 
-function PlayerLightDrawable:draw(x, y)
+function PlayerLightDrawable:draw(x, y, w, h, centered, rot)
    Draw.set_blend_mode("add")
-   self.t.base.player_light:draw(x + self.offset_x, y + self.offset_y, nil, nil, self.color, true)
+   Draw.set_color(self.color)
+   self.t.base.player_light:draw(x + self.offset_x, y + self.offset_y, nil, nil, nil, true)
    Draw.set_blend_mode("alpha")
    Draw.set_color(255, 255, 255)
 end

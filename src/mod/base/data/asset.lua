@@ -897,6 +897,15 @@ local assets = {
       count_x = 29
    },
    {
+      _id = "nefia_mark",
+      source = "graphic/interface.bmp",
+      x = 32,
+      y = 624,
+      width = 16 * 2,
+      height = 16,
+      count_x = 2
+   },
+   {
       _id = "weather_snow_etherwind",
       source = "graphic/interface.bmp",
       x = 0,

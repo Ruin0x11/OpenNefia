@@ -7,6 +7,7 @@ local field = require("game.field")
 local IOwned = require("api.IOwned")
 local Item = require("api.Item")
 local Enum = require("api.Enum")
+local IItem = require("api.item.IItem")
 
 local test_util = {}
 
@@ -45,7 +46,7 @@ function test_util.stripped_chara(id, map, x, y)
    else
       chara = Chara.create(id, nil, nil, {ownerless=true})
    end
-   chara:iter_items():each(IOwned.remove_ownership)
+   chara:iter_items():each(IItem.remove_ownership)
    return chara
 end
 

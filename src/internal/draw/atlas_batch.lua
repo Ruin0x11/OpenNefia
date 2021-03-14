@@ -27,9 +27,9 @@ function atlas_batch:add(chip, x, y, width, height, color, centered, rotation)
    local sy = 1
 
    if color then
-      self.batch:setColor(color[1] / 255, color[2] / 255, color[3] / 255)
+      self.batch:setColor(color[1] / 255, color[2] / 255, color[3] / 255, (color[4] or 255) / 255)
    else
-      self.batch:setColor(255, 255, 255)
+      self.batch:setColor(1, 1, 1, 1)
    end
 
    if width then

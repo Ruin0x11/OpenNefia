@@ -541,7 +541,7 @@ function Map.try_place_chara(chara, x, y, map)
 end
 
 local function rebuild_map(map, params)
-   Log.error("TODO")
+   Log.error("TODO rebuild map")
 end
 
 --- Cleans up the current map and moves the player and allies to a
@@ -591,12 +591,7 @@ function Map.travel_to(map, params)
 
    if map.area_uid == nil then
       Log.debug("Autogenerating new area for map '%d'", map.uid)
-      local player = Chara.player()
       local area = InstancedArea:new()
-      local floor = Area.floor_number(current)
-      area.parent_x = player.x
-      area.parent_y = player.y
-      area.parent_floor = floor
       area:add_floor(map)
       local parent = Area.for_map(current)
       if parent == nil then
@@ -651,31 +646,6 @@ function Map.travel_to(map, params)
    Gui.update_screen()
 
    return true
-end
-
-function Map.load_parent_map(map)
-   local area = Area.for_map(map)
-   local parent = Area.parent(map)
-   if parent == nil then
-      return nil
-   end
-
-   local floor = area.parent_floor or 1
-   return parent:load_or_generate_floor(floor)
-end
-
---- Finds the location of an entrance to this map in its containing world area.
----
---- NOTE: Currently the implementation assumes the map's area and parent area
---- both have area archetypes. This is to prevent having to load the entire
---- world map from disk just to know the position. This might have to be
---- redesigned later.
----
---- @tparam InstancedMap map
-function Map.position_in_parent_map(map)
-   local area = Area.for_map(map)
-
-   return Area.position_in_parent_map(area)
 end
 
 -- @tparam uint hour

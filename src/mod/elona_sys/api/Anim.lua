@@ -285,7 +285,7 @@ function Anim.bolt(positions, color, sound, chara_x, chara_y, target_x, target_y
          if draw then
             for j = 1, #frames do
                if frames[j] == "stop" then break
-               else
+               elseif frames[j] then
                   if frames[j].frame < 6 then
                      t.base.anim_shock:draw_region(frames[j].frame, draw_x + frames[j].x, draw_y + frames[j].y, nil, nil, color, true, rotation)
                   end
@@ -694,7 +694,7 @@ function Anim.meteor()
    -- <<<<<<<< shade2/screen.hsp:874 	swbreak ...
 end
 
-function Anim.ragnarok()
+function Anim.ragnarok(flames, use_screen_pos)
    if config.base.anime_wait == 0 then
       return function()
          Gui.play_sound("base.atk_fire")
@@ -708,11 +708,11 @@ function Anim.ragnarok()
          frame = 0 - Rand.rnd(3)
       }
    end
-   local flames = fun.tabulate(make_flame):take(100):to_list()
+   flames = flames or fun.tabulate(make_flame):take(100):to_list()
    local t = UiTheme.load()
 
    -- >>>>>>>> shade2/screen.hsp:876 	case aniRagna ..
-   return function()
+   return function(draw_x, draw_y)
       local did_something
       local cur_frame = 0
       local delta = 0
@@ -722,6 +722,10 @@ function Anim.ragnarok()
          for _, flame in ipairs(flames) do
             local x = flame.x
             local y = flame.y
+            if use_screen_pos then
+               x = x + draw_x
+               y = y + draw_y
+            end
             local frame = flame.frame
 
             if frame < 10 then
@@ -832,6 +836,16 @@ end
 
 function Anim.ball(positions, color, sound, center_x, center_y, map)
    -- >>>>>>>> shade2/screen.hsp:553:DONE 	case aniBallNuke ..
+   if config.base.anime_wait == 0 then
+      return function()
+         Gui.play_sound("base.ball1", center_x, center_y)
+
+         if sound then
+            Gui.play_sound(sound, center_x, center_y)
+         end
+      end
+   end
+
    color = color or {255, 255, 255}
 
    local t = UiTheme.load()

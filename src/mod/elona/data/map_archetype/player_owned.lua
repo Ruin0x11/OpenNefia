@@ -57,6 +57,7 @@ data:add {
       end
 
       map:set_archetype("elona.your_home", { set_properties = true })
+      map.level_text = HomeMap.map_level_text(floor)
       return map
    end,
 

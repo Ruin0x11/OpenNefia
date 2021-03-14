@@ -105,7 +105,7 @@ local function item_name_sub(s, item, jp)
          local skill_name = I18N.get("ability." .. item.params.textbook_skill_id .. ".name")
          s = s .. I18N.get("item.info." .. _id .. ".title", skill_name)
       elseif _id == "elona.book_of_rachel" then
-         s = s .. I18N.get("item.info." .. _id .. ".title", item.params.book_of_rachel_no)
+         s = s .. I18N.get("item.info." .. _id .. ".title", item.params.book_of_rachel_number)
       elseif _id == "elona.book" then
          s = s .. I18N.get("item.info." .. _id .. ".title", "_.elona.book." .. item.params.book_id .. ".title")
       end

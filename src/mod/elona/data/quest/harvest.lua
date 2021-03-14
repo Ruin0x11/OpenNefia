@@ -13,6 +13,7 @@ local elona_Quest = require("mod.elona.api.Quest")
 local Event = require("api.Event")
 local IOwned = require("api.IOwned")
 local Item = require("api.Item")
+local IItem = require("api.item.IItem")
 
 local quest_harvest = {
    _type = "base.map_archetype",
@@ -259,7 +260,7 @@ local function remove_quest_items_on_leave(_, params, result)
 
    local player = Chara.player()
    local pred = function(i) return i.own_state == Enum.OwnState.Quest end
-   player:iter_items():filter(pred):each(IOwned.remove_ownership)
+   player:iter_items():filter(pred):each(IItem.remove_ownership)
    player:refresh_weight()
    -- <<<<<<<< shade2/quest.hsp:320 		} ..
 end

@@ -26,7 +26,10 @@ function Layout.extract_params(layout)
 end
 
 function Layout.to_image_data(layout)
-   local color_to_tile = {}
+   local color_to_tile = {
+      tiles = {},
+      callbacks = {}
+   }
 
    local width, height, tiles = Layout.extract_params(layout)
 
@@ -40,7 +43,10 @@ function Layout.to_image_data(layout)
       tile_to_pixel[k] = { r, g, b }
 
       local number = Color.to_number(Draw.color_to_bytes(r, g, b, 1))
-      color_to_tile[number] = layout.tileset[k]
+      color_to_tile.tiles[number] = layout.tileset[k]
+      if layout.callbacks then
+         color_to_tile.callbacks[number] = layout.callbacks[k]
+      end
    end
 
    local image_data = Draw.new_image_data(width, height)
@@ -70,6 +76,7 @@ local TILES = {
 function Layout.from_image_data(image_data, color_to_tile)
    local byte = string.byte(".")
    local tileset = {}
+   local callbacks = {}
    local seen = {}
    local tiles = ""
    local last_y = 0
@@ -82,12 +89,13 @@ function Layout.from_image_data(image_data, color_to_tile)
          local tile = TILES[((idx)%#TILES)+1]
          idx = idx + 1
          if color_to_tile then
-            tile = color_to_tile[number]
+            tile = color_to_tile.tiles[number]
             if tile == nil then
                error(("Missing tile for color '%d'"):format(number))
             end
          end
          tileset[c] = tile
+         callbacks[c] = color_to_tile.callbacks[number] or nil
          seen[number] = c
          byte = byte + 1
       end
@@ -103,7 +111,7 @@ function Layout.from_image_data(image_data, color_to_tile)
 
    image_data:mapPixel(map)
 
-   return { tiles = tiles, tileset = tileset }
+   return { tiles = tiles, tileset = tileset, callbacks = callbacks }
 end
 
 function Layout.to_map(layout)

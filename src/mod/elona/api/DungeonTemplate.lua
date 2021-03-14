@@ -2,6 +2,7 @@ local Dungeon = require("mod.elona.api.Dungeon")
 local Rand = require("api.Rand")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Filters = require("mod.elona.api.Filters")
+local Nefia = require("mod.elona.api.Nefia")
 
 -- Dungeon templates are composable.
 --
@@ -14,18 +15,18 @@ local Filters = require("mod.elona.api.Filters")
 local DungeonTemplate = {}
 
 function DungeonTemplate.type_standard(floor, params)
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
    return Dungeon.gen_type_standard, params
 end
 
 function DungeonTemplate.type_wide(floor, params)
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.has_monster_houses = true
    return Dungeon.gen_type_wide, params
 end
 
 function DungeonTemplate.type_big_room(floor, params)
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
 
    -- >>>>>>>> shade2/map_rand.hsp:227 	if rdType=rdBigRoom{	 ...
    params.calc_density = function(map)
@@ -41,22 +42,22 @@ function DungeonTemplate.type_big_room(floor, params)
 end
 
 function DungeonTemplate.type_resident(floor, params)
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
    return Dungeon.gen_type_resident, params
 end
 
 function DungeonTemplate.type_jail(floor, params)
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
    return Dungeon.gen_type_jail, params
 end
 
 function DungeonTemplate.type_hunt(floor, params)
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
    return Dungeon.gen_type_hunt, params
 end
 
 function DungeonTemplate.type_long(floor, params)
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
 
    -- >>>>>>>> shade2/map_rand.hsp:233 	if rdType=rdLong{	 ...
    params.calc_density = function(map)
@@ -72,7 +73,7 @@ function DungeonTemplate.type_long(floor, params)
 end
 
 function DungeonTemplate.type_maze(floor, params)
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
 
    -- >>>>>>>> shade2/map_rand.hsp:243 	if rdType=rdMaze{	 ...
    params.calc_density = function(map)
@@ -92,7 +93,7 @@ function DungeonTemplate.type_maze(floor, params)
 end
 
 function DungeonTemplate.type_puppy_cave(floor, params)
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
 
    -- >>>>>>>> shade2/map_rand.hsp:238 	if rdType=rdDog{	 ...
    function params.calc_density(map)
@@ -110,7 +111,7 @@ end
 
 function DungeonTemplate.nefia_dungeon(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:27 	if areaType(gArea)=mTypeDungeon{ ...
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.dungeon"
    -- >>>>>>>> shade2/proc.hsp:18 	if mType=mTypeDungeon	: atxSpot=atxDungeon1 ...
    Dungeon.set_template_property(params, "material_spot", "elona.dungeon")
@@ -140,7 +141,7 @@ end
 
 function DungeonTemplate.nefia_forest(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:36 	if areaType(gArea)=mTypeForest{ ...
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.dungeon_forest"
    -- >>>>>>>> shade2/proc.hsp:20 	if mType=mTypeForest	: atxSpot=atxForest1 ...
    Dungeon.set_template_property(params, "material_spot", "elona.forest")
@@ -167,7 +168,7 @@ end
 
 function DungeonTemplate.nefia_tower(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:44 	if areaType(gArea)=mTypeTower{ ...
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.tower_1"
    -- >>>>>>>> shade2/proc.hsp:19 	if mType=mTypeTower	: atxSpot=atxBuilding1 ...
    Dungeon.set_template_property(params, "material_spot", "elona.building")
@@ -194,7 +195,7 @@ end
 
 function DungeonTemplate.nefia_fort(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:52 	if areaType(gArea)=mTypeFort{ ...
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.dungeon_castle"
    -- >>>>>>>> shade2/proc.hsp:21 	if mType=mTypeFort	: atxSpot=atxBuilding1	 ...
    Dungeon.set_template_property(params, "material_spot", "elona.building")
@@ -228,7 +229,7 @@ end
 
 function DungeonTemplate.lesimas(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:60 	if areaId(gArea)=areaLesimas{ ...
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.lesimas"
    params.on_generate_params = scale_density_with_floor
 
@@ -288,7 +289,7 @@ end
 
 function DungeonTemplate.tower_of_fire(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:88 	if areaId(gArea)=areaFireTrial{ ...
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.tower_of_fire"
    params.on_generate_params = scale_density_with_floor
 
@@ -298,7 +299,7 @@ end
 
 function DungeonTemplate.crypt_of_the_damned(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:93 	if areaId(gArea)=areaUndeadTrial{ ...
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.dungeon"
    params.on_generate_params = scale_density_with_floor
 
@@ -308,7 +309,7 @@ end
 
 function DungeonTemplate.ancient_castle(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:98 	if areaId(gArea)=areaRogueTrial{ ...
-   params.level = (params.level or 1) + floor - 1
+   params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.dungeon_castle"
    params.on_generate_params = scale_density_with_floor
 

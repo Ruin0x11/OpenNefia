@@ -68,19 +68,9 @@ local quest_sokoban = {
       max_crowd_density = 0,
       reveals_fog = true,
       prevents_teleport = true,
+      prevents_mining = true,
       is_temporary = true
    },
-
-   events = {
-      {
-         id = "elona.hook_calc_dig_success",
-         name = "Prevent digging",
-
-         callback = function(map)
-            return false
-         end
-      },
-   }
 }
 
 local function prevent_diagonal_movement(chara, params)

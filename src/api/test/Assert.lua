@@ -7,6 +7,7 @@ function Assert.is_truthy(actual, msg)
    if not actual then
       error(msg or "assertion failed!", 2)
    end
+   return actual
 end
 
 function Assert.is_falsy(actual, msg)
@@ -28,9 +29,10 @@ function Assert.not_eq(lhs, rhs)
 end
 
 local MAX_INSPECT_LENGTH = 10000
+local MAX_INSPECT_IDS = 1
 
 local function error_diff(lhs, rhs, message)
-   local inspect_args = { max_length = MAX_INSPECT_LENGTH }
+   local inspect_args = { max_length = MAX_INSPECT_LENGTH, max_ids = MAX_INSPECT_IDS }
    local lhs_insp = inspect(lhs, inspect_args)
    local rhs_insp = inspect(rhs, inspect_args)
    local diff = Diff.diff(lhs_insp, rhs_insp)
@@ -54,9 +56,13 @@ local function error_diff(lhs, rhs, message)
 end
 
 function Assert.same(lhs, rhs)
-   if type(lhs) == 'table' and type(rhs) == 'table' then
-      local result = table.deepcompare(lhs, rhs, true)
-      if not result then
+   if type(lhs) == 'table' or type(rhs) == 'table' then
+      if type(lhs) == 'table' and type(rhs) == 'table' then
+         local result = table.deepcompare(lhs, rhs, true)
+         if not result then
+            error_diff(lhs, rhs, "Expected both arguments to be the same, but they were different")
+         end
+      else
          error_diff(lhs, rhs, "Expected both arguments to be the same, but they were different")
       end
    else

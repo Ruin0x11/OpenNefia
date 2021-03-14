@@ -313,10 +313,12 @@ function Color:shade(r)
 end
 
 function Color.to_number(r, g, b, a)
-   return r * 16777216 + g * 65536 + b * 256 + a
+   local clamp_byte = function(byte) return math.clamp(math.floor(byte), 0, 255) end
+   return clamp_byte(r) * 16777216 + clamp_byte(g) * 65536 + clamp_byte(b) * 256 + clamp_byte(a)
 end
 
 function Color.from_number(n)
+   n = math.clamp(n, 0, 255 * 16777216 + 255 * 65536 + 255 * 256 + 255)
    return math.floor(n / 16777216) % 256, math.floor(n / 65536) % 256, math.floor(n / 256) % 256, n % 256
 end
 

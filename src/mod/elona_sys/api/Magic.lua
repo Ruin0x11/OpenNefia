@@ -114,10 +114,16 @@ function Magic.get_ai_location(target_type, range, caster, triggered_by, ai_targ
    end
 
    if target_type == "direction" then
-      return true, {
-         source = caster,
-         target = ai_target
-      }
+      -- NOTE: This check wasn't here in vanilla, or even oomSEST. Not having it
+      -- causes hands to attack you from across the map for some reason.
+      if Pos.dist(caster.x, caster.y, ai_target.x, ai_target.y) <= 1 then
+         return true, {
+            source = caster,
+            target = ai_target
+         }
+      end
+
+      return false, {}
    end
 
    error(("Unknown skill target_type '%s'"):format(target_type))

@@ -5,6 +5,7 @@ local Effect = require("mod.elona.api.Effect")
 local Home = require("mod.elona.api.Home")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local DeferredEvents = require("mod.elona.api.DeferredEvents")
+local ElonaWorld = require("mod.elona.api.ElonaWorld")
 
 local function spawn_random_sites(map, params)
    local amount = Calc.calc_random_site_generate_count(map)
@@ -33,3 +34,25 @@ local function welcome_home(map)
    -- <<<<<<<< shade2/system.hsp:28 		} ..
 end
 Event.register("base.on_map_enter", "Make servants welcome the player", welcome_home, 100000)
+
+local function generate_initial_nefias(map)
+   -- >>>>>>>> shade2/map.hsp:917 	if gArea=areaNorthTyris{ ...
+   if not map:has_type("world_map") then
+      return
+   end
+
+   ElonaWorld.generate_random_nefias(map)
+-- <<<<<<<< shade2/map.hsp:921 	} ..
+end
+Event.register("base.on_map_renew_major", "Generate initial world map nefias", generate_initial_nefias, 100000)
+
+local function update_world_map(map)
+   -- >>>>>>>> shade2/map.hsp:2067 	if areaType(gArea)=mTypeWorld{ ...
+   if not map:has_type("world_map") then
+      return
+   end
+
+   ElonaWorld.proc_world_regenerate(map)
+   -- <<<<<<<< shade2/map.hsp:2070 		} ..
+end
+Event.register("base.on_map_enter", "Update world map", update_world_map, 90000)

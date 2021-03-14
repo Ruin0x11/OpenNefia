@@ -213,6 +213,10 @@ Event.register(
    "Shade generation",
    function(_, params, result)
       -- >>>>>>>> shade2/chara.hsp:473 	npcMemory(1,dbId)++ 	 ..
+      if params.no_modify then
+         return result
+      end
+
       if params.id ~= "elona.shade" then
          return result
       end

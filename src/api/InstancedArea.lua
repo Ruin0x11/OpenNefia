@@ -16,9 +16,12 @@ function InstancedArea:init(archetype_id, area_generator, uids)
    self.metadata = {}
    self.name = nil
    self.parent_area = nil
+   self._parent_area_position = nil
+   self._children = {}
    self.parent_x = nil
    self.parent_y = nil
-   self.deepest_level_visited = 0
+   self.deepest_floor_visited = 0
+   self._deepest_floor = nil
 
    if archetype_id then
       self:set_archetype(archetype_id, { set_properties = true })
@@ -64,27 +67,25 @@ function InstancedArea:set_archetype(area_archetype_id, params)
 end
 
 function InstancedArea:deepest_floor()
-   if #self.maps == 0 then
-      local archetype = self:archetype()
-      if archetype and archetype.floors then
-         return fun.iter(table.keys(archetype.floors)):max()
-      end
-
-      return 1
+   if self._deepest_floor then
+      return self._deepest_floor
    end
-   return fun.iter(table.keys(self.maps)):max()
+
+   local archetype = self:archetype()
+   if archetype and archetype.floors then
+      return fun.iter(table.keys(archetype.floors)):max()
+   end
+
+   return 1
 end
 
 function InstancedArea:starting_floor()
-   if #self.maps == 0 then
-      local archetype = self:archetype()
-      if archetype and archetype.floors then
-         return fun.iter(table.keys(archetype.floors)):min()
-      end
-
-      return 1
+   local archetype = self:archetype()
+   if archetype and archetype.floors then
+      return fun.iter(table.keys(archetype.floors)):min()
    end
-   return fun.iter(table.keys(self.maps)):min()
+
+   return 1
 end
 
 function InstancedArea:iter_maps()
@@ -175,42 +176,87 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
 end
 
 function InstancedArea:iter_child_areas(floor)
-   assert(math.type(floor) == "integer")
+   if floor then
+      assert(math.type(floor) == "integer")
+   end
    if self._archetype == nil then
       return fun.iter({})
    end
 
-   local filter = function(arc)
-      return arc.parent_area
-         and self._archetype == arc.parent_area._id
-         and floor == arc.parent_area.on_floor
-   end
-   return data["base.area_archetype"]:iter():filter(filter)
-end
-
--- Given a child area, tries to find its location in this area. Used for
--- determining where to place the player when returning to the world map from a
--- town or dungeon.
-function InstancedArea:position_of_child(child, floor)
-   -- assert(class.is_an(InstancedArea, child)) BUG: See #108.
-   assert(math.type(floor) == "integer")
-
-   if self._archetype == nil or child._archetype == nil then
-      return nil, nil
+   local filter = function(uid, pos)
+      return floor == nil or pos.floor == floor
    end
 
-   -- BUG: Doesn't work with dynamically added areas.
-   local child_archetype = self:iter_child_areas(floor):filter(function(arc) return arc._id == child._archetype end):nth(1)
-   if child_archetype == nil then
-      return nil, nil
+   local map = function(uid, child)
+      return {
+         uid = uid,
+         floor = child.floor,
+         x = child.x,
+         y = child.y,
+      }
    end
 
-   local parent = child_archetype.parent_area
-   return parent.x, parent.y
+   return fun.iter(self._children):filter(filter):map(map)
 end
 
 function InstancedArea:load_starting_floor()
    return self:load_floor(self:starting_floor())
+end
+
+function InstancedArea:add_child_area(child)
+   assert(class.is_an(InstancedArea, child))
+   if self._children[child.uid] then
+      error(("Area %d is already a child of area %d"):format(child.uid, self.uid))
+   end
+
+   self._children[child.uid] = {
+      floor = nil,
+      x = nil,
+      y = nil
+   }
+end
+
+function InstancedArea:has_child_area(child)
+   assert(class.is_an(InstancedArea, child))
+   return self._children[child.uid] ~= nil
+end
+
+function InstancedArea:child_area_position(child)
+   assert(class.is_an(InstancedArea, child))
+   local meta = self._children[child.uid]
+   if not meta then
+      return nil, nil, nil
+   end
+
+   if meta.floor == nil or meta.x == nil or meta.y == nil then
+      return nil, nil, nil
+   end
+
+   return meta.x, meta.y, meta.floor
+end
+
+function InstancedArea:set_child_area_position(child, x, y, floor)
+   assert(class.is_an(InstancedArea, child))
+   local meta = self._children[child.uid]
+   if not meta then
+      error(("Area %d is not a child of area %d"):format(child.uid, self.uid))
+   end
+
+   if floor == nil or x == nil or y == nil then
+      assert(not (floor ~= nil or x ~= nil or y ~= nil))
+      meta.floor = nil
+      meta.x = nil
+      meta.y = nil
+   else
+      meta.floor = floor
+      meta.x = x
+      meta.y = y
+   end
+end
+
+function InstancedArea:remove_child_area(child)
+   assert(class.is_an(InstancedArea, child))
+   self._children[child.uid] = nil
 end
 
 function InstancedArea:__tostring()

@@ -131,7 +131,7 @@ function DungeonMap.generate_raw(generator, area, floor, width, height, attempts
    local dungeon, err
    local gen_params = {}
 
-   for _ = 1, attempts do
+   for attempt = 1, attempts do
       Rand.set_seed()
 
       local w = width or (34 + Rand.rnd(15))
@@ -150,7 +150,8 @@ function DungeonMap.generate_raw(generator, area, floor, width, height, attempts
          creature_packs = 1,
          level = floor,
          max_crowd_density = w * h / 100,
-         chara_filter = chara_filter
+         chara_filter = chara_filter,
+         generation_attempt = attempt
       }
 
       if on_generate_params then

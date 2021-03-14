@@ -12,6 +12,7 @@ local IUiLayer = require("api.gui.IUiLayer")
 local Input = require("api.Input")
 local InputHandler = require("api.gui.InputHandler")
 local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
+local MapObjectBatch = require("api.draw.MapObjectBatch")
 local UiList = require("api.gui.UiList")
 local UiTheme = require("api.gui.UiTheme")
 local UiWindow = require("api.gui.UiWindow")
@@ -49,7 +50,7 @@ local UiListExt = function(equipment_menu)
       local subtext = entry.subtext
 
       if entry.equipped then
-         equipment_menu.chip_batch:add(entry.icon, x + 12, y + 10, nil, nil, {255, 255, 255}, true)
+         equipment_menu.map_object_batch:add(entry.equipped, x + 12, y + 10, nil, nil, {255, 255, 255}, true)
 
          if equipment_menu.layout then
             item_name, subtext = equipment_menu.layout:draw_row(entry.equipped, item_name, subtext, x, y)
@@ -62,8 +63,8 @@ local UiListExt = function(equipment_menu)
    end
    function E:draw()
       UiList.draw(self)
-      equipment_menu.chip_batch:draw()
-      equipment_menu.chip_batch:clear()
+      equipment_menu.map_object_batch:draw()
+      equipment_menu.map_object_batch:clear()
    end
 
    return E
@@ -86,7 +87,7 @@ function EquipmentMenu:init(chara)
    self.stats = {}
    self.changed_equipment = false
 
-   self.chip_batch = nil
+   self.map_object_batch = nil
 
    self:update_from_chara()
 end
@@ -120,14 +121,6 @@ function EquipmentMenu:show_item_description()
    ItemDescriptionMenu:new(item, rest):query()
 end
 
-function EquipmentMenu:refresh_item_icons()
-   for _, entry in self.pages:iter() do
-      if entry.equipped and not entry.icon then
-         entry.icon = entry.equipped:calc("image")
-      end
-   end
-end
-
 function EquipmentMenu.build_list(chara)
    local list = {}
 
@@ -137,14 +130,12 @@ function EquipmentMenu.build_list(chara)
       entry.body_part = i.body_part
       entry.body_part_text = I18N.get("ui.body_part." .. i.body_part._id)
       entry.equipped = nil
-      entry.icon = nil
       entry.color = {10, 10, 10}
       entry.text = "-    "
       entry.subtext = "-"
 
       if i.equipped then
          entry.equipped = i.equipped
-         entry.icon = i.equipped:calc("image")
          entry.color = i.equipped:calc_ui_color()
          entry.text = i.equipped:build_name()
          entry.subtext = Ui.display_weight(i.equipped:calc("weight"))
@@ -161,7 +152,6 @@ function EquipmentMenu:update_from_chara()
 
    self.pages:set_data(list)
    self.win:set_pages(self.pages)
-   self:refresh_item_icons()
 
    local dv = self.chara:calc("dv")
    local pv = self.chara:calc("pv")
@@ -191,7 +181,7 @@ function EquipmentMenu:relayout()
    self.x, self.y, self.width, self.height = Ui.params_centered(self.width, self.height)
    self.t = UiTheme.load(self)
 
-   self.chip_batch = Draw.make_chip_batch("chip")
+   self.map_object_batch = MapObjectBatch:new()
 
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.pages:relayout(self.x + 88, self.y + 60, self.width, self.height)
@@ -304,7 +294,6 @@ function EquipmentMenu:update()
    end
 
    if self.pages.changed_page then
-      self:refresh_item_icons()
       self.win:set_pages(self)
    end
 
@@ -313,7 +302,7 @@ function EquipmentMenu:update()
 end
 
 function EquipmentMenu:release()
-   self.chip_batch:release()
+   self.map_object_batch:release()
 end
 
 return EquipmentMenu

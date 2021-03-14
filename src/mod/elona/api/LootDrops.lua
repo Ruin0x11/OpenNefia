@@ -5,12 +5,14 @@ local Enum = require("api.Enum")
 local Chara = require("api.Chara")
 local Calc = require("mod.elona.api.Calc")
 local Itemgen = require("mod.tools.api.Itemgen")
-local Filters = require("mod.elona.api.Filters")
 local Skill = require("mod.elona_sys.api.Skill")
+local FigureDrawable = require("mod.elona.api.gui.FigureDrawable")
+local CardDrawable = require("mod.elona.api.gui.CardDrawable")
 
 local LootDrops = {}
 
 -- >>>>>>>> shade2/module.hsp:2 #define global rangeNoCargo (mType!mTypeWorld)&(mT ...
+-- TODO cargo
 local function can_use_cargo_items(map)
    return map:has_type("world_map")
       or map:has_type("player_owned")
@@ -20,6 +22,15 @@ local function can_use_cargo_items(map)
       or map:has_type("guild")
 end
 -- <<<<<<<< shade2/module.hsp:2 #define global rangeNoCargo (mType!mTypeWorld)&(mT ..
+
+function LootDrops.should_drop_card_or_figure(chara)
+   local quality = chara:calc("quality")
+   return Rand.one_in(175)
+      or quality == Enum.Quality.Unique
+      or config.elona.debug_always_drop_figure_card
+      or (quality == Enum.Quality.Great and Rand.one_in(2))
+      or (quality == Enum.Quality.God and Rand.one_in(3))
+end
 
 function LootDrops.should_drop_player_item(item, player, map)
    -- >>>>>>>> shade2/item.hsp:99 		if iNum(cnt)=0:continue ...
@@ -320,41 +331,44 @@ function LootDrops.calc_loot_drops(chara, map, attacker)
    -- TODO arena
    local is_arena = false
    if not is_arena and not chara:find_role("elona.custom_chara") then
-      local function should_drop_figure(quality)
-         return Rand.one_in(175)
-            or quality == Enum.Quality.Unique
-            or config.elona.debug_always_drop_figure_card
-            or (quality == Enum.Quality.Great and Rand.one_in(2))
-            or (quality == Enum.Quality.God and Rand.one_in(3))
-      end
-
       local chara_id = chara._id
       local chara_color = chara.color
 
-      local function set_figure_params(item)
-         item.params.chara_id = chara_id
+      local function set_collectable_params(tag, drawable_klass)
+         return function(item)
+            item.params.chara_id = chara_id
 
-         -- special case for card/figure. the color of the chara chip displayed
-         -- is changed, not the figure/card itself. (so not item.color)
-         item.params.chara_color = table.deepcopy(chara_color)
+            -- special case for card/figure. the color of the chara chip displayed
+            -- is changed, not the figure/card itself. (so not item.color)
+            item.params.chara_color = table.deepcopy(chara_color)
 
-         if chara.proto.image then
-            local chip = data["base.chip"]:ensure(chara.proto.image)
-            if chip.is_tall then
-               item.image = "elona.item_figurine_tall"
+            -- TODO api to get the default image for a character (including class)
+            -- :calc("image") probably shouldn't be used here
+            item.params.chara_image = chara.proto.image or chara:calc("image") or nil
+
+            if item._id == "elona.figurine" and item.params.chara_image then
+               local chip = data["base.chip"]:ensure(item.params.chara_image)
+               if chip.is_tall then
+                  item.image = "elona.item_figurine_tall"
+               end
             end
+
+            -- TODO preinit item.params before on_init_params, so this can get
+            -- moved into the on_init_params() callback
+            item:set_drawable(tag, drawable_klass:new(item.params.chara_image, item.params.chara_color), "above", 10000)
+
+            item:refresh_cell_on_map()
          end
-
-         item:refresh_cell_on_map()
       end
 
-      local quality = chara:calc("quality")
+      local set_figure_params = set_collectable_params("elona.figurine", FigureDrawable)
+      local set_card_params = set_collectable_params("elona.card", CardDrawable)
 
-      if should_drop_figure(quality) then
-         drops[#drops+1] = { _id = "elona.card", on_create = set_figure_params }
+      if LootDrops.should_drop_card_or_figure(chara) then
+         drops[#drops+1] = { _id = "elona.card", on_create = set_card_params }
       end
 
-      if should_drop_figure(quality) then
+      if LootDrops.should_drop_card_or_figure(chara) then
          drops[#drops+1] = { _id = "elona.figurine", on_create = set_figure_params }
       end
    end

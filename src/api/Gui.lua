@@ -20,13 +20,13 @@ local capitalize = true
 local newline = true
 
 --- Refreshes and scrolls the screen and recalculates FOV.
-function Gui.update_screen(dt)
+function Gui.update_screen(dt, and_draw)
    local sw
    if Log.has_level("debug") then
       sw = Stopwatch:new()
    end
 
-   field:update_screen(scroll, dt)
+   field:update_screen(dt, and_draw, scroll)
    scroll = false
 
    if sw then
@@ -105,7 +105,7 @@ function Gui.wait_for_draw_callbacks()
    end
 
    if field:has_draw_callbacks() then
-      Gui.update_screen()
+      Gui.update_screen(nil, true)
    end
 
    field:wait_for_draw_callbacks()
@@ -475,11 +475,7 @@ function Gui.add_effect_map(asset_id, tx, ty, max_frames, rotation, kind)
       return
    end
 
-   local coords = Draw.get_coords()
-   local tw, th = coords:get_size()
-   local sx, sy = coords:tile_to_screen(tx + 1, ty + 1)
-
-   layer:add(asset_id, sx + tw / 2, sy + th / 2, max_frames, rotation, kind)
+   layer:add(asset_id, tx, ty, max_frames, rotation, kind)
 end
 
 function Gui.step_effect_map(frames)

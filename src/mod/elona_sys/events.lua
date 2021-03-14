@@ -407,22 +407,10 @@ Event.register("base.on_map_enter", "Play map music", play_map_music)
 local PlayerLightDrawable = require("api.gui.PlayerLightDrawable")
 local function add_player_light(player, params)
    if params.previous_player then
-      local remove = {}
-      for i, d in ipairs(params.previous_player.drawables) do
-         if class.is_an(PlayerLightDrawable, d.drawable) then
-            remove[#remove+1] = i
-         end
-      end
-      table.remove_indices(params.previous_player.drawables, remove)
+      params.previous_player:set_drawable("elona.player_light", nil)
    end
 
-   for _, d in ipairs(player.drawables) do
-      if class.is_an(PlayerLightDrawable, d.drawable) then
-         return
-      end
-   end
-
-   table.insert(player.drawables, { drawable = PlayerLightDrawable:new() })
+   player:set_drawable("elona.player_light", PlayerLightDrawable:new(), "below", 10000)
 end
 
 Event.register("base.on_set_player", "Add player light", add_player_light)

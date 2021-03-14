@@ -201,4 +201,16 @@ function HomeMap.generate(home_id, opts)
    return map
 end
 
+function HomeMap.map_level_text(level)
+   -- >>>>>>>> shade2/text.hsp:412 	if gArea=areaHome:if gLevel!1{ ...
+   if level == 1 then
+      return ""
+   elseif level > 0 then
+      return ("B.%s"):format(level-1)
+   else
+      return ("L.%s"):format((level-2)*-1)
+   end
+   -- <<<<<<<< shade2/text.hsp:414 	} ..
+end
+
 return HomeMap

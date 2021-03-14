@@ -13,32 +13,6 @@ end,
       _5 = "Smuggler's Hideout",
       _6 = "Light House"
     },
-    nefia = {
-      level = "",
-      prefix = {
-        type_a = {
-          _0 = "Beginner's ",
-          _1 = "Adventurer's ",
-          _2 = "Dangerous ",
-          _3 = "Fearful ",
-          _4 = "King's "
-        },
-        type_b = {
-          _0 = "Safe ",
-          _1 = "Exciting ",
-          _2 = "Servant's ",
-          _3 = "Shadow ",
-          _4 = "Chaotic "
-        }
-      },
-      suffix = {
-        _20 = "Dungeon",
-        _21 = "Tower",
-        _22 = "Forest",
-        _23 = "Fort"
-      }
-    },
-    no_dungeon_master = "This place is pretty dull. The dungeon master is no longer sighted here.",
     prompt_initialize = "Initialize this map? (Warning, only do this if an error occurs when loading this map. Make sure make a backup of the current save folder before doing this.)",
     quest = {
       field = "Field nearby town",

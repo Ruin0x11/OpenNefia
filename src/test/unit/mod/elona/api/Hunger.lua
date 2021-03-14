@@ -5,6 +5,7 @@ local Assert = require("api.test.Assert")
 local Hunger = require("mod.elona.api.Hunger")
 local IOwned = require("api.IOwned")
 local test_util = require("test.lib.test_util")
+local IItem = require("api.item.IItem")
 
 function test_Hunger_apply_general_eating_effect__sustain_attribute()
    local map = InstancedMap:new(10, 10)
@@ -51,7 +52,7 @@ function test_Hunger_apply_general_eating_effect__cute_fairy()
 
    local chara = test_util.stripped_chara("elona.cute_fairy", map)
    local food = test_util.stripped_item("elona.putitoro", map)
-   Item.iter(map):each(IOwned.remove_ownership)
+   Item.iter(map):each(IItem.remove_ownership)
 
    Assert.eq(0, Item.iter(map):length())
 

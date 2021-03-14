@@ -13,7 +13,7 @@ local Calc = {}
 
 function Calc.calc_object_level(base, map)
    local ret = base or 0
-   if base <= 0 then
+   if ret <= 0 then
       if map then
          ret = map:calc("level")
       else
@@ -36,7 +36,7 @@ function Calc.calc_object_level(base, map)
       end
    end
 
-   if base <= 3 and not Rand.one_in(4) then
+   if ret <= 3 and not Rand.one_in(4) then
       ret = Rand.rnd(3) + 1
    end
 

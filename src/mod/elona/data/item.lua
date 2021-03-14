@@ -11234,7 +11234,7 @@ local item =
          categories = {
             "elona.remains",
             "elona.no_generate"
-         }
+         },
       },
       {
          _id = "card",
