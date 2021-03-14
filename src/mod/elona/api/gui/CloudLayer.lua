@@ -1,6 +1,5 @@
 local Draw = require("api.Draw")
 local IDrawLayer = require("api.gui.IDrawLayer")
-local Map = require("api.Map")
 local Rand = require("api.Rand")
 local UiTheme = require("api.gui.UiTheme")
 local Chara = require("api.Chara")
@@ -19,10 +18,6 @@ function CloudLayer:init()
    self:init_clouds()
 end
 
-function CloudLayer:on_theme_switched(coords)
-   self.coords = Draw.get_coords()
-end
-
 function CloudLayer:init_clouds()
    self.clouds = {}
    -- >>>>>>>> shade2/chips.hsp:188 *cloud_init ...
@@ -37,7 +32,13 @@ function CloudLayer:init_clouds()
    -- <<<<<<<< shade2/chips.hsp:196 	return ..
 end
 
+function CloudLayer:on_theme_switched(coords)
+   self.coords = Draw.get_coords()
+   self.t = UiTheme.load(self)
+end
+
 function CloudLayer:relayout()
+   self.coords = Draw.get_coords()
    self.t = UiTheme.load(self)
 end
 

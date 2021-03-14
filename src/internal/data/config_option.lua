@@ -374,6 +374,13 @@ data:add_multi(
          max_value = 100
       },
       {
+         _id = "anime_wait_type",
+
+         type = "enum",
+         choices = { "always_wait", "at_turn_start", "never_wait" },
+         default = "always_wait",
+      },
+      {
          _id = "background_effect_wait",
 
          type = "integer",

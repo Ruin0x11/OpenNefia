@@ -562,7 +562,7 @@ make_ball {
    ball_cb = ball_cb_elemental
 }
 
-make_ball{
+make_ball {
    _id = "grenade",
    elona_id = 655,
 

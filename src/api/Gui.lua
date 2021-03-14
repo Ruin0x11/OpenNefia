@@ -65,9 +65,13 @@ function Gui.start_draw_callback(cb, async, tag)
       return
    end
 
+   if not field:has_draw_callbacks() and config.base.anime_wait_type ~= "always_wait" then
+      Gui.update_screen(nil, true)
+   end
+
    field:add_async_draw_callback(cb, tag)
 
-   if not async then
+   if not async and config.base.anime_wait_type == "always_wait" then
       Gui.wait_for_draw_callbacks()
    end
 end
