@@ -43,9 +43,12 @@ function SkipList:clear()
    self._size  = 2^self._levels
 end
 
+-- NOTE: This can't be serialized.
+local comp = function(key1,key2) return key1 <= key2 end
+
 -- comp: < or > (Duplicate keys are inserted at the beginning)
 -- comp: <= or >= (Duplicate keys are inserted at the end)
-function SkipList:init(initial_size,comp)
+function SkipList:init(initial_size)
    initial_size= initial_size or 100
 
    local levels= floor( logb(initial_size,1/p) )
@@ -54,7 +57,6 @@ function SkipList:init(initial_size,comp)
    self._levels = levels
    self._count = 0
    self._size = 2^levels
-   self.comp = comp or function(key1,key2) return key1 <= key2 end
 end
 
 function SkipList:length()
@@ -65,7 +67,7 @@ end
 -- If value is omitted, return any matching key and value
 function SkipList:find(key,value)
    local node = self.head
-   local comp = self.comp
+   -- local comp = self.comp
    -- Start search at the highest level
    for level = self._levels,1,-1 do
       while node[level] do
@@ -115,7 +117,7 @@ function SkipList:insert(key,value)
    -- levels-1 = log(1-cdf)/log(1-p)
    local levels = floor( log(1-random())/log(1-p) ) + 1
    levels       = min(levels,self._levels)
-   local comp   = self.comp
+   -- local comp   = self.comp
 
    local new_node = {key = key, value = value}
 
@@ -225,7 +227,7 @@ end
 -- Return true if it passes else error!
 function SkipList:check()
    local level = 0
-   local comp  = self.comp
+   -- local comp  = self.comp
    while self.head[level+1] do
       level      = level + 1
       local prev = self.head

@@ -21,6 +21,7 @@ local Hunger = require("mod.elona.api.Hunger")
 local World = require("api.World")
 local Const = require("api.Const")
 local ExHelp = require("mod.elona.api.ExHelp")
+local SkipList = require("api.SkipList")
 
 --
 --
@@ -104,6 +105,7 @@ local function init_save()
    s.quest_time_limit_notice_interval = 0
    s.sidequest = {}
    s.reservable_spellbook_ids = table.set {}
+   s.deferred_events = SkipList:new()
 end
 
 Event.register("base.on_init_save", "Init save (elona_sys)", init_save)

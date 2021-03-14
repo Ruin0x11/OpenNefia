@@ -148,7 +148,6 @@ local function prompt_remove_building(chara, params, result)
          if Input.yes_no() then
             entrance:remove_ownership()
             Area.delete(entrance.params.area_uid)
-            -- TODO world map nefia refresh
             Gui.play_sound("base.build1", entrance.x, entrance.y)
             Gui.mes("action.get.building.remove")
             return "turn_end"

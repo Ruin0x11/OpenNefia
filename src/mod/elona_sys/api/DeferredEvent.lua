@@ -1,6 +1,7 @@
 local DeferredEvent = {}
 
 function DeferredEvent.add(cb, priority)
+   assert(type(cb) == "function")
    priority = priority or 100000
    save.elona_sys.deferred_events:insert(priority, cb)
 end
