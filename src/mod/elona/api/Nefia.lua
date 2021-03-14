@@ -4,7 +4,6 @@ local Rand = require("api.Rand")
 local Chara = require("api.Chara")
 local Enum = require("api.Enum")
 local Charagen = require("mod.tools.api.Charagen")
-local Gui = require("api.Gui")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Calc = require("mod.elona.api.Calc")
 local Item = require("api.Item")
@@ -38,10 +37,32 @@ function Nefia.set_boss_uid(area, uid)
    area.metadata.nefia_boss_uid = uid
 end
 
+function Nefia.iter_all()
+   return Area.iter():filter(Nefia.get_type)
+end
+
+function Nefia.iter_in_area(map_or_area)
+   return Area.iter_children(map_or_area):filter(Nefia.get_type)
+end
+
+function Nefia.iter_entrances_in(map)
+   local filter = function(feat)
+      if not feat.params.area_uid then
+         return
+      end
+      local area = Area.get(feat.params.area_uid)
+      if area == nil then
+         return
+      end
+      return Nefia.get_type(area) ~= nil
+   end
+   return Area.iter_entrances_in_parent(map):filter(filter)
+end
+
 function Nefia.random_name(level, nefia_id)
    local rank_factor = 5
    local kind = Rand.rnd(2)
-   local rank = math.clamp(math.floor(level / rank_factor), 0, 5)
+   local rank = math.clamp(math.floor(level / rank_factor), 0, 4)
    return I18N.get(("nefia.prefix._%d._%d"):format(kind, rank), "nefia._." .. nefia_id .. ".name")
 end
 
@@ -56,7 +77,7 @@ function Nefia.calc_random_nefia_level(player, nefia_id)
       level = Rand.rnd(player:calc("level") + 5) + 1
    else
       level = Rand.rnd(50) + 1
-      if Rand.on_in(5) then
+      if Rand.one_in(5) then
          level = level * (Rand.rnd(3) + 1)
       end
    end

@@ -46,12 +46,11 @@ function Area.current()
 end
 
 function Area.iter()
-   return fun.iter_pairs(save.base.areas)
+   return fun.iter_pairs(save.base.areas):map(function(uid, area) return area end)
 end
 
 function Area.is_area_entrance(feat)
-   -- TODO: this might be too permissive of a filter, but that's
-   -- what I get for using a dynamic language...
+   -- TODO implement as a capability
    return feat.params and feat.params.area_uid and feat.params.area_floor
 end
 
@@ -108,7 +107,7 @@ end
 
 function Area.iter_children(map_or_area)
    local area = get_area(map_or_area)
-   return Area.iter():filter(function(uid, a) return a.parent_area == area.uid end)
+   return Area.iter():filter(function(a) return a.parent_area == area.uid end)
 end
 
 function Area.iter_all_contained_in(map_or_area)
@@ -123,7 +122,7 @@ function Area.iter_all_contained_in(map_or_area)
          result[#result+1] = area
          found[area] = true
          for _, child in Area.iter_children(area) do
-            stack[#stack+1] = Area.get(child)
+            stack[#stack+1] = child
          end
       end
    end

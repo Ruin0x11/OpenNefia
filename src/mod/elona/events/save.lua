@@ -26,6 +26,8 @@ local function init_save()
    s.next_train_date = 0
    s.labor_expenses = 0
    s.unpaid_bill_count = 0
+   s.about_to_regenerate_world_map = false
+   s.about_to_regenerate_nefias = false
 end
 
 Event.register("base.on_init_save", "Init save (elona)", init_save)

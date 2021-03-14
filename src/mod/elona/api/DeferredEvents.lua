@@ -190,7 +190,7 @@ function DeferredEvents.nefia_boss_defeated(map)
    local player = Chara.player()
    local uid = Nefia.get_boss_uid(area)
    local boss
-   if math.type(uid) == "integer" then
+   if math.type(uid) == "integer" and uid >= 0 then
       boss = map:get_object_of_type("base.chara", uid)
    end
 

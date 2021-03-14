@@ -41,7 +41,7 @@ local function spawn_nefia_boss(map, params)
 
    if area:deepest_floor() == Map.floor_number(map) then
       local boss_uid = Nefia.get_boss_uid(area)
-      if boss_uid == -1 then
+      if boss_uid and boss_uid < 0 then
          -- >>>>>>>> shade2/map.hsp:2053 		if gLevel=areaMaxLevel(gArea):if areaBoss(gArea) ...
          Gui.mes("nefia.no_dungeon_master", map.name)
          -- <<<<<<<< shade2/map.hsp:2053 		if gLevel=areaMaxLevel(gArea):if areaBoss(gArea) ..

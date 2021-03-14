@@ -9,7 +9,7 @@ function NefiaCompletionDrawable:init(state)
    local tw, th = coords:get_size()
    self.t = UiTheme.load(self)
    self.offset_x = math.floor(tw / 4)
-   self.offset_y = math.floor(th / 4)
+   self.offset_y = math.floor(-th / 4)
    self:set_state(state)
 end
 
@@ -27,10 +27,12 @@ function NefiaCompletionDrawable:update(dt)
 end
 
 function NefiaCompletionDrawable:draw(x, y)
+   -- >>>>>>>> shade2/module.hsp:650 				if areaDeepest(p)=areaMaxLevel(p):pos dx+16,dy ...
    if self.region > 0 then
       Draw.set_color(255, 255, 255)
       self.t.base.nefia_mark:draw_region(self.region, x + self.offset_x, y + self.offset_y)
    end
+   -- <<<<<<<< shade2/module.hsp:650 				if areaDeepest(p)=areaMaxLevel(p):pos dx+16,dy ..
 end
 
 return NefiaCompletionDrawable

@@ -70,7 +70,7 @@ end
 local function putitify_around_create(orig_fn, id, x, y, params, where)
    local chara = orig_fn(id, x, y, params, where)
 
-   if chara and not params.no_modify then
+   if chara and (params == nil or not params.no_modify) then
       putitify(chara)
    end
 

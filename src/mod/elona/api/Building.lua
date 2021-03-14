@@ -176,7 +176,7 @@ function Building.find_home_area_and_entrances(world_map)
    local home_area
 
    local world_area = Area.for_map(world_map)
-   for _, _, area in Area.iter_children(world_area) do
+   for _, area in Area.iter_children(world_area) do
       for floor, map_metadata in pairs(area.maps) do
          if map_metadata.uid == home_map_uid then
             home_area = area

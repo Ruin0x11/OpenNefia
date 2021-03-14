@@ -192,7 +192,6 @@ data:add {
 
 local function entrance_in_parent_map(map, area, parent_area, chara, prev)
    local x, y, floor = parent_area:child_area_position(area)
-   print("GET", map.uid, area, parent_area, x, y, floor)
    if x == nil or floor ~= parent_area:floor_of_map(map.uid) then
       return nil
    end

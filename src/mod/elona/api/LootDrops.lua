@@ -341,7 +341,10 @@ function LootDrops.calc_loot_drops(chara, map, attacker)
             -- special case for card/figure. the color of the chara chip displayed
             -- is changed, not the figure/card itself. (so not item.color)
             item.params.chara_color = table.deepcopy(chara_color)
-            item.params.chara_image = chara:calc("image") or chara.proto.image or nil
+
+            -- TODO api to get the default image for a character (including class)
+            -- :calc("image") probably shouldn't be used here
+            item.params.chara_image = chara.proto.image or chara:calc("image") or nil
 
             if item._id == "elona.figurine" and item.params.chara_image then
                local chip = data["base.chip"]:ensure(item.params.chara_image)
