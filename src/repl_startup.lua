@@ -19,7 +19,7 @@ Skill = require("mod.elona_sys.api.Skill")
 Wish = require("mod.elona.api.Wish")
 PlotViewer = require("mod.plot.api.PlotViewer")
 Weather = require("mod.elona.api.Weather")
-Treemap = require("mod.treemap.api.gui.Treemap")
+TreemapViewer = require("mod.treemap.api.gui.TreemapViewer")
 
 Log.set_level("info")
 
