@@ -111,7 +111,7 @@ function SkillsMenu:draw()
 
    Ui.draw_topic("ui.skill.name", self.x + 28, self.y + 36)
    Ui.draw_topic("ui.skill.cost", self.x + 220, self.y + 36)
-   Ui.draw_topic("ui.skill.effect", self.x + 320, self.y + 36)
+   Ui.draw_topic("ui.skill.detail", self.x + 320, self.y + 36)
    self.t.base.inventory_icons:draw_region(14, self.x + 46, self.y - 16)
    self.t.base.deco_skill_a:draw(self.x + self.width - 78, self.y + self.height - 165)
    self.t.base.deco_skill_b:draw(self.x + self.width - 168, self.y)
