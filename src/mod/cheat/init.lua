@@ -75,8 +75,8 @@ Event.register("base.before_engine_init", "Enable non-redistributable themes if 
 
 local function setup_dev_config()
    if config.base.development_mode then
-      config.base.auto_turn_speed = "highest"
-      config.base.anime_wait = 0
+      -- config.base.auto_turn_speed = "highest"
+      -- config.base.anime_wait = 0
       config.base.quickstart_chara_id = "elona.citizen"
    end
 end

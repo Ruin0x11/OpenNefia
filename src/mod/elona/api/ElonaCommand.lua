@@ -692,7 +692,8 @@ function ElonaCommand.name(player, target)
       return "player_turn_query"
    end
 
-   target.name = name
+   target.own_name = name
+   target.name = target.own_name
    target.has_own_name = true
    Gui.mes("action.interact.name.you_named", target)
 

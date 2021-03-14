@@ -12,7 +12,8 @@ local Charagen = require("mod.tools.api.Charagen")
 
 local function fix_name_gender_age(chara)
    if chara.proto.has_own_name then
-      chara.name = I18N.get("chara.job.own_name", chara.name, Text.random_name())
+      chara.own_name = Text.random_name()
+      chara.name = I18N.get("chara.job.own_name", chara.name, chara.own_name)
    end
 end
 
