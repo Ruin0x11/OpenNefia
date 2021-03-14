@@ -19,7 +19,7 @@ local actions = {
    "read",       -- on_read,       can_read,       elona_sys.on_item_read
    "zap",        -- on_zap,        can_zap,        elona_sys.on_item_zap
    "open",       -- on_open,       can_open,       elona_sys.on_item_open
-   "dip_source", -- on_dip_source, can_dip_source, elona_sys.on_item_dip_source
+   "dip_into",   -- on_dip_into,   can_dip_into,   elona_sys.on_item_dip_into
    "throw",      -- on_throw,      can_throw,      elona_sys.on_item_throw
    "descend",    -- on_descend,    can_descend,    elona_sys.on_item_descend
    "ascend",     -- on_ascend,     can_ascend,     elona_sys.on_item_ascend

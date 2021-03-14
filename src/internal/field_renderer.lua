@@ -53,6 +53,15 @@ function field_renderer:on_theme_switched()
    end
 end
 
+function field_renderer:find_layer(id)
+   for _, layer in ipairs(self.layers) do
+      if class.is_an(id, layer) then
+         return layer
+      end
+   end
+   return nil
+end
+
 function field_renderer:set_map(map, layers)
    self:init(map:width(), map:height(), layers)
 end

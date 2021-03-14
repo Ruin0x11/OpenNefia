@@ -1,7 +1,6 @@
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
 local Item = require("api.Item")
-local Chara = require("api.Chara")
 local utils = require("mod.test_room.data.map_archetype.utils")
 
 local throw = {

@@ -423,16 +423,6 @@ local function armor_skill_level(chara)
    return 0
 end
 
-local function armor_penalty(chara)
-   local armor_class = chara:calc("armor_class")
-   local skill = data["base.skill"][armor_class]
-   local penalty = 0
-   if skill and skill.calc_armor_penalty then
-      penalty = skill:calc_armor_penalty(chara)
-   end
-   return penalty
-end
-
 local function calc_protection_default(result, target)
    -- shade2/calculation.hsp:280 	prot		= cPV(tc)  + sdata(cArmor(tc),tc) +sDEX(tc)/10  ...
    result.amount = target:calc("pv") + armor_skill_level(target) + target:skill_level("elona.stat_dexterity") / 10

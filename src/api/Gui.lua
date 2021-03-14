@@ -104,6 +104,10 @@ function Gui.wait_for_draw_callbacks()
       return
    end
 
+   if field:has_draw_callbacks() then
+      Gui.update_screen()
+   end
+
    field:wait_for_draw_callbacks()
 end
 
@@ -463,6 +467,28 @@ end
 
 function Gui.mes_alert()
    -- TODO
+end
+
+function Gui.add_effect_map(asset_id, tx, ty, max_frames, rotation, kind)
+   local layer = field.renderer:find_layer("internal.layer.effect_map_layer")
+   if layer == nil then
+      return
+   end
+
+   local coords = Draw.get_coords()
+   local tw, th = coords:get_size()
+   local sx, sy = coords:tile_to_screen(tx + 1, ty + 1)
+
+   layer:add(asset_id, sx + tw / 2, sy + th / 2, max_frames, rotation, kind)
+end
+
+function Gui.step_effect_map(frames)
+   frames = frames or 1
+   local layer = field.renderer:find_layer("internal.layer.effect_map_layer")
+   if layer == nil then
+      return
+   end
+   layer:step_all(frames * (16.66 / 1000))
 end
 
 --- Plays a sound. You can optionally provide a position, so that if

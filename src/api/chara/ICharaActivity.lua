@@ -3,6 +3,7 @@ local config = require("internal.config")
 local Log = require("api.Log")
 local I18N = require("api.I18N")
 local Activity = require("api.Activity")
+local data = require("internal.data")
 
 local ICharaActivity = class.interface("ICharaActivity")
 
@@ -101,13 +102,21 @@ function ICharaActivity:start_activity(id, params, turns)
       if not ok then
          Log.error("Error starting activity: %s", result)
       end
+      return
    end
 
+   local auto_turn_anim_id = self.activity:get_auto_turn_anim() or nil
    if self:is_player() and config.base.auto_turn_speed ~= "highest" then
       local anim_wait = self.activity:get_animation_wait()
       if anim_wait > 0 then
-         local auto_turn_anim_id = self.activity:get_auto_turn_anim() or nil
          Gui.hud_widget("hud_auto_turn"):widget():set_shown(true, auto_turn_anim_id)
+      end
+   else
+      if auto_turn_anim_id then
+         local auto_turn_anim = data["base.auto_turn_anim"]:ensure(auto_turn_anim_id)
+         if auto_turn_anim.sound then
+            Gui.play_sound(auto_turn_anim.sound, self.x, self.y)
+         end
       end
    end
 end

@@ -41,6 +41,7 @@ function field_layer:init()
    self.layers = {
       "internal.layer.tile_layer",
       "internal.layer.debris_layer",
+      "internal.layer.effect_map_layer",
       "internal.layer.chip_layer",
       "internal.layer.tile_overhang_layer",
       "internal.layer.emotion_icon_layer",
@@ -215,6 +216,10 @@ end
 
 function field_layer:wait_for_draw_callbacks()
    self.draw_callbacks:wait()
+end
+
+function field_layer:has_draw_callbacks()
+   return self.draw_callbacks:has_more()
 end
 
 function field_layer:update_draw_callbacks(dt)

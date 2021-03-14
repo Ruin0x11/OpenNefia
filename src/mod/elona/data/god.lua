@@ -106,7 +106,7 @@ local god = {
          God.make_skill_blessing("elona.lock_picking", 450, 8),
       },
       offerings = {
-         "elona.fish_a",
+         "elona.fish",
          "elona.sandborer",
          "elona.cutlassfish",
          "elona.tuna",

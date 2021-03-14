@@ -41,10 +41,6 @@ return {
       harvest_grown = function(weight)
          return ("%s育った"):format(weight)
       end,
-      chip = {
-         dryrock = "日干し岩",
-         field = "畑"
-      },
       coldproof_blanket = {
          protects_item = function(_1, _2)
             return ("%sが%sの持ち物を冷気から守った。")

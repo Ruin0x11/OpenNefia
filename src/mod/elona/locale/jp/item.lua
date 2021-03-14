@@ -328,16 +328,10 @@ local item = {
     unidentified_name = "巨大な斧"
   },
   bait = {
-        name = "",
-
-    rank = {
-      _0 = "ミジンコ",
-      _1 = "バッタ",
-      _2 = "テントウ",
-      _3 = "トンボ",
-      _4 = "セミ",
-      _5 = "ヘラクレス"
-    },
+    name = "",
+    title = function(_1)
+       return ("%s"):format(_1)
+    end,
   },
   banded_mail = {
     desc = {
@@ -3056,10 +3050,10 @@ local item = {
     },
     name = "耐熱コーティング液"
   },
-  fish_a = {
+  fish = {
     name = ""
   },
-  fish_b = {
+  fish_junk = {
     name = ""
   },
   fishing_pole = {

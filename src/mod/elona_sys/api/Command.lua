@@ -31,14 +31,14 @@ function Command.move(player, x, y)
       x, y = Pos.add_direction(x, player.x, player.y)
    end
 
+   player.direction = Pos.pack_direction(Pos.direction_in(player.x, player.y, x, y))
+
    -- Try to modify the final position or prevent movement. This is caused by
    -- status effects like confusion, or being overweight, respectively.
    local next_pos = player:emit("elona_sys.before_player_move", {}, {x=x,y=y,result=nil})
    if next_pos.result then
       return next_pos.result or "player_turn_query"
    end
-
-   player.direction = Pos.pack_direction(Pos.direction_in(player.x, player.y, next_pos.x, next_pos.y))
 
    -- At this point the next position is final.
 
@@ -132,6 +132,14 @@ end
 
 function Command.drop(player)
    local result, canceled = Input.query_inventory(player, "elona.inv_drop", nil, "elona.main")
+   if canceled then
+      return nil, canceled
+   end
+   return result.result
+end
+
+function Command.dip(player)
+   local result, canceled = Input.query_inventory(player, "elona.inv_dip_source", nil, "elona.main")
    if canceled then
       return nil, canceled
    end
@@ -245,6 +253,7 @@ function Command.quit_game()
    if res.index == 1 then
       local can_save = true -- TODO showroom
       if can_save then
+         config.base.debug_load_after_save = false
          Save.save_game()
          Gui.mes("action.exit.saved")
          Gui.mes("action.exit.you_close_your_eyes")

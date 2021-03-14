@@ -7,6 +7,8 @@ local Quest = require("mod.elona_sys.api.Quest")
 local elona_Item = require("mod.elona.api.Item")
 local Skill = require("mod.elona_sys.api.Skill")
 local Hunger = require("mod.elona.api.Hunger")
+local Enum = require("api.Enum")
+local Pos = require("api.Pos")
 
 data:add {
    _id = "performer",
@@ -147,6 +149,28 @@ data:add {
    end
 }
 
+-- >>>>>>>> shade2/module.hsp:583 #define global cell_find(%%1) f=false:repeat 3:y=cY ...
+local function find_cell_with_role(cx, cy, tile_role, map)
+   for i = -1, 1 do
+      local x = cx + i
+      local y = cy
+      if map:tile(x, y).kind == tile_role then
+         return x, y
+      end
+   end
+
+   for j = -1, 1 do
+      local x = cx
+      local y = cy + j
+      if map:tile(x, y).kind == tile_role then
+         return x, y
+      end
+   end
+
+   return nil, nil
+end
+-- <<<<<<<< shade2/module.hsp:590 	loop} ..
+
 data:add {
    _id = "fishing",
    _type = "base.skill",
@@ -166,14 +190,57 @@ data:add {
    type = "skill",
    params = {
       "source",
-      "target",
+      "item"
    },
    cost = 5,
 
    cast = function(self, params)
-      Gui.mes("TODO")
+      -- >>>>>>>> shade2/proc.hsp:2287 	case rsFishing ...
+      local source = params.source
+      local map = source:current_map()
+      local item = params.item
+
+      if source:skill_level("elona.fishing") == 0 then
+         Gui.mes("magic.fish.do_not_know")
+         return false
+      end
+      if source:is_inventory_full() then
+         Gui.mes("ui.inv.common.inventory_is_full")
+         return false
+      end
+      if not config.base.development_mode and item.params.bait_amount <= 0 then
+         Gui.mes("magic.fish.need_bait")
+         return false
+      end
+
+      local x, y = find_cell_with_role(source.x, source.y, Enum.TileRole.Water, map)
+
+      if x == nil then
+         Gui.mes("magic.fish.not_good_place")
+         return false
+      end
+
+      if map:tile(source.x, source.y).kind == Enum.TileRole.Water then
+         Gui.mes("magic.fish.cannot_during_swim")
+         return false
+      end
+
+      source.direction = Pos.pack_direction(Pos.direction_in(source.x, source.y, x, y))
+
+      if source:is_player() and not Effect.do_stamina_check(source, self.cost) then
+         Gui.mes("magic.common.too_exhausted")
+         return true
+      end
+
+      Gui.add_effect_map("base.effect_map_ripple", x, y, 3)
+
+      item = item:separate()
+      item.params.bait_amount = item.params.bait_amount - 1
+
+      source:start_activity("elona.fishing", {x=x,y=y,fishing_pole=item,no_animation=config.elona.skip_fishing_animation})
 
       return true
+      -- <<<<<<<< shade2/proc.hsp:2309 	swbreak ..
    end
 }
 

@@ -10,7 +10,6 @@ local event = {
    { _id = "on_search_finish" },
    { _id = "on_feat_calc_materials" },
    { _id = "calc_dialog_choices" },
-   { _id = "calc_bad_performance_damage" },
    { _id = "before_spawn_mobs" },
    { _id = "before_cast_return" },
    { _id = "on_chara_displaced" },

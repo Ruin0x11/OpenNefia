@@ -31,7 +31,7 @@ local function item_type_prompt(choices)
       if canceled then
          return nil, canceled
       end
-      return result.item.data
+      return choices[result.index].data
    end
 end
 
@@ -180,6 +180,7 @@ function Smithing.on_use_blacksmith_hammer(hammer, chara)
       if canceled then
          return false
       end
+
       -- >>>>>>>> oomSEST/src/southtyris.hsp:98505                 if (reftypeminor == 77001 | iId(ci ..
       chara:start_activity("smithing.create_equipment", {hammer=hammer, categories={item_type}, target_item=item, material_item=nil})
       return true

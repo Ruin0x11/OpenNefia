@@ -87,6 +87,7 @@ local function item_name_sub(s, item, jp)
    if _id == "elona.kitty_bank" then
       s = s .. I18N.get("item.info." .. _id .. ".amount", "item.info." .. _id .. ".names._" .. item.params.bank_gold_increment)
    elseif _id == "elona.bait" then
+      s = s .. I18N.space() .. I18N.get("item.info." .. _id .. ".title", "bait._." .. item.params.bait_type .. ".name")
    elseif _id == "elona.ancient_book" then
       if jp and item.params.ancient_book_is_decoded then
          s = s .. "解読済みの"
@@ -124,8 +125,8 @@ local function item_name_sub(s, item, jp)
          item:has_category("elona.food") and item.params.food_type and (item.params.food_quality or 0) > 0
       if is_cooked_dish then
          skip = true
-         if _id == "elona.fish_a" then
-            local fish_name = "??? fish" -- TODO fishing
+         if _id == "elona.fish" then
+            local fish_name = "fish._." .. item.params.fish_id .. ".name"
             s = s .. Hunger.food_name(item.params.food_type, fish_name, item.params.food_quality)
          else
             local original_name = "item.info." .. _id .. ".name"
@@ -141,9 +142,8 @@ local function item_name_sub(s, item, jp)
       end
    end
 
-   if _id == "elona.fish_a" or _id == "elona.fish_b" then
-      local fish_name = "??? fish" -- TODO fishing
-      s = s .. fish_name
+   if _id == "elona.fish" or _id == "elona.fish_junk" then
+      s = s .. I18N.get("fish._." .. item.params.fish_id .. ".name")
    end
 
    if item.params.chara_id and item.own_state ~= Enum.OwnState.Quest then
@@ -342,8 +342,8 @@ function itemname.jp(item, amount, no_article)
 
    -- >>>>>>>> shade2/item_func.hsp:640 	if iId(id)=idFishingPole{ ..
    if _id == "elona.fishing_pole" then
-      if item.charges > 0 then
-         s = s .. I18N.get("item.info." .. _id .. ".remaining", "item.info.elona.bait.rank." .. item.params.fishing_pole_bait, item.charges)
+      if item.params.bait_amount > 0 then
+         s = s .. I18N.get("item.info." .. _id .. ".remaining", "bait._." .. item.params.bait_type .. ".name", item.params.bait_amount)
       end
    elseif _id == "elona.monster_ball" then
       local chara_id = item.params.monster_ball_captured_chara_id
@@ -587,7 +587,7 @@ function itemname.en(item, amount, no_article)
       end
    end
 
-   if s2 == "" and item._id ~= "elona.fish_a" and amount > 1 then
+   if s2 == "" and item._id ~= "elona.fish" and amount > 1 then
       s = s .. "s"
    end
 
@@ -606,8 +606,8 @@ function itemname.en(item, amount, no_article)
 
    -- >>>>>>>> shade2/item_func.hsp:640 	if iId(id)=idFishingPole{ ..
    if _id == "elona.fishing_pole" then
-      if item.has_charge and item.charges then
-         s = s .. I18N.get("item.info." .. _id .. ".remaining", "item.info.elona.bait.rank." .. item.params.fishing_pole_bait, item.charges)
+      if item.params.bait_amount > 0 then
+         s = s .. I18N.get("item.info." .. _id .. ".remaining", "bait._." .. item.params.bait_type .. ".name", item.params.bait_amount)
       end
    elseif _id == "elona.monster_ball" then
       local chara_id = item.params.monster_ball_captured_chara_id

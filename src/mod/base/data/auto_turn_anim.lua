@@ -5,6 +5,7 @@ data:add {
    _type = "base.auto_turn_anim",
    _id = "mining",
 
+   sound = "base.dig1",
    callback = function(x, y, t)
       return function()
          local frame = 0
@@ -30,6 +31,7 @@ data:add {
    _type = "base.auto_turn_anim",
    _id = "fishing",
 
+   sound = "base.water",
    on_start_callback = function()
       Gui.play_sound("base.water")
    end,
@@ -52,6 +54,7 @@ data:add {
    _type = "base.auto_turn_anim",
    _id = "harvesting",
 
+   sound = "base.bush1",
    callback = function(x, y, t)
       return function()
          local frame = 0
@@ -76,6 +79,7 @@ data:add {
    _type = "base.auto_turn_anim",
    _id = "searching",
 
+   sound = "base.dig2",
    callback = function(x, y, t)
       return function()
          local frame = 0

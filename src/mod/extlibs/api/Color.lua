@@ -312,13 +312,12 @@ function Color:shade(r)
       return self:lighten_to(self.L - self.L*r)
 end
 
-function Color:to_number()
-   local R, G, B, A = Color.hsl_to_rgb(self.H, self.S, self.L, self.A)
-   return math.floor(R * 255 * 16777216 + G * 255 * 65536 + B * 255 * 256 + (A or 1) * 255)
+function Color.to_number(r, g, b, a)
+   return r * 16777216 + g * 65536 + b * 256 + a
 end
 
-function Color:from_number(n)
-   return Color:new_rgb(math.floor(n / 16777216) % 256, math.floor(n / 65536) % 256, math.floor(n / 256) % 256, n % 256)
+function Color.from_number(n)
+   return math.floor(n / 16777216) % 256, math.floor(n / 65536) % 256, math.floor(n / 256) % 256, n % 256
 end
 
 function Color:to_rgb()

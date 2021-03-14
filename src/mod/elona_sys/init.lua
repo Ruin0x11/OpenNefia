@@ -342,5 +342,8 @@ Gui.bind_keys {
    end,
    journal = function(_, me)
       return Command.journal(me)
+   end,
+   dip = function(_, me)
+      return Command.dip(me)
    end
 }
