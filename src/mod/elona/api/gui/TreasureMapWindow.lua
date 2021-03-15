@@ -88,7 +88,10 @@ function TreasureMapWindow:draw()
 end
 
 function TreasureMapWindow:update(dt)
-   if self.finished then
+   local finished = self.finished
+   self.finished = false
+
+   if finished then
       Gui.play_sound("base.card1")
       return true
    end

@@ -1268,6 +1268,23 @@ local assets = {
    },
 
    {
+      _id = "cloud_1",
+      source = "graphic/map0.bmp",
+      x = 288,
+      y = 1040,
+      width = 208,
+      height = 160
+   },
+   {
+      _id = "cloud_2",
+      source = "graphic/map0.bmp",
+      x = 0,
+      y = 976,
+      width = 288,
+      height = 224
+   },
+
+   {
       _id = "light_port_light",
       source = "graphic/interface.bmp",
       x = 192,

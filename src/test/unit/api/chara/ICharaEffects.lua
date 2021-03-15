@@ -15,6 +15,18 @@ function test_ICharaEffects_apply_effect__adjusted_power()
    Assert.eq(2, chara:effect_turns("elona.bleeding"))
 end
 
+function test_ICharaEffects_apply_effect__additive_power()
+   local chara = test_util.stripped_chara("elona.putit")
+
+   Rand.set_seed(0)
+   chara:apply_effect("elona.paralysis", 500)
+   Assert.eq(29, chara:effect_turns("elona.paralysis"))
+
+   Rand.set_seed(0)
+   chara:apply_effect("elona.paralysis", 500)
+   Assert.eq(39, chara:effect_turns("elona.paralysis"))
+end
+
 function test_ICharaEffects_apply_effect__elemental_resist()
    local chara = test_util.stripped_chara("elona.putit")
 

@@ -55,7 +55,7 @@ data:add {
 
    on_generate_floor = function(area, floor)
       local gen, params = JANDungeonTemplate.nefia_weird(floor, { level = Nefia.get_level(area) })
-      local map =  DungeonMap.generate(area, floor, gen, params)
+      local map = DungeonMap.generate(area, floor, gen, params)
 
       return map
    end
@@ -65,6 +65,9 @@ local function putitify(chara)
    chara.image = "elona.chara_race_slime"
    chara.portrait = nil
    chara.name = I18N.get("chara.elona.putit.name")
+   if chara.own_name then
+      chara.name = I18N.get("chara.job.own_name", chara.name, chara.own_name)
+   end
 end
 
 local function putitify_around_create(orig_fn, id, x, y, params, where)

@@ -5268,7 +5268,12 @@ local item =
          categories = {
             "elona.container"
          },
-         light = light.item
+         light = light.item,
+
+         on_open = open_chest(
+            function(filter, item, gen_iteration)
+               return filter
+         end),
       },
       {
          _id = "safe",

@@ -117,9 +117,9 @@ function ICharaEffects:apply_effect(id, power, params)
          end
       end
    else
-      local additive = effect.additive_power
+      local additive = effect.calc_additive_power
       if type(additive) == "function" then
-         additive = math.floor(additive({turns=turns}))
+         additive = math.floor(additive(self, turns))
       end
       additive = additive or turns
 

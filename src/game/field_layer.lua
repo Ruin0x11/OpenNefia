@@ -5,6 +5,7 @@ local IInput = require("api.gui.IInput")
 local KeyHandler = require("api.gui.KeyHandler")
 local Log = require("api.Log")
 local Env = require("api.Env")
+local Draw = require("api.Draw")
 
 local draw = require("internal.draw")
 local draw_callbacks = require("internal.draw_callbacks")
@@ -38,15 +39,16 @@ function field_layer:init()
    -- keybinds
    self.keys:ignore_modifiers { "alt" }
 
-   self.layers = {
-      "internal.layer.tile_layer",
-      "internal.layer.debris_layer",
-      "internal.layer.effect_map_layer",
-      "internal.layer.chip_layer",
-      "internal.layer.tile_overhang_layer",
-      "internal.layer.emotion_icon_layer",
-      "internal.layer.shadow_layer",
-   }
+   self.layers = {}
+
+   local priority = 100000 -- Gui.LAYER_PRIORITY_TILEMAP
+   self:register_draw_layer("tile_layer", "internal.layer.tile_layer", priority)
+   self:register_draw_layer("debris_layer", "internal.layer.debris_layer", priority + 10000)
+   self:register_draw_layer("effect_map_layer", "internal.layer.effect_map_layer", priority + 20000)
+   self:register_draw_layer("chip_layer", "internal.layer.chip_layer", priority + 30000)
+   self:register_draw_layer("tile_overhang_layer", "internal.layer.tile_overhang_layer", priority + 40000)
+   self:register_draw_layer("emotion_icon_layer", "internal.layer.emotion_icon_layer", priority + 50000)
+   self:register_draw_layer("shadow_layer", "internal.layer.shadow_layer", priority + 60000)
 end
 
 function field_layer:make_keymap()
@@ -79,10 +81,12 @@ function field_layer:set_map(map)
    self.map = map
    self.map:redraw_all_tiles()
    if self.renderer == nil then
-      self.renderer = field_renderer:new(map:width(), map:height(), self.layers)
+      self.renderer = field_renderer:new(map:width(), map:height(), self.layers, self.hud)
    else
-      self.renderer:set_map(map, self.layers)
+      self.renderer:set_map(map, self.layers, self.hud)
    end
+   self.renderer:relayout(self.x, self.y, self.width, self.height)
+
    self.map_changed = true
    self.no_scroll = true
 end
@@ -92,7 +96,9 @@ function field_layer:relayout(x, y, width, height)
    self.y = y or self.y
    self.width = width or self.width
    self.height = height or self.height
-   self.hud:relayout(self.x, self.y, self.width, self.height)
+   if self.renderer then
+      self.renderer:relayout(self.x, self.y, self.width, self.height)
+   end
 end
 
 function field_layer:on_theme_switched()
@@ -201,7 +207,6 @@ function field_layer:update(dt, ran_action, result)
    self.renderer:update(dt)
    self.draw_callbacks:update(dt)
    self.sound_manager:update(dt)
-   self.hud:update(dt)
 end
 
 function field_layer:add_async_draw_callback(cb, tag, kind, z_order)
@@ -235,7 +240,6 @@ function field_layer:draw()
 
    self.renderer:draw()
    self.draw_callbacks:draw(self.renderer.draw_x, self.renderer.draw_y)
-   self.hud:draw()
 end
 
 function field_layer:query_repl()
@@ -256,13 +260,46 @@ function field_layer:query_repl()
    end
 end
 
--- HACK: Needs to be replaced with resource system.
-function field_layer:register_draw_layer(require_path)
+function field_layer:register_draw_layer(tag, require_path, priority, enabled)
+   Env.assert_is_valid_ident(tag)
+   assert(type(require_path) == "string")
+   assert(type(priority) == "number")
+
+   local mod = env.find_calling_mod()
+   tag = ("%s.%s"):format(mod, tag)
+   priority = priority
+   if enabled == nil then
+      enabled = true
+   end
+
    if env.is_hotloading() then
       Log.warn("Skipping draw layer register of '%s'", require_path)
       return
    end
-   self.layers[#self.layers+1] = require_path
+   if self.layers[tag] then
+      error("Draw layer " .. tag .. " already registered")
+   end
+   self.layers[tag] = { require_path = require_path, priority = priority, enabled = not not enabled }
+end
+
+function field_layer:get_draw_layer(tag)
+   if self.renderer == nil then
+      return nil
+   end
+
+   return self.renderer:get_layer(tag)
+end
+
+function field_layer:set_draw_layer_enabled(tag, enabled)
+   if not self.layers[tag] then
+      error(("Layer '%s' isn't registered"):format(tag))
+   end
+   enabled = not not enabled
+   self.layers[tag].enabled = enabled
+
+   if self.renderer then
+      return self.renderer:set_layer_enabled(tag, enabled)
+   end
 end
 
 return field_layer

@@ -82,7 +82,9 @@ function MapEditLayer:make_mousemap()
     end,
     button_2 = function(x, y, pressed)
       if pressed then
-        local tx, ty = Gui.visible_screen_to_tile(x, y)
+         local sx, sy = Gui.field_draw_pos()
+         local ox, oy = Draw.get_coords():get_start_offset(sx, sy)
+        local tx, ty = Gui.screen_to_tile(x+sx-ox, y+sy-oy)
         if Map.is_in_bounds(tx, ty) then
           self:copy_tile_at(tx, ty)
         end
@@ -179,7 +181,9 @@ function MapEditLayer:update(dt)
 
   local mouse_x, mouse_y = Input.mouse_pos()
   local sx, sy = Gui.field_draw_pos()
-  self.target_x, self.target_y = Gui.screen_to_tile(mouse_x + sx, mouse_y + sy)
+  -- TODO this should not be necessary...
+  local ox, oy = Draw.get_coords():get_start_offset(sx, sy)
+  self.target_x, self.target_y = Gui.screen_to_tile(mouse_x + sx - ox, mouse_y + sy - oy)
   local map = Map.current()
 
   if self.placing and map:is_in_bounds(self.target_x, self.target_y) then

@@ -71,7 +71,7 @@ local function start(self, player)
    local pos = MapEntrance.center(your_home, player)
    assert(your_home:take_object(player, pos.x, pos.y))
 
-   save.base.should_reset_world_map = true
+   save.base.about_to_regenerate_world_map = true
 
    DeferredEvent.add(function()
          local lomias = Chara.find("elona.lomias", "others")

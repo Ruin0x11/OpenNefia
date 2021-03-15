@@ -746,7 +746,7 @@ function Anim.ragnarok(flames, use_screen_pos)
          end
 
          local _
-         _, _, delta = Draw.yield(config.base.anime_wait + 40)
+         draw_x, draw_y, delta = Draw.yield(config.base.anime_wait + 40)
          cur_frame = cur_frame + delta
       until not did_something
    end

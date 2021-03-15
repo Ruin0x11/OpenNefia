@@ -2,7 +2,7 @@ local PriorityMap = class.class("PriorityMap")
 
 PriorityMap.DEFAULT_PRIORITY = 100000
 
-function PriorityMap:init(sort)
+function PriorityMap:init()
    self.map = {}
    self.priority = {}
    self.sorted_keys = {}
@@ -13,7 +13,7 @@ local function iter(state, index)
    if key == nil then
       return nil
    end
-   return index + 1, state.map[key]
+   return index + 1, state.map[key], key
 end
 
 function PriorityMap:iter()

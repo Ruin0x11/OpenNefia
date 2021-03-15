@@ -33,6 +33,7 @@ love.graphics.newSpriteBatch = function()
       clear = function() end,
       add = function() end,
       flush = function() end,
+      setColor = function() end,
    }
 end
 love.graphics.newQuad = function(x, y, w, h, tw, th)

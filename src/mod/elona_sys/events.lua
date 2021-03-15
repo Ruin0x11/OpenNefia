@@ -21,6 +21,7 @@ local Hunger = require("mod.elona.api.Hunger")
 local World = require("api.World")
 local Const = require("api.Const")
 local ExHelp = require("mod.elona.api.ExHelp")
+local SkipList = require("api.SkipList")
 
 --
 --
@@ -104,6 +105,7 @@ local function init_save()
    s.quest_time_limit_notice_interval = 0
    s.sidequest = {}
    s.reservable_spellbook_ids = table.set {}
+   s.deferred_events = SkipList:new()
 end
 
 Event.register("base.on_init_save", "Init save (elona_sys)", init_save)
@@ -321,7 +323,11 @@ Event.register("base.on_kill_chara", "Damage text and kill handling", function(c
 
                   -- This is so the chip will become hidden when the below
                   -- animation is played.
-                  Gui.update_screen()
+                  --
+                  -- BUG: ...but it doesn't work.
+                  if config.base.anime_wait > 0 then
+                     Gui.update_screen()
+                  end
 
                   if chara:calc("breaks_into_debris") then
                      if chara:is_in_fov() then
@@ -338,7 +344,6 @@ Event.register("base.on_kill_chara", "Damage text and kill handling", function(c
                      end
                      Map.spill_blood(chara.x, chara.y, 4, chara:current_map())
                   end
-                  Gui.update_screen()
                   -- <<<<<<<< shade2/chara_func.hsp:1661 			} ..
 end, { priority = 50000 })
 

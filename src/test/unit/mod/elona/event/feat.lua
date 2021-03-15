@@ -3,11 +3,16 @@ local test_util = require("test.lib.test_util")
 local Map = require("api.Map")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local Assert = require("api.test.Assert")
+local Feat = require("api.Feat")
+local IFeat = require("api.feat.IFeat")
 
 function test_map_entrance_sets_child_area_position()
    local north_tyris_area = Area.create_unique("elona.north_tyris", "root")
    local _, north_tyris_map = assert(north_tyris_area:load_or_generate_floor(north_tyris_area:starting_floor()))
    local puppy_cave_area = Area.create_unique("elona.puppy_cave", north_tyris_area)
+
+   Feat.iter(north_tyris_map):each(IFeat.remove_ownership)
+   Area.create_entrance(puppy_cave_area, 1, 29, 24, {}, north_tyris_map)
 
    local x, y, floor = Area.parent(puppy_cave_area):child_area_position(puppy_cave_area)
    Assert.eq(29, x)

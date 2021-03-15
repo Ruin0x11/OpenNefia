@@ -634,6 +634,7 @@ function InstancedMap:refresh_tile(x, y)
          local m = {}
          obj:produce_memory(m)
 
+         -- TODO set as object property
          if m.show then
             tile_light.offset_y = tile_light.offset_y or 0
             tile_light.brightness = tile_light.brightness or 0

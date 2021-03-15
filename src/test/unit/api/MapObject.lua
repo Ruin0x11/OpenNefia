@@ -153,3 +153,19 @@ function test_MapObject_is_map_object()
    local mef = Mef.create("elona.fire", nil, nil, {ownerless=true})
    Assert.eq(true, MapObject.is_map_object(mef))
 end
+
+function test_MapObject_clone__equip_slots()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+
+   local chara = Chara.create("elona.putit", 1, 2, {}, map)
+   local item = Item.create("elona.long_bow", nil, nil, {}, chara)
+   Assert.is_truthy(chara:equip_item(item))
+   Assert.eq(1, chara:iter_equipment():length())
+   Assert.eq(1, chara:iter_all_body_parts():extract("equipped"):filter(fun.op.truth):length())
+   Assert.eq(map, item:containing_map())
+
+   local new = MapObject.clone(chara, true)
+   Assert.eq(1, new:iter_equipment():length())
+   Assert.eq(1, new:iter_all_body_parts():extract("equipped"):filter(fun.op.truth):length())
+end

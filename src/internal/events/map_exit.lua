@@ -35,7 +35,7 @@ local function proc_area_changed(prev_map, params)
    -- >>>>>>>> shade2/map.hsp:212 			if areaType(gAreaPrev)=mTypeWorld{ ..
    if field_logic_state.player_about_to_respawn then
       Gui.mes("action.exit_map.delivered_to_your_home")
-      Weather.change_from_world_map()
+      Weather.change_from_world_map(next_map)
    else
       if Map.is_world_map(prev_map) then
          Gui.mes("action.exit_map.entered", params.next_map.name)

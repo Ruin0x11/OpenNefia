@@ -1,11 +1,13 @@
 --- @module EquipSlots
 
+local ICloneable = require("api.ICloneable")
 local ILocation = require("api.ILocation")
 local IOwned = require("api.IOwned")
+local MapObject = require("api.MapObject")
 local pool = require("internal.pool")
 local data = require("internal.data")
 
-local EquipSlots = class.class("EquipSlots", {ILocation, IOwned})
+local EquipSlots = class.class("EquipSlots", {ILocation, IOwned, ICloneable})
 
 --- @tparam {id:base.body_part,...} body_parts
 --- @tparam uid:IChara owner
@@ -259,6 +261,23 @@ function EquipSlots:take_object(obj)
    end
 
    return self:equip(obj, slot)
+end
+
+--
+-- ICloneable impl
+--
+
+function EquipSlots:clone(uid_tracker, cache, uid_mapping, opts)
+   local new = MapObject.deepcopy(self, uid_tracker, cache, uid_mapping, opts)
+
+   new.equipped = {}
+   for old_uid, slot in pairs(self.equipped) do
+      local new_uid = uid_mapping[old_uid]
+      new.equipped[new_uid] = slot
+      new.body_parts[slot].equipped = new_uid
+   end
+
+   return new
 end
 
 return EquipSlots

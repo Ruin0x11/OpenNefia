@@ -129,6 +129,12 @@ function ElonaWorld.proc_world_regenerate(world_map)
    if ElonaWorld.should_regenerate_nefias(world_map) then
       ElonaWorld.regenerate_nefias(world_map)
    end
+
+   for _, entrance in Area.iter_entrances_in_parent(world_map) do
+      -- >>>>>>>> shade2/map.hsp:2442 	if (areaType(cnt)=mTypeTown)or(areaType(cnt)=mTyp ...
+      entrance:refresh_cell_on_map()
+      -- <<<<<<<< shade2/map.hsp:2442 	if (areaType(cnt)=mTypeTown)or(areaType(cnt)=mTyp ..
+   end
    -- <<<<<<<< shade2/map.hsp:2381 	return ..
 end
 

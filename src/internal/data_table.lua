@@ -141,10 +141,6 @@ function data_table:add_index(_type, field)
    end
 end
 
-local function is_valid_ident(name)
-   return string.match(name, "^[_a-z][_a-z0-9]*$")
-end
-
 local function make_fallbacks(fallbacks, fields)
    local result = table.deepcopy(fallbacks)
    for _, field in ipairs(fields) do
@@ -172,7 +168,7 @@ function data_table:add_type(schema, params)
 
    params = params or {}
 
-   if not is_valid_ident(schema.name) then
+   if not env.is_valid_ident(schema.name) then
       self:error("'%s' is not a valid identifier (must consist of lowercase letters, numbers and underscores only, cannot start with a number)", schema.name)
       return nil
    end
@@ -308,7 +304,7 @@ function data_table:add(dat)
       return nil
    end
 
-   if not is_valid_ident(_id) then
+   if not env.is_valid_ident(_id) then
       self:error("'%s' is not a valid identifier (must consist of lowercase letters, numbers and underscores only, cannot start with a number)", 3, _id)
       return nil
    end

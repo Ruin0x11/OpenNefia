@@ -4252,8 +4252,6 @@ local tiles = {
 }
 
 for _, tile in ipairs(tiles) do
-   tile.count_x = tile.count_x or 1
-
    local id = tile.elona_id
    local x = (id % 33) * 48
    local y = math.floor(id / 33) * 48
@@ -4265,7 +4263,8 @@ for _, tile in ipairs(tiles) do
       x = x,
       y = y,
       width = 48,
-      height = 48
+      height = 48,
+      count_x = tile.count_x or nil
    }
 
    data:add(tile)

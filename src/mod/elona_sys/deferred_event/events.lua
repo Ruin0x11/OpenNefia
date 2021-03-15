@@ -1,18 +1,22 @@
 local Event = require("api.Event")
 local Gui = require("api.Gui")
-local SkipList = require("api.SkipList")
 
 local function run_events(_, _, result)
    local to_remove = 0
 
    for _, _, event in save.elona_sys.deferred_events:iterate() do
       to_remove = to_remove + 1
-      local ok, err = xpcall(event, debug.traceback)
-      if not ok then
-         Gui.report_error(err, "Error running deferred event")
-      elseif err ~= nil then
-         result = err
-         break
+
+      -- the event can be nil if a save was loaded, since functions aren't
+      -- serialized
+      if event then
+         local ok, err = xpcall(event, debug.traceback)
+         if not ok then
+            Gui.report_error(err, "Error running deferred event")
+         elseif err ~= nil then
+            result = err
+            break
+         end
       end
    end
 
@@ -26,8 +30,7 @@ end
 Event.register("base.on_turn_begin", "Run deferred events", run_events)
 
 local function clear_events()
-   save.elona_sys.deferred_events = SkipList:new()
+   save.elona_sys.deferred_events:clear()
 end
 
-Event.register("base.on_init_save", "Init save (deferred events)", clear_events)
-Event.register("base.on_map_enter", "Clear deferred events", clear_events)
+Event.register("base.on_map_leave", "Clear deferred events", clear_events)

@@ -50,7 +50,7 @@ function SpellsMenu.generate_list(chara)
             name = I18N.get("ability." .. entry._id .. ".name"),
             cost_stock = ("%d (%d)"):format(Skill.calc_spell_mp_cost(entry._id, chara), chara:spell_stock(entry._id)),
             lv_chance = ("%d/%d%%"):format(chara:skill_level(entry._id), Skill.calc_spell_success_chance(entry._id, chara)),
-            description = Skill.get_description(entry._id, chara):sub(0, 40),
+            description = utf8.wide_sub(Skill.get_description(entry._id, chara), 0, 40),
             icon = Ui.skill_icon(entry.related_skill)
          }
       end

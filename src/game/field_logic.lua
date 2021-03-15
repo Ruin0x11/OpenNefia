@@ -219,6 +219,10 @@ function field_logic.pass_turns()
       return "turn_begin"
    end
 
+   if config.base.anime_wait_type == "at_turn_start" then
+      Gui.wait_for_draw_callbacks()
+   end
+
    local is_first_turn = save.base.is_first_turn
    if is_first_turn then
       save.base.is_first_turn = false
@@ -315,6 +319,10 @@ function field_logic.player_turn_query()
    end
 
    Gui.update_screen(dt, true)
+
+   if config.base.anime_wait_type == "at_turn_start" then
+      Gui.wait_for_draw_callbacks()
+   end
 
    result = Event.trigger("base.on_player_turn")
    if result then

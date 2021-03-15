@@ -15,7 +15,7 @@ today on!
 Beginner's Guide
 	Author: An Old Adventurer
 
-<This book is weathered and yellow
+<<This book is weathered and yellow
 with age>
 
 I leave this book here in the off
@@ -955,8 +955,8 @@ Until then Partners!
 [You cannot make out who owns this]
 Written by Rachel's brother <damaged>
 
-<Within this rotted book is a Letter>
-<The Letter is faded Everywhere>
+<<Within this rotted book is a Letter>
+<<The Letter is faded Everywhere>
 
 Rachel<damaged> I'll forget.
 
@@ -965,7 +965,7 @@ In order to retain memory of<damaged>
 Your disease <damaged>
 by modern medicine.
 
-<damaged> himself out of hand.
+<<damaged> himself out of hand.
 
 No, I'm<damaged>
 
@@ -988,7 +988,7 @@ Requiescat in pace...
 You have been cordially invited hero,
 RSVP not required, but come prepared.
 
-<This has been written on papyrus>
+<<This has been written on papyrus>
 
 You have gotten a bit of a name for
 yourself young one, and you are even
@@ -1030,7 +1030,7 @@ Face me if you dare!
       title = "Card Game Manual",
       text = [[
 Action! Adventure! It's Card Battles!
-<By DeckMaster Schmidt>
+<<By DeckMaster Schmidt>
 
 Have you been looking for a game that
 your kids can play that doesn't
@@ -1059,7 +1059,7 @@ permits long-haul cargo. -
       title = "Dungeon Guide",
       text = [[
 Seek Ye the Secretes of yon Dungeons?
-<Schmidt the XVII, Duke of Intrigue>
+<<Schmidt the XVII, Duke of Intrigue>
 
 Then send ten gold to:
 Spelunkers Monthly Scrolls

@@ -1,11 +1,11 @@
-local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 
 local DamagePopup = {}
 
 local max = 20
 
 function DamagePopup.install()
-   Draw.register_draw_layer("mod.damage_popups.api.gui.DamagePopupLayer")
+   Gui.register_draw_layer("damage_popups", "mod.damage_popups.api.gui.DamagePopupLayer")
    save.damage_popups.popups = { count = 0 }
 end
 

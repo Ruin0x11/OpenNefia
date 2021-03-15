@@ -544,7 +544,8 @@ data:add {
 
    type = "skill",
    params = {
-      "source"
+      "source",
+      "target"
    },
 
    dice = function(self, params)

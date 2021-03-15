@@ -74,6 +74,8 @@ local function cleanup_globals()
    fs.remove(SaveFs.save_path("", "global"))
    field:init_global_data()
    Advice.remove_by_mod(test_util.TEST_MOD_ID)
+
+   config_store.proxy().base.autosave = false
 end
 
 local function print_result(result)

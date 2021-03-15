@@ -575,7 +575,7 @@ local function refresh_max_inventory_weight(chara)
                 45000, "set")
 end
 
-Event.register("base.on_refresh_weight", "refresh max inventory weight", refresh_max_inventory_weight)
+Event.register("base.on_refresh_weight", "refresh max inventory weight", refresh_max_inventory_weight, 50000)
 
 local function refresh_weight(chara)
    local weight = chara:calc("inventory_weight")
@@ -602,7 +602,7 @@ local function refresh_weight(chara)
    -- <<<<<<<< shade2/calculation.hsp:1326 	return ..
 end
 
-Event.register("base.on_refresh_weight", "apply weight type", refresh_weight)
+Event.register("base.on_refresh_weight", "apply weight type", refresh_weight, 500000)
 
 local function calc_speed(chara)
    return Skill.apply_speed_percentage(chara, true)

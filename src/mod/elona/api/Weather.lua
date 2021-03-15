@@ -68,18 +68,20 @@ function Weather.play_ambient_sound(map)
    -- <<<<<<<< shade2/sound.hsp:384 	if mField=mFieldOutdoor:dssetvolume lpFile,cfg_sv ..
 end
 
-function Weather.position_in_world_map()
+function Weather.position_in_world_map(map)
    -- TODO support for more world maps, less hardcoding. this is just for
    -- compat, for now.
    local player = Chara.player()
-   local map = Map.current()
+   map = map or Map.current()
    if not map then
       return nil, nil
    end
 
    local x, y
    if map._archetype == "elona.north_tyris" then
-      x, y = player.x, player.y
+      if player then
+         x, y = player.x, player.y
+      end
    else
       -- Check if we're inside a map where the parent map is North Tyris, so we
       -- can do things like check if our position in North Tyris is to the
@@ -107,9 +109,9 @@ function Weather.position_in_world_map()
    return x, y
 end
 
-function Weather.change_from_world_map()
+function Weather.change_from_world_map(map)
    -- >>>>>>>> shade2/main.hsp:564 *weather_change ...
-   local x, y = Weather.position_in_world_map()
+   local x, y = Weather.position_in_world_map(map)
    if x == nil then
       return
    end
@@ -172,7 +174,7 @@ end
 
 function Weather.pass_turn()
    save.elona.turns_until_weather_changes = save.elona.turns_until_weather_changes - 1
-   Weather.change_from_world_map()
+   Weather.change_from_world_map(Map.current())
 
    -- >>>>>>>> shade2/main.hsp:576 	gNextWeather-- ...
    if save.elona.turns_until_weather_changes < 0 then

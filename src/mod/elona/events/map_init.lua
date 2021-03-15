@@ -1,4 +1,5 @@
 local Calc = require("mod.elona.api.Calc")
+local Gui = require("api.Gui")
 local MapgenUtils = require("mod.elona.api.MapgenUtils")
 local Event = require("api.Event")
 local Effect = require("mod.elona.api.Effect")
@@ -48,11 +49,11 @@ Event.register("base.on_map_renew_major", "Generate initial world map nefias", g
 
 local function update_world_map(map)
    -- >>>>>>>> shade2/map.hsp:2067 	if areaType(gArea)=mTypeWorld{ ...
-   if not map:has_type("world_map") then
-      return
+   local is_world_map = map:has_type("world_map")
+   Gui.set_draw_layer_enabled("elona.cloud", is_world_map)
+   if is_world_map then
+      ElonaWorld.proc_world_regenerate(map)
    end
-
-   ElonaWorld.proc_world_regenerate(map)
    -- <<<<<<<< shade2/map.hsp:2070 		} ..
 end
 Event.register("base.on_map_enter", "Update world map", update_world_map, 90000)

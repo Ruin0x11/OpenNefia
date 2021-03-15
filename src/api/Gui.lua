@@ -65,9 +65,13 @@ function Gui.start_draw_callback(cb, async, tag)
       return
    end
 
+   if not field:has_draw_callbacks() and config.base.anime_wait_type ~= "always_wait" then
+      Gui.update_screen(nil, true)
+   end
+
    field:add_async_draw_callback(cb, tag)
 
-   if not async then
+   if not async and config.base.anime_wait_type == "always_wait" then
       Gui.wait_for_draw_callbacks()
    end
 end
@@ -470,7 +474,7 @@ function Gui.mes_alert()
 end
 
 function Gui.add_effect_map(asset_id, tx, ty, max_frames, rotation, kind)
-   local layer = field.renderer:find_layer("internal.layer.effect_map_layer")
+   local layer = field.renderer:get_layer("base.effect_map_layer")
    if layer == nil then
       return
    end
@@ -480,7 +484,7 @@ end
 
 function Gui.step_effect_map(frames)
    frames = frames or 1
-   local layer = field.renderer:find_layer("internal.layer.effect_map_layer")
+   local layer = field.renderer:get_layer("base.effect_map_layer")
    if layer == nil then
       return
    end
@@ -595,6 +599,24 @@ end
 
 function Gui.global_widget(tag)
    return draw.global_widget(tag)
+end
+
+Gui.LAYER_PRIORITY_TILEMAP = 100000
+Gui.LAYER_PRIORITY_USER = 500000
+Gui.LAYER_PRIORITY_HUD = 10000000
+
+function Gui.register_draw_layer(tag, layer, opts)
+   local priority = opts and opts.priority or Gui.LAYER_PRIORITY_USER
+   local enabled = opts and opts.enabled
+   field:register_draw_layer(tag, layer, priority, enabled)
+end
+
+function Gui.set_draw_layer_enabled(tag, enabled)
+   field:set_draw_layer_enabled(tag, enabled)
+end
+
+function Gui.get_draw_layer(tag)
+   return field:get_draw_layer(tag)
 end
 
 function Gui.run_keybind_action(action, ...)
