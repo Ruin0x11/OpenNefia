@@ -12,7 +12,6 @@ function test_InstancedMap_memorize_tile__map_tile()
    local expected = {
       _id = "elona.cobble",
       _type = "base.map_tile",
-      count_x = 1,
       elona_atlas = 1,
       elona_id = 78,
       image = {

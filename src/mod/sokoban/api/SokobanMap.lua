@@ -25,7 +25,7 @@ function SokobanMap.is_solved(map)
    end
 
    for _, x, y in positions:unwrap() do
-      local barrel = barrels:filter(function(b) print(x, y); return b.x == x and b.y == y end):nth(1)
+      local barrel = barrels:filter(function(b) return b.x == x and b.y == y end):nth(1)
       if barrel then
          found[barrel] = true
       end

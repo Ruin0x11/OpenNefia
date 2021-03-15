@@ -40,8 +40,9 @@ data:add {
       end
 
       if SokobanMap.is_solved(map) then
+         Gui.update_screen()
          Gui.play_sound("base.complete1")
-         Gui.mes("sokoban.solved", "Green")
+         Gui.mes_c("sokoban.solved", "Green")
          Input.query_more()
 
          local quest = assert(Quest.get_immediate_quest())

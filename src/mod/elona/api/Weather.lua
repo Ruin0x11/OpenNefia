@@ -79,7 +79,9 @@ function Weather.position_in_world_map(map)
 
    local x, y
    if map._archetype == "elona.north_tyris" then
-      x, y = player.x, player.y
+      if player then
+         x, y = player.x, player.y
+      end
    else
       -- Check if we're inside a map where the parent map is North Tyris, so we
       -- can do things like check if our position in North Tyris is to the

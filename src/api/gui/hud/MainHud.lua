@@ -22,6 +22,8 @@ function MainHud:init()
 
    self.widgets = WidgetContainer:new()
 
+   -- TODO to avoid circular dependencies, move all this into a
+   -- `base.on_engine_init` handler.
    self.widgets:add(UiMessageWindow:new(), "hud_message_window")
    self.widgets:add(UiStatusEffects:new(), "hud_status_effects")
    self.widgets:add(UiClock:new(), "hud_clock")
