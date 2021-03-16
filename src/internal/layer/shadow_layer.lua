@@ -4,10 +4,10 @@ local shadow_batch = require("internal.draw.shadow_batch")
 local Chara = require("api.Chara")
 local Draw = require("api.Draw")
 local IDrawLayer = require("api.gui.IDrawLayer")
-local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
 local UiTheme = require("api.gui.UiTheme")
+local Gui = require("api.Gui")
 
 local shadow_layer = class.class("shadow_layer", IDrawLayer)
 
@@ -18,6 +18,10 @@ function shadow_layer:init(width, height)
    self.lights = {}
    self.frames = 0
    self.reupdate_light = false
+end
+
+function shadow_layer:default_z_order()
+   return Gui.LAYER_Z_ORDER_TILEMAP + 60000
 end
 
 function shadow_layer:on_theme_switched(coords)
@@ -70,7 +74,7 @@ function shadow_layer:rebuild_light(map)
                shadow = shadow - power
 
                if map:is_in_fov(x, y) then
-                  local sx, sy = self.coords:tile_to_screen(x + 1, y + 1)
+                  local sx, sy = self.coords:tile_to_screen(x, y)
                   table.insert(self.lights, {
                                   chip = light.chip,
                                   flicker = light.flicker,
@@ -106,7 +110,7 @@ function shadow_layer:update_light_flicker()
    end
 end
 
-function shadow_layer:update(dt, screen_updated, scroll_frames)
+function shadow_layer:update(map, dt, screen_updated, scroll_frames)
    self.frames = self.frames + dt / (config.base.screen_refresh * (16.66 / 1000))
    if self.frames > 1 then
       self.frames = math.fmod(self.frames, 1)
@@ -114,9 +118,6 @@ function shadow_layer:update(dt, screen_updated, scroll_frames)
    end
 
    if screen_updated then
-      local map = Map.current()
-      assert(map ~= nil)
-
       self:rebuild_light(map)
    end
 
@@ -135,29 +136,22 @@ function shadow_layer:update(dt, screen_updated, scroll_frames)
 
    self.shadow_batch.updated = true
 
-   local map = Map.current()
    assert(map ~= nil)
 
-   local shadow_map = map:shadow_map()
+   local shadow_map, offset_tx, offset_ty = map:shadow_map()
    if #shadow_map > 0 then
-      self.shadow_batch:set_tiles(shadow_map)
+      self.shadow_batch:set_tiles(shadow_map, offset_tx, offset_ty)
    end
 
    return false
 end
 
-function shadow_layer:draw(draw_x, draw_y, offx, offy)
-   local sx, sy, ox, oy = self.coords:get_start_offset(draw_x - offx,
-                                                       draw_y - offy,
-                                                       Draw.get_width(),
-                                                       Draw.get_height())
-
+function shadow_layer:draw(draw_x, draw_y, width, height)
    Draw.set_blend_mode("add")
-
    for _, light in ipairs(self.lights) do
       local asset = self.t.base[light.chip]
-      local x = sx + light.x - draw_x
-      local y = sy + light.y - light.offset_y - draw_y
+      local x = draw_x + light.x
+      local y = draw_y + light.y - light.offset_y
       if #asset.quads == 0 then
          asset:draw(x, y, nil, nil, light.color)
       else
@@ -165,7 +159,7 @@ function shadow_layer:draw(draw_x, draw_y, offx, offy)
       end
    end
 
-   self.shadow_batch:draw(draw_x + offy, draw_y + offy, 0, 0)
+   self.shadow_batch:draw(draw_x, draw_y, width, height)
 end
 
 return shadow_layer

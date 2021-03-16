@@ -1,8 +1,8 @@
-local Map = require("api.Map")
 local IDrawLayer = require("api.gui.IDrawLayer")
 local Draw = require("api.Draw")
-local sparse_batch = require("internal.draw.sparse_batch")
+local Gui = require("api.Gui")
 local UiTheme = require("api.gui.UiTheme")
+local sparse_batch = require("internal.draw.sparse_batch")
 local atlas = require("internal.draw.atlas")
 local atlases = require("internal.global.atlases")
 
@@ -26,6 +26,10 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
     return vec4(1, 1, 1, textureColor.a * color.a);
 }
 ]])
+end
+
+function chip_layer:default_z_order()
+   return Gui.LAYER_Z_ORDER_TILEMAP + 30000
 end
 
 function chip_layer:on_theme_switched(coords)
@@ -267,7 +271,7 @@ function chip_layer:draw_stacking(ind, map, stack, chip_type, found)
    end
 end
 
-function chip_layer:update(dt, screen_updated, scroll_frames)
+function chip_layer:update(map, dt, screen_updated, scroll_frames)
    self.chip_batch:update(dt)
    self.drop_shadow_batch:update(dt)
 
@@ -281,7 +285,6 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
       return true
    end
 
-   local map = Map.current()
    assert(map ~= nil)
 
    local found = {}
@@ -323,8 +326,6 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
 end
 
 function chip_layer:draw_hp_bars(draw_x, draw_y, offx, offy)
-   local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
-
    -- TODO: rewrite this as a batched draw layer
    for _, ind in pairs(self.chip_batch_inds) do
       if ind.hp_bar then
@@ -333,27 +334,28 @@ function chip_layer:draw_hp_bars(draw_x, draw_y, offx, offy)
          end
 
          local ratio = math.clamp(ind.hp_ratio or 1.0, 0.0, 1.0)
-         self["i_" .. ind.hp_bar]:draw_percentage_bar(sx - draw_x + offx + ind.x * 48 + 9,
-                                                      sy - draw_y + offy + ind.y * 48 + CONFIG["base.chara"].y_offset + 48,
+         self["i_" .. ind.hp_bar]:draw_percentage_bar(draw_x + offx + ind.x * 48 + 9,
+                                                      draw_y + offy + ind.y * 48 + CONFIG["base.chara"].y_offset + 48,
                                                       ratio * 30, 3, ratio * 30)
       end
    end
 end
 
-function chip_layer:draw(draw_x, draw_y, offx, offy)
+function chip_layer:draw(draw_x, draw_y, width, height)
+   local offx, offy = 0, 0
    love.graphics.setShader(self.shadow_shader)
    Draw.set_color(255, 255, 255, 80)
    Draw.set_blend_mode("subtract")
-   self.drop_shadow_batch:draw(draw_x + offx, draw_y + offy)
+   self.drop_shadow_batch:draw(draw_x, draw_y, width, height)
    love.graphics.setShader()
 
    Draw.set_blend_mode("subtract")
    Draw.set_color(255, 255, 255, 110)
-   self.shadow_batch:draw(draw_x + offx, draw_y + offy, 8, 36)
+   self.shadow_batch:draw(draw_x + 8, draw_y + 36, width, height)
 
    Draw.set_color(255, 255, 255)
    Draw.set_blend_mode("alpha")
-   self.chip_batch:draw(draw_x + offx, draw_y + offy)
+   self.chip_batch:draw(draw_x, draw_y, width, height)
 
    self:draw_hp_bars(draw_x, draw_y, offx, offy)
 end

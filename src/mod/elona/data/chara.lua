@@ -59,9 +59,7 @@ local chara = {
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
       has_own_name = true,
-      ai_actions = {
-         calm_action = "elona.calm_dull"
-      },
+      ai_calm_action = "elona.calm_dull",
       ai_distance = 6,
       ai_move_chance = 80
    },
@@ -80,8 +78,8 @@ local chara = {
       fltselect = Enum.FltSelect.Sp,
       coefficient = 400,
       has_own_name = true,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand"
       }
    },
    {
@@ -101,8 +99,8 @@ local chara = {
       fltselect = Enum.FltSelect.Sp,
       coefficient = 400,
       has_own_name = true,
+      ai_calm_action = "elona.calm_dull",
       ai_actions = {
-         calm_action = "elona.calm_dull"
       }
    },
    {
@@ -122,8 +120,8 @@ local chara = {
       female_image = "elona.chara_informer_female",
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
+      ai_calm_action = "elona.calm_dull",
       ai_actions = {
-         calm_action = "elona.calm_dull"
       }
    },
    {
@@ -143,8 +141,8 @@ local chara = {
       image = "elona.chara_arena_master",
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
+      ai_calm_action = "elona.calm_dull",
       ai_actions = {
-         calm_action = "elona.calm_dull"
       }
    },
    {
@@ -165,8 +163,8 @@ local chara = {
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
       on_eat_corpse = eating_effect.holy_one,
+      ai_calm_action = "elona.calm_dull",
       ai_actions = {
-         calm_action = "elona.calm_dull"
       }
    },
    {
@@ -187,8 +185,8 @@ local chara = {
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
       on_eat_corpse = eating_effect.holy_one,
+      ai_calm_action = "elona.calm_dull",
       ai_actions = {
-         calm_action = "elona.calm_dull"
       }
    },
    {
@@ -208,8 +206,8 @@ local chara = {
       female_image = "elona.chara_elder_female",
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
+      ai_calm_action = "elona.calm_dull",
       ai_actions = {
-         calm_action = "elona.calm_dull"
       }
    },
    {
@@ -229,8 +227,8 @@ local chara = {
       female_image = "elona.chara_juere_female",
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
+      ai_calm_action = "elona.calm_dull",
       ai_actions = {
-         calm_action = "elona.calm_dull"
       }
    },
    {
@@ -250,8 +248,8 @@ local chara = {
       female_image = "elona.chara_guild_trainer_female",
       fltselect = Enum.FltSelect.Sp,
       coefficient = 400,
+      ai_calm_action = "elona.calm_dull",
       ai_actions = {
-         calm_action = "elona.calm_dull"
       }
    },
    {
@@ -629,9 +627,7 @@ local chara = {
       quality = Enum.Quality.Unique,
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
-      ai_actions = {
-         calm_action = "elona.calm_special"
-      },
+      ai_calm_action = "elona.calm_special",
 
       on_initialize_equipment = function(self, _, equip_spec)
          -- >>>>>>>> shade2/chara.hsp:330 	if (cId(rc)=351)or(cId(rc)=352){ ...
@@ -1343,8 +1339,8 @@ local chara = {
       coefficient = 400,
       flags = { "Splits" },
       splits = true,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          },
@@ -1373,8 +1369,8 @@ local chara = {
       flags = { "Splits2", "IsImmuneToElementalDamage" },
       splits2 = true,
       is_immune_to_elemental_damage = true,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          },
@@ -1512,8 +1508,8 @@ local chara = {
       fltselect = Enum.FltSelect.TownSp,
       rarity = 10000,
       coefficient = 100,
+      ai_calm_action = "elona.calm_special",
       ai_actions = {
-         calm_action = "elona.calm_special",
          sub = {
             { id = "elona.throw_potion", item_id = "elona.bottle_of_salt" }
          },
@@ -1557,9 +1553,7 @@ local chara = {
       fltselect = Enum.FltSelect.Shop,
       rarity = 2000,
       coefficient = 400,
-      ai_actions = {
-         calm_action = "elona.calm_special"
-      },
+      ai_calm_action = "elona.calm_special",
 
       on_initialize_equipment = function(self, _, equip_spec)
          -- >>>>>>>> shade2/chara.hsp:326 	if cId(rc)=326{	;bard ...
@@ -1628,8 +1622,8 @@ local chara = {
       coefficient = 400,
       flags = { "IsQuickTempered" },
       dialog = "elona.part_time_worker",
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand"
       }
    },
    {
@@ -1729,9 +1723,7 @@ local chara = {
       fltselect = Enum.FltSelect.TownSp,
       rarity = 2000,
       coefficient = 400,
-      ai_actions = {
-         calm_action = "elona.calm_special"
-      },
+      ai_calm_action = "elona.calm_special",
 
       events = {
          {
@@ -2246,8 +2238,8 @@ local chara = {
       race = "elona.mushroom",
       rarity = 50000,
       coefficient = 400,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" },
             { id = "elona.wait_melee" },
@@ -2272,8 +2264,8 @@ local chara = {
       rarity = 50000,
       coefficient = 400,
       on_eat_corpse = eating_effect.poisonous,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" },
             { id = "elona.skill", skill_id = "elona.action_distant_attack_7" }
@@ -2299,8 +2291,8 @@ local chara = {
       color = { 185, 155, 215 },
       rarity = 50000,
       coefficient = 400,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" },
             { id = "elona.skill", skill_id = "elona.action_distant_attack_7" }
@@ -2765,8 +2757,8 @@ local chara = {
       female_image = "elona.chara_wizard_female",
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
+      ai_calm_action = "elona.calm_dull",
       ai_actions = {
-         calm_action = "elona.calm_dull",
          main = {
             { id = "elona.skill", skill_id = "elona.spell_magic_dart" },
             { id = "elona.skill", skill_id = "elona.spell_nether_arrow" }
@@ -3714,8 +3706,8 @@ local chara = {
       coefficient = 400,
       flags = { "IsFloating" },
       on_eat_corpse = eating_effect.floating_eye,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          }
@@ -3744,8 +3736,8 @@ local chara = {
       coefficient = 400,
       flags = { "IsFloating" },
       on_eat_corpse = eating_effect.chaos_eye,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          },
@@ -3781,8 +3773,8 @@ local chara = {
       coefficient = 400,
       flags = { "IsFloating" },
       on_eat_corpse = eating_effect.mad_gaze,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          },
@@ -3819,8 +3811,8 @@ local chara = {
       coefficient = 400,
       flags = { "IsFloating" },
       on_eat_corpse = eating_effect.floating_eye,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          },
@@ -4095,8 +4087,8 @@ local chara = {
       race = "elona.hand",
       coefficient = 400,
       on_eat_corpse = eating_effect.hand,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          },
@@ -4127,8 +4119,8 @@ local chara = {
       color = { 225, 195, 255 },
       coefficient = 400,
       on_eat_corpse = eating_effect.hand,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          },
@@ -4160,8 +4152,8 @@ local chara = {
       eqtwohand = 1,
       coefficient = 400,
       on_eat_corpse = eating_effect.hand,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          },
@@ -4258,8 +4250,8 @@ local chara = {
       race = "elona.mandrake",
       image = "elona.chara_chaos_flower",
       coefficient = 400,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          }
@@ -4280,8 +4272,8 @@ local chara = {
       image = "elona.chara_chaos_flower",
       color = { 255, 195, 185 },
       coefficient = 400,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          }
@@ -6025,9 +6017,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.gilbert",
-      ai_actions = {
-         calm_action = "elona.calm_dull"
-      },
+      ai_calm_action = "elona.calm_dull",
       ai_distance = 3,
       ai_move_chance = 40
    },
@@ -6042,8 +6032,8 @@ local chara = {
       class = "elona.gunner",
       image = "elona.chara_yerles_self_propelled_gun",
       coefficient = 400,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.ranged" }
          }
@@ -6286,9 +6276,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.rilian",
-      ai_actions = {
-         calm_action = "elona.calm_dull"
-      },
+      ai_calm_action = "elona.calm_dull",
       ai_distance = 1,
       ai_move_chance = 100
    },
@@ -6309,9 +6297,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.tam",
-      ai_actions = {
-         calm_action = "elona.calm_dull"
-      },
+      ai_calm_action = "elona.calm_dull",
       ai_distance = 1,
       ai_move_chance = 100
    },
@@ -6869,9 +6855,7 @@ local chara = {
       flags = { "IsSuitableForMount" },
       on_eat_corpse = eating_effect.iron,
       dialog = "elona.kaneda_bike",
-      ai_actions = {
-         calm_action = "elona.calm_stand"
-      },
+      ai_calm_action = "elona.calm_stand",
       ai_distance = 1,
       ai_move_chance = 0,
       effect_immunities = { "elona.fear" },
@@ -6891,9 +6875,7 @@ local chara = {
       coefficient = 400,
       flags = { "IsSuitableForMount" },
       on_eat_corpse = eating_effect.iron,
-      ai_actions = {
-         calm_action = "elona.calm_stand"
-      },
+      ai_calm_action = "elona.calm_stand",
       ai_distance = 1,
       ai_move_chance = 0,
       effect_immunities = { "elona.fear" },
@@ -7109,8 +7091,8 @@ local chara = {
       rarity = 60000,
       coefficient = 400,
       on_eat_corpse = eating_effect.pumpkin,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          },
@@ -7139,8 +7121,8 @@ local chara = {
       coefficient = 400,
       is_invisible = true,
       on_eat_corpse = eating_effect.pumpkin,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          },
@@ -7169,8 +7151,8 @@ local chara = {
       coefficient = 400,
       is_invisible = true,
       on_eat_corpse = eating_effect.greater_pumpkin,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          },
@@ -7199,8 +7181,8 @@ local chara = {
       coefficient = 400,
       is_invisible = true,
       on_eat_corpse = eating_effect.halloween_nightmare,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" }
          },
@@ -7278,8 +7260,8 @@ local chara = {
       quality = Enum.Quality.Unique,
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          sub = {
             { id = "elona.skill", skill_id = "elona.action_fire_breath" }
          },
@@ -7307,8 +7289,8 @@ local chara = {
       image = "elona.chara_moyer_the_crooked",
       fltselect = Enum.FltSelect.Sp,
       coefficient = 400,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand"
       }
    },
    {
@@ -7413,9 +7395,7 @@ local chara = {
       quality = Enum.Quality.Unique,
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
-      ai_actions = {
-         calm_action = "elona.calm_follow"
-      },
+      ai_calm_action = "elona.calm_follow",
       ai_distance = 1,
 
       on_drop_loot = function(self, _, drops)
@@ -7449,9 +7429,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.pael",
-      ai_actions = {
-         calm_action = "elona.calm_stand"
-      },
+      ai_calm_action = "elona.calm_stand",
       ai_distance = 1
    },
    {
@@ -7472,9 +7450,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.lily",
-      ai_actions = {
-         calm_action = "elona.calm_stand"
-      },
+      ai_calm_action = "elona.calm_stand",
       ai_distance = 1
    },
    {
@@ -7495,9 +7471,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.raphael",
-      ai_actions = {
-         calm_action = "elona.calm_dull"
-      },
+      ai_calm_action = "elona.calm_dull",
       ai_distance = 1
    },
    {
@@ -7518,9 +7492,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.ainc",
-      ai_actions = {
-         calm_action = "elona.calm_stand"
-      },
+      ai_calm_action = "elona.calm_stand",
       ai_distance = 1
    },
    {
@@ -7541,9 +7513,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.arnord",
-      ai_actions = {
-         calm_action = "elona.calm_stand"
-      },
+      ai_calm_action = "elona.calm_stand",
       ai_distance = 1
    },
    {
@@ -7810,8 +7780,8 @@ local chara = {
       rarity = 40000,
       coefficient = 400,
       on_eat_corpse = eating_effect.yith,
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.wait_melee" },
             { id = "elona.wait_melee" },
@@ -8328,9 +8298,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.balzak",
-      ai_actions = {
-         calm_action = "elona.calm_special"
-      },
+      ai_calm_action = "elona.calm_special",
       ai_distance = 1,
       ai_move_chance = 70
    },
@@ -8387,8 +8355,8 @@ local chara = {
       flags = { "IsFloating" },
       can_cast_rapid_magic = true,
       dialog = "elona.lexus",
+      ai_calm_action = "elona.calm_stand",
       ai_actions = {
-         calm_action = "elona.calm_stand",
          main = {
             { id = "elona.skill", skill_id = "elona.spell_magic_dart" },
             { id = "elona.skill", skill_id = "elona.spell_nether_arrow" },
@@ -8439,9 +8407,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.abyss",
-      ai_actions = {
-         calm_action = "elona.calm_stand"
-      },
+      ai_calm_action = "elona.calm_stand",
       ai_distance = 1,
       ai_move_chance = 65
    },
@@ -8481,9 +8447,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.doria",
-      ai_actions = {
-         calm_action = "elona.calm_stand"
-      },
+      ai_calm_action = "elona.calm_stand",
       ai_distance = 1,
       ai_move_chance = 90
    },

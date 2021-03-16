@@ -19,6 +19,13 @@ data:add {
 }
 
 data:add {
+   _type = "base.chip",
+   _id = "white",
+
+   image = "mod/base/graphic/white.png"
+}
+
+data:add {
    _type = "base.chara",
    _id = "player",
 

@@ -27,7 +27,7 @@ function atlas_batch:add(chip, x, y, width, height, color, centered, rotation)
    local sy = 1
 
    if color then
-      self.batch:setColor(color[1] / 255, color[2] / 255, color[3] / 255, (color[4] or 255) / 255)
+      self.batch:setColor(Draw.color_from_bytes(color[1], color[2], color[3], color[4] or 255))
    else
       self.batch:setColor(1, 1, 1, 1)
    end

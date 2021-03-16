@@ -19,10 +19,11 @@ data:add_multi(
       { _id = "debug_always_drop_remains", type = "boolean", default = false },
       { _id = "debug_production_versatile_tool", type = "boolean", default = false },
       { _id = "debug_fishing", type = "boolean", default = false },
+      { _id = "debug_no_encounters", type = "boolean", default = false },
    }
 )
 
-Gui.register_draw_layer("cloud", "mod.elona.api.gui.CloudLayer", { priority = Gui.LAYER_PRIORITY_TILEMAP + 100000, enabled = false })
+Gui.register_draw_layer("cloud", "mod.elona.api.gui.CloudLayer", { enabled = false })
 
 Gui.bind_keys {
    quick_inv = function(_, me)

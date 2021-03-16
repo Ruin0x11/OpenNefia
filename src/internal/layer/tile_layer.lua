@@ -16,6 +16,10 @@ function tile_layer:init(width, height)
    self.tile_height = nil
 end
 
+function tile_layer:default_z_order()
+   return 100000
+end
+
 function tile_layer:on_theme_switched(coords)
    self.coords = coords
    local tile_atlas = atlases.get().tile
@@ -33,12 +37,11 @@ function tile_layer:reset()
    self.batch_inds = {}
 end
 
-function tile_layer:update(dt, screen_updated)
+function tile_layer:update(map, dt, screen_updated)
    self.tile_batch:update(dt)
 
    if not screen_updated then return end
 
-   local map = Map.current()
    assert(map ~= nil)
 
    for _, p in ipairs(map._tiles_dirty) do
@@ -67,8 +70,8 @@ function tile_layer:update(dt, screen_updated)
    self.tile_batch.updated = true
 end
 
-function tile_layer:draw(draw_x, draw_y, offx, offy)
-   self.tile_batch:draw(draw_x + offx, draw_y + offy)
+function tile_layer:draw(draw_x, draw_y, width, height)
+   self.tile_batch:draw(draw_x, draw_y, width, height)
 end
 
 return tile_layer

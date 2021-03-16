@@ -1,7 +1,7 @@
 local Draw = require("api.Draw")
 local IDrawLayer = require("api.gui.IDrawLayer")
 local Chara = require("api.Chara")
-local Map = require("api.Map")
+local Gui = require("api.Gui")
 
 local TargetOverlayLayer = class.class("TargetOverlayLayer", IDrawLayer)
 
@@ -11,6 +11,10 @@ function TargetOverlayLayer:init()
    self.h = nil
    self.lines = {}
    self.see_all = false
+end
+
+function TargetOverlayLayer:default_z_order()
+   return Gui.LAYER_Z_ORDER_USER
 end
 
 function TargetOverlayLayer:on_theme_switched(coords)
@@ -33,13 +37,11 @@ local COLORS = {
    enemy = {255, 0 ,0 }
 }
 
-function TargetOverlayLayer:update(dt, screen_updated)
+function TargetOverlayLayer:update(map, dt, screen_updated)
    self.frame = self.frame + dt
    if not screen_updated then
       return
    end
-
-   local map = Map.current()
 
    local i = 1
 
@@ -56,8 +58,8 @@ function TargetOverlayLayer:update(dt, screen_updated)
             offset = 4
          end
 
-         local sx, sy = self.coords:tile_to_screen(chara.x + 1, chara.y + 1)
-         local tx, ty = self.coords:tile_to_screen(target.x + 1, target.y + 1)
+         local sx, sy = self.coords:tile_to_screen(chara.x, chara.y)
+         local tx, ty = self.coords:tile_to_screen(target.x, target.y)
 
          local line = self.lines[i]
          if not line then
@@ -76,12 +78,11 @@ function TargetOverlayLayer:update(dt, screen_updated)
 end
 
 function TargetOverlayLayer:draw(draw_x, draw_y)
-   local start_x, start_y = self.coords:get_start_offset(draw_x, draw_y)
    for _, line in ipairs(self.lines) do
-      local sx = line.sx + self.w + start_x - draw_x
-      local sy = line.sy + self.h + start_y - draw_y
-      local tx = line.tx + self.w + start_x - draw_x
-      local ty = line.ty + self.h + start_y - draw_y
+      local sx = line.sx + self.w + draw_x
+      local sy = line.sy + self.h + draw_y
+      local tx = line.tx + self.w + draw_x
+      local ty = line.ty + self.h + draw_y
       line.color[4] = 255 - (math.floor(self.frame * 125) % 128)
       Draw.set_color(line.color)
       Draw.line(sx, sy, tx, ty)

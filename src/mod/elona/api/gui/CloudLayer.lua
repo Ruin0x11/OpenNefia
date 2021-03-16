@@ -18,6 +18,10 @@ function CloudLayer:init()
    self:init_clouds()
 end
 
+function CloudLayer:default_z_order()
+   return Gui.LAYER_Z_ORDER_TILEMAP + 100000
+end
+
 function CloudLayer:init_clouds()
    self.clouds = {}
    -- >>>>>>>> shade2/chips.hsp:188 *cloud_init ...
@@ -46,11 +50,8 @@ function CloudLayer:reset()
    self:init_clouds()
 end
 
-function CloudLayer:update(dt, screen_updated)
+function CloudLayer:update(map, dt, screen_updated)
    self.frame = self.frame + dt / (config.base.screen_refresh * (16.66 / 1000))
-   if not screen_updated then
-      return
-   end
 end
 
 function CloudLayer:draw(draw_x, draw_y)
@@ -59,7 +60,6 @@ function CloudLayer:draw(draw_x, draw_y)
    local cx = (player and player.x) or 0
    local cy = (player and player.y) or 0
 
-   local start_x, start_y = self.coords:get_start_offset(draw_x, draw_y)
    for i, cloud in ipairs(self.clouds) do
       Draw.set_blend_mode("subtract")
 
@@ -73,7 +73,7 @@ function CloudLayer:draw(draw_x, draw_y)
       y = y % (Gui.message_window_y() + asset:get_height()) - asset:get_height()
 
       if y < Gui.message_window_y() then
-         asset:draw(x + start_x, y + start_y)
+         asset:draw(x, y)
       end
 
       Draw.set_blend_mode("alpha")

@@ -12,6 +12,10 @@ function CardDrawable:init(chip_id, color)
    self.color = color
 end
 
+function CardDrawable:serialize()
+   self.batch = nil
+end
+
 function CardDrawable:deserialize()
    self.dirty = true
 end

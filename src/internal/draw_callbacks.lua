@@ -82,15 +82,9 @@ end
 function draw_callbacks:draw(draw_x, draw_y)
    local dead = {}
    local Draw = require("api.Draw")
-   local coords = Draw.get_coords()
-   local sx = 0
-   local sy = 0
-   if coords then
-     sx, sy = coords:get_start_offset(draw_x, draw_y)
-   end
 
-   draw_x = sx - draw_x
-   draw_y = sy - draw_y
+   draw_x = draw_x
+   draw_y = draw_y
 
    Draw.set_color(255, 255, 255)
 

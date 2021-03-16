@@ -1,4 +1,5 @@
 --- @module Gui
+local MapObject = require("api.MapObject")
 
 local Env = require("api.Env")
 local I18N = require("api.I18N")
@@ -12,6 +13,9 @@ local config = require("internal.config")
 local Enum = require("api.Enum")
 local Stopwatch = require("api.Stopwatch")
 local data = require("internal.data")
+local field_renderer = require("internal.field_renderer")
+local InstancedMap = require("api.InstancedMap")
+local draw_layer_spec = require("internal.draw_layer_spec")
 
 local Gui = {}
 
@@ -212,7 +216,7 @@ end
 --- @tparam int tx Tile X coordinate
 --- @tparam int ty Tile Y coordinate
 function Gui.tile_to_screen(tx, ty)
-   return draw.get_coords():tile_to_screen(tx+1, ty+1)
+   return draw.get_coords():tile_to_screen(tx, ty)
 end
 
 --- Converts from screen space to map tile space.
@@ -230,8 +234,7 @@ end
 function Gui.tile_to_visible_screen(tx, ty)
   local x, y = Gui.tile_to_screen(tx, ty)
   local draw_x, draw_y = Gui.field_draw_pos()
-  local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
-  return x - draw_x + sx, y - draw_y + sy
+  return x + draw_x, y + draw_y
 end
 
 --- Converts from visible screen space to map tile space.
@@ -244,8 +247,7 @@ function Gui.visible_screen_to_tile(sx, sy)
    end
 
   local draw_x, draw_y = Gui.field_draw_pos()
-  local start_x, start_y = Draw.get_coords():get_start_offset(draw_x, draw_y)
-   return draw.get_coords():screen_to_tile(sx + draw_x + start_x, sy + draw_y + start_y)
+  return draw.get_coords():screen_to_tile(-draw_x + sx, -draw_y + sy)
 end
 
 --- Returns the bounds of the visible tile positions on-screen.
@@ -601,14 +603,14 @@ function Gui.global_widget(tag)
    return draw.global_widget(tag)
 end
 
-Gui.LAYER_PRIORITY_TILEMAP = 100000
-Gui.LAYER_PRIORITY_USER = 500000
-Gui.LAYER_PRIORITY_HUD = 10000000
+Gui.LAYER_Z_ORDER_TILEMAP = 100000
+Gui.LAYER_Z_ORDER_USER = 500000
+Gui.LAYER_Z_ORDER_HUD = 10000000
 
 function Gui.register_draw_layer(tag, layer, opts)
-   local priority = opts and opts.priority or Gui.LAYER_PRIORITY_USER
+   local z_order = opts and opts.z_order or Gui.LAYER_Z_ORDER_USER
    local enabled = opts and opts.enabled
-   field:register_draw_layer(tag, layer, priority, enabled)
+   field:register_draw_layer(tag, layer, z_order, enabled)
 end
 
 function Gui.set_draw_layer_enabled(tag, enabled)
@@ -627,11 +629,49 @@ function Gui.update_minimap(map)
    Gui.hud_widget("hud_minimap"):widget():refresh_visible(map)
 end
 
-function Gui.render_tilemap_to_image()
-   local map = field.map
-   if not (field.is_active and map) then
-      return
+function Gui.render_tilemap_to_image(map, layers, map_object_types)
+   class.assert_is_an(InstancedMap, map)
+
+   local spec
+   if layers then
+      assert(type(layers) == "table")
+      spec = draw_layer_spec:new()
+
+      for tag, layer in pairs(layers) do
+         assert(type(layer.require_path) == "string")
+         assert(layer.z_order == nil or type(layer.z_order) == "number")
+         if layer.enabled == nil then
+            layer.enabled = true
+         end
+         spec:register_draw_layer(tag, layer.require_path, layer.z_order, not not layer.enabled)
+      end
+   else
+      spec = field.draw_layer_spec
    end
+
+   -- Need to copy the map in order to memorize all the tiles without affecting
+   -- the original map's memorization state.
+   map = MapObject.deepcopy(map)
+
+   -- Memorize everything.
+   map:iter_tiles():each(function(x, y) map:memorize_tile(x, y) end)
+   map:redraw_all_tiles()
+
+   -- Remove memory for some objects if we specify a whitelist. It's a list of
+   -- type IDs ("base.chara", "base.item", ...)
+   if map_object_types then
+      local allowed = table.set(map_object_types)
+      -- TODO blood debris memory
+      allowed["base.map_tile"] = true
+      for _type, _ in pairs(map._memory) do
+         if not allowed[_type] then
+            map._memory[_type] = nil
+         end
+      end
+   end
+
+   local renderer = field_renderer:new(map:width(), map:height(), spec, nil)
+   renderer:relayout(0, 0, Draw.get_width(), Draw.get_height())
 
    local tw, th = Draw.get_coords():get_size()
 
@@ -640,14 +680,10 @@ function Gui.render_tilemap_to_image()
 
    local canvas = love.graphics.newCanvas(cw, ch)
 
-   local function draw_to_canvas()
-      -- HACK
-      local draw_x_back = field.renderer.draw_x
-      local draw_y_back = field.renderer.draw_y
+   renderer:update(map, 0)
 
-      field.renderer:set_draw_pos(0, 0)
-      field.renderer:draw(0, 0, cw, ch) -- TODO draw layers to specified width
-      field.renderer:set_draw_pos(draw_x_back, draw_y_back)
+   local function draw_to_canvas()
+      renderer:draw(0, 0, cw, ch)
    end
 
    Draw.with_canvas(canvas, draw_to_canvas)

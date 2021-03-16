@@ -5,6 +5,8 @@ local paths = require("internal.paths")
 local IMapObject = require("api.IMapObject")
 local ILocation = require("api.ILocation")
 local Log = require("api.Log")
+local draw = require("internal.draw")
+local IUiLayer = require("api.gui.IUiLayer")
 
 -- The following adds support for cleaning up missing events
 -- automatically if a chunk is hotloaded. It assumes only one chunk is
@@ -69,3 +71,12 @@ Event.register("base.on_hotload_end", "Notify objects in map of prototype hotloa
                      end
                   end
 end)
+
+local function rebind_ui_layer_keys()
+   local current = draw.get_current_layer().layer
+   if class.is_an(IUiLayer, current) then
+      local keymap = current:make_keymap()
+      current:bind_keys(keymap)
+   end
+end
+Event.register("base.on_hotload_end", "Rebind keys of current UILayer", rebind_ui_layer_keys)

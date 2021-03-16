@@ -3,12 +3,17 @@ local UiTheme = require("api.gui.UiTheme")
 local Draw = require("api.Draw")
 local config = require("internal.config")
 local Map = require("api.Map")
+local Gui = require("api.Gui")
 
 local effect_map_layer = class.class("effect_map_layer", IDrawLayer)
 
 function effect_map_layer:init(width, height, coords)
    self.efmap = {}
    self.coords = coords
+end
+
+function effect_map_layer:default_z_order()
+   return Gui.LAYER_Z_ORDER_TILEMAP + 20000
 end
 
 function effect_map_layer:on_theme_switched(coords)
@@ -47,7 +52,7 @@ function effect_map_layer:add(asset_id, tx, ty, max_frames, rotation, kind)
    end
 
    local tw, th = self.coords:get_size()
-   local sx, sy = self.coords:tile_to_screen(tx + 1, ty + 1)
+   local sx, sy = self.coords:tile_to_screen(tx, ty)
    sx = sx + tw / 2
    sy = sy + th / 2
    local map = Map.current()
@@ -100,7 +105,7 @@ function effect_map_layer:step_all(frames)
    end
 end
 
-function effect_map_layer:update(dt, screen_updated)
+function effect_map_layer:update(map, dt, screen_updated)
    local frames = dt / (config.base.screen_refresh * (16.66 / 1000))
 
    self:step_all(frames)
@@ -109,20 +114,16 @@ function effect_map_layer:update(dt, screen_updated)
       return
    end
 
-   local map = Map.current()
    for _, ef in ipairs(self.efmap) do
       ef.show = map:is_in_fov(ef.tx, ef.ty)
    end
 end
 
 function effect_map_layer:draw(draw_x, draw_y, offx, offy)
-   -- HACK this shouldn't be needed...
-   local sx, sy, ox, oy = self.coords:get_start_offset(draw_x, draw_y, Draw.get_width(), Draw.get_height())
-
    for _, ef in ipairs(self.efmap) do
       if ef.show then
          Draw.set_color(255, 255, 255, ef.alpha)
-         ef.asset:draw_region(ef.asset_frame, ef.x - draw_x + sx, ef.y - draw_y + sy, nil, nil, nil, true, ef.rotation)
+         ef.asset:draw_region(ef.asset_frame, draw_x + ef.x, draw_y + ef.y, nil, nil, nil, true, ef.rotation)
       end
    end
 end

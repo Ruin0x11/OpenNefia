@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local IDrawLayer = require("api.gui.IDrawLayer")
+local Gui = require("api.Gui")
 
 local easing = require("mod.damage_popups.lib.easing")
 
@@ -9,6 +10,10 @@ function DamagePopupLayer:init()
    self.w = nil
    self.h = nil
    self.icons = {}
+end
+
+function DamagePopupLayer:default_z_order()
+   return Gui.LAYER_Z_ORDER_USER
 end
 
 function DamagePopupLayer:on_theme_switched(coords)
@@ -28,7 +33,7 @@ end
 
 local max_frame = 40
 
-function DamagePopupLayer:update(dt, screen_updated)
+function DamagePopupLayer:update(map, dt, screen_updated)
    local dead = {}
    local popups = save.damage_popups.popups or {}
 
@@ -50,14 +55,13 @@ end
 
 function DamagePopupLayer:draw(draw_x, draw_y)
    local popups = save.damage_popups.popups or {}
-   local sx, sy = self.coords:get_start_offset(draw_x, draw_y)
    for _, v in ipairs(popups) do
-      local x, y = self.coords:tile_to_screen(v.x+1, v.y+1)
+      local x, y = self.coords:tile_to_screen(v.x, v.y)
       local font_size = v.font
 
       Draw.set_font(font_size)
-      x = x - draw_x - math.floor(Draw.text_width(v.text)) + sx + self.w
-      y = y - draw_y - math.floor(Draw.text_height() / 2) - 2 * (v.frame + 30) + sy + self.h
+      x = x + draw_x - math.floor(Draw.text_width(v.text)) + self.w
+      y = y + draw_y - math.floor(Draw.text_height() / 2) - 2 * (v.frame + 30) + self.h
       Draw.text_shadowed(v.text, x, y, v.color, v.shadow_color)
    end
 end

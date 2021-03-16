@@ -71,6 +71,8 @@ function shadow_batch:on_theme_switched(atlas, coords)
    self.edge_image = self.t.base.shadow_edges.image
    self.batch = love.graphics.newSpriteBatch(self.image)
    self.edge_batch = love.graphics.newSpriteBatch(self.edge_image)
+   self.offset_tx = 0
+   self.offset_ty = 0
 
    self.quad = {}
    self.corner_quad = {}
@@ -107,8 +109,12 @@ function shadow_batch:find_bounds(x, y)
    return -1, -1, draw.get_tiled_width() + 2, draw.get_tiled_height() + 2
 end
 
-function shadow_batch:set_tiles(tiles)
+function shadow_batch:set_tiles(tiles, offset_tx, offset_ty)
    self.tiles = tiles
+   self.width = #tiles + (tiles[0] ~= nil and 1 or 0)
+   self.height = #tiles[1] + (tiles[1][0] ~= nil and 1 or 0)
+   self.offset_tx = offset_tx
+   self.offset_ty = offset_ty
    self.updated = true
 end
 
@@ -275,49 +281,28 @@ function shadow_batch:add_one(shadow, x, y)
    end
 end
 
-function shadow_batch:draw(x, y, offx, offy)
+function shadow_batch:draw(x, y, width, height)
+   local offx, offy = 0, 0
    x = x + offx
    y = y + offy
-   -- slight speedup
-   local tw = self.tile_width
-   local th = self.tile_height
-
-   local sx, sy, ox, oy = self.coords:get_start_offset(x-offx, y-offy, Draw.get_width(), Draw.get_height())
-
-   sx = -sx
-   sy = -sy
-
-   if x < 0 then
-      ox = 48
-   elseif x > 0 then
-      if ox == 48 then
-         ox = 0
-      end
-   end
-   if y < 0 then
-      oy = 48
-   elseif y > 0 then
-      if oy == 48 then
-         oy = 0
-      end
-   end
-
-   ox = ox - 48
-   oy = oy - 48
 
    if self.updated then
-      local tx, ty, tdx, tdy = self.coords:find_bounds(0, 0, self.width, self.height)
+      local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, width, height)
       local self_tiles = self.tiles
+      local offset_tx, offset_ty = self.offset_tx, self.offset_ty
+
+      self.scissor_x, self.scissor_y = self.coords:tile_to_screen(tx + 3, ty + 3)
+      self.scissor_width, self.scissor_height = self.coords:tile_to_screen(math.min(tdx-tx, self.width-3-1), math.min(tdy-ty, self.height-3-1))
 
       self.batch:clear()
       self.edge_batch:clear()
 
       for iy=ty-1,tdy+1 do
-         if iy >= -1 and iy <= self.height then
+         if iy >= 0 and iy-ty+1 < self.height then
             for ix=tx-1,tdx+1 do
-               if ix >= -1 and ix <= self.width then
-                  local tile = self_tiles[ix+1][iy+1]
-                  local i, j = self.coords:tile_to_screen(ix - tx, iy - ty)
+               if ix >= 0 and ix-tx+1 < self.width then
+                  local tile = self_tiles[ix-tx+1][iy-ty+1]
+                  local i, j = self.coords:tile_to_screen(ix - tx + offset_tx, iy - ty + offset_ty)
                   self:add_one(tile, i, j)
                end
             end
@@ -330,10 +315,29 @@ function shadow_batch:draw(x, y, offx, offy)
       self.updated = false
    end
 
+   local ocx, ocy = self.coords:tile_to_screen(self.offset_tx+1, self.offset_ty+1)
+   local scx, scy = x + ocx, y + ocy
+   local scw, sch = self.scissor_width, self.scissor_height
+
+   Draw.set_scissor(scx, scy, scw, sch)
    Draw.set_color(255, 255, 255, self.shadow_strength)
    Draw.set_blend_mode("subtract")
-   Draw.image(self.batch, sx + ox - tw, sy + oy - th)
-   Draw.image(self.edge_batch, sx + ox - tw, sy + oy - th)
+   Draw.image(self.batch, x, y)
+   Draw.image(self.edge_batch, x, y)
+   Draw.set_scissor()
+   Draw.set_color(255, 255, 255, self.shadow_strength * ((256-9) / 256))
+   if x < scx then
+      Draw.filled_rect(x, scy, scx - x, sch + height)
+   end
+   if y < scy then
+      Draw.filled_rect(x, y, scw + width, scy - y)
+   end
+   if scx + scw < width then
+      Draw.filled_rect(scx + scw, scy, width - (scx + scw), sch + height)
+   end
+   if scy + sch < height then
+      Draw.filled_rect(scx, scy + sch, scw, height - (scy + sch))
+   end
    Draw.set_blend_mode("alpha")
 end
 

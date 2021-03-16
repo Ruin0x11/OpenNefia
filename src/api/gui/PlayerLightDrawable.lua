@@ -10,15 +10,24 @@ local PlayerLightDrawable = class.class("PlayerLightDrawable", IDrawable)
 function PlayerLightDrawable:init()
    self.frames = 0
    self.color = {255, 255, 255, 50}
-   self.t = UiTheme.load(self)
    local coords = Draw.get_coords()
    local tw, th = coords:get_size()
    self.offset_x = math.floor(tw / 2)
    self.offset_y = math.floor(th / 2)
+   self.t = nil
+   self.dirty = true
 end
 
 function PlayerLightDrawable:is_drawable_in_ui()
    return false
+end
+
+function PlayerLightDrawable:serialize()
+   self.t = nil
+end
+
+function PlayerLightDrawable:deserialize()
+   self.dirty = true
 end
 
 function PlayerLightDrawable:update(dt)
@@ -39,6 +48,9 @@ function PlayerLightDrawable:update(dt)
 end
 
 function PlayerLightDrawable:draw(x, y, w, h, centered, rot)
+   if self.dirty then
+      self.t = UiTheme.load(self)
+   end
    Draw.set_blend_mode("add")
    Draw.set_color(self.color)
    self.t.base.player_light:draw(x + self.offset_x, y + self.offset_y, nil, nil, nil, true)

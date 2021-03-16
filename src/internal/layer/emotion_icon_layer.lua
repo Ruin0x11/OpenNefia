@@ -13,6 +13,10 @@ function emotion_icon_layer:init(width, height, coords)
    self.parts = {}
 end
 
+function emotion_icon_layer:default_z_order()
+   return Gui.LAYER_Z_ORDER_TILEMAP + 50000
+end
+
 function emotion_icon_layer:on_theme_switched(coords)
    self.coords = coords
    self.asset = nil
@@ -53,12 +57,11 @@ local EMOTION_ICONS = {
 }
 -- <<<<<<<< shade2/init.hsp:650 	#enum global emoParty ...
 --
-function emotion_icon_layer:update(dt, screen_updated)
+function emotion_icon_layer:update(map, dt, screen_updated)
    if not screen_updated then return end
 
    self.parts = {}
 
-   local map = Map.current()
    assert(map ~= nil)
 
    for _, c in Chara.iter(map) do
@@ -81,12 +84,9 @@ function emotion_icon_layer:update(dt, screen_updated)
    self.batch = self.asset:make_batch(self.parts)
 end
 
-function emotion_icon_layer:draw(draw_x, draw_y, offx, offy)
-   -- HACK this shouldn't be needed...
-   local sx, sy, ox, oy = self.coords:get_start_offset(draw_x, draw_y, Draw.get_width(), Draw.get_height())
-
+function emotion_icon_layer:draw(draw_x, draw_y, width, height)
    Draw.set_color(255, 255, 255)
-   Draw.image(self.batch, -draw_x + sx, -draw_y + sy)
+   Draw.image(self.batch, draw_x, draw_y)
 end
 
 return emotion_icon_layer

@@ -60,16 +60,14 @@ function tile_batch:update(dt)
    end
 end
 
-function tile_batch:draw(x, y)
+function tile_batch:draw(x, y, width, height)
    -- slight speedup
    local batch = self.batch
    local tw = self.tile_width
    local th = self.tile_height
 
-   local sx, sy, ox, oy = self.coords:get_start_offset(x, y, Draw.get_width(), Draw.get_height())
-
    if self.updated then
-      local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, self.width, self.height)
+      local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, width, height)
       local tiles = self.atlas.tiles
       local self_tiles = self.tiles
 
@@ -96,16 +94,24 @@ function tile_batch:draw(x, y)
       self.updated = false
    end
 
+   if x < 0 then
+      x = -tw + math.abs((x - 1) % tw) + 1
+   end
+   if y < 0 then
+      y = -th + math.abs((y - 1) % th) + 1
+   end
+
    Draw.set_color(255, 255, 255)
-   love.graphics.draw(batch, sx + ox - tw, sy + oy - th)
+   love.graphics.draw(batch, x - tw, y - th)
 
    -- TODO: The original HSP code uses the gfdec2 function. gfdec2
    -- decrements colors but prevents them from reaching a 0 value, so
    -- the colors here are inaccurate.
    Draw.set_blend_mode("subtract")
    Draw.set_color(self.shadow[1], self.shadow[2], self.shadow[3], 108)
-   Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height())
+   Draw.filled_rect(0, 0, width, height)
    Draw.set_blend_mode("alpha")
+
 end
 
 return tile_batch

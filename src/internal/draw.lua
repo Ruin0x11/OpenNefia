@@ -238,7 +238,7 @@ function draw.draw_global_widgets()
 end
 
 function draw.update_global_widgets(dt)
-   global_widgets:update(dt)
+   global_widgets:update(dt, nil)
 end
 
 local global_draw_callbacks = draw_callbacks:new()

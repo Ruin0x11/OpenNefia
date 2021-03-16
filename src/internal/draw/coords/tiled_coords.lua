@@ -22,42 +22,40 @@ function tiled_coords:get_tiled_height(h)
 end
 
 function tiled_coords:tile_to_screen(tx, ty)
-   return (tx - 1) * 48, (ty - 1) * 48
+   return tx * 48, ty * 48
 end
 
 function tiled_coords:screen_to_tile(sx, sy)
    return math.floor(sx / 48), math.floor(sy / 48)
 end
 
-function tiled_coords:find_bounds(x, y, width, height)
+function tiled_coords:find_bounds(x, y, draw_width, draw_height)
    local tile_width = 48
    local tile_height = 48
-   local draw_width = love.graphics.getWidth()
-   local draw_height = love.graphics.getHeight()
-   local tx = math.floor(x / tile_width) - 1
-   local ty = math.floor(y / tile_height) - 1
-   local tdx = math.min(math.ceil((x + draw_width) / tile_width), width)
-   local tdy = math.min(math.ceil((y + draw_height) / tile_height), height)
+   local tx = math.max(0, math.floor(-x / tile_width)) - 1
+   local ty = math.max(0, math.floor(-y / tile_height)) - 1
+   local tdx = tx + math.ceil((draw_width) / tile_width) + 1
+   local tdy = ty + math.ceil((draw_height) / tile_height) + 1
    return tx, ty, tdx, tdy
-end
-
-function tiled_coords:get_start_offset(x, y, width, height)
-   local sx = 0
-   local sy = 0
-   if x < 0 then
-      sx = math.floor(x / 2)
-   end
-   if y < 0 then
-      sy = math.floor(y / 2)
-   end
-   return sx, sy, math.floor(48 - (x % 48)), math.floor(48 - (y % 48))
 end
 
 function tiled_coords:get_draw_pos(tx, ty, mw, mh, width, height)
    local tile_size = 48
-   local x = math.clamp(tx * tile_size - math.floor(width / 2) + math.floor(tile_size / 2), 0, mw * tile_size - width)
-   local y = math.clamp(ty * tile_size - math.floor(height / 2) + math.floor(tile_size / 2), 0, mh * tile_size - height + (72 + 16))
-   return x, y
+
+   local msw = mw * tile_size
+   local msh = mh * tile_size
+
+   local max_x = (msw - width)
+   local max_y = (msh - height)
+
+   local sx = tx * tile_size
+   local sy = ty * tile_size
+   local offset_x = math.max((width - msw) / 2, 0)
+   local offset_y = math.max((height - msh) / 2, 0)
+
+   local x = math.clamp(-sx + width/2, -max_x, 0)
+   local y = math.clamp(-sy + height/2, -max_y, 0)
+   return math.floor(x + offset_x), math.floor(y + offset_y)
 end
 
 return tiled_coords
