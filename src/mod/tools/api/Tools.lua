@@ -1103,4 +1103,32 @@ function Tools.most_valuable_items()
    return data["base.item"]:iter():map(map):into_sorted(sort):extract("_id")
 end
 
+-- Compatible with omake's camera functionality.
+function Tools.take_picture(map, kind)
+   local layers = {
+       tile_layer          = { require_path = "internal.layer.tile_layer" },
+       debris_layer        = { require_path = "internal.layer.debris_layer" },
+       chip_layer          = { require_path = "internal.layer.chip_layer" },
+       tile_overhang_layer = { require_path = "internal.layer.tile_overhang_layer" },
+       emotion_icon_layer  = { require_path = "internal.layer.emotion_icon_layer" },
+   }
+
+   kind = kind or "all"
+
+   local map_object_types = {
+      "base.feat",
+      "base.mef"
+   }
+
+   if kind == "map_and_charas" then
+      map_object_types[#map_object_types+1] = "base.chara"
+   elseif kind == "map_and_items" then
+      map_object_types[#map_object_types+1] = "base.item"
+   elseif kind == "all" then
+      map_object_types = nil
+   end
+
+   return Gui.render_tilemap_to_image(map, layers, map_object_types)
+end
+
 return Tools

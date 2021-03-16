@@ -18,6 +18,10 @@ function CloudLayer:init()
    self:init_clouds()
 end
 
+function CloudLayer:default_z_order()
+   return Gui.LAYER_Z_ORDER_TILEMAP + 100000
+end
+
 function CloudLayer:init_clouds()
    self.clouds = {}
    -- >>>>>>>> shade2/chips.hsp:188 *cloud_init ...
@@ -46,7 +50,7 @@ function CloudLayer:reset()
    self:init_clouds()
 end
 
-function CloudLayer:update(dt, screen_updated)
+function CloudLayer:update(map, dt, screen_updated)
    self.frame = self.frame + dt / (config.base.screen_refresh * (16.66 / 1000))
    if not screen_updated then
       return

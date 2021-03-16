@@ -82,10 +82,10 @@ function WidgetContainer:draw()
    end
 end
 
-function WidgetContainer:update(dt)
+function WidgetContainer:update(dt, map)
    self.updated = false
    for _, holder in self:iter() do
-      holder:widget():update(dt)
+      holder:widget():update(dt, map)
       self.updated = self.updated or holder.updated
       holder.updated = false
    end

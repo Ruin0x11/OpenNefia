@@ -1,8 +1,8 @@
-local Map = require("api.Map")
 local IDrawLayer = require("api.gui.IDrawLayer")
 local Draw = require("api.Draw")
-local sparse_batch = require("internal.draw.sparse_batch")
+local Gui = require("api.Gui")
 local UiTheme = require("api.gui.UiTheme")
+local sparse_batch = require("internal.draw.sparse_batch")
 local atlas = require("internal.draw.atlas")
 local atlases = require("internal.global.atlases")
 
@@ -26,6 +26,10 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
     return vec4(1, 1, 1, textureColor.a * color.a);
 }
 ]])
+end
+
+function chip_layer:default_z_order()
+   return Gui.LAYER_Z_ORDER_TILEMAP + 30000
 end
 
 function chip_layer:on_theme_switched(coords)
@@ -267,7 +271,7 @@ function chip_layer:draw_stacking(ind, map, stack, chip_type, found)
    end
 end
 
-function chip_layer:update(dt, screen_updated, scroll_frames)
+function chip_layer:update(map, dt, screen_updated, scroll_frames)
    self.chip_batch:update(dt)
    self.drop_shadow_batch:update(dt)
 
@@ -281,7 +285,6 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
       return true
    end
 
-   local map = Map.current()
    assert(map ~= nil)
 
    local found = {}

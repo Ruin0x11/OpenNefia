@@ -111,6 +111,8 @@ end
 
 function shadow_batch:set_tiles(tiles, offset_tx, offset_ty)
    self.tiles = tiles
+   self.width = #tiles + (tiles[0] ~= nil and 1 or 0)
+   self.height = #tiles[1] + (tiles[1][0] ~= nil and 1 or 0)
    self.offset_tx = offset_tx
    self.offset_ty = offset_ty
    self.updated = true
@@ -290,15 +292,15 @@ function shadow_batch:draw(x, y, width, height)
       local offset_tx, offset_ty = self.offset_tx, self.offset_ty
 
       self.scissor_x, self.scissor_y = self.coords:tile_to_screen(tx + 3, ty + 3)
-      self.scissor_width, self.scissor_height = self.coords:tile_to_screen(tdx-tx, tdy-ty)
+      self.scissor_width, self.scissor_height = self.coords:tile_to_screen(math.min(tdx-tx, self.width-3-1), math.min(tdy-ty, self.height-3-1))
 
       self.batch:clear()
       self.edge_batch:clear()
 
       for iy=ty-1,tdy+1 do
-         if iy >= -1 and iy-ty+1 <= self.height+1 then
+         if iy >= 0 and iy-ty+1 < self.height then
             for ix=tx-1,tdx+1 do
-               if ix >= -1 and ix-tx+1 <= self.width+1 then
+               if ix >= 0 and ix-tx+1 < self.width then
                   local tile = self_tiles[ix-tx+1][iy-ty+1]
                   local i, j = self.coords:tile_to_screen(ix - tx + offset_tx, iy - ty + offset_ty)
                   self:add_one(tile, i, j)
@@ -328,12 +330,12 @@ function shadow_batch:draw(x, y, width, height)
       Draw.filled_rect(x, scy, scx - x, sch + height)
    end
    if y < scy then
-      Draw.filled_rect(scx, y, scw, scy - y)
+      Draw.filled_rect(x, y, scw + width, scy - y)
    end
-   if x + scw < width then
-      Draw.filled_rect(scx + scw, y, width - (scx + scw), sch + height)
+   if scx + scw < width then
+      Draw.filled_rect(scx + scw, scy, width - (scx + scw), sch + height)
    end
-   if y + sch < height then
+   if scy + sch < height then
       Draw.filled_rect(scx, scy + sch, scw, height - (scy + sch))
    end
    Draw.set_blend_mode("alpha")

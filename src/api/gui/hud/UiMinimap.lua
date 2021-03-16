@@ -17,7 +17,6 @@ end
 
 function UiMinimap:default_widget_refresh(player)
    self.player = player
-   self:refresh_visible()
 end
 
 function UiMinimap:default_widget_z_order()
@@ -31,20 +30,19 @@ function UiMinimap:relayout(x, y, width, height)
    self.height = height
    self.t = UiTheme.load(self)
    self.tile_batch = Draw.make_chip_batch("tile")
-   self:refresh_visible()
 end
 
-local Map
-
 local SUBTRACT_COLOR = { 155, 155, 155 }
+
+function UiMinimap:update(dt, map)
+   self:refresh_visible(map)
+end
 
 function UiMinimap:refresh_visible(map)
    if not self.tile_batch then
       return
    end
 
-   Map = Map or require("api.Map")
-   map = map or Map.current()
    if map == nil then
       return
    end
@@ -92,9 +90,6 @@ function UiMinimap:draw()
       self.t.base.minimap_marker_player:draw(self.x + x, self.y + y)
    end
    -- <<<<<<<< shade2/screen.hsp:1148 	pos inf_raderX+sx,inf_raderY+sy:gcopy SelInf,15,3 ..
-end
-
-function UiMinimap:update(dt)
 end
 
 return UiMinimap

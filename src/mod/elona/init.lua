@@ -22,7 +22,7 @@ data:add_multi(
    }
 )
 
-Gui.register_draw_layer("cloud", "mod.elona.api.gui.CloudLayer", { priority = Gui.LAYER_PRIORITY_TILEMAP + 100000, enabled = false })
+Gui.register_draw_layer("cloud", "mod.elona.api.gui.CloudLayer", { enabled = false })
 
 Gui.bind_keys {
    quick_inv = function(_, me)

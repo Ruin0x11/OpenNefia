@@ -44,12 +44,13 @@ function PicViewer:init(drawable)
          self.regions = fun.iter(drawable.quads):map(to_region):to_list()
       end
    else
-      self.width = drawable:getWidth() + 20
-      self.height = drawable:getHeight() + 20
+      self.width = drawable:getWidth()
+      self.height = drawable:getHeight()
    end
 
    self.offset_x = 0
    self.offset_y = 0
+   self.scale = 1.0
    self.delta = 50
    self.draw_border = true
 
@@ -68,6 +69,8 @@ function PicViewer:make_keymap()
       south = function() self.offset_y = self.offset_y - self.delta end,
       east = function() self.offset_x = self.offset_x - self.delta end,
       west = function() self.offset_x = self.offset_x + self.delta end,
+      repl_page_up = function() self.scale = math.max(0.1, self.scale - 0.1) end,
+      repl_page_down = function() self.scale = self.scale + 0.1 end,
       mode = function() self.draw_border = not self.draw_border end,
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end,
@@ -88,19 +91,23 @@ function PicViewer:draw()
    local x = self.x + self.offset_x
    local y = self.y + self.offset_y
 
+   local width = math.floor(self.width * self.scale)
+   local height = math.floor(self.height * self.scale)
+
    if self.draw_border then
-      Draw.filled_rect(x, y, self.width, self.height, {0, 0, 0})
-      Draw.line_rect(x+9, y+9, self.width-17, self.height-17, {255, 255, 255})
+      Draw.filled_rect(x, y, width, height, {0, 0, 0})
+      Draw.line_rect(x-2, y-2, width+4, height+4, {255, 255, 255})
    end
 
+   Draw.set_color(255, 255, 255)
    if self.drawable.draw then
-      self.drawable:draw(x + 10, y + 10, nil, nil, {255, 255, 255})
+      self.drawable:draw(x, y, width, height)
    else
-      Draw.image(self.drawable, x + 10, y + 10, nil, nil, {255, 255, 255})
+      Draw.image(self.drawable, x, y, width, height)
    end
 
    for _, r in ipairs(self.regions) do
-      Draw.line_rect(x + r.x + 10, y + r.y + 10, r.width, r.height, {255, 0, 0})
+      Draw.line_rect(x + r.x, y + r.y, r.width * self.scale, r.height * self.scale, {255, 0, 0})
    end
 end
 

@@ -44,7 +44,10 @@ function UiSkillTracker:set_data(player)
       :map(map)
       :to_list()
 
-   self.tracked_skill_ids[self.player_uid] = tracked_pairs
+      self.tracked_skill_ids[self.player_uid] = {
+         chara_name = nil,
+         tracked_pairs = tracked_pairs
+      }
 end
 
 function UiSkillTracker:relayout(x, y)
@@ -55,47 +58,37 @@ function UiSkillTracker:relayout(x, y)
    self.text_height = Draw.text_height()
 end
 
-local Map
 local Chara
 
 function UiSkillTracker:draw()
-   -- HACK
-   Map = Map or require("api.Map")
-
    -- >>>>>>>> shade2/screen.hsp:352 	ap3=0 ...
    local y = self.y
 
    for uid, tracked in pairs(self.tracked_skill_ids) do
-      local chara = Map.current():get_object(uid)
-      if chara then
-         if uid ~= self.player_uid then
-            Draw.text_shadowed(("=== %s"):format(chara.name), self.x, y)
-            y = y + self.text_height
-         end
-         for _, entry in ipairs(tracked) do
-            entry.name_text:relayout(self.x, y)
-            entry.name_text:draw()
+      if tracked.chara_name then
+         Draw.text_shadowed(("=== %s"):format(tracked.chara_name), self.x, y)
+         y = y + self.text_height
+      end
+      for _, entry in ipairs(tracked.tracked_pairs) do
+         entry.name_text:relayout(self.x, y)
+         entry.name_text:draw()
 
-            entry.desc_text:relayout(self.x + 50, y)
-            entry.desc_text:draw()
+         entry.desc_text:relayout(self.x + 50, y)
+         entry.desc_text:draw()
 
-            y = y + self.text_height
-         end
+         y = y + self.text_height
       end
    end
-
-
    -- <<<<<<<< shade2/screen.hsp:363 	loop ..
 end
 
-function UiSkillTracker:update()
+function UiSkillTracker:update(dt, map)
    -- HACK
-   Map = Map or require("api.Map")
    Chara = Chara or require("api.Chara")
 
    local remove = {}
    for uid, _ in pairs(self.tracked_skill_ids) do
-      local chara = Map.current():get_object(uid)
+      local chara = map:get_object(uid)
       if not Chara.is_alive(chara) then
          remove[#remove+1] = uid
       end

@@ -3,12 +3,17 @@ local UiTheme = require("api.gui.UiTheme")
 local Draw = require("api.Draw")
 local config = require("internal.config")
 local Map = require("api.Map")
+local Gui = require("api.Gui")
 
 local effect_map_layer = class.class("effect_map_layer", IDrawLayer)
 
 function effect_map_layer:init(width, height, coords)
    self.efmap = {}
    self.coords = coords
+end
+
+function effect_map_layer:default_z_order()
+   return Gui.LAYER_Z_ORDER_TILEMAP + 20000
 end
 
 function effect_map_layer:on_theme_switched(coords)
@@ -100,7 +105,7 @@ function effect_map_layer:step_all(frames)
    end
 end
 
-function effect_map_layer:update(dt, screen_updated)
+function effect_map_layer:update(map, dt, screen_updated)
    local frames = dt / (config.base.screen_refresh * (16.66 / 1000))
 
    self:step_all(frames)
@@ -109,7 +114,6 @@ function effect_map_layer:update(dt, screen_updated)
       return
    end
 
-   local map = Map.current()
    for _, ef in ipairs(self.efmap) do
       ef.show = map:is_in_fov(ef.tx, ef.ty)
    end

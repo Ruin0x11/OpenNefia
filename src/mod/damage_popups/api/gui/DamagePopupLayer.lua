@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local IDrawLayer = require("api.gui.IDrawLayer")
+local Gui = require("api.Gui")
 
 local easing = require("mod.damage_popups.lib.easing")
 
@@ -9,6 +10,10 @@ function DamagePopupLayer:init()
    self.w = nil
    self.h = nil
    self.icons = {}
+end
+
+function DamagePopupLayer:default_z_order()
+   return Gui.LAYER_Z_ORDER_USER
 end
 
 function DamagePopupLayer:on_theme_switched(coords)
@@ -28,7 +33,7 @@ end
 
 local max_frame = 40
 
-function DamagePopupLayer:update(dt, screen_updated)
+function DamagePopupLayer:update(map, dt, screen_updated)
    local dead = {}
    local popups = save.damage_popups.popups or {}
 

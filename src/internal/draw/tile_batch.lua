@@ -95,10 +95,10 @@ function tile_batch:draw(x, y, width, height)
    end
 
    if x < 0 then
-      x = -tw + math.abs((x - 1) % tw)
+      x = -tw + math.abs((x - 1) % tw) + 1
    end
    if y < 0 then
-      y = -th + math.abs((y - 1) % th)
+      y = -th + math.abs((y - 1) % th) + 1
    end
 
    Draw.set_color(255, 255, 255)
@@ -109,7 +109,7 @@ function tile_batch:draw(x, y, width, height)
    -- the colors here are inaccurate.
    Draw.set_blend_mode("subtract")
    Draw.set_color(self.shadow[1], self.shadow[2], self.shadow[3], 108)
-   Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height())
+   Draw.filled_rect(0, 0, width, height)
    Draw.set_blend_mode("alpha")
 
 end

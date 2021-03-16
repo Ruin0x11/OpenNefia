@@ -1,7 +1,7 @@
 local Draw = require("api.Draw")
 local IDrawLayer = require("api.gui.IDrawLayer")
 local Chara = require("api.Chara")
-local Map = require("api.Map")
+local Gui = require("api.Gui")
 
 local TargetOverlayLayer = class.class("TargetOverlayLayer", IDrawLayer)
 
@@ -11,6 +11,10 @@ function TargetOverlayLayer:init()
    self.h = nil
    self.lines = {}
    self.see_all = false
+end
+
+function TargetOverlayLayer:default_z_order()
+   return Gui.LAYER_Z_ORDER_USER
 end
 
 function TargetOverlayLayer:on_theme_switched(coords)
@@ -33,13 +37,11 @@ local COLORS = {
    enemy = {255, 0 ,0 }
 }
 
-function TargetOverlayLayer:update(dt, screen_updated)
+function TargetOverlayLayer:update(map, dt, screen_updated)
    self.frame = self.frame + dt
    if not screen_updated then
       return
    end
-
-   local map = Map.current()
 
    local i = 1
 

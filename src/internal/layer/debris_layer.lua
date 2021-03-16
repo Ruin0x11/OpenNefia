@@ -18,6 +18,10 @@ function debris_layer:init(width, height)
    self.fragment_batch = nil
 end
 
+function debris_layer:default_z_order()
+   return Gui.LAYER_Z_ORDER_TILEMAP + 10000
+end
+
 function debris_layer:on_theme_switched(coords)
    self.coords = coords
    local tw, th = self.coords:get_size()
@@ -39,10 +43,9 @@ function debris_layer:reset()
    self.fragment_batch = nil
 end
 
-function debris_layer:update(dt, screen_updated)
+function debris_layer:update(map, dt, screen_updated)
    if not screen_updated then return end
 
-   local map = Map.current()
    assert(map ~= nil)
 
    local blood_parts = {}

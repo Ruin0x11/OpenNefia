@@ -3,13 +3,11 @@ local IUiLayer = require("api.gui.IUiLayer")
 local Event = require("api.Event")
 local IInput = require("api.gui.IInput")
 local KeyHandler = require("api.gui.KeyHandler")
-local Log = require("api.Log")
 local Env = require("api.Env")
-local Draw = require("api.Draw")
 
 local draw = require("internal.draw")
 local draw_callbacks = require("internal.draw_callbacks")
-local env = require("internal.env")
+local draw_layer_spec = require("internal.draw_layer_spec")
 local field_renderer = require("internal.field_renderer")
 
 local field_layer = class.class("field_layer", IUiLayer)
@@ -39,16 +37,15 @@ function field_layer:init()
    -- keybinds
    self.keys:ignore_modifiers { "alt" }
 
-   self.layers = {}
+   self.draw_layer_spec = draw_layer_spec:new()
 
-   local priority = 100000 -- Gui.LAYER_PRIORITY_TILEMAP
-   self:register_draw_layer("tile_layer", "internal.layer.tile_layer", priority)
-   self:register_draw_layer("debris_layer", "internal.layer.debris_layer", priority + 10000)
-   self:register_draw_layer("effect_map_layer", "internal.layer.effect_map_layer", priority + 20000)
-   self:register_draw_layer("chip_layer", "internal.layer.chip_layer", priority + 30000)
-   self:register_draw_layer("tile_overhang_layer", "internal.layer.tile_overhang_layer", priority + 40000)
-   self:register_draw_layer("emotion_icon_layer", "internal.layer.emotion_icon_layer", priority + 50000)
-   self:register_draw_layer("shadow_layer", "internal.layer.shadow_layer", priority + 60000)
+   self:register_draw_layer("tile_layer", "internal.layer.tile_layer")
+   self:register_draw_layer("debris_layer", "internal.layer.debris_layer")
+   self:register_draw_layer("effect_map_layer", "internal.layer.effect_map_layer")
+   self:register_draw_layer("chip_layer", "internal.layer.chip_layer")
+   self:register_draw_layer("tile_overhang_layer", "internal.layer.tile_overhang_layer")
+   self:register_draw_layer("emotion_icon_layer", "internal.layer.emotion_icon_layer")
+   self:register_draw_layer("shadow_layer", "internal.layer.shadow_layer")
 end
 
 function field_layer:make_keymap()
@@ -81,9 +78,9 @@ function field_layer:set_map(map)
    self.map = map
    self.map:redraw_all_tiles()
    if self.renderer == nil then
-      self.renderer = field_renderer:new(map:width(), map:height(), self.layers, self.hud)
+      self.renderer = field_renderer:new(map:width(), map:height(), self.draw_layer_spec, self.hud)
    else
-      self.renderer:set_map(map, self.layers, self.hud)
+      self.renderer:set_map_size(map:width(), map:height(), self.draw_layer_spec, self.hud)
    end
    self.renderer:relayout(self.x, self.y, self.width, self.height)
 
@@ -126,7 +123,7 @@ function field_layer:set_camera_pos(x, y)
    self.camera_x = x
    self.camera_y = y
    self.renderer:update_draw_pos(x, y, 0)
-   self.renderer:update(0)
+   self.renderer:update(self.map, 0)
    self:refresh_hud()
 end
 
@@ -172,7 +169,7 @@ function field_layer:update_screen(dt, and_draw, scroll)
       local going = true
       while going do
          self.keys:update_repeats(dt)
-         going = self.renderer:update(dt)
+         going = self.renderer:update(self.map, dt)
          if and_draw then
             dt = coroutine.yield() or 0
          end
@@ -204,7 +201,7 @@ function field_layer:get_message_window()
 end
 
 function field_layer:update(dt, ran_action, result)
-   self.renderer:update(dt)
+   self.renderer:update(self.map, dt)
    self.draw_callbacks:update(dt)
    self.sound_manager:update(dt)
 end
@@ -260,26 +257,8 @@ function field_layer:query_repl()
    end
 end
 
-function field_layer:register_draw_layer(tag, require_path, priority, enabled)
-   Env.assert_is_valid_ident(tag)
-   assert(type(require_path) == "string")
-   assert(type(priority) == "number")
-
-   local mod = env.find_calling_mod()
-   tag = ("%s.%s"):format(mod, tag)
-   priority = priority
-   if enabled == nil then
-      enabled = true
-   end
-
-   if env.is_hotloading() then
-      Log.warn("Skipping draw layer register of '%s'", require_path)
-      return
-   end
-   if self.layers[tag] then
-      error("Draw layer " .. tag .. " already registered")
-   end
-   self.layers[tag] = { require_path = require_path, priority = priority, enabled = not not enabled }
+function field_layer:register_draw_layer(tag, require_path, z_order, enabled)
+   return self.draw_layer_spec:register_draw_layer(tag, require_path, z_order, enabled)
 end
 
 function field_layer:get_draw_layer(tag)
@@ -291,11 +270,7 @@ function field_layer:get_draw_layer(tag)
 end
 
 function field_layer:set_draw_layer_enabled(tag, enabled)
-   if not self.layers[tag] then
-      error(("Layer '%s' isn't registered"):format(tag))
-   end
-   enabled = not not enabled
-   self.layers[tag].enabled = enabled
+   self.draw_layer_spec:set_draw_layer_enabled(tag, enabled)
 
    if self.renderer then
       return self.renderer:set_layer_enabled(tag, enabled)

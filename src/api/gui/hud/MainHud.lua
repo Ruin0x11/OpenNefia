@@ -53,6 +53,10 @@ function MainHud:init()
    self.widgets:add(UiBar:new("hud_mp_bar", 0, 0, true), "hud_mp_bar", { position = position, refresh = refresh })
 end
 
+function MainHud:default_z_order()
+   return 10000000 -- Gui.LAYER_Z_ORDER_HUD
+end
+
 function MainHud:reset()
 end
 
@@ -84,8 +88,8 @@ function MainHud:draw(draw_x, draw_y)
    self.widgets:draw(draw_x, draw_y)
 end
 
-function MainHud:update(dt)
-   self.widgets:update(dt)
+function MainHud:update(map, dt)
+   self.widgets:update(dt, map)
 
    if self.widgets.updated and self.x then
       self.widgets:relayout(self.x, self.y, self.width, self.height)

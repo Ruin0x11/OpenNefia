@@ -75,7 +75,7 @@ function UiDigitalClock:draw()
    self.time_of_day_text:draw()
 end
 
-function UiDigitalClock:update(dt)
+function UiDigitalClock:update(dt, map)
    self.frame = self.frame + dt
 end
 

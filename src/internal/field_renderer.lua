@@ -6,7 +6,7 @@ local sound_manager = require("internal.global.global_sound_manager")
 
 local field_renderer = class.class("field_renderer")
 
-function field_renderer:init(map_width, map_height, layers, hud)
+function field_renderer:init(map_width, map_height, draw_layer_spec, hud)
    local coords = Draw.get_coords()
 
    self.map_width = map_width
@@ -26,12 +26,12 @@ function field_renderer:init(map_width, map_height, layers, hud)
    self.scroll_x = 0
    self.scroll_y = 0
 
-   for tag, entry in pairs(layers) do
+   for tag, entry in draw_layer_spec:iter() do
       -- WARNING: This needs to be sanitized by moving all the layers
       -- to the public API, to prevent usage of the global require.
       local ok, layer = pcall(require, entry.require_path)
       if not ok then
-         error("Could not load draw layer " .. entry.require_path .. ":\n\t" .. layer)
+         error("Could not load draw layer " .. tostring(entry.require_path) .. ":\n\t" .. layer)
       end
       local IDrawLayer = require("api.gui.IDrawLayer")
 
@@ -43,14 +43,23 @@ function field_renderer:init(map_width, map_height, layers, hud)
       instance:reset()
       instance:relayout(self.x, self.y, self.width, self.height)
 
-      self.layers:set(tag, instance, entry.priority)
+      local z_order = entry.z_order
+      if z_order == nil then
+         z_order = instance:default_z_order()
+      end
+      assert(type(z_order) == "number")
+
+      self.layers:set(tag, instance, z_order)
       self.enabled[tag] = entry.enabled
    end
 
-   self.hud = hud
-   self.hud:on_theme_switched(coords)
-   self.hud:reset()
-   self.layers:set("hud", self.hud, 10000000) -- Gui.LAYER_PRIORITY_HUD
+   if hud then
+      hud:on_theme_switched(coords)
+      hud:reset()
+      local z_order = hud:default_z_order()
+      assert(type(z_order) == "number")
+      self.layers:set("hud", hud, z_order)
+   end
 end
 
 function field_renderer:on_theme_switched()
@@ -84,8 +93,8 @@ function field_renderer:set_layer_enabled(tag, enabled)
    self.enabled[tag] = not not enabled
 end
 
-function field_renderer:set_map(map, layers, hud)
-   self:init(map:width(), map:height(), layers, hud)
+function field_renderer:set_map_size(map_width, map_height, layers, hud)
+   self:init(map_width, map_height, layers, hud)
 end
 
 function field_renderer:set_scroll(dx, dy, scroll_frames)
@@ -124,14 +133,15 @@ function field_renderer:draw_pos()
    return self.draw_x, self.draw_y, self.scroll_x, self.scroll_y
 end
 
-function field_renderer:draw()
-   local draw_x = self.draw_x
-   local draw_y = self.draw_y
-   local width, height = self.width, self.height - 72 - 16
+function field_renderer:draw(x, y, width, height)
+   x = x or self.draw_x
+   y = y or self.draw_y
+   width = width or self.width
+   height = height or (self.height - 72 - 16)
 
    for _, l, tag in self.layers:iter() do
       if self.enabled[tag] ~= false then
-         local ok, result = xpcall(function() l:draw(draw_x, draw_y, width, height) end, debug.traceback)
+         local ok, result = xpcall(function() l:draw(x, y, width, height) end, debug.traceback)
          if not ok then
             Log.error("%s", result)
          end
@@ -139,7 +149,7 @@ function field_renderer:draw()
    end
 end
 
-function field_renderer:update(dt)
+function field_renderer:update(map, dt)
    -- BUG: this really doesn't look like the original Elona's
    -- scrolling. The issue is here it is based on dt. In vanilla
    -- scrolling would always scroll by a fixed amount of pixels
@@ -163,7 +173,7 @@ function field_renderer:update(dt)
    local going = false
    for _, l, tag in self.layers:iter() do
       if self.enabled[tag] ~= false then
-         local result = l:update(dt, self.screen_updated, self.scroll_frames)
+         local result = l:update(map, dt, self.screen_updated, self.scroll_frames)
          if result then -- not nil or false
             going = true
          end

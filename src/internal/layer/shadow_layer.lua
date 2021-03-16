@@ -4,10 +4,10 @@ local shadow_batch = require("internal.draw.shadow_batch")
 local Chara = require("api.Chara")
 local Draw = require("api.Draw")
 local IDrawLayer = require("api.gui.IDrawLayer")
-local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
 local UiTheme = require("api.gui.UiTheme")
+local Gui = require("api.Gui")
 
 local shadow_layer = class.class("shadow_layer", IDrawLayer)
 
@@ -18,6 +18,10 @@ function shadow_layer:init(width, height)
    self.lights = {}
    self.frames = 0
    self.reupdate_light = false
+end
+
+function shadow_layer:default_z_order()
+   return Gui.LAYER_Z_ORDER_TILEMAP + 60000
 end
 
 function shadow_layer:on_theme_switched(coords)
@@ -106,7 +110,7 @@ function shadow_layer:update_light_flicker()
    end
 end
 
-function shadow_layer:update(dt, screen_updated, scroll_frames)
+function shadow_layer:update(map, dt, screen_updated, scroll_frames)
    self.frames = self.frames + dt / (config.base.screen_refresh * (16.66 / 1000))
    if self.frames > 1 then
       self.frames = math.fmod(self.frames, 1)
@@ -114,9 +118,6 @@ function shadow_layer:update(dt, screen_updated, scroll_frames)
    end
 
    if screen_updated then
-      local map = Map.current()
-      assert(map ~= nil)
-
       self:rebuild_light(map)
    end
 
@@ -135,7 +136,6 @@ function shadow_layer:update(dt, screen_updated, scroll_frames)
 
    self.shadow_batch.updated = true
 
-   local map = Map.current()
    assert(map ~= nil)
 
    local shadow_map, offset_tx, offset_ty = map:shadow_map()
@@ -148,7 +148,6 @@ end
 
 function shadow_layer:draw(draw_x, draw_y, width, height)
    Draw.set_blend_mode("add")
-
    for _, light in ipairs(self.lights) do
       local asset = self.t.base[light.chip]
       local x = draw_x + light.x
