@@ -181,7 +181,6 @@ do
          music = "elona.town3",
          types = { "player_owned" },
          is_indoor = true,
-         item_on_floor_limit = 10,
       }
    }
    function museum.on_generate_map(area, floor)
