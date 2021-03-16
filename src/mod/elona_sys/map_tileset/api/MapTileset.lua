@@ -30,10 +30,10 @@ local function convert_tiles(tileset, map)
       -- tunnels the map generator doesn't accidentally dig into a
       -- tile holding a hidden path, but still lets it appear like the
       -- default tile.
-      if match == nil and tile._id == "elona.mapgen_default" then
-         match = tileset.tiles["elona.mapgen_floor"]
+      if match == nil and tile._id == "elona.mapgen_fog" then
+         match = tileset.tiles["elona.mapgen_default"]
          if match == nil then
-            match = default.tiles["elona.mapgen_floor"]
+            match = default.tiles["elona.mapgen_default"]
          end
       end
 

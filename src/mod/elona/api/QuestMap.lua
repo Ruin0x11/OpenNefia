@@ -360,7 +360,7 @@ function QuestMap.generate_harvest(difficulty)
    -- >>>>>>>> shade2/map_rand.hsp:337 	mField=mFieldOutdoor ..
    local map = InstancedMap:new(58 + Rand.rnd(16), 50 + Rand.rnd(16))
    map:set_archetype("elona.quest_harvest", { set_properties = true })
-   map:clear(MapTileset.get("elona.mapgen_floor", map))
+   map:clear(MapTileset.get("elona.mapgen_default", map))
    map.name = I18N.get("map.quest.harvest")
 
    MapgenUtils.spray_tile(map, "elona.grass_bush_3", 10)

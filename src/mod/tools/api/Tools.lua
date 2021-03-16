@@ -1031,6 +1031,12 @@ function Tools.powerup(chara, levels)
             Skill.gain_skill(chara, m._id, 2000, 1000)
            end)
 
+   Skill.iter_resistances()
+      :each(function(m)
+            chara:mod_base_resist_level(m._id, 2000, "set")
+           end)
+
+   chara:refresh()
    chara:heal_to_max()
 end
 

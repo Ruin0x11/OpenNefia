@@ -4275,9 +4275,9 @@ data:add_multi(
    "base.map_tile",
    {
       {
-         _id = "mapgen_floor",
+         _id = "mapgen_default",
          image = "graphic/default/floor.png",
-         is_solid = false
+         is_solid = true
       },
       {
          _id = "mapgen_tunnel",
@@ -4295,8 +4295,8 @@ data:add_multi(
          is_solid = false
       },
       {
-         _id = "mapgen_default",
+         _id = "mapgen_fog",
          image = "graphic/default/floor.png",
-         is_solid = false
+         is_solid = true
       },
 })

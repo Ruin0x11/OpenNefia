@@ -6894,7 +6894,7 @@ local chara = {
       ai_actions = {
          main = {
             { id = "elona.skill", skill_id = "elona.action_drop_mine" },
-            { id = "elona.random_move" }
+            { id = "elona.random_movement" }
          },
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_gravity" }

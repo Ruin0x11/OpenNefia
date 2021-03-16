@@ -757,6 +757,23 @@ data:add_multi(
 
 data:add {
    _type = "base.ai_action",
+   _id = "random_movement",
+
+   act = function(chara, params)
+      -- >>>>>>>> shade2/ai.hsp:489 	if act=actRandomMove{ ...
+      local map = chara:current_map()
+      local nx, ny = Pos.random_direction(chara.x, chara.y)
+      if map:can_access(nx, ny) then
+         Action.move(chara, nx, ny)
+         return true
+      end
+      return false
+      -- <<<<<<<< shade2/ai.hsp:494 	} ..
+   end
+}
+
+data:add {
+   _type = "base.ai_action",
    _id = "melee",
 
    act = function(chara, params)

@@ -99,7 +99,7 @@ function Dungeon.create_map(floor, params, width, height)
    height = height or params.height
 
    local map = InstancedMap:new(width, height)
-   map:clear("elona.mapgen_floor")
+   map:clear("elona.mapgen_default")
    map.level = floor
    if params.max_crowd_density then
       map.max_crowd_density = params.max_crowd_density
@@ -498,7 +498,7 @@ local function can_dig(x, y, map)
       return true
    end
 
-   return tile._id == "elona.mapgen_floor"
+   return tile._id == "elona.mapgen_default"
 end
 
 local function next_dir(dir, tx, ty, end_x, end_y, map)
@@ -665,7 +665,7 @@ function Dungeon.dig_to_entrance(start_x, start_y, end_x, end_y, straight, hidde
          ty = dy
          Map.set_tile(dx, dy, "elona.mapgen_tunnel", map)
          if Rand.rnd(200) < hidden_path_chance then
-            Map.set_tile(dx, dy, "elona.mapgen_default", map)
+            Map.set_tile(dx, dy, "elona.mapgen_fog", map)
             Feat.create("elona.hidden_path", dx, dy, {}, map)
          end
          -- if not straight and Rand.one_in(4) then
@@ -1256,11 +1256,11 @@ function Dungeon.gen_type_puppy_cave(floor, params)
             local tunnel_at = tunnels[tx+ty*map:width()]
 
             if tunnel_at then
-               if tunnel_at ~= tunnel and id ~= "elona.mapgen_floor" then
+               if tunnel_at ~= tunnel and id ~= "elona.mapgen_default" then
                   return false
                end
             else
-               if id ~= "elona.mapgen_tunnel" and id ~= "elona.mapgen_floor" then
+               if id ~= "elona.mapgen_tunnel" and id ~= "elona.mapgen_default" then
                   return false
                end
             end
@@ -1303,8 +1303,8 @@ function Dungeon.gen_type_puppy_cave(floor, params)
       if map:tile(x - 1, y)._id == "elona.mapgen_tunnel"
          and map:tile(x + 1, y)._id == "elona.mapgen_tunnel"
       then
-         if map:tile(x, y - 1)._id == "elona.mapgen_floor"
-            and map:tile(x, y + 1)._id == "elona.mapgen_floor"
+         if map:tile(x, y - 1)._id == "elona.mapgen_default"
+            and map:tile(x, y + 1)._id == "elona.mapgen_default"
          then
             Feat.create("elona.door", x, y, {difficulty = Dungeon.calc_door_difficulty(map)}, map)
          end
@@ -1315,8 +1315,8 @@ function Dungeon.gen_type_puppy_cave(floor, params)
       if map:tile(x, y - 1)._id == "elona.mapgen_tunnel"
          and map:tile(x, y + 1)._id == "elona.mapgen_tunnel"
       then
-         if map:tile(x - 1, y)._id == "elona.mapgen_floor"
-            and map:tile(x + 1, y)._id == "elona.mapgen_floor"
+         if map:tile(x - 1, y)._id == "elona.mapgen_default"
+            and map:tile(x + 1, y)._id == "elona.mapgen_default"
          then
             Feat.create("elona.door", x, y, {difficulty = Dungeon.calc_door_difficulty(map)}, map)
          end

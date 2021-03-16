@@ -506,9 +506,9 @@ function Effect.damage_item_fire(item, fireproof_blanket)
 
    if item:has_category("elona.food") and item.params.food_quality == 0 then
       if owner then
-         Gui.mes_c_visible("item.someones_item.get_broiled", owner, "Orange", item, owner)
+         Gui.mes_c_visible("item.someones_item.gets_broiled", owner, "Orange", item, owner)
       else
-         Gui.mes_c_visible("item.item_on_the_ground.get_broiled", item, "Orange", item)
+         Gui.mes_c_visible("item.item_on_the_ground.gets_broiled", item, "Orange", item)
       end
       local Hunger = require("mod.elona.api.Hunger")
       Hunger.make_dish(item, Rand.rnd(5) + 1)
