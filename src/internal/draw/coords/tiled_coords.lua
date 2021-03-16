@@ -46,10 +46,10 @@ function tiled_coords:get_draw_pos(tx, ty, mw, mh, width, height)
    local msh = mh * tile_size
 
    local max_x = (msw - width)
-   local max_y = (msh - height + (72 + 16))
+   local max_y = (msh - height)
 
    local sx = tx * tile_size
-   local sy = ty * tile_size + 16
+   local sy = ty * tile_size
    local offset_x = math.max((width - msw) / 2, 0)
    local offset_y = math.max((height - msh) / 2, 0)
 

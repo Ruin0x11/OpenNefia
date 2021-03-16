@@ -100,7 +100,7 @@ function field_renderer:update_draw_pos(player_x, player_y, scroll_frames)
                                                    self.map_width,
                                                    self.map_height,
                                                    self.width,
-                                                   self.height)
+                                                   self.height - 72 - 16)
 
    if scroll_frames then
       self:set_scroll(self.draw_x - draw_x, self.draw_y - draw_y, scroll_frames)
@@ -127,13 +127,13 @@ end
 function field_renderer:draw()
    local draw_x = self.draw_x
    local draw_y = self.draw_y
-   local width, height = self.width, self.height
+   local width, height = self.width, self.height - 72 - 16
 
    for _, l, tag in self.layers:iter() do
       if self.enabled[tag] ~= false then
          local ok, result = xpcall(function() l:draw(draw_x, draw_y, width, height) end, debug.traceback)
          if not ok then
-            Log.error("Error in field draw layer: %s", result)
+            Log.error("%s", result)
          end
       end
    end

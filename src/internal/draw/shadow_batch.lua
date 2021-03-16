@@ -283,37 +283,6 @@ function shadow_batch:draw(x, y, width, height)
    local offx, offy = 0, 0
    x = x + offx
    y = y + offy
-   -- slight speedup
-   local tw = self.tile_width
-   local th = self.tile_height
-
-   -- local sx, sy, ox, oy = 0, 0, 0, 0
-
-   -- sx = -sx
-   -- sy = -sy
-
-   -- if x < 0 then
-   --    ox = 48
-   -- elseif x > 0 then
-   --    if ox == 48 then
-   --       ox = 0
-   --    end
-   -- end
-   -- if y < 0 then
-   --    oy = 48
-   -- elseif y > 0 then
-   --    if oy == 48 then
-   --       oy = 0
-   --    end
-   -- end
-
-   -- ox = ox - 48
-   -- oy = oy - 48
-
-   -- self.scissor_x = 0
-   -- self.scissor_y = 0
-   -- self.scissor_width = 0
-   -- self.scissor_height = 0
 
    if self.updated or true then
       local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, width, height)
