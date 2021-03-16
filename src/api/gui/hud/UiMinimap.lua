@@ -18,6 +18,10 @@ end
 
 function UiMinimap:default_widget_refresh(player)
    self.player = player
+   local map = player:current_map()
+   if map then
+      self:refresh_visible(map)
+   end
 end
 
 function UiMinimap:default_widget_z_order()
@@ -38,11 +42,7 @@ end
 
 local SUBTRACT_COLOR = { 100, 100, 100 }
 
-function UiMinimap:update(dt, map, screen_updated)
-   if not screen_updated then
-      return
-   end
-   self:refresh_visible(map)
+function UiMinimap:update(dt)
 end
 
 function UiMinimap:refresh_visible(map)
@@ -60,6 +60,7 @@ function UiMinimap:refresh_visible(map)
    self.th = self.height / mh
 
    self.tile_batch:clear()
+   self.blocked_batch:clear()
 
    -- >>>>>>>> shade2/screen.hsp:1270 *rader_preDraw ..
    for ind = 1, mw * mh do

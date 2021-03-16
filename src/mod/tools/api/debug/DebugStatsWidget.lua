@@ -42,7 +42,7 @@ function DebugStatsWidget:draw()
    end
 end
 
-function DebugStatsWidget:update(dt, map, screen_updated)
+function DebugStatsWidget:update(dt)
    table.clear(self.texts)
    local results = DebugStatsHook.get_results()
 

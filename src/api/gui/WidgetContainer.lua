@@ -82,11 +82,11 @@ function WidgetContainer:draw()
    end
 end
 
-function WidgetContainer:update(dt, map, screen_updated)
+function WidgetContainer:update(dt)
    self.updated = false
    for _, holder in self:iter() do
       if holder:enabled() then
-         holder:widget():update(dt, map, screen_updated)
+         holder:widget():update(dt)
          self.updated = self.updated or holder.updated
          holder.updated = false
       end
