@@ -30,9 +30,10 @@ function UiMinimap:relayout(x, y, width, height)
    self.height = height
    self.t = UiTheme.load(self)
    self.tile_batch = Draw.make_chip_batch("tile")
+   self.blocked_batch = Draw.make_chip_batch("chip")
 end
 
-local SUBTRACT_COLOR = { 155, 155, 155 }
+local SUBTRACT_COLOR = { 100, 100, 100 }
 
 function UiMinimap:update(dt, map)
    self:refresh_visible(map)
@@ -56,20 +57,16 @@ function UiMinimap:refresh_visible(map)
    for _, x, y in map:iter_tiles() do
       if map:is_memorized(x, y) then
          local memory = map:memory(x, y, "base.map_tile")
-         local tile = assert(memory[1])
+         local tile = memory[1]
 
-         local color
+         local sx, sy, sw, sh = math.ceil(x * self.tw), math.ceil(y * self.th), self.tw, self.th
+        
+         self.tile_batch:add(tile._id, sx, sy, sw, sh)
+
          if tile.is_solid then
-            -- TODO Use subtractive blending, since the original code uses
-            -- `gfdec2` on top of impassible tiles. Essentially, draw another
-            -- sprite batch for blending purposes only with squares of either
-            -- black or {100, 100, 100} if the tile is not accessable. Then draw
-            -- the sprite batch with alpha blending, turn on subtractive
-            -- blending, then draw the blending sprite batch on top of the first
-            -- sprite batch.
-            color = SUBTRACT_COLOR
+            -- Decrement color on top of impassable tiles.
+            self.blocked_batch:add("base.white", sx, sy, sw, sh, SUBTRACT_COLOR)
          end
-         self.tile_batch:add(tile._id, math.ceil(x * self.tw), math.ceil(y * self.th), self.tw, self.th, color)
       end
    end
    -- <<<<<<<< shade2/screen.hsp:1290 	return ..
@@ -79,7 +76,12 @@ function UiMinimap:draw()
    -- TODO correct offsets
    Draw.set_color(255, 255, 255)
    self.t.base.hud_minimap:draw(self.x, self.y+1)
+
    self.tile_batch:draw(self.x, self.y+3, self.width, self.height)
+
+   Draw.set_blend_mode("subtract")
+   self.blocked_batch:draw(self.x, self.y+3, self.width, self.height)
+
    Draw.set_blend_mode("add")
    Draw.set_color(10, 10, 10)
    Draw.filled_rect(self.x, self.y+1, self.width, self.height)
