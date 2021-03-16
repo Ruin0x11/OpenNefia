@@ -59,19 +59,23 @@ function QuestBoardMenu:draw()
    self.pages:draw()
 end
 
-function QuestBoardMenu:update()
-   if self.canceled then
+function QuestBoardMenu:update(dt)
+   local canceled = self.canceled
+   local chosen = self.pages.chosen
+
+   self.canceled = false
+   self.pages:update(dt)
+
+   if canceled then
       return nil, "canceled"
    end
 
-   if self.pages.chosen then
+   if chosen then
       Gui.mes("ui.board.do_you_meet")
       if Input.yes_no() then
          return self.pages:selected_item().quest
       end
    end
-
-   self.pages:update()
 end
 
 return QuestBoardMenu

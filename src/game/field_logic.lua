@@ -160,6 +160,7 @@ function field_logic.turn_begin()
       field_logic.update_chara_time_this_turn(starting_turn_time)
    end
 
+   -- BUG: don't pass time if just loaded from save
    World.pass_time_in_seconds(starting_turn_time / 5 + 1)
 
    field:get_message_window():new_turn()
@@ -572,6 +573,7 @@ function field_logic.query()
 
    field.is_active = true
 
+   draw.push_layer(field.hud)
    draw.push_layer(field)
 
    Gui.update_screen()

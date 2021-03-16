@@ -119,7 +119,7 @@ function draw.set_root_input_handler(input)
 end
 
 function draw.push_layer(ui_layer, priority)
-   priority = priority or #layers
+   priority = priority or ui_layer:default_z_order()
    class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
    ui_layer:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
    ui_layer:focus()
