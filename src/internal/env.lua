@@ -722,6 +722,10 @@ function env.get_module_of_member(fn)
    return entry.module, entry.identifier
 end
 
+function env.get_loaded_module_paths()
+   return table.values(require_path_cache)
+end
+
 function env.is_loaded(path)
    return package.loaded[path] ~= nil
 end

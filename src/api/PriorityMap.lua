@@ -6,6 +6,7 @@ function PriorityMap:init()
    self.map = {}
    self.priority = {}
    self.sorted_keys = {}
+   self.dirty = true
 end
 
 local function iter(state, index)
@@ -17,10 +18,18 @@ local function iter(state, index)
 end
 
 function PriorityMap:iter()
+   if self.dirty then
+      self.dirty = false
+      self:_update_sorting()
+   end
    return iter, self, 1
 end
 
 function PriorityMap:len()
+   if self.dirty then
+      self.dirty = false
+      self:_update_sorting()
+   end
    return #self.sorted_keys
 end
 
@@ -32,7 +41,7 @@ function PriorityMap:set(key, value, priority)
       self.map[key] = value
       self.priority[key] = priority or PriorityMap.DEFAULT_PRIORITY
    end
-   self:_update_sorting()
+   self.dirty = true
 end
 
 function PriorityMap:get(key)

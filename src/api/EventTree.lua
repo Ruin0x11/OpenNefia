@@ -194,12 +194,11 @@ function EventTree:print()
       arr[#arr+1] = { first_line, v.priority, disabled }
    end
 
-   return table.print(arr,
+   return table.concat(table.print(arr,
                       {
                          header = { "Name", "Priority", "Disabled" },
                          spacing = 2
-                      }
-   )
+                      }), "\n")
 end
 
 return EventTree

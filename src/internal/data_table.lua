@@ -656,7 +656,7 @@ function proxy:print()
    for _, v in self:iter() do
       list[#list+1] = { v._id }
    end
-   return table.print(list, { header = { "ID" }, sort = 1 })
+   return table.concat(table.print(list, { header = { "ID" }, sort = 1 }), "\n")
 end
 
 function data_table:__index(k)

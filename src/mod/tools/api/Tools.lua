@@ -128,7 +128,7 @@ function Tools.dump_charas()
    :map(function(c) return { tostring(c.uid), c.x, c.y } end)
       :to_list()
 
-   return table.print(t, {header = {"UID", "X", "Y"}})
+   return table.concat(table.print(t, {header = {"UID", "X", "Y"}}), "\n")
 end
 
 function Tools.dump_items()
@@ -136,7 +136,7 @@ function Tools.dump_items()
    :map(function(i) return { tostring(i.uid), i.x, i.y } end)
       :to_list()
 
-   return table.print(t, {header = {"UID", "X", "Y"}})
+   return table.concat(table.print(t, {header = {"UID", "X", "Y"}}), "\n")
 end
 
 function Tools.clone_me(times)
