@@ -13,6 +13,14 @@ function NefiaCompletionDrawable:init(state)
    self:set_state(state)
 end
 
+function NefiaCompletionDrawable:serialize()
+   self.t = nil
+end
+
+function NefiaCompletionDrawable:deserialize()
+   self.t = UiTheme.load(self)
+end
+
 function NefiaCompletionDrawable:set_state(state)
    if state == "conquered" then
       self.region = 1

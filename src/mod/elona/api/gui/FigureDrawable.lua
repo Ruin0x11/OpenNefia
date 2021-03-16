@@ -1,6 +1,5 @@
 local IDrawable = require("api.gui.IDrawable")
 local Draw = require("api.Draw")
-local Gui = require("api.Gui")
 
 local FigureDrawable = class.class("FigureDrawable", IDrawable)
 
@@ -12,6 +11,10 @@ function FigureDrawable:init(chip_id, color)
    self.chip_id = chip_id
    self.color = color or { 255, 255, 255 }
    self.color[4] = 150
+end
+
+function FigureDrawable:serialize()
+   self.batch = nil
 end
 
 function FigureDrawable:deserialize()
