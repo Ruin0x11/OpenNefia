@@ -35,7 +35,10 @@ end
 
 local SUBTRACT_COLOR = { 100, 100, 100 }
 
-function UiMinimap:update(dt, map)
+function UiMinimap:update(dt, map, screen_updated)
+   if not screen_updated then
+      return
+   end
    self:refresh_visible(map)
 end
 
@@ -48,19 +51,23 @@ function UiMinimap:refresh_visible(map)
       return
    end
 
-   self.tw = math.ceil(self.width / map:width())
-   self.th = math.ceil(self.height / map:height())
+   local mw = map:width()
+   local mh = map:height()
+   self.tw = math.ceil(self.width / mw)
+   self.th = math.ceil(self.height / mh)
 
    self.tile_batch:clear()
 
    -- >>>>>>>> shade2/screen.hsp:1270 *rader_preDraw ..
-   for _, x, y in map:iter_tiles() do
-      if map:is_memorized(x, y) then
-         local memory = map:memory(x, y, "base.map_tile")
+   for ind = 1, mw * mh do
+      local x = (ind-1) % mw
+      local y = math.floor((ind-1) / mw)
+      local memory = map._memory["base.map_tile"][ind]
+      if memory and memory[1] then
          local tile = memory[1]
 
          local sx, sy, sw, sh = math.ceil(x * self.tw), math.ceil(y * self.th), self.tw, self.th
-        
+
          self.tile_batch:add(tile._id, sx, sy, sw, sh)
 
          if tile.is_solid then

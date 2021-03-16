@@ -66,7 +66,7 @@ function tile_batch:draw(x, y, width, height)
    local tw = self.tile_width
    local th = self.tile_height
 
-   if self.updated or true then
+   if self.updated then
       local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, width, height)
       local tiles = self.atlas.tiles
       local self_tiles = self.tiles

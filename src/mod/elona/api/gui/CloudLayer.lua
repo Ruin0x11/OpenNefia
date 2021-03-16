@@ -52,9 +52,6 @@ end
 
 function CloudLayer:update(map, dt, screen_updated)
    self.frame = self.frame + dt / (config.base.screen_refresh * (16.66 / 1000))
-   if not screen_updated then
-      return
-   end
 end
 
 function CloudLayer:draw(draw_x, draw_y)

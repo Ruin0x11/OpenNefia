@@ -286,7 +286,7 @@ function shadow_batch:draw(x, y, width, height)
    x = x + offx
    y = y + offy
 
-   if self.updated or true then
+   if self.updated then
       local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, width, height)
       local self_tiles = self.tiles
       local offset_tx, offset_ty = self.offset_tx, self.offset_ty

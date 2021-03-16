@@ -88,8 +88,8 @@ function MainHud:draw(draw_x, draw_y)
    self.widgets:draw(draw_x, draw_y)
 end
 
-function MainHud:update(map, dt)
-   self.widgets:update(dt, map)
+function MainHud:update(map, dt, screen_updated)
+   self.widgets:update(dt, map, screen_updated)
 
    if self.widgets.updated and self.x then
       self.widgets:relayout(self.x, self.y, self.width, self.height)

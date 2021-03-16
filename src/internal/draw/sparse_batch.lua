@@ -183,7 +183,7 @@ function sparse_batch:draw(x, y, width, height)
 
    local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, width, height)
 
-   if self.updated or true then
+   if self.updated then
       for _, batch in ipairs(self.batches) do
          batch:clear()
       end
