@@ -106,8 +106,6 @@ function InventoryWrapper:previous_menu()
 end
 
 function InventoryWrapper:switch_context()
-   Gui.play_sound("base.inv")
-
    if self.group then
       self.proto_id = self.group.protos[self.selected_index]
    end

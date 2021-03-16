@@ -117,8 +117,13 @@ function InventoryMenu:make_keymap()
 end
 
 function InventoryMenu:on_query()
-   self.canceled = false
-   if self.ctxt.proto.query_text and self.result == nil then
+   if self.result ~= nil then
+      return
+   end
+
+   Gui.play_sound("base.inv")
+
+   if self.ctxt.proto.query_text then
       local params = {}
       if self.ctxt.proto.locale_params then
          params = {self.ctxt.proto:locale_params()}
