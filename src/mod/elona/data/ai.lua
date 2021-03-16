@@ -45,7 +45,7 @@ end
 local function wander(chara, params)
    local map = chara:current_map()
 
-   local calm_action = chara.ai_actions and chara.ai_actions.calm_action
+   local calm_action = chara.ai_calm_action or "elona.calm_roam"
 
    -- >>>>>>>> shade2/ai.hsp:318 	if cAiCalm(cc)=aiRoam{ ...
    if calm_action == "elona.calm_roam" then
