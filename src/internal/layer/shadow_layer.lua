@@ -138,26 +138,21 @@ function shadow_layer:update(dt, screen_updated, scroll_frames)
    local map = Map.current()
    assert(map ~= nil)
 
-   local shadow_map = map:shadow_map()
+   local shadow_map, offset_tx, offset_ty = map:shadow_map()
    if #shadow_map > 0 then
-      self.shadow_batch:set_tiles(shadow_map)
+      self.shadow_batch:set_tiles(shadow_map, offset_tx, offset_ty)
    end
 
    return false
 end
 
 function shadow_layer:draw(draw_x, draw_y, offx, offy)
-   local sx, sy, ox, oy = self.coords:get_start_offset(draw_x - offx,
-                                                       draw_y - offy,
-                                                       Draw.get_width(),
-                                                       Draw.get_height())
-
    Draw.set_blend_mode("add")
 
    for _, light in ipairs(self.lights) do
       local asset = self.t.base[light.chip]
-      local x = sx + light.x - draw_x
-      local y = sy + light.y - light.offset_y - draw_y
+      local x = light.x - draw_x
+      local y = light.y - light.offset_y - draw_y
       if #asset.quads == 0 then
          asset:draw(x, y, nil, nil, light.color)
       else

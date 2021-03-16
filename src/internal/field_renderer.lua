@@ -127,11 +127,14 @@ end
 function field_renderer:draw()
    local draw_x = self.draw_x
    local draw_y = self.draw_y
-   local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
+   local sx, sy, ox, oy = Draw.get_coords():get_start_offset(draw_x, draw_y)
+
+   local mouse_x, mouse_y = require("api.Input").mouse_pos()
+   local width, height = Draw.get_width(), Draw.get_height()
 
    for _, l, tag in self.layers:iter() do
       if self.enabled[tag] ~= false then
-         local ok, result = xpcall(function() l:draw(draw_x, draw_y, self.scroll_x, self.scroll_y) end, debug.traceback)
+         local ok, result = xpcall(function() l:draw(-mouse_x, -mouse_y, width, height) end, debug.traceback)
          if not ok then
             Log.error("%s", result)
          end

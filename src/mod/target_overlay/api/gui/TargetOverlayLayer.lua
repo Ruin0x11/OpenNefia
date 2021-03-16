@@ -76,12 +76,11 @@ function TargetOverlayLayer:update(dt, screen_updated)
 end
 
 function TargetOverlayLayer:draw(draw_x, draw_y)
-   local start_x, start_y = self.coords:get_start_offset(draw_x, draw_y)
    for _, line in ipairs(self.lines) do
-      local sx = line.sx + self.w + start_x - draw_x
-      local sy = line.sy + self.h + start_y - draw_y
-      local tx = line.tx + self.w + start_x - draw_x
-      local ty = line.ty + self.h + start_y - draw_y
+      local sx = line.sx + self.w + draw_x
+      local sy = line.sy + self.h + draw_y
+      local tx = line.tx + self.w + draw_x
+      local ty = line.ty + self.h + draw_y
       line.color[4] = 255 - (math.floor(self.frame * 125) % 128)
       Draw.set_color(line.color)
       Draw.line(sx, sy, tx, ty)

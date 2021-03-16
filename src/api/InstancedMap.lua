@@ -91,6 +91,8 @@ function InstancedMap:init(width, height, uids, tile)
    -- visible screen area only, with (1, 1) being the tile at the
    -- upper left corner of the game window.
    self._shadow_map = t()
+   self._shadow_start_x = 0
+   self._shadow_start_y = 0
 
    -- Locations that are treated as solid. Can be changed by mods to
    -- make objects that act solid, like map features.
@@ -195,7 +197,7 @@ function InstancedMap:height()
 end
 
 function InstancedMap:shadow_map()
-   return self._shadow_map
+   return self._shadow_map, self._shadow_start_x, self._shadow_start_y
 end
 
 function InstancedMap:clear(tile)
@@ -443,7 +445,10 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
       ly = ly + 1
    end
 
-   return self._shadow_map, start_x, start_y
+   self._shadow_start_x = start_x + 2
+   self._shadow_start_y = start_y + 1
+
+   return self._shadow_map, self._shadow_start_x, self._shadow_start_y
 end
 
 function InstancedMap:memorize_tile(x, y)

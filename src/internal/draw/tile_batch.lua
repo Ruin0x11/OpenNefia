@@ -60,16 +60,18 @@ function tile_batch:update(dt)
    end
 end
 
-function tile_batch:draw(x, y)
+function tile_batch:draw(x, y, width, height)
    -- slight speedup
    local batch = self.batch
    local tw = self.tile_width
    local th = self.tile_height
 
    local sx, sy, ox, oy = self.coords:get_start_offset(x, y, Draw.get_width(), Draw.get_height())
+   sx, sy, ox, oy = 0, 0, 0, 0
 
-   if self.updated then
-      local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, self.width, self.height)
+   if self.updated or true then
+      local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, width, height)
+      print("get", x, y, tx, ty, tdx, tdy)
       local tiles = self.atlas.tiles
       local self_tiles = self.tiles
 
@@ -96,8 +98,28 @@ function tile_batch:draw(x, y)
       self.updated = false
    end
 
+   do
+      Draw.set_color(255, 0, 0)
+      Draw.set_font(11)
+      Draw.text(string.format("%d,%d", x, y), x+4, y-12)
+      Draw.filled_rect(x, y - 4, 1, 8)
+      Draw.filled_rect(x - 4, y, 8, 1)
+      Draw.filled_rect(48 * 10, 48, 48, 48)
+   end
+
+   Draw.set_font(14)
+   Draw.text_shadowed(("%d, %d"):format(x, y), 100, 280)
+
+   if x < 0 then
+      x = -tw + math.abs((x - 1) % tw)
+   end
+   if y < 0 then
+      y = -th + math.abs((y - 1) % th)
+   end
+   Draw.text_shadowed(("%d, %d"):format(x, y), 100, 300)
+
    Draw.set_color(255, 255, 255)
-   love.graphics.draw(batch, sx + ox - tw, sy + oy - th)
+   love.graphics.draw(batch, x, y)
 
    -- TODO: The original HSP code uses the gfdec2 function. gfdec2
    -- decrements colors but prevents them from reaching a 0 value, so
@@ -106,6 +128,7 @@ function tile_batch:draw(x, y)
    Draw.set_color(self.shadow[1], self.shadow[2], self.shadow[3], 108)
    Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height())
    Draw.set_blend_mode("alpha")
+
 end
 
 return tile_batch

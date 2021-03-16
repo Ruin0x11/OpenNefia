@@ -98,7 +98,7 @@ function tile_overhang_layer:update(dt, screen_updated)
 end
 
 function tile_overhang_layer:draw_shadows(draw_x, draw_y, offx, offy)
-   local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
+   local sx, sy = 0, 0
 
    Draw.set_blend_mode("subtract")
    Draw.set_color(255, 255, 255, 20)
@@ -135,10 +135,10 @@ function tile_overhang_layer:draw_shadows(draw_x, draw_y, offx, offy)
    Draw.set_color(255, 255, 255)
 end
 
-function tile_overhang_layer:draw(draw_x, draw_y, offx, offy)
-   self.overhang_batch:draw(draw_x + offx, draw_y + offy + 12)
+function tile_overhang_layer:draw(draw_x, draw_y, width, height)
+   self.overhang_batch:draw(draw_x, draw_y + 12, width, height)
 
-   self:draw_shadows(draw_x, draw_y, offx, offy)
+   self:draw_shadows(draw_x, draw_y, 0, 0)
 end
 
 return tile_overhang_layer

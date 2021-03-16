@@ -29,15 +29,13 @@ function tiled_coords:screen_to_tile(sx, sy)
    return math.floor(sx / 48), math.floor(sy / 48)
 end
 
-function tiled_coords:find_bounds(x, y, width, height)
+function tiled_coords:find_bounds(x, y, draw_width, draw_height)
    local tile_width = 48
    local tile_height = 48
-   local draw_width = love.graphics.getWidth()
-   local draw_height = love.graphics.getHeight()
-   local tx = math.floor(x / tile_width) - 1
-   local ty = math.floor(y / tile_height) - 1
-   local tdx = math.min(math.ceil((x + draw_width) / tile_width), width)
-   local tdy = math.min(math.ceil((y + draw_height) / tile_height), height)
+   local tx = math.max(0, math.floor(-x / tile_width)) - 1
+   local ty = math.max(0, math.floor(-y / tile_height)) - 1
+   local tdx = tx + math.ceil((draw_width) / tile_width) + 1
+   local tdy = ty + math.ceil((draw_height) / tile_height) + 1
    return tx, ty, tdx, tdy
 end
 
@@ -50,7 +48,7 @@ function tiled_coords:get_start_offset(x, y, width, height)
    if y < 0 then
       sy = math.floor(y / 2)
    end
-   return sx, sy, math.floor(48 - (x % 48)), math.floor(48 - (y % 48))
+   return sx + math.floor(48 - (x % 48)), sy + math.floor(48 - (y % 48)), 0, 0
 end
 
 function tiled_coords:get_draw_pos(tx, ty, mw, mh, width, height)

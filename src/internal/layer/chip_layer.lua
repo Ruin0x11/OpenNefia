@@ -323,8 +323,6 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
 end
 
 function chip_layer:draw_hp_bars(draw_x, draw_y, offx, offy)
-   local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
-
    -- TODO: rewrite this as a batched draw layer
    for _, ind in pairs(self.chip_batch_inds) do
       if ind.hp_bar then
@@ -333,14 +331,15 @@ function chip_layer:draw_hp_bars(draw_x, draw_y, offx, offy)
          end
 
          local ratio = math.clamp(ind.hp_ratio or 1.0, 0.0, 1.0)
-         self["i_" .. ind.hp_bar]:draw_percentage_bar(sx - draw_x + offx + ind.x * 48 + 9,
-                                                      sy - draw_y + offy + ind.y * 48 + CONFIG["base.chara"].y_offset + 48,
+         self["i_" .. ind.hp_bar]:draw_percentage_bar(draw_x + offx + ind.x * 48 + 9,
+                                                      draw_y + offy + ind.y * 48 + CONFIG["base.chara"].y_offset + 48,
                                                       ratio * 30, 3, ratio * 30)
       end
    end
 end
 
-function chip_layer:draw(draw_x, draw_y, offx, offy)
+function chip_layer:draw(draw_x, draw_y, width, height)
+   local offx, offy = 0, 0
    love.graphics.setShader(self.shadow_shader)
    Draw.set_color(255, 255, 255, 80)
    Draw.set_blend_mode("subtract")

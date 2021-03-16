@@ -67,8 +67,8 @@ function tile_layer:update(dt, screen_updated)
    self.tile_batch.updated = true
 end
 
-function tile_layer:draw(draw_x, draw_y, offx, offy)
-   self.tile_batch:draw(draw_x + offx, draw_y + offy)
+function tile_layer:draw(draw_x, draw_y, width, height)
+   self.tile_batch:draw(draw_x, draw_y, width, height)
 end
 
 return tile_layer
