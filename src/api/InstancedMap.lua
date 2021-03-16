@@ -352,7 +352,6 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
 
    local fov_radius = gen_fov_radius(fov_size)
    local radius = math.floor((fov_size + 2) / 2)
-   local max_dist = math.floor(fov_size / 2)
 
    -- The shadowmap has extra space at the edges, to make shadows at
    -- the edge of the map display correctly, so offset the start and

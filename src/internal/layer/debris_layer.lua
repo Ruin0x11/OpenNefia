@@ -72,17 +72,14 @@ function debris_layer:update(dt, screen_updated)
    self.fragment_batch = self.fragment_asset:make_batch(fragment_parts)
 end
 
-function debris_layer:draw(draw_x, draw_y, offx, offy)
+function debris_layer:draw(draw_x, draw_y)
    Draw.set_color(255, 255, 255)
 
-   -- HACK this shouldn't be needed...
-   local sx, sy, ox, oy = self.coords:get_start_offset(draw_x, draw_y, Draw.get_width(), Draw.get_height())
-
    if self.fragment_batch then
-      Draw.image(self.fragment_batch, -draw_x + sx, -draw_y + sy)
+      Draw.image(self.fragment_batch, draw_x, draw_y)
    end
    if self.blood_batch then
-      Draw.image(self.blood_batch, -draw_x + sx, -draw_y + sy)
+      Draw.image(self.blood_batch, draw_x, draw_y)
    end
 end
 

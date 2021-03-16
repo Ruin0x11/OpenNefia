@@ -39,18 +39,6 @@ function tiled_coords:find_bounds(x, y, draw_width, draw_height)
    return tx, ty, tdx, tdy
 end
 
-function tiled_coords:get_start_offset(x, y, width, height)
-   local sx = 0
-   local sy = 0
-   if x < 0 then
-      sx = math.floor(x / 2)
-   end
-   if y < 0 then
-      sy = math.floor(y / 2)
-   end
-   return sx + math.floor(48 - (x % 48)), sy + math.floor(48 - (y % 48)), 0, 0
-end
-
 function tiled_coords:get_draw_pos(tx, ty, mw, mh, width, height)
    local tile_size = 48
 

@@ -212,7 +212,7 @@ end
 --- @tparam int tx Tile X coordinate
 --- @tparam int ty Tile Y coordinate
 function Gui.tile_to_screen(tx, ty)
-   return draw.get_coords():tile_to_screen(tx+1, ty+1)
+   return draw.get_coords():tile_to_screen(tx, ty)
 end
 
 --- Converts from screen space to map tile space.
@@ -230,8 +230,7 @@ end
 function Gui.tile_to_visible_screen(tx, ty)
   local x, y = Gui.tile_to_screen(tx, ty)
   local draw_x, draw_y = Gui.field_draw_pos()
-  local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
-  return x - draw_x + sx, y - draw_y + sy
+  return x + draw_x, y + draw_y
 end
 
 --- Converts from visible screen space to map tile space.
@@ -244,8 +243,7 @@ function Gui.visible_screen_to_tile(sx, sy)
    end
 
   local draw_x, draw_y = Gui.field_draw_pos()
-  local start_x, start_y = Draw.get_coords():get_start_offset(draw_x, draw_y)
-   return draw.get_coords():screen_to_tile(sx + draw_x + start_x, sy + draw_y + start_y)
+  return draw.get_coords():screen_to_tile(-draw_x + sx, -draw_y + sy)
 end
 
 --- Returns the bounds of the visible tile positions on-screen.

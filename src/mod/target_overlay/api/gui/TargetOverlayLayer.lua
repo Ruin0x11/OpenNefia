@@ -56,8 +56,8 @@ function TargetOverlayLayer:update(dt, screen_updated)
             offset = 4
          end
 
-         local sx, sy = self.coords:tile_to_screen(chara.x + 1, chara.y + 1)
-         local tx, ty = self.coords:tile_to_screen(target.x + 1, target.y + 1)
+         local sx, sy = self.coords:tile_to_screen(chara.x, chara.y)
+         local tx, ty = self.coords:tile_to_screen(target.x, target.y)
 
          local line = self.lines[i]
          if not line then

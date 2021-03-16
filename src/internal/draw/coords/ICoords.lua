@@ -4,6 +4,5 @@ return class.interface("ICoords", {
                           get_tiled_height = "function",
                           tile_to_screen = "function",
                           find_bounds = "function",
-                          get_start_offset = "function",
                           get_draw_pos = "function",
 })

@@ -47,7 +47,7 @@ function effect_map_layer:add(asset_id, tx, ty, max_frames, rotation, kind)
    end
 
    local tw, th = self.coords:get_size()
-   local sx, sy = self.coords:tile_to_screen(tx + 1, ty + 1)
+   local sx, sy = self.coords:tile_to_screen(tx, ty)
    sx = sx + tw / 2
    sy = sy + th / 2
    local map = Map.current()
@@ -116,13 +116,10 @@ function effect_map_layer:update(dt, screen_updated)
 end
 
 function effect_map_layer:draw(draw_x, draw_y, offx, offy)
-   -- HACK this shouldn't be needed...
-   local sx, sy, ox, oy = self.coords:get_start_offset(draw_x, draw_y, Draw.get_width(), Draw.get_height())
-
    for _, ef in ipairs(self.efmap) do
       if ef.show then
          Draw.set_color(255, 255, 255, ef.alpha)
-         ef.asset:draw_region(ef.asset_frame, ef.x - draw_x + sx, ef.y - draw_y + sy, nil, nil, nil, true, ef.rotation)
+         ef.asset:draw_region(ef.asset_frame, draw_x + ef.x, draw_y + ef.y, nil, nil, nil, true, ef.rotation)
       end
    end
 end

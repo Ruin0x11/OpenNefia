@@ -83,11 +83,10 @@ end
 function DirectionPrompt:draw()
    local frame = math.floor(self.frame*50)
    local alpha = math.floor(200 - frame / 2 % 20 * (frame / 2 % 20))
-   local draw_x, draw_y, scx, scy = Gui.field_draw_pos()
-   local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
+   local draw_x, draw_y = Gui.field_draw_pos()
    local tw, th = Draw.get_coords():get_size()
-   local x = self.x - draw_x + sx + math.floor(tw / 2)
-   local y = self.y - draw_y + sy + math.floor(th / 2)
+   local x = self.x + draw_x + math.floor(tw / 2)
+   local y = self.y + draw_y + math.floor(th / 2)
 
    -- TODO move draw args into params
 

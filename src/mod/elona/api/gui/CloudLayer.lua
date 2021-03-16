@@ -59,7 +59,6 @@ function CloudLayer:draw(draw_x, draw_y)
    local cx = (player and player.x) or 0
    local cy = (player and player.y) or 0
 
-   local start_x, start_y = self.coords:get_start_offset(draw_x, draw_y)
    for i, cloud in ipairs(self.clouds) do
       Draw.set_blend_mode("subtract")
 
@@ -73,7 +72,7 @@ function CloudLayer:draw(draw_x, draw_y)
       y = y % (Gui.message_window_y() + asset:get_height()) - asset:get_height()
 
       if y < Gui.message_window_y() then
-         asset:draw(x + start_x, y + start_y)
+         asset:draw(x, y)
       end
 
       Draw.set_blend_mode("alpha")

@@ -70,7 +70,7 @@ function shadow_layer:rebuild_light(map)
                shadow = shadow - power
 
                if map:is_in_fov(x, y) then
-                  local sx, sy = self.coords:tile_to_screen(x + 1, y + 1)
+                  local sx, sy = self.coords:tile_to_screen(x, y)
                   table.insert(self.lights, {
                                   chip = light.chip,
                                   flicker = light.flicker,
@@ -151,8 +151,8 @@ function shadow_layer:draw(draw_x, draw_y, width, height)
 
    for _, light in ipairs(self.lights) do
       local asset = self.t.base[light.chip]
-      local x = light.x - draw_x
-      local y = light.y - light.offset_y - draw_y
+      local x = draw_x + light.x
+      local y = draw_y + light.y - light.offset_y
       if #asset.quads == 0 then
          asset:draw(x, y, nil, nil, light.color)
       else
