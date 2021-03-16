@@ -336,10 +336,10 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
 
    for i=0,stw + 4 do
       if self._shadow_map[i] then
-         for j=0, #self._shadow_map[i]+1 do
+         for j=0, sth+4 do
             self._shadow_map[i][j] = 0
          end
-         for j=#self._shadow_map[i]+2,sth+4 do
+         for j=#self._shadow_map[i],sth+4 do
             self._shadow_map[i][j] = nil
          end
       else
@@ -360,7 +360,7 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
    local start_x = math.clamp(player_x - math.floor(stw / 2), 0, self._width - stw) - 1
    local start_y = math.clamp(player_y - math.floor(sth / 2) - 1, 0, self._height - sth) - 1
    local end_x = (start_x + stw) + 1 + 1
-   local end_y = (start_y + sth) + 1 + 1
+   local end_y = (start_y + sth) + 1 + 2
 
    local fov_y_start = player_y - math.floor(fov_size / 2)
    local fov_y_end = player_y + math.floor(fov_size / 2)
@@ -445,8 +445,8 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
       ly = ly + 1
    end
 
-   self._shadow_start_x = start_x + 2
-   self._shadow_start_y = start_y + 1
+   self._shadow_start_x = start_x
+   self._shadow_start_y = start_y
 
    return self._shadow_map, self._shadow_start_x, self._shadow_start_y
 end

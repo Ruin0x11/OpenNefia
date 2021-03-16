@@ -22,7 +22,7 @@ function tiled_coords:get_tiled_height(h)
 end
 
 function tiled_coords:tile_to_screen(tx, ty)
-   return (tx - 1) * 48, (ty - 1) * 48
+   return tx * 48, ty * 48
 end
 
 function tiled_coords:screen_to_tile(sx, sy)

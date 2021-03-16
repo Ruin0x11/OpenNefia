@@ -287,51 +287,50 @@ function shadow_batch:draw(x, y, width, height)
    local tw = self.tile_width
    local th = self.tile_height
 
-   local sx, sy, ox, oy = self.coords:get_start_offset(x-offx, y-offy, Draw.get_width(), Draw.get_height())
-   sx, sy, ox, oy = 0, 0, 0, 0
+   -- local sx, sy, ox, oy = 0, 0, 0, 0
 
-   sx = -sx
-   sy = -sy
+   -- sx = -sx
+   -- sy = -sy
 
-   if x < 0 then
-      ox = 48
-   elseif x > 0 then
-      if ox == 48 then
-         ox = 0
-      end
-   end
-   if y < 0 then
-      oy = 48
-   elseif y > 0 then
-      if oy == 48 then
-         oy = 0
-      end
-   end
+   -- if x < 0 then
+   --    ox = 48
+   -- elseif x > 0 then
+   --    if ox == 48 then
+   --       ox = 0
+   --    end
+   -- end
+   -- if y < 0 then
+   --    oy = 48
+   -- elseif y > 0 then
+   --    if oy == 48 then
+   --       oy = 0
+   --    end
+   -- end
 
-   ox = ox - 48
-   oy = oy - 48
+   -- ox = ox - 48
+   -- oy = oy - 48
 
    -- self.scissor_x = 0
    -- self.scissor_y = 0
    -- self.scissor_width = 0
    -- self.scissor_height = 0
 
-   if self.updated then
-      local tx, ty, tdx, tdy = self.coords:find_bounds(0, 0, self.width, self.height)
+   if self.updated or true then
+      local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, width, height)
       local self_tiles = self.tiles
       local offset_tx, offset_ty = self.offset_tx, self.offset_ty
 
-      self.scissor_x, self.scissor_y = self.coords:tile_to_screen(tx + offset_tx + 1, ty + offset_ty + 1)
-      self.scissor_width, self.scissor_height = self.coords:tile_to_screen(tdx, tdy)
+      self.scissor_x, self.scissor_y = self.coords:tile_to_screen(tx + 3, ty + 3)
+      self.scissor_width, self.scissor_height = self.coords:tile_to_screen(tdx-tx, tdy-ty)
 
       self.batch:clear()
       self.edge_batch:clear()
 
       for iy=ty-1,tdy+1 do
-         if iy >= -1 and iy <= self.height then
+         if iy >= -1 and iy-ty+1 <= self.height+1 then
             for ix=tx-1,tdx+1 do
-               if ix >= -1 and ix <= self.width then
-                  local tile = self_tiles[ix+1][iy+1]
+               if ix >= -1 and ix-tx+1 <= self.width+1 then
+                  local tile = self_tiles[ix-tx+1][iy-ty+1]
                   local i, j = self.coords:tile_to_screen(ix - tx + offset_tx, iy - ty + offset_ty)
                   self:add_one(tile, i, j)
                end
@@ -345,25 +344,36 @@ function shadow_batch:draw(x, y, width, height)
       self.updated = false
    end
 
-   Draw.set_scissor(self.scissor_x, self.scissor_y, self.scissor_width, self.scissor_height)
+   local ocx, ocy = self.coords:tile_to_screen(self.offset_tx+1, self.offset_ty+1)
+   local scx, scy = x + ocx, y + ocy
+   local scw, sch = self.scissor_width, self.scissor_height
+
+
+   Draw.set_line_width(4)
+   Draw.set_color(255, 0, 0)
+   Draw.line_rect(scx, scy, scw, sch)
+   Draw.set_line_width(0)
+   Draw.set_font(14)
+   Draw.text_shadowed(string.format("%d,%d", x, y), 400, 400)
+
+   Draw.set_scissor(scx, scy, scw, sch)
    Draw.set_color(255, 255, 255, self.shadow_strength)
    Draw.set_blend_mode("subtract")
    Draw.image(self.batch, x, y)
    Draw.image(self.edge_batch, x, y)
    Draw.set_scissor()
    Draw.set_color(255, 255, 255, self.shadow_strength * ((256-9) / 256))
-   local width, height = Draw.get_width(), Draw.get_height()
-   if x < self.scissor_x then
-      Draw.filled_rect(x, self.scissor_y, self.scissor_x - x, self.scissor_height)
+   if x < scx then
+      Draw.filled_rect(x, y, scx - x, sch + height)
    end
-   if y < self.scissor_y then
-      Draw.filled_rect(self.scissor_x, y, self.scissor_width, self.scissor_y - y)
+   if y < scy then
+      Draw.filled_rect(scx, y, scw, scy - y)
    end
-   if x + self.scissor_width < width then
-      -- Draw.filled_rect(self.scissor_x + x + self.scissor_width, y, width - (x + self.scissor_width), self.scissor_height)
+   if x + scw < width then
+      Draw.filled_rect(scx + scw, y, width - (scx + scw), sch + height)
    end
-   if y + self.scissor_height < height then
-      -- Draw.filled_rect(self.scissor_x + x, self.scissor_y + y + self.scissor_height, self.scissor_width, height - (y + self.scissor_height))
+   if y + sch < height then
+      Draw.filled_rect(scx, scy + sch, scw, height - (scy + sch))
    end
    Draw.set_blend_mode("alpha")
 end

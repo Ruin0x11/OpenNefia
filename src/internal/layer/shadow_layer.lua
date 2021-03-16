@@ -146,7 +146,7 @@ function shadow_layer:update(dt, screen_updated, scroll_frames)
    return false
 end
 
-function shadow_layer:draw(draw_x, draw_y, offx, offy)
+function shadow_layer:draw(draw_x, draw_y, width, height)
    Draw.set_blend_mode("add")
 
    for _, light in ipairs(self.lights) do
@@ -160,7 +160,7 @@ function shadow_layer:draw(draw_x, draw_y, offx, offy)
       end
    end
 
-   self.shadow_batch:draw(draw_x + offy, draw_y + offy, 0, 0)
+   self.shadow_batch:draw(draw_x, draw_y, width, height)
 end
 
 return shadow_layer

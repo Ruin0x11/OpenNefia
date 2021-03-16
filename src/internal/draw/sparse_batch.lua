@@ -168,12 +168,12 @@ function sparse_batch:update(dt)
    end
 end
 
-function sparse_batch:draw(x, y, offset_x, offset_y)
+function sparse_batch:draw(x, y, width, height)
    -- slight speedup
    local tw = self.tile_width
    local th = self.tile_height
-   offset_x = offset_x or 0
-   offset_y = offset_y or 0
+   local offset_x = 0
+   local offset_y = 0
 
    local xc = self.xcoords
    local yc = self.ycoords
@@ -181,10 +181,9 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
    local yo = self.yoffs
    local rots = self.rotations
 
-   local sx, sy, ox, oy = self.coords:get_start_offset(x, y, Draw.get_width(), Draw.get_height())
-   local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, self.width, self.height)
+   local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, width, height)
 
-   if self.updated then
+   if self.updated or true then
       for _, batch in ipairs(self.batches) do
          batch:clear()
       end
@@ -250,7 +249,7 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
 
             local cx = xc[ind]
             local cy = yc[ind]
-            if cx >= tx - 1 and cx < tdx and cy >= ty - 1 and cy < tdy then
+            if cx >= tx and cx < tdx and cy >= ty and cy < tdy then
                local i, j = self.coords:tile_to_screen(cx - tx, cy - ty)
                local px = i + xo[ind]
                local py = j + yo[ind]
@@ -296,21 +295,28 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
       self.updated = false
    end
 
+   if x < 0 then
+      x = -tw + math.abs((x - 1) % tw)
+   end
+   if y < 0 then
+      y = -th + math.abs((y - 1) % th)
+   end
+
    for idx = 1, #self.to_draw_inds do
       local ind = self.to_draw_inds[idx]
       local drawable = self.to_draw_drawables[idx]
       if drawable.draw then
          local i, j = self.coords:tile_to_screen(xc[ind] - tx, yc[ind] - ty)
-         drawable:draw(sx + ox - tw + offset_x + i + xo[ind],
-                       sy + oy - th + offset_y + j + yo[ind],
+         drawable:draw(x - tw + offset_x + i + xo[ind],
+                       y - th + offset_y + j + yo[ind],
                        nil,
                        nil,
                        false,
                        rots[ind])
       else
          love.graphics.draw(drawable,
-                            sx + ox - tw + offset_x,
-                            sy + oy - th + offset_y)
+                            x - tw + offset_x,
+                            y - th + offset_y)
       end
    end
 end

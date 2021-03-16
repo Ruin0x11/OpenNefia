@@ -130,6 +130,7 @@ function field_renderer:draw()
    local sx, sy, ox, oy = Draw.get_coords():get_start_offset(draw_x, draw_y)
 
    local mouse_x, mouse_y = require("api.Input").mouse_pos()
+   -- mouse_x = 1200; mouse_y = 400
    local width, height = Draw.get_width(), Draw.get_height()
 
    for _, l, tag in self.layers:iter() do
