@@ -53,9 +53,21 @@ end
 
 function tiled_coords:get_draw_pos(tx, ty, mw, mh, width, height)
    local tile_size = 48
-   local x = math.clamp(tx * tile_size - math.floor(width / 2) + math.floor(tile_size / 2), 0, mw * tile_size - width)
-   local y = math.clamp(ty * tile_size - math.floor(height / 2) + math.floor(tile_size / 2), 0, mh * tile_size - height + (72 + 16))
-   return x, y
+
+   local msw = mw * tile_size
+   local msh = mh * tile_size
+
+   local max_x = (msw - width)
+   local max_y = (msh - height + (72 + 16))
+
+   local sx = tx * tile_size
+   local sy = ty * tile_size + 16
+   local offset_x = math.max((width - msw) / 2, 0)
+   local offset_y = math.max((height - msh) / 2, 0)
+
+   local x = math.clamp(-sx + width/2, -max_x, 0)
+   local y = math.clamp(-sy + height/2, -max_y, 0)
+   return math.floor(x + offset_x), math.floor(y + offset_y)
 end
 
 return tiled_coords

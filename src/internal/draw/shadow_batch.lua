@@ -348,14 +348,6 @@ function shadow_batch:draw(x, y, width, height)
    local scx, scy = x + ocx, y + ocy
    local scw, sch = self.scissor_width, self.scissor_height
 
-
-   Draw.set_line_width(4)
-   Draw.set_color(255, 0, 0)
-   Draw.line_rect(scx, scy, scw, sch)
-   Draw.set_line_width(0)
-   Draw.set_font(14)
-   Draw.text_shadowed(string.format("%d,%d", x, y), 400, 400)
-
    Draw.set_scissor(scx, scy, scw, sch)
    Draw.set_color(255, 255, 255, self.shadow_strength)
    Draw.set_blend_mode("subtract")
@@ -364,7 +356,7 @@ function shadow_batch:draw(x, y, width, height)
    Draw.set_scissor()
    Draw.set_color(255, 255, 255, self.shadow_strength * ((256-9) / 256))
    if x < scx then
-      Draw.filled_rect(x, y, scx - x, sch + height)
+      Draw.filled_rect(x, scy, scx - x, sch + height)
    end
    if y < scy then
       Draw.filled_rect(scx, y, scw, scy - y)

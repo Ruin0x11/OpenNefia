@@ -99,8 +99,8 @@ function field_renderer:update_draw_pos(player_x, player_y, scroll_frames)
                                                    player_y,
                                                    self.map_width,
                                                    self.map_height,
-                                                   Draw.get_width(),
-                                                   Draw.get_height())
+                                                   self.width,
+                                                   self.height)
 
    if scroll_frames then
       self:set_scroll(self.draw_x - draw_x, self.draw_y - draw_y, scroll_frames)
@@ -130,12 +130,11 @@ function field_renderer:draw()
    local sx, sy, ox, oy = Draw.get_coords():get_start_offset(draw_x, draw_y)
 
    local mouse_x, mouse_y = require("api.Input").mouse_pos()
-   -- mouse_x = 1200; mouse_y = 400
    local width, height = Draw.get_width(), Draw.get_height()
 
    for _, l, tag in self.layers:iter() do
       if self.enabled[tag] ~= false then
-         local ok, result = xpcall(function() l:draw(-mouse_x, -mouse_y, width, height) end, debug.traceback)
+         local ok, result = xpcall(function() l:draw(draw_x, draw_y, width, height) end, debug.traceback)
          if not ok then
             Log.error("%s", result)
          end

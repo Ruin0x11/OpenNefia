@@ -97,9 +97,7 @@ function tile_overhang_layer:update(dt, screen_updated)
    self.overhang_batch.updated = true
 end
 
-function tile_overhang_layer:draw_shadows(draw_x, draw_y, offx, offy)
-   local sx, sy = 0, 0
-
+function tile_overhang_layer:draw_shadows(draw_x, draw_y)
    Draw.set_blend_mode("subtract")
    Draw.set_color(255, 255, 255, 20)
 
@@ -107,8 +105,8 @@ function tile_overhang_layer:draw_shadows(draw_x, draw_y, offx, offy)
    for ind, _ in pairs(self.top_shadows) do
       local x = ind % self.overhang_batch.width
       local y = math.floor(ind / self.overhang_batch.width)
-      Draw.filled_rect(x * self.tile_width - draw_x - offx + sx,
-                       y * self.tile_height - draw_y - offy + sy - 20,
+      Draw.filled_rect(x * self.tile_width + draw_x,
+                       y * self.tile_height + draw_y - 8,
                        self.tile_width,
                        math.floor(self.tile_height / 6))
    end
@@ -119,14 +117,14 @@ function tile_overhang_layer:draw_shadows(draw_x, draw_y, offx, offy)
       local y = math.floor(ind / self.overhang_batch.width)
 
       Draw.set_color(255, 255, 255, 16)
-      Draw.filled_rect(x * self.tile_width - draw_x - offx + sx,
-                       (y+1) * self.tile_height - draw_y - offy + sy,
+      Draw.filled_rect(x * self.tile_width + draw_x,
+                       (y+1) * self.tile_height + draw_y,
                        self.tile_width,
                        math.floor(self.tile_height / 2))
 
       Draw.set_color(255, 255, 255, 12)
-      Draw.filled_rect(x * self.tile_width - draw_x - offx + sx,
-                       (y+1) * self.tile_height - draw_y - offy + sy + 24,
+      Draw.filled_rect(x * self.tile_width + draw_x,
+                       (y+1) * self.tile_height + draw_y + 24,
                        self.tile_width,
                        math.floor(self.tile_height / 4))
    end
