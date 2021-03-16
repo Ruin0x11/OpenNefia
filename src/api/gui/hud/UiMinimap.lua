@@ -53,8 +53,11 @@ function UiMinimap:refresh_visible(map)
    self.tile_batch:clear()
 
    -- >>>>>>>> shade2/screen.hsp:1270 *rader_preDraw ..
-   for _, x, y, tile in map:iter_tiles() do
+   for _, x, y in map:iter_tiles() do
       if map:is_memorized(x, y) then
+         local memory = map:memory(x, y, "base.map_tile")
+         local tile = assert(memory[1])
+
          local color
          if tile.is_solid then
             -- TODO Use subtractive blending, since the original code uses
