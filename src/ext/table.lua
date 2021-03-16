@@ -455,18 +455,18 @@ end
 -- @treturn string
 function table.print(t, params)
    if not (t[1] ~= nil and t[1][1] ~= nil) then
-      return "(empty)"
+      return {}
    end
 
    local columns = #t[1]
    local widths = table.of(0, columns)
-   local spacing = params.spacing or 1
+   local spacing = params and params.spacing or 1
 
-   if params.sort then
+   if params and params.sort then
       table.sort(t, function(a, b) return a[params.sort] < b[params.sort] end)
    end
 
-   if params.header then
+   if params and params.header then
       for j, item in ipairs(params.header) do
          widths[j] = math.max(widths[j], utf8.wide_len(item) + spacing)
       end
@@ -480,23 +480,26 @@ function table.print(t, params)
 
    local total_width = ireduce(widths, function(sum, n) return sum + n + 1 end, 0)
 
-   local s = ""
+   local lines = {}
 
-   if params.header then
+   if params and params.header then
+      local s = ""
       for j, item in ipairs(params.header) do
          s = s .. string.format("%s", right_pad(item, widths[j] + spacing))
       end
-      s = s .. "\n" .. string.rep('-', total_width) .. "\n"
+      lines[#lines+1] = s
+      lines[#lines+1] = string.rep('-', total_width)
    end
 
    for i, row in ipairs(t) do
+      local s = ""
       for j, item in ipairs(row) do
          s = s .. string.format("%s", right_pad(tostring(item), widths[j] + spacing))
       end
-      s = s .. "\n"
+      lines[#lines+1] = s
    end
 
-   return s
+   return lines
 end
 
 --- Sorts a table in O(n^2) time in a stable manner. Ported from Elona
@@ -666,4 +669,10 @@ function table.readonly(t)
    }
    setmetatable(proxy, mt)
    return proxy
+end
+
+function table.clear(tbl)
+   for k, _ in pairs(tbl) do
+      tbl[k] = nil
+   end
 end

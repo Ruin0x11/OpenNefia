@@ -68,6 +68,9 @@ Env.is_valid_ident = env.is_valid_ident
 -- @function Env.assert_is_valid_ident
 Env.assert_is_valid_ident = env.assert_is_valid_ident
 
+-- @function Env.get_loaded_module_paths
+Env.get_loaded_module_paths = env.get_loaded_module_paths
+
 local time_begin = Env.get_time()
 
 function Env.get_play_time(old_play_time)

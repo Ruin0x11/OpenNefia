@@ -8,6 +8,7 @@ local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Building = require("mod.elona.api.Building")
 local Nefia = require("mod.elona.api.Nefia")
 local Rand = require("api.Rand")
+local Tools = require("mod.tools.api.Tools")
 
 require("mod.test_room.data")
 
@@ -88,6 +89,8 @@ local function on_game_start(self, player)
 
    Map.set_map(map)
    map:take_object(player, 25, 25)
+
+   Tools.powerup(player)
 end
 
 data:add {
