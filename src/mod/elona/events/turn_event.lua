@@ -127,6 +127,9 @@ Event.register("elona_sys.before_player_move", "Leave footsteps", leave_footstep
 
 local function proc_random_encounter(chara, params, result)
    -- >>>>>>>> shade2/action.hsp:647 	if mType=mTypeWorld:if cc=pc{ ...
+   if config.elona.debug_no_encounters then
+      return result
+   end
    if not chara:is_player() then
       return result
    end

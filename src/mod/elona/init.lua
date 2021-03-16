@@ -19,6 +19,7 @@ data:add_multi(
       { _id = "debug_always_drop_remains", type = "boolean", default = false },
       { _id = "debug_production_versatile_tool", type = "boolean", default = false },
       { _id = "debug_fishing", type = "boolean", default = false },
+      { _id = "debug_no_encounters", type = "boolean", default = false },
    }
 )
 
