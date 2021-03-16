@@ -56,8 +56,8 @@ function UiMinimap:refresh_visible(map)
 
    local mw = map:width()
    local mh = map:height()
-   self.tw = math.ceil(self.width / mw)
-   self.th = math.ceil(self.height / mh)
+   self.tw = self.width / mw
+   self.th = self.height / mh
 
    self.tile_batch:clear()
 
@@ -69,7 +69,7 @@ function UiMinimap:refresh_visible(map)
       if memory and memory[ind] and memory[ind][1] then
          local tile = memory[ind][1]
 
-         local sx, sy, sw, sh = math.ceil(x * self.tw), math.ceil(y * self.th), self.tw, self.th
+         local sx, sy, sw, sh = math.ceil(x * self.tw), math.ceil(y * self.th), math.ceil(self.tw), math.ceil(self.th)
 
          self.tile_batch:add(tile._id, sx, sy, sw, sh)
 

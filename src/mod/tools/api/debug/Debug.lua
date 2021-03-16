@@ -15,9 +15,9 @@ function Debug.toggle_stats_widget(show)
    holder:set_enabled(show)
 
    if show then
-      Gui.mes("debug.stats_widget.showing")
+      Gui.mes("debug.mes.stats_widget.showing")
    else
-      Gui.mes("debug.stats_widget.hiding")
+      Gui.mes("debug.mes.stats_widget.hiding")
    end
 end
 
@@ -70,7 +70,8 @@ function Debug.query_debug_menu()
          { text = "debug.prompt.toggle_stats_widget", index = 1 },
          { text = "debug.prompt.watch_api", index = 2 },
          { text = "debug.prompt.unwatch_api", index = 3 },
-         { text = "debug.prompt.clear_stats", index = 4 },
+         { text = "debug.prompt.unwatch_all", index = 4 },
+         { text = "debug.prompt.clear_stats", index = 5 },
       }
       local result
       result, canceled = Prompt:new(options):query()
@@ -88,6 +89,9 @@ function Debug.query_debug_menu()
       elseif index == 3 then
          Debug.query_unwatch_api()
       elseif index == 4 then
+         DebugStatsHook.unhook_all()
+         Gui.mes("debug.mes.unwatched_all")
+      elseif index == 5 then
          DebugStatsHook.clear_results()
       end
    end

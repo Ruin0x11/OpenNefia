@@ -6,6 +6,8 @@ local state = require("mod.tools.internal.global")
 
 local DebugStatsHook = {}
 
+local MEMORY_OVERHEAD = 0.05
+
 local function make_advice_id(api, fn_name)
    return ("Hook %s.%s"):format(api, fn_name)
 end
@@ -39,11 +41,7 @@ function DebugStatsHook.hook(api)
             rec.hits = rec.hits + 1
             rec.time = rec.time + time:measure()
 
-            local mem_meas = mem:measure()
-            if mem_meas > 0 then
-               rec.mem_hits = rec.mem_hits + 1
-               rec.mem = rec.mem + mem_meas
-            end
+            rec.mem = rec.mem + math.max(0, mem:measure() - MEMORY_OVERHEAD)
 
             return table.unpack(results, 1, table.maxn(results))
          end
