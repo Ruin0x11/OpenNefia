@@ -3308,14 +3308,14 @@ local chara = {
       flags = { "IsSuitableForMount" },
       ai_actions = {
          sub = {
-            { id = "elona.skill", skill_id = "elona.action_chaos_breath" }
+            { id = "elona.skill", skill_id = "elona.action_darkness_breath" }
          },
          sub_action_chance = 12
       },
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
-         "elona.action_chaos_breath"
+         "elona.action_darkness_breath"
       }
    },
    {
@@ -3338,14 +3338,14 @@ local chara = {
       flags = { "IsSuitableForMount" },
       ai_actions = {
          sub = {
-            { id = "elona.skill", skill_id = "elona.action_nerve_breath" }
+            { id = "elona.skill", skill_id = "elona.action_mind_breath" }
          },
          sub_action_chance = 12
       },
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
-         "elona.action_nerve_breath"
+         "elona.action_mind_breath"
       }
    },
    {
@@ -3368,14 +3368,14 @@ local chara = {
       flags = { "IsSuitableForMount" },
       ai_actions = {
          sub = {
-            { id = "elona.skill", skill_id = "elona.action_darkness_breath" }
+            { id = "elona.skill", skill_id = "elona.action_nerve_breath" }
          },
          sub_action_chance = 12
       },
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
-         "elona.action_darkness_breath"
+         "elona.action_nerve_breath"
       }
    },
    {
@@ -3398,14 +3398,14 @@ local chara = {
       flags = { "IsSuitableForMount" },
       ai_actions = {
          sub = {
-            { id = "elona.skill", skill_id = "elona.action_mind_breath" }
+            { id = "elona.skill", skill_id = "elona.action_poison_breath" }
          },
          sub_action_chance = 12
       },
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
-         "elona.action_mind_breath"
+         "elona.action_poison_breath"
       }
    },
    {
@@ -3428,14 +3428,14 @@ local chara = {
       flags = { "IsSuitableForMount" },
       ai_actions = {
          sub = {
-            { id = "elona.skill", skill_id = "elona.action_nether_breath" }
+            { id = "elona.skill", skill_id = "elona.action_sound_breath" }
          },
          sub_action_chance = 12
       },
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
-         "elona.action_nether_breath"
+         "elona.action_sound_breath"
       }
    },
    {
@@ -3458,14 +3458,14 @@ local chara = {
       flags = { "IsSuitableForMount" },
       ai_actions = {
          sub = {
-            { id = "elona.skill", skill_id = "elona.action_sound_breath" }
+            { id = "elona.skill", skill_id = "elona.action_nether_breath" }
          },
          sub_action_chance = 12
       },
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
-         "elona.action_sound_breath"
+         "elona.action_nether_breath"
       }
    },
    {
@@ -3488,14 +3488,14 @@ local chara = {
       flags = { "IsSuitableForMount" },
       ai_actions = {
          sub = {
-            { id = "elona.skill", skill_id = "elona.action_poison_breath" }
+            { id = "elona.skill", skill_id = "elona.action_chaos_breath" }
          },
          sub_action_chance = 12
       },
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
-         "elona.action_poison_breath"
+         "elona.action_chaos_breath"
       }
    },
    {
@@ -5085,14 +5085,14 @@ local chara = {
       coefficient = 400,
       ai_actions = {
          sub = {
-            { id = "elona.skill", skill_id = "elona.action_sound_breath" }
+            { id = "elona.skill", skill_id = "elona.action_nether_breath" }
          },
          sub_action_chance = 15
       },
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
-         "elona.action_sound_breath"
+         "elona.action_nether_breath"
       }
    },
    {
@@ -5112,14 +5112,14 @@ local chara = {
       coefficient = 400,
       ai_actions = {
          sub = {
-            { id = "elona.skill", skill_id = "elona.action_poison_breath" }
+            { id = "elona.skill", skill_id = "elona.action_chaos_breath" }
          },
          sub_action_chance = 15
       },
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
-         "elona.action_poison_breath"
+         "elona.action_chaos_breath"
       }
    },
    {
