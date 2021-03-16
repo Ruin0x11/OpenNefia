@@ -122,7 +122,6 @@ end
 function ElonaWorld.proc_world_regenerate(world_map)
    -- >>>>>>>> shade2/map.hsp:2353 *world_update ...
    if save.elona.about_to_regenerate_world_map then
-      save.elona.about_to_regenerate_world_map = false
       MapArchetype.generate_area_archetype_entrances(world_map, true)
    end
 
@@ -135,6 +134,8 @@ function ElonaWorld.proc_world_regenerate(world_map)
       entrance:refresh_cell_on_map()
       -- <<<<<<<< shade2/map.hsp:2442 	if (areaType(cnt)=mTypeTown)or(areaType(cnt)=mTyp ..
    end
+
+   save.elona.about_to_regenerate_world_map = false
    -- <<<<<<<< shade2/map.hsp:2381 	return ..
 end
 
