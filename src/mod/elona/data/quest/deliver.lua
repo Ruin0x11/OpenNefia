@@ -283,3 +283,13 @@ local function set_quest_target_emoicon(chara, params, result)
 end
 
 Event.register("base.on_chara_turn_end", "Set quest target emotion icon", set_quest_target_emoicon)
+
+local function reset_quest_emoicon(_, params)
+   local chara = params.client
+   if chara.emotion_icon == "elona.quest_target"
+      or chara.emotion_icon == "elona.quest_client"
+   then
+      chara:set_emotion_icon(nil)
+   end
+end
+Event.register("elona_sys.on_quest_completed", "Reset quest emotion icon", reset_quest_emoicon)
