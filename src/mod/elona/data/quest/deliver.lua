@@ -9,6 +9,7 @@ local Gui = require("api.Gui")
 local Event = require("api.Event")
 local Itemname = require("mod.elona.api.Itemname")
 local elona_Item = require("mod.elona.api.Item")
+local Effect = require("mod.elona.api.Effect")
 
 ---
 --- Data
@@ -131,7 +132,7 @@ function deliver.on_accept(self)
    end
 
    player:take_object(item)
-   Gui.mes("common.you_put_in_your_backpack", item)
+   Gui.mes("common.you_put_in_your_backpack", item:build_name(1))
    Gui.play_sound("base.inv")
 
    return true, "elona.quest_deliver:accept"
@@ -141,6 +142,24 @@ function deliver.on_complete(self, client, text)
    local platinum = Rand.rnd(2) + 1
    Quest.make_quest_rewards(self, nil, platinum)
    client.is_quest_delivery_target = nil
+end
+
+local mark_delivery_targets
+
+function deliver.on_failure(self)
+   -- >>>>>>>> shade2/quest.hsp:350 		if qExist(rq)=qDeliver{ ...
+   local player = Chara.player()
+   local map = player:current_map()
+   if map then
+      mark_delivery_targets(map)
+   end
+   Gui.mes_c("quest.deliver.you_commit_a_serious_crime", "Purple")
+   Effect.modify_karma(player, -20)
+   -- <<<<<<<< shade2/quest.hsp:354 			} ..
+end
+
+function deliver.target_chara_uids(self)
+   return { self.params.target_chara_uid }
 end
 
 data:add(deliver)
@@ -207,13 +226,24 @@ data:add {
 --- Events
 ---
 
-local function mark_delivery_targets(map)
+function mark_delivery_targets(map)
    local charas_with_delivery = Quest.iter_accepted()
-      :filter(function(q) return q.params.target_map_uid == map.uid and q._id == "elona.deliver" end)
+      :filter(function(q)
+            return q.params.target_map_uid == map.uid
+               and q._id == "elona.deliver"
+               and q.state == "accepted"
+             end)
       :map(function(q) return q.params.target_chara_uid, q.params.item_id end):to_map()
 
    for _, chara in map:iter_charas() do
-      chara.is_quest_delivery_target = charas_with_delivery[chara.uid]
+      local item_id = charas_with_delivery[chara.uid]
+      if chara.is_quest_delivery_target
+         and not item_id
+         and chara.emotion_icon == "elona.quest_target"
+      then
+         chara:set_emotion_icon(nil)
+      end
+      chara.is_quest_delivery_target = item_id or nil
    end
 end
 
@@ -253,3 +283,13 @@ local function set_quest_target_emoicon(chara, params, result)
 end
 
 Event.register("base.on_chara_turn_end", "Set quest target emotion icon", set_quest_target_emoicon)
+
+local function reset_quest_emoicon(_, params)
+   local chara = params.client
+   if chara.emotion_icon == "elona.quest_target"
+      or chara.emotion_icon == "elona.quest_client"
+   then
+      chara:set_emotion_icon(nil)
+   end
+end
+Event.register("elona_sys.on_quest_completed", "Reset quest emotion icon", reset_quest_emoicon)

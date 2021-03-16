@@ -144,8 +144,12 @@ function Advice.is_advised(require_path, fn_name, mod, identifier)
    end
 
    local advice = fns[fn_name]
+   if advice == nil then
+      return false
+   end
+
    if mod == nil then
-      return advice ~= nil
+      return true
    end
 
    for _, advice_fn in ipairs(advice.advice_fns) do
@@ -437,7 +441,6 @@ local function update_hotloaded_module_advice(_, params)
          advice.original_fn = field
          advice.merged_fn = rebuild_merged_advice_fn(advice)
          module_[ident] = advice.merged_fn
-         advice_state.advice[advice.merged_fn] = advice
       end
    end
 end

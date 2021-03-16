@@ -4,6 +4,7 @@ local Enum = require("api.Enum")
 local Weather = require("mod.elona.api.Weather")
 local Calc = require("mod.elona.api.Calc")
 local I18N = require("api.I18N")
+local Quest = require("mod.elona_sys.api.Quest")
 
 local role = {
    {
@@ -68,9 +69,20 @@ local role = {
       elona_id = 14,
 
       dialog_choices = {
-         function()
-            -- TODO quest
-            return {{"elona.guard:where_is", "talk.npc.guard.where_is"}}
+         function(speaker, state)
+            local map = speaker:current_map()
+            local to_choice = function(chara)
+               return {
+                  "elona.guard:where_is",
+                  I18N.get("talk.npc.guard.choices.where_is", chara),
+                  params = { chara_uid = chara.uid }
+               }
+
+            end
+            return Quest.iter_accepted()
+               :flatmap(function(quest) return Quest.find_target_charas(quest, map) end)
+               :map(to_choice)
+               :to_list()
          end,
          function()
             return {{"elona.guard:lost_item", "talk.npc.guard.lost_wallet"}}

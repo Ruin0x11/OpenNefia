@@ -37,7 +37,7 @@ Event.register("base.on_kill_chara", "npc memory",
                   end
                   local map = victim:current_map()
                   map.crowd_density = map.crowd_density - 1
-                  Effect.on_kill(params.source, victim)
+                  Effect.on_kill(victim, params.source)
                   -- TODO riding
                   -- TODO crowd
                   -- <<<<<<<< shade2/chara_func.hsp:1735 		check_kill dmgSource,tc ..

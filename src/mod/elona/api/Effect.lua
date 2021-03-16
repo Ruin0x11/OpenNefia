@@ -889,13 +889,46 @@ function Effect.add_buff(target, source, buff_id, power, duration)
    return true
 end
 
-function Effect.on_kill(attacker, victim)
+function Effect.on_kill(victim, attacker)
    -- >>>>>>>> shade2/chara_func.hsp:1121 #deffunc check_kill int cc,int tc ..
    -- TODO arena
 
    if class.is_an(IChara, attacker) then
+      local karma_lost = nil
       if attacker:is_in_player_party() then
-         save.base.total_killed = save.base.total_killed + 1
+         if not victim:is_in_player_party() then
+            save.base.total_killed = save.base.total_killed + 1
+            -- TODO fighter's guild
+            if victim._id == "elona.rich_person" then
+               karma_lost = -15
+            elseif victim._id == "elona.noble_child" then
+               karma_lost = -10
+            elseif victim._id == "elona.tourist" then
+               karma_lost = -5
+            end
+            if victim:find_role("elona.shopkeeper") then
+               karma_lost = -10
+            end
+            if victim:find_role("elona.adventurer") then
+               Skill.modify_impression(victim, -25)
+            end
+         end
+         if not attacker:is_player() then
+            if victim.impression < Const.IMPRESSION_MARRY then
+               if Rand.one_in(2) then
+                  Skill.modify_impression(attacker, 1)
+                  victim:set_emotion_icon("elona.heart", 3)
+               end
+            else
+               if Rand.one_in(10) then
+                  Skill.modify_impression(attacker, 1)
+                  victim:set_emotion_icon("elona.heart", 3)
+               end
+            end
+         end
+      end
+      if karma_lost then
+         Effect.modify_karma(Chara.player(), karma_lost)
       end
    end
    -- <<<<<<<< shade2/chara_func.hsp:1146 	return ..

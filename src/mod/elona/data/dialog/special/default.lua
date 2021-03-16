@@ -85,9 +85,9 @@ data:add {
             modify_impress_and_interest(t.speaker)
          end,
          text = talk_text,
-         choices = function(t)
+         choices = function(t, state)
             local speaker = t.speaker
-            local choices = speaker:emit("elona.calc_dialog_choices", {}, {})
+            local choices = speaker:emit("elona.calc_dialog_choices", {state=state}, {})
 
             table.insert(choices, {"__END__", "ui.bye"})
 

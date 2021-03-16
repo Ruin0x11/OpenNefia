@@ -60,7 +60,7 @@ local function proc_return(chara)
          end
 
          if Quest.is_non_returnable_quest_active() then
-            Gui.mes("quest.deliver.you_commit_a_serious_crime")
+            Gui.mes("magic.return.you_commit_a_crime")
             Effect.modify_karma(chara, -10)
          end
 

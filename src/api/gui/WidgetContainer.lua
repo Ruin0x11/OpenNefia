@@ -85,9 +85,11 @@ end
 function WidgetContainer:update(dt, map, screen_updated)
    self.updated = false
    for _, holder in self:iter() do
-      holder:widget():update(dt, map, screen_updated)
-      self.updated = self.updated or holder.updated
-      holder.updated = false
+      if holder:enabled() then
+         holder:widget():update(dt, map, screen_updated)
+         self.updated = self.updated or holder.updated
+         holder.updated = false
+      end
    end
 end
 

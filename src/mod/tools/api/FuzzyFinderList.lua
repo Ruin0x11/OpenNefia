@@ -98,6 +98,8 @@ function FuzzyFinderList:draw()
    local x = self.x + 10
    local y = self.topic_win.y
 
+   Draw.set_scissor(x, y, self.width - 20, self.height)
+
    self:update_offset()
    local entry_count = math.min(self.model:len()-self.offset, self.page_size)
    for i=self.offset,self.offset+entry_count do
@@ -120,6 +122,8 @@ function FuzzyFinderList:draw()
 
       Draw.text(cand[1], x, y, {255, 255, 255})
    end
+
+   Draw.set_scissor()
 end
 
 function FuzzyFinderList:update(dt)

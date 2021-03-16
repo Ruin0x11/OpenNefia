@@ -3,7 +3,6 @@ local Chara = require("api.Chara")
 local Calc = require("mod.elona.api.Calc")
 local Enum = require("api.Enum")
 local Charagen = require("mod.tools.api.Charagen")
-local Map = require("api.Map")
 local Feat = require("api.Feat")
 local Item = require("api.Item")
 local Filters = require("mod.elona.api.Filters")
@@ -13,7 +12,6 @@ local MapgenUtils = {}
 
 function MapgenUtils.spray_tile(map, tile_id, density)
    local n = math.floor(map:width() * map:height() * density / 100 + 1)
-   print(n,tile_id)
 
    for _=1,n do
       local x = Rand.rnd(map:width())

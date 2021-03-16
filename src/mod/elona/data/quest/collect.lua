@@ -84,6 +84,10 @@ local collect = {
          item_name = Itemname.qualify_article(Itemname.qualify_name(self.params.target_item_id)),
          target_name = target_name
       }
+   end,
+
+   target_chara_uids = function(self)
+      return { self.params.target_chara_uid }
    end
 }
 data:add(collect)

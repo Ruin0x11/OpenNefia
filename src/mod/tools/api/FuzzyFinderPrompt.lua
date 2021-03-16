@@ -24,6 +24,7 @@ function FuzzyFinderPrompt:init(cands, opts)
    end
 
    opts.get_name = opts.get_name or tostring
+   opts.prompt_length = opts.prompt_length or 20
 
    for i=1,#cands do
       if type(cands[i]) == "string" then
@@ -38,7 +39,7 @@ function FuzzyFinderPrompt:init(cands, opts)
    self.match_opts = opts.match_opts or {}
    self.last_search = nil
    self.list = FuzzyFinderList:new(cands)
-   self.text_prompt = TextPrompt:new(opts.prompt_length or 20, true, false, false, nil, opts.initial_prompt, false)
+   self.text_prompt = TextPrompt:new(opts.prompt_length, true, false, false, nil, opts.initial_prompt, false)
    self.input = InputHandler:new(TextHandler:new())
    self.input:bind_keys(self:make_keymap())
    self.input:forward_to({self.list, self.text_prompt})
@@ -104,7 +105,7 @@ local function get_matched_regions(query, cand)
          regions[#regions+1] = {0, 0}
       else
          local regex = ("(%s).*"):format(part)
-         local start, _, matched = string.find(cand, regex, the_start)
+         local start, _, matched = string.find(cand:lower(), regex, the_start)
          start = start or the_start
 
          local start_pos = Draw.text_width(cand:sub(1, start-1))
@@ -120,7 +121,7 @@ function FuzzyFinderPrompt:update_match()
    local cands = self.cands
    local query = self.text_prompt:get_text()
    if self.last_search and string.match(query, "^" .. string.escape_for_gsub(self.last_search)) then
-      -- exclude candidates that did't match last time.
+      -- exclude candidates that didn't match last time.
       cands = self.matched_cands
    end
 

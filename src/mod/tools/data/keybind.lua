@@ -33,3 +33,9 @@ data:add {
    _id = "toggle_log",
    default = "ctrl_-"
 }
+
+data:add {
+   _type = "base.keybind",
+   _id = "show_debug_menu",
+   default = "f12"
+}

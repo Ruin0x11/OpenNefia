@@ -195,32 +195,32 @@ end
           response = "It's nothing."
         },
         where_is = {
-          close = function(_1, _2)
-  return ("I saw %s just a minute ago. Try %s.")
-  :format(basename(_2), _1)
-end,
-          dead = "Oh forget it, dead for now.",
           direction = {
             east = "east",
             north = "north",
             south = "south",
             west = "west"
           },
-          far = function(_1, _2)
-  return ("If you want to meet %s, you have to considerably walk to %s.")
-  :format(basename(_2), _1)
-end,
-          moderate = function(_1, _2)
-  return ("Walk to %s for a while, you'll find %s.")
-  :format(_1, basename(_2))
-end,
-          very_close = function(_1)
+          dead = "Oh forget it, dead for now.",
+          very_close = function(_1, _2, _3)
   return ("Oh look carefully before asking, just turn %s.")
-  :format(_1)
+  :format(_3)
 end,
-          very_far = function(_1, _2)
+          close = function(_1, _2, _3)
+  return ("I saw %s just a minute ago. Try %s.")
+  :format(basename(_2), _3)
+end,
+          moderate = function(_1, _2, _3)
+  return ("Walk to %s for a while, you'll find %s.")
+  :format(_3, basename(_2))
+end,
+          far = function(_1, _2, _3)
+  return ("If you want to meet %s, you have to considerably walk to %s.")
+  :format(basename(_2), _3)
+end,
+          very_far = function(_1, _2, _3)
   return ("You need to walk long way to %s to meet %s.")
-  :format(_1, basename(_2))
+  :format(_3, basename(_2))
 end
         }
       },

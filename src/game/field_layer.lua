@@ -48,6 +48,10 @@ function field_layer:init()
    self:register_draw_layer("shadow_layer", "internal.layer.shadow_layer")
 end
 
+function field_layer:default_z_order()
+   return 10000
+end
+
 function field_layer:make_keymap()
    return {}
 end
@@ -78,9 +82,9 @@ function field_layer:set_map(map)
    self.map = map
    self.map:redraw_all_tiles()
    if self.renderer == nil then
-      self.renderer = field_renderer:new(map:width(), map:height(), self.draw_layer_spec, self.hud)
+      self.renderer = field_renderer:new(map:width(), map:height(), self.draw_layer_spec)
    else
-      self.renderer:set_map_size(map:width(), map:height(), self.draw_layer_spec, self.hud)
+      self.renderer:set_map_size(map:width(), map:height(), self.draw_layer_spec)
    end
    self.renderer:relayout(self.x, self.y, self.width, self.height)
 
@@ -194,7 +198,6 @@ function field_layer:refresh_hud()
    local player = self.player
    self.hud:refresh(player)
 end
-
 
 function field_layer:get_message_window()
    return self.hud.widgets:get("hud_message_window"):widget()

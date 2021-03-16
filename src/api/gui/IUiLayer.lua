@@ -28,6 +28,8 @@ local function trimmed_traceback(err, regex)
    return table.concat(lines, "\n")
 end
 
+IUiLayer.DEFAULT_Z_ORDER = 100000
+
 --- Starts drawing this UI layer and switches input focus to it.
 ---
 --- @treturn[opt] any The value returned by the layer's `update`
@@ -44,7 +46,7 @@ function IUiLayer:query(z_order)
    end
 
    if z_order == nil then
-      z_order = self:default_z_order() or draw.get_max_z_order() or 100000
+      z_order = self:default_z_order() or IUiLayer.DEFAULT_Z_ORDER
    end
 
    assert(type(z_order) == "number", ("Z order must be number (got: %s)"):format(z_order))

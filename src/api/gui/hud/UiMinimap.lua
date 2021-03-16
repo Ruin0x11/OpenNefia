@@ -8,6 +8,7 @@ function UiMinimap:init()
    self.tw = 0
    self.th = 0
    self.tile_batch = nil
+   self.blocked_batch = nil
    self.player = nil
 end
 
@@ -24,6 +25,7 @@ function UiMinimap:default_widget_z_order()
 end
 
 function UiMinimap:relayout(x, y, width, height)
+   local Map = require("api.Map")
    self.x = x
    self.y = y
    self.width = width
@@ -31,6 +33,7 @@ function UiMinimap:relayout(x, y, width, height)
    self.t = UiTheme.load(self)
    self.tile_batch = Draw.make_chip_batch("tile")
    self.blocked_batch = Draw.make_chip_batch("chip")
+   self:refresh_visible(Map.current())
 end
 
 local SUBTRACT_COLOR = { 100, 100, 100 }
@@ -53,8 +56,8 @@ function UiMinimap:refresh_visible(map)
 
    local mw = map:width()
    local mh = map:height()
-   self.tw = math.ceil(self.width / mw)
-   self.th = math.ceil(self.height / mh)
+   self.tw = self.width / mw
+   self.th = self.height / mh
 
    self.tile_batch:clear()
 
@@ -62,11 +65,11 @@ function UiMinimap:refresh_visible(map)
    for ind = 1, mw * mh do
       local x = (ind-1) % mw
       local y = math.floor((ind-1) / mw)
-      local memory = map._memory["base.map_tile"][ind]
-      if memory and memory[1] then
-         local tile = memory[1]
+      local memory = map._memory["base.map_tile"]
+      if memory and memory[ind] and memory[ind][1] then
+         local tile = memory[ind][1]
 
-         local sx, sy, sw, sh = math.ceil(x * self.tw), math.ceil(y * self.th), self.tw, self.th
+         local sx, sy, sw, sh = math.ceil(x * self.tw), math.ceil(y * self.th), math.ceil(self.tw), math.ceil(self.th)
 
          self.tile_batch:add(tile._id, sx, sy, sw, sh)
 

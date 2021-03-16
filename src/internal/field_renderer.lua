@@ -6,7 +6,7 @@ local sound_manager = require("internal.global.global_sound_manager")
 
 local field_renderer = class.class("field_renderer")
 
-function field_renderer:init(map_width, map_height, draw_layer_spec, hud)
+function field_renderer:init(map_width, map_height, draw_layer_spec)
    local coords = Draw.get_coords()
 
    self.map_width = map_width
@@ -52,14 +52,6 @@ function field_renderer:init(map_width, map_height, draw_layer_spec, hud)
       self.layers:set(tag, instance, z_order)
       self.enabled[tag] = entry.enabled
    end
-
-   if hud then
-      hud:on_theme_switched(coords)
-      hud:reset()
-      local z_order = hud:default_z_order()
-      assert(type(z_order) == "number")
-      self.layers:set("hud", hud, z_order)
-   end
 end
 
 function field_renderer:on_theme_switched()
@@ -93,8 +85,8 @@ function field_renderer:set_layer_enabled(tag, enabled)
    self.enabled[tag] = not not enabled
 end
 
-function field_renderer:set_map_size(map_width, map_height, layers, hud)
-   self:init(map_width, map_height, layers, hud)
+function field_renderer:set_map_size(map_width, map_height, layers)
+   self:init(map_width, map_height, layers)
 end
 
 function field_renderer:set_scroll(dx, dy, scroll_frames)

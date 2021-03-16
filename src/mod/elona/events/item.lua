@@ -7,6 +7,8 @@ local Effect = require("mod.elona.api.Effect")
 local Log = require("api.Log")
 local World = require("api.World")
 local Ui = require("api.Ui")
+local Enum = require("api.Enum")
+local Skill = require("mod.elona_sys.api.Skill")
 
 local function proc_sandbag(chara)
    -- >>>>>>>> shade2/chara_func.hsp:1499 		if cBit(cSandBag,tc):cHp(tc)=cMhp(tc) ..
@@ -150,7 +152,7 @@ local function proc_item_eaten_is_spiked_with_love_potion(food, params, result)
       Gui.mes("food.effect.spiked.self")
    else
       Gui.mes_c("food.effect.spiked.other", "SkyBlue", chara)
-      Effect.modify_impression(chara, 30)
+      Skill.modify_impression(chara, 30)
       Effect.modify_karma(Chara.player(), -10)
       Effect.love_miracle(chara)
    end

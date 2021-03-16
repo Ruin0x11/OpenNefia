@@ -545,6 +545,7 @@ function Quest.complete(quest, client)
 end
 
 function Quest.fail(quest)
+   quest.state = "failed"
    Gui.mes("quest.failed_taken_from", quest.client_name)
    Event.trigger("elona_sys.on_quest_failed", {quest=quest})
 
@@ -662,6 +663,20 @@ function Quest.get_immediate_quest()
       quest = Quest.get(quest_uid)
    end
    return quest
+end
+
+function Quest.find_target_charas(quest, map)
+   local proto = data["elona_sys.quest"]:ensure(quest._id)
+   local targets = {}
+   if proto.target_chara_uids then
+      for _, uid in ipairs(proto.target_chara_uids(quest)) do
+         local chara = map:get_object_of_type("base.chara", uid)
+         if chara then
+            targets[#targets+1] = chara
+         end
+      end
+   end
+   return targets
 end
 
 return Quest

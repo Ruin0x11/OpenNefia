@@ -87,7 +87,7 @@ data:add {
       local damage = Rand.rnd(self.power / 25 + 5) + 1
       chara:damage_hp(damage, "elona.mef_acid", { element = "elona.acid", element_power = self.power })
       if not Chara.is_alive(chara) then
-         Effect.on_kill(origin or nil, chara)
+         Effect.on_kill(chara, origin or nil)
       end
    end,
 }
@@ -163,7 +163,7 @@ data:add {
       local damage = Rand.rnd(self.power / 15 + 5) + 1
       chara:damage_hp(damage, "elona.mef_fire", { element = "elona.fire", element_power = self.power })
       if not Chara.is_alive(chara) then
-         Effect.on_kill(origin or nil, chara)
+         Effect.on_kill(chara, origin or nil)
       end
    end,
 
@@ -231,7 +231,7 @@ data:add {
       end
 
       if not Chara.is_alive(chara) then
-         Effect.on_kill(origin or nil, chara)
+         Effect.on_kill(chara, origin or nil)
       end
 
       self:remove_ownership()
