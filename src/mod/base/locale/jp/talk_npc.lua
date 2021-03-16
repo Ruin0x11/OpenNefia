@@ -234,35 +234,35 @@ return {
                response = "当然のことだ"
             },
             where_is = {
-               close = function(_1, _2, _3)
-                  return ("ちょっと前に%sの方で見かけた%s")
-                     :format(_1, yo(_3))
-               end,
-               dead = function(_1)
-                  return ("奴なら今は死んでいる%s")
-                     :format(yo(_1, 2))
-               end,
                direction = {
                   east = "東",
                   north = "北",
                   south = "南",
                   west = "西"
                },
-               far = function(_1, _2, _3)
-                  return ("%sに会いたいのなら、%sにかなり歩く必要があ%s")
-                     :format(basename(_2), _1, ru(_3))
-               end,
-               moderate = function(_1, _2)
-                  return ("%sなら%sの方角を探してごらん。")
-                     :format(basename(_2), _1)
+               dead = function(_1)
+                  return ("奴なら今は死んでいる%s")
+                     :format(yo(_1, 2))
                end,
                very_close = function(_1, _2, _3)
                   return ("%sならすぐ近くにいる%s%sの方を向いてごらん。")
-                     :format(basename(_2), yo(_3), _1)
+                     :format(basename(_2), yo(_1), _3)
+               end,
+               close = function(_1, _2, _3)
+                  return ("ちょっと前に%sの方で見かけた%s")
+                     :format(_3, yo(_1))
+               end,
+               moderate = function(_1, _2, _3)
+                  return ("%sなら%sの方角を探してごらん。")
+                     :format(basename(_2), _3)
+               end,
+               far = function(_1, _2, _3)
+                  return ("%sに会いたいのなら、%sにかなり歩く必要があ%s")
+                     :format(basename(_2), _3, ru(_1))
                end,
                very_far = function(_1, _2, _3)
                   return ("%s%s、ここから%sの物凄く離れた場所にいるはず%s")
-                     :format(basename(_2), ka(_3, 3), _1, da(_3))
+                     :format(basename(_2), ka(_1, 3), _3, da(_1))
                end
             }
          },

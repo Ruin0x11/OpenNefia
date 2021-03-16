@@ -665,4 +665,18 @@ function Quest.get_immediate_quest()
    return quest
 end
 
+function Quest.find_target_charas(quest, map)
+   local proto = data["elona_sys.quest"]:ensure(quest._id)
+   local targets = {}
+   if proto.target_chara_uids then
+      for _, uid in ipairs(proto.target_chara_uids(quest)) do
+         local chara = map:get_object_of_type("base.chara", uid)
+         if chara then
+            targets[#targets+1] = chara
+         end
+      end
+   end
+   return targets
+end
+
 return Quest

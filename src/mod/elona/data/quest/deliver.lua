@@ -158,6 +158,10 @@ function deliver.on_failure(self)
    -- <<<<<<<< shade2/quest.hsp:354 			} ..
 end
 
+function deliver.target_chara_uids(self)
+   return { self.params.target_chara_uid }
+end
+
 data:add(deliver)
 
 

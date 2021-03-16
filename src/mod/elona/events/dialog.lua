@@ -9,7 +9,7 @@ local function calc_dialog_choices(speaker, params, result)
       if role_data.dialog_choices then
          for _, choice in ipairs(role_data.dialog_choices) do
             if type(choice) == "function" then
-               local choices = choice(speaker, params)
+               local choices = choice(speaker, params.state)
                if choices ~= nil then
                   assert(type(choices) == "table")
                   for _, choice in ipairs(choices) do

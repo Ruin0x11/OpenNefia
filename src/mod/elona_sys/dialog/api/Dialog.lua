@@ -316,8 +316,12 @@ local function step_dialog(node_data, talk, state, prev_node_id)
             dialog_error(talk, "Error getting dialog text", texts)
          end
 
+         if type(texts) == "string" then
+            texts = { texts }
+         end
+
          if type(texts) ~= "table" then
-            dialog_error(talk, "`text` function must return a table of strings")
+            dialog_error(talk, "`text` function must return a string or a table of strings")
          end
       end
 
