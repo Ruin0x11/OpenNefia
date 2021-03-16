@@ -573,8 +573,8 @@ Event.register("elona_sys.on_quest_completed", "Create default quest rewards", q
 local function quest_failed_callback(_, params)
    local quest = params.quest
    local quest_data = data["elona_sys.quest"]:ensure(quest._id)
-   if quest_data.on_failed then
-      quest_data.on_failed(quest)
+   if quest_data.on_failure then
+      quest_data.on_failure(quest)
    end
 end
 Event.register("elona_sys.on_quest_failed", "Run on_quest_failed callback", quest_failed_callback, 200000)

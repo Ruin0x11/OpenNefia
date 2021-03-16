@@ -545,6 +545,7 @@ function Quest.complete(quest, client)
 end
 
 function Quest.fail(quest)
+   quest.state = "failed"
    Gui.mes("quest.failed_taken_from", quest.client_name)
    Event.trigger("elona_sys.on_quest_failed", {quest=quest})
 

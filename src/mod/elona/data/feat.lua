@@ -248,12 +248,17 @@ local function travel(start_pos_fn, set_prev_map)
          local map_archetype = map:archetype()
 
          local function start_pos_or_archetype(map, chara, prev_map, self)
-            local pos = start_pos_fn(map, chara, prev_map, self)
-            if pos == nil then
-               Log.debug("No stairs found in connecting map, attempting to use map archetype's starting position.")
-               if map_archetype and map_archetype.starting_pos then
-                  pos = map_archetype.starting_pos(map, chara, prev_map, self)
+            local pos
+            if start_pos_fn then
+               pos = start_pos_fn(map, chara, prev_map, self)
+               if pos == nil then
+                  Log.debug("No stairs found in connecting map, attempting to use map archetype's starting position.")
+                  if map_archetype and map_archetype.starting_pos then
+                     pos = map_archetype.starting_pos(map, chara, prev_map, self)
+                  end
                end
+            elseif map_archetype and map_archetype.starting_pos then
+               pos = map_archetype.starting_pos(map, chara, prev_map, self)
             end
             return pos
          end
@@ -400,7 +405,7 @@ data:add
       self:mod("can_activate", true)
    end,
 
-   on_activate = travel(MapEntrance.stairs_up, true),
+   on_activate = travel(nil, true),
 
    on_descend = function(self, params) self.proto.on_activate(self, params) end,
 
