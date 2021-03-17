@@ -8,7 +8,7 @@ local Map = require("api.Map")
 local Pos = require("api.Pos")
 local EquipmentMenu = require("api.gui.menu.EquipmentMenu")
 local Save = require("api.Save")
-local elona_Magic = require("mod.elona.api.Magic")
+local ElonaMagic = require("mod.elona.api.ElonaMagic")
 local QuickMenuPrompt = require("api.gui.QuickMenuPrompt")
 local Log = require("api.Log")
 local ConfigMenuWrapper = require("api.gui.menu.config.ConfigMenuWrapper")
@@ -286,13 +286,13 @@ local function handle_spells_result(result, chara)
    local skill_id = result._id
 
    if command_type == "spell" then
-      local did_something = elona_Magic.cast_spell(skill_id, chara, false)
+      local did_something = ElonaMagic.cast_spell(skill_id, chara, false)
       if did_something then
          return "turn_end"
       end
       return "player_turn_query"
    elseif command_type == "skill" then
-      local did_something = elona_Magic.do_action(skill_id, chara)
+      local did_something = ElonaMagic.do_action(skill_id, chara)
       if did_something then
          return "turn_end"
       end

@@ -16,7 +16,7 @@ local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
 local Itemgen = require("mod.elona.api.Itemgen")
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
-local Magic = require("mod.elona.api.Magic")
+local ElonaMagic = require("mod.elona.api.ElonaMagic")
 local Quest = require("mod.elona_sys.api.Quest")
 local ElonaQuest = require("mod.elona.api.ElonaQuest")
 local I18N = require("api.I18N")
@@ -1099,7 +1099,7 @@ data:add {
             end
 
             local skill_level = params.chara:skill_level(self.params.skill_id)
-            local success = Magic.try_to_read_spellbook(params.chara, difficulty, skill_level)
+            local success = ElonaMagic.try_to_read_spellbook(params.chara, difficulty, skill_level)
 
             if not success then
                params.chara:remove_activity()
@@ -1209,7 +1209,7 @@ data:add {
             end
 
             local stat_level = params.chara:skill_level("elona.stat_magic")
-            local success = Magic.try_to_read_spellbook(params.chara, difficulty, stat_level)
+            local success = ElonaMagic.try_to_read_spellbook(params.chara, difficulty, stat_level)
 
             if not success then
                params.chara:remove_activity()

@@ -3,7 +3,7 @@ local Rand = require("api.Rand")
 local Gui = require("api.Gui")
 local Event = require("api.Event")
 local Chara = require("api.Chara")
-local Magic = require("mod.elona.api.Magic")
+local ElonaMagic = require("mod.elona.api.ElonaMagic")
 local I18N = require("api.I18N")
 local Enum = require("api.Enum")
 
@@ -57,7 +57,7 @@ local function make_buff(opts)
       alignment = (opts.type == "hex" and "negative") or "positive",
 
       cast = function(self, params)
-         return Magic.apply_buff("elona." .. opts._id, params)
+         return ElonaMagic.apply_buff("elona." .. opts._id, params)
       end
    }
 end

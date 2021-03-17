@@ -11,19 +11,19 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Input = require("api.Input")
 local Anim = require("mod.elona_sys.api.Anim")
 local Action = require("api.Action")
-local elona_sys_Magic = require("mod.elona_sys.api.Magic")
+local Magic = require("mod.elona_sys.api.Magic")
 local Enum = require("api.Enum")
 local SkillCheck = require("mod.elona.api.SkillCheck")
 local Log = require("api.Log")
 local Hunger = require("mod.elona.api.Hunger")
 local Const = require("api.Const")
 
-local Magic = {}
+local ElonaMagic = {}
 
 -- BUG: we have to return false or nil instead of player_turn_query to support
 -- characters other than the player using items!
 
-function Magic.drink_potion(magic_id, power, item, params)
+function ElonaMagic.drink_potion(magic_id, power, item, params)
    -- TODO: allow multiple magic IDs to be passed at once, or maybe a callback
    -- function even.
    local chara = params.chara
@@ -52,7 +52,7 @@ function Magic.drink_potion(magic_id, power, item, params)
       curse_state = curse_state,
       triggered_by = triggered_by
    }
-   local did_something, result = elona_sys_Magic.cast(magic_id, magic_params)
+   local did_something, result = Magic.cast(magic_id, magic_params)
 
    if result and item and chara:is_player() and result.obvious then
       Effect.identify_item(item, Enum.IdentifyState.Name)
@@ -94,7 +94,7 @@ local function proc_well_events(well, chara)
 
    if well._id == "elona.holy_well" then
       if Rand.one_in(2) then
-         elona_sys_Magic.cast("elona.wish")
+         Magic.cast("elona.wish")
          return
       end
    end
@@ -126,7 +126,7 @@ local function proc_well_events(well, chara)
    -- <<<<<<<< shade2/proc.hsp:1462 	return true ..
 end
 
-function Magic.drink_well(item, params)
+function ElonaMagic.drink_well(item, params)
    -- >>>>>>>> shade2/proc.hsp:1383 *drinkWell ..
    local chara = params.chara
 
@@ -149,7 +149,7 @@ end
 --- @tparam table magic
 --- @tparam table params
 --- @treturn string
-function Magic.read_scroll(item, magic, params)
+function ElonaMagic.read_scroll(item, magic, params)
    -- >>>>>>>> shade2/proc.hsp:1465 *readScroll ..
    params = params or {}
    params.chara = params.chara or nil
@@ -186,7 +186,7 @@ function Magic.read_scroll(item, magic, params)
       local magic_id = pair._id
       local power = pair.power
       assert(magic_id and power, ("Missing _id (%s) or power (%s) for magic callback"):format(magic_id, power))
-      did_something, result = elona_sys_Magic.cast(magic_id, {power=power,item=item,source=chara,target=chara})
+      did_something, result = Magic.cast(magic_id, {power=power,item=item,source=chara,target=chara})
    end
 
    result = result or {}
@@ -207,11 +207,11 @@ end
 --- @tparam uint power
 --- @tparam table params
 --- @treturn string
-function Magic.zap_wand(item, magic_id, power, params)
+function ElonaMagic.zap_wand(item, magic_id, power, params)
    -- >>>>>>>> shade2/proc.hsp:1491 *zapStaff ..
    params = params or {}
 
-   local skill_data = elona_sys_Magic.skills_for_magic(magic_id)[1] or nil
+   local skill_data = Magic.skills_for_magic(magic_id)[1] or nil
    local chara = params.chara or item:get_owning_chara()
 
    if item.charges <= 0 then
@@ -230,7 +230,7 @@ function Magic.zap_wand(item, magic_id, power, params)
    if skill_data then
       local target = chara:get_target()
       local success
-      success, magic_pos = elona_sys_Magic.get_magic_location(skill_data.target_type,
+      success, magic_pos = Magic.get_magic_location(skill_data.target_type,
                                                               skill_data.range,
                                                               chara,
                                                               params.triggered_by or "wand",
@@ -292,7 +292,7 @@ function Magic.zap_wand(item, magic_id, power, params)
          source = magic_pos.source,
          target = magic_pos.target
       }
-      local did_something, result = elona_sys_Magic.cast(magic_id, magic_params)
+      local did_something, result = Magic.cast(magic_id, magic_params)
 
       result = result or {}
       if result.obvious == nil then
@@ -323,7 +323,7 @@ function Magic.zap_wand(item, magic_id, power, params)
    -- <<<<<<<< shade2/proc.hsp:1536 	return true ..
 end
 
-function Magic.check_can_cast_spell(skill_id, caster)
+function ElonaMagic.check_can_cast_spell(skill_id, caster)
    local skill_data = data["base.skill"]:ensure(skill_id)
 
    if skill_data.on_check_can_cast then
@@ -335,7 +335,7 @@ function Magic.check_can_cast_spell(skill_id, caster)
    return true
 end
 
-function Magic.calc_spellbook_success(chara, difficulty, skill_level)
+function ElonaMagic.calc_spellbook_success(chara, difficulty, skill_level)
    -- >>>>>>>> shade2/calculation.hsp:1079 *calcReadCheck	 ..
    if chara:has_effect("elona.blindness") then
       return false
@@ -368,7 +368,7 @@ function Magic.calc_spellbook_success(chara, difficulty, skill_level)
    return true
 end
 
-function Magic.fail_to_read_spellbook(chara, difficulty, skill_level)
+function ElonaMagic.fail_to_read_spellbook(chara, difficulty, skill_level)
    -- >>>>>>>> shade2/calculation.hsp:1092 	if rnd(4)=0{ ...
    if Rand.one_in(4) then
       Gui.mes_visible("misc.fail_to_cast.mana_is_absorbed", chara)
@@ -409,27 +409,27 @@ function Magic.fail_to_read_spellbook(chara, difficulty, skill_level)
    end
 
    Gui.mes_visible("misc.fail_to_cast.dimension_door_opens", chara)
-   elona_sys_Magic.cast("elona.teleport", { source = chara, target = chara })
+   Magic.cast("elona.teleport", { source = chara, target = chara })
 
    return
       -- <<<<<<<< shade2/calculation.hsp:1114 	return false ..
 end
 
 -- Tries to read a spellbook, and on failure causes a negative effect to happen.
-function Magic.try_to_read_spellbook(chara, difficulty, skill_level)
+function ElonaMagic.try_to_read_spellbook(chara, difficulty, skill_level)
    -- >>>>>>>> shade2/calculation.hsp:1096 	if rnd(4)=0{ ..
-   local success = Magic.calc_spellbook_success(chara, difficulty, skill_level)
+   local success = ElonaMagic.calc_spellbook_success(chara, difficulty, skill_level)
    if success then
       return true
    end
 
-   Magic.fail_to_read_spellbook(chara, difficulty, skill_level)
+   ElonaMagic.fail_to_read_spellbook(chara, difficulty, skill_level)
 
    return false
    -- <<<<<<<< shade2/calculation.hsp:1118 	return false ..
 end
 
-function Magic.do_cast_spell(skill_id, caster, use_mp)
+function ElonaMagic.do_cast_spell(skill_id, caster, use_mp)
    -- >>>>>>>> elona122/shade2/proc.hsp:1282 *cast_proc ..
    local skill_data = data["base.skill"]:ensure(skill_id)
    local params = {
@@ -448,12 +448,12 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
       end
    end
 
-   if not Magic.check_can_cast_spell(skill_id, caster) then
+   if not ElonaMagic.check_can_cast_spell(skill_id, caster) then
       return false
    end
 
    local target = caster:get_target()
-   local success, result = elona_sys_Magic.get_magic_location(skill_data.target_type,
+   local success, result = Magic.get_magic_location(skill_data.target_type,
                                                               skill_data.range,
                                                               caster,
                                                               params.triggered_by,
@@ -483,7 +483,7 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
 
    if caster:has_effect("elona.confusion") or caster:has_effect("elona.dimming") then
       Gui.mes_visible("action.cast.confused", caster.x, caster.y, caster)
-      local success = Magic.try_to_read_spellbook(caster, skill_data.difficulty, caster:skill_level(skill_data._id))
+      local success = ElonaMagic.try_to_read_spellbook(caster, skill_data.difficulty, caster:skill_level(skill_data._id))
       if not success then
          return true
       end
@@ -528,7 +528,7 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
 
    if rapid_magic then
       for i = 1, rapid_magic do
-         elona_sys_Magic.cast(skill_data.effect_id, params)
+         Magic.cast(skill_data.effect_id, params)
          if not Chara.is_alive(params.target) then
             local target = Action.find_target(caster)
             if target == nil or caster:relation_towards(target) > Enum.Relation.Enemy then
@@ -539,7 +539,7 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
          end
       end
    else
-      elona_sys_Magic.cast(skill_data.effect_id, params)
+      Magic.cast(skill_data.effect_id, params)
    end
 
    return true
@@ -556,8 +556,8 @@ local function gain_spell_and_casting_experience(skill_id, caster)
    Skill.gain_skill_exp(caster, "elona.casting", skill_entry.cost + 10, 5)
 end
 
-function Magic.cast_spell(skill_id, caster, use_mp)
-   local success = Magic.do_cast_spell(skill_id, caster, use_mp)
+function ElonaMagic.cast_spell(skill_id, caster, use_mp)
+   local success = ElonaMagic.do_cast_spell(skill_id, caster, use_mp)
    if success then
       gain_spell_and_casting_experience(skill_id, caster)
       return true
@@ -566,7 +566,7 @@ function Magic.cast_spell(skill_id, caster, use_mp)
    return false
 end
 
-function Magic.do_action(skill_id, caster)
+function ElonaMagic.do_action(skill_id, caster)
    -- >>>>>>>> shade2/proc.hsp:1539 *action ...
    -- TODO: action: death word
    --
@@ -579,7 +579,7 @@ function Magic.do_action(skill_id, caster)
    }
 
    local target = caster:get_target()
-   local success, result = elona_sys_Magic.get_magic_location(skill_data.target_type,
+   local success, result = Magic.get_magic_location(skill_data.target_type,
                                                               skill_data.range,
                                                               caster,
                                                               "action",
@@ -618,13 +618,13 @@ function Magic.do_action(skill_id, caster)
       return true
    end
 
-   local did_something = elona_sys_Magic.cast(skill_data.effect_id, params)
+   local did_something = Magic.cast(skill_data.effect_id, params)
 
    return did_something
    -- <<<<<<<< shade2/proc.hsp:1557 	return true ..
 end
 
-function Magic.apply_buff(buff_id, params)
+function ElonaMagic.apply_buff(buff_id, params)
    -- >>>>>>>> shade2/proc.hsp:1664 		if buffType(p)=buffBless:animeLoad 11,tc:else:if ..
    local buff = data["elona_sys.buff"]:ensure(buff_id)
    local target = params.target
@@ -656,7 +656,7 @@ function Magic.apply_buff(buff_id, params)
    -- <<<<<<<< shade2/proc.hsp:1682 		goto *effect_end ..
 end
 
-function Magic.read_spellbook(item, skill_id, params)
+function ElonaMagic.read_spellbook(item, skill_id, params)
    -- >>>>>>>> shade2/proc.hsp:1168 *readSpellbook ..
    local chara = params.chara or item:get_owning_chara()
 
@@ -678,4 +678,4 @@ function Magic.read_spellbook(item, skill_id, params)
    -- <<<<<<<< shade2/proc.hsp:1191 		} ..
 end
 
-return Magic
+return ElonaMagic

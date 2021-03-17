@@ -679,11 +679,11 @@ function Tools.iter_buffs(type)
 end
 
 function Tools.apply_all_buffs(type, chara, power)
-   local Magic = require("mod.elona.api.Magic")
+   local ElonaMagic = require("mod.elona.api.ElonaMagic")
    chara = chara or Chara.player()
    type = type or "blessing"
    power = power or 1000
-   Tools.iter_buffs(type):each(function(b) Magic.apply_buff(b._id, { target = chara, source = chara, power = power }) end)
+   Tools.iter_buffs(type):each(function(b) ElonaMagic.apply_buff(b._id, { target = chara, source = chara, power = power }) end)
 end
 
 function Tools.identify_all()

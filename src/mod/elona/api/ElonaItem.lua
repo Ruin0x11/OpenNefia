@@ -17,7 +17,7 @@ local Itemgen = require("mod.elona.api.Itemgen")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Save = require("api.Save")
-local api_Item = require("api.Item")
+local Item = require("api.Item")
 local Hunger = require("mod.elona.api.Hunger")
 
 local ElonaItem = {}
@@ -479,7 +479,7 @@ function ElonaItem.open_chest(item, gen_filter_cb, item_count, loot_level, seed,
       create_medal = true
    end
    if create_medal then
-      api_Item.create("elona.small_medal", x, y, { amount = 1 }, map)
+      Item.create("elona.small_medal", x, y, { amount = 1 }, map)
    end
 
    Save.queue_autosave()

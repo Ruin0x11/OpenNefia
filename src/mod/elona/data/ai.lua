@@ -17,7 +17,7 @@ local Ai = require("api.Ai")
 local Chara = require("api.Chara")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
-local elona_Magic = require("mod.elona.api.Magic")
+local ElonaMagic = require("mod.elona.api.ElonaMagic")
 
 local function default_target(chara)
    return chara:get_party_leader() or Chara.player()
@@ -892,14 +892,14 @@ data:add {
                return true
             end
          end
-         local did_something = elona_Magic.cast_spell(skill._id, chara, true)
+         local did_something = ElonaMagic.cast_spell(skill._id, chara, true)
          if did_something then
             return true
          end
       end
 
       if skill.type == "action" then
-         local did_something = elona_Magic.do_action(skill._id, chara)
+         local did_something = ElonaMagic.do_action(skill._id, chara)
          if did_something then
             return true
          end
