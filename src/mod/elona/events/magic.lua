@@ -7,7 +7,7 @@ local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Chara = require("api.Chara")
 local Input = require("api.Input")
 local Map = require("api.Map")
-local Quest = require("mod.elona.api.Quest")
+local ElonaQuest = require("mod.elona.api.ElonaQuest")
 local Enum = require("api.Enum")
 
 local function set_return_restriction(map)
@@ -59,7 +59,7 @@ local function proc_return(chara)
             return
          end
 
-         if Quest.is_non_returnable_quest_active() then
+         if ElonaQuest.is_non_returnable_quest_active() then
             Gui.mes("magic.return.you_commit_a_crime")
             Effect.modify_karma(chara, -10)
          end

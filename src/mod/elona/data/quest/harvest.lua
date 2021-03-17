@@ -9,7 +9,7 @@ local Calc = require("mod.elona.api.Calc")
 local Enum = require("api.Enum")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
-local elona_Quest = require("mod.elona.api.Quest")
+local ElonaQuest = require("mod.elona.api.ElonaQuest")
 local Event = require("api.Event")
 local IOwned = require("api.IOwned")
 local Item = require("api.Item")
@@ -149,7 +149,7 @@ local harvest = {
       end
       -- <<<<<<<< shade2/main.hsp:1635 	if gQuest=qConquer{ ..
 
-      elona_Quest.travel_to_previous_map()
+      ElonaQuest.travel_to_previous_map()
    end
 }
 

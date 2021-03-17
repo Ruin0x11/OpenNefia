@@ -18,7 +18,7 @@ local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
 local Magic = require("mod.elona.api.Magic")
 local Quest = require("mod.elona_sys.api.Quest")
-local elona_Quest = require("mod.elona.api.Quest")
+local ElonaQuest = require("mod.elona.api.ElonaQuest")
 local I18N = require("api.I18N")
 local Action = require("api.Action")
 local Ui = require("api.Ui")
@@ -753,7 +753,7 @@ local function update_quest_score(audience)
    if quest and quest._id == "elona.party" then
       if not audience:is_in_player_party() then
          audience.impression = audience.impression + Rand.rnd(3)
-         local score = elona_Quest.calc_party_score(audience:current_map())
+         local score = ElonaQuest.calc_party_score(audience:current_map())
          -- >>>>>>>> shade2/calculation.hsp:1346 	if p>qParam2(gQuestRef) : txtEf coBlue: txt "(+"+ ..
          local diff = score - quest.params.current_points
          if diff > 0 then

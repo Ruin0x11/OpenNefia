@@ -4,7 +4,7 @@ local Calc = require("mod.elona.api.Calc")
 local Quest = require("mod.elona_sys.api.Quest")
 local QuestMap = require("mod.elona.api.QuestMap")
 local Map = require("api.Map")
-local elona_Quest = require("mod.elona.api.Quest")
+local ElonaQuest = require("mod.elona.api.ElonaQuest")
 local Event = require("api.Event")
 
 local hunt = {
@@ -70,7 +70,7 @@ data:add {
 local function check_hunt_quest_targets(map)
    local quest = Quest.get_immediate_quest()
    if quest and (quest._id == "elona.hunt" or quest._id == "elona.huntex") then
-      elona_Quest.update_target_count_hunt(quest, map)
+      ElonaQuest.update_target_count_hunt(quest, map)
    end
 end
 Event.register("elona_sys.on_quest_check", "Check hunt quest targets", check_hunt_quest_targets)
