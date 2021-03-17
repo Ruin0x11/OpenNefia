@@ -12,7 +12,7 @@ local ElonaBuilding = require("mod.elona.api.ElonaBuilding")
 local Event = require("api.Event")
 local Gardening = require("mod.elona.api.Gardening")
 local Chara = require("api.Chara")
-local elona_Chara = require("mod.elona.api.Chara")
+local ElonaChara = require("mod.elona.api.ElonaChara")
 local Rank = require("mod.elona.api.Rank")
 
 --
@@ -214,7 +214,7 @@ do
    function museum.on_map_entered_events(map)
       -- >>>>>>>> shade2/map.hsp:2117 	if (areaId(gArea)=areaMuseum)or(areaId(gArea)=are ..
       for _ = 1, 5 do
-         elona_Chara.spawn_mobs(map)
+         ElonaChara.spawn_mobs(map)
       end
       -- <<<<<<<< shade2/map.hsp:2121 		} ..
 
@@ -306,7 +306,7 @@ do
    function shop.on_map_entered_events(map)
       -- >>>>>>>> shade2/map.hsp:2117 	if (areaId(gArea)=areaMuseum)or(areaId(gArea)=are ..
       for _ = 1, 5 do
-         elona_Chara.spawn_mobs(map)
+         ElonaChara.spawn_mobs(map)
       end
       -- <<<<<<<< shade2/map.hsp:2121 		} ..
 

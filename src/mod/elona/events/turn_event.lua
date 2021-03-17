@@ -5,7 +5,7 @@ local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 local Chara = require("api.Chara")
-local elona_Chara = require("mod.elona.api.Chara")
+local ElonaChara = require("mod.elona.api.ElonaChara")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Feat = require("api.Feat")
 local Encounter = require("mod.elona.api.Encounter")
@@ -155,7 +155,7 @@ Event.register("base.on_chara_moved", "Proc random encounters", proc_random_enco
 local function respawn_mobs()
    -- >>>>>>>> shade2/main.hsp:545 		if gTurn¥20=0 : call chara_spawn ...
    if save.base.play_turns % 20 == 0 then
-      elona_Chara.spawn_mobs()
+      ElonaChara.spawn_mobs()
    end
    -- <<<<<<<< shade2/main.hsp:545 		if gTurn¥20=0 : call chara_spawn ..
 end
