@@ -1,4 +1,4 @@
-local Charagen = require("mod.tools.api.Charagen")
+local Charagen = require("mod.elona.api.Charagen")
 local Calc = require("mod.elona.api.Calc")
 local Chara = require("api.Chara")
 local Item = require("api.Item")

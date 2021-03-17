@@ -1,6 +1,6 @@
 local Chara = require("api.Chara")
 local Rand = require("api.Rand")
-local Charagen = require("mod.tools.api.Charagen")
+local Charagen = require("mod.elona.api.Charagen")
 local Text = require("mod.elona.api.Text")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")

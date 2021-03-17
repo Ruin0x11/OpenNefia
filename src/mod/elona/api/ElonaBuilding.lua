@@ -12,7 +12,7 @@ local Log = require("api.Log")
 local Map = require("api.Map")
 local Draw = require("api.Draw")
 local Chara = require("api.Chara")
-local Charagen = require("mod.tools.api.Charagen")
+local Charagen = require("mod.elona.api.Charagen")
 local Building = require("mod.elona.api.Building")
 local Inventory = require("api.Inventory")
 

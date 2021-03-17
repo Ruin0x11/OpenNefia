@@ -1,4 +1,4 @@
-local Charagen = require("mod.tools.api.Charagen")
+local Charagen = require("mod.elona.api.Charagen")
 local IGenerator = require("api.test.gen.IGenerator")
 local ObjectGen = require("api.test.gen.ObjectGen")
 
