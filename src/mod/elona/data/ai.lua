@@ -6,7 +6,7 @@ local Const = require("api.Const")
 local I18N = require("api.I18N")
 local AiUtil = require("mod.elona.api.AiUtil")
 local Log = require("api.Log")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local Skill = require("mod.elona_sys.api.Skill")
 
 local Action = require("api.Action")

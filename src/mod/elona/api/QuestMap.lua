@@ -20,7 +20,7 @@ local IOwned = require("api.IOwned")
 local Quest = require("mod.elona_sys.api.Quest")
 local MapgenUtils = require("mod.elona.api.MapgenUtils")
 local Filters = require("mod.elona.api.Filters")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local IFeat = require("api.feat.IFeat")
 local IChara = require("api.chara.IChara")
 

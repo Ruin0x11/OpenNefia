@@ -1,6 +1,6 @@
 local Chara = require("api.Chara")
 local Item = require("api.Item")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local Rand = require("api.Rand")
 local Enum = require("api.Enum")
 local World = require("api.World")

@@ -6,7 +6,7 @@ local Map = require("api.Map")
 local InstancedMap = require("api.InstancedMap")
 local Rand = require("api.Rand")
 local Charagen = require("mod.tools.api.Charagen")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local Calc = require("mod.elona.api.Calc")
 local I18N = require("api.I18N")
 

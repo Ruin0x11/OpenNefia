@@ -1,7 +1,7 @@
 local utils = require("mod.test_room.data.map_archetype.utils")
 local Chara = require("api.Chara")
 local Pos = require("api.Pos")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local Rand = require("api.Rand")
 
 local ai = {

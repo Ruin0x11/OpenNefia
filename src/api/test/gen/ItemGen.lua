@@ -1,4 +1,4 @@
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local IGenerator = require("api.test.gen.IGenerator")
 local ObjectGen = require("api.test.gen.ObjectGen")
 

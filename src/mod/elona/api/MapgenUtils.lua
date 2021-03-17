@@ -6,7 +6,7 @@ local Charagen = require("mod.tools.api.Charagen")
 local Feat = require("api.Feat")
 local Item = require("api.Item")
 local Filters = require("mod.elona.api.Filters")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 
 local MapgenUtils = {}
 

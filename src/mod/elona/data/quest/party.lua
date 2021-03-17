@@ -11,7 +11,7 @@ local I18N = require("api.I18N")
 local Item = require("api.Item")
 local Const = require("api.Const")
 local Enum = require("api.Enum")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 
 local map_party = {
    _type = "base.map_archetype",

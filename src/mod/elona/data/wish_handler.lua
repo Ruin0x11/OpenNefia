@@ -11,7 +11,7 @@ local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 local Event = require("api.Event")
 local Enum = require("api.Enum")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local Itemname = require("mod.elona.api.Itemname")
 

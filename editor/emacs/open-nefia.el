@@ -636,6 +636,16 @@ removed.  Return the new string.  If STRING is nil, return nil."
              (string-join (list project-root file))))
     (indent-region (point-at-bol) (point-at-eol))))
 
+(defun open-nefia--api-dir-cands (&optional mod-name)
+  (let ((project-root (projectile-ensure-project (projectile-project-root))))
+    (-filter (lambda (f)
+               (and (or
+                     (string-prefix-p "src/api" f)
+                     (string-prefix-p "src/mod" f)
+                     (string-prefix-p "src/internal" f))
+                    (if mod-name (string-match-p (format "^src/mod/%s/" mod-name) f) t)))
+             (projectile-project-dirs project-root))))
+
 (defun open-nefia--api-file-cands (&optional mod-name)
   (let ((project-root (projectile-ensure-project (projectile-project-root))))
     (-filter (lambda (f)

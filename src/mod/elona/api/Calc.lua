@@ -7,7 +7,7 @@ local Util = require("mod.elona_sys.api.Util")
 local Const = require("api.Const")
 local Rank = require("mod.elona.api.Rank")
 local Filters = require("mod.elona.api.Filters")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 
 local Calc = {}
 
