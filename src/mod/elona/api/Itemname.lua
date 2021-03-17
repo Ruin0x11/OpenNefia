@@ -13,7 +13,7 @@ local IdentifyState = Enum.IdentifyState
 local CurseState = Enum.CurseState
 local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local Effect = require("mod.elona.api.Effect")
-local elona_Item = require("mod.elona.api.Item")
+local ElonaItem = require("mod.elona.api.ElonaItem")
 local Ui = require("api.Ui")
 local World = require("api.World")
 local Hunger = require("mod.elona.api.Hunger")
@@ -271,7 +271,7 @@ function itemname.jp(item, amount, no_article)
 
    local katakana = false
    if not skip then
-      if identify >= IdentifyState.Full and elona_Item.is_equipment(item) then
+      if identify >= IdentifyState.Full and ElonaItem.is_equipment(item) then
          if item:calc("is_eternal_force") then
             s = s .. "eternal force" .. I18N.space()
          else
@@ -303,7 +303,7 @@ function itemname.jp(item, amount, no_article)
    if identify == IdentifyState.None then
       s = s .. unknown_name
    elseif identify < IdentifyState.Full then
-      if quality < Quality.Great or not elona_Item.is_equipment(item) then
+      if quality < Quality.Great or not ElonaItem.is_equipment(item) then
          s = s .. name
       else
          s = s .. unknown_name
@@ -357,7 +357,7 @@ function itemname.jp(item, amount, no_article)
       s = s .. I18N.get("item.info." .. _id .. ".level", item.params.chest_lockpick_difficulty)
    end
 
-   if identify == IdentifyState.Quality and elona_Item.is_equipment(item) then
+   if identify == IdentifyState.Quality and ElonaItem.is_equipment(item) then
       local material_name = "item_material." .. item.material .. ".name"
       s = s .. I18N.get("ui.sense_quality", "ui.quality._" .. quality, material_name)
       if curse == CurseState.Cursed then
@@ -520,7 +520,7 @@ function itemname.en(item, amount, no_article)
    end
 
    if not skip then
-      if identify >= IdentifyState.Full and elona_Item.is_equipment(item) then
+      if identify >= IdentifyState.Full and ElonaItem.is_equipment(item) then
          if item:calc("is_eternal_force") then
             s = s .. "エターナルフォース" .. I18N.space()
          else
@@ -540,7 +540,7 @@ function itemname.en(item, amount, no_article)
       if identify == IdentifyState.None then
          s = s .. unknown_name
       elseif identify < IdentifyState.Full then
-         if quality < Quality.Great or not elona_Item.is_equipment(item) then
+         if quality < Quality.Great or not ElonaItem.is_equipment(item) then
             s = s .. name
          else
             s = s .. unknown_name
@@ -549,7 +549,7 @@ function itemname.en(item, amount, no_article)
          if quality == Quality.Unique or item:calc("is_precious") then
             s = s .. name
          else
-            if elona_Item.is_equipment(item) and item.ego_enchantment then
+            if ElonaItem.is_equipment(item) and item.ego_enchantment then
                s = s .. " " .. I18N.get("enchantment.item_ego.major." .. item.ego_enchantment, name)
             else
                s = s .. name
@@ -576,7 +576,7 @@ function itemname.en(item, amount, no_article)
    -- <<<<<<<< shade2/item_func.hsp:605 *skipName ..
    -- >>>>>>>> shade2/item_func.hsp:606 	if en@{ ..
    if not no_article then
-      if identify >= IdentifyState.Full and quality >= Quality.Great and elona_Item.is_equipment(item) then
+      if identify >= IdentifyState.Full and quality >= Quality.Great and ElonaItem.is_equipment(item) then
          s = "the " .. s
       elseif amount == 1 then
          if starts_with_vowel(s) then
@@ -621,7 +621,7 @@ function itemname.en(item, amount, no_article)
       s = s .. I18N.get("item.info." .. _id .. ".level", item.params.chest_lockpick_difficulty)
    end
 
-   if identify == IdentifyState.Quality and elona_Item.is_equipment(item) then
+   if identify == IdentifyState.Quality and ElonaItem.is_equipment(item) then
       local material_name = "item_material." .. item.material .. ".name"
       s = s .. I18N.get("ui.sense_quality", "ui.quality._" .. quality, material_name)
       if curse == CurseState.Cursed then

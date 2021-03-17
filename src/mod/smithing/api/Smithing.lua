@@ -2,7 +2,7 @@ local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Item = require("api.Item")
 local Skill = require("mod.elona_sys.api.Skill")
-local elona_Item = require("mod.elona.api.Item")
+local ElonaItem = require("mod.elona.api.ElonaItem")
 local Enum = require("api.Enum")
 local Rand = require("api.Rand")
 local Calc = require("mod.elona.api.Calc")
@@ -74,7 +74,7 @@ function Smithing.can_smith_item(item, hammer, selected_items)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:104957 			reftype@m18 = refitem(iId(__invNo), 5, __invNo) ..
    if item._id == "elona.broken_sword" then
       return true
-   elseif elona_Item.is_equipment(item) then
+   elseif ElonaItem.is_equipment(item) then
       return true
    elseif item._id == "elona.remains_skin" then
       return true

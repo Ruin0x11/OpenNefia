@@ -1,20 +1,20 @@
-local elona_Item = require("mod.elona.api.Item")
+local ElonaItem = require("mod.elona.api.ElonaItem")
 
 local function filter_armor(item)
    -- >>>>>>>> shade2/item_data.hsp:239 	if f=fltEncArmor 	: if range_fltArmor(a)=false:re ...
-   return elona_Item.is_armor(item)
+   return ElonaItem.is_armor(item)
    -- <<<<<<<< shade2/item_data.hsp:239 	if f=fltEncArmor 	: if range_fltArmor(a)=false:re ..
 end
 
 local function filter_accessory(item)
 -- >>>>>>>> shade2/item_data.hsp:240 	if f=fltEncAccessory	: if range_fltAccessory(a)=f ...
-   return elona_Item.is_accessory(item)
+   return ElonaItem.is_accessory(item)
 -- <<<<<<<< shade2/item_data.hsp:240 	if f=fltEncAccessory	: if range_fltAccessory(a)=f ..
 end
 
 local function filter_general(item)
    -- >>>>>>>> shade2/item_data.hsp:241 	if f=fltEncGeneral	: if (range_fltArmor(a)=true)o ...
-   return elona_Item.is_equipment(item)
+   return ElonaItem.is_equipment(item)
    -- <<<<<<<< shade2/item_data.hsp:241 	if f=fltEncGeneral	: if (range_fltArmor(a)=true)o ..
 end
 

@@ -4,7 +4,7 @@ local Enum = require("api.Enum")
 local Gui = require("api.Gui")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Map = require("api.Map")
-local elona_sys_Quest = require("mod.elona_sys.api.Quest")
+local Quest = require("mod.elona_sys.api.Quest")
 local Log = require("api.Log")
 
 local ElonaQuest = {}
@@ -107,7 +107,7 @@ function ElonaQuest.is_non_returnable_quest_active()
       local proto = data["elona_sys.quest"]:ensure(q._id)
       return proto.prevents_return
    end
-   return elona_sys_Quest.iter_accepted():any(pred)
+   return Quest.iter_accepted():any(pred)
 end
 -- <<<<<<<< shade2/command.hsp:4384 	return f ..
 

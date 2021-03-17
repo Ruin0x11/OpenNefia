@@ -7,7 +7,7 @@ local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 local Map = require("api.Map")
 local Calc = require("mod.elona.api.Calc")
 local Effect = require("mod.elona.api.Effect")
-local elona_Item = require("mod.elona.api.Item")
+local ElonaItem = require("mod.elona.api.ElonaItem")
 local Enum = require("api.Enum")
 local Quest = require("mod.elona_sys.api.Quest")
 local Ui = require("api.Ui")
@@ -692,12 +692,12 @@ local inv_present = {
       assert(ctxt.chara:take_item(trade_item))
       assert(ctxt.target:take_item(item))
 
-      elona_Item.convert_artifact(trade_item)
+      ElonaItem.convert_artifact(trade_item)
       Equipment.equip_all_optimally(ctxt.target)
       if not ctxt.target:is_in_player_party() then
          Equipment.generate_and_equip(ctxt.target)
       end
-      elona_Item.ensure_free_item_slot(ctxt.target)
+      ElonaItem.ensure_free_item_slot(ctxt.target)
       ctxt.target:refresh()
       ctxt.target:refresh_weight()
       ctxt.chara:refresh_weight()
@@ -1040,7 +1040,7 @@ local inv_equipment = {
    query_text = "ui.inv.title.target",
 
    filter = function(ctxt, item)
-      return item:has_category("elona.furniture") or elona_Item.is_equipment(item)
+      return item:has_category("elona.furniture") or ElonaItem.is_equipment(item)
    end,
 
    on_select = function(ctxt, item, amount)
@@ -1086,7 +1086,7 @@ local inv_equipment_armor = {
    query_text = "ui.inv.title.target",
 
    filter = function(ctxt, item)
-      return elona_Item.is_armor(item)
+      return ElonaItem.is_armor(item)
    end,
 
    on_select = function(ctxt, item, amount)
@@ -1159,7 +1159,7 @@ local inv_garoks_hammer = {
    query_text = "ui.inv.title.target",
 
    filter = function(ctxt, item)
-      return item:calc("quality") < Enum.Quality.Great and elona_Item.is_equipment(item)
+      return item:calc("quality") < Enum.Quality.Great and ElonaItem.is_equipment(item)
    end,
 
    on_select = function(ctxt, item, amount)
@@ -1238,7 +1238,7 @@ function inv_take.on_select(ctxt, item, amount)
       local sep = item:separate(amount)
       sep:remove_ownership()
       assert(chara:take_item(sep))
-      elona_Item.convert_artifact(sep)
+      ElonaItem.convert_artifact(sep)
    end
 
    Equipment.equip_all_optimally(target)

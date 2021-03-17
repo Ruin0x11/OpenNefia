@@ -8,7 +8,7 @@ local Item = require("api.Item")
 local Chara = require("api.Chara")
 local Theme = require("api.Theme")
 local FFHP = require("mod.ceri_items.api.FFHP")
-local elona_Item = require("mod.elona.api.Item")
+local ElonaItem = require("mod.elona.api.ElonaItem")
 
 local function apply_mapping(mapping, item)
    if mapping.chip_on_identify then
@@ -43,8 +43,8 @@ local function set_item_image_on_memorize(_, params)
          end
       else
          for _, item in Item.iter_in_everything(map):filter(function(i) return i._id == params._id end) do
-            item.image = elona_Item.default_item_image(item)
-            item.color = elona_Item.default_item_color(item)
+            item.image = ElonaItem.default_item_image(item)
+            item.color = ElonaItem.default_item_color(item)
          end
       end
    end
@@ -75,8 +75,8 @@ local function set_item_images(map)
    for _, item in Item.iter_in_everything(map) do
       local mapping = FFHP.mapping_for(item._id)
       if mapping then
-         item.image = elona_Item.default_item_image(item)
-         item.color = elona_Item.default_item_color(item)
+         item.image = ElonaItem.default_item_image(item)
+         item.color = ElonaItem.default_item_color(item)
          if ItemMemory.is_known(item._id) and Theme.is_active("ceri_items.ceri_items") then
             apply_mapping(mapping, item)
          end

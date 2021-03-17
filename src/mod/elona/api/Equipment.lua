@@ -3,7 +3,7 @@ local Rand = require("api.Rand")
 local Enum = require("api.Enum")
 local Calc = require("mod.elona.api.Calc")
 local Itemgen = require("mod.elona.api.Itemgen")
-local elona_Item = require("mod.elona.api.Item")
+local ElonaItem = require("mod.elona.api.ElonaItem")
 local Const = require("api.Const")
 local Stopwatch = require("api.Stopwatch")
 local Log = require("api.Log")
@@ -100,7 +100,7 @@ function Equipment.generate_and_equip(chara)
       item.identify_state = Enum.IdentifyState.Full
 
       if item.quality >= Enum.Quality.Great
-         and elona_Item.is_equipment(item)
+         and ElonaItem.is_equipment(item)
          and chara:find_role("elona.adventurer")
       then
          -- TODO adventurer

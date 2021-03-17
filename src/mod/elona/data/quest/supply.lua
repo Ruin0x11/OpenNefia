@@ -8,7 +8,7 @@ local Gui = require("api.Gui")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Event = require("api.Event")
 local Itemname = require("mod.elona.api.Itemname")
-local elona_Item = require("mod.elona.api.Item")
+local ElonaItem = require("mod.elona.api.ElonaItem")
 
 local supply = {
    _id = "supply",
@@ -83,7 +83,7 @@ data:add {
          local item = find_item(Chara.player(), quest.params.target_item_id)
 
          Gui.mes("talk.npc.common.hand_over", item)
-         elona_Item.ensure_free_item_slot(t.speaker)
+         ElonaItem.ensure_free_item_slot(t.speaker)
          local sep = assert(item:move_some(1, t.speaker))
          t.speaker.item_to_use = sep
          t.speaker.was_passed_quest_item = true

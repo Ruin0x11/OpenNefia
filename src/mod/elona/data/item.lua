@@ -21,7 +21,7 @@ local Anim = require("mod.elona_sys.api.Anim")
 local World = require("api.World")
 local Weather = require("mod.elona.api.Weather")
 local Area = require("api.Area")
-local elona_Item = require("mod.elona.api.Item")
+local ElonaItem = require("mod.elona.api.ElonaItem")
 local Filters = require("mod.elona.api.Filters")
 local SkillCheck = require("mod.elona.api.SkillCheck")
 local Const = require("api.Const")
@@ -101,7 +101,7 @@ local function open_chest(filter, item_count, after_cb)
          end
       end
 
-      elona_Item.open_chest(sep, filter, item_count)
+      ElonaItem.open_chest(sep, filter, item_count)
       sep.params.chest_item_level = 0
 
       if after_cb then
