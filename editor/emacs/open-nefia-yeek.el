@@ -52,5 +52,18 @@
          (file (concat root file)))
     (open-nefia-yeek--run "move" file dir)))
 
+(defun open-nefia-yeek-rename-module (file new-name)
+  "Runs yeek to rename module FILE to have NEW-NAME."
+  (interactive
+   (list
+    (projectile-completing-read "Module file: " (open-nefia--api-file-cands))
+    (read-string "New name: ")))
+
+  (if (string-blank-p new-name)
+      (error "New name must be non-blank")
+    (let* ((root (projectile-project-root))
+           (file (concat root file)))
+      (open-nefia-yeek--run "rename-module" file new-name))))
+
 (provide 'open-nefia-yeek)
 ;;; open-nefia-yeek.el ends here
