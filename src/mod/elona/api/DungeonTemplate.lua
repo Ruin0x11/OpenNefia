@@ -1,6 +1,6 @@
 local Dungeon = require("mod.elona.api.Dungeon")
 local Rand = require("api.Rand")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local Filters = require("mod.elona.api.Filters")
 local Nefia = require("mod.elona.api.Nefia")
 

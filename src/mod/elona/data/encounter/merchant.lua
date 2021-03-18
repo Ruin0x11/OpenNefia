@@ -3,11 +3,11 @@ local Chara = require("api.Chara")
 local I18N = require("api.I18N")
 local Effect = require("mod.elona.api.Effect")
 local Skill = require("mod.elona_sys.api.Skill")
-local Charagen = require("mod.tools.api.Charagen")
+local Charagen = require("mod.elona.api.Charagen")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Event = require("api.Event")
-local elona_Quest = require("mod.elona.api.Quest")
+local ElonaQuest = require("mod.elona.api.ElonaQuest")
 
 data:add {
    _type = "elona.encounter",
@@ -66,7 +66,7 @@ end
 local function exit_merchant_encounter(_, params, result)
    if params.talk.dialog._id == "elona.default" and is_wandering_merchant(params.talk.speaker) then
       if result.node_id == "__END__" then
-         elona_Quest.travel_to_previous_map()
+         ElonaQuest.travel_to_previous_map()
       end
    end
    return result

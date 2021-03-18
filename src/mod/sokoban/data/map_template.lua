@@ -3,7 +3,7 @@ local SokobanMap = require("mod.sokoban.api.SokobanMap")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Quest = require("mod.elona_sys.api.Quest")
-local elona_Quest = require("mod.elona.api.Quest")
+local ElonaQuest = require("mod.elona.api.ElonaQuest")
 local Event = require("api.Event")
 local Chara = require("api.Chara")
 local Rand = require("api.Rand")
@@ -48,7 +48,7 @@ data:add {
          local quest = assert(Quest.get_immediate_quest())
          quest.state = "completed"
 
-         elona_Quest.travel_to_previous_map()
+         ElonaQuest.travel_to_previous_map()
       end
 
       return "turn_end"

@@ -6,7 +6,7 @@ local Input = require("api.Input")
 local Chara = require("api.Chara")
 local Rand = require("api.Rand")
 local Enum = require("api.Enum")
-local Charagen = require("mod.tools.api.Charagen")
+local Charagen = require("mod.elona.api.Charagen")
 
 data:add {
    _type = "elona.encounter",

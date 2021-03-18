@@ -89,10 +89,7 @@ function MainHud:draw(draw_x, draw_y)
 end
 
 function MainHud:update(dt)
-   local Map = require("api.Map")
-   local screen_updated = false
-   local map = Map.current()
-   self.widgets:update(dt, map, screen_updated)
+   self.widgets:update(dt)
 
    if self.widgets.updated and self.x then
       self.widgets:relayout(self.x, self.y, self.width, self.height)

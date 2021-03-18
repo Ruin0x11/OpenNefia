@@ -3,11 +3,11 @@ local Action = require("api.Action")
 local UidTracker = require("api.UidTracker")
 local Pos = require("api.Pos")
 local I18N = require("api.I18N")
-local Magic = require("mod.elona.api.Magic")
+local ElonaMagic = require("mod.elona.api.ElonaMagic")
 local utils = require("mod.visual_ai.internal.utils")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local Const = require("api.Const")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local Rand = require("api.Rand")
 local Filters = require("mod.elona.api.Filters")
 local Item = require("api.Item")
@@ -312,7 +312,7 @@ data:add {
       end
 
       chara:set_target(target)
-      return Magic.cast_spell(self.vars.skill_id, chara, true)
+      return ElonaMagic.cast_spell(self.vars.skill_id, chara, true)
    end
 }
 

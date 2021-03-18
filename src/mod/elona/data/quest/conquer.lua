@@ -4,7 +4,7 @@ local Calc = require("mod.elona.api.Calc")
 local Quest = require("mod.elona_sys.api.Quest")
 local QuestMap = require("mod.elona.api.QuestMap")
 local Map = require("api.Map")
-local elona_Quest = require("mod.elona.api.Quest")
+local ElonaQuest = require("mod.elona.api.ElonaQuest")
 local Event = require("api.Event")
 local I18N = require("api.I18N")
 local Gui = require("api.Gui")
@@ -77,7 +77,7 @@ local conquer = {
       Gui.mes_c("quest.conquer.fail", "Purple")
       -- <<<<<<<< shade2/main.hsp:1637 		} ..
 
-      elona_Quest.travel_to_previous_map()
+      ElonaQuest.travel_to_previous_map()
    end,
 
    prevents_pickpocket = true
@@ -123,7 +123,7 @@ data:add {
 local function check_conquer_quest_targets(map)
    local quest = Quest.get_immediate_quest()
    if quest and (quest._id == "elona.conquer") then
-      elona_Quest.update_target_count_conquer(quest, map)
+      ElonaQuest.update_target_count_conquer(quest, map)
    end
 end
 Event.register("elona_sys.on_quest_check", "Check conquer quest targets", check_conquer_quest_targets)

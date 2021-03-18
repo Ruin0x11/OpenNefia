@@ -1,13 +1,13 @@
 local Map = require("api.Map")
 local Chara = require("api.Chara")
 local Rand = require("api.Rand")
-local Charagen = require("mod.tools.api.Charagen")
+local Charagen = require("mod.elona.api.Charagen")
 local Enum = require("api.Enum")
 local Util = require("mod.elona_sys.api.Util")
 local Const = require("api.Const")
 local Rank = require("mod.elona.api.Rank")
 local Filters = require("mod.elona.api.Filters")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 
 local Calc = {}
 
@@ -115,7 +115,7 @@ end
 -- @tparam boolean is_shop
 -- @treturn int
 function Calc.calc_item_value(item, mode, is_shop)
-   local elona_Item = require("mod.elona.api.Item")
+   local ElonaItem = require("mod.elona.api.ElonaItem")
 
    mode = mode or "buy"
 
@@ -134,7 +134,7 @@ function Calc.calc_item_value(item, mode, is_shop)
          value = pc_level / 5 * ((save.base.random_seed + Util.string_to_integer(item._id) * 31) % pc_level + 4) + 10
       end
    else
-      if elona_Item.is_equipment(item) then
+      if ElonaItem.is_equipment(item) then
          if     identify == Enum.IdentifyState.Name then
             value = base_value * 2 / 10
          elseif identify == Enum.IdentifyState.Quality then
@@ -208,7 +208,7 @@ function Calc.calc_item_value(item, mode, is_shop)
       local value_limit = negotiation * 250 + 5000
       value = math.max(value / 3, value_limit)
       value = value * (100 + negotiation * 5) / 1000
-      if elona_Item.is_equipment(item) then
+      if ElonaItem.is_equipment(item) then
          value = value / 20
       end
       if item:calc("is_stolen") then
@@ -217,7 +217,7 @@ function Calc.calc_item_value(item, mode, is_shop)
       value = math.min(value, value_limit)
    elseif mode == "player_shop" then
       value = value / 5
-      if elona_Item.is_equipment(item) then
+      if ElonaItem.is_equipment(item) then
          value = value / 3
       end
       value = math.min(value, 15000)

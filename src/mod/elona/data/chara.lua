@@ -7,7 +7,7 @@ local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Chara = require("api.Chara")
 local Item = require("api.Item")
 local Calc = require("mod.elona.api.Calc")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local Event = require("api.Event")
 
 local eating_effect = require("mod.elona.data.chara.eating_effect")
@@ -6894,7 +6894,7 @@ local chara = {
       ai_actions = {
          main = {
             { id = "elona.skill", skill_id = "elona.action_drop_mine" },
-            { id = "elona.random_move" }
+            { id = "elona.random_movement" }
          },
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_gravity" }

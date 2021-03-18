@@ -1,7 +1,7 @@
 local utils = require("mod.test_room.data.map_archetype.utils")
 local Item = require("api.Item")
-local Charagen = require("mod.tools.api.Charagen")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Charagen = require("mod.elona.api.Charagen")
+local Itemgen = require("mod.elona.api.Itemgen")
 
 local smithing = {
    _id = "smithing"

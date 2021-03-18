@@ -8,7 +8,7 @@ local Skill = require("mod.elona_sys.api.Skill")
 local CharaMake = require("api.CharaMake")
 local Const = require("api.Const")
 local Map = require("api.Map")
-local Charagen = require("mod.tools.api.Charagen")
+local Charagen = require("mod.elona.api.Charagen")
 
 local function fix_name_gender_age(chara)
    if chara.proto.has_own_name then

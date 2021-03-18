@@ -4,8 +4,8 @@
 ---
 
 Tools = require("mod.tools.api.Tools")
-Itemgen = require("mod.tools.api.Itemgen")
-Charagen = require("mod.tools.api.Charagen")
+Itemgen = require("mod.elona.api.Itemgen")
+Charagen = require("mod.elona.api.Charagen")
 Compat = require("mod.elona_sys.api.Compat")
 Benchmark = require("mod.tools.api.Benchmark")
 Magic = require("mod.elona_sys.api.Magic")

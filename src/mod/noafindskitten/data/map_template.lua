@@ -9,7 +9,7 @@ local Anim = require("mod.elona_sys.api.Anim")
 local Color = require("mod.extlibs.api.Color")
 local Quest = require("mod.elona_sys.api.Quest")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
-local elona_Quest = require("mod.elona.api.Quest")
+local ElonaQuest = require("mod.elona.api.ElonaQuest")
 
 data:add {
    _type = "base.chip",
@@ -44,7 +44,7 @@ data:add {
          local quest = assert(Quest.get_immediate_quest())
          quest.state = "completed"
 
-         elona_Quest.travel_to_previous_map()
+         ElonaQuest.travel_to_previous_map()
       else
          Gui.play_sound("base.chat")
          Gui.mes_c(self.description)

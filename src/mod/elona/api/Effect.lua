@@ -151,8 +151,8 @@ end
 
 function Effect.do_identify_item(item, level)
    if item.identify_state == Enum.IdentifyState.Quality then
-      local elona_Item = require("mod.elona.api.Item")
-      if not elona_Item.is_equipment(item) then
+      local ElonaItem = require("mod.elona.api.ElonaItem")
+      if not ElonaItem.is_equipment(item) then
          level = Enum.IdentifyState.Full
       end
    end
@@ -478,11 +478,11 @@ end
 
 function Effect.damage_chara_item_acid(chara)
    -- >>>>>>>> shade2/chara_func.hsp:1152 	if ciRef!-1:ci=ciRef:else{ ...
-   local elona_Item = require("mod.elona.api.Item")
+   local ElonaItem = require("mod.elona.api.ElonaItem")
 
    local pred = function(item) return Rand.one_in(math.clamp(30, 1, 30)) and item:calc("bonus") > -4 end
    local target = chara:iter_equipment():filter(pred):nth(1)
-   if target == nil or not elona_Item.is_equipment(target) then
+   if target == nil or not ElonaItem.is_equipment(target) then
       return false
    end
 
@@ -506,9 +506,9 @@ function Effect.damage_item_fire(item, fireproof_blanket)
 
    if item:has_category("elona.food") and item.params.food_quality == 0 then
       if owner then
-         Gui.mes_c_visible("item.someones_item.get_broiled", owner, "Orange", item, owner)
+         Gui.mes_c_visible("item.someones_item.gets_broiled", owner, "Orange", item, owner)
       else
-         Gui.mes_c_visible("item.item_on_the_ground.get_broiled", item, "Orange", item)
+         Gui.mes_c_visible("item.item_on_the_ground.gets_broiled", item, "Orange", item)
       end
       local Hunger = require("mod.elona.api.Hunger")
       Hunger.make_dish(item, Rand.rnd(5) + 1)
@@ -965,12 +965,12 @@ function Effect.sense_quality(chara)
       return
    end
 
-   local elona_Item = require("mod.elona.api.Item")
+   local ElonaItem = require("mod.elona.api.ElonaItem")
 
    local filter = function(i)
       return Item.is_alive(i)
          and i.identify_state < Enum.IdentifyState.Full
-         and elona_Item.is_equipment(i)
+         and ElonaItem.is_equipment(i)
    end
 
    for _, item in chara:iter_items():filter(filter) do

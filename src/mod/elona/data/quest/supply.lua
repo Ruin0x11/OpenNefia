@@ -1,14 +1,14 @@
 local Rand = require("api.Rand")
 local Chara = require("api.Chara")
 local Filters = require("mod.elona.api.Filters")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local I18N = require("api.I18N")
 local Quest = require("mod.elona_sys.api.Quest")
 local Gui = require("api.Gui")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Event = require("api.Event")
 local Itemname = require("mod.elona.api.Itemname")
-local elona_Item = require("mod.elona.api.Item")
+local ElonaItem = require("mod.elona.api.ElonaItem")
 
 local supply = {
    _id = "supply",
@@ -83,7 +83,7 @@ data:add {
          local item = find_item(Chara.player(), quest.params.target_item_id)
 
          Gui.mes("talk.npc.common.hand_over", item)
-         elona_Item.ensure_free_item_slot(t.speaker)
+         ElonaItem.ensure_free_item_slot(t.speaker)
          local sep = assert(item:move_some(1, t.speaker))
          t.speaker.item_to_use = sep
          t.speaker.was_passed_quest_item = true

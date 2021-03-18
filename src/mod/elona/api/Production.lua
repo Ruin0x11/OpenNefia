@@ -4,7 +4,7 @@ local Gui = require("api.Gui")
 local Calc = require("mod.elona.api.Calc")
 local Enum = require("api.Enum")
 local Rand = require("api.Rand")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local Skill = require("mod.elona_sys.api.Skill")
 local Effect = require("mod.elona.api.Effect")
 

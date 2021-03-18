@@ -1,5 +1,5 @@
 local Gui = require("api.Gui")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local Rand = require("api.Rand")
 local Filters = require("mod.elona.api.Filters")
 local Save = require("api.Save")

@@ -13,16 +13,16 @@ local Util = require("mod.elona_sys.api.Util")
 local Enchantment = require("mod.elona.api.Enchantment")
 local Calc = require("mod.elona.api.Calc")
 local Filters = require("mod.elona.api.Filters")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Save = require("api.Save")
-local api_Item = require("api.Item")
+local Item = require("api.Item")
 local Hunger = require("mod.elona.api.Hunger")
 
-local Item = {}
+local ElonaItem = {}
 
-function Item.generate_oracle_text(item)
+function ElonaItem.generate_oracle_text(item)
    -- >>>>>>>> shade2/item.hsp:631 	if fixLv=fixUnique:if mode!mode_shop:if noOracle= ...
    local date = save.base.date
    local known_name = "item.info." .. item._id .. ".name"
@@ -125,22 +125,22 @@ local function has_any_category(item, cats)
 end
 
 -- TODO remove
-function Item.is_equipment(item)
+function ElonaItem.is_equipment(item)
    return has_any_category(item, EQUIPMENT_CATEGORIES)
 end
 
 -- TODO remove
-function Item.is_armor(item)
+function ElonaItem.is_armor(item)
    return has_any_category(item, ARMOR_CATEGORIES)
 end
 
 -- TODO remove
-function Item.is_accessory(item)
+function ElonaItem.is_accessory(item)
    return has_any_category(item, ACCESSORY_CATEGORIES)
 end
 
 -- TODO remove
-function Item.is_non_useable(item)
+function ElonaItem.is_non_useable(item)
    return has_any_category(item, NON_USEABLE_CATEGORIES)
 end
 
@@ -154,13 +154,13 @@ local function fix_item_2(item, params)
       item.quality = item.proto.quality
    end
 
-   if not Item.is_non_useable(item) then
+   if not ElonaItem.is_non_useable(item) then
       if Rand.one_in(12) then
          item.curse_state = Enum.CurseState.Blessed
       end
       if Rand.one_in(13) then
          item.curse_state = Enum.CurseState.Cursed
-         if Item.is_equipment(item) and Rand.one_in(4) then
+         if ElonaItem.is_equipment(item) and Rand.one_in(4) then
             item.curse_state = Enum.CurseState.Doomed
          end
       end
@@ -174,7 +174,7 @@ local function fix_item_2(item, params)
       item.curse_state = Enum.CurseState.Normal
    end
 
-   if Item.is_equipment(item) or item:has_category("elona.furniture") and Rand.one_in(5) then
+   if ElonaItem.is_equipment(item) or item:has_category("elona.furniture") and Rand.one_in(5) then
       if is_randomized_material(item.material) or item:has_category("elona.furniture") then
          local chara_level
          if CharaMake.is_active() then
@@ -194,7 +194,7 @@ local function fix_item_2(item, params)
    end
 
    -- NOTE: fltPotion instead of fltHeadItem
-   if Item.is_equipment(item) then
+   if ElonaItem.is_equipment(item) then
       Enchantment.add_random_enchantments(item)
    else
       if item.quality ~= Enum.Quality.Unique then
@@ -253,7 +253,7 @@ local RANDOM_COLORS = {
 }
 -- <<<<<<<< shade2/text.hsp:213 	_randColor	=coDefault	,coGreen	,coBlue		,coYellow ...
 
-function Item.random_item_color(item, seed)
+function ElonaItem.random_item_color(item, seed)
    seed = seed or save.base.random_seed
    local index = (Util.string_to_integer(item._id) % seed) % 6
    return table.deepcopy(RANDOM_COLORS[index+1])
@@ -267,13 +267,13 @@ local FURNITURE_COLORS = {
    Enum.Color.Brown
 }
 
-function Item.random_furniture_color()
+function ElonaItem.random_furniture_color()
    -- >>>>>>>> shade2/item.hsp:613 	if iCol(ci)=coRand	:iCol(ci)=randColor(rnd(length ...
    return table.deepcopy(Rand.choice(FURNITURE_COLORS))
    -- <<<<<<<< shade2/item.hsp:613 	if iCol(ci)=coRand	:iCol(ci)=randColor(rnd(length ...end
 end
 
-function Item.default_item_image(item)
+function ElonaItem.default_item_image(item)
    if item.params.food_type and item.params.food_quality ~= 0 then
       return Hunger.get_food_image(item.params.food_type, item.params.food_quality)
    else
@@ -281,19 +281,19 @@ function Item.default_item_image(item)
    end
 end
 
-function Item.default_item_color(item, seed)
+function ElonaItem.default_item_color(item, seed)
    -- >>>>>>>> shade2/item.hsp:615 	iCol(ci)=iColOrg(ci) ...
    if item.proto.random_color == "Random" then
-      return Item.random_item_color(item)
+      return ElonaItem.random_item_color(item)
    elseif item.proto.random_color == "Furniture" then
-      return Item.random_furniture_color(item)
+      return ElonaItem.random_furniture_color(item)
    else
       return item.proto.color
    end
    -- <<<<<<<< shade2/item.hsp:616 	if iCol(ci)=coRand	:iCol(ci)=randColor(rnd(length ..
 end
 
-function Item.fix_item(item, params)
+function ElonaItem.fix_item(item, params)
    -- If true:
    --  - Do not autoidentify with Sense Quality immediately upon creation.
    --  - No chance to generate unique items.
@@ -306,7 +306,7 @@ function Item.fix_item(item, params)
    local no_oracle = params.no_oracle or is_shop
 
    -- >>>>>>>> shade2/item.hsp:615 	iCol(ci)=iColOrg(ci) ...
-   item.color = Item.default_item_color(item) or item.color
+   item.color = ElonaItem.default_item_color(item) or item.color
    -- <<<<<<<< shade2/item.hsp:616 	if iCol(ci)=coRand	:iCol(ci)=randColor(rnd(length ..
 
    -- >>>>>>>> shade2/item.hsp:628 	itemMemory(1,dbId)++ ..
@@ -314,7 +314,7 @@ function Item.fix_item(item, params)
    item.quality = params.quality or item.quality
 
    if item.quality == Enum.Quality.Unique and not no_oracle then
-      local text = Item.generate_oracle_text(item)
+      local text = ElonaItem.generate_oracle_text(item)
       table.insert(save.elona.artifact_locations, text)
    end
    -- <<<<<<<< shade2/item.hsp:636  	} ...
@@ -370,7 +370,7 @@ function Item.fix_item(item, params)
       Effect.identify_item(item, config.base.debug_autoidentify)
    else
       local player = Chara.player()
-      if player and not is_shop and Item.is_equipment(item) then
+      if player and not is_shop and ElonaItem.is_equipment(item) then
          if Rand.rnd(player:skill_level("elona.sense_quality")+1) > 5 then
             item.identify_state = Enum.IdentifyState.Quality
          end
@@ -382,7 +382,7 @@ function Item.fix_item(item, params)
 end
 
 local function item_fix_on_build(obj, params)
-   Item.fix_item(obj, params)
+   ElonaItem.fix_item(obj, params)
 end
 Event.register("base.on_build_item", "Apply Item.fix_item", item_fix_on_build)
 
@@ -393,14 +393,14 @@ local function apply_item_on_init_params(item, params)
 end
 Event.register("base.on_item_init_params", "Default item on_init_params callback", apply_item_on_init_params)
 
-function Item.convert_artifact(item, mode)
-   if not Item.is_equipment(item) then return end
+function ElonaItem.convert_artifact(item, mode)
+   if not ElonaItem.is_equipment(item) then return end
    if item.quality ~= Enum.Quality.Unique then return end
    if item:is_equipped() then return end
    Log.error("TODO")
 end
 
-function Item.ensure_free_item_slot(chara)
+function ElonaItem.ensure_free_item_slot(chara)
    -- >>>>>>>> shade2/adv.hsp:151 *chara_adjustInv ..
    if not chara:is_inventory_full() then
       return
@@ -416,7 +416,7 @@ function Item.ensure_free_item_slot(chara)
    -- <<<<<<<< shade2/adv.hsp:164 	return p ..
 end
 
-function Item.open_chest(item, gen_filter_cb, item_count, loot_level, seed, silent)
+function ElonaItem.open_chest(item, gen_filter_cb, item_count, loot_level, seed, silent)
    local map, _, x, y = item:containing_map()
    if not map then
       return
@@ -479,11 +479,11 @@ function Item.open_chest(item, gen_filter_cb, item_count, loot_level, seed, sile
       create_medal = true
    end
    if create_medal then
-      api_Item.create("elona.small_medal", x, y, { amount = 1 }, map)
+      Item.create("elona.small_medal", x, y, { amount = 1 }, map)
    end
 
    Save.queue_autosave()
    -- <<<<<<<< shade2/action.hsp:1022 	iParam1(ri)=0 ..
 end
 
-return Item
+return ElonaItem

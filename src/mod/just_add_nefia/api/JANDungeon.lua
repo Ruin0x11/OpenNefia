@@ -92,7 +92,7 @@ function JANDungeon.dig_path_between(map, start_x, start_y, end_x, end_y, cache,
       local dx = math.abs(node_a.x - node_b.x)
       local dy = math.abs(node_a.y - node_b.y)
       if dx > 0 and dy > 0 then
-         dist = dist * 10
+         dist = dist * 100
       end
       if not node_a.can_access then
          dist = dist * 10
@@ -112,7 +112,7 @@ function JANDungeon.dig_path_between(map, start_x, start_y, end_x, end_y, cache,
    end
 
    for _, node in ipairs(path) do
-      if true or not map:can_access(node.x, node.y) then
+      if not map:can_access(node.x, node.y) then
          map:set_tile(node.x, node.y, tile)
       end
    end
@@ -332,24 +332,20 @@ local function try_place_door(map, x, y)
       return
    end
 
-   if map:tile(x - 1, y)._id == "elona.mapgen_tunnel"
-      and map:tile(x + 1, y)._id == "elona.mapgen_tunnel"
+   if (map:tile(x - 1, y)._id == "elona.mapgen_tunnel" and map:tile(x + 1, y)._id == "elona.mapgen_room")
+      or (map:tile(x - 1, y)._id == "elona.mapgen_room" and map:tile(x + 1, y)._id == "elona.mapgen_tunnel")
    then
-      if map:tile(x, y - 1)._id == "elona.mapgen_floor"
-         and map:tile(x, y + 1)._id == "elona.mapgen_floor"
-      then
+      if not map:is_floor(x, y - 1) and not map:is_floor(x, y + 1) then
          Feat.create("elona.door", x, y, {difficulty = Dungeon.calc_door_difficulty(map)}, map)
       end
 
       return
    end
 
-   if map:tile(x, y - 1)._id == "elona.mapgen_tunnel"
-      and map:tile(x, y + 1)._id == "elona.mapgen_tunnel"
+   if (map:tile(x, y - 1)._id == "elona.mapgen_tunnel" and map:tile(x, y + 1)._id == "elona.mapgen_room")
+      or (map:tile(x, y - 1)._id == "elona.mapgen_room" and map:tile(x, y + 1)._id == "elona.mapgen_tunnel")
    then
-      if map:tile(x - 1, y)._id == "elona.mapgen_floor"
-         and map:tile(x + 1, y)._id == "elona.mapgen_floor"
-      then
+      if not map:is_floor(x - 1, y) and not map:is_floor(x + 1, y) then
          Feat.create("elona.door", x, y, {difficulty = Dungeon.calc_door_difficulty(map)}, map)
       end
 
@@ -374,7 +370,7 @@ OOOO########OOOOO########OOOO]],
 
       tileset = {
          ["."] = "elona.mapgen_room",
-         ["#"] = "elona.mapgen_floor",
+         ["#"] = "elona.mapgen_default",
          ["O"] = "elona.mapgen_wall",
          ["x"] = "elona.mapgen_tunnel",
       }
@@ -396,13 +392,8 @@ OOOO########OOOOO########OOOO]],
       return nil
    end
 
-   for j = 1, math.floor(map:height() / 2) - 2 - 1 do
-      local y = j * 2
-      for i = 1, math.floor(map:width() / 2) - 2 - 1 do
-         local x = i * 2
-
-         try_place_door(map, x, y)
-      end
+   for _, x, y in map:iter_tiles() do
+      try_place_door(map, x, y)
    end
 
    return map
@@ -450,7 +441,7 @@ function JANDungeon.gen_firey_life(floor, params)
    local map = gen(floor, params)
    map:set_archetype("just_add_nefia.firey_life", { set_properties = true })
 
-   map.max_crowd_density = map:width() * map:height() / 5
+   map.max_crowd_density = map:width() * map:height() / 20
 
    return map
 end

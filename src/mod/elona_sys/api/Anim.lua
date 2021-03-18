@@ -733,7 +733,9 @@ function Anim.ragnarok(flames, use_screen_pos)
 
                if frame >= 0 then
                   t.base.anim_flame:draw_region(frame + 1, x, y)
-                  t.base.anim_flame:draw_region(frame + 1, x, y - 96)
+                  if not use_screen_pos then
+                     t.base.anim_flame:draw_region(frame + 1, x, y - 96)
+                  end
                   flame.frame = flame.frame + 1 * delta
                else
                   flame.frame = flame.frame + Rand.rnd(2) * delta

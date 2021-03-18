@@ -16,7 +16,7 @@ local DeferredEvents = require("mod.elona.api.DeferredEvents")
 local MapgenUtils = require("mod.elona.api.MapgenUtils")
 local Enum = require("api.Enum")
 local Event = require("api.Event")
-local Charagen = require("mod.tools.api.Charagen")
+local Charagen = require("mod.elona.api.Charagen")
 
 do
    local vernis = {

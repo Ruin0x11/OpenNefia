@@ -184,6 +184,7 @@ function PositionPrompt:draw()
    end
    Draw.set_blend_mode("alpha")
 
+   Draw.set_font(14)
    for i, line in ipairs(self.target_text) do
       Draw.text_shadowed(line, 100, Gui.message_window_y() - 45 - i * 20)
    end

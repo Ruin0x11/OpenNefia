@@ -12,7 +12,7 @@ local Save = require("api.Save")
 local Enum = require("api.Enum")
 local Calc = require("mod.elona.api.Calc")
 local Filters = require("mod.elona.api.Filters")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local I18N = require("api.I18N")
 local God = require("mod.elona.api.God")
 local AliasPrompt = require("api.gui.AliasPrompt")
@@ -21,7 +21,7 @@ local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Text = require("mod.elona.api.Text")
 local Mef = require("api.Mef")
 local Const = require("api.Const")
-local Quest = require("mod.elona.api.Quest")
+local ElonaQuest = require("mod.elona.api.ElonaQuest")
 local Hunger = require("mod.elona.api.Hunger")
 local Material = require("mod.elona.api.Material")
 local Area = require("api.Area")
@@ -952,7 +952,7 @@ data:add {
          Gui.mes("magic.escape.cancel")
          s.turns_until_cast_return = 0
       else
-         if Quest.is_non_returnable_quest_active() then
+         if ElonaQuest.is_non_returnable_quest_active() then
             Gui.mes("misc.return.forbidden")
             if not Input.yes_no() then
                return false

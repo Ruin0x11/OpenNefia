@@ -3,7 +3,7 @@ local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Item = require("api.Item")
 local Rand = require("api.Rand")
-local Magic = require("mod.elona.api.Magic")
+local ElonaMagic = require("mod.elona.api.ElonaMagic")
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
 local ItemMaterial = require("mod.elona.api.ItemMaterial")
@@ -12,7 +12,7 @@ local ItemFunction = require("mod.elona.api.ItemFunction")
 local Calc = require("mod.elona.api.Calc")
 local Building = require("mod.elona.api.Building")
 local I18N = require("api.I18N")
-local elona_sys_Magic = require("mod.elona_sys.api.Magic")
+local Magic = require("mod.elona_sys.api.Magic")
 local Input = require("api.Input")
 local Log = require("api.Log")
 local Chara = require("api.Chara")
@@ -21,11 +21,11 @@ local Anim = require("mod.elona_sys.api.Anim")
 local World = require("api.World")
 local Weather = require("mod.elona.api.Weather")
 local Area = require("api.Area")
-local elona_Item = require("mod.elona.api.Item")
+local ElonaItem = require("mod.elona.api.ElonaItem")
 local Filters = require("mod.elona.api.Filters")
 local SkillCheck = require("mod.elona.api.SkillCheck")
 local Const = require("api.Const")
-local Charagen = require("mod.tools.api.Charagen")
+local Charagen = require("mod.elona.api.Charagen")
 local Mef = require("api.Mef")
 local Hunger = require("mod.elona.api.Hunger")
 local ProductionMenu = require("mod.elona.api.gui.ProductionMenu")
@@ -101,7 +101,7 @@ local function open_chest(filter, item_count, after_cb)
          end
       end
 
-      elona_Item.open_chest(sep, filter, item_count)
+      ElonaItem.open_chest(sep, filter, item_count)
       sep.params.chest_item_level = 0
 
       if after_cb then
@@ -152,7 +152,7 @@ local function new_years_gift_effect(gift, chara)
       end
 
       Gui.mes_visible("action.open.new_year_gift.cursed_letter", chara.x, chara.y)
-      elona_sys_Magic.cast("elona.effect_curse", { source = chara, target = chara, power = 1000 })
+      Magic.cast("elona.effect_curse", { source = chara, target = chara, power = 1000 })
       return
    end
 
@@ -698,7 +698,7 @@ local item =
          value = 480,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.identify", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.identify", power = 100 }}, params)
          end,
          category = 53000,
          coefficient = 0,
@@ -719,7 +719,7 @@ local item =
          value = 12000,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.oracle", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.oracle", power = 100 }}, params)
          end,
          category = 53000,
          coefficient = 0,
@@ -740,7 +740,7 @@ local item =
          value = 200,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.teleport", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.teleport", power = 100 }}, params)
          end,
          category = 53000,
          coefficient = 0,
@@ -763,7 +763,7 @@ local item =
          value = 3500,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.buff_incognito", power = 300 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.buff_incognito", power = 300 }}, params)
          end,
          category = 53000,
          rarity = 70000,
@@ -793,7 +793,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.identify", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.identify", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -819,7 +819,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.teleport_other", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.teleport_other", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 12 + Rand.rnd(12) - Rand.rnd(12)
@@ -845,7 +845,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_teleport", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_teleport", params)
          end,
          on_init_params = function(self)
             self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
@@ -873,7 +873,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_identify", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_identify", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -901,7 +901,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_uncurse", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_uncurse", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -1008,7 +1008,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_dirty_water", item, params)
+            return ElonaMagic.drink_potion("elona.effect_dirty_water", item, params)
          end,
          categories = {
             "elona.drink",
@@ -1027,7 +1027,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_blind", 200, item, params)
+            return ElonaMagic.drink_potion("elona.effect_blind", 200, item, params)
          end,
 
          tags = { "neg" },
@@ -1050,7 +1050,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_confuse", 150, item, params)
+            return ElonaMagic.drink_potion("elona.effect_confuse", 150, item, params)
          end,
 
          tags = { "neg" },
@@ -1073,7 +1073,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_paralyze", 200, item, params)
+            return ElonaMagic.drink_potion("elona.effect_paralyze", 200, item, params)
          end,
 
          tags = { "neg" },
@@ -1095,7 +1095,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_sleep", 200, item, params)
+            return ElonaMagic.drink_potion("elona.effect_sleep", 200, item, params)
          end,
 
          tags = { "nogive" },
@@ -1117,7 +1117,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_ale", 300, item, params)
+            return ElonaMagic.drink_potion("elona.effect_ale", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1139,7 +1139,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_ice_bolt", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_ice_bolt", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -1166,7 +1166,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_fire_bolt", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_fire_bolt", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -1193,7 +1193,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_lightning_bolt", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_lightning_bolt", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -1989,7 +1989,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.heal_light", 100, item, params)
+            return ElonaMagic.drink_potion("elona.heal_light", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -2012,7 +2012,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.heal_light", 300, item, params)
+            return ElonaMagic.drink_potion("elona.heal_light", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -2035,7 +2035,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.heal_critical", 100, item, params)
+            return ElonaMagic.drink_potion("elona.heal_critical", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -2059,7 +2059,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.heal_critical", 300, item, params)
+            return ElonaMagic.drink_potion("elona.heal_critical", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -2083,7 +2083,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.heal_critical", 400, item, params)
+            return ElonaMagic.drink_potion("elona.heal_critical", 400, item, params)
          end,
          categories = {
             "elona.drink",
@@ -2146,7 +2146,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.cure_of_eris", 100, item, params)
+            return ElonaMagic.drink_potion("elona.cure_of_eris", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -2170,7 +2170,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.cure_of_eris", 300, item, params)
+            return ElonaMagic.drink_potion("elona.cure_of_eris", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -2194,7 +2194,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.cure_of_jure", 100, item, params)
+            return ElonaMagic.drink_potion("elona.cure_of_jure", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -2385,7 +2385,7 @@ local item =
 
          skill = "elona.performer",
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.performer", { source = params.chara, item = self })
+            Magic.cast("elona.performer", { source = params.chara, item = self })
          end,
          params = { instrument_quality = 200 },
          categories = {
@@ -2700,7 +2700,7 @@ local item =
             amount_dryness = 0,
          },
 
-         on_drink = Magic.drink_well,
+         on_drink = ElonaMagic.drink_well,
          elona_type = "well",
 
          categories = {
@@ -2752,7 +2752,7 @@ local item =
          coefficient = 100,
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+            Magic.cast("elona.cooking", { source = params.chara, item = self })
          end,
          params = { cooking_quality = 150 },
 
@@ -2814,7 +2814,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_dimensional_move", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_dimensional_move", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -2857,7 +2857,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_summon_monsters", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_summon_monsters", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -2885,7 +2885,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.heal_light", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.heal_light", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -2912,7 +2912,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.magic_dart", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.magic_dart", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 10 + Rand.rnd(10) - Rand.rnd(10)
@@ -2938,7 +2938,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.summon_monsters", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.summon_monsters", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -2965,7 +2965,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.ice_bolt", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.ice_bolt", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -2992,7 +2992,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.fire_bolt", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.fire_bolt", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 10 + Rand.rnd(10) - Rand.rnd(10)
@@ -3034,7 +3034,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.cure_of_eris", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.cure_of_eris", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -3283,7 +3283,7 @@ local item =
          coefficient = 100,
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+            Magic.cast("elona.cooking", { source = params.chara, item = self })
          end,
          params = { cooking_quality = 200 },
          categories = {
@@ -3442,7 +3442,7 @@ local item =
          random_color = "Furniture",
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+            Magic.cast("elona.cooking", { source = params.chara, item = self })
          end,
          params = { cooking_quality = 100 },
          categories = {
@@ -3462,7 +3462,7 @@ local item =
          random_color = "Furniture",
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+            Magic.cast("elona.cooking", { source = params.chara, item = self })
          end,
          params = { cooking_quality = 100 },
          categories = {
@@ -3482,7 +3482,7 @@ local item =
          random_color = "Furniture",
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+            Magic.cast("elona.cooking", { source = params.chara, item = self })
          end,
          params = { cooking_quality = 100 },
          categories = {
@@ -3765,7 +3765,7 @@ local item =
             amount_dryness = 0,
          },
 
-         on_drink = Magic.drink_well,
+         on_drink = ElonaMagic.drink_well,
          elona_type = "well",
 
          categories = {
@@ -3809,7 +3809,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.lightning_bolt", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.lightning_bolt", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 10 + Rand.rnd(10) - Rand.rnd(10)
@@ -3836,7 +3836,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.buff_slow", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.buff_slow", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -4342,7 +4342,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.magic_map", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.magic_map", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 9 + Rand.rnd(9) - Rand.rnd(9)
@@ -4370,7 +4370,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.heal_critical", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.heal_critical", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -4485,7 +4485,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_ale", 500, item, params)
+            return ElonaMagic.drink_potion("elona.effect_ale", 500, item, params)
          end,
          categories = {
             "elona.drink",
@@ -4607,7 +4607,7 @@ local item =
          value = 1050,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.uncurse", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.uncurse", power = 100 }}, params)
          end,
          category = 53000,
          coefficient = 0,
@@ -4880,7 +4880,7 @@ local item =
          coefficient = 100,
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+            Magic.cast("elona.cooking", { source = params.chara, item = self })
          end,
          params = { cooking_quality = 60 },
          categories = {
@@ -5181,7 +5181,7 @@ local item =
          value = 750,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.return", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.return", power = 100 }}, params)
          end,
          category = 53000,
          rarity = 300000,
@@ -5309,7 +5309,7 @@ local item =
          value = 480,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.magic_map", power = 500 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.magic_map", power = 500 }}, params)
          end,
          category = 53000,
          coefficient = 0,
@@ -5330,7 +5330,7 @@ local item =
          value = 240000,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_gain_skill", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_skill", power = 100 }}, params)
          end,
          level = 15,
          category = 53000,
@@ -5369,7 +5369,7 @@ local item =
          value = 8000,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_gain_knowledge", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_knowledge", power = 100 }}, params)
          end,
          level = 5,
          category = 53000,
@@ -5392,7 +5392,7 @@ local item =
          value = 200,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.teleport", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.teleport", power = 100 }}, params)
          end,
          category = 53000,
          coefficient = 0,
@@ -5424,7 +5424,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_magic_map", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_magic_map", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -5453,7 +5453,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_oracle", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_oracle", params)
          end,
          on_init_params = function(self)
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
@@ -5482,7 +5482,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_return", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_return", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -5509,7 +5509,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_heal_light", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_heal_light", params)
          end,
          on_init_params = function(self)
             self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
@@ -5537,7 +5537,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_heal_critical", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_heal_critical", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -5566,7 +5566,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_cure_of_eris", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_cure_of_eris", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -5595,7 +5595,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_cure_of_jure", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_cure_of_jure", params)
          end,
          on_init_params = function(self)
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
@@ -5619,7 +5619,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_ale", 200, item, params)
+            return ElonaMagic.drink_potion("elona.effect_ale", 200, item, params)
          end,
          categories = {
             "elona.drink",
@@ -5640,7 +5640,7 @@ local item =
 
          skill = "elona.performer",
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.performer", { source = params.chara, item = self })
+            Magic.cast("elona.performer", { source = params.chara, item = self })
          end,
          params = { instrument_quality = 110 },
 
@@ -5662,7 +5662,7 @@ local item =
          coefficient = 100,
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+            Magic.cast("elona.cooking", { source = params.chara, item = self })
          end,
          params = { cooking_quality = 40 },
          categories = {
@@ -5680,7 +5680,7 @@ local item =
          coefficient = 100,
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+            Magic.cast("elona.cooking", { source = params.chara, item = self })
          end,
          params = { cooking_quality = 80 },
          categories = {
@@ -5702,7 +5702,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_magic_dart", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_magic_dart", params)
          end,
          on_init_params = function(self)
             self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
@@ -5805,7 +5805,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_poison", 200, item, params)
+            return ElonaMagic.drink_potion("elona.effect_poison", 200, item, params)
          end,
 
          tags = { "nogive", "elona.is_acid" },
@@ -5831,7 +5831,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_nether_arrow", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_nether_arrow", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -5860,7 +5860,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_chaos_eye", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_chaos_eye", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -5888,7 +5888,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_nerve_arrow", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_nerve_arrow", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -5940,7 +5940,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_darkness_bolt", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_darkness_bolt", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -5968,7 +5968,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_mind_bolt", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_mind_bolt", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -5996,7 +5996,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_ice_ball", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_ice_ball", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -6024,7 +6024,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_fire_ball", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_fire_ball", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -6053,7 +6053,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_raging_roar", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_raging_roar", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -6082,7 +6082,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_chaos_ball", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_chaos_ball", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -6313,7 +6313,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.restore_body", 100, item, params)
+            return ElonaMagic.drink_potion("elona.restore_body", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -6335,7 +6335,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.restore_spirit", 100, item, params)
+            return ElonaMagic.drink_potion("elona.restore_spirit", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -6357,7 +6357,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_gain_potential", 100, item, params)
+            return ElonaMagic.drink_potion("elona.effect_gain_potential", 100, item, params)
          end,
 
          tags = { "spshop" },
@@ -6375,7 +6375,7 @@ local item =
          value = 150,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_curse", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_curse", power = 100 }}, params)
          end,
          category = 53000,
          coefficient = 0,
@@ -6407,7 +6407,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_wish", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_wish", params)
          end,
          on_init_params = function(self)
             self.charges = 1 + Rand.rnd(1) - Rand.rnd(1)
@@ -6436,7 +6436,7 @@ local item =
          has_random_name = true,
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.wish", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.wish", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 1 + Rand.rnd(1) - Rand.rnd(1)
@@ -6698,7 +6698,7 @@ local item =
          coefficient = 100,
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+            Magic.cast("elona.cooking", { source = params.chara, item = self })
          end,
          params = { bed_quality = 200 },
 
@@ -7053,7 +7053,7 @@ local item =
          coefficient = 100,
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.performer", { source = params.chara, item = self })
+            Magic.cast("elona.performer", { source = params.chara, item = self })
          end,
          params = { instrument_quality = 150 },
          categories = {
@@ -7262,7 +7262,7 @@ local item =
          params = { bait_type = "elona.water_flea", bait_amount = 0 },
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.fishing", { source = params.chara, item = self })
+            Magic.cast("elona.fishing", { source = params.chara, item = self })
          end,
 
          elona_function = 16,
@@ -7885,7 +7885,7 @@ local item =
          value = 3500,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.identify", power = 2000 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.identify", power = 2000 }}, params)
          end,
          level = 10,
          category = 53000,
@@ -7908,7 +7908,7 @@ local item =
          value = 4400,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.uncurse", power = 2500 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.uncurse", power = 2500 }}, params)
          end,
          level = 12,
          category = 53000,
@@ -7937,7 +7937,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.buff_holy_shield", 200, item, params)
+            return ElonaMagic.drink_potion("elona.buff_holy_shield", 200, item, params)
          end,
          categories = {
             "elona.drink",
@@ -7959,7 +7959,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.buff_holy_shield", params)
+            return ElonaMagic.read_spellbook(self, "elona.buff_holy_shield", params)
          end,
          on_init_params = function(self)
             self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
@@ -7987,7 +7987,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.buff_mist_of_silence", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.buff_mist_of_silence", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 7 + Rand.rnd(7) - Rand.rnd(7)
@@ -8015,7 +8015,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.buff_mist_of_silence", params)
+            return ElonaMagic.read_spellbook(self, "elona.buff_mist_of_silence", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -8040,7 +8040,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.buff_mist_of_silence", 400, item, params)
+            return ElonaMagic.drink_potion("elona.buff_mist_of_silence", 400, item, params)
          end,
 
          tags = { "neg" },
@@ -8067,7 +8067,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.buff_regeneration", params)
+            return ElonaMagic.read_spellbook(self, "elona.buff_regeneration", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -8094,7 +8094,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.buff_regeneration", 300, item, params)
+            return ElonaMagic.drink_potion("elona.buff_regeneration", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -8117,7 +8117,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.buff_elemental_shield", params)
+            return ElonaMagic.read_spellbook(self, "elona.buff_elemental_shield", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -8144,7 +8144,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.buff_elemental_shield", 250, item, params)
+            return ElonaMagic.drink_potion("elona.buff_elemental_shield", 250, item, params)
          end,
          categories = {
             "elona.drink",
@@ -8167,7 +8167,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.buff_speed", params)
+            return ElonaMagic.read_spellbook(self, "elona.buff_speed", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -8196,7 +8196,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.buff_slow", params)
+            return ElonaMagic.read_spellbook(self, "elona.buff_slow", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -8223,7 +8223,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.buff_speed", 250, item, params)
+            return ElonaMagic.drink_potion("elona.buff_speed", 250, item, params)
          end,
          categories = {
             "elona.drink",
@@ -8242,7 +8242,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.buff_slow", 400, item, params)
+            return ElonaMagic.drink_potion("elona.buff_slow", 400, item, params)
          end,
 
          tags = { "neg" },
@@ -8268,7 +8268,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.buff_speed", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.buff_speed", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -8295,7 +8295,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.buff_hero", params)
+            return ElonaMagic.read_spellbook(self, "elona.buff_hero", params)
          end,
          on_init_params = function(self)
             self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
@@ -8321,7 +8321,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.buff_hero", 250, item, params)
+            return ElonaMagic.drink_potion("elona.buff_hero", 250, item, params)
          end,
          categories = {
             "elona.drink",
@@ -8343,7 +8343,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.buff_mist_of_frailness", params)
+            return ElonaMagic.read_spellbook(self, "elona.buff_mist_of_frailness", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -8372,7 +8372,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.buff_element_scar", params)
+            return ElonaMagic.read_spellbook(self, "elona.buff_element_scar", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -8397,7 +8397,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.buff_mist_of_frailness", 250, item, params)
+            return ElonaMagic.drink_potion("elona.buff_mist_of_frailness", 250, item, params)
          end,
 
          tags = { "neg" },
@@ -8424,7 +8424,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.buff_holy_veil", params)
+            return ElonaMagic.read_spellbook(self, "elona.buff_holy_veil", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -8444,7 +8444,7 @@ local item =
          value = 1500,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.buff_holy_veil", power = 250 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.buff_holy_veil", power = 250 }}, params)
          end,
          level = 3,
          category = 53000,
@@ -8476,7 +8476,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.vanquish_hex", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.vanquish_hex", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 6 + Rand.rnd(6) - Rand.rnd(6)
@@ -8504,7 +8504,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_holy_light", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_holy_light", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -8533,7 +8533,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_vanquish_hex", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_vanquish_hex", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -8553,7 +8553,7 @@ local item =
          value = 350,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.holy_light", power = 300 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.holy_light", power = 300 }}, params)
          end,
          category = 53000,
          rarity = 800000,
@@ -8575,7 +8575,7 @@ local item =
          value = 1400,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.vanquish_hex", power = 300 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.vanquish_hex", power = 300 }}, params)
          end,
          level = 5,
          category = 53000,
@@ -8598,7 +8598,7 @@ local item =
          value = 2400,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.harvest_mana", power = 250 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.harvest_mana", power = 250 }}, params)
          end,
          level = 5,
          category = 53000,
@@ -8630,7 +8630,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.harvest_mana", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.harvest_mana", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -8652,7 +8652,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_sulfuric", 100, item, params)
+            return ElonaMagic.drink_potion("elona.effect_sulfuric", 100, item, params)
          end,
 
          tags = { "nogive", "elona.is_acid" },
@@ -8701,7 +8701,7 @@ local item =
          value = 3800,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_create_material", power = 250 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_create_material", power = 250 }}, params)
          end,
          level = 5,
          category = 53000,
@@ -8733,7 +8733,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.buff_nightmare", params)
+            return ElonaMagic.read_spellbook(self, "elona.buff_nightmare", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -8762,7 +8762,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.buff_divine_wisdom", params)
+            return ElonaMagic.read_spellbook(self, "elona.buff_divine_wisdom", params)
          end,
          on_init_params = function(self)
             self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
@@ -8782,7 +8782,7 @@ local item =
          value = 1800,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.buff_divine_wisdom", power = 250 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.buff_divine_wisdom", power = 250 }}, params)
          end,
          level = 3,
          category = 53000,
@@ -8997,7 +8997,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_sense_object", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_sense_object", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -9017,7 +9017,7 @@ local item =
          value = 350,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.sense_object", power = 500 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.sense_object", power = 500 }}, params)
          end,
          category = 53000,
          coefficient = 0,
@@ -9047,7 +9047,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.uncurse", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.uncurse", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -9555,7 +9555,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_weaken_resistance", 100, item, params)
+            return ElonaMagic.drink_potion("elona.effect_weaken_resistance", 100, item, params)
          end,
 
          tags = { "neg" },
@@ -9573,7 +9573,7 @@ local item =
          value = 15000,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_gain_skill_potential", power = 500 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_skill_potential", power = 500 }}, params)
          end,
          level = 5,
          category = 53000,
@@ -9600,7 +9600,7 @@ local item =
          value = 12000,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_gain_faith", power = 300 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_faith", power = 300 }}, params)
          end,
          level = 5,
          category = 53000,
@@ -9634,7 +9634,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.mutation", 100, item, params)
+            return ElonaMagic.drink_potion("elona.mutation", 100, item, params)
          end,
 
          tags = { "nogive" },
@@ -9660,7 +9660,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_cure_mutation", 200, item, params)
+            return ElonaMagic.drink_potion("elona.effect_cure_mutation", 200, item, params)
          end,
          categories = {
             "elona.drink",
@@ -9683,7 +9683,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_mutation", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_mutation", params)
          end,
          on_init_params = function(self)
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
@@ -10654,7 +10654,7 @@ local item =
          value = 9000,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_gain_ally", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_ally", power = 100 }}, params)
          end,
          level = 10,
          category = 53000,
@@ -10685,7 +10685,7 @@ local item =
          has_random_name = true,
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.dominate", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.dominate", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
@@ -10718,7 +10718,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_dominate", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_dominate", params)
          end,
          on_init_params = function(self)
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
@@ -10798,7 +10798,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_web", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_web", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -10827,7 +10827,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.web", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.web", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -11146,7 +11146,7 @@ local item =
          value = 600,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_change_material", power = 10 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_change_material", power = 10 }}, params)
          end,
          category = 53000,
          coefficient = 0,
@@ -11170,7 +11170,7 @@ local item =
          value = 5000,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_change_material", power = 180 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_change_material", power = 180 }}, params)
          end,
          level = 15,
          category = 53000,
@@ -11193,7 +11193,7 @@ local item =
          value = 20000,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_change_material", power = 350 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_change_material", power = 350 }}, params)
          end,
          level = 30,
          category = 53000,
@@ -11265,7 +11265,7 @@ local item =
          value = 8000,
          weight = 380,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.gain_younger_sister", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.gain_younger_sister", power = 100 }}, params)
          end,
          level = 5,
          category = 55000,
@@ -11290,7 +11290,7 @@ local item =
          value = 8000,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_enchant_weapon", power = 200 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_enchant_weapon", power = 200 }}, params)
          end,
          category = 53000,
          rarity = 300000,
@@ -11312,7 +11312,7 @@ local item =
          value = 14000,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_enchant_weapon", power = 400 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_enchant_weapon", power = 400 }}, params)
          end,
          level = 10,
          category = 53000,
@@ -11335,7 +11335,7 @@ local item =
          value = 8000,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_enchant_armor", power = 200 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_enchant_armor", power = 200 }}, params)
          end,
          category = 53000,
          rarity = 300000,
@@ -11357,7 +11357,7 @@ local item =
          value = 14000,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_enchant_armor", power = 400 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_enchant_armor", power = 400 }}, params)
          end,
          level = 10,
          category = 53000,
@@ -11394,7 +11394,7 @@ local item =
          value = 10000,
          weight = 500,
          on_read = function(self)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_deed_of_inheritance", power = self.params.deed_of_heirship_quality }})
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_deed_of_inheritance", power = self.params.deed_of_heirship_quality }})
          end,
          level = 3,
          category = 53000,
@@ -11523,7 +11523,7 @@ local item =
          value = 2500,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_recharge", power = 300 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_recharge", power = 300 }}, params)
          end,
          level = 5,
          category = 53000,
@@ -11551,7 +11551,7 @@ local item =
 
          prevent_dip = true,
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_water", 100, item, params)
+            return ElonaMagic.drink_potion("elona.effect_water", 100, item, params)
          end,
          medal_value = 3,
          categories = {
@@ -11575,7 +11575,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.change", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.change", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -11603,7 +11603,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.effect_alchemy", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.effect_alchemy", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -11628,7 +11628,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(self, params)
-            return Magic.drink_potion("elona.effect_poison", 150, self, params)
+            return ElonaMagic.drink_potion("elona.effect_poison", 150, self, params)
          end,
 
          on_init_params = function(self, params)
@@ -12142,7 +12142,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.wall_creation", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.wall_creation", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 7 + Rand.rnd(7) - Rand.rnd(7)
@@ -12170,7 +12170,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_wall_creation", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_wall_creation", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -12223,7 +12223,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_healing_rain", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_healing_rain", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -12243,7 +12243,7 @@ local item =
          value = 3500,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.healing_rain", power = 400 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.healing_rain", power = 400 }}, params)
          end,
          level = 12,
          category = 53000,
@@ -12278,7 +12278,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_healing_touch", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_healing_touch", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -12307,7 +12307,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.healing_touch", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.healing_touch", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -12532,7 +12532,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_cure_corruption", 200, item, params)
+            return ElonaMagic.drink_potion("elona.effect_cure_corruption", 200, item, params)
          end,
          medal_value = 10,
          categories = {
@@ -12682,7 +12682,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_acid_ground", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_acid_ground", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -12711,7 +12711,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.spell_acid_ground", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.spell_acid_ground", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -12735,7 +12735,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_sulfuric", 250, item, params)
+            return ElonaMagic.drink_potion("elona.effect_sulfuric", 250, item, params)
          end,
 
          tags = { "nogive" },
@@ -12806,7 +12806,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_fire_wall", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_fire_wall", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -12835,7 +12835,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.fire_wall", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.fire_wall", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -12965,7 +12965,7 @@ local item =
          params = { chara_id = nil },
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.milk", 100, item, params)
+            return ElonaMagic.drink_potion("elona.milk", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -13019,7 +13019,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_molotov", 100, item, params)
+            return ElonaMagic.drink_potion("elona.effect_molotov", 100, item, params)
          end,
 
          tags = { "nogive" },
@@ -13111,7 +13111,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.door_creation", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.door_creation", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 6 + Rand.rnd(6) - Rand.rnd(6)
@@ -13138,7 +13138,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_door_creation", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_door_creation", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -13237,7 +13237,7 @@ local item =
          elona_function = 14,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_water", 100, item, params)
+            return ElonaMagic.drink_potion("elona.effect_water", 100, item, params)
          end,
 
          on_throw = function(self, params)
@@ -13559,7 +13559,7 @@ local item =
             amount_dryness = 0,
          },
 
-         on_drink = Magic.drink_well,
+         on_drink = ElonaMagic.drink_well,
          elona_type = "well",
 
          categories = {
@@ -13642,7 +13642,7 @@ local item =
          coefficient = 100,
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+            Magic.cast("elona.cooking", { source = params.chara, item = self })
          end,
          params = { cooking_quality = 225 },
          categories = {
@@ -13942,7 +13942,7 @@ local item =
          coefficient = 0,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_love_potion", 100, item, params)
+            return ElonaMagic.drink_potion("elona.effect_love_potion", 100, item, params)
          end,
 
          tags = { "nogive" },
@@ -13981,7 +13981,7 @@ local item =
          weight = 20,
          on_read = function(self, params)
             params.no_consume = true
-            return Magic.read_scroll(self, {{ _id = "elona.effect_treasure_map", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_treasure_map", power = 100 }}, params)
          end,
          level = 5,
          category = 53000,
@@ -14040,7 +14040,7 @@ local item =
          value = 15000,
          weight = 380,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.gain_cat_sister", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.gain_cat_sister", power = 100 }}, params)
          end,
          level = 15,
          category = 55000,
@@ -14065,7 +14065,7 @@ local item =
          value = 10000,
          weight = 380,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.gain_young_lady", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.gain_young_lady", power = 100 }}, params)
          end,
          level = 5,
          category = 55000,
@@ -14119,7 +14119,7 @@ local item =
          is_precious = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_troll_blood", 500, item, params)
+            return ElonaMagic.drink_potion("elona.effect_troll_blood", 500, item, params)
          end,
 
          tags = { "spshop" },
@@ -14190,7 +14190,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.buff_incognito", params)
+            return ElonaMagic.read_spellbook(self, "elona.buff_incognito", params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -14288,7 +14288,7 @@ local item =
          value = 40000,
          weight = 5,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_flight", power = 150 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_flight", power = 150 }}, params)
          end,
          category = 53000,
          rarity = 25000,
@@ -14452,7 +14452,7 @@ local item =
          value = 450,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_escape", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_escape", power = 100 }}, params)
          end,
          category = 53000,
          rarity = 500000,
@@ -14675,7 +14675,7 @@ local item =
             count_2 = 0,
          },
 
-         on_drink = Magic.drink_well,
+         on_drink = ElonaMagic.drink_well,
          elona_type = "well",
 
          categories = {
@@ -14847,7 +14847,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_dark_eye", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_dark_eye", params)
          end,
          on_init_params = function(self)
             self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
@@ -15870,7 +15870,7 @@ local item =
 
          skill = "elona.performer",
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.performer", { source = params.chara, item = self })
+            Magic.cast("elona.performer", { source = params.chara, item = self })
          end,
          params = { instrument_quality = 150 },
 
@@ -15896,7 +15896,7 @@ local item =
 
          skill = "elona.performer",
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.performer", { source = params.chara, item = self })
+            Magic.cast("elona.performer", { source = params.chara, item = self })
          end,
          params = { instrument_quality = 130 },
 
@@ -15921,7 +15921,7 @@ local item =
 
          skill = "elona.performer",
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.performer", { source = params.chara, item = self })
+            Magic.cast("elona.performer", { source = params.chara, item = self })
          end,
          params = { instrument_quality = 70 },
 
@@ -15947,7 +15947,7 @@ local item =
 
          skill = "elona.performer",
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.performer", { source = params.chara, item = self })
+            Magic.cast("elona.performer", { source = params.chara, item = self })
          end,
          params = { instrument_quality = 175 },
 
@@ -16026,7 +16026,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_magic_storm", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_magic_storm", params)
          end,
          on_init_params = function(self)
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
@@ -16055,7 +16055,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_crystal_spear", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_crystal_spear", params)
          end,
          on_init_params = function(self)
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
@@ -16079,7 +16079,7 @@ local item =
          originalnameref2 = "potion",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_salt", 100, item, params)
+            return ElonaMagic.drink_potion("elona.effect_salt", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -16222,7 +16222,7 @@ local item =
          coefficient = 0,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_dirty_water", 100, item, params)
+            return ElonaMagic.drink_potion("elona.effect_dirty_water", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -16275,7 +16275,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_descent", 100, item, params)
+            return ElonaMagic.drink_potion("elona.effect_descent", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -16309,7 +16309,7 @@ local item =
          skill = "elona.performer",
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.performer", { source = params.chara, item = self })
+            Magic.cast("elona.performer", { source = params.chara, item = self })
          end,
          is_precious = true,
          params = { instrument_quality = 180 },
@@ -16335,7 +16335,7 @@ local item =
          value = 6000,
          weight = 380,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.resurrection", power = 2500 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.resurrection", power = 2500 }}, params)
          end,
          category = 55000,
          rarity = 3000,
@@ -16360,7 +16360,7 @@ local item =
          value = 3500,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.buff_contingency", power = 1500 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.buff_contingency", power = 1500 }}, params)
          end,
          level = 5,
          category = 53000,
@@ -16395,7 +16395,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.buff_contingency", params)
+            return ElonaMagic.read_spellbook(self, "elona.buff_contingency", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -16422,7 +16422,7 @@ local item =
          random_color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.evolution", 100, item, params)
+            return ElonaMagic.drink_potion("elona.evolution", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -17020,7 +17020,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_four_dimensional_pocket", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_four_dimensional_pocket", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -17049,7 +17049,7 @@ local item =
          random_color = "Random",
 
          on_read = function(self, params)
-            return Magic.read_spellbook(self, "elona.spell_wizards_harvest", params)
+            return ElonaMagic.read_spellbook(self, "elona.spell_wizards_harvest", params)
          end,
          on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -17206,7 +17206,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_sulfuric", 250, item, params)
+            return ElonaMagic.drink_potion("elona.effect_sulfuric", 250, item, params)
          end,
 
          tags = { "nogive" },
@@ -17224,7 +17224,7 @@ local item =
          value = 7500,
          weight = 20,
          on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.effect_name", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_name", power = 100 }}, params)
          end,
          level = 20,
          category = 53000,
@@ -17966,7 +17966,7 @@ local item =
          skill = "elona.performer",
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.performer", { source = params.chara, item = self })
+            Magic.cast("elona.performer", { source = params.chara, item = self })
          end,
          is_precious = true,
          params = { instrument_quality = 200 },
@@ -18133,7 +18133,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_soda", 100, item, params)
+            return ElonaMagic.drink_potion("elona.effect_soda", 100, item, params)
          end,
 
          tags = { "fest" },
@@ -18158,7 +18158,7 @@ local item =
          quality = Enum.Quality.Unique,
 
          on_drink = function(item, params)
-            return Magic.drink_potion("elona.effect_cupsule", 100, item, params)
+            return ElonaMagic.drink_potion("elona.effect_cupsule", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -18513,7 +18513,7 @@ local item =
          random_color = "Furniture",
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+            Magic.cast("elona.cooking", { source = params.chara, item = self })
          end,
 
          categories = {
@@ -18533,7 +18533,7 @@ local item =
          random_color = "Furniture",
 
          on_use = function(self, params)
-            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+            Magic.cast("elona.cooking", { source = params.chara, item = self })
          end,
 
          categories = {

@@ -6,7 +6,7 @@ local Const = require("api.Const")
 local I18N = require("api.I18N")
 local AiUtil = require("mod.elona.api.AiUtil")
 local Log = require("api.Log")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local Skill = require("mod.elona_sys.api.Skill")
 
 local Action = require("api.Action")
@@ -17,7 +17,7 @@ local Ai = require("api.Ai")
 local Chara = require("api.Chara")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
-local elona_Magic = require("mod.elona.api.Magic")
+local ElonaMagic = require("mod.elona.api.ElonaMagic")
 
 local function default_target(chara)
    return chara:get_party_leader() or Chara.player()
@@ -757,6 +757,23 @@ data:add_multi(
 
 data:add {
    _type = "base.ai_action",
+   _id = "random_movement",
+
+   act = function(chara, params)
+      -- >>>>>>>> shade2/ai.hsp:489 	if act=actRandomMove{ ...
+      local map = chara:current_map()
+      local nx, ny = Pos.random_direction(chara.x, chara.y)
+      if map:can_access(nx, ny) then
+         Action.move(chara, nx, ny)
+         return true
+      end
+      return false
+      -- <<<<<<<< shade2/ai.hsp:494 	} ..
+   end
+}
+
+data:add {
+   _type = "base.ai_action",
    _id = "melee",
 
    act = function(chara, params)
@@ -875,14 +892,14 @@ data:add {
                return true
             end
          end
-         local did_something = elona_Magic.cast_spell(skill._id, chara, true)
+         local did_something = ElonaMagic.cast_spell(skill._id, chara, true)
          if did_something then
             return true
          end
       end
 
       if skill.type == "action" then
-         local did_something = elona_Magic.do_action(skill._id, chara)
+         local did_something = ElonaMagic.do_action(skill._id, chara)
          if did_something then
             return true
          end

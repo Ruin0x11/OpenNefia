@@ -59,6 +59,7 @@ function UiSkillTracker:relayout(x, y)
 end
 
 local Chara
+local Map
 
 function UiSkillTracker:draw()
    -- >>>>>>>> shade2/screen.hsp:352 	ap3=0 ...
@@ -82,13 +83,14 @@ function UiSkillTracker:draw()
    -- <<<<<<<< shade2/screen.hsp:363 	loop ..
 end
 
-function UiSkillTracker:update(dt, map)
+function UiSkillTracker:update()
    -- HACK
+   Map = Map or require("api.Map")
    Chara = Chara or require("api.Chara")
 
    local remove = {}
    for uid, _ in pairs(self.tracked_skill_ids) do
-      local chara = map:get_object(uid)
+      local chara = Map.current():get_object(uid)
       if not Chara.is_alive(chara) then
          remove[#remove+1] = uid
       end

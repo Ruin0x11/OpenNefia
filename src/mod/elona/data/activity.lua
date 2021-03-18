@@ -13,12 +13,12 @@ local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
-local Magic = require("mod.elona.api.Magic")
+local ElonaMagic = require("mod.elona.api.ElonaMagic")
 local Quest = require("mod.elona_sys.api.Quest")
-local elona_Quest = require("mod.elona.api.Quest")
+local ElonaQuest = require("mod.elona.api.ElonaQuest")
 local I18N = require("api.I18N")
 local Action = require("api.Action")
 local Ui = require("api.Ui")
@@ -753,7 +753,7 @@ local function update_quest_score(audience)
    if quest and quest._id == "elona.party" then
       if not audience:is_in_player_party() then
          audience.impression = audience.impression + Rand.rnd(3)
-         local score = elona_Quest.calc_party_score(audience:current_map())
+         local score = ElonaQuest.calc_party_score(audience:current_map())
          -- >>>>>>>> shade2/calculation.hsp:1346 	if p>qParam2(gQuestRef) : txtEf coBlue: txt "(+"+ ..
          local diff = score - quest.params.current_points
          if diff > 0 then
@@ -1099,7 +1099,7 @@ data:add {
             end
 
             local skill_level = params.chara:skill_level(self.params.skill_id)
-            local success = Magic.try_to_read_spellbook(params.chara, difficulty, skill_level)
+            local success = ElonaMagic.try_to_read_spellbook(params.chara, difficulty, skill_level)
 
             if not success then
                params.chara:remove_activity()
@@ -1209,7 +1209,7 @@ data:add {
             end
 
             local stat_level = params.chara:skill_level("elona.stat_magic")
-            local success = Magic.try_to_read_spellbook(params.chara, difficulty, stat_level)
+            local success = ElonaMagic.try_to_read_spellbook(params.chara, difficulty, stat_level)
 
             if not success then
                params.chara:remove_activity()

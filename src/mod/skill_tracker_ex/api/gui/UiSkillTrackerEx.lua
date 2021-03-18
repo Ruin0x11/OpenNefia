@@ -94,7 +94,7 @@ function UiSkillTrackerEx:relayout(x, y)
    self.gradient = ColorBand:new(COLORS)
    self.exp_gradient = ColorBand:new(EXP_COLORS)
    if self.player_uid and self.tracked_skill_ids[self.player_uid] then
-      self.log_widget:relayout(self.x + 24, self.y + self.log_widget.padding + self.text_height * (table.count(self.tracked_skill_ids[self.player_uid]) - 1), self.y, 200, 200)
+      self.log_widget:relayout(self.x + 24, self.y + self.log_widget.padding + self.text_height * (table.count(self.tracked_skill_ids[self.player_uid].tracked_pairs) - 1), self.y, 200, 200)
    end
 end
 
@@ -109,6 +109,7 @@ function UiSkillTrackerEx:on_gain_skill_exp(skill_id, base_amount, actual_amount
 end
 
 local Chara
+local Map
 
 function UiSkillTrackerEx:draw()
    local y = self.y
@@ -137,13 +138,14 @@ function UiSkillTrackerEx:draw()
    self.log_widget:draw()
 end
 
-function UiSkillTrackerEx:update(dt, map)
+function UiSkillTrackerEx:update(dt)
    -- HACK
+   Map = Map or require("api.Map")
    Chara = Chara or require("api.Chara")
 
    local remove = {}
    for uid, _ in pairs(self.tracked_skill_ids) do
-      local chara = map:get_object(uid)
+      local chara = Map.current():get_object(uid)
       if not Chara.is_alive(chara) then
          remove[#remove+1] = uid
       end

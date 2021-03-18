@@ -6,12 +6,12 @@ local QuestMap = require("mod.elona.api.QuestMap")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Event = require("api.Event")
-local elona_Quest = require("mod.elona.api.Quest")
+local ElonaQuest = require("mod.elona.api.ElonaQuest")
 local I18N = require("api.I18N")
 local Item = require("api.Item")
 local Const = require("api.Const")
 local Enum = require("api.Enum")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 
 local map_party = {
    _type = "base.map_archetype",
@@ -80,8 +80,8 @@ local party = {
       Gui.mes("quest.party.is_over")
 
       local map = Map.current()
-      local score = elona_Quest.calc_party_score(map)
-      local bonus = elona_Quest.calc_party_score_bonus(map)
+      local score = ElonaQuest.calc_party_score(map)
+      local bonus = ElonaQuest.calc_party_score_bonus(map)
       if bonus > 0 then
          Gui.mes("quest.party.total_bonus", bonus)
       end
@@ -99,7 +99,7 @@ local party = {
       end
       -- <<<<<<<< shade2/main.hsp:1623 		} ..
 
-      elona_Quest.travel_to_previous_map()
+      ElonaQuest.travel_to_previous_map()
    end
 }
 

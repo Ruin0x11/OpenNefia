@@ -11,14 +11,14 @@ local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Mef = require("api.Mef")
 local IOwned = require("api.IOwned")
-local elona_Item = require("mod.elona.api.Item")
+local ElonaItem = require("mod.elona.api.ElonaItem")
 local Enum = require("api.Enum")
 local Effect = require("mod.elona.api.Effect")
 local Area = require("api.Area")
-local Charagen = require("mod.tools.api.Charagen")
+local Charagen = require("mod.elona.api.Charagen")
 local SaveFs = require("api.SaveFs")
 local Log = require("api.Log")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local Filters = require("mod.elona.api.Filters")
 local Quest = require("mod.elona_sys.api.Quest")
 local Skill = require("mod.elona_sys.api.Skill")
@@ -679,11 +679,11 @@ function Tools.iter_buffs(type)
 end
 
 function Tools.apply_all_buffs(type, chara, power)
-   local Magic = require("mod.elona.api.Magic")
+   local ElonaMagic = require("mod.elona.api.ElonaMagic")
    chara = chara or Chara.player()
    type = type or "blessing"
    power = power or 1000
-   Tools.iter_buffs(type):each(function(b) Magic.apply_buff(b._id, { target = chara, source = chara, power = power }) end)
+   Tools.iter_buffs(type):each(function(b) ElonaMagic.apply_buff(b._id, { target = chara, source = chara, power = power }) end)
 end
 
 function Tools.identify_all()
@@ -1031,6 +1031,12 @@ function Tools.powerup(chara, levels)
             Skill.gain_skill(chara, m._id, 2000, 1000)
            end)
 
+   Skill.iter_resistances()
+      :each(function(m)
+            chara:mod_base_resist_level(m._id, 2000, "set")
+           end)
+
+   chara:refresh()
    chara:heal_to_max()
 end
 

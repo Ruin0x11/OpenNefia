@@ -1,5 +1,5 @@
 local Rand = require("api.Rand")
-local Itemgen = require("mod.tools.api.Itemgen")
+local Itemgen = require("mod.elona.api.Itemgen")
 local schema = require("thirdparty.schema")
 local I18N = require("api.I18N")
 

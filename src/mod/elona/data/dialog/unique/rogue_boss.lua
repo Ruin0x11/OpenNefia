@@ -1,7 +1,7 @@
 local global = require("mod.elona.internal.global")
 local Chara = require("api.Chara")
 local Gui = require("api.Gui")
-local Quest = require("mod.elona.api.Quest")
+local ElonaQuest = require("mod.elona.api.ElonaQuest")
 
 -- >>>>>>>> shade2/chat.hsp:1973 		snd sePayGold ...
 local function surrender_cost()
@@ -43,7 +43,7 @@ data:add {
             {"talk.unique.rogue_boss.too_poor", args = function(t) return {t.speaker} end},
          },
          on_finish = function()
-            Quest.travel_to_previous_map()
+            ElonaQuest.travel_to_previous_map()
          end
       },
       ambush = {
@@ -75,7 +75,7 @@ data:add {
             {"talk.unique.rogue_boss.ambush.surrender", args = function(t) return {t.speaker} end},
          },
          on_finish = function()
-            Quest.travel_to_previous_map()
+            ElonaQuest.travel_to_previous_map()
          end
       },
    }

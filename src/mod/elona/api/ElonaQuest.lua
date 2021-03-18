@@ -4,13 +4,13 @@ local Enum = require("api.Enum")
 local Gui = require("api.Gui")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Map = require("api.Map")
-local elona_sys_Quest = require("mod.elona_sys.api.Quest")
+local Quest = require("mod.elona_sys.api.Quest")
 local Log = require("api.Log")
 
-local Quest = {}
+local ElonaQuest = {}
 
 -- >>>>>>>> shade2/calculation.hsp:1339 #deffunc calcPartyScore ..
-function Quest.calc_party_score(map)
+function ElonaQuest.calc_party_score(map)
    local score = 0
    for _, chara in Chara.iter_others(map):filter(Chara.is_alive) do
       if chara.impression >= Const.IMPRESSION_PARTY then
@@ -25,7 +25,7 @@ end
 -- <<<<<<<< shade2/calculation.hsp:1349 	return  ..
 
 -- >>>>>>>> shade2/calculation.hsp:1351 #deffunc calcPartyScore2 ..
-function Quest.calc_party_score_bonus(map, silent)
+function ElonaQuest.calc_party_score_bonus(map, silent)
    local bonus = 0
    for _, chara in Chara.iter_others(map):filter(Chara.is_alive) do
       if chara.impression >= Const.IMPRESSION_PARTY and chara:calc("quality") >= Enum.Quality.Great then
@@ -63,7 +63,7 @@ local function hunt_target_count(quest, map, cb)
    -- <<<<<<<< shade2/chara_func.hsp:197 		} ..
 end
 
-function Quest.update_target_count_hunt(quest, map)
+function ElonaQuest.update_target_count_hunt(quest, map)
    return hunt_target_count(quest, map, event_quest_eliminate_hunt(quest))
 end
 
@@ -75,7 +75,7 @@ local function event_quest_eliminate_escort(quest)
    end
 end
 
-function Quest.update_target_count_escort(quest, map)
+function ElonaQuest.update_target_count_escort(quest, map)
    return hunt_target_count(quest, map, event_quest_eliminate_escort(quest))
 end
 
@@ -88,7 +88,7 @@ local function event_quest_eliminate_conquer(quest)
    end
 end
 
-function Quest.update_target_count_conquer(quest, map)
+function ElonaQuest.update_target_count_conquer(quest, map)
    if quest.state == "completed" then
       return
    end
@@ -102,16 +102,16 @@ function Quest.update_target_count_conquer(quest, map)
 end
 
 -- >>>>>>>> shade2/command.hsp:4378 *check_return ..
-function Quest.is_non_returnable_quest_active()
+function ElonaQuest.is_non_returnable_quest_active()
    local pred = function(q)
       local proto = data["elona_sys.quest"]:ensure(q._id)
       return proto.prevents_return
    end
-   return elona_sys_Quest.iter_accepted():any(pred)
+   return Quest.iter_accepted():any(pred)
 end
 -- <<<<<<<< shade2/command.hsp:4384 	return f ..
 
-function Quest.travel_to_previous_map()
+function ElonaQuest.travel_to_previous_map()
    local map = Chara.player():current_map()
    local prev_map_uid, prev_x, prev_y = map:previous_map_and_location()
    if prev_map_uid == nil then
@@ -125,4 +125,4 @@ function Quest.travel_to_previous_map()
    Map.travel_to(prev_map, { start_x = prev_x, start_y = prev_y })
 end
 
-return Quest
+return ElonaQuest

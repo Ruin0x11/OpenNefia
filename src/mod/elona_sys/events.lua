@@ -15,7 +15,7 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Effect = require("mod.elona.api.Effect")
 local Calc = require("mod.elona.api.Calc")
 local Chara = require("api.Chara")
-local elona_Quest = require("mod.elona.api.Quest")
+local ElonaQuest = require("mod.elona.api.ElonaQuest")
 local Enum = require("api.Enum")
 local Hunger = require("mod.elona.api.Hunger")
 local World = require("api.World")
@@ -582,7 +582,7 @@ Event.register("elona_sys.on_quest_failed", "Run on_quest_failed callback", ques
 local function check_escort_quest_targets(map)
    local quest = Quest.get_immediate_quest()
    if quest and quest._id == "elona.escort" then
-      elona_Quest.update_target_count_escort(quest, map)
+      ElonaQuest.update_target_count_escort(quest, map)
    end
 end
 Event.register("elona_sys.on_quest_check", "Check escort quest targets", check_escort_quest_targets)
