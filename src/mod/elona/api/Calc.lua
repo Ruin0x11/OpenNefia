@@ -8,6 +8,7 @@ local Const = require("api.Const")
 local Rank = require("mod.elona.api.Rank")
 local Filters = require("mod.elona.api.Filters")
 local Itemgen = require("mod.elona.api.Itemgen")
+local Item = require("api.Item")
 
 local Calc = {}
 
@@ -576,6 +577,42 @@ function Calc.calc_ally_limit(chara)
    -- >>>>>>>> shade2/init.hsp:3174 #define global followerLimit limit(sCHR(pc)/5+1,2, ...
    return math.floor(math.clamp(chara:skill_level("elona.stat_charisma") / 5 + 1, 2, Const.MAX_CHARAS_ALLY))
    -- <<<<<<<< shade2/init.hsp:3174 #define global followerLimit limit(sCHR(pc)/5+1,2, ..
+end
+
+-- @tparam string kind "identify", "investigate"
+-- @hsp calcIdentifyValue kind
+function Calc.calc_item_identify_cost(item, kind, player)
+   kind = kind or "identify"
+   player = player or Chara.player()
+
+   local cost = 300
+   if kind == "identify" then
+      local filter = function(i) return Item.is_alive(i) and i.identify_state < Enum.IdentifyState.Full end
+      local known_count = player:iter_items():filter(filter):length()
+      if known_count >= 2 then
+         cost = cost * known_count * 70 / 100
+      end
+   elseif kind == "investigate" then
+      cost = 5000
+   end
+
+   cost = cost * 100 / (100 + player:skill_level("elona.negotiation") * 2)
+
+   if player:calc("guild") == "elona.fighter" then
+      cost = cost / 2
+   end
+
+   return math.floor(cost)
+end
+
+function Calc.calc_restore_cost(chara)
+   local cost = 500
+
+   if chara:calc("guild") == "elona.fighter" then
+      cost = cost / 2
+   end
+
+   return math.floor(cost)
 end
 
 return Calc

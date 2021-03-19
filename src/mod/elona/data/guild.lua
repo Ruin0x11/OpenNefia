@@ -1,4 +1,6 @@
 local I18N = require("api.I18N")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Event = require("api.Event")
 
 local function order(elona_id)
    return 100000 + elona_id * 10000
@@ -152,3 +154,25 @@ do
       },
    }
 end
+
+local function reset_guild_sidequest_progress(chara, params)
+   local guild_id = params.guild_id
+
+   -- >>>>>>>> shade2/chat.hsp:1861 			flagThiefGuild	=0 ...
+   if guild_id ~= "elona.mage" then
+      Sidequest.set_progress("elona.guild_mage_joining", 0)
+      Sidequest.set_progress("elona.guild_mage_quota", 0)
+      save.elona.guild_mage_point_quota = 0
+   elseif guild_id ~= "elona.fighter" then
+      Sidequest.set_progress("elona.guild_fighter_joining", 0)
+      Sidequest.set_progress("elona.guild_fighter_quota", 0)
+      save.elona.guild_fighter_target_chara_id = nil
+      save.elona.guild_fighter_target_chara_quota = 0
+   elseif guild_id ~= "elona.thief" then
+      Sidequest.set_progress("elona.guild_thief_joining", 0)
+      Sidequest.set_progress("elona.guild_thief_quota", 0)
+      save.elona.thieves_guild_quota = 0
+   end
+   -- <<<<<<<< shade2/chat.hsp:1873 			sqThief1	=0 ..
+end
+Event.register("elona.on_chara_changed_guild", "Reset other guild sidequest progress", reset_guild_sidequest_progress)

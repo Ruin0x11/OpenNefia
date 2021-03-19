@@ -125,7 +125,7 @@ data:add {
       guild_member = {
          on_start = move_off_guild_entrance,
          text = function()
-            return I18N.get("talk.unique.lexus.member.dialog", Rank.title("elona.guild"), Chara.player().name)
+            return I18N.get("talk.unique.lexus.member.dialog", Rank.title("elona.guild"), Chara.player():calc("name"))
          end,
          choices = function()
             local choices = {}

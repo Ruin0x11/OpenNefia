@@ -896,7 +896,14 @@ function Effect.on_kill(victim, attacker)
       if attacker:is_in_player_party() then
          if not victim:is_in_player_party() then
             save.base.total_killed = save.base.total_killed + 1
-            -- TODO fighter's guild
+            if save.elona.guild_fighter_target_chara_id == victim._id
+               and save.elona.guild_fighter_target_chara_quota > 0
+            then
+               save.elona.guild_fighter_target_chara_quota = save.elona.guild_fighter_target_chara_quota - 1
+            end
+            if victim.relation >= Enum.Relation.Neutral then
+               karma_lost = -2
+            end
             if victim._id == "elona.rich_person" then
                karma_lost = -15
             elseif victim._id == "elona.noble_child" then
