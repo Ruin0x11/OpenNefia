@@ -70,4 +70,9 @@ function Guild.calc_fighter_guild_target_count()
    return 2 + Rand.rnd(3)
 end
 
+function Guild.calc_thief_guild_quota(place)
+   place = place or Rank.get("elona.guild")
+   return (10000 - place) * 6 + 1000
+end
+
 return Guild

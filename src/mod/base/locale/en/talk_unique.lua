@@ -359,10 +359,6 @@ end
       },
       lexus = {
         member = {
-          choices = {
-            new_quota = "Do you have any tasks for me?",
-            report_quota = "About my task."
-          },
           dialog = function(_1, _2)
   return ("Welcome to the Mages Guild, %s %s... Please come in.")
   :format(_1, _2)
@@ -371,10 +367,6 @@ end,
   return ("Sure, there're plenty of tasks for you. For now, collect the ancient books and decrypt them. When you gather %s guild points, we will think about your promotion.")
   :format(_1)
 end,
-          report_quota = {
-            ["end"] = "You've done very well. I will give a report of your achievement to the council.",
-            waiting = "You have your task to complete."
-          }
         },
         nonmember = {
           choices = {

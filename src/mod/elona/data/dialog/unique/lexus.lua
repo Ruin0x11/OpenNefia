@@ -17,7 +17,7 @@ end
 
 local function join_guild()
    Sidequest.set_progress("elona.guild_mage_joining", 1000)
-   Rank.set("elona.guild", 10000)
+   Rank.set("elona.guild", 10000, true)
 
    Guild.set_guild(Chara.player(), "elona.mage")
 
@@ -130,9 +130,9 @@ data:add {
          choices = function()
             local choices = {}
             if Sidequest.progress("elona.guild_mage_quota") == 0 then
-               table.insert(choices, {"guild_quota_new", "talk.unique.lexus.member.choices.new_quota"})
+               table.insert(choices, {"guild_quota_new", "guild.dialog.choices.new_quota"})
             else
-               table.insert(choices, {"guild_quota_check", "talk.unique.lexus.member.choices.report_quota"})
+               table.insert(choices, {"guild_quota_check", "guild.dialog.choices.report_quota"})
             end
             table.insert(choices, {"__END__", "ui.bye"})
 
@@ -156,14 +156,14 @@ data:add {
          return "guild_quota_finish"
       end,
       guild_quota_waiting = {
-         text = "talk.unique.lexus.member.report_quota.waiting",
+         text = "guild.dialog.report_quota.waiting",
          choices = {
             {"__start", "ui.more"},
          }
       },
       guild_quota_finish = {
          on_start = receive_reward,
-         text = "talk.unique.lexus.member.report_quota.end"
+         text = "guild.dialog.report_quota.end"
       },
    }
 }

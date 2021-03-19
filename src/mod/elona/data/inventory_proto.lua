@@ -455,7 +455,7 @@ local inv_sell = {
       return name .. " " .. Ui.display_weight(item:calc("weight"))
    end,
    get_item_detail_text = function(name, item)
-      return tostring(Calc.calc_item_value(item, "buy")) .. " gp"
+      return tostring(Calc.calc_item_value(item, "sell")) .. " gp"
    end,
 
    filter = function(ctxt, item)
@@ -496,25 +496,35 @@ local inv_sell = {
       return true
    end,
    on_select = function(ctxt, item, amount)
-      Gui.mes("ui.inv.sell.prompt", item:build_name(amount), amount)
+      local cost = math.floor((Calc.calc_item_value(item, "sell") * amount))
+
+      Gui.mes("ui.inv.sell.prompt", item:build_name(amount), cost)
       if not Input.yes_no() then
          return "inventory_continue"
       end
 
-      local cost = math.floor((item:calc("value") * amount) / 5)
-
       if cost > ctxt.target.gold then
-         Gui.mes("ui.inv.sell.not_enough_money")
+         Gui.mes("ui.inv.sell.not_enough_money", ctxt.target)
          return "inventory_continue"
       end
 
-      local separated = Action.get(ctxt.target, item, amount)
-      if not separated then
+      local separated = item:separate(amount)
+      if not ctxt.target:take_item(separated) then
          Gui.mes("action.pick_up.shopkeepers_inventory_is_full")
          return "inventory_continue"
       end
 
-      Gui.mes("action.pick_up.you_sell", item:build_name(amount))
+      if not item.is_stolen then
+         Gui.mes("action.pick_up.you_sell", item:build_name(amount))
+      else
+         item.is_stolen = false
+         Gui.mes("action.pick_up.you_sell_stolen", item:build_name(amount))
+         if save.elona.guild_thief_stolen_goods_quota > 0 then
+            save.elona.guild_thief_stolen_goods_quota = math.max(save.elona.guild_thief_stolen_goods_quota - cost, 0)
+            Gui.mes("action.pick_up.thieves_guild_quota", save.elona.guild_thief_stolen_goods_quota )
+         end
+      end
+
       Gui.play_sound("base.getgold1", ctxt.chara.x, ctxt.chara.y)
       ctxt.target.gold = ctxt.target.gold - cost
       ctxt.chara.gold = ctxt.chara.gold + cost

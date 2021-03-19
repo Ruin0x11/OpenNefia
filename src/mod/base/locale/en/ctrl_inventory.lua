@@ -161,8 +161,8 @@ end
   :format(_1)
 end,
         not_enough_money = function(_1)
-  return ("%s checks %s wallet and shake %s head.")
-  :format(name(_1), his(_1), his(_1))
+  return ("%s checks %s wallet and shake%s %s head.")
+     :format(name(_1), his(_1), s(_1), his(_1))
 end,
         prompt = function(_1, _2)
   return ("Do you really want to sell %s for %s gold pieces?")

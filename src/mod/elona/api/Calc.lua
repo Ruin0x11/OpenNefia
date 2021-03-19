@@ -209,13 +209,19 @@ function Calc.calc_item_value(item, mode, is_shop)
       value = math.max(value, value_limit)
    elseif mode == "sell" then
       local value_limit = negotiation * 250 + 5000
-      value = math.max(value / 3, value_limit)
+      if value / 3 < value_limit then
+         value_limit = value / 3
+      end
       value = value * (100 + negotiation * 5) / 1000
       if ElonaItem.is_equipment(item) then
          value = value / 20
       end
-      if item:calc("is_stolen") then
-         -- TODO thief guild
+      if item.is_stolen then
+         if player:calc("guild") == "elona.thief" then
+            value = value / 3 * 2
+         else
+            value = value / 10
+         end
       end
       value = math.min(value, value_limit)
    elseif mode == "player_shop" then

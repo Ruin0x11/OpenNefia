@@ -20,7 +20,7 @@ end
 
 local function join_guild()
    Sidequest.set_progress("elona.guild_fighter_joining", 1000)
-   Rank.set("elona.guild", 10000)
+   Rank.set("elona.guild", 10000, true)
 
    Guild.set_guild(Chara.player(), "elona.fighter")
 
@@ -80,9 +80,7 @@ data:add {
       end,
 
       guild_nonmember = {
-         text = {
-            {"talk.unique.doria.nonmember.dialog"},
-         },
+         text = "talk.unique.doria.nonmember.dialog",
          choices = {
             {"guild_desc", "talk.unique.doria.nonmember.choices.tell_me_about"},
             {"guild_join_check", "talk.unique.doria.nonmember.choices.want_to_join"},
@@ -90,9 +88,7 @@ data:add {
          }
       },
       guild_desc = {
-         text = {
-            {"talk.unique.doria.nonmember.tell_me_about"},
-         },
+         text = "talk.unique.doria.nonmember.tell_me_about",
          choices = {
             {"__start", "ui.more"},
          }
@@ -145,9 +141,9 @@ data:add {
          choices = function()
             local choices = {}
             if Sidequest.progress("elona.guild_fighter_quota") == 0 then
-               table.insert(choices, {"guild_quota_new", "talk.unique.lexus.member.choices.new_quota"})
+               table.insert(choices, {"guild_quota_new", "guild.dialog.choices.new_quota"})
             else
-               table.insert(choices, {"guild_quota_check", "talk.unique.lexus.member.choices.report_quota"})
+               table.insert(choices, {"guild_quota_check", "guild.dialog.choices.report_quota"})
             end
             table.insert(choices, {"__END__", "ui.bye"})
 
@@ -171,18 +167,14 @@ data:add {
          return "guild_quota_finish"
       end,
       guild_quota_waiting = {
-         text = {
-            {"talk.unique.lexus.member.report_quota.waiting"},
-         },
+         text = "guild.dialog.report_quota.waiting",
          choices = {
             {"__start", "ui.more"},
          }
       },
       guild_quota_finish = {
-         text = {
-            receive_reward,
-            {"talk.unique.lexus.member.report_quota.end"},
-         },
+         on_start = receive_reward,
+         text = "guild.dialog.report_quota.end",
       },
    }
 }

@@ -148,7 +148,7 @@ do
 
       progress = {
          [1] = function()
-            return I18N.get("sidequest._.elona.guild_thief_quota.progress._0", save.elona.guild_thief_stolen_goods_gold_value)
+            return I18N.get("sidequest._.elona.guild_thief_quota.progress._0", save.elona.guild_thief_stolen_goods_quota)
          end,
          [1000] = "",
       },
