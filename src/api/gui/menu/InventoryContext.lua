@@ -7,6 +7,7 @@ local ILocation = require("api.ILocation")
 local Map = require("api.Map")
 local Event = require("api.Event")
 local Chara = require("api.Chara")
+local Calc = require("mod.elona.api.Calc")
 
 --- The underlying behavior of an inventory screen. Separating it like
 --- this allows trivial creation of item shortcuts, since all that is
@@ -95,7 +96,7 @@ local sources = {
       name = "ground",
       getter = source_ground,
       order = 9000,
-      on_get_name = function(self, name, item, menu)
+      get_item_name = function(self, name, item, menu)
          return name .. " (Ground)"
       end,
       params = {
@@ -108,7 +109,7 @@ local sources = {
       name = "equipment",
       getter = source_equipment,
       order = 8000,
-      on_get_name = function(self, name, item, menu)
+      get_item_name = function(self, name, item, menu)
          return name .. " (main hand)"
       end,
       on_draw = function(self, x, y, item, menu)
@@ -122,7 +123,7 @@ local sources = {
       name = "target_equipment",
       getter = source_target_equipment,
       order = 8000,
-      on_get_name = function(self, name, item, menu)
+      get_item_name = function(self, name, item, menu)
          return name .. " (main hand)"
       end,
       on_draw = function(self, x, y, item, menu)
@@ -136,12 +137,6 @@ local sources = {
       name = "shop",
       getter = source_shop,
       order = 7000,
-      on_get_name = function(self, name, item, menu)
-         return name .. " " .. Ui.display_weight(item:calc("weight"))
-      end,
-      on_get_subtext = function(self, subtext, item, menu)
-         return tostring(item:calc("value")) .. " gp"
-      end,
       params = {
          shop = "table"
       }

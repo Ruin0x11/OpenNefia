@@ -386,6 +386,15 @@ local inv_buy = {
    show_money = true,
    window_title = "ui.inventory_command.buy",
    query_text = "ui.inv.title.buy",
+   window_detail_header = "ui.inv.buy.window.price",
+
+   get_item_name = function(name, item)
+      return name .. " " .. Ui.display_weight(item:calc("weight"))
+   end,
+   get_item_detail_text = function(name, item)
+      return tostring(Calc.calc_item_value(item, "buy")) .. " gp"
+   end,
+
    can_select = function(ctxt, item)
       if item:calc("is_no_drop") then
          return false, "marked as no drop"
@@ -440,6 +449,14 @@ local inv_sell = {
    show_money = true,
    window_title = "ui.inventory_command.sell",
    query_text = "ui.inv.title.sell",
+   window_detail_header = "ui.inv.buy.window.price",
+
+   get_item_name = function(name, item)
+      return name .. " " .. Ui.display_weight(item:calc("weight"))
+   end,
+   get_item_detail_text = function(name, item)
+      return tostring(Calc.calc_item_value(item, "buy")) .. " gp"
+   end,
 
    filter = function(ctxt, item)
       -- >>>>>>>> shade2/command.hsp:3368 		if shopTrade{ ...
@@ -981,7 +998,7 @@ local inv_put_tax_box = {
       -- This can happen if you buy an extra bill from Miral.
       if save.elona.unpaid_bill_count <= 0 then
          Gui.play_sound("base.fail1")
-         Gui.mes("ui.inv.put.tax.not_enough_money")
+         Gui.mes("ui.inv.put.tax.do_not_have_to")
          return false
       end
       -- <<<<<<<< shade2/command.hsp:3908 				if gBill<=0 : snd seFail1:txt lang("まだ納税する必要はな ..

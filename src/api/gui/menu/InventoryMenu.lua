@@ -26,7 +26,7 @@ local UiListExt = function(inventory_menu)
    local E = {}
 
    function E:get_item_text(entry)
-      return entry.text
+      return entry.name
    end
    function E:get_item_color(entry)
       return entry.item:calc_ui_color()
@@ -45,24 +45,15 @@ local UiListExt = function(inventory_menu)
       end
    end
    function E:draw_item_text(item_name, entry, i, x, y, x_offset, color)
-      -- on_display_item_value
-      local subtext = Ui.display_weight(entry.item:calc("weight") * entry.item.amount)
-
-      if entry.source.on_get_name then
-         item_name = entry.source:on_get_name(item_name, entry.item, inventory_menu)
-      end
-
-      if entry.source.on_get_subtext then
-         subtext = entry.source:on_get_subtext(subtext, entry.item, inventory_menu)
-      end
+      local detail_text = entry.detail_text
 
       if inventory_menu.layout then
-         item_name, subtext = inventory_menu.layout:draw_row(entry.item, item_name, subtext, x, y)
+         item_name, detail_text = inventory_menu.layout:draw_row(entry.item, item_name, detail_text, x, y)
       end
 
       UiList.draw_item_text(self, item_name, entry, i, x, y, x_offset, color)
 
-      Draw.text(subtext, x + 516 - Draw.text_width(subtext), y + 2, color)
+      Draw.text(detail_text, x + 516 - Draw.text_width(detail_text), y + 2, color)
    end
    function E:draw()
       UiList.draw(self)
@@ -89,7 +80,7 @@ function InventoryMenu:init(ctxt, returns_item)
    self.max_weight = 0
    self.cargo_weight = 0
    self.layout = nil -- ResistanceLayout:new()
-   self.subtext_column = "subtext"
+   self.subtext_column = self.ctxt.proto.window_detail_header or "ui.inv.window.weight"
    self.is_drawing = true
    self.total_weight_text = ""
    self.text_equip_slots = {}
@@ -211,6 +202,10 @@ function InventoryMenu.filter_item(ctxt, item)
    return ctxt:filter(item)
 end
 
+local function default_detail_text(item)
+   return Ui.display_weight(item:calc("weight") * item.amount)
+end
+
 function InventoryMenu.build_list(ctxt)
    local filtered = {}
    local all = {}
@@ -225,10 +220,27 @@ function InventoryMenu.build_list(ctxt)
    for _, source in pairs(sources) do
       local items = source.getter(ctxt)
       items = items:map(function(item)
+            local item_name = item:build_name()
+            if ctxt.proto.get_item_name then
+               item_name = ctxt.proto.get_item_name(item_name, item)
+            end
+            if source.get_item_name then
+               item_name = source:get_item_name(item_name, item)
+            end
+
+            local detail_text = default_detail_text(item)
+            if ctxt.proto.get_item_detail_text then
+               detail_text = ctxt.proto.get_item_detail_text(item_name, item)
+            end
+            if source.get_item_detail_text then
+               detail_text = source:get_item_detail_text(detail_text, item)
+            end
+
             return {
                item = item,
                source = source,
-               text = item:build_name(),
+               name = item_name,
+               detail_text = detail_text,
                color = item:calc("color")
             }
       end)
