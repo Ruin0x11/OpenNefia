@@ -1134,6 +1134,7 @@ function Effect.spoil_items(map)
          and item:calc("material") == "elona.fresh"
          and (item.spoilage_date or 0) > 0
          and item.spoilage_date < date_hours
+         and item:calc("own_state") <= Enum.OwnState.None
    end
 
    for _, item in Item.iter(map):filter(will_rot) do
