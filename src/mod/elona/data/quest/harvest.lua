@@ -188,6 +188,11 @@ data:add {
          end
       },
       complete = {
+         on_start = function(t)
+            local quest = Quest.for_client(t.speaker)
+            assert(quest)
+            Quest.complete(quest, t.speaker)
+         end,
          text = function(t)
             local text = I18N.get("quest.giver.complete.done_well", t.speaker)
 
@@ -200,11 +205,6 @@ data:add {
             -- <<<<<<<< shade2/text.hsp:1252 		if qExist(rq)=qHarvest:if qParam1(rq)*125/100<qP ..
 
             return {text}
-         end,
-         on_start = function(t)
-            local quest = Quest.for_client(t.speaker)
-            assert(quest)
-            Quest.complete(quest, t.speaker)
          end,
          jump_to = "elona.default:__start"
       }

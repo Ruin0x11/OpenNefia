@@ -307,6 +307,14 @@ local function step_dialog(node_data, talk, state, prev_node_id)
       -- which checks if the chat buffer wasn't previously set. (buff="")
       local texts = node_data.prev_text or node.text
 
+      -- Run on_start callback.
+      if node.on_start then
+         local ok, result = pcall(node.on_start, talk, state, node_data.params)
+         if not ok then
+            dialog_error(talk, "Error running on_start function", result)
+         end
+      end
+
       if type(texts) == "string" then
          texts = { texts }
       elseif type(texts) == "function" then
@@ -322,14 +330,6 @@ local function step_dialog(node_data, talk, state, prev_node_id)
 
          if type(texts) ~= "table" then
             dialog_error(talk, "`text` function must return a string or a table of strings")
-         end
-      end
-
-      -- Run on_start callback.
-      if node.on_start then
-         local ok, result = pcall(node.on_start, talk, state, node_data.params)
-         if not ok then
-            dialog_error(talk, "Error running on_start function", result)
          end
       end
 

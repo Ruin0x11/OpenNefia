@@ -77,7 +77,9 @@ function Quest.generate_from_proto(proto_id, chara, map)
 
    local existing_quest = Quest.for_client(uid)
    if existing_quest then
-      Log.warn("Overwriting quest for client " .. uid .. " as they are already giving one.")
+      if existing_quest.state ~= "finished" then
+         Log.warn("Overwriting quest for client " .. uid .. " as they are already giving one.")
+      end
       assert(table.iremove_value(save.elona_sys.quest.quests, existing_quest))
    end
 
@@ -93,7 +95,11 @@ function Quest.generate_from_proto(proto_id, chara, map)
       _id = proto._id,
       client_chara_type = 0,
       difficulty = 0,
-      -- not_accepted, accepted, failed, completed
+      -- not_accepted: quest is viewable in the quest board
+      -- accepted: quest is viewable in the player's journal
+      -- failed: quest was failed
+      -- completed: quest was finished, but not turned in yet
+      -- finished: quest was finished and turned in.
       state = "not_accepted",
       expiration_date = 0,
       deadline_days = nil,
@@ -518,6 +524,7 @@ function Quest.update_in_map(map)
          local do_generate = quest == nil
             or (World.date():hours() > quest.expiration_date
                    and quest.state == "not_accepted")
+            or quest.state == "finished"
          if do_generate then
             if not Rand.one_in(3) then
                Quest.generate(client.uid, map)
@@ -536,7 +543,7 @@ function Quest.complete(quest, client)
 
    Event.trigger("elona_sys.on_quest_completed", {quest=quest, client=client})
 
-   table.iremove_value(save.elona_sys.quest.quests, quest)
+   quest.state = "finished"
    Gui.update_screen()
 
    Save.queue_autosave()
