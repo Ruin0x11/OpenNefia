@@ -205,6 +205,14 @@ end
 
 function field_layer:update(dt, ran_action, result)
    self.renderer:update(self.map, dt)
+
+   -- HACK the hud also gets tracked by the draw layer system, but since the hud
+   -- will never technically get updated by the draw layer system since it's
+   -- never focused for input, we update it manually in the field layer. This
+   -- will have to change if the hud wants to grab input for some potential new
+   -- modding feature.
+   self.hud:update(dt)
+
    self.draw_callbacks:update(dt)
    self.sound_manager:update(dt)
 end
