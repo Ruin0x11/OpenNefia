@@ -67,6 +67,7 @@ data:add {
          jump_to = "elona.default:talk"
       },
       lost_item = function(t)
+         -- TODO
          return "elona.default:talk"
       end,
    }

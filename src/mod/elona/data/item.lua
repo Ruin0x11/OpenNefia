@@ -6415,6 +6415,7 @@ local item =
          has_charge = true,
          can_be_recharged = false,
          is_wishable = false,
+         can_be_reserved = false,
 
          elona_type = "book",
          categories = {
@@ -17064,6 +17065,7 @@ local item =
          end,
          has_charge = true,
          can_be_recharged = false,
+         can_be_reserved = false,
 
          elona_type = "book",
          categories = {

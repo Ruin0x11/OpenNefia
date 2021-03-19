@@ -203,7 +203,7 @@ function mages_guild.on_generate_map()
    chara:add_role("elona.special")
 
    chara = Chara.create("elona.wizard", 27, 8, nil, map)
-   chara:add_role("elona.shopkeeper", { inventory_id="spell_writer" })
+   chara:add_role("elona.shopkeeper", { inventory_id = "elona.spell_writer" })
    chara:add_role("elona.spell_writer")
    chara.name = I18N.get("chara.job.spell_writer", chara.name)
 

@@ -4,6 +4,7 @@ local World = require("api.World")
 local Filters = require("mod.elona.api.Filters")
 local schema = require("thirdparty.schema")
 local Enum = require("api.Enum")
+local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 
 -- Generates a list to be used with "choices" which will set the
 -- provided field to one of the choices in "list".
@@ -153,12 +154,8 @@ data:add_multi(
          rules = {
             {
                on_generate = function()
-                  local reserved = {}
-                  for item_id, _ in data["elona.item"]:iter() do
-                     if Item.memory(2, item_id) > 1 then
-                        reserved[#reserved+1] = item_id
-                     end
-                  end
+                  local filter = function(_id) return ItemMemory.reserved_state(_id) == "reserved" end
+                  local reserved = data["base.item"]:iter():extract("_id"):filter(filter):to_list()
 
                   if #reserved == 0 then
                      -- NOTE: this used to return out of shop_refresh,

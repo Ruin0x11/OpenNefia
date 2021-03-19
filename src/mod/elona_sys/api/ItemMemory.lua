@@ -38,4 +38,25 @@ function ItemMemory.is_known(id)
    return memory.known[id]
 end
 
+local RESERVE_STATES = table.set {
+   "not_reserved",
+   "reserved"
+}
+
+-- itemMemory(2, ci)
+function ItemMemory.set_reserved_state(id, reserved)
+   data["base.item"]:ensure(id)
+   local memory = save.elona_sys.item_memory
+   if not (RESERVE_STATES[reserved] or reserved == nil) then
+      error(("Unknown spellbook reserve state %s"):format(reserved))
+   end
+   memory.reserved[id] = reserved
+end
+
+function ItemMemory.reserved_state(id)
+   data["base.item"]:ensure(id)
+   local memory = save.elona_sys.item_memory
+   return memory.reserved[id]
+end
+
 return ItemMemory
