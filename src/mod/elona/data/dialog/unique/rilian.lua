@@ -8,7 +8,6 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "rilian",
 
-   root = "talk.unique.rilian",
    nodes = {
       __start = function()
          local flag = Sidequest.progress("elona.puppys_cave")
@@ -20,36 +19,30 @@ data:add {
             return "quest_check"
          end
 
-         return "__IGNORED__"
+         return "elona.ignores_you:__start"
       end,
       quest_completed = {
-         text = {
-            {"complete"},
-         },
+         text = "talk.unique.rillian.complete",
       },
       quest_ask = {
-         text = {
-            {"quest.dialog"},
-         },
+         text = "talk.unique.rillian.quest.dialog",
          choices = {
-            {"quest_yes", "quest.choices.do_it"},
-            {"quest_no", "__BYE__"}
+            {"quest_yes", "talk.unique.rillian.quest.choices.do_it"},
+            {"quest_no", "ui.bye"}
          },
          default_choice = "quest_no"
       },
       quest_yes = {
-         text = {
-            common.show_journal_update_message,
-            {"quest.do_it"},
-         },
+         on_start = function()
+            Sidequest.update_journal()
+         end,
+         text = "talk.unique.rillian.quest.do_it",
          on_finish = function()
             Sidequest.set_progress("elona.puppys_cave", 1)
          end
       },
       quest_no = {
-         text = {
-            {"quest.bye"},
-         },
+         text = "talk.unique.rillian.quest.bye",
       },
       quest_check = function()
          if Chara.find("elona.poppy", "allies") == nil then
@@ -59,14 +52,10 @@ data:add {
          return "quest_finish"
       end,
       quest_waiting = {
-         text = {
-            {"quest.waiting"}
-         }
+         text = "talk.unique.rillian.quest.waiting"
       },
       quest_finish = {
-         text = {
-            {"quest.end"},
-         },
+         text = "talk.unique.rillian.quest.end",
          on_finish = function()
             Item.create("elona.cooler_box", Chara.player().x, Chara.player().y)
             Item.create("elona.gold_piece", Chara.player().x, Chara.player().y, {amount=2500})

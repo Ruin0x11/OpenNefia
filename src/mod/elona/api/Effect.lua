@@ -854,12 +854,12 @@ function Effect.add_buff(target, source, buff_id, power, duration)
    local buff = data["elona_sys.buff"]:ensure(buff_id)
 
    if duration <= 0 then
-      return false
+      return nil
    end
 
    if target:find_buff(buff_id) then
       Gui.mes("magic.buff.no_effect")
-      return false
+      return nil
    end
 
    local fixed_duration
@@ -868,10 +868,10 @@ function Effect.add_buff(target, source, buff_id, power, duration)
       local resists
       resists, fixed_duration = resists_hex(target, buff_id, power, duration)
       if resists == "done" then
-         return false
+         return nil
       elseif resists then
          Gui.mes_visible("magic.buff.resists", target)
-         return false
+         return nil
       end
 
       if source and source:is_player() then
@@ -884,9 +884,7 @@ function Effect.add_buff(target, source, buff_id, power, duration)
    local apply_mes = "buff." .. buff_id .. ".apply"
 
    Gui.mes_visible(apply_mes, target)
-   target:add_buff(buff_id, power, fixed_duration)
-
-   return true
+   return target:add_buff(buff_id, power, fixed_duration)
 end
 
 function Effect.on_kill(victim, attacker)

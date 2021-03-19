@@ -288,6 +288,12 @@ function InventoryContext:after_filter(filtered)
    return nil
 end
 
+function InventoryContext:on_query()
+   if self.proto.on_query then
+      return self.proto.on_query(self)
+   end
+end
+
 function InventoryContext:query_item_amount(item)
    local amount = math.clamp(self.proto.default_amount or item.amount, 1, item.amount)
    local can_query = false

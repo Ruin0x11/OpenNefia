@@ -3,6 +3,9 @@ local util = require("mod.elona.data.map_archetype.util")
 local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
 local Chara = require("api.Chara")
 local I18N = require("api.I18N")
+local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local DeferredEvents = require("mod.elona.api.DeferredEvents")
+local Area = require("api.Area")
 
 local thieves_guild = {
    _type = "base.map_archetype",
@@ -67,16 +70,22 @@ function thieves_guild.on_generate_map()
 
    return map
 end
+
+
+function thieves_guild.on_map_entered_events(map, params)
+   local prev_map = params.previous_map
+   local prev_x = params.previous_x
+   local prev_y = params.previous_y
+   util.connect_stair_at_to_prev_map(map, 8, 9, prev_map, prev_x, prev_y)
+
+   -- >>>>>>>> shade2/map.hsp:2032 	if areaId(gArea)=areaKapul{ ...
+   DeferredEvent.add(function()
+         DeferredEvents.proc_guild_intruder("elona.thief", Chara.player(), map)
+   end)
+   -- <<<<<<<< shade2/map.hsp:2034 		} ..
+end
+
 data:add(thieves_guild)
-
-data:add {
-   _type = "base.area_archetype",
-   _id = "thieves_guild",
-
-   floors = {
-      [1] = "elona.thieves_guild"
-   }
-}
 
 
 local fighters_guild = {
@@ -127,7 +136,7 @@ function fighters_guild.on_generate_map()
    chara = Chara.create("elona.wizard", 14, 18, nil, map)
    chara:add_role("elona.identifier")
 
-   chara = Chara.create("elona.blacksmith", 29, 15, nil, map)
+   chara = Chara.create("elona.shopkeeper", 29, 15, nil, map)
    chara:add_role("elona.shopkeeper", {inventory_id = "elona.blacksmith"})
    chara.shop_rank = 12
    chara.name = I18N.get("chara.job.blacksmith", chara.name)
@@ -138,16 +147,21 @@ function fighters_guild.on_generate_map()
 
    return map
 end
+
+function fighters_guild.on_map_entered_events(map, params)
+   local prev_map = params.previous_map
+   local prev_x = params.previous_x
+   local prev_y = params.previous_y
+   util.connect_stair_at_to_prev_map(map, 16, 1, prev_map, prev_x, prev_y)
+
+   -- >>>>>>>> shade2/map.hsp:2032 	if areaId(gArea)=areaKapul{ ...
+   DeferredEvent.add(function()
+         DeferredEvents.proc_guild_intruder("elona.fighter", Chara.player(), map)
+   end)
+   -- <<<<<<<< shade2/map.hsp:2034 		} ..
+end
+
 data:add(fighters_guild)
-
-data:add {
-   _type = "base.area_archetype",
-   _id = "fighters_guild",
-
-   floors = {
-      [1] = "elona.fighters_guild"
-   }
-}
 
 
 local mages_guild = {
@@ -189,7 +203,7 @@ function mages_guild.on_generate_map()
    chara:add_role("elona.special")
 
    chara = Chara.create("elona.wizard", 27, 8, nil, map)
-   chara:add_role("elona.shopkeeper", {inventory_id="spell_writer"})
+   chara:add_role("elona.shopkeeper", { inventory_id="spell_writer" })
    chara:add_role("elona.spell_writer")
    chara.name = I18N.get("chara.job.spell_writer", chara.name)
 
@@ -215,13 +229,17 @@ function mages_guild.on_generate_map()
    return map
 end
 
+function mages_guild.on_map_entered_events(map, params)
+   local prev_map = params.previous_map
+   local prev_x = params.previous_x
+   local prev_y = params.previous_y
+   util.connect_stair_at_to_prev_map(map, 13, 14, prev_map, prev_x, prev_y)
+
+   -- >>>>>>>> shade2/map.hsp:2026 	if areaId(gArea)=areaLumiest{ ...
+   DeferredEvent.add(function()
+         DeferredEvents.proc_guild_intruder("elona.mage", Chara.player(), map)
+   end)
+   -- <<<<<<<< shade2/map.hsp:2028 		} ..
+end
+
 data:add(mages_guild)
-
-data:add {
-   _type = "base.area_archetype",
-   _id = "mages_guild",
-
-   floors = {
-      [1] = "elona.mages_guild"
-   }
-}

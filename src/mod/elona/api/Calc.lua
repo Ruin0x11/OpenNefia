@@ -202,7 +202,9 @@ function Calc.calc_item_value(item, mode, is_shop)
    if mode == "buy" then
       local value_limit = value / 2
       value = value * 100 / (100 + negotiation)
-      -- TODO mage guild
+      if player:calc("guild") == "elona.mage" and item:has_category("elona.spellbook") then
+         value = value * 80 / 100
+      end
       value = math.max(value, value_limit)
    elseif mode == "sell" then
       local value_limit = negotiation * 250 + 5000

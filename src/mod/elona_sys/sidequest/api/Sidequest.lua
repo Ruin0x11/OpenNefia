@@ -2,6 +2,7 @@ local Chara = require("api.Chara")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
 local Enum = require("api.Enum")
+local I18N = require("api.I18N")
 
 local Sidequest = {}
 
@@ -29,6 +30,35 @@ function Sidequest.set_progress(sidequest_id, progress)
    sidequest[sidequest_id].progress = progress
 end
 
+local function iter(state, i)
+   local progress = 0
+   local sidequest_id
+   while progress <= 0 and i < #state do
+      i = i + 1
+      sidequest_id = state[i]
+      local sidequest = save.elona_sys.sidequest[sidequest_id]
+      progress = sidequest and sidequest.progress or 0
+   end
+
+   if i >= #state and progress == 0 then
+      return nil
+   end
+
+   return i, sidequest_id, progress
+end
+
+local function sort(a, b)
+   local proto_a = data["elona_sys.sidequest"]:ensure(a)
+   local proto_b = data["elona_sys.sidequest"]:ensure(a)
+   return proto_a.ordering < proto_b.ordering
+end
+
+function Sidequest.iter()
+   local sorted_keys = table.keys(save.elona_sys.sidequest)
+   table.sort(sorted_keys, sort)
+   return fun.wrap(iter, sorted_keys, 0)
+end
+
 function Sidequest.set_quest_targets(map)
    map = map or Map.current()
 
@@ -50,6 +80,27 @@ function Sidequest.no_targets_remaining(map)
    end
 
    return true
+end
+
+function Sidequest.localize_progress_text(sidequest_id, progress)
+   local sidequest_data = data["elona_sys.sidequest"]:ensure(sidequest_id)
+
+   progress = progress or Sidequest.progress(sidequest_id)
+   assert(type(progress) == "number")
+
+   local text = sidequest_data.progress[progress]
+   assert(progress == 0 or sidequest_data.progress[progress],
+          ("Invalid sidequest progress %d (%s)"):format(progress, sidequest_id))
+
+   if type(text) == "function" then
+      text = text()
+   else
+      text = I18N.get_optional(text)
+   end
+
+   assert(type(text) == "string", "Progress text must be string")
+
+   return text
 end
 
 function Sidequest.update_journal()

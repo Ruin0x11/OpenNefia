@@ -92,7 +92,14 @@ function CharacterSheetMenu:text_level()
    local exp = 1000
    local required_exp = 1000
    local god_name = self.chara:calc("god") or "elona.eyth"
-   local guild_name = save.elona.guild or "none"
+
+   local guild = self.chara:calc("guild")
+   local guild_name
+   if guild then
+      guild_name = I18N.get("guild._." .. guild .. ".name")
+   else
+      guild_name = I18N.get("guild.none")
+   end
 
    self.texts["level"] =
       UiTextGroup:new({
@@ -110,7 +117,7 @@ function CharacterSheetMenu:text_level()
          tostring(exp),
          tostring(required_exp),
          I18N.get("god." .. god_name .. ".name"),
-         I18N.get("guild." .. guild_name .. ".name")
+         guild_name,
       }, 14)
    self.texts["level_val"]:relayout(self.x + 410, self.y + 45)
 

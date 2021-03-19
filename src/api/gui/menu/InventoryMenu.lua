@@ -117,11 +117,15 @@ function InventoryMenu:make_keymap()
 end
 
 function InventoryMenu:on_query()
+   Gui.play_sound("base.inv")
+
+   self:show_query_text()
+end
+
+function InventoryMenu:show_query_text()
    if self.result ~= nil then
       return
    end
-
-   Gui.play_sound("base.inv")
 
    if self.ctxt.proto.query_text then
       local params = {}
@@ -136,7 +140,10 @@ function InventoryMenu:on_query()
       end
       Gui.mes(text, table.unpack(params))
    end
+
+   self.ctxt:on_query()
 end
+
 
 -- TODO: IList needs refactor to "selected_entry" to avoid naming
 -- confusion
@@ -390,6 +397,7 @@ function InventoryMenu:update(dt)
          if not canceled then
             if result == "inventory_continue" then
                self:update_filtering()
+               self:show_query_text()
             elseif result == "inventory_cancel" then
                return nil, "canceled"
             else

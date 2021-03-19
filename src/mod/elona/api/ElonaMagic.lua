@@ -646,13 +646,13 @@ function ElonaMagic.apply_buff(buff_id, params)
    local power = buff:params(params)
    params.buff = power
 
-   Effect.add_buff(target, source, buff_id, power.power, power.duration)
+   local buff_data = Effect.add_buff(target, source, buff_id, power.power, power.duration)
 
-   if buff.on_apply then
-      buff:on_apply(params)
+   if buff_data and buff.on_add then
+      buff.on_add(buff_data, params)
    end
 
-   return true
+   return buff_data
    -- <<<<<<<< shade2/proc.hsp:1682 		goto *effect_end ..
 end
 

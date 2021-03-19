@@ -1,59 +1,66 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local Math = require("game.Math")
-local I18N = require("game.I18N")
-local Item = require("game.Item")
-local World = require("game.World")
-local table = require("game.table")
+local Chara = require("api.Chara")
+local Gui = require("api.Gui")
+local Item = require("api.Item")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Rank = require("mod.elona.api.Rank")
+local Guild = require("mod.elona.api.Guild")
+local Itemgen = require("mod.elona.api.Itemgen")
+local I18N = require("api.I18N")
 
-local common = require_relative("data/dialog/common")
+local common = require("mod.elona.data.dialog.common")
 
 local function start_trial()
-    World.data.joining_mages_guild = 1
-    World.data.mages_guild_quota = 30
-    GUI.show_journal_update_message()
+    Sidequest.set_progress("elona.guild_mage_joining", 1)
+    save.elona.guild_mage_point_quota = 30
+    Sidequest.update_journal()
 end
 
 local function join_guild()
-    World.data.ranks[8] = 10000
+   Sidequest.set_progress("elona.guild_mage_joining", 1000)
+   Rank.set("elona.guild", 10000)
 
-    World.join_guild("mages")
+   Guild.set_guild(Chara.player(), "elona.mage")
 
-    GUI.txt(I18N.get("core.quest.completed"))
-    GUI.play_sound("core.complete1")
-    GUI.show_journal_update_message()
-    GUI.txt(I18N.get("core.talk.unique.lexus.nonmember.joined"), "Yellow")
+   Gui.mes_c("quest.completed", "Green")
+   Gui.play_sound("base.complete1")
+   Sidequest.update_journal()
+   Gui.mes_c("talk.unique.lexus.nonmember.joined", "Yellow")
 end
 
-local function move_self(t)
-   t.speaker:move_to(4, 20)
-   t.speaker.initial_position.x = 4
-   t.speaker.initial_position.y = 20
+local function move_off_guild_entrance(t)
+   local lexus = t.speaker
+   lexus:set_pos(4, 20)
+   lexus.initial_x = 4
+   lexus.initial_y = 20
 end
 
 local function update_quota()
-   World.data.mages_guild_quota_recurring = true
-   World.data.mages_guild_quota = 75 - World.data.ranks[8] / 200
-   GUI.show_journal_update_message()
+   Sidequest.set_progress("elona.guild_mage_quota", 1)
+   save.elona.guild_mage_point_quota = Guild.calc_mage_guild_quota()
+   Sidequest.update_journal()
 end
 
 local function receive_reward()
-   World.data.mages_guild_quota_recurring = false
-   Item.create(Chara.player().position, {objlv = 51 - World.data.ranks[8] / 200, flttypemajor = 54000})
-   Item.create(Chara.player().position, "core.gold_piece", 10000 - World.data.ranks[8] + 1000)
-   Item.create(Chara.player().position, "core.platinum_coin", Math.clamp(4 - World.data.ranks[8] / 2500, 1, 4))
+   local player = Chara.player()
+   local map = player:current_map()
+   local guild_rank = Rank.get("elona.guild")
+   Sidequest.set_progress("elona.guild_mage_quota", 0)
+   Itemgen.create(player.x, player.y, { level = 51 - guild_rank / 200, categories = "elona.spellbook" }, map)
+   Item.create("elona.gold_piece", player.x, player.y, { amount = 10000 - guild_rank + 1000 }, map)
+   Item.create("elona.platinum_coin", player.x, player.y, { amount = math.clamp(4 - guild_rank / 2500, 1, 4) }, map)
 
    common.quest_completed()
 
-   World.modify_ranking(8, 500, 8)
+   Rank.modify("elona.guild", 500, 8)
 end
 
-return {
-   id = "lexus",
-   root = "core.talk.unique.lexus",
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "lexus",
+
    nodes = {
       __start = function()
-         if World.belongs_to_guild("mages") == false then
+         if Chara.player():calc("guild") ~= "elona.mage" then
             return "guild_nonmember"
          end
 
@@ -62,26 +69,26 @@ return {
 
       guild_nonmember = {
          text = {
-            {"nonmember.dialog"},
+            {"talk.unique.lexus.nonmember.dialog"},
          },
          choices = {
-            {"guild_desc", "nonmember.choices.tell_me_about"},
-            {"guild_join_check", "nonmember.choices.want_to_join"},
-            {"__END__", "__BYE__"}
+            {"guild_desc", "talk.unique.lexus.nonmember.choices.tell_me_about"},
+            {"guild_join_check", "talk.unique.lexus.nonmember.choices.want_to_join"},
+            {"__END__", "ui.bye"}
          }
       },
       guild_desc = {
          text = {
-            {"nonmember.tell_me_about"},
+            {"talk.unique.lexus.nonmember.tell_me_about"},
          },
          choices = {
-            {"__start", "__MORE__"},
+            {"__start", "ui.more"},
          }
       },
       guild_join_check = function()
-         if World.data.joining_mages_guild == 0 then
+         if Sidequest.progress("elona.guild_mage_joining") == 0 then
             return "guild_join_start"
-         elseif World.data.mages_guild_quota > 0 then
+         elseif save.elona.guild_mage_point_quota > 0 then
             return "guild_join_waiting"
          end
 
@@ -89,77 +96,74 @@ return {
       end,
       guild_join_start = {
          text = {
-            {"nonmember.want_to_join._0"},
-            {"nonmember.want_to_join._1"},
+            {"talk.unique.lexus.nonmember.want_to_join._0"},
+            {"talk.unique.lexus.nonmember.want_to_join._1"},
             start_trial,
-            {"nonmember.want_to_join._2"},
+            {"talk.unique.lexus.nonmember.want_to_join._2"},
          },
          choices = {
-            {"__start", "__MORE__"},
+            {"__start", "ui.more"},
          }
       },
       guild_join_waiting = {
          text = {
-            {"nonmember.quota"},
+            {"talk.unique.lexus.nonmember.quota"},
          },
          choices = {
-            {"__start", "__MORE__"},
+            {"__start", "ui.more"},
          }
       },
       guild_join_finish = {
          text = {
-            {"nonmember.end._0"},
+            {"talk.unique.lexus.nonmember.end._0"},
             join_guild,
-            {"nonmember.end._1"},
+            {"talk.unique.lexus.nonmember.end._1"},
          },
-         on_finish = move_self,
+         on_finish = move_off_guild_entrance,
       },
 
       guild_member = {
-         text = {
-            move_self,
-            {"member.dialog", args = function() return {World.ranking_title(8), Chara.player().basename} end},
-         },
+         on_start = move_off_guild_entrance,
+         text = function()
+            return I18N.get("talk.unique.lexus.member.dialog", Rank.title("elona.guild"), Chara.player().name)
+         end,
          choices = function()
             local choices = {}
-            if not World.data.mages_guild_quota_recurring then
-               table.insert(choices, {"guild_quota_new", "member.choices.new_quota"})
+            if Sidequest.progress("elona.guild_mage_quota") == 0 then
+               table.insert(choices, {"guild_quota_new", "talk.unique.lexus.member.choices.new_quota"})
             else
-               table.insert(choices, {"guild_quota_check", "member.choices.report_quota"})
+               table.insert(choices, {"guild_quota_check", "talk.unique.lexus.member.choices.report_quota"})
             end
-            table.insert(choices, {"__END__", "__BYE__"})
+            table.insert(choices, {"__END__", "ui.bye"})
 
             return choices
          end
       },
       guild_quota_new = {
-         text = {
-            update_quota,
-            {"member.new_quota", args = function() return {World.data.mages_guild_quota} end},
-         },
+         on_start = update_quota,
+         text = function()
+            return I18N.get("talk.unique.lexus.member.new_quota", save.elona.guild_mage_point_quota)
+         end,
+
          choices = {
-            {"__start", "__MORE__"},
+            {"__start", "ui.more"},
          }
       },
       guild_quota_check = function()
-         if World.data.mages_guild_quota > 0 then
+         if save.elona.guild_mage_point_quota > 0 then
             return "guild_quota_waiting"
          end
          return "guild_quota_finish"
       end,
       guild_quota_waiting = {
-         text = {
-            {"core.talk.unique.lexus.member.report_quota.waiting"},
-         },
+         text = "talk.unique.lexus.member.report_quota.waiting",
          choices = {
-            {"__start", "__MORE__"},
+            {"__start", "ui.more"},
          }
       },
       guild_quota_finish = {
-         text = {
-            receive_reward,
-            {"core.talk.unique.lexus.member.report_quota.end"},
-         },
+         on_start = receive_reward,
+         text = "talk.unique.lexus.member.report_quota.end"
       },
    }
 }

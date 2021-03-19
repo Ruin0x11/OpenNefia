@@ -1,16 +1,18 @@
 return {
-  guild = {
-    fighters = {
-      name = "Fighters Guild"
-    },
-    mages = {
-      name = "Mages Guild"
-    },
-    none = {
-      name = "None"
-    },
-    thieves = {
-      name = "Thieves Guild"
-    }
-  }
+   guild = {
+      none = "None",
+      _ = {
+         elona = {
+            mage = {
+               name = "Mages Guild"
+            },
+            fighter = {
+               name = "Fighters Guild"
+            },
+            thief = {
+               name = "Thieves Guild"
+            }
+         }
+      }
+   }
 }

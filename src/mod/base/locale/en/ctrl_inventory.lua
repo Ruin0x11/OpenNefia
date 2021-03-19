@@ -133,7 +133,7 @@ end
         guild = {
           have_no_quota = "You have no quota for Mages Guild.",
           remaining = function(_1)
-  return ("%sguild points are needed to gain a rank.")
+  return ("%s guild points are needed to gain a rank.")
   :format(_1)
 end,
           you_deliver = function(_1)

@@ -52,7 +52,7 @@ local function apply_hostile_action(victim, params)
    -- >>>>>>>> shade2/chara_func.hsp:1583 		if dmgSource>=0{ ..
    local attacker = params.attacker
 
-   if attacker == nil then
+   if attacker == nil or victim:is_player() then
       return
    end
 

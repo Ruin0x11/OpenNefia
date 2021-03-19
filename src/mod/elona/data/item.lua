@@ -12565,9 +12565,17 @@ local item =
          is_precious = true,
 
          on_open = function(self, params)
+            local chara = params.chara
+            local map = chara:current_map()
+
             -- >>>>>>>> shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ..
-            Input.query_inventory(params.chara, "elona.inv_harvest_delivery_chest", nil, nil)
+            if map._archetype == "elona.lumiest" or map._archetype == "elona.mages_guild" then
+               Input.query_inventory(params.chara, "elona.inv_mages_guild_delivery_chest", nil, nil)
+            else
+               Input.query_inventory(params.chara, "elona.inv_harvest_delivery_chest", nil, nil)
+            end
             -- <<<<<<<< shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ..
+
             return "player_turn_query"
          end,
 

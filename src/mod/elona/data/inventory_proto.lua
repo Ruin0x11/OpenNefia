@@ -899,6 +899,60 @@ local inv_harvest_delivery_chest = {
 }
 data:add(inv_harvest_delivery_chest)
 
+local inv_mages_guild_delivery_chest = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_mages_guild_delivery_chest",
+   elona_id = 24,
+   elona_sub_id = 0,
+
+   sources = { "chara" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   window_title = "ui.inventory_command.put",
+   query_text = "ui.inv.title.put",
+
+   filter = function(ctxt, item)
+      -- >>>>>>>> shade2/command.hsp:3410 			if gArea=areaLumiest{ ...
+      return item._id == "elona.ancient_book" and item.params.ancient_book_is_decoded == true
+      -- <<<<<<<< shade2/command.hsp:3412 				}else{ ..
+   end,
+
+   after_filter = function(ctxt, filtered)
+      -- >>>>>>>> shade2/command.hsp:3462 	if invCtrl=24: if invCtrl(1)=0 :if gArea=areaLumi ...
+      if save.elona.guild_mage_point_quota <= 0 then
+         Gui.mes("ui.inv.put.guild.have_no_quota")
+         return "player_turn_query"
+      end
+      -- <<<<<<<< shade2/command.hsp:3462 	if invCtrl=24: if invCtrl(1)=0 :if gArea=areaLumi ..
+   end,
+
+   on_query = function(ctxt)
+      -- >>>>>>>> shade2/command.hsp:3482 		if invCtrl=24: if invCtrl(1)=0 :if gArea=areaLum ...
+      Gui.mes("ui.inv.put.guild.remaining", save.elona.guild_mage_point_quota)
+      -- <<<<<<<< shade2/command.hsp:3482 		if invCtrl=24: if invCtrl(1)=0 :if gArea=areaLum ..
+   end,
+
+   on_select = function(ctxt, item, amount)
+      -- >>>>>>>> shade2/command.hsp:3893 				snd seInv ...
+      Gui.play_sound("base.inv")
+
+      local points_earned = (item.params.ancient_book_difficulty + 1) * amount
+      save.elona.guild_mage_point_quota = math.max(save.elona.guild_mage_point_quota - points_earned, 0)
+      if save.elona.guild_mage_point_quota == 0 then
+         Gui.play_sound("base.complete1")
+         Gui.mes_c("ui.inv.put.guild.you_fulfill", "Green")
+      end
+
+      item.amount = item.amount - amount
+      ctxt.chara:refresh_weight()
+
+      return "inventory_continue"
+      -- <<<<<<<< shade2/command.hsp:3904 				goto *com_inventory ...
+   end
+}
+data:add(inv_mages_guild_delivery_chest)
+
 local inv_put_tax_box = {
    _type = "elona_sys.inventory_proto",
    _id = "inv_put_tax_box",

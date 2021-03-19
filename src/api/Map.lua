@@ -29,8 +29,10 @@ local Map = {}
 ---
 --- @tparam InstancedMap map
 --- @tparam string load_type One of "full" (default), "traveled", "initialize", "continue"
+--- @tparam uint prev_x Previous X position of player
+--- @tparam uint prev_y Previous Y position of player
 --- @see Map.travel_to
-function Map.set_map(map, load_type)
+function Map.set_map(map, load_type, prev_x, prev_y)
    load_type = load_type or "full"
    assert(class.is_an(InstancedMap, map))
    if field.map == map then return end
@@ -40,8 +42,9 @@ function Map.set_map(map, load_type)
    if load_type ~= "traveled" then
       Gui.mes_clear()
    end
+
    save.base.is_first_turn = true
-   map:emit("base.on_map_enter", {load_type=load_type})
+   map:emit("base.on_map_enter", {load_type=load_type,previous_map=field.map,previous_x=prev_x,previous_y=prev_y})
    map.visit_times = map.visit_times + 1
    field:set_map(map)
    Gui.update_minimap()
@@ -617,6 +620,9 @@ function Map.travel_to(map, params)
    player:remove_activity()
    player:reset_ai()
 
+   local prev_x = player.x
+   local prev_y = player.y
+
    local success = Map.try_place_chara(player, x, y, map)
    assert(success, "Could not place player in map")
 
@@ -640,7 +646,7 @@ function Map.travel_to(map, params)
       Map.save(current)
    end
 
-   Map.set_map(map, "traveled")
+   Map.set_map(map, "traveled", prev_x, prev_y)
    collectgarbage()
 
    Gui.update_screen()

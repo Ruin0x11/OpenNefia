@@ -211,4 +211,16 @@ function DeferredEvents.nefia_boss_defeated(map)
    -- <<<<<<<< shade2/main.hsp:1773 	} ..
 end
 
+function DeferredEvents.proc_guild_intruder(guild_id, chara, map)
+   -- >>>>>>>> shade2/main.hsp:2038 	case evGuild ...
+   if chara:calc("guild") ~= guild_id then
+      Gui.mes_c("event.alarm", "Red")
+      for _, other in Chara.iter_others(map):filter(Chara.is_alive) do
+         other:set_relation_towards(chara, Enum.Relation.Enemy)
+         other:set_target(chara, 250)
+      end
+   end
+   -- <<<<<<<< shade2/main.hsp:2045 	swbreak ..
+end
+
 return DeferredEvents

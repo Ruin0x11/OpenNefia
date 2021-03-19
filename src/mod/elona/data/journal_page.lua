@@ -3,6 +3,7 @@ local I18N = require("api.I18N")
 local Rank = require("mod.elona.api.Rank")
 local Quest = require("mod.elona_sys.api.Quest")
 local Calc = require("mod.elona.api.Calc")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 
 data:add {
    _type = "base.journal_page",
@@ -48,6 +49,24 @@ local function format_quest_status(quest)
    -- <<<<<<<< shade2/text.hsp:1247 		buff+=s(4)+"¥n" ..
 end
 
+local function format_sidequest_status(sidequest_id, progress)
+   -- >>>>>>>> shade2/text.hsp:1017 #define sqTitle(%%1,%%2) p=false:if %%1!0:s=%%2:p=%%1:i ...
+   local name = I18N.get("sidequest._." .. sidequest_id .. ".name")
+
+   -- TODO don't base progress on some arbitrary number, use a flag or something
+   -- instead
+   local is_complete = progress >= 1000
+   local text
+   if is_complete then
+      text = ("%s%s"):format(I18N.get("sidequest.journal.done"), name)
+   else
+      text = ("(%s)\n%s"):format(name, Sidequest.localize_progress_text(sidequest_id, progress))
+   end
+
+   return text
+   -- <<<<<<<< shade2/text.hsp:1018 #define sqAdd(%%1,%%2) if val=0:if p=%%1 : s1=%%2 : ta ..
+end
+
 data:add {
    _type = "base.journal_page",
    _id = "quest",
@@ -61,8 +80,8 @@ data:add {
       local quest_infos = Quest.iter_accepted():map(format_quest_status):to_list()
       local quest_info = table.concat(quest_infos, "\n\n")
 
-      -- TODO sidequests
-      local sub_quest_info = "TODO sub quest"
+      local sub_quest_infos = Sidequest.iter():map(format_sidequest_status):to_list()
+      local sub_quest_info = table.concat(sub_quest_infos, "\n\n")
 
       return ([[
  - %s -
@@ -71,11 +90,13 @@ data:add {
 
 %s
 
+<color=#006400>%s
 %s
 ]]):format(
          I18N.get("journal._.elona.quest.title"),
          main_quest_info,
          quest_info,
+         I18N.get("sidequest.journal.title"),
          sub_quest_info
           )
    end
