@@ -15,7 +15,15 @@ data:add_type {
 do
    data:add {
       _type = "elona.guild",
-      _id = "mage"
+      _id = "mage",
+
+      -- >>>>>>>> shade2/chat.hsp:240 	if flagMageGuild!0{ ...
+      guest_trainer_skills = {
+         "elona.stat_magic",
+         "elona.stat_will",
+         "elona.stat_learning"
+      }
+      -- <<<<<<<< shade2/chat.hsp:242 		}else{ ..
    }
 
    data:add {
@@ -54,8 +62,17 @@ end
 do
    data:add {
       _type = "elona.guild",
-      _id = "fighter"
+      _id = "fighter",
+
+      -- >>>>>>>> shade2/chat.hsp:243 	if flagFighterGuild!0{ ...
+      guest_trainer_skills = {
+         "elona.stat_strength",
+         "elona.stat_endurance",
+         "elona.stat_dexterity"
+      },
+      -- <<<<<<<< shade2/chat.hsp:245 		}else{ ..
    }
+
 
    data:add {
       _type = "elona_sys.sidequest",
@@ -97,7 +114,16 @@ end
 do
    data:add {
       _type = "elona.guild",
-      _id = "thief"
+      _id = "thief",
+
+      -- >>>>>>>> shade2/chat.hsp:246 	if flagThiefGuild!0{ ...
+      guest_trainer_skills = {
+         "elona.stat_dexterity",
+         "elona.stat_perception",
+         "elona.stat_endurance",
+         "elona.stat_learning",
+      },
+      -- <<<<<<<< shade2/chat.hsp:248 		}else{ ..
    }
 
    data:add {
