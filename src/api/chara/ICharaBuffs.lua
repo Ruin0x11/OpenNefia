@@ -52,6 +52,8 @@ function ICharaBuffs:add_buff(buff_id, power, duration)
    }
    table.insert(self.buffs, buff)
    self:refresh()
+
+   return buff
 end
 
 function ICharaBuffs:get_buff(buff_id)

@@ -25,6 +25,7 @@ local Ui = require("api.Ui")
 local Const = require("api.Const")
 local Weather = require("mod.elona.api.Weather")
 local Hunger = require("mod.elona.api.Hunger")
+local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 
 local function sex_check_end(chara, partner)
    if not Chara.is_alive(partner)
@@ -1141,7 +1142,9 @@ data:add {
 
             Skill.gain_skill(params.chara, self.params.skill_id, 1, calc_gained_stock(memorization, current_stock))
             Skill.gain_skill_exp(params.chara, "elona.memorization", 10 + difficulty / 5)
-            save.elona_sys.reservable_spellbook_ids[self.params.spellbook._id] = true
+            if ItemMemory.reserved_state(self.params.spellbook._id) == nil then
+               ItemMemory.set_reserved_state(self.params.spellbook._id, "not_reserved")
+            end
 
             Effect.identify_item(self.params.spellbook, Enum.IdentifyState.Name)
 

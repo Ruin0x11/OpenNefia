@@ -386,6 +386,15 @@ local inv_buy = {
    show_money = true,
    window_title = "ui.inventory_command.buy",
    query_text = "ui.inv.title.buy",
+   window_detail_header = "ui.inv.buy.window.price",
+
+   get_item_name = function(name, item)
+      return name .. " " .. Ui.display_weight(item:calc("weight"))
+   end,
+   get_item_detail_text = function(name, item)
+      return tostring(Calc.calc_item_value(item, "buy")) .. " gp"
+   end,
+
    can_select = function(ctxt, item)
       if item:calc("is_no_drop") then
          return false, "marked as no drop"
@@ -440,6 +449,14 @@ local inv_sell = {
    show_money = true,
    window_title = "ui.inventory_command.sell",
    query_text = "ui.inv.title.sell",
+   window_detail_header = "ui.inv.buy.window.price",
+
+   get_item_name = function(name, item)
+      return name .. " " .. Ui.display_weight(item:calc("weight"))
+   end,
+   get_item_detail_text = function(name, item)
+      return tostring(Calc.calc_item_value(item, "sell")) .. " gp"
+   end,
 
    filter = function(ctxt, item)
       -- >>>>>>>> shade2/command.hsp:3368 		if shopTrade{ ...
@@ -479,25 +496,35 @@ local inv_sell = {
       return true
    end,
    on_select = function(ctxt, item, amount)
-      Gui.mes("ui.inv.sell.prompt", item:build_name(amount), amount)
+      local cost = math.floor((Calc.calc_item_value(item, "sell") * amount))
+
+      Gui.mes("ui.inv.sell.prompt", item:build_name(amount), cost)
       if not Input.yes_no() then
          return "inventory_continue"
       end
 
-      local cost = math.floor((item:calc("value") * amount) / 5)
-
       if cost > ctxt.target.gold then
-         Gui.mes("ui.inv.sell.not_enough_money")
+         Gui.mes("ui.inv.sell.not_enough_money", ctxt.target)
          return "inventory_continue"
       end
 
-      local separated = Action.get(ctxt.target, item, amount)
-      if not separated then
+      local separated = item:separate(amount)
+      if not ctxt.target:take_item(separated) then
          Gui.mes("action.pick_up.shopkeepers_inventory_is_full")
          return "inventory_continue"
       end
 
-      Gui.mes("action.pick_up.you_sell", item:build_name(amount))
+      if not item.is_stolen then
+         Gui.mes("action.pick_up.you_sell", item:build_name(amount))
+      else
+         item.is_stolen = false
+         Gui.mes("action.pick_up.you_sell_stolen", item:build_name(amount))
+         if save.elona.guild_thief_stolen_goods_quota > 0 then
+            save.elona.guild_thief_stolen_goods_quota = math.max(save.elona.guild_thief_stolen_goods_quota - cost, 0)
+            Gui.mes("action.pick_up.thieves_guild_quota", save.elona.guild_thief_stolen_goods_quota )
+         end
+      end
+
       Gui.play_sound("base.getgold1", ctxt.chara.x, ctxt.chara.y)
       ctxt.target.gold = ctxt.target.gold - cost
       ctxt.chara.gold = ctxt.chara.gold + cost
@@ -899,6 +926,60 @@ local inv_harvest_delivery_chest = {
 }
 data:add(inv_harvest_delivery_chest)
 
+local inv_mages_guild_delivery_chest = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_mages_guild_delivery_chest",
+   elona_id = 24,
+   elona_sub_id = 0,
+
+   sources = { "chara" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   window_title = "ui.inventory_command.put",
+   query_text = "ui.inv.title.put",
+
+   filter = function(ctxt, item)
+      -- >>>>>>>> shade2/command.hsp:3410 			if gArea=areaLumiest{ ...
+      return item._id == "elona.ancient_book" and item.params.ancient_book_is_decoded == true
+      -- <<<<<<<< shade2/command.hsp:3412 				}else{ ..
+   end,
+
+   after_filter = function(ctxt, filtered)
+      -- >>>>>>>> shade2/command.hsp:3462 	if invCtrl=24: if invCtrl(1)=0 :if gArea=areaLumi ...
+      if save.elona.guild_mage_point_quota <= 0 then
+         Gui.mes("ui.inv.put.guild.have_no_quota")
+         return "player_turn_query"
+      end
+      -- <<<<<<<< shade2/command.hsp:3462 	if invCtrl=24: if invCtrl(1)=0 :if gArea=areaLumi ..
+   end,
+
+   on_query = function(ctxt)
+      -- >>>>>>>> shade2/command.hsp:3482 		if invCtrl=24: if invCtrl(1)=0 :if gArea=areaLum ...
+      Gui.mes("ui.inv.put.guild.remaining", save.elona.guild_mage_point_quota)
+      -- <<<<<<<< shade2/command.hsp:3482 		if invCtrl=24: if invCtrl(1)=0 :if gArea=areaLum ..
+   end,
+
+   on_select = function(ctxt, item, amount)
+      -- >>>>>>>> shade2/command.hsp:3893 				snd seInv ...
+      Gui.play_sound("base.inv")
+
+      local points_earned = (item.params.ancient_book_difficulty + 1) * amount
+      save.elona.guild_mage_point_quota = math.max(save.elona.guild_mage_point_quota - points_earned, 0)
+      if save.elona.guild_mage_point_quota == 0 then
+         Gui.play_sound("base.complete1")
+         Gui.mes_c("ui.inv.put.guild.you_fulfill", "Green")
+      end
+
+      item.amount = item.amount - amount
+      ctxt.chara:refresh_weight()
+
+      return "inventory_continue"
+      -- <<<<<<<< shade2/command.hsp:3904 				goto *com_inventory ...
+   end
+}
+data:add(inv_mages_guild_delivery_chest)
+
 local inv_put_tax_box = {
    _type = "elona_sys.inventory_proto",
    _id = "inv_put_tax_box",
@@ -927,7 +1008,7 @@ local inv_put_tax_box = {
       -- This can happen if you buy an extra bill from Miral.
       if save.elona.unpaid_bill_count <= 0 then
          Gui.play_sound("base.fail1")
-         Gui.mes("ui.inv.put.tax.not_enough_money")
+         Gui.mes("ui.inv.put.tax.do_not_have_to")
          return false
       end
       -- <<<<<<<< shade2/command.hsp:3908 				if gBill<=0 : snd seFail1:txt lang("まだ納税する必要はな ..

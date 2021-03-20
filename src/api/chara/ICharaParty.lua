@@ -1,7 +1,7 @@
 local Chara = require("api.Chara")
 local save = require("internal.global.save")
-local Map = require("api.Map")
-local InstancedMap = require("api.InstancedMap")
+local MapObject = require("api.MapObject")
+local Gui = require("api.Gui")
 
 local ICharaParty = class.interface("ICharaParty", {})
 
@@ -134,6 +134,47 @@ function ICharaParty:can_recruit_allies()
    can_recruit = self:emit("base.on_chara_calc_can_recruit_allies", nil, can_recruit)
 
    return can_recruit
+end
+
+--- Attempts to recruit a character as an ally of this character.
+---
+--- @tparam IChara ally
+--- @tparam[opt] bool no_message
+--- @treturn bool true on success.
+function ICharaParty:recruit_as_ally(target, no_message)
+   assert(MapObject.is_map_object(target, "base.chara"))
+
+   if not self:get_party() then
+      local party_id = save.base.parties:add_party()
+      save.base.parties:add_member(party_id, self)
+   end
+
+   if self == target then
+      return false
+   end
+
+   if self:is_party_leader_of(target) then
+      return false
+   end
+
+   -- TODO make into event returning a turn result instead? Elona+ has a special
+   -- error message if the target is in a tag team.
+   if not self:can_recruit_allies() then
+      Gui.mes("action.ally_joins.party_full")
+      return false
+   end
+
+   save.base.parties:add_member(self:get_party(), target)
+
+   target.relation = self.relation
+   target:refresh()
+
+   if self:is_player() and not no_message then
+      Gui.mes_c("action.ally_joins.success", "Yellow", target)
+      Gui.play_sound("base.pray1");
+   end
+   target:emit("base.on_recruited_as_ally", { no_message = no_message })
+   return true
 end
 
 return ICharaParty

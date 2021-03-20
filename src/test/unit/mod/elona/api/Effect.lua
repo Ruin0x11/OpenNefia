@@ -5,6 +5,7 @@ local Weather = require("mod.elona.api.Weather")
 local Effect = require("mod.elona.api.Effect")
 local World = require("api.World")
 local ItemMaterial = require("mod.elona.api.ItemMaterial")
+local Enum = require("api.Enum")
 
 function test_Effect_spoil_items()
    local map = InstancedMap:new(10, 10)
@@ -31,6 +32,7 @@ function test_Effect_spoil_items()
    Effect.spoil_items(map)
    Assert.eq("elona.item_rotten_food", corpse.image)
    Assert.matches("rotten ", corpse:build_name())
+   Assert.eq(-1, corpse.spoilage_date)
 end
 
 function test_Effect_spoil_items__jerky()
@@ -84,4 +86,25 @@ function test_Effect_spoil_items__raw()
    Effect.spoil_items(map)
    Assert.eq("elona.item_dagger", dagger.image)
    Assert.eq("elona.dagger", dagger._id)
+end
+
+function test_Effect_spoil_items__own_state()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+
+   local corpse = Item.create("elona.corpse", 5, 5, {}, map)
+   corpse.own_state = Enum.OwnState.NotOwned
+   corpse.spoilage_date = 1
+   Assert.eq("elona.item_corpse", corpse.image)
+   Assert.no_matches("rotten ", corpse:build_name())
+
+   Effect.spoil_items(map)
+   Assert.eq("elona.item_corpse", corpse.image)
+   Assert.no_matches("rotten ", corpse:build_name())
+
+   corpse.own_state = Enum.OwnState.None
+   Effect.spoil_items(map)
+   Assert.eq("elona.item_rotten_food", corpse.image)
+   Assert.matches("rotten ", corpse:build_name())
+   Assert.eq(-1, corpse.spoilage_date)
 end

@@ -1,76 +1,78 @@
-local Chara = require("game.Chara")
-local Data = require("game.Data")
-local Internal = require("game.Internal")
-local Rand = require("game.Rand")
-local GUI = require("game.GUI")
-local Math = require("game.Math")
-local I18N = require("game.I18N")
-local Item = require("game.Item")
-local World = require("game.World")
-local table = require("game.table")
-local string = require("game.string")
+local Chara = require("api.Chara")
+local Gui = require("api.Gui")
+local I18N = require("api.I18N")
+local Item = require("api.Item")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Guild = require("mod.elona.api.Guild")
+local Rank = require("mod.elona.api.Rank")
+local Itemgen = require("mod.elona.api.Itemgen")
+local Calc = require("mod.elona.api.Calc")
+local Enum = require("api.Enum")
 
-local common = require_relative("data/dialog/common")
+local common = require("mod.elona.data.dialog.common")
 
 local function start_trial()
-    World.data.joining_fighters_guild = 1
-    GUI.show_journal_update_message()
-    World.data.fighters_guild_target = Internal.generate_fighters_guild_target(10)
-    World.data.fighters_guild_quota = 15
+    Sidequest.set_progress("elona.guild_fighter_joining", 1)
+    Sidequest.update_journal()
+    save.elona.guild_fighter_target_chara_id = Guild.random_fighter_guild_target_id(10)
+    save.elona.guild_fighter_target_chara_quota = 15
 end
 
 local function join_guild()
-    World.data.ranks[8] = 10000
+   Sidequest.set_progress("elona.guild_fighter_joining", 1000)
+   Rank.set("elona.guild", 10000, true)
 
-    World.join_guild("fighters")
+   Guild.set_guild(Chara.player(), "elona.fighter")
 
-    GUI.txt(I18N.get("core.quest.completed"))
-    GUI.play_sound("core.complete1")
-    GUI.show_journal_update_message()
-    GUI.txt(I18N.get("core.talk.unique.doria.nonmember.joined"), "Yellow")
+   Gui.mes_c("quest.completed", "Green")
+   Gui.play_sound("base.complete1")
+   Sidequest.update_journal()
+   Gui.mes_c("talk.unique.doria.nonmember.joined", "Yellow")
 end
 
-local function move_self(t)
-   t.speaker:move_to(29, 2)
-   t.speaker.initial_position.x = 29
-   t.speaker.initial_position.y = 2
+local function move_off_guild_entrance(t)
+   local doria = t.speaker
+   doria:set_pos(29, 2)
+   doria.initial_x = 29
+   doria.initial_y = 2
 end
 
 local function update_quota()
-   World.data.fighters_guild_target = Internal.generate_fighters_guild_target(Chara.player().level + 10)
-   World.data.fighters_guild_quota = 2 + Rand.between(2, 5)
-   World.data.fighters_guild_quota_recurring = true
-   GUI.show_journal_update_message()
+   local level = Guild.calc_fighter_guild_target_level(Chara.player())
+   save.elona.guild_fighter_target_chara_id = Guild.random_fighter_guild_target_id(level)
+   save.elona.guild_fighter_target_chara_quota = Guild.calc_fighter_guild_target_count()
+   Sidequest.set_progress("elona.guild_fighter_quota", 1)
+   Sidequest.update_journal()
 end
 
 local function receive_reward()
-   World.data.fighters_guild_quota_recurring = false
-   Item.create(Chara.player().position, {objlv = 51 - World.data.ranks[8] / 200, quality = "Good", flttypemajor = 10000})
-   Item.create(Chara.player().position, "core.gold_piece", 10000 - World.data.ranks[8] + 1000)
-   Item.create(Chara.player().position, "core.platinum_coin", Math.clamp(4 - World.data.ranks[8] / 2500, 1, 4))
+   local player = Chara.player()
+   local map = player:current_map()
+   local guild_rank = Rank.get("elona.guild")
+
+   Sidequest.set_progress("elona.guild_fighter_quota", 0)
+   Itemgen.create(player.x, player.y,
+                  {
+                     level = 51 - guild_rank / 200,
+                     quality = Calc.calc_object_quality(Enum.Quality.Good),
+                     categories = "elona.equip_melee"
+                  },
+                  map)
+   Item.create("elona.gold_piece", player.x, player.y, { amount = 10000 - guild_rank + 1000 }, map)
+   Item.create("elona.platinum_coin", player.x, player.y, { amount = math.clamp(4 - guild_rank / 2500, 1, 4) }, map)
 
    common.quest_completed()
 
-   World.modify_ranking(8, 500, 8)
+   Rank.modify("elona.guild", 500, 8)
 end
 
-local function extract_id_parts(key)
-   return string.match(key, "(.+)%.(.+)")
-end
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "doria",
 
-local function quota_args()
-   local id = Data.get_id_by_legacy("core.chara", World.data.fighters_guild_target)
-   local mod_id, instance_id = extract_id_parts(id)
-   local name = I18N.get(mod_id .. ".chara." .. instance_id .. ".name")
-   return {World.data.fighters_guild_quota, name}
-end
-
-return {
-   id = "doria",
-   root = "core.talk.unique.doria",
    nodes = {
       __start = function()
-         if World.belongs_to_guild("fighters") == false then
+         if Chara.player():calc("guild") ~= "elona.fighter" then
             return "guild_nonmember"
          end
 
@@ -78,27 +80,23 @@ return {
       end,
 
       guild_nonmember = {
-         text = {
-            {"nonmember.dialog"},
-         },
+         text = "talk.unique.doria.nonmember.dialog",
          choices = {
-            {"guild_desc", "nonmember.choices.tell_me_about"},
-            {"guild_join_check", "nonmember.choices.want_to_join"},
-            {"__END__", "__BYE__"}
+            {"guild_desc", "talk.unique.doria.nonmember.choices.tell_me_about"},
+            {"guild_join_check", "talk.unique.doria.nonmember.choices.want_to_join"},
+            {"__END__", "ui.bye"}
          }
       },
       guild_desc = {
-         text = {
-            {"nonmember.tell_me_about"},
-         },
+         text = "talk.unique.doria.nonmember.tell_me_about",
          choices = {
-            {"__start", "__MORE__"},
+            {"__start", "ui.more"},
          }
       },
       guild_join_check = function()
-         if World.data.joining_fighters_guild == 0 then
+         if Sidequest.progress("elona.guild_fighter_joining") == 0 then
             return "guild_join_start"
-         elseif World.data.fighters_guild_quota > 0 then
+         elseif save.elona.guild_fighter_target_chara_quota > 0 then
             return "guild_join_waiting"
          end
 
@@ -106,76 +104,77 @@ return {
       end,
       guild_join_start = {
          text = {
-            {"nonmember.want_to_join._0"},
+            {"talk.unique.doria.nonmember.want_to_join._0"},
             start_trial,
-            {"nonmember.want_to_join._1", args = quota_args},
+            function()
+               local chara_name = I18N.get("chara." .. save.elona.guild_fighter_target_chara_id .. ".name")
+               return I18N.get("talk.unique.doria.nonmember.want_to_join._1", save.elona.guild_fighter_target_chara_quota, chara_name)
+            end
          },
          choices = {
-            {"__start", "__MORE__"},
+            {"__start", "ui.more"},
          }
       },
       guild_join_waiting = {
-         text = {
-            {"nonmember.quota", args = quota_args},
-         },
+         text = function()
+            local chara_name = I18N.get("chara." .. save.elona.guild_fighter_target_chara_id .. ".name")
+            return I18N.get("talk.unique.doria.nonmember.quota", save.elona.guild_fighter_target_chara_quota, chara_name)
+         end,
          choices = {
-            {"__start", "__MORE__"},
+            {"__start", "ui.more"},
          }
       },
       guild_join_finish = {
          text = {
-            {"nonmember.end._0"},
+            {"talk.unique.doria.nonmember.end._0"},
             join_guild,
-            {"nonmember.end._1"},
+            {"talk.unique.doria.nonmember.end._1"},
          },
-         on_finish = move_self,
+         on_finish = move_off_guild_entrance,
       },
 
       guild_member = {
-         text = {
-            move_self,
-            {"member.dialog", args = function() return {World.ranking_title(8), Chara.player().basename} end},
-         },
+         on_start = move_off_guild_entrance,
+         text = function()
+            return I18N.get("talk.unique.doria.member.dialog", Rank.title("elona.guild"), Chara.player():calc("name"))
+         end,
          choices = function()
             local choices = {}
-            if not World.data.fighters_guild_quota_recurring then
-               table.insert(choices, {"guild_quota_new", "core.talk.unique.lexus.member.choices.new_quota"})
+            if Sidequest.progress("elona.guild_fighter_quota") == 0 then
+               table.insert(choices, {"guild_quota_new", "guild.dialog.choices.new_quota"})
             else
-               table.insert(choices, {"guild_quota_check", "core.talk.unique.lexus.member.choices.report_quota"})
+               table.insert(choices, {"guild_quota_check", "guild.dialog.choices.report_quota"})
             end
-            table.insert(choices, {"__END__", "__BYE__"})
+            table.insert(choices, {"__END__", "ui.bye"})
 
             return choices
          end
       },
       guild_quota_new = {
-         text = {
-            update_quota,
-            {"member.new_quota", args = quota_args},
-         },
+         on_start = update_quota,
+         text = function()
+            local chara_name = I18N.get("chara." .. save.elona.guild_fighter_target_chara_id .. ".name")
+            return I18N.get("talk.unique.doria.member.new_quota", save.elona.guild_fighter_target_chara_quota, chara_name)
+         end,
          choices = {
-            {"__start", "__MORE__"},
+            {"__start", "ui.more"},
          }
       },
       guild_quota_check = function()
-         if World.data.fighters_guild_quota > 0 then
+         if save.elona.guild_fighter_target_chara_quota > 0 then
             return "guild_quota_waiting"
          end
          return "guild_quota_finish"
       end,
       guild_quota_waiting = {
-         text = {
-            {"core.talk.unique.lexus.member.report_quota.waiting"},
-         },
+         text = "guild.dialog.report_quota.waiting",
          choices = {
-            {"__start", "__MORE__"},
+            {"__start", "ui.more"},
          }
       },
       guild_quota_finish = {
-         text = {
-            receive_reward,
-            {"core.talk.unique.lexus.member.report_quota.end"},
-         },
+         on_start = receive_reward,
+         text = "guild.dialog.report_quota.end",
       },
    }
 }

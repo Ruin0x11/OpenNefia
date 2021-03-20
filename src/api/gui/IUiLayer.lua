@@ -3,6 +3,7 @@ local Log = require("api.Log")
 local IDrawable = require("api.gui.IDrawable")
 local IInput = require("api.gui.IInput")
 local config = require("internal.config")
+local IHud = require("api.gui.hud.IHud")
 
 local draw = require("internal.draw")
 
@@ -103,7 +104,11 @@ function IUiLayer:query(z_order)
                if config.base.update_unfocused_ui_layers then
                   local layers = draw.get_layers()
                   for i = 1, #layers-1 do
-                     layers[i].layer:update(dt, false)
+                     local layer = layers[i].layer
+                     -- HACK
+                     if not class.is_an(IHud, layer) then
+                        layer:update(dt, false)
+                     end
                   end
                end
                local ran = self:run_actions(dt)

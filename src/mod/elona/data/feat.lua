@@ -264,31 +264,35 @@ local function travel(start_pos_fn, set_prev_map)
          end
 
          -- >>>>>>>> shade2/map.hsp:152 		if feat(1)=objDownstairs :msgTemp+=lang("階段を降りた。 ..
-         if area.uid ~= prev_area.uid then
-            -- If the area we're trying to travel to is the parent of this area, then
-            -- put the player directly on the area's entrance.
-            if parent_area == area then
-               -- TODO allow configuring ally start positions in Map.travel_to() (mStartWorld)
-               starting_pos = entrance_in_parent_map(map, prev_area, parent_area, chara, prev_map)
-               if starting_pos == nil then
-                  -- Assume there will be stairs in the connecting map, and if
-                  -- not fall back to the archetype's declared map start
-                  -- position.
+         if self.params.area_starting_x and self.params.area_starting_y then
+            starting_pos = { x = self.params.area_starting_x, y = self.params.area_starting_y }
+         else
+            if area.uid ~= prev_area.uid then
+               -- If the area we're trying to travel to is the parent of this area, then
+               -- put the player directly on the area's entrance.
+               if parent_area == area then
+                  -- TODO allow configuring ally start positions in Map.travel_to() (mStartWorld)
+                  starting_pos = entrance_in_parent_map(map, prev_area, parent_area, chara, prev_map)
+                  if starting_pos == nil then
+                     -- Assume there will be stairs in the connecting map, and if
+                     -- not fall back to the archetype's declared map start
+                     -- position.
+                     starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
+                  end
+               else
+                  -- We're going into a dungeon. Assume there's stairs there, and
+                  -- if not fall back to the archetype.
                   starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
+
+                  if prev_area:has_child_area(area) then
+                     -- `prev_area` contains the entrance to this area.
+                     local floor = assert(Map.floor_number(prev_map))
+                     prev_area:set_child_area_position(area, chara.x, chara.y, floor)
+                  end
                end
             else
-               -- We're going into a dungeon. Assume there's stairs there, and
-               -- if not fall back to the archetype.
                starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
-
-               if prev_area:has_child_area(area) then
-                  -- `prev_area` contains the entrance to this area.
-                  local floor = assert(Map.floor_number(prev_map))
-                  prev_area:set_child_area_position(area, chara.x, chara.y, floor)
-               end
             end
-         else
-            starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
          end
 
          if starting_pos == nil then
@@ -302,24 +306,8 @@ local function travel(start_pos_fn, set_prev_map)
          end
          -- <<<<<<<< shade2/map.hsp:153 		if feat(1)=objUpstairs	 :msgTemp+=lang("階段を昇った。" ..
       else
-         -- This staircase might have got generated as part of a map
-         -- template. Check to see if this map has a previous map set, and
-         -- use that for the map to travel to.
-         Log.warn("This stair does not have an area UID, trying to travel to previous map.")
-         local prev_map_uid, set_prev_x, set_prev_y = prev_map:previous_map_and_location()
-         if prev_map_uid then
-            local ok
-            ok, map = assert(Map.load(prev_map_uid))
-            if not ok then
-               Log.error("Could not load previous map: %s", map)
-               return "player_turn_query"
-            end
-            start_x = set_prev_x
-            start_y = set_prev_y
-         else
-            Log.error("This staircase doesn't have an area to travel to, and the previous map is not set.")
-            return "player_turn_query"
-         end
+         Log.error("This staircase (%s) doesn't have an area UID set.", self)
+         return "player_turn_query"
       end
 
       local travel_params = {

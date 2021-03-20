@@ -854,12 +854,12 @@ function Effect.add_buff(target, source, buff_id, power, duration)
    local buff = data["elona_sys.buff"]:ensure(buff_id)
 
    if duration <= 0 then
-      return false
+      return nil
    end
 
    if target:find_buff(buff_id) then
       Gui.mes("magic.buff.no_effect")
-      return false
+      return nil
    end
 
    local fixed_duration
@@ -868,10 +868,10 @@ function Effect.add_buff(target, source, buff_id, power, duration)
       local resists
       resists, fixed_duration = resists_hex(target, buff_id, power, duration)
       if resists == "done" then
-         return false
+         return nil
       elseif resists then
          Gui.mes_visible("magic.buff.resists", target)
-         return false
+         return nil
       end
 
       if source and source:is_player() then
@@ -884,9 +884,7 @@ function Effect.add_buff(target, source, buff_id, power, duration)
    local apply_mes = "buff." .. buff_id .. ".apply"
 
    Gui.mes_visible(apply_mes, target)
-   target:add_buff(buff_id, power, fixed_duration)
-
-   return true
+   return target:add_buff(buff_id, power, fixed_duration)
 end
 
 function Effect.on_kill(victim, attacker)
@@ -898,7 +896,14 @@ function Effect.on_kill(victim, attacker)
       if attacker:is_in_player_party() then
          if not victim:is_in_player_party() then
             save.base.total_killed = save.base.total_killed + 1
-            -- TODO fighter's guild
+            if save.elona.guild_fighter_target_chara_id == victim._id
+               and save.elona.guild_fighter_target_chara_quota > 0
+            then
+               save.elona.guild_fighter_target_chara_quota = save.elona.guild_fighter_target_chara_quota - 1
+            end
+            if victim.relation >= Enum.Relation.Neutral then
+               karma_lost = -2
+            end
             if victim._id == "elona.rich_person" then
                karma_lost = -15
             elseif victim._id == "elona.noble_child" then
@@ -1134,6 +1139,7 @@ function Effect.spoil_items(map)
          and item:calc("material") == "elona.fresh"
          and (item.spoilage_date or 0) > 0
          and item.spoilage_date < date_hours
+         and item:calc("own_state") <= Enum.OwnState.None
    end
 
    for _, item in Item.iter(map):filter(will_rot) do

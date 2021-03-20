@@ -651,7 +651,7 @@ do
       end
    )
 
-   function derphy.on_generate_map()
+   function derphy.on_generate_map(area)
       local map = Elona122Map.generate("rogueden")
       map:set_archetype("elona.derphy", { set_properties = true })
 
@@ -731,6 +731,8 @@ do
          MapgenUtils.generate_chara(map)
       end
 
+      util.connect_stair_at(map, 16, 17, area, 3)
+
       return map
    end
 
@@ -747,7 +749,8 @@ do
       image = "elona.feat_area_village",
 
       floors = {
-         [1] = "elona.derphy"
+         [1] = "elona.derphy",
+         [3] = "elona.thieves_guild"
       },
 
       metadata = {
@@ -795,7 +798,7 @@ do
 
    port_kapul.chara_filter = util.chara_filter_town()
 
-   function port_kapul.on_generate_map()
+   function port_kapul.on_generate_map(area)
       local map = Elona122Map.generate("kapul")
       map:set_archetype("elona.port_kapul", { set_properties = true })
 
@@ -915,6 +918,8 @@ do
          MapgenUtils.generate_chara(map)
       end
 
+      util.connect_stair_at(map, 29, 3, area, 3)
+
       return map
    end
 
@@ -931,7 +936,8 @@ do
       image = "elona.feat_area_city",
 
       floors = {
-         [1] = "elona.port_kapul"
+         [1] = "elona.port_kapul",
+         [3] = "elona.fighters_guild"
       },
 
       metadata = {
@@ -1405,7 +1411,7 @@ do
       end
    )
 
-   function lumiest.on_generate_map()
+   function lumiest.on_generate_map(area)
       local map = Elona122Map.generate("lumiest")
       map:set_archetype("elona.lumiest", { set_properties = true })
 
@@ -1516,6 +1522,8 @@ do
          MapgenUtils.generate_chara(map)
       end
 
+      util.connect_stair_at(map, 5, 20, area, 3)
+
       return map
    end
 
@@ -1532,7 +1540,8 @@ do
       image = "elona.feat_area_city",
 
       floors = {
-         [1] = "elona.lumiest"
+         [1] = "elona.lumiest",
+         [3] = "elona.mages_guild"
       },
 
       metadata = {

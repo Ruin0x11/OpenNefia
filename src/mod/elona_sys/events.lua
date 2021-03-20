@@ -93,7 +93,7 @@ local function init_save()
    local s = save.elona_sys
    s.awake_hours = 0
    s.npc_memory = { killed = {}, generated = {} }
-   s.item_memory = { known = {}, generated = {} }
+   s.item_memory = { known = {}, generated = {}, reserved = {} }
    s.quest = {
       clients = {},
       towns = {},
@@ -104,7 +104,6 @@ local function init_save()
    s.quest_time_limit = 0
    s.quest_time_limit_notice_interval = 0
    s.sidequest = {}
-   s.reservable_spellbook_ids = table.set {}
    s.deferred_events = SkipList:new()
 end
 

@@ -24,11 +24,11 @@ local CANDIDATES = {
 
 -- >>>>>>>> shade2/map_user.hsp:398 		if p=0: cRole(rc)=cRoleShopArmor	:cnName(rc)=lan ...
 local SHOP_KINDS = {
-   { _id = "elona.blacksmith",    name = "servant.shop_title.armory" },
-   { _id = "elona.general_store", name = "servant.shop_title.general_store" },
-   { _id = "elona.magic_vendor",  name = "servant.shop_title.magic_store" },
-   { _id = "elona.general_store", name = "servant.shop_title.goods_store" },
-   { _id = "elona.blackmarket",   name = "servant.shop_title.blackmarket" },
+   { _id = "elona.blacksmith",     name = "servant.shop_title.armory" },
+   { _id = "elona.general_vendor", name = "servant.shop_title.general_store" },
+   { _id = "elona.magic_vendor",   name = "servant.shop_title.magic_store" },
+   { _id = "elona.goods_vendor",   name = "servant.shop_title.goods_store" },
+   { _id = "elona.blackmarket",    name = "servant.shop_title.blackmarket" },
 }
 -- <<<<<<<< shade2/map_user.hsp:403 		if p=5:	cRole(rc)=cRoleShopBlack	:cnName(rc)=lan ..
 

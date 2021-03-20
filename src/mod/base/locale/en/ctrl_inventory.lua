@@ -133,7 +133,7 @@ end
         guild = {
           have_no_quota = "You have no quota for Mages Guild.",
           remaining = function(_1)
-  return ("%sguild points are needed to gain a rank.")
+  return ("%s guild points are needed to gain a rank.")
   :format(_1)
 end,
           you_deliver = function(_1)
@@ -161,8 +161,8 @@ end
   :format(_1)
 end,
         not_enough_money = function(_1)
-  return ("%s checks %s wallet and shake %s head.")
-  :format(name(_1), his(_1), his(_1))
+  return ("%s checks %s wallet and shake%s %s head.")
+     :format(name(_1), his(_1), s(_1), his(_1))
 end,
         prompt = function(_1, _2)
   return ("Do you really want to sell %s for %s gold pieces?")

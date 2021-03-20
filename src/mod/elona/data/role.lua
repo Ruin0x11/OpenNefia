@@ -148,6 +148,10 @@ local role = {
    {
       _id = "spell_writer",
       elona_id = 1020,
+
+      dialog_choices = {
+         {"elona.spell_writer:reserve", "talk.npc.spell_writer.choices.reserve"},
+      }
    },
 }
 

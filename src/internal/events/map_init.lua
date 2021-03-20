@@ -216,10 +216,10 @@ local function proc_scene()
    -- <<<<<<<< shade2/map.hsp:2015 		} ..
 end
 
-local function proc_map_loaded_events(map)
+local function proc_map_loaded_events(map, prev_map, prev_x, prev_y)
    -- >>>>>>>> shade2/map.hsp:2018 	proc "Map:Area specific" ..
    -- TODO
-   map:emit("base.on_map_loaded_events")
+   map:emit("base.on_map_loaded_events", {previous_map=prev_map,previous_x=prev_x,previous_y=prev_y})
    -- <<<<<<<< shade2/map.hsp:2054 		} ..
 end
 
@@ -229,7 +229,7 @@ local function init_world_map(map)
    -- <<<<<<<< shade2/map.hsp:2070 		} ..
 end
 
-local function proc_map_entered_events(map)
+local function proc_map_entered_events(map, prev_map, prev_x, prev_y)
    -- >>>>>>>> shade2/map.hsp:2084 	proc "Map:Update area" ..
    Effect.wake_up_everyone(map)
    local player = Chara.player()
@@ -238,7 +238,7 @@ local function proc_map_entered_events(map)
    end
 
    -- TODO
-   map:emit("base.on_map_entered_events")
+   map:emit("base.on_map_entered_events", {previous_map=prev_map,previous_x=prev_x,previous_y=prev_y})
    -- <<<<<<<< shade2/map.hsp:2087 	mode=mode_Main:screenUpdate=-1:gosub *screen_refr ..
 end
 
@@ -293,6 +293,9 @@ end
 
 local function initialize_map(map, params)
    local load_type = assert(params.load_type)
+   if load_type == "continue" then
+      return
+   end
 
    if not map.is_temporary then
       prepare_savable_map(map, load_type)
@@ -310,7 +313,10 @@ Event.register("base.on_map_initialize", "Initialize map renewal, crowding and q
 local function prepare_map(map, params)
    local load_type = assert(params.load_type)
 
-   map:emit("base.on_map_initialize", {load_type=load_type})
+   local prev_map = params.previous_map
+   local prev_x = params.previous_x
+   local prev_y = params.previous_y
+   map:emit("base.on_map_initialize", {load_type=load_type,previous_map=prev_map,previous_x=prev_x,previous_y=prev_y})
 
    if load_type == "initialize" then
       return
@@ -318,7 +324,7 @@ local function prepare_map(map, params)
 
    proc_scene(map)
 
-   proc_map_loaded_events(map)
+   proc_map_loaded_events(map, prev_map, prev_x, prev_y)
 
    if Map.is_world_map(map) then
       init_world_map(map)
@@ -328,7 +334,7 @@ local function prepare_map(map, params)
       return
    end
 
-   proc_map_entered_events(map)
+   proc_map_entered_events(map, prev_map, prev_x, prev_y)
 
    proc_map_entered(map)
 

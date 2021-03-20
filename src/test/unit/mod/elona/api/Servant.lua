@@ -22,7 +22,7 @@ function test_Servant_calc_wage_cost__shopkeeper()
 
    Assert.eq(0, Servant.calc_wage_cost(shopkeeper))
 
-   shopkeeper:add_role("elona.shopkeeper", { inventory_id = "elona.general_store" })
+   shopkeeper:add_role("elona.shopkeeper", { inventory_id = "elona.goods_vendor" })
    Assert.eq(1000, Servant.calc_wage_cost(shopkeeper))
 
    shopkeeper:add_role("elona.shopkeeper", { inventory_id = "elona.blackmarket" })
@@ -42,7 +42,7 @@ function test_Servant_is_servant()
    Assert.is_truthy(Map.try_place_chara(shopkeeper, nil, nil, first_floor))
    Assert.eq(false, Servant.is_servant(shopkeeper))
 
-   shopkeeper:add_role("elona.shopkeeper", { inventory_id = "elona.general_store" })
+   shopkeeper:add_role("elona.shopkeeper", { inventory_id = "elona.goods_vendor" })
    Assert.eq(true, Servant.is_servant(shopkeeper))
 end
 
@@ -80,7 +80,7 @@ function test_Servant_calc_total_labor_expenses()
 
    local shopkeeper = Chara.create("elona.shopkeeper", nil, nil, {ownerless=true})
    Assert.is_truthy(Map.try_place_chara(shopkeeper, nil, nil, first_floor))
-   shopkeeper:add_role("elona.shopkeeper", { inventory_id = "elona.general_store" })
+   shopkeeper:add_role("elona.shopkeeper", { inventory_id = "elona.goods_vendor" })
 
    Assert.eq(500, Servant.calc_total_labor_expenses(first_floor))
 

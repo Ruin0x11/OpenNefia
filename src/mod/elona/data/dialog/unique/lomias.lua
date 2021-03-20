@@ -295,13 +295,17 @@ data:add {
       get_out = function(t)
          local larnneire = Chara.find("elona.larnneire", "others")
          if not Chara.is_alive(larnneire) then
-            local lomias = Chara.find("elona.lomias", "others")
-            Chara.player():act_hostile_towards(lomias)
-            t:say("talk.unique.lomias.after.get_out.larnneire_died", "__BYE__")
-            return "__END__"
+            return "larnneire_died"
          end
          return "get_out_1"
       end,
+      larnneire_died = {
+         on_start = function()
+            local lomias = Chara.find("elona.lomias", "others")
+            Chara.player():act_hostile_towards(lomias)
+         end,
+         text = "talk.unique.lomias.after.get_out.larnneire_died",
+      },
       get_out_1 = {
          text = {
             {"talk.unique.lomias.after.get_out.dialog._0", args = common.args_name, speaker = "elona.larnneire"},

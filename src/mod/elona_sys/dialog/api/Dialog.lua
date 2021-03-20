@@ -307,6 +307,14 @@ local function step_dialog(node_data, talk, state, prev_node_id)
       -- which checks if the chat buffer wasn't previously set. (buff="")
       local texts = node_data.prev_text or node.text
 
+      -- Run on_start callback.
+      if node.on_start then
+         local ok, result = pcall(node.on_start, talk, state, node_data.params)
+         if not ok then
+            dialog_error(talk, "Error running on_start function", result)
+         end
+      end
+
       if type(texts) == "string" then
          texts = { texts }
       elseif type(texts) == "function" then
@@ -325,14 +333,6 @@ local function step_dialog(node_data, talk, state, prev_node_id)
          end
       end
 
-      -- Run on_start callback.
-      if node.on_start then
-         local ok, result = pcall(node.on_start, talk, state, node_data.params)
-         if not ok then
-            dialog_error(talk, "Error running on_start function", result)
-         end
-      end
-
       if node.jump_to then
          local dialog, jumped_node, jumped_node_id = find_dialog(talk.dialog, node.jump_to)
          if dialog and jumped_node then
@@ -344,80 +344,89 @@ local function step_dialog(node_data, talk, state, prev_node_id)
       end
 
       for i, text in ipairs(texts) do
-         if type(text) == "string" then
-            text = {text}
-         end
-
-         if type(text) == "table" then
-            -- Obtain arguments to I18N.get().
-            -- Assume the speaker is the first argument unless otherwise noted.
-            local args = {talk.speaker}
-            if text.args then
-               local ok
-               ok, args = pcall(text.args, talk, state, node_data.params)
-               if not ok then
-                  dialog_error(talk, "Error getting I18N arguments", args)
-               end
-            end
-
-            -- Change speaking character.
-            if text.speaker ~= nil then
-               local found = Chara.find(text.speaker, "others")
-               if found == nil then
-                  found = Chara.find(text.speaker, "allies")
-               end
-               if found ~= nil then
-                  talk.speaker = found
-               end
-            end
-
-            -- Get localization key of default response ("more", "bye").
-            local choice_key = text.choice
-            if choice_key == nil then
-               if texts[i+1] == nil then
-                  choice_key = "ui.bye"
-               else
-                  choice_key = "ui.more"
-               end
-            end
-
-            -- Build choices. Default to ending the dialog.
-            local choices
-            choices, node = get_choices(node, talk, state, node_data, choice_key)
-
-            -- Set the default choice to select if window is
-            -- cancelled. If nil, prevent cancellation.
-            local default_choice = nil
-            if node.default_choice ~= nil then
-               for j, choice in ipairs(choices) do
-                  if choice[1] == node.default_choice then
-                     default_choice = j
-                  end
-               end
-               if default_choice == nil then
-                  dialog_error(talk, "Could not find default choice \"" .. node.default_choice .. "\"")
-               end
-            end
-
-            -- Resolve localized text.
-            local tex = resolve_translated_text(text[1], args)
-
-            -- Prompt for choice if on the last text entry or
-            -- `next_node` is non-nil, otherwise show single choice.
-            if texts[i+1] == nil then
-               local node_id, params = query(talk, tex, choices, default_choice)
-               next_node = {node_id = node_id, params = params}
-            else
-               query(talk, tex, {{"dummy", choice_key}})
-            end
-         elseif type(text) == "function" then
-            -- Call an arbitrary function. The result is ignored.
-            local ok, err = pcall(text, talk, state, node_data.params)
+         local proceed = true
+         if type(text) == "function" then
+            -- Call an arbitrary function.
+            local ok, err = xpcall(text, debug.traceback, talk, state, node_data.params)
             if not ok then
                dialog_error(talk, "Error running text function", err)
             end
-         else
-            dialog_error(talk, "Cannot parse text entry, must be string, function or table (got: " .. type(text) .. ")")
+            text = err
+            if text == nil and texts[i+1] ~= nil then
+               proceed = false
+            end
+         end
+
+         if proceed then
+            if type(text) == "string" then
+               text = {text}
+            end
+
+            if type(text) == "table" then
+               -- Obtain arguments to I18N.get().
+               -- Assume the speaker is the first argument unless otherwise noted.
+               local args = {talk.speaker}
+               if text.args then
+                  local ok
+                  ok, args = pcall(text.args, talk, state, node_data.params)
+                  if not ok then
+                     dialog_error(talk, "Error getting I18N arguments", args)
+                  end
+               end
+
+               -- Change speaking character.
+               if text.speaker ~= nil then
+                  local found = Chara.find(text.speaker, "others")
+                  if found == nil then
+                     found = Chara.find(text.speaker, "allies")
+                  end
+                  if found ~= nil then
+                     talk.speaker = found
+                  end
+               end
+
+               -- Get localization key of default response ("more", "bye").
+               local choice_key = text.choice
+               if choice_key == nil then
+                  if texts[i+1] == nil then
+                     choice_key = "ui.bye"
+                  else
+                     choice_key = "ui.more"
+                  end
+               end
+
+               -- Build choices. Default to ending the dialog.
+               local choices
+               choices, node = get_choices(node, talk, state, node_data, choice_key)
+
+               -- Set the default choice to select if window is
+               -- cancelled. If nil, prevent cancellation.
+               local default_choice = nil
+               if node.default_choice ~= nil then
+                  for j, choice in ipairs(choices) do
+                     if choice[1] == node.default_choice then
+                        default_choice = j
+                     end
+                  end
+                  if default_choice == nil then
+                     dialog_error(talk, "Could not find default choice \"" .. node.default_choice .. "\"")
+                  end
+               end
+
+               -- Resolve localized text.
+               local tex = resolve_translated_text(text[1], args)
+
+               -- Prompt for choice if on the last text entry or
+               -- `next_node` is non-nil, otherwise show single choice.
+               if texts[i+1] == nil then
+                  local node_id, params = query(talk, tex, choices, default_choice)
+                  next_node = {node_id = node_id, params = params}
+               else
+                  query(talk, tex, {{"dummy", choice_key}})
+               end
+            else
+               dialog_error(talk, "Cannot parse text entry, must be string, function or table (got: " .. type(text) .. ")")
+            end
          end
       end
 

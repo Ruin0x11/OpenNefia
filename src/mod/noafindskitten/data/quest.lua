@@ -67,12 +67,12 @@ data:add {
          Map.travel_to(quest_map)
       end,
       complete = {
-         text = "quest.types.noafindskitten.noafindskitten.complete",
          on_start = function(t)
             local quest = Quest.for_client(t.speaker)
             assert(quest)
             Quest.complete(quest, t.speaker)
          end,
+         text = "quest.types.noafindskitten.noafindskitten.complete",
          jump_to = "elona.default:__start"
       }
    }
