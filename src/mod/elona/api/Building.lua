@@ -22,7 +22,7 @@ function Building.find_worker(map, chara_uid)
    end
 
    obj = save.base.staying_charas:get_object(chara_uid)
-   if obj then
+   if obj and save.base.staying_charas:is_staying_in_map(obj, map) then
       return obj
    end
 

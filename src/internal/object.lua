@@ -188,7 +188,7 @@ end
 
 function object:__tostring()
    local addr = string.tostring_raw(self):gsub("^table: (.*)", "%1")
-   return ("<object ('%s', uid %d) %s>"):format(self._type, self.uid, addr)
+   return ("<object ('%s', uid %s) %s>"):format(self._type, self.uid, addr)
 end
 
 if not binser.hasRegistry("object") then
