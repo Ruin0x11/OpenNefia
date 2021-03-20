@@ -44,9 +44,9 @@ end
 local function format_name_and_area(chara)
    -- >>>>>>>> shade2/command.hsp:545 		s=""+cnAka(i)+" "+cnName(i)  ...
    local name = ("%s %s"):format(chara.title, chara.name)
-   local staying_map = StayingCharas.get_staying_map_for_global(chara)
-   if staying_map then
-      name = name .. ("(%s)"):format(staying_map.map_name)
+   local staying_area = StayingCharas.get_staying_area_for_global(chara)
+   if staying_area then
+      name = name .. ("(%s)"):format(staying_area.area_name)
    end
    return name
    -- <<<<<<<< shade2/command.hsp:546 		if cArea(i)!0:s=s+"("+mapName(cArea(i))+")" ..

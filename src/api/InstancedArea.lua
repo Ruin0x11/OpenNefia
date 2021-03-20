@@ -3,6 +3,7 @@ local Log = require("api.Log")
 local save = require("internal.global.save")
 local data = require("internal.data")
 local MapArchetype = require("api.MapArchetype")
+local I18N = require("api.I18N")
 
 local InstancedArea = class.class("InstancedArea")
 
@@ -25,7 +26,12 @@ function InstancedArea:init(archetype_id, area_generator, uids)
 
    if archetype_id then
       self:set_archetype(archetype_id, { set_properties = true })
+      self.name = I18N.get_optional("map.unique." .. archetype_id .. ".name")
    end
+end
+
+function InstancedArea:has_type(ty)
+   return false
 end
 
 function InstancedArea:add_floor(map, floor)
@@ -39,7 +45,6 @@ function InstancedArea:add_floor(map, floor)
       error(("Map already registered in area '%d'"):format(map.area_uid))
    end
    self.maps[floor] = { uid = map.uid }
-   self.name = self.name or map.name
    map.area_uid = self.uid
 end
 

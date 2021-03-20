@@ -255,9 +255,13 @@ function Chara.create(id, x, y, params, where)
       end
 
       if where then
-         -- TODO: may want to return status
-         local Map = require("api.Map")
-         Map.try_place_chara(chara, x, y, where)
+         if where:is_positional() then
+            -- TODO: may want to return status
+            local Map = require("api.Map")
+            Map.try_place_chara(chara, x, y, where)
+         else
+            where:take_object(chara)
+         end
       end
 
       MapObject.finalize(chara, gen_params)

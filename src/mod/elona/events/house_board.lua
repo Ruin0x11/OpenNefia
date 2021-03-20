@@ -9,7 +9,6 @@ local Servant = require("mod.elona.api.Servant")
 local MapEdit = require("mod.elona.api.MapEdit")
 local Gui = require("api.Gui")
 local Area = require("api.Area")
-local Log = require("api.Log")
 local ChooseAllyMenu = require("api.gui.menu.ChooseAllyMenu")
 local Chara = require("api.Chara")
 local StayingCharas = require("api.StayingCharas")
@@ -17,10 +16,6 @@ local ICharaParty = require("api.chara.ICharaParty")
 local ChooseNpcMenu = require("api.gui.menu.ChooseNpcMenu")
 local Enum = require("api.Enum")
 local Input = require("api.Input")
-
-local function is_alive_or_staying(chara)
-   return chara.state == "Alive" or chara.state == "Staying"
-end
 
 local function iter_staying_allies()
    return StayingCharas.iter_global():filter(ICharaParty.is_in_player_party)
@@ -47,25 +42,31 @@ local function shop_assign_shopkeeper(map)
       x_offset = 20
    }
 
-   local allies = iter_allies_and_stayers(map):filter(is_alive_or_staying):to_list()
+   local allies = iter_allies_and_stayers(map):filter(Chara.is_alive):to_list()
    local result, canceled = ChooseAllyMenu:new(allies, topic):query()
 
    if result and not canceled then
       Gui.play_sound("base.ok1")
+
+      local area, floor = Area.for_map(map)
+      if not area then
+         error("Map does not have an area")
+      end
+
       local ally = result.chara
       -- TODO move elsewhere
       if map.shopkeeper_uid == ally.uid then
-         StayingCharas.unregister_global(ally, map)
+         StayingCharas.unregister_global(ally, area)
          map.shopkeeper_uid = nil
          Gui.mes("building.home.staying.remove.worker", ally)
       else
          if map.shopkeeper_uid then
             local existing = Building.find_worker(map, map.shopkeeper_uid)
             if existing then
-               StayingCharas.unregister_global(existing, map)
+               StayingCharas.unregister_global(existing, area)
             end
          end
-         StayingCharas.register_global(ally, map)
+         StayingCharas.register_global(ally, area, floor)
          map.shopkeeper_uid = ally.uid
          Gui.mes("building.home.staying.add.worker", ally)
       end
@@ -102,25 +103,31 @@ local function ranch_assign_breeder(map)
       x_offset = 20
    }
 
-   local allies = iter_allies_and_stayers(map):filter(is_alive_or_staying):to_list()
+   local allies = iter_allies_and_stayers(map):filter(Chara.is_alive):to_list()
    local result, canceled = ChooseAllyMenu:new(allies, topic):query()
 
    if result and not canceled then
       Gui.play_sound("base.ok1")
+
+      local area, floor = Area.for_map(map)
+      if not area then
+         error("Map does not have an area")
+      end
+
       local ally = result.chara
       -- TODO move elsewhere
       if map.breeder_uid == ally.uid then
-         StayingCharas.unregister_global(ally, map)
+         StayingCharas.unregister_global(ally, area)
          map.breeder_uid = nil
          Gui.mes("building.home.staying.remove.worker", ally)
       else
          if map.breeder_uid then
             local existing = Building.find_worker(map, map.breeder_uid)
             if existing then
-               StayingCharas.unregister_global(existing, map)
+               StayingCharas.unregister_global(existing, area)
             end
          end
-         StayingCharas.register_global(ally, map)
+         StayingCharas.register_global(ally, area, floor)
          map.breeder_uid = ally.uid
          Gui.mes("building.home.staying.add.worker", ally)
       end
@@ -173,16 +180,22 @@ local function your_home_allies(map)
 
    if result and not canceled then
       Gui.play_sound("base.ok1")
+
+      local area, floor = Area.for_map(map)
+      if not area then
+         error("Map does not have an area")
+      end
+
       Gui.mes_newline()
       local ally = result.chara
-      local staying_map = StayingCharas.get_staying_map_for_global(ally)
-      if staying_map then
-         if staying_map.map_uid == map.uid then
-            StayingCharas.unregister_global(ally)
+      local staying_area = StayingCharas.get_staying_area_for_global(ally)
+      if staying_area then
+         if staying_area.area_uid == area.uid then
+            StayingCharas.unregister_global(ally, area)
             Gui.mes("building.home.staying.remove.ally", ally)
          end
       else
-         StayingCharas.register_global(ally, map)
+         StayingCharas.register_global(ally, area, floor)
          Gui.mes("building.home.staying.add.ally", ally)
       end
    end

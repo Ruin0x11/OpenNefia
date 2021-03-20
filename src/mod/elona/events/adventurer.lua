@@ -5,6 +5,7 @@ local MapObject = require("api.MapObject")
 local Enum = require("api.Enum")
 local Map = require("api.Map")
 local Chara = require("api.Chara")
+local World = require("api.World")
 local Adventurer = require("mod.elona.api.Adventurer")
 
 local function add_news_gain_level(chara, params)
@@ -43,12 +44,39 @@ local function cleanup_adventurer(chara)
 end
 Event.register("base.on_object_removed", "Clean up adventurer status", cleanup_adventurer)
 
+local function should_transfer(chara, map)
+   local role = chara:find_role("elona.adventurer")
+   if role == nil then
+      return false
+   end
+
+   if role.state ~= "Alive" then
+      return false
+   end
+
+   if chara:calc("is_hired") then
+      return true
+   end
+
+   if not (map:has_type("town")
+              or map:has_type("guild")
+           -- XXX: not in vanilla
+              or map:has_type("player_owned"))
+   then
+      return false
+   end
+
+   -- TODO arena
+
+   return true
+end
+
 local function transfer_staying_adventurers(_, params)
    -- >>>>>>>> shade2/map.hsp:1875 	repeat maxAdv,maxFollower ...
    local next_map = params.next_map
 
    local player = Chara.player()
-   for _, adv in save.elona.staying_adventurers:do_transfer(next_map) do
+   for _, adv in save.elona.staying_adventurers:do_transfer(next_map, should_transfer) do
       if adv:calc("is_hired") then
          adv.relation = Enum.Relation.Ally
          Map.try_place_chara(adv, player.x, player.y, next_map)
@@ -62,3 +90,32 @@ local function transfer_staying_adventurers(_, params)
    -- <<<<<<<< shade2/map.hsp:1892 	loop ..
 end
 Event.register("base.on_map_leave", "Transfer staying adventurers", transfer_staying_adventurers, { priority = 350000 })
+
+local function set_adventurer_killed_state(chara)
+   -- >>>>>>>> shade2/chara_func.hsp:1666 			if cRole(tc)=cRoleAdv{ ...
+   local role = chara:find_role("elona.adventurer")
+   if not role then
+      return
+   end
+
+   chara.state = "Dead"
+   role.state = "Hospital"
+   chara.respawn_date = World.date_hours() + Adventurer.calc_respawn_hours(chara)
+   assert(save.elona.staying_adventurers:take_object(chara))
+   -- <<<<<<<< shade2/chara_func.hsp:1668 				cRespawn(tc)=dateId+respawnTimeAdv+rnd(respawn ..
+end
+Event.register("base.on_chara_killed", "Set adventurer killed state", set_adventurer_killed_state, { priority = 300000 })
+
+local function on_adventurer_place_failure(chara)
+   -- >>>>>>>> shade2/chara.hsp:437 		if cRole(rc)=cRoleAdv	: cExist(rc)=cAdvHospital ...
+   local role = chara:find_role("elona.adventurer")
+   if not role then
+      return
+   end
+
+   chara.state = "Dead"
+   role.state = "Hospital"
+   assert(save.elona.staying_adventurers:take_object(chara))
+   -- <<<<<<<< shade2/chara.hsp:437 		if cRole(rc)=cRoleAdv	: cExist(rc)=cAdvHospital ..
+end
+Event.register("base.on_chara_place_failure", "Set adventurer killed state", on_adventurer_place_failure, { priority = 300000 })

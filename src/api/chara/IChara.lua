@@ -494,7 +494,6 @@ function IChara:kill(source)
    elseif self:has_any_roles() then
       self.state = "CitizenDead"
       self.respawn_date = World.date_hours() + Const.CITIZEN_RESPAWN_HOURS
-      -- TODO adventurer
    else
       self.state = "Dead"
    end

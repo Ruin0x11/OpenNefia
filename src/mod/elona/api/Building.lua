@@ -12,7 +12,7 @@ local Prompt = require("api.gui.Prompt")
 local Building = {}
 
 function Building.iter(map)
-   return Area.iter(map):filter(function(_, a) return a.metadata.is_player_owned end)
+   return Area.iter(map):filter(function(a) return a.metadata.is_player_owned end)
 end
 
 function Building.find_worker(map, chara_uid)

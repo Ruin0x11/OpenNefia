@@ -139,13 +139,15 @@ function Area.for_map(map_or_uid)
    local areas = save.base.areas
 
    local mapping = {}
+   local floor_mapping = {}
    for _, _, area in fun.iter_pairs(areas) do
-      for _, _, map_meta in area:iter_maps() do
+      for _, floor, map_meta in area:iter_maps() do
          mapping[map_meta.uid] = area
+         floor_mapping[map_meta.uid] = floor
       end
    end
 
-   return mapping[uid]
+   return mapping[uid], floor_mapping[uid]
 end
 
 function Area.floor_number(map)

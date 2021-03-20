@@ -102,14 +102,18 @@ end
 
 function MapObject.is_map_object(t, _type)
    if not class.is_an(IMapObject, t) then
-      return false
+      return false, ("%s is not a map object"):format(t)
    end
 
    if _type == nil then
       return true
    end
 
-   return _type == t._type
+   if _type ~= t._type then
+      return false, ("Expected map object of type '%s', got '%s'"):format(_type, t._type)
+   end
+
+   return true
 end
 
 -- Another modification of penlight's algorithm that also calls :clone() on any
