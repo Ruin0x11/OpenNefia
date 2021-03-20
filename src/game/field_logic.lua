@@ -17,6 +17,7 @@ local save = require("internal.global.save")
 local chara_make = require("game.chara_make")
 local Save = require("api.Save")
 local field_logic_state = require("internal.global.field_logic_state")
+local fs = require("util.fs")
 
 local DeathMenu = require("api.gui.menu.DeathMenu")
 
@@ -24,7 +25,7 @@ local field_logic = {}
 
 local dt = 0
 
-function field_logic.setup_new_game(player)
+function field_logic.setup_new_game(player, save_id)
    field.map = nil
 
    local scenario = data["base.scenario"]:ensure(save.base.scenario)
@@ -32,7 +33,14 @@ function field_logic.setup_new_game(player)
    assert(class.is_an(IChara, player))
 
    Chara.set_player(player)
-   config.base._save_id = ("%s_%d"):format(player.name, os.time())
+   if save_id == nil then
+      save_id = ("%s_%d"):format(player.name, os.time())
+   end
+   save_id = fs.sanitize(save_id, "_")
+   if string.len(save_id) == 0 then
+      error("Save ID must be greater than 0 characters in length.")
+   end
+   config.base._save_id = fs.sanitize(save_id)
    scenario:on_game_start(player)
    assert(Map.current(), "Scenario must set the current map")
    assert(player:current_map() == Map.current(), "Player must exist in current map")
@@ -69,11 +77,9 @@ function field_logic.quickstart()
          Skill.apply_race_params(me, me.race)
          Skill.apply_class_params(me, me.class)
 
-         field_logic.setup_new_game(me)
+         field_logic.setup_new_game(me, "quickstart")
    end, debug.traceback)
    chara_make.set_is_active_override(false)
-
-   config.base._save_id = "quickstart"
 
    if not ok then
       error(err)
