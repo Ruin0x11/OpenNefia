@@ -136,7 +136,7 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
    assert(math.type(floor) == "integer")
    local ok, map = self:load_floor(floor)
    if ok then
-      return ok, map
+      return ok, map, false
    end
 
    -- WARNING: Map.save() should always be called on the map this returns, or
@@ -162,6 +162,9 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
    if map_archetype_id then
       map = MapArchetype.generate_map(map_archetype_id, self, floor, params)
    else
+      if archetype.on_generate_floor == nil then
+         return false, "no_archetype_on_generate_floor"
+      end
       map = archetype.on_generate_floor(self, floor, params)
    end
 
@@ -172,7 +175,7 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
 
    Log.debug("Generated area %d's floor %d with map archetype %s", self.uid, floor, map._archetype)
 
-   return true, map
+   return true, map, true
 end
 
 function InstancedArea:iter_child_areas(floor)
@@ -201,6 +204,10 @@ end
 
 function InstancedArea:load_starting_floor()
    return self:load_floor(self:starting_floor())
+end
+
+function InstancedArea:load_or_generate_starting_floor()
+   return self:load_or_generate_floor(self:starting_floor())
 end
 
 function InstancedArea:add_child_area(child)

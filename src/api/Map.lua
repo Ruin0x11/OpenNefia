@@ -529,12 +529,18 @@ function Map.try_place_chara(chara, x, y, map)
    if real_x ~= nil then
       assert(can_place_chara_at(real_x, real_y, map))
 
-      Log.debug("Place %s %d,%d --> %d,%d", chara._id, x, y, real_x, real_y)
+      Log.debug("Place %s %s,%s --> %s,%s", chara._id, x, y, real_x, real_y)
 
-      local result = map:take_object(chara, real_x, real_y)
-      if result then
-         map.crowd_density = map.crowd_density + 1
-         map:refresh_tile(real_x, real_y)
+      local result
+      if map:has_object(chara) then
+         chara:set_pos(real_x, real_y)
+         result = chara
+      else
+         result = map:take_object(chara, real_x, real_y)
+         if result then
+            map.crowd_density = map.crowd_density + 1
+            map:refresh_tile(real_x, real_y)
+         end
       end
       return result
    end

@@ -4,6 +4,7 @@ local Rank = require("mod.elona.api.Rank")
 local Quest = require("mod.elona_sys.api.Quest")
 local Calc = require("mod.elona.api.Calc")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local News = require("mod.elona.api.News")
 
 data:add {
    _type = "base.journal_page",
@@ -12,14 +13,25 @@ data:add {
    ordering = 40000,
 
    render = function()
-      -- TODO adventurers
+      -- >>>>>>>> shade2/command.hsp:907 	buff=newsBuff ...
+      local iter = News.iter()
+      local text
+      if iter:length() == 0 then
+         text = "No news"
+      else
+         local concat = function(acc, s) return (acc and (acc .. "\n") or "") .. s end
+         text = iter:foldl(concat)
+      end
 
       return ([[
  - %s -
 
+%s
 ]]):format(
-         I18N.get("journal._.elona.news.title")
+         I18N.get("journal._.elona.news.title"),
+         text
           )
+      -- <<<<<<<< shade2/command.hsp:916  ..
    end
 }
 

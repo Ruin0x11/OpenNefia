@@ -123,7 +123,11 @@ function StayingCharas:is_staying_in_map(chara, map)
    return staying_map.map_uid == map.uid
 end
 
-function StayingCharas:do_transfer(map)
+local function no_filter(chara) return true end
+
+function StayingCharas:do_transfer(map, filter)
+   filter = filter or no_filter
+
    local is_outside_staying_map = function(chara)
       local staying_map = self:get_staying_map_for(chara)
       return chara.state == "Alive"
@@ -154,7 +158,7 @@ function StayingCharas:do_transfer(map)
             chara.initial_y = player.y
          end
       end
-      return (staying_map == nil or staying_map.map_uid == map.uid)
+      return (staying_map == nil or staying_map.map_uid == map.uid) and filter(chara, map)
    end
 
    local function place(chara)
@@ -167,7 +171,10 @@ function StayingCharas:do_transfer(map)
       end
    end
 
-   self:iter():filter(is_inside_staying_map):each(place)
+   local iter = self:iter():filter(is_inside_staying_map)
+   iter:each(place)
+
+   return iter:unwrap_with_self()
 end
 
 return StayingCharas

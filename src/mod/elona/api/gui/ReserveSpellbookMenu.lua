@@ -2,11 +2,8 @@ local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 local I18N = require("api.I18N")
-local InventoryTargetEquipWindow = require("api.gui.menu.InventoryTargetEquipWindow")
-local Chara = require("api.Chara")
 local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local Item = require("api.Item")
-local MapObjectBatch = require("api.draw.MapObjectBatch")
 
 local IInput = require("api.gui.IInput")
 local UiList = require("api.gui.UiList")
@@ -15,10 +12,7 @@ local IPaged = require("api.gui.IPaged")
 local IUiLayer = require("api.gui.IUiLayer")
 local InputHandler = require("api.gui.InputHandler")
 local UiWindow = require("api.gui.UiWindow")
-local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 
-
---- A menu for a single inventory action, like getting or eating.
 local ReserveSpellbookMenu = class.class("ReserveSpellbookMenu", {IUiLayer, IPaged})
 
 ReserveSpellbookMenu:delegate("input", IInput)
