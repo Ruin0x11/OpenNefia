@@ -303,6 +303,29 @@ function Adventurer.gain_item(adv)
    -- <<<<<<<< shade2/adv.hsp:148 	return ..
 end
 
+function Adventurer.can_appear_in_map(adv, map)
+   local role = adv:find_role("elona.adventurer")
+   if role == nil then
+      return false
+   end
+
+   if role.state ~= "Alive" then
+      return false
+   end
+
+   if adv:calc("is_hired") then
+      return true
+   end
+
+   if not (map:has_type("town") or map:has_type("guild")) then
+      return false
+   end
+
+   -- TODO arena
+
+   return true
+end
+
 function Adventurer.act(adv)
    -- >>>>>>>> shade2/adv.hsp:77 	if rnd(60)=0{ ...
    if adv:current_map() ~= nil then

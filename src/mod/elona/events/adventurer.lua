@@ -7,6 +7,7 @@ local Map = require("api.Map")
 local Chara = require("api.Chara")
 local World = require("api.World")
 local Adventurer = require("mod.elona.api.Adventurer")
+local Log = require("api.Log")
 
 local function add_news_gain_level(chara, params)
    if not chara:find_role("elona.adventurer") or not params.show_message then
@@ -44,39 +45,12 @@ local function cleanup_adventurer(chara)
 end
 Event.register("base.on_object_removed", "Clean up adventurer status", cleanup_adventurer)
 
-local function should_transfer(chara, map)
-   local role = chara:find_role("elona.adventurer")
-   if role == nil then
-      return false
-   end
-
-   if role.state ~= "Alive" then
-      return false
-   end
-
-   if chara:calc("is_hired") then
-      return true
-   end
-
-   if not (map:has_type("town")
-              or map:has_type("guild")
-           -- XXX: not in vanilla
-              or map:has_type("player_owned"))
-   then
-      return false
-   end
-
-   -- TODO arena
-
-   return true
-end
-
 local function transfer_staying_adventurers(prev_map, params)
    -- >>>>>>>> shade2/map.hsp:1875 	repeat maxAdv,maxFollower ...
    local next_map = params.next_map
 
    local player = Chara.player()
-   for _, adv in save.elona.staying_adventurers:do_transfer(prev_map, next_map, should_transfer) do
+   for _, adv in save.elona.staying_adventurers:do_transfer(prev_map, next_map, Adventurer.can_appear_in_map) do
       if adv:calc("is_hired") then
          adv.relation = Enum.Relation.Ally
          Map.try_place_chara(adv, player.x, player.y, next_map)
