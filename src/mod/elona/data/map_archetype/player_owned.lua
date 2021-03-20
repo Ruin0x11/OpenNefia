@@ -45,6 +45,7 @@ data:add {
    _type = "base.area_archetype",
    _id = "your_home",
 
+   types = { "player_owned" },
    image = "elona.feat_area_your_dungeon",
 
    on_generate_floor = function(area, floor)
@@ -120,6 +121,7 @@ do
       _id = "ranch",
       elona_id = 31,
 
+      types = { "player_owned" },
       image = "elona.feat_area_ranch",
 
       floors = {
@@ -161,6 +163,7 @@ do
       _id = "dungeon",
       elona_id = 39,
 
+      types = { "player_owned" },
       image = "elona.feat_area_your_dungeon",
 
       floors = {
@@ -248,6 +251,7 @@ do
       _id = "museum",
       elona_id = 101,
 
+      types = { "player_owned" },
       image = "elona.feat_area_museum",
 
       floors = {
@@ -353,6 +357,7 @@ do
       _id = "shop",
       elona_id = 102,
 
+      types = { "player_owned" },
       image = "elona.feat_area_shop",
 
       floors = {
@@ -392,6 +397,7 @@ do
       _id = "crop",
       elona_id = 103,
 
+      types = { "player_owned" },
       image = "elona.feat_area_crop",
 
       floors = {
@@ -435,6 +441,7 @@ do
       _id = "storage_house",
       elona_id = 104,
 
+      types = { "player_owned" },
       image = "elona.feat_area_storage_house",
 
       floors = {

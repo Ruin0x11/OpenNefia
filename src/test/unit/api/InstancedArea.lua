@@ -1,4 +1,5 @@
 local InstancedArea = require("api.InstancedArea")
+local Area = require("api.Area")
 local Assert = require("api.test.Assert")
 
 function test_InstancedArea_set_child_area_position()
@@ -43,4 +44,18 @@ function test_InstancedArea_remove_child_area()
 
    parent:remove_child_area(child)
    Assert.eq(false, parent:has_child_area(child))
+end
+
+function test_InstancedArea_has_type()
+   local north_tyris_area = Area.create_unique("elona.north_tyris", "root")
+   Assert.is_truthy(north_tyris_area:load_or_generate_starting_floor())
+   local puppy_cave_area = Area.get_unique("elona.puppy_cave", north_tyris_area)
+
+   Assert.eq(true, north_tyris_area:has_type("world_map"))
+   Assert.eq(false, north_tyris_area:has_type("dungeon"))
+   Assert.eq(false, north_tyris_area:has_type("dood"))
+
+   Assert.eq(false, puppy_cave_area:has_type("world_map"))
+   Assert.eq(true, puppy_cave_area:has_type("dungeon"))
+   Assert.eq(false, puppy_cave_area:has_type("dood"))
 end

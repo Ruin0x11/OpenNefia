@@ -26,6 +26,8 @@ do
       _id = "north_tyris",
       elona_id = 4,
 
+      types = { "world_map" },
+
       floors = {
          [1] = "elona.north_tyris"
       }
@@ -100,6 +102,8 @@ do
       _id = "south_tyris",
       elona_id = 48,
 
+      types = { "world_map" },
+
       floors = {
          [1] = "elona.south_tyris"
       },
@@ -132,6 +136,8 @@ do
       _type = "base.area_archetype",
       _id = "test_world",
       elona_id = 47,
+
+      types = { "world_map" },
 
       floors = {
          [1] = "elona.test_world"

@@ -109,3 +109,70 @@ data:add {
       [1] = "elona.the_sewer"
    }
 }
+
+do
+   local test_site = {
+      _id = "test_site",
+      _type = "base.map_archetype",
+
+      unique = true,
+
+      properties = {
+         music = "elona.puti",
+         types = { "dungeon" },
+         level = 5,
+         is_indoor = true,
+         is_not_renewable = true,
+         max_crowd_density = 0,
+         default_ai_calm = 0,
+         material_spot_type = "elona.dungeon"
+      },
+      events = {
+         {
+            id = "elona_sys.on_quest_check",
+            name = "Sidequest: nightmare",
+
+            callback = function(map)
+               if Sidequest.progress("elona.nightmare") < 2 then
+                  if Sidequest.no_targets_remaining(map) then
+                     Sidequest.set_progress("elona.nightmare", 2)
+                     Sidequest.update_journal()
+                  end
+               end
+            end
+         }
+      }
+   }
+
+   function test_site.starting_pos(map)
+      return { x = 6, y = 27 }
+   end
+
+   function test_site.on_generate_map(area, floor)
+      local map = Elona122Map.generate("sqNightmare")
+      map:set_archetype("elona.shelter", { set_properties = true })
+
+      Sidequest.set_quest_targets(map)
+
+      return map
+   end
+
+   data:add(test_site)
+
+   data:add {
+      _type = "base.area_archetype",
+      _id = "test_site",
+
+      floors = {
+         [1] = "elona.test_site"
+      },
+
+      --parent_area = {
+      --   _id = "elona.north_tyris",
+      --   on_floor = 1,
+      --   x = 20,
+      --   y = 20,
+      --   starting_floor = 1
+      --}
+   }
+end

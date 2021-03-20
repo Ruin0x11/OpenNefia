@@ -86,6 +86,7 @@ local area_nefia = {
    _type = "base.area_archetype",
    _id = "nefia",
 
+   types = { "dungeon" },
    image = "elona.feat_area_cave",
 }
 

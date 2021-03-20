@@ -451,28 +451,9 @@ data:add
                   self:set_drawable("elona.nefia_completion", nil)
                end
 
-               local function is_area_town_or_guild(area)
-                  local archetype = area:archetype()
-                  if archetype and archetype.floors then
-                     for _, map_archetype_id in pairs(archetype.floors) do
-                        local map_archetype = data["base.map_archetype"][map_archetype_id]
-                        if map_archetype
-                           and map_archetype.properties
-                           and map_archetype.properties.types
-                        then
-                           local set = table.set(map_archetype.properties.types)
-                           if set["town"] or set["guild"] then
-                              return true
-                           end
-                        end
-                     end
-                  end
-                  return false
-               end
-
                -- >>>>>>>> shade2/map.hsp:2442 	if (areaType(cnt)=mTypeTown)or(areaType(cnt)=mTyp ...
                if area then
-                  local has_light = area.metadata.has_light or is_area_town_or_guild(area)
+                  local has_light = area.metadata.has_light or area:has_type("town") or area:has_type("guild")
 
                   if has_light then
                      self.light = {

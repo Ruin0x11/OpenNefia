@@ -52,6 +52,7 @@ do
       _type = "base.area_archetype",
       _id = "lesimas",
 
+      types = { "dungeon" },
       image = "elona.feat_area_lesimas",
 
       deepest_floor = 45,
@@ -153,6 +154,7 @@ do
       _type = "base.area_archetype",
       _id = "the_void",
 
+      types = { "dungeon" },
       image = "elona.feat_area_lesimas",
 
       metadata = {
@@ -216,6 +218,7 @@ do
       _type = "base.area_archetype",
       _id = "tower_of_fire",
 
+      types = { "dungeon" },
       image = "elona.feat_area_tower_of_fire",
 
       deepest_floor = 4,
@@ -287,6 +290,7 @@ do
       _type = "base.area_archetype",
       _id = "crypt_of_the_damned",
 
+      types = { "dungeon" },
       image = "elona.feat_area_crypt",
 
       deepest_floor = 6,
@@ -363,6 +367,7 @@ do
       _type = "base.area_archetype",
       _id = "ancient_castle",
 
+      types = { "dungeon" },
       image = "elona.feat_area_castle",
 
       deepest_floor = 6,
@@ -432,6 +437,7 @@ do
       _type = "base.area_archetype",
       _id = "dragons_nest",
 
+      types = { "dungeon" },
       image = "elona.feat_area_dungeon",
 
       deepest_floor = 4,
@@ -480,6 +486,7 @@ do
       _type = "base.area_archetype",
       _id = "mountain_pass",
 
+      types = { "dungeon" },
       image = "elona.feat_area_dungeon",
 
       deepest_floor = 5,
@@ -535,6 +542,7 @@ do
       _type = "base.area_archetype",
       _id = "puppy_cave",
 
+      types = { "dungeon" },
       image = "elona.feat_area_dungeon",
 
       deepest_floor = 4,
@@ -606,6 +614,7 @@ do
       _type = "base.area_archetype",
       _id = "minotaurs_nest",
 
+      types = { "dungeon" },
       image = "elona.feat_area_dungeon",
 
       deepest_floor = 5,
@@ -669,6 +678,7 @@ do
       _type = "base.area_archetype",
       _id = "yeeks_nest",
 
+      types = { "dungeon" },
       image = "elona.feat_area_dungeon",
 
       deepest_floor = 1,

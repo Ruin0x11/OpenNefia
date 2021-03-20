@@ -15,6 +15,7 @@ do
       starting_pos = MapEntrance.south,
 
       properties = {
+         types = { "quest" },
          level = 1,
          is_indoor = true,
          default_ai_calm = 1,
@@ -30,6 +31,7 @@ do
       _type = "base.area_archetype",
       _id = "show_house",
 
+      types = { "quest" },
       image = "elona.feat_area_border_tent",
 
       parent_area = {
@@ -51,6 +53,7 @@ do
       starting_pos = MapEntrance.center,
 
       properties = {
+         types = { "quest" },
          music = "elona.arena",
          tileset = "elona.tower_1",
          level = 1,
@@ -85,6 +88,7 @@ do
       starting_pos = MapEntrance.stairs_up,
 
       properties = {
+         types = { "quest" },
          music = "elona.arena",
          tileset = "elona.tower_1",
          level = 1,
@@ -161,6 +165,7 @@ do
       _id = "rq",
       elona_id = 9,
 
+      types = { "field" },
       deepest_level = 45,
 
       floors = {

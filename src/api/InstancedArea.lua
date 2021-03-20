@@ -23,6 +23,7 @@ function InstancedArea:init(archetype_id, area_generator, uids)
    self.parent_y = nil
    self.deepest_floor_visited = 0
    self._deepest_floor = nil
+   self._types = {}
 
    if archetype_id then
       self:set_archetype(archetype_id, { set_properties = true })
@@ -31,7 +32,7 @@ function InstancedArea:init(archetype_id, area_generator, uids)
 end
 
 function InstancedArea:has_type(ty)
-   return false
+   return self._types[ty] ~= nil
 end
 
 function InstancedArea:add_floor(map, floor)
@@ -67,6 +68,9 @@ function InstancedArea:set_archetype(area_archetype_id, params)
          for k, v in pairs(archetype.metadata) do
             self.metadata[k] = table.deepcopy(v)
          end
+      end
+      if archetype.types then
+         self._types = table.set(archetype.types)
       end
    end
 end
