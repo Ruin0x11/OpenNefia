@@ -37,7 +37,7 @@ end
 
 function pool:take_object(obj, x, y)
    if self:has_object(obj) then
-      return nil
+      return nil, "already_has_object"
    end
 
    x = math.floor(x or 0)
@@ -51,7 +51,7 @@ function pool:take_object(obj, x, y)
    local location = obj:get_location()
    if location then
       if not location:remove_object(obj) then
-         return nil
+         return nil, "could_not_transfer"
       end
       mt.location = nil
    end

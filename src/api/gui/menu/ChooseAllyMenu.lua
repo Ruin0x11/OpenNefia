@@ -132,6 +132,10 @@ function ChooseAllyMenu:init(charas, topic)
    self.pages:set_data(list)
 end
 
+function ChooseAllyMenu:on_query()
+   Gui.play_sound("base.pop2")
+end
+
 function ChooseAllyMenu:make_keymap()
    return {
       cancel = function() self.canceled = true end,

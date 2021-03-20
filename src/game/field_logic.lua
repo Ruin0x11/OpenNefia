@@ -76,14 +76,16 @@ function field_logic.quickstart()
          local Skill = require("mod.elona_sys.api.Skill")
          Skill.apply_race_params(me, me.race)
          Skill.apply_class_params(me, me.class)
-
-         field_logic.setup_new_game(me, "quickstart")
+         return me
    end, debug.traceback)
    chara_make.set_is_active_override(false)
 
    if not ok then
       error(err)
    end
+
+   local me = err
+   field_logic.setup_new_game(me, "quickstart")
 
    Gui.mes("Quickstarted game.")
 end

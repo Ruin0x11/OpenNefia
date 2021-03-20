@@ -15,7 +15,7 @@ ICharaInventory:delegate("inv",
                         })
 
 function ICharaInventory:iter()
-   -- HACK for purposes of IObject:instantiate() (see #149)
+   -- HACK for purposes of IOwned:get_location() (see #149)
    return fun.chain(self:iter_items(), self:iter_shop_inventory())
 end
 

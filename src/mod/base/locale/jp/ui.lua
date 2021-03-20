@@ -5,7 +5,7 @@ return {
          hospital = "病院",
          location = "現在地",
          name_and_rank = "冒険者の名前とランク",
-         rank_counter = "位",
+         rank_counter = function(_1) return ("%d位"):format(_1) end,
          title = "冒険者ランク",
          unknown = "不明"
       },

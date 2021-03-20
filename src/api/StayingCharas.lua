@@ -10,6 +10,7 @@ local I18N = require("api.I18N")
 local InstancedArea = require("api.InstancedArea")
 local Area = require("api.Area")
 local save = require("internal.global.save")
+local ICharaParty = require("api.chara.ICharaParty")
 
 local StayingCharas = class.class("StayingCharas", ILocation)
 
@@ -24,6 +25,15 @@ function StayingCharas:init(owner)
    self.container = ObjectContainer:new("base.chara", self)
    self.area_uid_to_chara_uids = {}
    self.chara_uid_to_area_uid = {}
+end
+
+
+local function iter_staying_allies()
+   return StayingCharas.iter_global():filter(ICharaParty.is_in_player_party)
+end
+
+function StayingCharas.iter_allies_and_stayers(map)
+   return fun.chain(Chara.player():iter_other_party_members(map), iter_staying_allies())
 end
 
 function StayingCharas.register_global(chara, area, floor)
@@ -201,7 +211,6 @@ function StayingCharas:do_transfer(prev_map, map, filter)
    end
 
    local function place(chara)
-      print("PLACE", chara.name, chara.uid)
       local x = chara.initial_x
       local y = chara.initial_y
       if not Map.try_place_chara(chara, x, y, map) then

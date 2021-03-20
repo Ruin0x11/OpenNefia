@@ -98,10 +98,10 @@ local function set_adventurer_killed_state(chara)
       return
    end
 
-   chara.state = "Dead"
+   chara.state = "Alive"
    role.state = "Hospital"
    chara.respawn_date = World.date_hours() + Adventurer.calc_respawn_hours(chara)
-   assert(save.elona.staying_adventurers:take_object(chara))
+   save.elona.staying_adventurers:take_object(chara)
    -- <<<<<<<< shade2/chara_func.hsp:1668 				cRespawn(tc)=dateId+respawnTimeAdv+rnd(respawn ..
 end
 Event.register("base.on_chara_killed", "Set adventurer killed state", set_adventurer_killed_state, { priority = 300000 })
@@ -113,9 +113,26 @@ local function on_adventurer_place_failure(chara)
       return
    end
 
-   chara.state = "Dead"
+   chara.state = "Alive"
    role.state = "Hospital"
-   assert(save.elona.staying_adventurers:take_object(chara))
+   save.elona.staying_adventurers:take_object(chara)
    -- <<<<<<<< shade2/chara.hsp:437 		if cRole(rc)=cRoleAdv	: cExist(rc)=cAdvHospital ..
 end
 Event.register("base.on_chara_place_failure", "Set adventurer killed state", on_adventurer_place_failure, { priority = 300000 })
+
+local function cleanup_dead_adventurers(map)
+   -- >>>>>>>> shade2/chara_func.hsp:1666 			if cRole(tc)=cRoleAdv{ ...
+   local filter = function(c)
+      return not Chara.is_alive(c) and Adventurer.is_adventurer(c)
+   end
+   for _, chara in Chara.iter_all(map):filter(filter) do
+      local role = assert(chara:find_role("elona.adventurer"))
+
+      chara.state = "Alive"
+      role.state = "Hospital"
+      chara.respawn_date = World.date_hours() + Adventurer.calc_respawn_hours(chara)
+      save.elona.staying_adventurers:take_object(chara)
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:1668 				cRespawn(tc)=dateId+respawnTimeAdv+rnd(respawn ..
+end
+Event.register("base.on_map_enter", "Cleanup dead adventurers", cleanup_dead_adventurers, { priority = 300000 })

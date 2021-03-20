@@ -12,18 +12,9 @@ local Area = require("api.Area")
 local ChooseAllyMenu = require("api.gui.menu.ChooseAllyMenu")
 local Chara = require("api.Chara")
 local StayingCharas = require("api.StayingCharas")
-local ICharaParty = require("api.chara.ICharaParty")
 local ChooseNpcMenu = require("api.gui.menu.ChooseNpcMenu")
 local Enum = require("api.Enum")
 local Input = require("api.Input")
-
-local function iter_staying_allies()
-   return StayingCharas.iter_global():filter(ICharaParty.is_in_player_party)
-end
-
-local function iter_allies_and_stayers(map)
-   return fun.chain(Chara.player():iter_other_party_members(map), iter_staying_allies())
-end
 
 
 local function format_info_shopkeeper(chara)
@@ -42,7 +33,7 @@ local function shop_assign_shopkeeper(map)
       x_offset = 20
    }
 
-   local allies = iter_allies_and_stayers(map):filter(Chara.is_alive):to_list()
+   local allies = StayingCharas.iter_allies_and_stayers(map):filter(Chara.is_alive):to_list()
    local result, canceled = ChooseAllyMenu:new(allies, topic):query()
 
    if result and not canceled then
@@ -103,7 +94,7 @@ local function ranch_assign_breeder(map)
       x_offset = 20
    }
 
-   local allies = iter_allies_and_stayers(map):filter(Chara.is_alive):to_list()
+   local allies = StayingCharas.iter_allies_and_stayers(map):filter(Chara.is_alive):to_list()
    local result, canceled = ChooseAllyMenu:new(allies, topic):query()
 
    if result and not canceled then
@@ -175,7 +166,7 @@ local function your_home_allies(map)
       x_offset = 20
    }
 
-   local allies = iter_allies_and_stayers(map):filter(Chara.is_alive):to_list()
+   local allies = StayingCharas.iter_allies_and_stayers(map):filter(Chara.is_alive):to_list()
    local result, canceled = ChooseAllyMenu:new(allies, topic):query()
 
    if result and not canceled then

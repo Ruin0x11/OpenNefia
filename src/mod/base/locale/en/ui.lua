@@ -5,7 +5,7 @@ return {
       hospital = "Hospital",
       location = "Location",
       name_and_rank = "Name and Rank",
-      rank_counter = "",
+      rank_counter = function(_1) return ("%s"):format(ordinal(_1)) end,
       title = "Adventurer Rank",
       unknown = "Unknown"
     },

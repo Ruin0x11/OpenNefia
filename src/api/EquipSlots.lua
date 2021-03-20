@@ -103,8 +103,9 @@ function EquipSlots:equip(obj, slot)
       return nil, "is_equipped"
    end
 
-   if not self.pool:take_object(obj) then
-      return nil, "cannot_own"
+   local ok, err = self.pool:take_object(obj)
+   if not ok then
+      return nil, err
    end
 
    self.equipped[obj.uid] = slot

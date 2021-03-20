@@ -17,6 +17,8 @@ local Itemgen = require("mod.elona.api.Itemgen")
 local ElonaItem = require("mod.elona.api.ElonaItem")
 local Equipment = require("mod.elona.api.Equipment")
 local ElonaChara = require("mod.elona.api.ElonaChara")
+local InstancedArea = require("api.InstancedArea")
+local MapObject = require("api.MapObject")
 
 local Adventurer = {}
 
@@ -24,14 +26,16 @@ local Adventurer = {}
 Adventurer.MAX_ADVENTURERS = 40 - 1
 -- <<<<<<<< shade2/init.hsp:85 	#define global maxAdv		40-maxNullChara ..
 
-local is_adventurer = function(chara) return chara:find_role("elona.adventurer") end
+function Adventurer.is_adventurer(chara)
+   return chara:find_role("elona.adventurer") ~= nil
+end
 
 function Adventurer.iter_all(map)
    return fun.chain(Adventurer.iter_staying(), Adventurer.iter_in_map(map))
 end
 
 function Adventurer.iter_in_map(map)
-   return Chara.iter(map):filter(is_adventurer)
+   return Chara.iter(map):filter(Adventurer.is_adventurer)
 end
 
 function Adventurer.iter_staying(map)
@@ -50,6 +54,24 @@ function Adventurer.area_of(adv)
       floor = staying_area.area_floor
    end
    return area, floor
+end
+
+function Adventurer.location_name(adv)
+   local role = adv:find_role("elona.adventurer")
+   if role == nil then
+      return I18N.get("ui.adventurers.unknown")
+   end
+
+   if role.state == "Hospital" then
+      return I18N.get("ui.adventurers.hospital")
+   end
+
+   local area, floor = Adventurer.area_of(adv)
+   if area then
+      return area.name
+   end
+
+   return I18N.get("ui.adventurers.unknown")
 end
 
 function Adventurer.initialize()
@@ -77,20 +99,26 @@ function Adventurer.calc_adventurer_level(player)
    -- <<<<<<<< shade2/adv.hsp:30 	flt 0,fixGreat: initLv=rnd(60+cLevel(pc))+1 ..
 end
 
-function Adventurer.calc_exploring_area(adv)
-   -- >>>>>>>> shade2/adv.hsp:40 	p=rnd(headRandArea) ...
-   local area = Rand.choice(Area.iter())
-   -- TODO maybe we need a way to tag an area with a map type, to prevent
-   -- adventurers from spawning in weird places.
-   --
+function Adventurer.is_valid_exploring_area(area)
+   if area == nil then
+      return false
+   end
 
-   local archetype = area:archetype()
-   if archetype == nil
-      or archetype.on_generate_floor == nil
-      or area:has_type("quest")
+   if area:has_type("quest")
+      or area:has_type("player_owned")
       or Home.is_home_area(area)
    then
-      area = Area.get_unique("elona.north_tyris")
+      return false
+   end
+
+   return true
+end
+
+function Adventurer.calc_starting_area(adv)
+   -- >>>>>>>> shade2/adv.hsp:40 	p=rnd(headRandArea) ...
+   local area = Rand.choice(Area.iter())
+   if not area or Adventurer.is_valid_exploring_area(area) then
+      area = Area.create_unique("elona.north_tyris")
    end
    if Rand.one_in(4) then
       area = Area.get_unique("elona.vernis")
@@ -105,9 +133,42 @@ function Adventurer.calc_exploring_area(adv)
    -- <<<<<<<< shade2/adv.hsp:44 	if rnd(6)=0:p=areaYowyn ..
 end
 
+function Adventurer.calc_exploring_area(adv)
+   local area
+   for i = 1, 10 do
+      if Rand.one_in(4) then
+         area = Rand.choice(Building.iter())
+      else
+         area = Rand.choice(Area.iter())
+      end
+
+      if not Adventurer.is_valid_exploring_area(area) then
+         area = Area.create_unique("elona.north_tyris")
+      end
+
+      if i <= 5 and area:has_type("town") then
+         break
+      end
+   end
+   return area
+end
+
+function Adventurer.set_area(adv, area, floor)
+   assert(MapObject.is_map_object(adv, "base.chara"))
+   class.assert_is_an(InstancedArea, area)
+
+   if not Adventurer.is_adventurer(adv) then
+      return
+   end
+
+   save.elona.staying_adventurers:register(adv, area, floor or area:starting_floor())
+end
+
 function Adventurer.calc_starting_fame(adv)
    return (adv.level ^ 2) * 30 + Rand.rnd(adv.level * 200 + 100) + Rand.rnd(500)
 end
+
+Adventurer.RESPAWN_HOURS = 24
 
 function Adventurer.calc_respawn_hours()
    -- >>>>>>>> shade2/chara_func.hsp:1668 				cRespawn(tc)=dateId+respawnTimeAdv+rnd(respawn ...
@@ -149,7 +210,7 @@ end
 function Adventurer.generate_and_place()
    local adv = Adventurer.generate()
 
-   local area = Adventurer.calc_exploring_area()
+   local area = Adventurer.calc_starting_area()
 
    if area == nil then
       Log.warn("No area for adventurer %s found.", adv)
@@ -160,7 +221,7 @@ function Adventurer.generate_and_place()
       Log.error("Could not place adventurer in staying adventurers pool.")
       return nil
    end
-   save.elona.staying_adventurers:register(adv, area, area:starting_floor())
+   Adventurer.set_area(adv, area)
 
    return adv
 end
@@ -228,10 +289,10 @@ function Adventurer.gain_item(adv)
       item.identify_state = Enum.IdentifyState.Full
       if item.quality >= Enum.Quality.Great and ElonaItem.is_equipment(item) then
          -- >>>>>>>> shade2/text.hsp:1335 	if type=5{ ...
-         local staying_area = Adventurer.staying_area_for(adv)
+         local staying_area = Adventurer.area_of(adv)
          if staying_area then
             local topic = I18N.get("news.discovery.title")
-            local text = I18N.get("news.discovery.text", adv.title, adv.name, item:build_name(1), staying_area.area_name)
+            local text = I18N.get("news.discovery.text", adv.title, adv.name, item:build_name(1), staying_area.name)
             News.add(text, topic)
          end
          -- <<<<<<<< shade2/text.hsp:1338 		} ..
@@ -249,29 +310,18 @@ function Adventurer.act(adv)
    end
 
    if Rand.one_in(60) then
-      local area
-      for _ = 1, 10 do
-         if Rand.one_in(4) then
-            area = Rand.choice(Building.iter())
-         else
-            area = Adventurer.calc_exploring_area()
-         end
-         if area == nil then
-            Log.warn("No area for adventurer %s found.", adv)
-            return
-         end
-         -- TODO tag area with town type
-         if area:has_type("town") then
-            break
-         end
-      end
-      save.elona.staying_adventurers:register(adv, area, area:starting_floor())
+      local area = Adventurer.calc_exploring_area()
+      Adventurer.set_area(adv, area)
    end
 
    local area = Adventurer.area_of(adv)
    if area == nil then
-      Log.warn("No staying area for adventurer %s was set.", adv)
-      return
+      area = Adventurer.calc_exploring_area()
+      if area == nil then
+         Log.warn("No area for adventurer %s could be located.", adv)
+         return
+      end
+      Adventurer.set_area(adv, area)
    end
 
    if Rand.one_in(200) and not area:has_type("town") then

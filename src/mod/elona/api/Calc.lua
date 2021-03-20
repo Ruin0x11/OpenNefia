@@ -621,4 +621,8 @@ function Calc.calc_restore_cost(chara)
    return math.floor(cost)
 end
 
+function Calc.calc_informer_investigate_cost(player, ally)
+   return 10000
+end
+
 return Calc

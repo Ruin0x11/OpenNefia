@@ -108,10 +108,10 @@ function Equipment.generate_and_equip(chara)
       then
          -- >>>>>>>> shade2/text.hsp:1319 	if type=1{ ...
          local Adventurer = require("mod.elona.api.Adventurer")
-         local staying_area = Adventurer.staying_area_for(chara)
+         local staying_area = Adventurer.area_of(chara)
          if staying_area then
             local topic = I18N.get("news.discovery.title")
-            local text = I18N.get("news.discovery.text", chara.title, chara.name, item:build_name(1), staying_area.area_name)
+            local text = I18N.get("news.discovery.text", chara.title, chara.name, item:build_name(1), staying_area.name)
 
             -- >>>>>>>> shade2/adv.hsp:239 		if cRole(rc)=cRoleAdv : valn=itemname(ci):addNew ...
             News.add(text, topic)
