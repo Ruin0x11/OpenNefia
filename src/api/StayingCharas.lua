@@ -161,7 +161,7 @@ function StayingCharas:is_staying_in_map(chara, map)
    return self:is_staying_in_area(chara, area, floor)
 end
 
-function StayingCharas:do_transfer(map, filter)
+function StayingCharas:do_transfer(prev_map, map, filter)
    local area, floor = Area.for_map(map)
 
    local is_outside_staying_area = function(chara)
@@ -177,26 +177,16 @@ function StayingCharas:do_transfer(map, filter)
       assert(chara:get_location() == self)
    end
 
+   -- Check both the previous and next map, since by now the allies of the
+   -- player might have been transferred to the next map.
+   Chara.iter_all(prev_map):filter(is_outside_staying_area):each(take)
    Chara.iter_all(map):filter(is_outside_staying_area):each(take)
 
    local is_inside_staying_area = function(chara)
       local staying_area = self:get_staying_area_for(chara)
 
-      if staying_area == nil then
-         -- In cases where staying map was unregistered but the character was
-         -- not moved back into the game world.
-         Log.warn("Transferring unregistered stayer to current map. (%d)", chara.uid)
-         chara.initial_x = nil
-         chara.initial_y = nil
-         local player = Chara.player()
-         if player then
-            chara.initial_x = player.x
-            chara.initial_y = player.y
-         end
-         return true
-      end
-
       if area == nil
+         or staying_area == nil
          or area.uid ~= staying_area.area_uid
          or floor ~= staying_area.area_floor
       then
@@ -211,6 +201,7 @@ function StayingCharas:do_transfer(map, filter)
    end
 
    local function place(chara)
+      print("PLACE", chara.name, chara.uid)
       local x = chara.initial_x
       local y = chara.initial_y
       if not Map.try_place_chara(chara, x, y, map) then

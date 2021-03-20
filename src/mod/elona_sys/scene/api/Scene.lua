@@ -3,11 +3,12 @@ local Fs = require("api.Fs")
 local Log = require("api.Log")
 local I18N = require("api.I18N")
 local SceneLayer = require("mod.elona_sys.scene.api.SceneLayer")
+local Env = require("api.Env")
 
 local Scene = {}
 
 function Scene.play(id)
-   if not config.base.story then
+   if not config.base.story or Env.is_headless() then
       return
    end
    local scene_data = data["elona_sys.scene"][id]

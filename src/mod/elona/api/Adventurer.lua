@@ -38,8 +38,18 @@ function Adventurer.iter_staying(map)
    return save.elona.staying_adventurers:iter()
 end
 
-function Adventurer.staying_area_for(adv)
-   return save.elona.staying_adventurers:get_staying_area_for(adv)
+function Adventurer.area_of(adv)
+   local map = adv:current_map()
+   if map then
+      return Area.for_map(map)
+   end
+   local staying_area = save.elona.staying_adventurers:get_staying_area_for(adv)
+   local area, floor
+   if staying_area ~= nil then
+      area = Area.get(staying_area.area_uid)
+      floor = staying_area.area_floor
+   end
+   return area, floor
 end
 
 function Adventurer.initialize()
@@ -63,7 +73,7 @@ end
 function Adventurer.calc_adventurer_level(player)
    player = player or Chara.player()
    -- >>>>>>>> shade2/adv.hsp:30 	flt 0,fixGreat: initLv=rnd(60+cLevel(pc))+1 ...
-   return Rand.rnd(60 + player.level) + 1
+   return Rand.rnd(60 + (player and player.level or 0)) + 1
    -- <<<<<<<< shade2/adv.hsp:30 	flt 0,fixGreat: initLv=rnd(60+cLevel(pc))+1 ..
 end
 
@@ -80,18 +90,18 @@ function Adventurer.calc_exploring_area(adv)
       or area:has_type("quest")
       or Home.is_home_area(area)
    then
-      area = Area.create_unique("elona.north_tyris")
+      area = Area.get_unique("elona.north_tyris")
    end
    if Rand.one_in(4) then
-      area = Area.create_unique("elona.vernis")
+      area = Area.get_unique("elona.vernis")
    end
    if Rand.one_in(4) then
-      area = Area.create_unique("elona.vernis")
+      area = Area.get_unique("elona.vernis")
    end
    if Rand.one_in(6) then
-      area = Area.create_unique("elona.yowyn")
+      area = Area.get_unique("elona.yowyn")
    end
-   return area
+   return area or Area.get_unique("elona.north_tyris")
    -- <<<<<<<< shade2/adv.hsp:44 	if rnd(6)=0:p=areaYowyn ..
 end
 
@@ -122,6 +132,16 @@ function Adventurer.generate()
    adv:add_role("elona.adventurer", { state = "Alive", contract_expiry_date = nil })
    adv.fame = Adventurer.calc_starting_fame(adv)
 
+   -- In vanilla, adventurers were treated differently than mobs/villagers in
+   -- the current map. They were always loaded into memory in slots 17-57 and
+   -- swapped out depending on their current area when the player changed maps.
+   -- As a result, we need a way to exclude certain characters from being
+   -- iterated by Chara.iter_others().
+   --
+   -- By default, `is_other` on characters is nil, which will be treated as
+   -- `true` by Chara.iter_others(). (the exclusion is explicit)
+   adv.is_other = false
+
    return adv
    -- <<<<<<<< shade2/adv.hsp:47 	return ..
 end
@@ -130,6 +150,11 @@ function Adventurer.generate_and_place()
    local adv = Adventurer.generate()
 
    local area = Adventurer.calc_exploring_area()
+
+   if area == nil then
+      Log.warn("No area for adventurer %s found.", adv)
+      return
+   end
 
    if not save.elona.staying_adventurers:take_object(adv) then
       Log.error("Could not place adventurer in staying adventurers pool.")
@@ -231,6 +256,10 @@ function Adventurer.act(adv)
          else
             area = Adventurer.calc_exploring_area()
          end
+         if area == nil then
+            Log.warn("No area for adventurer %s found.", adv)
+            return
+         end
          -- TODO tag area with town type
          if area:has_type("town") then
             break
@@ -239,7 +268,12 @@ function Adventurer.act(adv)
       save.elona.staying_adventurers:register(adv, area, area:starting_floor())
    end
 
-   local area = nil
+   local area = Adventurer.area_of(adv)
+   if area == nil then
+      Log.warn("No staying area for adventurer %s was set.", adv)
+      return
+   end
+
    if Rand.one_in(200) and not area:has_type("town") then
       Adventurer.gain_item(adv)
    end

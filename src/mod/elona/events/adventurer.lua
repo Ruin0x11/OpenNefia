@@ -71,12 +71,12 @@ local function should_transfer(chara, map)
    return true
 end
 
-local function transfer_staying_adventurers(_, params)
+local function transfer_staying_adventurers(prev_map, params)
    -- >>>>>>>> shade2/map.hsp:1875 	repeat maxAdv,maxFollower ...
    local next_map = params.next_map
 
    local player = Chara.player()
-   for _, adv in save.elona.staying_adventurers:do_transfer(next_map, should_transfer) do
+   for _, adv in save.elona.staying_adventurers:do_transfer(prev_map, next_map, should_transfer) do
       if adv:calc("is_hired") then
          adv.relation = Enum.Relation.Ally
          Map.try_place_chara(adv, player.x, player.y, next_map)

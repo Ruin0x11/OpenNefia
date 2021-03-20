@@ -85,7 +85,7 @@ end
 --- @treturn Iterator(IChara)
 function Chara.iter_others(map)
    map = map or field.map
-   return map:iter_charas():filter(function(c) return not c:is_in_player_party() end)
+   return map:iter_charas():filter(function(c) return not c:is_in_player_party() and c.is_other ~= false end)
 end
 
 --- Looks for a character with the given UID or base.chara ID in the

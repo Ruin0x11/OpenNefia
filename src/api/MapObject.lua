@@ -102,7 +102,7 @@ end
 
 function MapObject.is_map_object(t, _type)
    if not class.is_an(IMapObject, t) then
-      return false, ("%s is not a map object"):format(t)
+      return false, ("'%s' is not a map object"):format(t)
    end
 
    if _type == nil then

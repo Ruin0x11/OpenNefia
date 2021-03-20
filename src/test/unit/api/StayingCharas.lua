@@ -47,7 +47,7 @@ function test_StayingCharas_register__invalid()
 
    Assert.throws_error(function() staying:register(nil, area, 1) end, "'nil' is not a map object")
    Assert.throws_error(function() staying:register(chara, nil, 1) end, "nil %(nil%) is not an instance of Class 'InstancedArea'")
-   Assert.throws_error(function() staying:register(chara, area, 42) end, "Floor 42 does not exist in area")
+   staying:register(chara, area, 42)
 end
 
 function test_StayingCharas_unregister__different_map()
@@ -98,15 +98,15 @@ function test_StayingCharas_do_transfer()
    Assert.eq(0, staying:iter():length())
    Assert.eq("Alive", chara.state)
 
-   Assert.is_truthy(Map.try_place_chara(chara, 5, 5, outside))
-   staying:do_transfer(outside)
+   Assert.is_truthy(Map.try_place_chara(chara, 5, 5, inside))
+   staying:do_transfer(inside, outside)
 
    Assert.eq(0, Chara.iter_all(inside):length())
    Assert.eq(0, Chara.iter_all(outside):length())
    Assert.eq(1, staying:iter():length())
    Assert.eq("Alive", chara.state)
 
-   staying:do_transfer(inside)
+   staying:do_transfer(outside, inside)
 
    Assert.eq(1, Chara.iter_all(inside):length())
    Assert.eq(0, Chara.iter_all(outside):length())
@@ -138,7 +138,7 @@ function test_StayingCharas_do_transfer__will_not_transfer_dead()
    Assert.eq("Dead", chara.state)
 
    Assert.is_truthy(Map.try_place_chara(chara, 5, 5, outside))
-   staying:do_transfer(outside)
+   staying:do_transfer(inside, outside)
 
    Assert.eq(0, Chara.iter_all(inside):length())
    Assert.eq(1, Chara.iter_all(outside):length())
@@ -146,7 +146,7 @@ function test_StayingCharas_do_transfer__will_not_transfer_dead()
    Assert.eq("Dead", chara.state)
 
    Assert.is_truthy(Map.try_place_chara(chara, 5, 5, inside))
-   staying:do_transfer(inside)
+   staying:do_transfer(inside, outside)
 
    Assert.eq(1, Chara.iter_all(inside):length())
    Assert.eq(0, Chara.iter_all(outside):length())
@@ -175,7 +175,7 @@ function test_StayingCharas_do_transfer__will_not_transfer_player()
    Assert.eq("Alive", chara.state)
 
    Assert.is_truthy(Map.try_place_chara(chara, 5, 5, outside))
-   staying:do_transfer(outside)
+   staying:do_transfer(inside, outside)
 
    Assert.eq(0, Chara.iter_all(inside):length())
    Assert.eq(1, Chara.iter_all(outside):length())
@@ -212,8 +212,8 @@ function test_StayingCharas_do_transfer__fixes_leftover()
    Assert.eq(0, staying:iter():length())
    Assert.eq("Alive", chara.state)
 
-   Assert.is_truthy(Map.try_place_chara(chara, 5, 5, outside))
-   staying:do_transfer(outside)
+   Assert.is_truthy(Map.try_place_chara(chara, 5, 5, inside))
+   staying:do_transfer(inside, outside)
 
    Assert.eq(0, Chara.iter_all(inside):length())
    Assert.eq(0, Chara.iter_all(outside):length())
@@ -222,18 +222,19 @@ function test_StayingCharas_do_transfer__fixes_leftover()
    Assert.eq("Alive", chara.state)
 
    staying:unregister(chara)
-   staying:do_transfer(other)
+   staying:do_transfer(outside, other)
 
    Assert.eq(0, Chara.iter_all(inside):length())
    Assert.eq(0, Chara.iter_all(outside):length())
-   Assert.eq(1, Chara.iter_all(other):length())
-   Assert.eq(0, staying:iter():length())
+   Assert.eq(0, Chara.iter_all(other):length())
+   Assert.eq(1, staying:iter():length())
    Assert.eq("Alive", chara.state)
 end
 
-function test_StayingCharas_do_transfer__transfers_unregistered()
+function test_StayingCharas_do_transfer__does_not_transfer_unregistered()
    local staying = StayingCharas:new()
 
+   local inside = InstancedMap:new(10, 10)
    local outside = InstancedMap:new(10, 10)
 
    local area_outside = InstancedArea:new()
@@ -246,12 +247,9 @@ function test_StayingCharas_do_transfer__transfers_unregistered()
    Assert.eq(1, staying:iter():length())
    Assert.eq("Alive", chara.state)
 
-   Assert.is_truthy(Map.try_place_chara(chara, 5, 5, outside))
-   staying:do_transfer(outside)
+   staying:do_transfer(inside, outside)
 
-   Assert.eq(1, Chara.iter_all(outside):length())
-   Assert.eq(0, staying:iter():length())
+   Assert.eq(0, Chara.iter_all(outside):length())
+   Assert.eq(1, staying:iter():length())
    Assert.eq("Alive", chara.state)
-   Assert.eq(5, chara.x)
-   Assert.eq(5, chara.y)
 end
