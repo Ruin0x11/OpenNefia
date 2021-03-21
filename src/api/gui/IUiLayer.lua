@@ -31,6 +31,16 @@ end
 
 IUiLayer.DEFAULT_Z_ORDER = 100000
 
+local function get_max_z_order()
+   local max = IUiLayer.DEFAULT_Z_ORDER
+   for _, v in ipairs(draw.get_layers()) do
+      if not class.is_an(IHud, v.layer) then
+         max = math.max(max, v.priority)
+      end
+   end
+   return max
+end
+
 --- Starts drawing this UI layer and switches input focus to it.
 ---
 --- @treturn[opt] any The value returned by the layer's `update`
@@ -47,7 +57,7 @@ function IUiLayer:query(z_order)
    end
 
    if z_order == nil then
-      z_order = self:default_z_order() or math.max(draw.get_max_z_order() + 1, IUiLayer.DEFAULT_Z_ORDER)
+      z_order = self:default_z_order() or get_max_z_order() + 1
    end
 
    assert(type(z_order) == "number", ("Z order must be number (got: %s)"):format(z_order))

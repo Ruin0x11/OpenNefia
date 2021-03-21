@@ -42,7 +42,7 @@ function AllyHpBarWidget:set_data(player)
 
    -- >>>>>>>> oomSEST/src/net.hsp:1754 		if (cfg_hpgauge) { ...
    for _, chara in player:iter_other_party_members() do
-      local is_stethoscoped = true -- TODO
+      local is_stethoscoped = chara.is_stethoscoped or true -- TODO
       if Chara.is_alive(chara) or (chara.state == "PetDead" and is_stethoscoped) then
          local name_color
          if Chara.is_alive(chara) then
