@@ -135,7 +135,6 @@ end
 
 function Smithing.on_use_blacksmith_hammer(hammer, chara)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:83523 		cw = ci ..
-   Gui.play_sound("base.inv")
    local params = {hammer = hammer, selected_items = {}}
    local result, canceled = Input.query_item(chara, "smithing.hammer_target", { params=params })
    if canceled then
