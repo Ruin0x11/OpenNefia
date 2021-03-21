@@ -73,6 +73,20 @@ local role = {
    {
       _id = "adventurer",
       elona_id = 13,
+
+      -- >>>>>>>> shade2/chat.hsp:2264 	if cRole(tc)=cRoleAdv{ ...
+      dialog_choices = {
+         {"elona.default:trade", "talk.npc.common.choices.trade"},
+         function(speaker)
+            if not speaker.is_hired then
+               return {
+                  {"elona.adventurer:hire", "talk.npc.adventurer.choices.hire"},
+                  {"elona.adventurer:join", "talk.npc.adventurer.choices.join"}
+               }
+            end
+         end,
+      }
+      -- <<<<<<<< shade2/chat.hsp:2270 		} ..
    },
    {
       _id = "guard",

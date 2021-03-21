@@ -195,16 +195,16 @@ function StayingCharas:do_transfer(prev_map, map, filter)
    local is_inside_staying_area = function(chara)
       local staying_area = self:get_staying_area_for(chara)
 
-      if area == nil
-         or staying_area == nil
-         or area.uid ~= staying_area.area_uid
-         or floor ~= staying_area.area_floor
-      then
-         return false
-      end
-
-      if filter and not filter(chara, map) then
-         return false
+      if filter then
+         return filter(chara, map, area, floor, staying_area)
+      else
+         if area == nil
+            or staying_area == nil
+            or area.uid ~= staying_area.area_uid
+            or floor ~= staying_area.area_floor
+         then
+            return false
+         end
       end
 
       return true

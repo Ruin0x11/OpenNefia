@@ -5,6 +5,7 @@ local Const = require("api.Const")
 local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 local World = require("api.World")
+local ElonaAction = require("mod.elona.api.ElonaAction")
 
 local function talk_text(t)
    -- >>>>>>>> elona122/shade2/text.hsp:957 *random_talk ..
@@ -110,5 +111,15 @@ data:add {
          },
          jump_to = "__start"
       },
+      trade = function(t)
+         -- >>>>>>>> shade2/chat.hsp:2443 	if chatVal=20{ ..
+         local result, canceled = ElonaAction.trade(Chara.player(), t.speaker)
+
+         if canceled then
+            return "elona.default:you_kidding"
+         end
+         return "elona.default:thanks"
+         -- <<<<<<<< shade2/chat.hsp:2452 		} ..
+      end,
    },
 }

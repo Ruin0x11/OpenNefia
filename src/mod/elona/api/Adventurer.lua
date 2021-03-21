@@ -190,7 +190,7 @@ function Adventurer.generate()
    adv.image = ElonaChara.random_human_image(adv)
    adv.name = Text.random_name()
    adv.title = Text.random_title()
-   adv:add_role("elona.adventurer", { state = "Alive", contract_expiry_date = nil })
+   adv:add_role("elona.adventurer", { state = "Alive", contract_expiry_date = nil, times_contracted = 0 })
    adv.fame = Adventurer.calc_starting_fame(adv)
 
    -- In vanilla, adventurers were treated differently than mobs/villagers in
@@ -272,6 +272,12 @@ function Adventurer.update_all(map)
    Adventurer.iter_staying():each(Adventurer.act)
 end
 
+function Adventurer.calc_hire_cost(adv)
+   -- >>>>>>>> shade2/calculation.hsp:678 #defcfunc calcHireAdv int id  	 ...
+   return 250 + (adv.level ^ 2) * 30
+   -- <<<<<<<< shade2/calculation.hsp:679 	return 250+cLevel(id)*cLevel(id)*30 ..
+end
+
 function Adventurer.gain_item(adv)
    -- >>>>>>>> shade2/adv.hsp:122 *adv_gainItem ...
    local filter = {
@@ -303,7 +309,13 @@ function Adventurer.gain_item(adv)
    -- <<<<<<<< shade2/adv.hsp:148 	return ..
 end
 
-function Adventurer.can_appear_in_map(adv, map)
+function Adventurer.calc_join_level_requirement(adv)
+   -- >>>>>>>> shade2/chat.hsp:2844 		if (cLevel(pc)*3/2+10)<cLevel(tc){ ...
+   return (adv:calc("level") - 10) * (2 / 3)
+   -- <<<<<<<< shade2/chat.hsp:2844 		if (cLevel(pc)*3/2+10)<cLevel(tc){ ..
+end
+
+function Adventurer.can_appear_in_map(adv, map, area, floor, staying_area)
    local role = adv:find_role("elona.adventurer")
    if role == nil then
       return false
@@ -323,7 +335,7 @@ function Adventurer.can_appear_in_map(adv, map)
 
    -- TODO arena
 
-   return true
+   return area and staying_area and area.uid == staying_area.area_uid and floor == staying_area.area_floor
 end
 
 function Adventurer.act(adv)

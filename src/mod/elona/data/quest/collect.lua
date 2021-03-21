@@ -109,16 +109,6 @@ data:add {
 
    root = "talk.npc.quest_giver",
    nodes = {
-      trade = function(t)
-         -- >>>>>>>> shade2/chat.hsp:2443 	if chatVal=20{ ..
-         local result, canceled = ElonaAction.trade(Chara.player(), t.speaker)
-
-         if canceled then
-            return "elona.default:you_kidding"
-         end
-         return "elona.default:thanks"
-         -- <<<<<<<< shade2/chat.hsp:2452 		} ..
-      end,
       give = function(t)
          -- TODO generalize with dialog argument
          local quest = collect_quest_for(t.speaker)
@@ -144,7 +134,7 @@ local function add_collect_dialog_choice(speaker, _, choices)
       return q._id == "elona.collect" and q.params.target_chara_uid == speaker.uid
    end
    if Quest.iter_accepted():any(has_collect_quest) then
-      Dialog.add_choice("elona.quest_collect:trade", "talk.npc.common.choices.trade", choices)
+      Dialog.add_choice("elona.default:trade", "talk.npc.common.choices.trade", choices)
    end
    return choices
 end

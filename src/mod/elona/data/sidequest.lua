@@ -22,26 +22,6 @@ data:add {
    }
 }
 
--- TODO maybe move elsewhere, since it's treated put in a different section
--- thatn side quest information in the journal
-data:add {
-   _type = "elona_sys.sidequest",
-   _id = "main_quest",
-   elona_id = 2,
-   ordering = order(2),
-
-   progress = {
-      [1] = "",
-      [30] = "",
-      [60] = "",
-      [100] = "",
-      [110] = "",
-      [125] = "",
-      [180] = "",
-      [1000] = "",
-   },
-}
-
 data:add {
    _type = "elona_sys.sidequest",
    _id = "putit_attacks",

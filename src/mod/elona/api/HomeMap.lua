@@ -30,7 +30,7 @@ data:add {
 
    on_generate = function(map)
       -- >>>>>>>> shade2/map.hsp:877 	 		if gHomeLevel=0{ ..
-      if Sidequest.progress("elona.main_quest") == 0 then
+      if save.elona.main_quest_progress == 0 then
          local chara = Chara.create("elona.larnneire", 18, 10, {}, map)
          chara:add_role("elona.special")
 

@@ -129,20 +129,22 @@ end
 function ElonaMagic.drink_well(item, params)
    -- >>>>>>>> shade2/proc.hsp:1383 *drinkWell ..
    local chara = params.chara
+   Gui.mes_c("TODO well", "Red")
 
-   if item.params.count_1 < -5 or item.params.count_2 >= 20
-      or (item._id == "elona.holy_well" and save.elona.holy_well_count <= 0)
-   then
-      Gui.mes("action.drink.well.is_dry", item)
-      return "turn_end"
-   end
+   -- if item.params.count_1 < -5 or item.params.count_2 >= 20
+   --    or (item._id == "elona.holy_well" and save.elona.holy_well_count <= 0)
+   -- then
+   --    Gui.mes("action.drink.well.is_dry", item)
+   --    return "turn_end"
+   -- end
 
-   local sep = item:separate()
-   Gui.play_sound("base.drink1", chara.x, chara.y)
-   Gui.mes("action.drink.well.draw", chara, item)
+   -- local sep = item:separate()
+   -- Gui.play_sound("base.drink1", chara.x, chara.y)
+   -- Gui.mes("action.drink.well.draw", chara, item)
    -- <<<<<<<< shade2/proc.hsp:1387 	tc=cc:ciBk=ci ..
 
-   return proc_well_events(sep, chara)
+   -- return proc_well_events(sep, chara)
+   return "turn_end"
 end
 
 --- @tparam IItem item

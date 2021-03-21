@@ -84,6 +84,7 @@ function InventoryMenu:init(ctxt, returns_item)
    self.is_drawing = true
    self.total_weight_text = ""
    self.text_equip_slots = {}
+   self.play_sound = false
 
    self.result = nil
 
@@ -96,7 +97,7 @@ function InventoryMenu:init(ctxt, returns_item)
    self.input:bind_keys(self:make_keymap())
    self.input:bind_keys(self.ctxt:additional_keybinds())
 
-   self:update_filtering()
+   self:update_filtering(true)
 end
 
 function InventoryMenu:make_keymap()
@@ -108,8 +109,9 @@ function InventoryMenu:make_keymap()
 end
 
 function InventoryMenu:on_query()
-   Gui.play_sound("base.inv")
-
+   if self.play_sound then
+      Gui.play_sound("base.inv")
+   end
    self:show_query_text()
 end
 
@@ -281,7 +283,7 @@ function InventoryMenu.build_list(ctxt)
    return filtered
 end
 
-function InventoryMenu:update_filtering()
+function InventoryMenu:update_filtering(play_sound)
    local filtered = InventoryMenu.build_list(self.ctxt)
 
    self.pages:set_data(filtered)
@@ -320,6 +322,8 @@ function InventoryMenu:update_filtering()
    local result = self.ctxt:after_filter(filtered)
    if result then
       self.result = result
+   elseif play_sound then
+      self.play_sound = true
    end
 
    if self.ctxt.proto.show_weight_text then
