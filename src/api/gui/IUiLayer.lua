@@ -47,7 +47,7 @@ function IUiLayer:query(z_order)
    end
 
    if z_order == nil then
-      z_order = self:default_z_order() or IUiLayer.DEFAULT_Z_ORDER
+      z_order = self:default_z_order() or math.max(draw.get_max_z_order() + 1, IUiLayer.DEFAULT_Z_ORDER)
    end
 
    assert(type(z_order) == "number", ("Z order must be number (got: %s)"):format(z_order))
