@@ -262,7 +262,7 @@ function ElonaBuilding.calc_museum_rank(map)
       seen[item.params.chara_id] = true
    end
    new_rank = math.max(10000 - math.sqrt(new_rank) * 100, 100)
-   return new_rank
+   return math.floor(new_rank)
 end
 
 function ElonaBuilding.update_museum(map)
