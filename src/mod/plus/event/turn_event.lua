@@ -18,5 +18,4 @@ local function play_hunger_sound(chara, params, result)
       end
    end
 end
-
 Event.register("base.on_chara_turn_end", "Play hunger warning sound", play_hunger_sound)

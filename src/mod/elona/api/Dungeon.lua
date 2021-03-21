@@ -666,7 +666,7 @@ function Dungeon.dig_to_entrance(start_x, start_y, end_x, end_y, straight, hidde
          Map.set_tile(dx, dy, "elona.mapgen_tunnel", map)
          if Rand.rnd(200) < hidden_path_chance then
             Map.set_tile(dx, dy, "elona.mapgen_fog", map)
-            Feat.create("elona.hidden_path", dx, dy, {}, map)
+            Feat.create("elona.hidden_path", dx, dy, {force=true}, map)
          end
          -- if not straight and Rand.one_in(4) then
          --    dir, dest = next_dir(dir, tx, ty, end_x, end_y, map)
