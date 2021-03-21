@@ -8,6 +8,7 @@ local Itemgen = require("mod.elona.api.Itemgen")
 local Skill = require("mod.elona_sys.api.Skill")
 local FigureDrawable = require("mod.elona.api.gui.FigureDrawable")
 local CardDrawable = require("mod.elona.api.gui.CardDrawable")
+local Equipment = require("mod.elona.api.Equipment")
 
 local LootDrops = {}
 
@@ -113,10 +114,11 @@ function LootDrops.should_drop_item(item, chara)
       end
    end
    if chara:find_role("elona.adventurer") then
-      if Rand.one_in(5) then
+      if not Rand.one_in(5) then
          result = false
       end
    end
+   -- TODO arena
    if quality == Enum.Quality.Unique then
       result = true
    end
@@ -458,7 +460,9 @@ function LootDrops.do_drop_loot(chara, map, attacker, drops)
 
    chara:refresh_cell_on_map()
 
-   -- TODO adventurer
+   if chara:find_role("elona.adventurer") then
+      Equipment.generate_and_equip(chara)
+   end
 end
 
 -- >>>>>>>> shade2/item.hsp:93 *item_loot ...
