@@ -186,11 +186,10 @@ function Action.put_in_container(container, item, amount, container_item)
 
    local success = item:move_some(amount, container)
 
-   if container_item then
-      container_item:emit("base.after_container_receive_item", {amount=amount,item=item,container=container}, false)
-   end
-
    if success then
+      if container_item then
+         container_item:emit("base.after_container_receive_item", {amount=amount,item=item,container=container}, false)
+      end
       Gui.play_sound(Rand.choice({"base.get1", "base.get2"}))
       Gui.mes("action.pick_up.put_in_container", item:build_name(amount))
       return true
