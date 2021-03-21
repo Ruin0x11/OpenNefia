@@ -236,7 +236,7 @@ function QuickMenuList:draw()
 end
 
 function QuickMenuList:update(dt)
-   self.frame = self.frame + dt
+   self.frame = self.frame + (dt / (config.base.screen_refresh * (16.66 / 1000)))
    self.result = nil
 
    self.diagonal_only = self.input:is_modifier_held("alt")
