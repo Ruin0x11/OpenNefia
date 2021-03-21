@@ -410,7 +410,7 @@ data:add {
       local default_tile = MapTileset.get_default_tile("elona.mapgen_tunnel", map)
 
       local reveal = function(x, y, map)
-         map:memorize_tile(x, y, "tile")
+         map:reveal_tile(x, y)
       end
       local forget = function(x, y, map)
          map:reveal_tile(x, y, default_tile)
