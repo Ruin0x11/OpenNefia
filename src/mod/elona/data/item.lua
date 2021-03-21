@@ -7872,7 +7872,7 @@ local item =
             -- Only allow taking, not putting. (provide "nil" to inventory group ID)
             Gui.play_sound("base.chest1")
             assert(self:is_item_container())
-            Input.query_inventory(chara, "elona.inv_get_container", { container = self, params={query_leftover=true} }, nil)
+            Input.query_inventory(chara, "elona.inv_take_container", { container = self, params={query_leftover=true} }, nil)
 
             return "turn_end"
             -- <<<<<<<< shade2/action.hsp:894 		} ..
@@ -12196,7 +12196,7 @@ local item =
          on_open = function(self, params)
             -- >>>>>>>> shade2/action.hsp:896 	if iId(ci)=idTaxBox  :invCtrl=24,2:snd seInv:goto ...
             local inv = Inventory.get_or_create("elona.salary_chest")
-            Input.query_inventory(params.chara, "elona.inv_get_container", { container = inv }, nil)
+            Input.query_inventory(params.chara, "elona.inv_take_container", { container = inv }, nil)
 
             return "turn_end"
             -- <<<<<<<< shade2/action.hsp:896 	if iId(ci)=idTaxBox  :invCtrl=24,2:snd seInv:goto ..
@@ -12600,7 +12600,7 @@ local item =
          on_open = function(self, params)
             -- >>>>>>>> shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ...
             local inv = Inventory.get_or_create("elona.shop_strongbox")
-            Input.query_inventory(params.chara, "elona.inv_get_container", { container = inv }, nil)
+            Input.query_inventory(params.chara, "elona.inv_take_container", { container = inv }, nil)
 
             return "turn_end"
             -- <<<<<<<< shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ..
@@ -13085,9 +13085,44 @@ local item =
          rarity = 50000,
          coefficient = 100,
 
+         on_open = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:932 			if invFile=roleFileFreezer : invContainer=15:el ...
+            local inv = Inventory.get_or_create("elona.freezer")
+            inv:set_max_capacity(15)
+            Input.query_inventory(params.chara, "elona.inv_take_food_container", { params = { container_item = self }, container = inv }, "elona.food_container")
+            -- <<<<<<<< shade2/action.hsp:932 			if invFile=roleFileFreezer : invContainer=15:el ..
+
+            return "turn_end"
+         end,
+
          categories = {
             "elona.container",
             "elona.no_generate"
+         },
+
+         events = {
+            {
+               id = "base.after_container_receive_item",
+               name = "Reset spoilage date",
+
+               callback = function(self, params)
+                  local item = params.item
+                  if item.spoilage_date and item.spoilage_date >= 0 and item.spoilage_hours then
+                     item.spoilage_date = 0
+                  end
+               end
+            },
+            {
+               id = "base.after_container_provide_item",
+               name = "Reset spoilage date",
+
+               callback = function(self, params)
+                  local item = params.item
+                  if (item.spoilage_date or 0) >= 0 and item.spoilage_hours then
+                     item.spoilage_date = World.date_hours() + item.spoilage_hours
+                  end
+               end
+            },
          }
       },
       {
@@ -14536,14 +14571,51 @@ local item =
          rarity = 50000,
          coefficient = 100,
 
+         container_params = {
+            type = "local",
+            max_capacity = 4,
+            combine_weight = true
+         },
+
+         on_open = function(self, params)
+            Input.query_inventory(params.chara, "elona.inv_take_food_container", { params = { container_item = self }, container = self.inv }, "elona.food_container")
+
+            return "player_turn_query"
+         end,
+
          is_precious = true,
          quality = Enum.Quality.Unique,
 
-         cannot_use_flight_on = true,
+         can_use_flight_on = false,
 
          categories = {
             "elona.container",
             "elona.unique_item"
+         },
+
+         events = {
+            {
+               id = "base.after_container_receive_item",
+               name = "Reset spoilage date",
+
+               callback = function(self, params)
+                  local item = params.item
+                  if item.spoilage_date and item.spoilage_date >= 0 and item.spoilage_hours then
+                     item.spoilage_date = 0
+                  end
+               end
+            },
+            {
+               id = "base.after_container_provide_item",
+               name = "Reset spoilage date",
+
+               callback = function(self, params)
+                  local item = params.item
+                  if (item.spoilage_date or 0) >= 0 and item.spoilage_hours then
+                     item.spoilage_date = World.date_hours() + item.spoilage_hours
+                  end
+               end
+            },
          }
       },
       {

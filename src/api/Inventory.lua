@@ -2,15 +2,16 @@ local ILocation = require("api.ILocation")
 local pool = require("internal.pool")
 local save = require("internal.global.save")
 local IOwned = require("api.IOwned")
+local IContainer = require("api.IContainer")
 
-local Inventory = class.class("Inventory", ILocation)
+local Inventory = class.class("Inventory", IContainer)
 
-function Inventory:init(max_size, type_id, owner)
+function Inventory:init(max_capacity, type_id, owner)
    if owner then
       assert(class.is_an(IOwned, owner))
       self._parent = owner
    end
-   self.max_size = max_size or 200
+   self.max_capacity = math.max(math.floor(max_capacity or 200), 1)
    self.type_id = type_id or "base.item"
    self.max_weight = nil
 
@@ -24,12 +25,8 @@ function Inventory:set_owner(owner)
    self._parent = owner
 end
 
-function Inventory:set_max_size(max_size)
-   self.max_size = max_size
-end
-
 function Inventory:is_full()
-   return self:len() >= self.max_size
+   return self:len() >= self.max_capacity
 end
 
 function Inventory:sorted_by(comparator)
@@ -56,7 +53,7 @@ function Inventory:len()
 end
 
 function Inventory:free_slots()
-   return self.max_size - self:len()
+   return self.max_capacity - self:len()
 end
 
 -- Gets or creates a new inventory at the given ID.
@@ -112,6 +109,26 @@ function Inventory:take_object(obj)
    end
 
    return self.pool:take_object(obj)
+end
+
+--
+-- IContainer impl
+--
+
+function Inventory:get_max_capacity()
+   return self.max_capacity
+end
+
+function Inventory:set_max_capacity(max_capacity)
+   self.max_capacity = max_capacity
+end
+
+function Inventory:get_max_item_weight()
+   return self.max_weight
+end
+
+function Inventory:set_max_item_weight(max_weight)
+   self.max_weight = max_weight
 end
 
 return Inventory

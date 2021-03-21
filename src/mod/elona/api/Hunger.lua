@@ -287,13 +287,13 @@ local function show_player_eating_message(player, food)
    if food_quality <= 0 then
       local food_type = food.params.food_type
       if food_type then
-         local message = I18N.get_optional("food.names.elona.meat.uncooked_message")
+         local message = I18N.get_optional("food.names." .. food_type .. ".uncooked_message")
          if message then
             Gui.mes(message)
             return
          end
 
-         Gui.mes("food.effect.boring")
+         Gui.mes("food.effect.uncooked_message")
          return
       end
    end

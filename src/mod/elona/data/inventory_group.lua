@@ -41,11 +41,11 @@ data:add {
 
 data:add {
    _type = "elona_sys.inventory_group",
-   _id = "container",
+   _id = "food_container",
 
    protos = {
-      "elona.inv_take",
-      "elona.inv_put"
+      "elona.inv_take_food_container",
+      "elona.inv_put_food_container"
    }
 }
 

@@ -715,7 +715,7 @@ If false, this item cannot be wished for.
          x_offset = nil,
          y_offset = nil,
 
-         cannot_use_flight_on = nil -- elona.cooler_box
+         can_use_flight_on = nil -- elona.cooler_box
       }
    },
    { interface = IItem }

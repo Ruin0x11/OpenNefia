@@ -16,6 +16,7 @@ local Equipment = require("mod.elona.api.Equipment")
 local Skill = require("mod.elona_sys.api.Skill")
 local Chara = require("api.Chara")
 local Const = require("api.Const")
+local World = require("api.World")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
@@ -427,8 +428,15 @@ local inv_buy = {
 
       Gui.mes("action.pick_up.you_buy", item:build_name(amount))
       Gui.play_sound("base.paygold1", ctxt.chara.x, ctxt.chara.y)
-      ctxt.chara.gold = ctxt.chara.gold - cost
-      ctxt.target.gold = ctxt.target.gold + cost
+      ctxt.chara.gold = math.floor(ctxt.chara.gold - cost)
+      ctxt.target.gold = math.floor(ctxt.target.gold + cost)
+
+      if item.spoilage_hours then
+         item.spoilage_date = World.date_hours() + item.spoilage_hours
+         if item.params.food_quality > 0 then
+            item.spoilage_date = item.spoilage_date + 72
+         end
+      end
 
       Gui.refresh_hud()
 
@@ -805,9 +813,9 @@ local inv_steal = {
 }
 data:add(inv_steal)
 
-local inv_get_container = {
+local inv_take_container = {
    _type = "elona_sys.inventory_proto",
-   _id = "inv_get_container",
+   _id = "inv_take_container",
    elona_id = 22,
    elona_sub_id = 0,
 
@@ -841,12 +849,42 @@ local inv_get_container = {
    end,
 
    on_select = function(ctxt, item, amount)
-      local result = Action.get_from_container(ctxt.chara, item, amount)
+      local result = Action.take_from_container(ctxt.chara, item, amount)
 
       return "inventory_continue"
    end
 }
-data:add(inv_get_container)
+data:add(inv_take_container)
+
+local inv_take_food_container = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_take_food_container",
+   elona_id = 22,
+   elona_sub_id = 3,
+
+   sources = { "container" },
+   params = { container_item = "table" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   window_title = "ui.inventory_command.take",
+   query_text = "ui.inv.title.take",
+
+   can_select = function(ctxt, item)
+      if not can_take(item) then
+         return "turn_end"
+      end
+
+      return true
+   end,
+
+   on_select = function(ctxt, item, amount)
+      local result = Action.take_from_container(ctxt.chara, item, amount, ctxt.params.container_item)
+
+      return "inventory_continue"
+   end
+}
+data:add(inv_take_food_container)
 
 local inv_get_four_dimensional_pocket = {
    _type = "elona_sys.inventory_proto",
@@ -876,12 +914,60 @@ local inv_get_four_dimensional_pocket = {
    end,
 
    on_select = function(ctxt, item, amount)
-      local result = Action.get_from_container(ctxt.chara, item, amount)
+      local result = Action.take_from_container(ctxt.chara, item, amount)
 
       return "inventory_continue"
    end
 }
 data:add(inv_get_four_dimensional_pocket)
+
+local inv_put_food_container = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_put_food_container",
+   elona_id = 24,
+   elona_sub_id = 3,
+
+   sources = { "chara" },
+   params = { container_item = "table" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   window_title = "ui.inventory_command.put",
+   query_text = "ui.inv.title.put",
+
+   filter = function(ctxt, item)
+      -- >>>>>>>> shade2/command.hsp:3416 			if iProperty(cnt)=propQuest:continue ...
+      return item.own_state ~= Enum.OwnState.Quest
+      -- <<<<<<<< shade2/command.hsp:3416 			if iProperty(cnt)=propQuest:continue ..
+      -- >>>>>>>> shade2/command.hsp:3421 		if invCtrl(1)=3: if refType!fltFood:continue ...
+         and item:has_category("elona.food")
+      -- <<<<<<<< shade2/command.hsp:3421 		if invCtrl(1)=3: if refType!fltFood:continue ..
+   end,
+
+   on_select = function(ctxt, item, amount)
+      if not ctxt.container:can_take_object(item) then
+         Gui.play_sound("base.fail1")
+         Gui.mes("ui.inv.put.container.full")
+         return "inventory_continue"
+      end
+
+      local max_weight = ctxt.container:get_max_item_weight()
+      if max_weight and item:calc("weight") >= max_weight then
+         Gui.play_sound("base.fail1")
+         Gui.mes("ui.inv.put.container.too_heavy", max_weight)
+         return "inventory_continue"
+      end
+
+      local result = Action.put_in_container(ctxt.container, item, amount, ctxt.params.container_item)
+
+      if item.spoilage_date and item.spoilage_date >= 0 and item.spoilage_hours then
+         item.spoilage_date = 0
+      end
+
+      return "inventory_continue"
+   end
+}
+data:add(inv_put_food_container)
 
 local inv_harvest_delivery_chest = {
    _type = "elona_sys.inventory_proto",
@@ -1060,15 +1146,16 @@ local inv_put_four_dimensional_pocket = {
    on_select = function(ctxt, item, amount)
       -- HACK: Assuming ctxt.container is an api.Inventory. Probably want to have
       -- an IInventory interface that both IChara and Inventory satisfy.
-      if ctxt.container:is_full() then
+      if not ctxt.container:can_take_object(item) then
          Gui.play_sound("base.fail1")
          Gui.mes("ui.inv.put.container.full")
          return "inventory_continue"
       end
 
-      if item:calc("weight") >= ctxt.container.max_weight then
+      local max_weight = ctxt.container:get_max_item_weight()
+      if max_weight and item:calc("weight") >= max_weight then
          Gui.play_sound("base.fail1")
-         Gui.mes("ui.inv.put.container.too_heavy", ctxt.container.max_weight)
+         Gui.mes("ui.inv.put.container.too_heavy", max_weight)
          return "inventory_continue"
       end
 
@@ -1216,7 +1303,7 @@ local inv_equipment_flight = {
 
    filter = function(ctxt, item)
       -- >>>>>>>> shade2/command.hsp:3404 		if invCtrl(1)=6: if (iWeight(cnt)<=0)or(iId(cnt) ..
-      return item.weight > 1 and not item:calc("cannot_use_flight_on")
+      return item.weight > 1 and item:calc("can_use_flight_on") ~= false
       -- <<<<<<<< shade2/command.hsp:3404 		if invCtrl(1)=6: if (iWeight(cnt)<=0)or(iId(cnt) ..
    end,
 

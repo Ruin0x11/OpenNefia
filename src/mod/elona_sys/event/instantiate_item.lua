@@ -59,10 +59,6 @@ end
 Event.register("base.on_object_prototype_changed", "Connect item events", connect_item_events)
 
 local function permit_item_actions(item)
-   if item:has_category("elona.container") then
-      item.can_open = true
-   end
-
    if item:has_category("elona.food")
       or item:has_category("elona.cargo_food")
    then

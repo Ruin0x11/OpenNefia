@@ -165,22 +165,31 @@ end
 --- @tparam[opt] int amount
 --- @treturn[1] bool success
 --- @treturn[2] string turn_result
-function Action.get_from_container(chara, item, amount)
-   return item:emit("base.on_get_item", {chara=chara,amount=amount,source=item:get_location()}, false)
+function Action.take_from_container(chara, item, amount, container_item)
+   local result = item:emit("base.on_get_item", {chara=chara,amount=amount,source=item:get_location()}, false)
+
+   if container_item then
+      container_item:emit("base.after_container_provide_item", {chara=chara,item=item,amount=amount})
+   end
+
+   return result
 end
 
 --- @tparam ILocation container
 --- @tparam IItem item
 --- @tparam[opt] int amount
 --- @treturn bool success
-function Action.put_in_container(container, item, amount)
+function Action.put_in_container(container, item, amount, container_item)
    if item == nil then
       return false
    end
 
-   item:emit("base.on_put_item", {amount=amount,target=container}, false)
-
    local success = item:move_some(amount, container)
+
+   if container_item then
+      container_item:emit("base.after_container_receive_item", {amount=amount,item=item,container=container}, false)
+   end
+
    if success then
       Gui.play_sound(Rand.choice({"base.get1", "base.get2"}))
       Gui.mes("action.pick_up.put_in_container", item:build_name(amount))

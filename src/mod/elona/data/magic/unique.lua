@@ -337,8 +337,8 @@ data:add {
       Gui.mes("magic.four_dimensional_pocket")
 
       local pocket = Inventory.get_or_create("elona.four_dimensional_pocket")
-      pocket:set_max_size(math.clamp(math.floor(params.power / 10 + 10), 10, 300))
-      pocket.max_weight = params.power * 100
+      pocket:set_max_capacity(math.clamp(math.floor(params.power / 10 + 10), 10, 300))
+      pocket:set_max_item_weight(params.power * 100)
 
       Input.query_inventory(source, "elona.inv_get_four_dimensional_pocket", { container = pocket }, "elona.container_four_dimensional_pocket")
 
