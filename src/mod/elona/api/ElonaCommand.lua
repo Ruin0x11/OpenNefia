@@ -512,7 +512,7 @@ function ElonaCommand.ammo(player)
    -- <<<<<<<< elona122/shade2/command.hsp:4739 	goto *pc_turn ..
 end
 
-local function enter_field_map(player)
+function ElonaCommand.enter_field_map(player)
    local stood_tile = Map.tile(player.x, player.y)
    local map = FieldMap.generate(stood_tile, 34, 22, Map.current())
 
@@ -568,7 +568,7 @@ local function choose_command_dwim(player)
    end
 
    if command == nil and map:has_type("world_map") then
-      return enter_field_map
+      return ElonaCommand.enter_field_map
    end
 
    return command or Command.search
