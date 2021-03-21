@@ -109,9 +109,9 @@ return {
                return ("%s start%s to think clearly.")
                   :format(name(_1), s(_1))
             end,
-            description = function(_1)
+            description = function(_1, _2)
                return ("Increases LER,MAG by %s, literacy skill by %s")
-                  :format(_1[1], _1[2])
+                  :format(_1, _2)
             end,
             name = "Divine Wisdom"
          },
@@ -120,9 +120,9 @@ return {
                return ("%s incur%s the wrath of God.")
                   :format(name(_1), s(_1))
             end,
-            description = function(_1)
+            description = function(_1, _2)
                return ("Decreases speed by %s, PV by %s%%")
-                  :format(_1[1], _1[2])
+                  :format(_1, _2)
             end,
             name = "Punishment"
          },
