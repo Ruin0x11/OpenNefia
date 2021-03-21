@@ -12,7 +12,7 @@ local Prompt = require("api.gui.Prompt")
 local Building = {}
 
 function Building.iter(map)
-   return Area.iter(map):filter(function(_, a) return a.metadata.is_player_owned end)
+   return Area.iter(map):filter(function(a) return a.metadata.is_player_owned end)
 end
 
 function Building.find_worker(map, chara_uid)
@@ -22,7 +22,7 @@ function Building.find_worker(map, chara_uid)
    end
 
    obj = save.base.staying_charas:get_object(chara_uid)
-   if obj then
+   if obj and save.base.staying_charas:is_staying_in_map(obj, map) then
       return obj
    end
 

@@ -85,7 +85,7 @@ end
 --- @treturn Iterator(IChara)
 function Chara.iter_others(map)
    map = map or field.map
-   return map:iter_charas():filter(function(c) return not c:is_in_player_party() end)
+   return map:iter_charas():filter(function(c) return not c:is_in_player_party() and c.is_other ~= false end)
 end
 
 --- Looks for a character with the given UID or base.chara ID in the
@@ -255,9 +255,13 @@ function Chara.create(id, x, y, params, where)
       end
 
       if where then
-         -- TODO: may want to return status
-         local Map = require("api.Map")
-         Map.try_place_chara(chara, x, y, where)
+         if where:is_positional() then
+            -- TODO: may want to return status
+            local Map = require("api.Map")
+            Map.try_place_chara(chara, x, y, where)
+         else
+            where:take_object(chara)
+         end
       end
 
       MapObject.finalize(chara, gen_params)

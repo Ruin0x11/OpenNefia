@@ -59,6 +59,7 @@ do
       _id = "lumiest_graveyard",
       elona_id = 10,
 
+      types = { "field" },
       image = "elona.feat_area_crypt",
 
       floors = {
@@ -135,6 +136,7 @@ do
       _id = "truce_ground",
       elona_id = 20,
 
+      types = { "field" },
       image = "elona.feat_area_truce_ground",
 
       floors = {
@@ -182,6 +184,7 @@ do
       _id = "jail",
       elona_id = 41,
 
+      types = { "field" },
       image = "elona.feat_area_jail",
 
       floors = {
@@ -294,6 +297,7 @@ do
       _id = "test_world_north_border",
       elona_id = 48,
 
+      types = { "guild" },
       image = "elona.feat_area_border_tent",
 
       floors = {
@@ -347,6 +351,7 @@ do
       _id = "north_tyris_south_border",
       elona_id = 43,
 
+      types = { "guild" },
       image = "elona.feat_area_border_tent",
 
       floors = {
@@ -399,6 +404,7 @@ do
       _id = "south_tyris_north_border",
       elona_id = 45,
 
+      types = { "guild" },
       image = "elona.feat_area_border_tent",
 
       floors = {
@@ -503,6 +509,7 @@ do
       _id = "the_smoke_and_pipe",
       elona_id = 46,
 
+      types = { "guild" },
       image = "elona.feat_area_the_smoke_and_pipe",
 
       floors = {
@@ -566,6 +573,7 @@ do
       _id = "miral_and_garoks_workshop",
       elona_id = 34,
 
+      types = { "guild" },
       image = "elona.feat_area_miral_and_garoks_workshop",
 
       floors = {
@@ -634,6 +642,7 @@ do
       _id = "mansion_of_younger_sister",
       elona_id = 29,
 
+      types = { "field" },
       floors = {
          [1] = "elona.mansion_of_younger_sister"
       },
@@ -723,6 +732,7 @@ do
       _id = "cyber_dome",
       elona_id = 21,
 
+      types = { "guild" },
       image = "elona.feat_area_tent",
 
       floors = {
@@ -818,6 +828,7 @@ do
       _id = "larna",
       elona_id = 25,
 
+      types = { "guild" },
       image = "elona.feat_area_village",
 
       floors = {
@@ -903,6 +914,7 @@ do
       _id = "embassy",
       elona_id = 32,
 
+      types = { "guild" },
       image = "elona.feat_area_embassy",
 
       floors = {
@@ -954,6 +966,7 @@ do
       _id = "fort_of_chaos_beast",
       elona_id = 22,
 
+      types = { "field" },
       image = "elona.feat_area_god",
 
       floors = {
@@ -1005,6 +1018,7 @@ do
       _id = "fort_of_chaos_machine",
       elona_id = 23,
 
+      types = { "field" },
       image = "elona.feat_area_god",
 
       floors = {
@@ -1058,6 +1072,7 @@ do
       _id = "fort_of_chaos_collapsed",
       elona_id = 24,
 
+      types = { "field" },
       image = "elona.feat_area_god",
 
       floors = {
@@ -1123,74 +1138,6 @@ do
 
    data:add(shelter)
 end
-
-do
-   local test_site = {
-      _id = "test_site",
-      _type = "base.map_archetype",
-
-      unique = true,
-
-      properties = {
-         music = "elona.puti",
-         types = { "dungeon" },
-         level = 5,
-         is_indoor = true,
-         is_not_renewable = true,
-         max_crowd_density = 0,
-         default_ai_calm = 0,
-         material_spot_type = "elona.dungeon"
-      },
-      events = {
-         {
-            id = "elona_sys.on_quest_check",
-            name = "Sidequest: nightmare",
-
-            callback = function(map)
-               if Sidequest.progress("elona.nightmare") < 2 then
-                  if Sidequest.no_targets_remaining(map) then
-                     Sidequest.set_progress("elona.nightmare", 2)
-                     Sidequest.update_journal()
-                  end
-               end
-            end
-         }
-      }
-   }
-
-   function test_site.starting_pos(map)
-      return { x = 6, y = 27 }
-   end
-
-   function test_site.on_generate_map(area, floor)
-      local map = Elona122Map.generate("sqNightmare")
-      map:set_archetype("elona.shelter", { set_properties = true })
-
-      Sidequest.set_quest_targets(map)
-
-      return map
-   end
-
-   data:add(test_site)
-
-   data:add {
-      _type = "base.area_archetype",
-      _id = "test_site",
-
-      floors = {
-         [1] = "elona.test_site"
-      },
-
-      --parent_area = {
-      --   _id = "elona.north_tyris",
-      --   on_floor = 1,
-      --   x = 20,
-      --   y = 20,
-      --   starting_floor = 1
-      --}
-   }
-end
-
 
 do
    local pyramid = {
@@ -1286,6 +1233,7 @@ do
       _type = "base.area_archetype",
       _id = "pyramid",
 
+      types = { "dungeon" },
       image = "elona.feat_area_pyramid",
 
       floors = {

@@ -1,5 +1,6 @@
 --- @module Quest
 local Save = require("api.Save")
+local Enum = require("api.Enum")
 
 local Rand = require("api.Rand")
 local Chara = require("api.Chara")
@@ -358,6 +359,36 @@ function Quest.town_info(map)
    return save.elona_sys.quest.towns[uid] or nil
 end
 
+function Quest.is_valid_quest_client(chara)
+   if chara == nil or chara.state == "Dead" then
+      return false, "Character is not alive."
+   end
+   if not chara.can_talk then
+      return false, "Cannot talk to character."
+   end
+   if not chara:has_any_roles() then
+      return false, "Character has no role."
+   end
+   if chara:find_role("elona.special") then
+      return false, "Character is marked as being unable to be a quest client."
+   end
+   if chara:find_role("elona.adventurer") then
+      return false, "Character is an adventurer."
+   end
+
+   local map = chara:current_map()
+
+   if map == nil then
+      return false, "Character is not on a map."
+   end
+   if not save.elona_sys.quest.towns[map.uid] then
+      return false, ("Map %d (%s) is not registered as a valid quest endpoint map. Use Quest.register_town() to register it as one.")
+         :format(map.uid, map.gen_id)
+   end
+
+   return true
+end
+
 --- Registers this character as a quest client. The following
 --- conditions must be satisfied:
 ---
@@ -371,28 +402,12 @@ end
 ---
 --- @tparam IChara chara
 function Quest.register_client(chara)
-   if chara == nil or chara.state == "Dead" then
-      return nil, "Character is not alive."
-   end
-   if not chara.can_talk then
-      return nil, "Cannot talk to character."
-   end
-   if not chara:has_any_roles() then
-      return nil, "Character has no role."
-   end
-   if chara:find_role("elona.special") then
-      return nil, "Character is marked as being unable to be a quest client."
+   local ok, reason = Quest.is_valid_quest_client(chara)
+   if not ok then
+      return nil, reason
    end
 
    local map = chara:current_map()
-
-   if map == nil then
-      return nil, "Character is not on a map."
-   end
-   if not save.elona_sys.quest.towns[map.uid] then
-      return nil, ("Map %d (%s) is not registered as a valid quest endpoint map. Use Quest.register_town() to register it as one.")
-         :format(map.uid, map.gen_id)
-   end
 
    Log.debug("Register quest client %d", chara.uid)
 
@@ -481,7 +496,6 @@ function Quest.unregister_town(map)
    save.elona_sys.quest.towns[map.uid] = nil
 end
 
-
 --- Updates the status of all quests in this map.
 ---
 --- NOTE: This function modifies the map, so the caller has to be sure
@@ -499,7 +513,10 @@ function Quest.update_in_map(map)
    if Quest.town_info(map) then
       -- Register all characters that can be quest targets.
       for _, chara in Chara.iter_others(map) do
-         if chara.quality < 6 and not chara:find_role("elona.special") then
+         if chara.quality < Enum.Quality.Unique
+            and not chara:find_role("elona.special")
+            and not chara:find_role("elona.adventurer")
+         then
             local ok, err = Quest.register_client(chara)
             if not ok then
                Log.debug(err)

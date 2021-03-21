@@ -3,6 +3,7 @@ local Log = require("api.Log")
 local save = require("internal.global.save")
 local data = require("internal.data")
 local MapArchetype = require("api.MapArchetype")
+local I18N = require("api.I18N")
 
 local InstancedArea = class.class("InstancedArea")
 
@@ -22,10 +23,16 @@ function InstancedArea:init(archetype_id, area_generator, uids)
    self.parent_y = nil
    self.deepest_floor_visited = 0
    self._deepest_floor = nil
+   self._types = {}
 
    if archetype_id then
       self:set_archetype(archetype_id, { set_properties = true })
+      self.name = I18N.get_optional("map.unique." .. archetype_id .. ".name")
    end
+end
+
+function InstancedArea:has_type(ty)
+   return self._types[ty] ~= nil
 end
 
 function InstancedArea:add_floor(map, floor)
@@ -39,7 +46,6 @@ function InstancedArea:add_floor(map, floor)
       error(("Map already registered in area '%d'"):format(map.area_uid))
    end
    self.maps[floor] = { uid = map.uid }
-   self.name = self.name or map.name
    map.area_uid = self.uid
 end
 
@@ -62,6 +68,9 @@ function InstancedArea:set_archetype(area_archetype_id, params)
          for k, v in pairs(archetype.metadata) do
             self.metadata[k] = table.deepcopy(v)
          end
+      end
+      if archetype.types then
+         self._types = table.set(archetype.types)
       end
    end
 end
@@ -136,7 +145,7 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
    assert(math.type(floor) == "integer")
    local ok, map = self:load_floor(floor)
    if ok then
-      return ok, map
+      return ok, map, false
    end
 
    -- WARNING: Map.save() should always be called on the map this returns, or
@@ -162,6 +171,9 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
    if map_archetype_id then
       map = MapArchetype.generate_map(map_archetype_id, self, floor, params)
    else
+      if archetype.on_generate_floor == nil then
+         return false, "no_archetype_on_generate_floor"
+      end
       map = archetype.on_generate_floor(self, floor, params)
    end
 
@@ -172,7 +184,7 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
 
    Log.debug("Generated area %d's floor %d with map archetype %s", self.uid, floor, map._archetype)
 
-   return true, map
+   return true, map, true
 end
 
 function InstancedArea:iter_child_areas(floor)
@@ -201,6 +213,10 @@ end
 
 function InstancedArea:load_starting_floor()
    return self:load_floor(self:starting_floor())
+end
+
+function InstancedArea:load_or_generate_starting_floor()
+   return self:load_or_generate_floor(self:starting_floor())
 end
 
 function InstancedArea:add_child_area(child)

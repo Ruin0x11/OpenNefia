@@ -999,8 +999,11 @@ data:add {
          success = false
       end
 
-      -- TODO adventurer
-      if target:calc("quality") >= Enum.Quality.Great or target:has_any_roles() or target:calc("is_precious") then
+      if target:calc("quality") >= Enum.Quality.Great
+         or target:has_any_roles()
+         or target:calc("is_precious")
+         or target.is_being_escorted
+      then
          success = "impossible"
       end
       if target:is_in_player_party() then
@@ -1018,6 +1021,8 @@ data:add {
          -- This logic is really complicated and domain specific, and is used
          -- only in three places in the code (relocate_chara).
          Gui.mes("TODO")
+         target:set_target(source)
+         target.is_quest_target = false
 
          map:emit("elona_sys.on_quest_check")
       elseif success == false then

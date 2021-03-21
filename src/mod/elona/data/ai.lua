@@ -476,16 +476,30 @@ local function decide_ally_target(chara, params)
       and not being_targeted
 
    if not Chara.is_alive(target)
-      or target:is_party_leader_of(chara)
+      or chara:relation_towards(target) >= Enum.Relation.Ally
       or chara:get_aggro(target) <= 0
       or target_not_important
    then
-      -- Follow the leader.
-      chara:set_target(chara:get_party_leader())
+      local leader = chara:get_party_leader()
+      if target then
+         if target:is_party_leader_of(chara) then
+            -- Follow the leader.
+            leader = chara:get_party_leader()
+         elseif chara:relation_towards(target) >= Enum.Relation.Ally then
+            leader = target
+         end
+         chara:set_target(leader)
+      end
 
       local party = save.base.parties:get(chara:get_party())
+      if leader then
+         party = save.base.parties:get(leader:get_party())
+      end
       local map = chara:current_map()
-      local leader_attacker = map:get_object_of_type("base.chara", party.metadata.leader_attacker)
+      local leader_attacker
+      if party then
+         leader_attacker = map:get_object_of_type("base.chara", party.metadata.leader_attacker)
+      end
       if leader_attacker ~= nil then
          if Chara.is_alive(leader_attacker) then
             if chara:relation_towards(leader_attacker) <= Enum.Relation.Enemy then
@@ -498,21 +512,17 @@ local function decide_ally_target(chara, params)
          end
       end
 
-      if chara:get_target() == nil or chara:get_target():is_party_leader_of(chara) then
-         local leader = chara:get_party_leader()
-
-         if Chara.is_alive(leader) then
-            local leader_target = leader:get_target()
-            if Chara.is_alive(leader_target) and leader:relation_towards(leader_target) <= Enum.Relation.Enemy then
-               if chara:has_los(leader_target.x, leader_target.y) then
-                  chara:set_target(leader_target, 5)
-               end
+      if (chara:get_target() == nil or chara:get_target() == leader) and Chara.is_alive(leader) then
+         local leader_target = leader:get_target()
+         if Chara.is_alive(leader_target) and leader:relation_towards(leader_target) <= Enum.Relation.Enemy then
+            if chara:has_los(leader_target.x, leader_target.y) then
+               chara:set_target(leader_target, 5)
             end
          end
       end
 
       target = chara:get_target()
-      if target and not Effect.is_visible(target, chara) and Rand.one_in(5) then
+      if target and not Effect.is_visible(target, chara) and not Rand.one_in(5) then
          chara:set_target(chara:get_party_leader())
       end
    end
@@ -571,10 +581,8 @@ local function decide_ally_idle_action(chara, params)
    if Chara.is_alive(target) then
       -- item on space
 
-      if chara:relation_towards(Chara.player()) >= Enum.Relation.Ally then
-         if Ai.run("elona.on_ai_ally_actions", chara) then
-            return true
-         end
+      if Ai.run("elona.on_ai_ally_actions", chara) then
+         return true
       end
 
       local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
@@ -604,7 +612,7 @@ local function decide_targeted_action(chara, params)
    end
 
    local target = chara:get_target()
-   if chara:is_in_player_party() and target and target:is_player() then
+   if chara:relation_towards(Chara.player()) >= Enum.Relation.Ally and target and target:is_player() then
       return Ai.run("elona.decide_ally_idle_action", chara)
    end
 
@@ -660,7 +668,7 @@ local function elona_default_ai(chara, params)
       return true
    end
 
-   if chara:is_in_player_party() then
+   if chara:relation_towards(Chara.player()) >= Enum.Relation.Ally then
       Ai.run("elona.decide_ally_target", chara)
    end
 
@@ -709,7 +717,7 @@ local function elona_default_ai(chara, params)
    end
 
    target = chara:get_target()
-   if Chara.is_alive(target) and (chara:get_aggro(target) > 0 or chara:is_in_player_party()) then
+   if Chara.is_alive(target) and (chara:get_aggro(target) > 0 or chara:relation_towards(Chara.player()) >= Enum.Relation.Ally) then
       return Ai.run("elona.decide_targeted_action", chara)
    end
 

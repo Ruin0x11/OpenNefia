@@ -41,6 +41,7 @@ data:add_multi(
       { _id = "on_area_deleted" },
       { _id = "on_proc_status_effect" },
       { _id = "on_object_instantiated" },
+      { _id = "on_object_finalized" },
       { _id = "on_chara_instantiated" },
       { _id = "on_item_instantiated" },
       { _id = "on_feat_instantiated" },

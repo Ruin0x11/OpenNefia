@@ -9,6 +9,7 @@ local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local Weather = require("mod.elona.api.Weather")
+local Adventurer = require("mod.elona.api.Adventurer")
 
 local function load_towns(north_tyris)
    for _, area in Area.iter_in_parent(north_tyris) do
@@ -56,6 +57,9 @@ local function start(self, player)
    -- Save the world map since we created new entrance feats in it. It also
    -- needs to be saved in order to be used as the previous map, set below.
    Map.save(north_tyris)
+
+   -- Generate adventurers.
+   Adventurer.initialize()
 
    -- NOTE: We have to update the outer map parameters here, or we won't know
    -- what map to travel to when exiting from the edge. This normally gets set

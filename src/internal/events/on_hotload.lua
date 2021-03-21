@@ -73,10 +73,10 @@ Event.register("base.on_hotload_end", "Notify objects in map of prototype hotloa
 end)
 
 local function rebind_ui_layer_keys()
-   local current = draw.get_current_layer().layer
-   if class.is_an(IUiLayer, current) then
-      local keymap = current:make_keymap()
-      current:bind_keys(keymap)
+   local current = draw.get_current_layer()
+   if current and class.is_an(IUiLayer, current.layer) then
+      local keymap = current.layer:make_keymap()
+      current.layer:bind_keys(keymap)
    end
 end
 Event.register("base.on_hotload_end", "Rebind keys of current UILayer", rebind_ui_layer_keys)

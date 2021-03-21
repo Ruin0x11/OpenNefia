@@ -106,6 +106,7 @@ data:add {
    _type = "base.area_archetype",
    _id = "putit_room",
 
+   types = { "dungeon" },
    floors = {
       [1] = "test_room.putit_room"
    },
@@ -125,6 +126,8 @@ data:add {
 local the_dungeon = {
    _type = "base.area_archetype",
    _id = "the_dungeon",
+
+   types = { "dungeon" },
    image = "elona.feat_area_crypt",
 
    metadata = {
@@ -228,6 +231,7 @@ data:add {
    _type = "base.area_archetype",
    _id = "quest_room",
 
+   types = { "town" },
    floors = {
       [1] = "test_room.quest_room"
    },
@@ -252,6 +256,7 @@ local test_room = {
    _type = "base.area_archetype",
    _id = "test_room",
 
+   types = { "guild" },
    metadata = {
       can_return_to = true
    },

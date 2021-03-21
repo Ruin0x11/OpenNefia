@@ -1,5 +1,7 @@
 local DateTime = require("api.DateTime")
 local Event = require("api.Event")
+local CircularBuffer = require("api.CircularBuffer")
+local StayingCharas = require("api.StayingCharas")
 
 local function init_save()
    local s = save.elona
@@ -32,6 +34,9 @@ local function init_save()
    s.guild_fighter_target_chara_id = nil
    s.guild_fighter_target_chara_quota = 0
    s.guild_thief_stolen_goods_quota = 0
+   s.news_buffer = CircularBuffer:new(38)
+   s.staying_adventurers = StayingCharas:new(nil)
+   s.main_quest_progress = 0
 end
 
 Event.register("base.on_init_save", "Init save (elona)", init_save)

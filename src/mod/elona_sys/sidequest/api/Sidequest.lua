@@ -98,7 +98,9 @@ function Sidequest.localize_progress_text(sidequest_id, progress)
       text = I18N.get_optional(text)
    end
 
-   assert(type(text) == "string", "Progress text must be string")
+   if type(text) ~= "string" then
+      error(("Progress text must be string (%s)"):format(sidequest_id))
+   end
 
    return text
 end

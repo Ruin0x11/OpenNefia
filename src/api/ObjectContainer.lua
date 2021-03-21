@@ -47,11 +47,7 @@ function ObjectContainer:can_take_object(obj)
 end
 
 function ObjectContainer:take_object(obj)
-   if not self.pool:take_object(obj) then
-      return nil, "cannot_own"
-   end
-
-   return obj, nil
+   return self.pool:take_object(obj)
 end
 
 return ObjectContainer

@@ -18,7 +18,7 @@ function test_map_travel_transfers_staying()
    Assert.is_truthy(player:recruit_as_ally(chara))
    Map.set_map(puppy_cave_map)
 
-   StayingCharas.register_global(chara, puppy_cave_map)
+   StayingCharas.register_global(chara, puppy_cave_area, puppy_cave_area:starting_floor())
 
    Assert.eq("Alive", chara.state)
    Assert.eq(puppy_cave_map, chara:get_location())
@@ -26,7 +26,7 @@ function test_map_travel_transfers_staying()
 
    Assert.is_truthy(Map.travel_to(north_tyris_map))
 
-   Assert.eq("Staying", chara.state)
+   Assert.eq("Alive", chara.state)
    Assert.eq(save.base.staying_charas, chara:get_location())
    Assert.eq(0, chara:iter_other_party_members():length())
 

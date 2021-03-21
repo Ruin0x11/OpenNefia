@@ -11,15 +11,15 @@ local global = require("mod.elona.internal.global")
 local RandomEvent = require("mod.elona.api.RandomEvent")
 local Rank = require("mod.elona.api.Rank")
 local Home = require("mod.elona.api.Home")
+local Adventurer = require("mod.elona.api.Adventurer")
 
 local function hourly_events()
    -- >>>>>>>> shade2/main.hsp:627 	if mType=mTypeWorld{ ...
    local s = save.elona_sys
    local map = Map.current()
 
-   -- TODO adventurer
-
    if map then
+      Adventurer.update_all(map)
       Effect.spoil_items(map)
 
       if Map.is_world_map(map) then

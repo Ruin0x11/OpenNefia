@@ -7,6 +7,9 @@ local ElonaItem = require("mod.elona.api.ElonaItem")
 local Const = require("api.Const")
 local Stopwatch = require("api.Stopwatch")
 local Log = require("api.Log")
+local News = require("mod.elona.api.News")
+local text = require("thirdparty.pl.text")
+local I18N = require("api.I18N")
 
 local Equipment = {}
 
@@ -103,7 +106,18 @@ function Equipment.generate_and_equip(chara)
          and ElonaItem.is_equipment(item)
          and chara:find_role("elona.adventurer")
       then
-         -- TODO adventurer
+         -- >>>>>>>> shade2/text.hsp:1319 	if type=1{ ...
+         local Adventurer = require("mod.elona.api.Adventurer")
+         local staying_area = Adventurer.area_of(chara)
+         if staying_area then
+            local topic = I18N.get("news.discovery.title")
+            local text = I18N.get("news.discovery.text", chara.title, chara.name, item:build_name(1), staying_area.name)
+
+            -- >>>>>>>> shade2/adv.hsp:239 		if cRole(rc)=cRoleAdv : valn=itemname(ci):addNew ...
+            News.add(text, topic)
+            -- <<<<<<<< shade2/adv.hsp:239 		if cRole(rc)=cRoleAdv : valn=itemname(ci):addNew ..
+         end
+         -- <<<<<<<< shade2/text.hsp:1322 		} ...
       end
 
       Equipment.equip_optimally(chara, item)

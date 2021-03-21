@@ -494,6 +494,8 @@ function Skill.gain_level(chara, show_message)
 
    chara.required_experience = Skill.calc_required_experience(chara)
    chara:refresh()
+
+   chara:emit("elona_sys.on_chara_gained_level", {show_message=show_message})
 end
 
 function Skill.grow_primary_skills(chara)

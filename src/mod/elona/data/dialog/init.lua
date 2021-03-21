@@ -33,6 +33,8 @@ require("mod.elona.data.dialog.role.trainer")
 require("mod.elona.data.dialog.role.shopkeeper")
 require("mod.elona.data.dialog.role.innkeeper")
 require("mod.elona.data.dialog.role.spell_writer")
+require("mod.elona.data.dialog.role.informer")
+require("mod.elona.data.dialog.role.adventurer")
 
 require("mod.elona.data.dialog.unique.miches")
 require("mod.elona.data.dialog.unique.larnneire")

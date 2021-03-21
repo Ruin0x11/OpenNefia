@@ -211,8 +211,7 @@ local function find_dialog(cur, id)
    return dialog_data, node_data, full_id
 end
 
-local get_choices
-get_choices = function(node, talk, state, node_data, choice_key, found)
+local function get_choices(node, talk, state, node_data, choice_key, found)
    found = found or {}
    local choices = node.choices
    if choices == nil then
@@ -482,8 +481,9 @@ end
 --- @tparam string choice_id
 --- @tparam string choice_text
 --- @tparam {{string,string}...} choices
+--- @tparam[opt] table params
 --- @tparam[opt] bool also_text If true, also match by the localized choice text
-function Dialog.add_choice(choice_id, choice_text, choices, also_text)
+function Dialog.add_choice(choice_id, choice_text, choices, params, also_text)
    for _, exist in ipairs(choices) do
       if exist[1] == choice_id -- choice ID
          and (also_text and exist[2] == choice_id) -- localized text
@@ -492,7 +492,7 @@ function Dialog.add_choice(choice_id, choice_text, choices, also_text)
       end
    end
 
-   table.insert(choices, {choice_id, choice_text})
+   table.insert(choices, {choice_id, choice_text, params = params})
 end
 
 return Dialog

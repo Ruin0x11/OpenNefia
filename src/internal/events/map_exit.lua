@@ -57,9 +57,9 @@ end
 
 Event.register("base.on_map_leave", "Events on area change", proc_area_changed, { priority = 200000 })
 
-local function transfer_staying_charas(_, params)
+local function transfer_staying_charas(prev_map, params)
    local next_map = params.next_map
 
-   save.base.staying_charas:do_transfer(next_map)
+   save.base.staying_charas:do_transfer(prev_map, next_map)
 end
 Event.register("base.on_map_leave", "Transfer staying characters", transfer_staying_charas, { priority = 300000 })

@@ -46,6 +46,9 @@ end
 function IObject:finalize(build_params)
    -- TODO this is redundant
    self:build(build_params)
+   if class.is_an(IEventEmitter, self) then
+      self:emit("base.on_object_finalized")
+   end
 end
 
 function IObject:instantiate()

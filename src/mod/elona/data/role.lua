@@ -35,14 +35,24 @@ local role = {
    {
       _id = "trainer",
       elona_id = 7,
+
+      -- >>>>>>>> shade2/chat.hsp:2253 	if cRole(tc)=cRoleTrainer{ ...
       dialog_choices = {
          {"elona.trainer:train", "talk.npc.trainer.choices.train.ask"},
          {"elona.trainer:learn", "talk.npc.trainer.choices.learn.ask"}
       }
+      -- <<<<<<<< shade2/chat.hsp:2256 		} ..
    },
    {
       _id = "informer",
       elona_id = 8,
+
+      -- >>>>>>>> shade2/chat.hsp:2257 	if cRole(tc)=cRoleInformer{ ...
+      dialog_choices = {
+         {"elona.informer:list_adventurers", "talk.npc.informer.choices.show_adventurers"},
+         {"elona.informer:investigate_ally", "talk.npc.informer.choices.investigate_ally"}
+      }
+      -- <<<<<<<< shade2/chat.hsp:2260 		} ..
    },
    {
       _id = "bartender",
@@ -63,11 +73,26 @@ local role = {
    {
       _id = "adventurer",
       elona_id = 13,
+
+      -- >>>>>>>> shade2/chat.hsp:2264 	if cRole(tc)=cRoleAdv{ ...
+      dialog_choices = {
+         {"elona.default:trade", "talk.npc.common.choices.trade"},
+         function(speaker)
+            if not speaker.is_hired then
+               return {
+                  {"elona.adventurer:hire", "talk.npc.adventurer.choices.hire"},
+                  {"elona.adventurer:join", "talk.npc.adventurer.choices.join"}
+               }
+            end
+         end,
+      }
+      -- <<<<<<<< shade2/chat.hsp:2270 		} ..
    },
    {
       _id = "guard",
       elona_id = 14,
 
+      -- >>>>>>>> shade2/chat.hsp:2293 	if cRole(tc)=cRoleguard{ ...
       dialog_choices = {
          function(speaker, state)
             local map = speaker:current_map()
@@ -91,6 +116,7 @@ local role = {
             return {{"elona.guard:lost_item", "talk.npc.guard.lost_suitcase"}}
          end,
       }
+      -- <<<<<<<< shade2/chat.hsp:2300 		} ..
    },
    {
       _id = "royal_family",

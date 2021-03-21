@@ -31,9 +31,11 @@ function ElonaItem.generate_oracle_text(item)
 
    if owner then
       if owner:find_role("elona.adventurer") then
-         -- TODO adventurer
-         local map_name = "TODO"
-         return I18N.get("magic.oracle.was_held_by", known_name, owner, map_name, date.day, date.month, date.year)
+         local Adventurer = require("mod.elona.api.Adventurer")
+         local area = Adventurer.area_of(owner)
+         if area then
+            return I18N.get("magic.oracle.was_held_by", known_name, owner, area.name, date.day, date.month, date.year)
+         end
       end
    end
 

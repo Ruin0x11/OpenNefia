@@ -9,6 +9,7 @@ local Item = require("api.Item")
 local Calc = require("mod.elona.api.Calc")
 local Itemgen = require("mod.elona.api.Itemgen")
 local Event = require("api.Event")
+local ElonaChara = require("mod.elona.api.ElonaChara")
 
 local eating_effect = require("mod.elona.data.chara.eating_effect")
 
@@ -7311,18 +7312,12 @@ local chara = {
 
       events = {
          {
-            id = "base.on_chara_instantiated",
+            id = "base.on_object_finalized",
             name = "Set image",
 
             callback = function(self)
                -- >>>>>>>> shade2/chara.hsp:513 	if cId(rc)=205{ ..
-               -- TODO
-               local id = Rand.rnd(33) * 2 + 1
-               if self.gender == "female" then
-                  id = id + 1
-               end
-               self.image = data["base.chip"]:iter():filter(function(c) return c.elona_id == id end):extract("_id"):nth(1)
-               assert(self.image)
+               self.image = ElonaChara.random_human_image(self)
                -- <<<<<<<< shade2/chara.hsp:515 		} ..
             end
          }

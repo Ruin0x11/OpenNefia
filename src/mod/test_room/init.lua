@@ -9,6 +9,7 @@ local Building = require("mod.elona.api.Building")
 local Nefia = require("mod.elona.api.Nefia")
 local Rand = require("api.Rand")
 local Tools = require("mod.tools.api.Tools")
+local Adventurer = require("mod.elona.api.Adventurer")
 
 require("mod.test_room.data")
 
@@ -89,6 +90,8 @@ local function on_game_start(self, player)
 
    Map.set_map(map)
    map:take_object(player, 25, 25)
+
+   Adventurer.initialize()
 
    Tools.powerup(player)
 end
