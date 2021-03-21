@@ -194,9 +194,12 @@ function field_layer:player_is_running()
    return self.keys.keys.pressed["shift"]
 end
 
-function field_layer:refresh_hud()
+function field_layer:refresh_hud(relayout)
    local player = self.player
    self.hud:refresh(player)
+   if relayout then
+      self.hud:relayout()
+   end
 end
 
 function field_layer:get_message_window()

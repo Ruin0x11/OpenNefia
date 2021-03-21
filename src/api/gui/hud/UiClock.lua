@@ -34,6 +34,8 @@ function UiClock:relayout(x, y)
    self.x = x
    self.y = y
    self.t = UiTheme.load(self)
+   self.width = self.t.base.clock:get_width()
+   self.height = self.t.base.clock:get_height()
 end
 
 function UiClock:draw()

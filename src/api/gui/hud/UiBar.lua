@@ -55,7 +55,7 @@ function UiBar:draw()
    if self.inner_width > 0 then
       Draw.set_color(255, 255, 255)
 
-      self.i_bar:draw_percentage_bar(self.x + 16, self.y + 5, self.inner_width, 6)
+      self.i_bar:draw_percentage_bar(self.x + 16, self.y + 5, self.inner_width, self.inner_width, 6)
    end
 
    if self.show_digit then

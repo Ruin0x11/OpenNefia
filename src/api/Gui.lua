@@ -51,8 +51,8 @@ end
 
 --- Updates the HUD. Call this if you change anything that might need
 --- to be reflected in the HUD, such as player equipment.
-function Gui.refresh_hud()
-   field:refresh_hud()
+function Gui.refresh_hud(relayout)
+   field:refresh_hud(relayout)
 end
 
 --- Returns the screen coordinates of the tilemap renderer.
