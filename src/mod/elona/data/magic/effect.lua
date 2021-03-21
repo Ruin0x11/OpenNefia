@@ -574,6 +574,7 @@ data:add {
                      end
                      Skill.gain_skill(target, spell._id, 1, 100 * 2)
                      Gui.mes_c(I18N.get(mes) .. I18N.get("magic.gain_knowledge.gain", spell_name), "Green")
+                     Gui.play_sound("base.ding2")
                      did_something = true
                      break
                   end

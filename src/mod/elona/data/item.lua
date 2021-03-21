@@ -12720,7 +12720,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return ElonaMagic.zap_wand(self, "elona.spell_acid_ground", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.acid_ground", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)

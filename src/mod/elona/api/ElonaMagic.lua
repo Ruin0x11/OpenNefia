@@ -213,6 +213,7 @@ function ElonaMagic.zap_wand(item, magic_id, power, params)
    -- >>>>>>>> shade2/proc.hsp:1491 *zapStaff ..
    params = params or {}
 
+   -- HACK
    local skill_data = Magic.skills_for_magic(magic_id)[1] or nil
    local chara = params.chara or item:get_owning_chara()
 
@@ -284,13 +285,15 @@ function ElonaMagic.zap_wand(item, magic_id, power, params)
    local success = chara:emit("elona.calc_wand_success", {magic_id=magic_id,item=item}, false)
 
    if success then
+      local range = skill_data and skill_data.range or 0
+
       local magic_params = {
          power=adjusted_power,
          item=item,
          curse_state=curse_state,
          x = magic_pos.x,
          y = magic_pos.y,
-         range = skill_data.range,
+         range = range,
          source = magic_pos.source,
          target = magic_pos.target
       }

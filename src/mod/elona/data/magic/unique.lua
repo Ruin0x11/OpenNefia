@@ -59,7 +59,7 @@ data:add {
       end
 
       for _, chara in Chara.iter():filter(filter) do
-         Gui.mes_visible("magic.gravity", chara.x, chara.y)
+         Gui.mes_visible("magic.gravity", chara.x, chara.y, chara)
          chara:apply_effect("elona.gravity", 100 + Rand.rnd(100))
       end
 
