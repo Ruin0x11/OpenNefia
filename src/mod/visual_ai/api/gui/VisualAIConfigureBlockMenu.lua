@@ -77,19 +77,23 @@ function VisualAIConfigureBlockMenu:draw()
 end
 
 function VisualAIConfigureBlockMenu:update(dt)
-   if self.list.changed then
+   local changed = self.list.changed
+   local chosen = self.chosen
+   local canceled = self.canceled
+
+   self.win:update(dt)
+   self.list:update(dt)
+
+   if changed then
       self:update_card_text()
    end
 
-   if self.chosen then
+   if chosen then
       Gui.play_sound("base.ok1")
       return self.list:get_vars(), nil
    end
 
-   self.win:update()
-   self.list:update()
-
-   if self.canceled then
+   if canceled then
       return nil, "canceled"
    end
 end

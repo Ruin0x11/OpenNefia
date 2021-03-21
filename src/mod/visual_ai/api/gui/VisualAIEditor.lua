@@ -176,16 +176,20 @@ function VisualAIEditor:draw()
 end
 
 function VisualAIEditor:update(dt)
-   if self.grid.changed then
-      local trail, selected_idx = self.grid:get_trail_and_index()
-      self.trail:set_trail(trail, selected_idx)
-   end
+   local canceled = self.canceled
+   local changed = self.grid.changed
 
+   self.canceled = nil
    self.win:update(dt)
    self.grid:update(dt)
    self.trail:update(dt)
 
-   if self.canceled then
+   if changed then
+      local trail, selected_idx = self.grid:get_trail_and_index()
+      self.trail:set_trail(trail, selected_idx)
+   end
+
+   if canceled then
       save.visual_ai.editing_chara = nil
       if self.interactive then
          return self.plan, nil
