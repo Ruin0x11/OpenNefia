@@ -11255,7 +11255,7 @@ local item =
          value = 8000,
          weight = 380,
          on_read = function(self, params)
-            return ElonaMagic.read_scroll(self, {{ _id = "elona.gain_younger_sister", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_younger_sister", power = 100 }}, params)
          end,
          level = 5,
          category = 55000,
@@ -14072,7 +14072,7 @@ local item =
          value = 15000,
          weight = 380,
          on_read = function(self, params)
-            return ElonaMagic.read_scroll(self, {{ _id = "elona.gain_cat_sister", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_cat_sister", power = 100 }}, params)
          end,
          level = 15,
          category = 55000,
@@ -14097,7 +14097,7 @@ local item =
          value = 10000,
          weight = 380,
          on_read = function(self, params)
-            return ElonaMagic.read_scroll(self, {{ _id = "elona.gain_young_lady", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_young_lady", power = 100 }}, params)
          end,
          level = 5,
          category = 55000,
