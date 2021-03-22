@@ -3,8 +3,9 @@ local env = require("internal.env")
 local paths = require("internal.paths")
 local EventTree = require("api.EventTree")
 local Log = require("api.Log")
+local ICloneable = require("api.ICloneable")
 
-local EventHolder = class.class("EventHolder")
+local EventHolder = class.class("EventHolder", ICloneable)
 
 EventHolder.DEFAULT_PRIORITY = 100000
 
@@ -16,6 +17,10 @@ end
 
 function EventHolder:clear()
    self:init()
+end
+
+function EventHolder:clone()
+   return EventHolder:new()
 end
 
 function EventHolder:serialize()
