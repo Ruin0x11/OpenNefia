@@ -95,7 +95,10 @@ data:add {
       local target = params.target
       local map = params.source:current_map()
 
-      if not source:is_player() or target:is_in_player_party() then
+      if not source:is_player()
+         or source:is_party_leader_of(target)
+         or target:relation_towards(source) >= Enum.Relation.Ally
+      then
          Gui.mes("common.nothing_happens")
          return true, { obvious = false }
       end
@@ -110,14 +113,14 @@ data:add {
 
       -- TODO item: monster heart
 
-      local success = Rand.rnd(params.power / 15 + 5) < target:calc("level")
+      local success = Rand.rnd(params.power / 15 + 5) >= target:calc("level")
 
       if target:calc("quality") >= Enum.Quality.Good then
-         Gui.mes("magic.domination.cannot_be_charmed")
+         Gui.mes("magic.domination.cannot_be_charmed", target)
       elseif success then
          source:recruit_as_ally(target)
       else
-         Gui.mes("magic.common.resists")
+         Gui.mes("magic.common.resists", target)
       end
 
       return true
