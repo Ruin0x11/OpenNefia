@@ -232,15 +232,7 @@ function TextHandler:run_actions()
 
    for c, _ in pairs(self.this_frame) do
       if not ran[c] then
-         local keybind = self.keybinds:key_to_keybind(c, self.modifiers)
-         if Log.has_level("trace") then
-            Log.trace("Keybind: %s %s %s", c, keybind, self)
-         end
-
-         if self.bindings[keybind] == nil then
-            keybind = "raw_" .. c
-         end
-         self:run_keybind_action(keybind, true)
+         self:run_key_action(c, true)
       end
    end
 
