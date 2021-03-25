@@ -162,8 +162,7 @@ function TextHandler:ignore_modifiers(modifiers)
    self.keybinds:ignore_modifiers(modifiers)
 end
 
-
-function TextHandler:run_key_action(key, ...)
+function TextHandler:run_text_action(key, ...)
    local keybind
 
    local special = false
@@ -174,20 +173,42 @@ function TextHandler:run_key_action(key, ...)
       keybind = self.keybinds:key_to_keybind(key, self.modifiers)
    end
 
-   if self.bindings[keybind] == nil and not special then
+   if not special then
       keybind = "raw_" .. key
    end
 
    if self.bindings[keybind] == nil
       and not special
-      and string.len(key) == 1
       and self.bindings["text_entered"]
    then
       return true, self.bindings["text_entered"](key, ...)
    end
 
    if Log.has_level("trace") then
+      Log.trace("Text: %s %s -> \"%s\" %s", key, inspect(self.modifiers), keybind, self)
+   end
+
+   local ran, result = self:run_keybind_action(keybind, true, ...)
+
+   if not ran then
+      for _, forward in ipairs(self.forwards) do
+         local did_something, first_result = forward:run_text_action(key, ...)
+         if did_something then
+            return did_something, first_result
+         end
+      end
+   end
+end
+
+function TextHandler:run_key_action(key, ...)
+   local keybind = self.keybinds:key_to_keybind(key, self.modifiers)
+   if Log.has_level("trace") then
       Log.trace("Keybind: %s %s -> \"%s\" %s", key, inspect(self.modifiers), keybind, self)
+   end
+
+   if self.bindings[keybind] == nil then
+      local with_modifiers = self:prepend_key_modifiers(key)
+      keybind = "raw_" .. with_modifiers
    end
 
    local ran, result = self:run_keybind_action(keybind, true, ...)
@@ -201,7 +222,7 @@ function TextHandler:run_key_action(key, ...)
       end
    end
 
-   return ran
+   return ran, result
 end
 
 function TextHandler:run_keybind_action(keybind, pressed, ...)
@@ -226,7 +247,7 @@ function TextHandler:run_actions()
    end
 
    for _, c in ipairs(self.chars) do
-      self:run_key_action(c)
+      self:run_text_action(c)
       ran[c] = true
    end
 
@@ -237,11 +258,11 @@ function TextHandler:run_actions()
    end
 
    if self.finished then
-      self:run_key_action("text_submitted")
+      self:run_text_action("text_submitted")
    end
 
    if self.canceled then
-      self:run_key_action("text_canceled")
+      self:run_text_action("text_canceled")
    end
 
    self.chars = {}
