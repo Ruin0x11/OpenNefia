@@ -20,11 +20,13 @@ end
 function utf8.pop(t)
    local byteoffset = utf8.offset(t, -1)
 
+   local ch
    if byteoffset then
+      ch = string.sub(t, byteoffset)
       t = string.sub(t, 1, byteoffset - 1)
    end
 
-   return t
+   return t, ch
 end
 
 if utf8.sub == nil then
@@ -137,6 +139,10 @@ function utf8.wide_sub(t, i, j)
       end
       i = i - len
       j = j - len
+   end
+
+   if not (start and finish) then
+      return t
    end
 
    return string.sub(t, start, finish)
