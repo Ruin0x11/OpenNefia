@@ -1245,13 +1245,15 @@ data:add {
 
    cast = function(self, params)
       local source = params.source
-      local target = params.target
       local map = params.source:current_map()
 
       Gui.mes_c("magic.swarm", "Blue")
 
       local filter = function(chara)
-         if not Chara.is_alive(chara) or chara:is_in_same_party(source) then
+         if not Chara.is_alive(chara)
+            or chara == source
+            or chara:is_in_same_party(source)
+         then
             return false
          end
 
@@ -1272,7 +1274,7 @@ data:add {
          ElonaAction.melee_attack(source, chara)
       end
 
-      Chara.iter():filter(filter):each(melee)
+      Chara.iter(map):filter(filter):each(melee)
 
       return true
    end

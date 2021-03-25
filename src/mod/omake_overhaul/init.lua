@@ -26,3 +26,5 @@ data:add_multi(
       },
    }
 )
+
+require("mod.omake_overhaul.data.init")

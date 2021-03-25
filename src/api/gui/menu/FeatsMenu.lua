@@ -53,8 +53,9 @@ local UiListExt = function(feats_menu)
          return
       end
       if (i - 1) % 2 == 0 then
-         -- TODO gfini 540, 18
-         Draw.filled_rect(x - 1, y, 640, 18, {12, 14, 16, 16})
+         Draw.set_blend_mode("subtract")
+         Draw.filled_rect(x - 1, y, 640, 18, {12, 14, 16})
+         Draw.set_blend_mode("alpha")
       end
       if item.type ~= "can_acquire" then
          return
