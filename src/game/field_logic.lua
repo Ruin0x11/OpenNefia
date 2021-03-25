@@ -18,6 +18,7 @@ local chara_make = require("game.chara_make")
 local Save = require("api.Save")
 local field_logic_state = require("internal.global.field_logic_state")
 local fs = require("util.fs")
+local SaveFs = require("api.SaveFs")
 
 local DeathMenu = require("api.gui.menu.DeathMenu")
 
@@ -40,6 +41,12 @@ function field_logic.setup_new_game(player, save_id)
    if string.len(save_id) == 0 then
       error("Save ID must be greater than 0 characters in length.")
    end
+
+   local path = SaveFs.save_path("", "save", save_id)
+   if fs.exists(path) then
+      error(("Save '%s' already exists."):format(save_id))
+   end
+
    config.base._save_id = fs.sanitize(save_id)
    scenario:on_game_start(player)
    assert(Map.current(), "Scenario must set the current map")
@@ -84,8 +91,14 @@ function field_logic.quickstart()
       error(err)
    end
 
+   local save_id = "quickstart"
+   local path = SaveFs.save_path("", "save", save_id)
+   if fs.exists(path) then
+      fs.remove(path)
+   end
+
    local me = err
-   field_logic.setup_new_game(me, "quickstart")
+   field_logic.setup_new_game(me, save_id)
 
    Gui.mes("Quickstarted game.")
 end
