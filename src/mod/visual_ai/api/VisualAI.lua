@@ -223,7 +223,7 @@ function VisualAI.run(chara, plan)
    if #errors > 0 then
       local concat = function(acc, t) return (acc and (acc .. "  ") or "  ") .. ("(%d,%d): %s\n"):format(t.x, t.y, t.message) end
       local error_text = fun.iter(errors):foldl(concat)
-      error(("Plan has %d errors:\n%s"):format(#errors, error_text))
+      return false, (("Plan has %d errors:\n%s"):format(#errors, error_text))
    end
 
    if ext.stored_target and not target_filter_in_fov.filter(nil, chara, ext.stored_target) then
@@ -249,6 +249,8 @@ function VisualAI.run(chara, plan)
    -- elseif is_position(target) then
    --    chara.target_location = { x = target.x, y = target.y }
    -- end
+
+   return true, nil
 end
 
 function VisualAI.set_plan(chara, plan)

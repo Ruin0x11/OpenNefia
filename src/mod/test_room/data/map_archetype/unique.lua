@@ -49,7 +49,9 @@ data:add(arc)
 
 local putit_room = {
    _type = "base.map_archetype",
-   _id = "putit_room"
+   _id = "putit_room",
+
+   starting_pos = MapEntrance.stairs_up
 }
 
 function putit_room.on_map_loaded_events(map)

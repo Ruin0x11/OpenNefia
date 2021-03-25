@@ -66,7 +66,7 @@ end
 
 local bigIntSupport = false
 local isInteger
-if math.type then -- Detect Lua 5.3
+if _VERSION == "Lua 5.3" then -- Detect Lua 5.3
     local mtype = math.type
     bigIntSupport = loadstring[[
     local char = string.char

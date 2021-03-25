@@ -9,6 +9,7 @@ local World = require("api.World")
 local Ui = require("api.Ui")
 local Enum = require("api.Enum")
 local Skill = require("mod.elona_sys.api.Skill")
+local Const = require("api.Const")
 
 local function proc_sandbag(chara)
    -- >>>>>>>> shade2/chara_func.hsp:1499 		if cBit(cSandBag,tc):cHp(tc)=cMhp(tc) ..
@@ -162,3 +163,26 @@ local function proc_item_eaten_is_spiked_with_love_potion(food, params, result)
    -- <<<<<<<< shade2/item.hsp:1163 	} ..
 end
 Event.register("elona_sys.on_item_eat", "Proc is spiked with love potion eating effect", proc_item_eaten_is_spiked_with_love_potion, { priority = 130000 })
+
+local function make_bed_useable(item)
+   if item:has_category("elona.furniture_bed") then
+      item.can_use = true
+   end
+end
+Event.register("base.on_item_instantiated", "Make bed useable", make_bed_useable)
+
+local function use_bed(item, params)
+   -- >>>>>>>> shade2/action.hsp:1732 	if iTypeMinor(ci)=fltBed{ ...
+   if not item:has_category("elona.furniture_bed") then
+      return
+   end
+   -- <<<<<<<< shade2/action.hsp:1735 		} ..
+
+   if save.elona_sys.awake_hours < Const.SLEEP_THRESHOLD_LIGHT then
+      Gui.mes("action.use.not_sleepy")
+      return "player_turn_query"
+   end
+
+   params.chara:start_activity("elona.preparing_to_sleep", { bed = item })
+end
+Event.register("elona_sys.on_item_use", "Use bed", use_bed, { priority = 200000 })

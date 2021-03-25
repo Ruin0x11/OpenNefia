@@ -127,7 +127,7 @@ function VisualAIBlockList:select_block(block_id)
 end
 
 function VisualAIBlockList:change_category(index, delta)
-   Gui.play_sound("base.cursor1")
+   Gui.play_sound("base.pop1")
    local category_idx = math.wrap(self.category_idx + delta, 1, #CATEGORIES+1)
    self:set_category(category_idx)
 end

@@ -475,8 +475,8 @@ function Skill.gain_level(chara, show_message)
       skill_bonus = skill_bonus + chara:trait_level("elona.perm_skill_point")
    end
 
-   chara.skill_bonus = chara.skill_bonus + skill_bonus
-   chara.total_skill_bonus = chara.total_skill_bonus + skill_bonus
+   chara.skill_bonus = math.floor(chara.skill_bonus + skill_bonus)
+   chara.total_skill_bonus = math.floor(chara.total_skill_bonus + skill_bonus)
 
    if chara:has_trait("elona.perm_chaos_shape") then
       if chara.level < 37 and chara.level % 3 == 0 and chara.max_level < chara.level then
@@ -871,10 +871,14 @@ function Skill.apply_race_params(chara, race_id)
    if race_data.age_min or race_data.age_max then
       chara.age = Rand.between(race_data.age_min or 1, race_data.age_max or 1)
    end
-   if Rand.percent_chance(race_data.male_ratio or 50) then
-      chara.gender = "male"
+   if chara.proto.gender == nil then
+      if Rand.percent_chance(race_data.male_ratio or 50) then
+         chara.gender = "male"
+      else
+         chara.gender = "female"
+      end
    else
-      chara.gender = "female"
+      chara.gender = chara.proto.gender
    end
 
    -- >>>>>>>> shade2/chara.hsp:518 	cHeight(rc)=cHeight(rc) + rnd(cHeight(rc)/5+1) -  ...

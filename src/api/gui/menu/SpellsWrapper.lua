@@ -62,9 +62,9 @@ function SpellsWrapper:next_menu()
       self.selected_index = 1
    end
 
-   Gui.play_sound("base.pop1")
-
    self:switch_context()
+
+   Gui.play_sound(self.menus[self.selected_index].sound)
 end
 
 function SpellsWrapper:previous_menu()

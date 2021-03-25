@@ -59,7 +59,7 @@ data:add {
       end
 
       for _, chara in Chara.iter():filter(filter) do
-         Gui.mes_visible("magic.gravity", chara.x, chara.y)
+         Gui.mes_visible("magic.gravity", chara.x, chara.y, chara)
          chara:apply_effect("elona.gravity", 100 + Rand.rnd(100))
       end
 
@@ -95,7 +95,10 @@ data:add {
       local target = params.target
       local map = params.source:current_map()
 
-      if not source:is_player() or target:is_in_player_party() then
+      if not source:is_player()
+         or source:is_party_leader_of(target)
+         or target:relation_towards(source) >= Enum.Relation.Ally
+      then
          Gui.mes("common.nothing_happens")
          return true, { obvious = false }
       end
@@ -110,14 +113,14 @@ data:add {
 
       -- TODO item: monster heart
 
-      local success = Rand.rnd(params.power / 15 + 5) < target:calc("level")
+      local success = Rand.rnd(params.power / 15 + 5) >= target:calc("level")
 
       if target:calc("quality") >= Enum.Quality.Good then
-         Gui.mes("magic.domination.cannot_be_charmed")
+         Gui.mes("magic.domination.cannot_be_charmed", target)
       elseif success then
          source:recruit_as_ally(target)
       else
-         Gui.mes("magic.common.resists")
+         Gui.mes("magic.common.resists", target)
       end
 
       return true
@@ -337,8 +340,8 @@ data:add {
       Gui.mes("magic.four_dimensional_pocket")
 
       local pocket = Inventory.get_or_create("elona.four_dimensional_pocket")
-      pocket:set_max_size(math.clamp(math.floor(params.power / 10 + 10), 10, 300))
-      pocket.max_weight = params.power * 100
+      pocket:set_max_capacity(math.clamp(math.floor(params.power / 10 + 10), 10, 300))
+      pocket:set_max_item_weight(params.power * 100)
 
       Input.query_inventory(source, "elona.inv_get_four_dimensional_pocket", { container = pocket }, "elona.container_four_dimensional_pocket")
 
@@ -410,7 +413,7 @@ data:add {
       local default_tile = MapTileset.get_default_tile("elona.mapgen_tunnel", map)
 
       local reveal = function(x, y, map)
-         map:memorize_tile(x, y, "tile")
+         map:reveal_tile(x, y)
       end
       local forget = function(x, y, map)
          map:reveal_tile(x, y, default_tile)

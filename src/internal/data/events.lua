@@ -97,6 +97,8 @@ data:add_multi(
       { _id = "on_set_player" },
       { _id = "on_startup" },
       { _id = "on_get_item" },
+      { _id = "after_container_receive_item" },
+      { _id = "after_container_provide_item" },
       { _id = "on_log_message" },
       { _id = "on_player_turn" },
       { _id = "on_heal_chara_hp", },

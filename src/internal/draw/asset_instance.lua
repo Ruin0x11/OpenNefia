@@ -167,7 +167,7 @@ function asset_instance:draw_bar(x, y, width, region)
    end
 end
 
-function asset_instance:draw_percentage_bar(x, y, width)
+function asset_instance:draw_percentage_bar(x, y, width, draw_width, draw_height)
    local iw = self.asset:get_width()
    local ih = self.asset:get_height()
 
@@ -177,7 +177,7 @@ function asset_instance:draw_percentage_bar(x, y, width)
       self.bar_quad:setViewport(iw - width, 0, last_width, ih)
    end
 
-   Draw.image_region(self.asset.image, self.bar_quad, x, y)
+   Draw.image_region(self.asset.image, self.bar_quad, x, y, draw_width, draw_height)
 end
 
 function asset_instance:release()

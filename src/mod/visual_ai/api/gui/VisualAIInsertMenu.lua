@@ -85,13 +85,17 @@ local function make_var_defs(block)
 end
 
 function VisualAIInsertMenu:update(dt)
-   if self.list.changed then
+   local changed = self.list.changed
+   local canceled = self.canceled
+
+   local chosen = self.list:update(dt)
+   self.win:update(dt)
+   self.category_win:update(dt)
+   self.canceled = false
+
+   if changed then
       self.category_text = I18N.get("visual_ai.gui.menu.category", "visual_ai.gui.category." .. self.list.category)
    end
-
-   self.win:update(dt)
-   local chosen = self.list:update(dt)
-   self.category_win:update(dt)
 
    if chosen then
       Gui.play_sound("base.ok1")
@@ -107,7 +111,7 @@ function VisualAIInsertMenu:update(dt)
          return { last_category = chosen.last_category, block = block }, nil
       end
    end
-   if self.canceled then
+   if canceled then
       return { last_category = self.list.category }, "canceled"
    end
 end

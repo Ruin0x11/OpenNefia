@@ -108,7 +108,7 @@ end
 -- Autoexplore functionality
 --
 
-function Autoexplore.do_travel(player)
+function Autoexplore.do_travel(_, player)
    Gui.mes("autoexplore.travel.prompt")
    local dest_x, dest_y = Input.query_position()
    if dest_x then
@@ -134,7 +134,7 @@ function Autoexplore.do_travel(player)
    return "player_turn_query"
 end
 
-function Autoexplore.do_autoexplore(player)
+function Autoexplore.do_autoexplore(_, player)
    if Map.is_world_map() then
       Gui.mes("autoexplore.explore.cannot_in_overworld")
       Autoexplore.stop()

@@ -157,11 +157,11 @@ end
 function IEventEmitter:connect_self(event_id, name, cb, opts, global_events, force)
    data["base.event"]:ensure(event_id)
 
-   register_global_handler_if_needed(self, event_id, global_events)
-
    if self:has_event_handler(event_id, name) and force then
       self:disconnect_self(event_id, name)
    end
+
+   register_global_handler_if_needed(self, event_id, global_events)
 
    self._events:register(event_id, name, cb, opts)
 end

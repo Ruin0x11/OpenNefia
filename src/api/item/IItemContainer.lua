@@ -1,7 +1,7 @@
-local ILocation = require("api.ILocation")
+local IContainer = require("api.IContainer")
 local Inventory = require("api.Inventory")
 
-local IItemContainer = class.interface("IItemContainer", {}, {ILocation})
+local IItemContainer = class.interface("IItemContainer", {}, {IContainer})
 
 function IItemContainer:init()
 end
@@ -9,7 +9,7 @@ end
 function IItemContainer:build()
    local container_params = self.proto.container_params
    if container_params and container_params.type == "local" then
-      self.inv = Inventory:new(nil, "base.item", self)
+      self.inv = Inventory:new(container_params.max_capacity or nil, "base.item", self)
    end
 end
 
@@ -65,7 +65,7 @@ function IItemContainer:is_in_bounds(x, y)
 end
 
 function IItemContainer:can_take_object(obj)
-   return self:is_item_container()
+   return self:is_item_container() and not self.inv:is_full()
 end
 
 function IItemContainer:take_object(obj)
@@ -83,5 +83,36 @@ function IItemContainer:iter()
    return self.inv:iter()
 end
 
+--
+-- IContainer impl
+--
+
+function IItemContainer:get_max_capacity(max_capacity)
+   if not self:is_item_container() then
+      return nil
+   end
+   return self.inv:get_max_capacity()
+end
+
+function IItemContainer:set_max_capacity(max_capacity)
+   if not self:is_item_container() then
+      return
+   end
+   self.inv:set_max_capacity(max_capacity)
+end
+
+function IItemContainer:get_max_item_weight(max_capacity)
+   if not self:is_item_container() then
+      return nil
+   end
+   return self.inv:get_max_item_weight()
+end
+
+function IItemContainer:set_max_item_weight(max_weight)
+   if not self:is_item_container() then
+      return
+   end
+   self.inv:set_max_item_weight(max_weight)
+end
 
 return IItemContainer

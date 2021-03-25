@@ -253,7 +253,7 @@ data:add {
    -- <<<<<<<< shade2/proc.hsp:57 		if feat(1)=objREspring	:s=lang("泉は干上がった。","The s ..
 
    -- >>>>>>>> shade2/action.hsp:765 			if feat(1)=objREspring		:txt lang("泉がある。","You  ...
-   on_stepped_on_text = "action.move.feature.material.remains"
+   on_stepped_on_text = "action.move.feature.material.spring"
    -- <<<<<<<< shade2/action.hsp:765 			if feat(1)=objREspring		:txt lang("泉がある。","You  ..
 }
 

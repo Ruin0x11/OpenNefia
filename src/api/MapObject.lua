@@ -239,6 +239,7 @@ function MapObject.clone(obj, owned, uid_tracker, cache, uid_mapping, opts)
    end
 
    Event.trigger("base.on_object_cloned", {object=obj, type="full", owned=owned})
+   obj:instantiate()
 
    return new_object
 end

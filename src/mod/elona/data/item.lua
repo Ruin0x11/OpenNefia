@@ -2250,7 +2250,6 @@ local item =
          image = "elona.item_bed",
          value = 1400,
          weight = 15000,
-         on_use = function() end,
          level = 5,
          category = 60000,
          subcategory = 60004,
@@ -3779,7 +3778,6 @@ local item =
          image = "elona.item_bunk_bed",
          value = 2200,
          weight = 12400,
-         on_use = function() end,
          level = 5,
          category = 60000,
          subcategory = 60004,
@@ -6541,7 +6539,6 @@ local item =
          image = "elona.item_luxury_bed",
          value = 4500,
          weight = 17500,
-         on_use = function() end,
          level = 15,
          category = 60000,
          subcategory = 60004,
@@ -6636,7 +6633,6 @@ local item =
          image = "elona.item_giant_bed",
          value = 3800,
          weight = 15000,
-         on_use = function() end,
          level = 12,
          category = 60000,
          subcategory = 60004,
@@ -6656,7 +6652,6 @@ local item =
          image = "elona.item_plain_bed",
          value = 1200,
          weight = 13000,
-         on_use = function() end,
          category = 60000,
          subcategory = 60004,
          coefficient = 100,
@@ -6674,7 +6669,6 @@ local item =
          image = "elona.item_coffin",
          value = 2400,
          weight = 8900,
-         on_use = function() end,
          level = 18,
          category = 60000,
          subcategory = 60004,
@@ -6716,7 +6710,6 @@ local item =
          image = "elona.item_soft_bed",
          value = 2200,
          weight = 12000,
-         on_use = function() end,
          category = 60000,
          subcategory = 60004,
          rarity = 200000,
@@ -6767,7 +6760,6 @@ local item =
          image = "elona.item_clean_bed",
          value = 1500,
          weight = 9500,
-         on_use = function() end,
          category = 60000,
          subcategory = 60004,
          rarity = 500000,
@@ -6907,7 +6899,6 @@ local item =
          image = "elona.item_cheap_bed",
          value = 880,
          weight = 2800,
-         on_use = function() end,
          category = 60000,
          subcategory = 60004,
          rarity = 600000,
@@ -6999,7 +6990,6 @@ local item =
          image = "elona.item_comfortable_bed",
          value = 2800,
          weight = 10000,
-         on_use = function() end,
          level = 9,
          category = 60000,
          subcategory = 60004,
@@ -7872,7 +7862,7 @@ local item =
             -- Only allow taking, not putting. (provide "nil" to inventory group ID)
             Gui.play_sound("base.chest1")
             assert(self:is_item_container())
-            Input.query_inventory(chara, "elona.inv_get_container", { container = self, params={query_leftover=true} }, nil)
+            Input.query_inventory(chara, "elona.inv_take_container", { container = self, params={query_leftover=true} }, nil)
 
             return "turn_end"
             -- <<<<<<<< shade2/action.hsp:894 		} ..
@@ -9530,7 +9520,6 @@ local item =
          image = "elona.item_sleeping_bag",
          value = 800,
          weight = 2400,
-         on_use = function() end,
          category = 59000,
          subcategory = 60004,
          coefficient = 0,
@@ -11266,7 +11255,7 @@ local item =
          value = 8000,
          weight = 380,
          on_read = function(self, params)
-            return ElonaMagic.read_scroll(self, {{ _id = "elona.gain_younger_sister", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_younger_sister", power = 100 }}, params)
          end,
          level = 5,
          category = 55000,
@@ -12196,7 +12185,7 @@ local item =
          on_open = function(self, params)
             -- >>>>>>>> shade2/action.hsp:896 	if iId(ci)=idTaxBox  :invCtrl=24,2:snd seInv:goto ...
             local inv = Inventory.get_or_create("elona.salary_chest")
-            Input.query_inventory(params.chara, "elona.inv_get_container", { container = inv }, nil)
+            Input.query_inventory(params.chara, "elona.inv_take_container", { container = inv }, nil)
 
             return "turn_end"
             -- <<<<<<<< shade2/action.hsp:896 	if iId(ci)=idTaxBox  :invCtrl=24,2:snd seInv:goto ..
@@ -12600,7 +12589,7 @@ local item =
          on_open = function(self, params)
             -- >>>>>>>> shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ...
             local inv = Inventory.get_or_create("elona.shop_strongbox")
-            Input.query_inventory(params.chara, "elona.inv_get_container", { container = inv }, nil)
+            Input.query_inventory(params.chara, "elona.inv_take_container", { container = inv }, nil)
 
             return "turn_end"
             -- <<<<<<<< shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ..
@@ -12720,7 +12709,7 @@ local item =
          random_color = "Random",
 
          on_zap = function(self, params)
-            return ElonaMagic.zap_wand(self, "elona.spell_acid_ground", 100, params)
+            return ElonaMagic.zap_wand(self, "elona.acid_ground", 100, params)
          end,
          on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -13085,9 +13074,44 @@ local item =
          rarity = 50000,
          coefficient = 100,
 
+         on_open = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:932 			if invFile=roleFileFreezer : invContainer=15:el ...
+            local inv = Inventory.get_or_create("elona.freezer")
+            inv:set_max_capacity(15)
+            Input.query_inventory(params.chara, "elona.inv_take_food_container", { params = { container_item = self }, container = inv }, "elona.food_container")
+            -- <<<<<<<< shade2/action.hsp:932 			if invFile=roleFileFreezer : invContainer=15:el ..
+
+            return "turn_end"
+         end,
+
          categories = {
             "elona.container",
             "elona.no_generate"
+         },
+
+         events = {
+            {
+               id = "base.after_container_receive_item",
+               name = "Reset spoilage date",
+
+               callback = function(self, params)
+                  local item = params.item
+                  if item.spoilage_date and item.spoilage_date >= 0 and item.spoilage_hours then
+                     item.spoilage_date = 0
+                  end
+               end
+            },
+            {
+               id = "base.after_container_provide_item",
+               name = "Reset spoilage date",
+
+               callback = function(self, params)
+                  local item = params.item
+                  if (item.spoilage_date or 0) >= 0 and item.spoilage_hours then
+                     item.spoilage_date = World.date_hours() + item.spoilage_hours
+                  end
+               end
+            },
          }
       },
       {
@@ -13753,7 +13777,6 @@ local item =
          image = "elona.item_kings_bed",
          value = 35000,
          weight = 24000,
-         on_use = function() end,
          level = 50,
          category = 60000,
          subcategory = 60004,
@@ -14049,7 +14072,7 @@ local item =
          value = 15000,
          weight = 380,
          on_read = function(self, params)
-            return ElonaMagic.read_scroll(self, {{ _id = "elona.gain_cat_sister", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_cat_sister", power = 100 }}, params)
          end,
          level = 15,
          category = 55000,
@@ -14074,7 +14097,7 @@ local item =
          value = 10000,
          weight = 380,
          on_read = function(self, params)
-            return ElonaMagic.read_scroll(self, {{ _id = "elona.gain_young_lady", power = 100 }}, params)
+            return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_young_lady", power = 100 }}, params)
          end,
          level = 5,
          category = 55000,
@@ -14536,14 +14559,51 @@ local item =
          rarity = 50000,
          coefficient = 100,
 
+         container_params = {
+            type = "local",
+            max_capacity = 4,
+            combine_weight = true
+         },
+
+         on_open = function(self, params)
+            Input.query_inventory(params.chara, "elona.inv_take_food_container", { params = { container_item = self }, container = self.inv }, "elona.food_container")
+
+            return "player_turn_query"
+         end,
+
          is_precious = true,
          quality = Enum.Quality.Unique,
 
-         cannot_use_flight_on = true,
+         can_use_flight_on = false,
 
          categories = {
             "elona.container",
             "elona.unique_item"
+         },
+
+         events = {
+            {
+               id = "base.after_container_receive_item",
+               name = "Reset spoilage date",
+
+               callback = function(self, params)
+                  local item = params.item
+                  if item.spoilage_date and item.spoilage_date >= 0 and item.spoilage_hours then
+                     item.spoilage_date = 0
+                  end
+               end
+            },
+            {
+               id = "base.after_container_provide_item",
+               name = "Reset spoilage date",
+
+               callback = function(self, params)
+                  local item = params.item
+                  if (item.spoilage_date or 0) >= 0 and item.spoilage_hours then
+                     item.spoilage_date = World.date_hours() + item.spoilage_hours
+                  end
+               end
+            },
          }
       },
       {
@@ -14564,7 +14624,6 @@ local item =
          image = "elona.item_eastern_bed",
          value = 2500,
          weight = 2000,
-         on_use = function() end,
          category = 59000,
          subcategory = 60004,
          rarity = 200000,
@@ -14738,7 +14797,6 @@ local item =
          image = "elona.item_luxury_bed",
          value = 7500,
          weight = 16000,
-         on_use = function() end,
          level = 40,
          category = 60000,
          subcategory = 60004,
@@ -16674,7 +16732,6 @@ local item =
          image = "elona.item_luxury_bed",
          value = 25000,
          weight = 31000,
-         on_use = function() end,
          level = 45,
          category = 60000,
          subcategory = 60004,
@@ -18078,7 +18135,6 @@ local item =
          image = "elona.item_jures_body_pillow",
          value = 250,
          weight = 800,
-         on_use = function() end,
          level = 5,
          fltselect = 1,
          category = 60000,
