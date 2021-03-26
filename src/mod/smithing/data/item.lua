@@ -37,7 +37,7 @@ data:add {
 
          callback = function(item, params, result)
             if item:calc("identify_state") >= Enum.IdentifyState.Quality then
-               local exp_perc = (item.params.hammer_experience * 100.0) / Calc.calc_living_weapon_required_exp(item.params.hammer_level)
+               local exp_perc = (item.params.hammer_experience * 100.0) / Smithing.calc_hammer_required_exp(item)
                exp_perc = ("%3.6f"):format(exp_perc):sub(1, 6)
                local text = ("[Lv: %d Exp: %s%%]"):format(item.params.hammer_level, string.right_pad(tostring(exp_perc), 6))
                table.insert(result, { text = text, icon = 7 })

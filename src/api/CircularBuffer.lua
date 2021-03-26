@@ -82,7 +82,7 @@ function CircularBuffer:__len()
     return #(self.history)
 end
 
-function CircularBuffer:init(max_length)
+function CircularBuffer:init(max_length, initial_value)
     if type(max_length) ~= 'number' or max_length <= 1 then
         error("Buffer length must be greater than 1")
     end
@@ -90,10 +90,12 @@ function CircularBuffer:init(max_length)
     self.history = {}
     self.oldest = 1
     self.max_length = max_length
-    self.push = CircularBuffer.push
-    self.filled = CircularBuffer.filled
-    self.len = CircularBuffer.len
-    self.clear = CircularBuffer.clear
+
+    if initial_value then
+       for _ = 1, self.max_length do
+          self:push(initial_value)
+       end
+    end
 end
 
 return CircularBuffer

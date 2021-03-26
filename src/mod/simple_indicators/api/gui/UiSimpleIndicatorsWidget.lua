@@ -26,13 +26,21 @@ function UiSimpleIndicatorsWidget:set_data(player)
 
    for _, proto in data["simple_indicators.indicator"]:iter() do
       if not global.disabled_indicators[proto._id] then
-         local ind = {
-            ordering = proto.ordering or 100000,
-            text = proto.render(player)
-         }
-         self.indicators[#self.indicators + 1] = ind
+         local text = proto.render(player)
+         if text ~= nil then
+            local ind = {
+               ordering = proto.ordering or 100000,
+               text = tostring(text)
+            }
+            self.indicators[#self.indicators + 1] = ind
+         end
       end
    end
+
+   Draw.set_font(13)
+   local th = Draw.text_height()
+   self.height = #self.indicators * th
+   self.y = Gui.message_window_y() - 30 - self.height
 
    table.sort(self.indicators, function(a, b) return a.ordering < b.ordering end)
 end
