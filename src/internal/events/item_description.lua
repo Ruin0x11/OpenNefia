@@ -53,7 +53,7 @@ local quality_info = {
    },
    {
       pred = function(i)
-         return i:calc("is_alive")
+         return i:calc("is_living")
       end,
       desc = function(i)
          -- TODO living weapon
@@ -77,7 +77,7 @@ local quality_info = {
    },
    {
       pred = function(i)
-         return i:calc("is_alive") and config.base.development_mode
+         return i:calc("is_living") and config.base.development_mode
       end,
       desc = function(i)
          -- TODO living weapon
