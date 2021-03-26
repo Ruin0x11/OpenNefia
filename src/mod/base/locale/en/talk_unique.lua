@@ -244,7 +244,7 @@ end,
           you_receive = "You receive a key of Lesimas 17th level. Your journal has been updated."
         }
       },
-      garok = {
+      garokk = {
         dialog = "Don't you see I'm busy!"
       },
       gilbert = {
@@ -669,7 +669,7 @@ end,
           small_medals = "I have some small medals.",
           upgrade_cart = "Can you upgrade my cart?"
         },
-        dialog = "Oh oh, what we got, talk about rare! A traveler? I would have given you a feast if it were not Garok that handles today's dinner. You know, his cooking is as loutish as his creations. Oh well, you've come all the way here, what can I do for you?",
+        dialog = "Oh oh, what we got, talk about rare! A traveler? I would have given you a feast if it were not Garokk that handles today's dinner. You know, his cooking is as loutish as his creations. Oh well, you've come all the way here, what can I do for you?",
         small_medals = "Ho ho ho! You got small medals! Let me see, let me see! Would you like to trade them for one of my proud works?",
         upgrade_cart = {
           choices = {

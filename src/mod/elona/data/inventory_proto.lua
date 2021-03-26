@@ -1442,6 +1442,14 @@ local inv_buy_small_medals = {
       return Calc.calc_item_medal_value(a.item) < Calc.calc_item_medal_value(b.item)
    end,
 
+   on_query = function(ctxt)
+      -- >>>>>>>> shade2/command.hsp:3477 		if invCtrl=28{ ...
+      local medals = ElonaItem.find_small_medals(ctxt.chara)
+      local medal_amount = medals and medals.amount or 0
+      Gui.mes("ui.inv.trade_medals.medals", medal_amount)
+      -- <<<<<<<< shade2/command.hsp:3481 			} ..
+   end,
+
    can_select = function(ctxt, item)
       if not can_take(item) then
          return "turn_end"
