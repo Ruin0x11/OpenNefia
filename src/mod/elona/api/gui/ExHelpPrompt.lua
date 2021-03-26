@@ -96,7 +96,7 @@ function ExHelpPrompt:relayout(x, y, width, height)
    self.more_prompt:relayout(self.x + self.width - 140, self.y + self.height - 1)
    -- <<<<<<<< shade2/init.hsp:3898 	return ..
 
-   self.text:relayout(self.x + 120, self.y + 55, self.width - 160, self.height - 55)
+   self.text:relayout(self.x + 120, self.y + 55, self.width - 158, self.height - 55)
    self.text:set_shadow(self.t.elona.ex_help_text_shadow_color)
 end
 

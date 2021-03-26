@@ -151,9 +151,11 @@ function UiHelpMarkup.parse_elona_markup(text, width, color, font_size)
          append = false
       elseif c == "\n" then
          append = false
-         x = 0
-         y = y + font_size + 2
-         push_result(x, y)
+         if current_text ~= "" then
+            x = 0
+            y = y + font_size + 2
+            push_result(x, y)
+         end
       end
 
       if append then
