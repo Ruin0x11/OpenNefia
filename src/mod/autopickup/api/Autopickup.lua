@@ -50,7 +50,6 @@ function Autopickup.compile_rule(rule)
       end
       op = VALID_OPS[ch]
    end
-   print(inspect(ops))
 
    local going = true
    while going do

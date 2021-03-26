@@ -100,7 +100,7 @@ data:add {
       -- <<<<<<<< shade2/chat.hsp:2588 		if chatVal!1:buff=strKidding:goto *chat_default ..
       attack = function(t)
          -- >>>>>>>> shade2/chat.hsp:2590 		goHostile ...
-         Effect.turn_guards_hostile(t.speaker:current_map())
+         Effect.turn_guards_hostile(Chara.player())
          return "__END__"
          -- <<<<<<<< shade2/chat.hsp:2591 		goto *chat_end ..
       end

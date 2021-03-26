@@ -2,8 +2,8 @@ local data = require("internal.data")
 local draw = require("internal.draw")
 local config = require("internal.config")
 local Log = require("api.Log")
-local Draw = require("api.Draw")
 local startup = require("game.startup")
+local ISoundHolder = require("api.ISoundHolder")
 
 data:add_multi(
    "base.config_option",
@@ -245,7 +245,16 @@ data:add_multi(
          _id = "positional_audio",
 
          type = "boolean",
-         default = false
+         default = false,
+
+         on_changed = function()
+            local field = require("game.field")
+            if field.is_active then
+               for _, obj in field.map:iter() do
+                  ISoundHolder.on_set_location(obj, obj.location)
+               end
+            end
+         end
       }
    }
 )

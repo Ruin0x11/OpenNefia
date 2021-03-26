@@ -54,7 +54,7 @@ function IItem:build(params)
 end
 
 function IItem:instantiate()
-   IObject.instantiate(self)
+   IMapObject.instantiate(self)
    self:emit("base.on_item_instantiated")
 end
 

@@ -7,7 +7,7 @@
 --- @module Map
 local object = require("internal.object")
 local Event = require("api.Event")
-
+local ISoundHolder = require("api.ISoundHolder")
 local field = require("game.field")
 local Chara = require("api.Chara")
 local Log = require("api.Log")
@@ -46,7 +46,13 @@ function Map.set_map(map, load_type, prev_x, prev_y)
    save.base.is_first_turn = true
    map:emit("base.on_map_enter", {load_type=load_type,previous_map=field.map,previous_x=prev_x,previous_y=prev_y})
    map.visit_times = map.visit_times + 1
+
    field:set_map(map)
+
+   for _, obj in map:iter() do
+      ISoundHolder.on_set_location(obj, obj.location)
+   end
+
    Gui.update_minimap()
    return field.map
 end

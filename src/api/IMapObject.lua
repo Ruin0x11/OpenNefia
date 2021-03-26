@@ -3,6 +3,7 @@
 local IOwned = require("api.IOwned")
 local IObject = require("api.IObject")
 local IDrawableHolder = require("api.IDrawableHolder")
+local ISoundHolder = require("api.ISoundHolder")
 
 -- An IObject that can be displayed on a tilemap.
 local IMapObject  = class.interface("IMapObject",
@@ -10,10 +11,12 @@ local IMapObject  = class.interface("IMapObject",
                                 uid = "number",
                                 produce_memory = "function"
                              },
-                             {IOwned, IObject, IDrawableHolder})
+                             {IOwned, IObject, IDrawableHolder, ISoundHolder})
 
 function IMapObject:init()
    IObject.init(self)
+   IDrawableHolder.init(self)
+   ISoundHolder.init(self)
 
    -- We make `x` and `y` immutable using `object.__newindex`, to force their
    -- update through IMapObject:set_pos(x, y). This is so positional indexing
@@ -30,9 +33,22 @@ function IMapObject:refresh_cell_on_map()
    end
 end
 
+function IMapObject:instantiate()
+   IObject.instantiate(self)
+   ISoundHolder.instantiate(self)
+end
+
 --- Refreshes this map object.
 function IMapObject:on_refresh()
    self:refresh_cell_on_map()
+end
+
+function IMapObject:on_set_location(old_location)
+   ISoundHolder.on_set_location(self, old_location)
+end
+
+function IMapObject:on_set_pos(old_x, old_y)
+   ISoundHolder.on_set_pos(self, old_x, old_y)
 end
 
 --- Sets the position of this map object.

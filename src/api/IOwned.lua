@@ -3,7 +3,7 @@ local ILocation = require("api.ILocation")
 local IOwned = class.interface("IOwned",
                          {
                             -- location = { type = ILocation, optional = true },
-                            _parent = { type = ILocation, optional = true }
+                            _parent = { type = ILocation, optional = true },
                          })
 
 function IOwned:remove_ownership(no_events)
@@ -15,6 +15,12 @@ function IOwned:remove_ownership(no_events)
       assert(location:remove_object(self))
       assert(self.location == nil)
    end
+end
+
+function IOwned:on_set_location(old_location)
+end
+
+function IOwned:on_set_pos(x, y)
 end
 
 -- Gets the top-level location of this object.

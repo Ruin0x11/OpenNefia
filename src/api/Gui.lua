@@ -528,8 +528,14 @@ end
 --- @see Gui.stop_background_sound
 function Gui.play_background_sound(sound_id, tag, x, y, volume)
    local sound_manager = require("internal.global.global_sound_manager")
+   local coords = draw.get_coords()
 
-   sound_manager:play_looping(tag, sound_id, "sound", x, y, volume)
+   if config.base.positional_audio and x ~= nil and y ~= nil then
+      local sx, sy = coords:tile_to_screen(x, y)
+      sound_manager:play_looping(tag, sound_id, "sound", sx, sy, volume)
+   else
+      sound_manager:play_looping(tag, sound_id, "sound", nil, nil, volume)
+   end
 end
 
 --- Stops playing a sound that was started with
