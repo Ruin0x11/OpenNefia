@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local IUiConsoleRenderer = require("mod.ui_console.api.gui.IUiConsoleRenderer")
+local ConsoleConsts = require("mod.ui_console.api.gui.ConsoleConsts")
 
 local DefaultConsoleRenderer = class.class("DefaultConsoleRenderer", IUiConsoleRenderer)
 
@@ -32,13 +33,21 @@ function DefaultConsoleRenderer:init()
    self.default_bg = 3
 end
 
-function DefaultConsoleRenderer:set_size(width, height, font_size)
+function DefaultConsoleRenderer:relayout(x, y, width, height)
+   self.x = x
+   self.y = y
+   self.width = width
+   self.height = height
+end
+
+function DefaultConsoleRenderer:set_font_size(font_size)
    self.font_size = font_size
+
    Draw.set_font(self.font_size)
    self.char_width = Draw.text_width(" ") + 1
    self.char_height = Draw.text_height() + 1
-   self.width_chars = math.floor(width / self.char_width)
-   self.height_chars = math.floor(height / self.char_height)
+   self.width_chars = math.floor(self.width / self.char_width)
+   self.height_chars = math.floor(self.height / self.char_height)
 
    return self.width_chars, self.height_chars
 end
@@ -49,6 +58,8 @@ function DefaultConsoleRenderer:render_chars(buffer, tiles_dirty)
    local w = self.width_chars
    local h = self.height_chars
 
+   local ATTR_CURSOR = ConsoleConsts.ATTR.CURSOR
+
    local bg = self.default_bg
    local function draw_bg(i)
       local x = (i-1) % w
@@ -57,9 +68,13 @@ function DefaultConsoleRenderer:render_chars(buffer, tiles_dirty)
       local sy = y * ch
 
       local t = buffer[i]
-      if bg ~= t.bg then
-         Draw.set_color(PALETTE[t.bg])
-         bg = t.bg
+      local tbg = t.bg
+      if bit.band(t.attr, ATTR_CURSOR) > 0 then
+         tbg = t.fg
+      end
+      if bg ~= tbg then
+         Draw.set_color(PALETTE[tbg])
+         bg = tbg
       end
       Draw.filled_rect(sx, sy, cw, ch)
    end
@@ -85,9 +100,13 @@ function DefaultConsoleRenderer:render_chars(buffer, tiles_dirty)
       local sy = y * ch
 
       local t = buffer[i]
-      if fg ~= t.fg then
-         Draw.set_color(PALETTE[t.fg])
-         fg = t.fg
+      local tfg = t.fg
+      if bit.band(t.attr, ATTR_CURSOR) > 0 then
+         tfg = t.bg
+      end
+      if fg ~= tfg then
+         Draw.set_color(PALETTE[tfg])
+         fg = tfg
       end
       Draw.text(t.ch, sx, sy)
    end
@@ -103,6 +122,12 @@ function DefaultConsoleRenderer:render_chars(buffer, tiles_dirty)
          draw_fg(i)
       end
    end
+end
+
+function DefaultConsoleRenderer:draw()
+end
+
+function DefaultConsoleRenderer:update()
 end
 
 return DefaultConsoleRenderer

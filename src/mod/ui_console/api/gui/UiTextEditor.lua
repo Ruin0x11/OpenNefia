@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local TextHandler = require("api.gui.TextHandler")
+local ConsoleConsts = require("mod.ui_console.api.gui.ConsoleConsts")
 
 local IInput = require("api.gui.IInput")
 local IUiElement = require("api.gui.IUiElement")
@@ -10,10 +11,10 @@ local UiTextEditor = class.class("UiTextEditor", {IUiElement, IInput})
 
 UiTextEditor:delegate("input", IInput)
 
-function UiTextEditor:init(text, font_size)
+function UiTextEditor:init(text, font_size, renderer)
    text = text or ""
 
-   self.con = UiConsole:new(font_size or 14)
+   self.con = UiConsole:new(font_size or 14, renderer)
 
    self.cursor_x = 0
    self.cursor_y = 0
@@ -38,6 +39,18 @@ function UiTextEditor:make_keymap()
       south = function() self:move_cursor(0, 1) end,
       west = function() self:move_cursor(-1, 0) end,
       east = function() self:move_cursor(1, 0) end,
+      repl_page_up = function()
+         self:move_cursor(0, -self.cursor_y)
+      end,
+      repl_page_down = function()
+         self:move_cursor(0, #self.lines-self.cursor_y-1)
+      end,
+      repl_first_char = function()
+         self:move_cursor(-self.cursor_x, 0)
+      end,
+      repl_last_char = function()
+         self:move_cursor(#self:current_line() - self.cursor_x, 0)
+      end,
       text_entered = function(t)
          self:put_char(t)
       end,
@@ -64,16 +77,32 @@ function UiTextEditor:current_line()
 end
 
 function UiTextEditor:move_cursor(dx, dy)
-   local ch = self.con:get_char(self.cursor_x, self.cursor_y)
-   self.con:put_char(self.cursor_x, self.cursor_y, ch, 1, 3)
+   if self.con:is_in_bounds(self.cursor_x, self.cursor_y) then
+      local ch = self.con:get_char(self.cursor_x, self.cursor_y)
+      self.con:put_char(self.cursor_x, self.cursor_y, ch, 1, 3)
+   end
 
+   local move_to_beginning
+   local move_to_end
+   if self.cursor_y + dy < 0 then
+      move_to_beginning = true
+   elseif self.cursor_y + dy > #self.lines - 1 then
+      move_to_end = true
+   end
    self.cursor_y = math.clamp(self.cursor_y + dy, 0, #self.lines-1)
 
    local line = self:current_line()
+   if move_to_beginning then
+      dx = -self.cursor_x
+   elseif move_to_end then
+      dx = utf8.wide_len(line) - self.cursor_x
+   end
    self.cursor_x = math.clamp(self.cursor_x + dx, 0, utf8.wide_len(line))
 
-   ch = self.con:get_char(self.cursor_x, self.cursor_y)
-   self.con:put_char(self.cursor_x, self.cursor_y, ch, 1, 3)
+   if self.con:is_in_bounds(self.cursor_x, self.cursor_y) then
+      local ch = self.con:get_char(self.cursor_x, self.cursor_y)
+      self.con:put_char(self.cursor_x, self.cursor_y, ch, 1, 3)
+   end
 
    self.frames = 0
 end
@@ -121,7 +150,6 @@ function UiTextEditor:rub_char()
    if self.cursor_x == #line then
       local ch
       line, ch = utf8.pop(line)
-      print(ch)
       dx = ch and -utf8.wide_len(ch)
    elseif self.cursor_x == 1 then
       line = utf8.sub(line, 2)
@@ -183,17 +211,13 @@ function UiTextEditor:update(dt)
    self.frames = self.frames + dt / (config.base.screen_refresh * (16.66 / 1000))
 
    if self.con:is_in_bounds(self.cursor_x, self.cursor_y) then
-      local fg, bg
+      local attr = self.con:get_char_attr(self.cursor_x, self.cursor_y)
       if math.floor(self.frames * 2) % 2 == 0 then
-         fg = 3
-         bg = 1
+         attr = bit.bor(ConsoleConsts.ATTR.CURSOR, attr)
       else
-         fg = 1
-         bg = 3
+         attr = bit.band(bit.bnot(ConsoleConsts.ATTR.CURSOR), attr)
       end
-
-      local ch = self.con:get_char(self.cursor_x, self.cursor_y)
-      self.con:put_char(self.cursor_x, self.cursor_y, ch, fg, bg)
+      self.con:set_char_attr(self.cursor_x, self.cursor_y, attr)
    end
 
    self.con:update(dt)

@@ -73,6 +73,7 @@ Event.register("base.on_hotload_end", "Notify objects in map of prototype hotloa
 end)
 
 local function rebind_ui_layer_keys()
+   -- BUG doesn't work for forwards
    local current = draw.get_current_layer()
    if current and class.is_an(IUiLayer, current.layer) then
       local keymap = current.layer:make_keymap()
