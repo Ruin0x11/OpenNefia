@@ -11,7 +11,7 @@ local function get_fish(chara, fishing_pole)
    local fish = Fishing.create_fish(fish_id, chara)
    if fish then
       Gui.mes("activity.fishing.get", fish:build_name(1))
-      fish:stack()
+      fish:stack(true)
    end
    return fish
    -- <<<<<<<< shade2/proc.hsp:883 	return ..

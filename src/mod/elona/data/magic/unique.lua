@@ -192,7 +192,7 @@ local function do_curse(self, params)
    Gui.play_sound("base.curse3")
    local cb = Anim.load("elona.anim_curse", target.x, target.y)
    Gui.start_draw_callback(cb)
-   item:stack()
+   item:stack(true)
 
    return true
 end
@@ -521,7 +521,7 @@ data:add {
          Gui.mes("ui.inv.identify.need_more_power")
       end
 
-      item:stack()
+      item:stack(true)
 
       return true
    end
@@ -605,7 +605,7 @@ data:add {
          if chance > 0 and params.power >= chance then
             total_uncursed = total_uncursed + 1
             item.curse_state = Enum.CurseState.Normal
-            item:stack()
+            item:stack(true)
          else
             total_resisted = total_resisted + 1
          end

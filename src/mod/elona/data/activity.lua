@@ -1247,7 +1247,7 @@ data:add {
 
             -- TODO: shade2/proc.hsp:3118 ((iId(ci)=idMageBook)&(iParam2(ci)!0))
 
-            self.params.ancient_book:stack()
+            self.params.ancient_book:stack(true)
             -- <<<<<<<< shade2/proc.hsp:1228 		item_stack pc,ci,1 ..
          end
       }
@@ -1662,6 +1662,7 @@ data:add {
                chara.gold = chara.gold + 1
             else
                assert(chara:take_item(sep))
+               sep:stack(true)
                Gui.play_sound(Rand.choice({"base.get1", "base.get2"}), chara.x, chara.y)
             end
             chara:refresh_weight()

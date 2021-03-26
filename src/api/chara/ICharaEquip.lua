@@ -154,6 +154,7 @@ function ICharaEquip:unequip_item(item)
    end
 
    local result = self:take_item(item)
+   item:stack()
    item:refresh()
 
    return result

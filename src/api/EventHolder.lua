@@ -4,8 +4,9 @@ local paths = require("internal.paths")
 local EventTree = require("api.EventTree")
 local Log = require("api.Log")
 local ICloneable = require("api.ICloneable")
+local IComparable = require("api.IComparable")
 
-local EventHolder = class.class("EventHolder", ICloneable)
+local EventHolder = class.class("EventHolder", {ICloneable, IComparable})
 
 EventHolder.DEFAULT_PRIORITY = 100000
 
@@ -281,33 +282,41 @@ function EventHolder:print(event_id)
    return s
 end
 
-function EventHolder:__eq(other)
+local function is_global_callback_runner(id, name)
+   return name == ("Global callback runner (%s)"):format(id)
+end
+
+function EventHolder:compare(other)
    local found = {}
 
    for id, tree in pairs(self.hooks) do
       found[id] = found[id] or {}
       for name, _ in pairs(tree.name_to_ind) do
-         found[id][name] = false
+         if not is_global_callback_runner(id, name) then
+            found[id][name] = false
+         end
       end
    end
 
    for id, tree in pairs(other.hooks) do
       found[id] = found[id] or {}
       for name, _ in pairs(tree.name_to_ind) do
-         if found[id][name] == false then
-            found[id][name] = true
-         else
-            -- A handler was found in the second holder that wasn't
-            -- in the first holder.
-            return false
+         if not is_global_callback_runner(id, name) then
+            if found[id][name] == false then
+               found[id][name] = true
+            else
+               -- A handler was found in the second holder that wasn't
+               -- in the first holder.
+               return false, id, name
+            end
          end
       end
    end
 
-   for _, t in pairs(found) do
-      for _, was_found in pairs(t) do
+   for id, t in pairs(found) do
+      for name, was_found in pairs(t) do
          if was_found == false then
-            return false
+            return false, id, name
          end
       end
    end

@@ -10,11 +10,6 @@ local IEventEmitter = class.interface("IEventEmitter")
 function IEventEmitter:init(events)
    self._events = EventHolder:new()
    self.global_events = EventHolder:new()
-
-   local events = events or (self.proto and self.proto.events)
-   if events then
-      self:connect_self_multiple(events, true)
-   end
 end
 
 function IEventEmitter:on_reload_prototype(old_id)
@@ -29,7 +24,7 @@ function IEventEmitter:on_reload_prototype(old_id)
 
    local events = self.proto and self.proto.events
    if events then
-      Log.debug("Hotloading %d events of %s:%s for object %d", #events, self._type, self._id, self.uid)
+      Log.debug("Loading %d events of %s:%s for object %d", #events, self._type, self._id, self.uid)
       self:connect_self_multiple(events, true)
    end
 end
@@ -207,7 +202,7 @@ function IEventEmitter:connect_global(event_id, name, cb, opts, global_events)
 end
 
 function IEventEmitter:compare_events(other)
-   return self._events == other._events and self.global_events == other.global_events
+   return self._events:compare(other._events)
 end
 
 function IEventEmitter:list_events(event_id)

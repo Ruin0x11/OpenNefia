@@ -65,7 +65,9 @@ function IStackableObject:can_stack_with(other)
    if not class.is_an(IStackableObject, other) then
       return false
    end
-   return self._type == other._type and self.uid ~= other.uid
+   return self._type == other._type
+      and self.uid ~= other.uid
+      and self.location == other.location
 end
 
 --- Stacks this object with other objects in the same location that

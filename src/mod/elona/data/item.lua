@@ -228,6 +228,7 @@ local function open_new_years_gift(self, params)
 
    new_years_gift_effect(sep, params.chara)
    sep.params.chest_item_level = 0
+   sep:stack()
 
    return "turn_end"
    -- <<<<<<<< shade2/action.hsp:961 	} ..
@@ -14056,6 +14057,7 @@ local item =
          coefficient = 100,
 
          is_precious = true,
+         always_stack = true,
 
          tags = { "noshop" },
          rftags = { "ore" },

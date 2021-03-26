@@ -402,9 +402,8 @@ function LootDrops.calc_loot_drops(chara, map, attacker)
       drops[#drops+1] = { _id = "elona.corpse", on_create = LootDrops.make_corpse }
    end
 
-   if false
-      -- or config.base.development_mode
-   then
+   --[[
+   if config.base.development_mode then
       drops[#drops+1] = {
          filter = {
             categories = "elona.remains"
@@ -412,6 +411,7 @@ function LootDrops.calc_loot_drops(chara, map, attacker)
          on_create = LootDrops.make_remains
       }
    end
+   --]]
 
    local rich_loot = chara:calc("rich_loot_amount")
    if rich_loot and rich_loot > 0 then
@@ -455,6 +455,7 @@ function LootDrops.do_drop_loot(chara, map, attacker, drops)
          if drop.on_create then
             drop.on_create(item, chara, attacker)
          end
+         item:stack()
       end
    end
 

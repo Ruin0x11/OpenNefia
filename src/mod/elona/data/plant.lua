@@ -23,7 +23,7 @@ local function generate_item(cb)
 
       local item = Itemgen.create(plant.x, plant.y, filter, params.chara)
       Gui.mes("action.plant.harvest", item:build_name())
-      item:stack()
+      item:stack(true)
    end
 end
 
