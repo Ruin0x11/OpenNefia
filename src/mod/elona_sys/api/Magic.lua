@@ -10,6 +10,8 @@ local Action = require("api.Action")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local Enum = require("api.Enum")
 local Log = require("api.Log")
+local IEventEmitter = require("api.IEventEmitter")
+local Event = require("api.Event")
 
 local Magic = {}
 
@@ -356,10 +358,23 @@ function Magic.cast(id, params)
       end
    end
 
-   local did_something, result = magic:cast(params)
+   local result = { did_something = false, turn_result = nil }
+   local event_params = { magic_params = params, magic = magic }
+   if class.is_an(IEventEmitter, params.source) then
+      params.source:emit("elona_sys.on_cast_magic", event_params, result)
+   else
+      Event.trigger("elona_sys.on_cast_magic", event_params, result)
+   end
 
-   return did_something, result
+   return result.did_something, result.turn_result
 end
+
+local function on_cast_magic(_, params, result)
+   local did_something, turn_result = params.magic:cast(params.magic_params)
+   result.did_something = did_something
+   result.turn_result = turn_result
+end
+Event.register("elona_sys.on_cast_magic", "Cast magic", on_cast_magic, { priority = 100000 })
 
 function Magic.skills_for_magic(magic_id)
    if magic_id == nil then
