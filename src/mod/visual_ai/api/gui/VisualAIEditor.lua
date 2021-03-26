@@ -98,6 +98,8 @@ function VisualAIEditor:insert(split_type)
       return
    end
 
+   Gui.play_sound("base.ok1")
+
    local result, canceled = VisualAIInsertMenu:new("visual_ai.gui.menu.insert_block", self.last_category):query()
    self.last_category = result.last_category
    if canceled then
