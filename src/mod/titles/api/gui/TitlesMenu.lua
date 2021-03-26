@@ -85,7 +85,7 @@ end
 function TitlesMenu:init(chara)
    self.chara = chara
 
-   self.win = UiWindow:new("trait.window.title", true, I18N.get("titles.ui.menu.note"), 55, 40)
+   self.win = UiWindow:new("titles.ui.menu.title", true, I18N.get("titles.ui.menu.note"), 55, 40)
 
    self.data = TitlesMenu.generate_list(self.chara)
 
