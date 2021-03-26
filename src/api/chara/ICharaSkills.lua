@@ -117,6 +117,7 @@ function ICharaSkills:mod_skill_level(skill_id, amount, op)
    if not self:has_skill(skill_id) then
       return
    end
+   self.temp.skills = self.temp.skills or {}
    local result = self:mod("skills", { [skill_id] = { level = math.floor(amount) } }, op)
    local level = self.temp.skills[skill_id].level
    level = math.clamp(level, 0, Const.MAX_SKILL_LEVEL)
@@ -129,6 +130,7 @@ function ICharaSkills:mod_base_skill_level(skill_id, amount, op)
    if not self:has_skill(skill_id) then
       self:set_base_skill(skill_id, 1, 100, 0)
    end
+   self.temp.skills = self.temp.skills or {}
    local result = self:mod_base("skills", { [skill_id] = { level = math.floor(amount) } }, op)
    local level = self.skills[skill_id].level
    level = math.clamp(level, 0, Const.MAX_SKILL_LEVEL)
@@ -141,6 +143,7 @@ function ICharaSkills:mod_skill_potential(skill_id, amount, op)
    if not self:has_skill(skill_id) then
       self:set_base_skill(skill_id, 1, 100, 0)
    end
+   self.temp.skills = self.temp.skills or {}
    local result = self:mod_base("skills", { [skill_id] = { potential = math.floor(amount) } }, op)
    local potential = self.skills[skill_id].potential
    potential = math.clamp(potential, 0, Const.MAX_SKILL_POTENTIAL)
@@ -153,6 +156,7 @@ function ICharaSkills:mod_skill_experience(skill_id, amount, op)
    if not self:has_skill(skill_id) then
       self:set_base_skill(skill_id, 1, 100, 0)
    end
+   self.temp.skills = self.temp.skills or {}
    local result = self:mod_base("skills", { [skill_id] = { experience = math.floor(amount) } }, op)
    local experience = self.skills[skill_id].experience
    experience = math.clamp(experience, 0, Const.MAX_SKILL_EXPERIENCE)
