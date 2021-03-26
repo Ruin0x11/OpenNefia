@@ -403,7 +403,7 @@ data:add
          if area then
             -- >>>>>>>> shade2/action.hsp:758 			if feat(1)=objArea		:txt mapName(feat(2)+feat(3 ...
             if Nefia.get_type(area) then
-               ExHelp.maybe_show("elona.random_dungeon")
+               ExHelp.show("elona.nefia")
             end
             -- <<<<<<<< shade2/action.hsp:758 			if feat(1)=objArea		:txt mapName(feat(2)+feat(3 ..
             Gui.mes(get_map_display_name(area, true))
