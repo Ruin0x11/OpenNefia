@@ -284,7 +284,7 @@ function Effect.modify_corruption(chara, delta)
    if stage_delta > 0 then
       if original_stage == 0 then
          Gui.mes_c("chara.corruption.symptom", "Purple")
-         ExHelp.maybe_show(15)
+         ExHelp.show("elona.ether_disease")
       end
 
       local traits_to_add

@@ -47,7 +47,10 @@ function Map.set_map(map, load_type, prev_x, prev_y)
    map:emit("base.on_map_enter", {load_type=load_type,previous_map=field.map,previous_x=prev_x,previous_y=prev_y})
    map.visit_times = map.visit_times + 1
 
+   local previous_map = field.map
    field:set_map(map)
+
+   map:emit("base.after_map_entered", {load_type=load_type,previous_map=previous_map,previous_x=prev_x,previous_y=prev_y})
 
    for _, obj in map:iter() do
       ISoundHolder.on_set_location(obj, obj.location)

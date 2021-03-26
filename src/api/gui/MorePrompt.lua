@@ -34,7 +34,7 @@ function MorePrompt:make_keymap()
    end
 
    return {
-      shift = proceed,
+      cancel = proceed,
       escape = proceed,
       enter = proceed
    }

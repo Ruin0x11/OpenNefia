@@ -2,6 +2,7 @@ local Material = require("mod.elona.api.Material")
 local Rand = require("api.Rand")
 local Gui = require("api.Gui")
 local Skill = require("mod.elona_sys.api.Skill")
+local ExHelp = require("mod.elona.api.ExHelp")
 
 data:add_type {
    name = "material_spot",
@@ -45,6 +46,10 @@ data:add {
          local mes = try_get_spot_info(self, "on_stepped_on_text") or "action.move.feature.material.spot"
          Gui.mes(mes)
       end
+
+      -- >>>>>>>> shade2/action.hsp:782  			if rangeFeatRE(feat(1)) : help 5 ...
+      ExHelp.show("elona.material_spot")
+      -- <<<<<<<< shade2/action.hsp:782  			if rangeFeatRE(feat(1)) : help 5 ..
    end,
 
    on_search = function(self, params)

@@ -42,12 +42,12 @@ local function hourly_events()
    end
 
    if s.awake_hours >= Const.SLEEP_THRESHOLD_LIGHT then
-      ExHelp.maybe_show(9)
+      ExHelp.show("elona.sleep")
    end
 
    local player = Chara.player()
    if player and player.nutrition < Const.HUNGER_THRESHOLD_NORMAL then
-      ExHelp.maybe_show(10)
+      ExHelp.show("elona.hunger")
    end
    -- <<<<<<<< shade2/main.hsp:636 	if cHunger(pc)<hungerNormal	: help 10 ..
 end
@@ -122,6 +122,8 @@ local function create_income(_, params)
          Gui.mes("misc.tax.no_duty")
       end
    end
+
+   ExHelp.show("elona.salary")
    -- <<<<<<<< shade2/main.hsp:660 		if (gDay=1)or(gDay=15)	:gosub *event_income ..
 end
 Event.register("base.on_day_passed", "create_income", create_income, 200000)

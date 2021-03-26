@@ -326,6 +326,22 @@ local assets = {
       height = 48
    },
    {
+      _id = "deco_help_a",
+      source = "graphic/deco_help.bmp",
+      x = 0,
+      y = 0,
+      width = 48,
+      height = 48
+   },
+   {
+      _id = "deco_help_b",
+      source = "graphic/deco_help.bmp",
+      x = 0,
+      y = 48,
+      width = 96,
+      height = 120
+   },
+   {
       _id = "inventory_icons",
       source = "graphic/interface.bmp",
       x = 288,

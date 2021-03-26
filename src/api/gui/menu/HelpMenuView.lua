@@ -43,8 +43,9 @@ function HelpMenuView:set_data(section)
       if not text then
          text = ("Error: Missing help section '%s'"):format(self.section)
       end
-      local err
-      markup, err = Ui.parse_elona_markup(text.body, self.width - 40)
+      -- TODO
+      local err = true
+      -- markup, err = Ui.parse_elona_markup(text.body, self.width - 40)
       if err then
          markup = { text = ("Invalid markup: %s"):format(err) }
       end

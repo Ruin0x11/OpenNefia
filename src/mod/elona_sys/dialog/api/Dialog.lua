@@ -452,6 +452,11 @@ function Dialog.start(chara, dialog_id)
 
    dialog_id = dialog_id or chara:calc("dialog") or "elona.default"
 
+   local result = chara:emit("elona_sys.on_chara_dialog_start", { dialog_id = dialog_id }, { blocked = false })
+   if result.blocked then
+      return
+   end
+
    local start_node
    local colon_pos = string.find(dialog_id, ":")
    if colon_pos then

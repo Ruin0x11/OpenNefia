@@ -541,11 +541,11 @@ local function show_weather_ex_help(_, params)
    -- >>>>>>>> shade2/main.hsp:615 		if gWeather=weatherHardRain	:help 11 ...
    local id = params.new_weather_id
    if id == "elona.hard_rain" then
-      ExHelp.maybe_show(11)
+      ExHelp.show("elona.bad_weather")
    elseif id == "elona.snow" then
-      ExHelp.maybe_show(12)
+      ExHelp.show("elona.snow")
    elseif id == "elona.etherwind" then
-      ExHelp.maybe_show(13)
+      ExHelp.show("elona.etherwind")
    end
    -- <<<<<<<< shade2/main.hsp:617 		if gWeather=weatherEther	:help 13 ..
 end
