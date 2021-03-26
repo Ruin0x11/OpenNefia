@@ -294,6 +294,10 @@ function Gui.player_is_running()
    return field:player_is_running()
 end
 
+function Gui.is_modifier_held(modifier)
+   return field:is_modifier_held(modifier)
+end
+
 --- @tparam string err
 --- @tparam string msg
 function Gui.report_error(err, msg)
