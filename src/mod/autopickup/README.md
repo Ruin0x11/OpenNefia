@@ -1,3 +1,3 @@
 # autopickup
 
-Describe your mod here.
+Implements the autopickup feature from the omake variants.

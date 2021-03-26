@@ -17,7 +17,7 @@ function ExHelp.show(id, force)
    end
 
    local player = Chara.player()
-   if player:has_activity() and not player:has_activity("elona.traveling") then
+   if not Chara.is_alive(player) or (player:has_activity() and not player:has_activity("elona.traveling")) then
       return
    end
 

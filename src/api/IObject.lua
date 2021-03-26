@@ -52,9 +52,9 @@ function IObject:finalize(build_params)
    end
 end
 
-function IObject:instantiate()
+function IObject:instantiate(no_bind_events)
    if class.is_an(IEventEmitter, self) then
-      self:emit("base.on_object_prototype_changed", {old_id=nil})
+      self:emit("base.on_object_prototype_changed", {old_id=nil,no_bind_events=no_bind_events})
       self:emit("base.on_object_instantiated")
    end
 end

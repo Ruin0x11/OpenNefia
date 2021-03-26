@@ -28,7 +28,7 @@ Event.register("base.on_hotload_end", "Clean up events missing in chunk on hotlo
 
 Event.register("base.on_object_prototype_changed", "reload events for object",
                function(obj, params)
-                  if params.old_id ~= nil and class.is_an(IEventEmitter, obj) then
+                  if not params.no_bind_events and class.is_an(IEventEmitter, obj) then
                      IEventEmitter.on_reload_prototype(obj, params.old_id)
                   end
                end,

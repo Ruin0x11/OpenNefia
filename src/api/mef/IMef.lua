@@ -20,8 +20,8 @@ function IMef:build()
    self:emit("base.on_build_mef")
 end
 
-function IMef:instantiate()
-   IMapObject.instantiate(self)
+function IMef:instantiate(no_bind_events)
+   IMapObject.instantiate(self, no_bind_events)
    self:emit("base.on_mef_instantiated")
 end
 
