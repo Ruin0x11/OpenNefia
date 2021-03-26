@@ -1,6 +1,5 @@
 local IEventEmitter = require("api.IEventEmitter")
 local IMapObject = require("api.IMapObject")
-local IObject = require("api.IObject")
 local IModdable = require("api.IModdable")
 local Mef = require("api.Mef")
 
@@ -22,7 +21,7 @@ function IMef:build()
 end
 
 function IMef:instantiate()
-   IObject.instantiate(self)
+   IMapObject.instantiate(self)
    self:emit("base.on_mef_instantiated")
 end
 

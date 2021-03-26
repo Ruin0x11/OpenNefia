@@ -5667,7 +5667,9 @@ local item =
          categories = {
             "elona.misc_item"
          },
-         light = light.torch
+
+         light = light.torch,
+         ambient_sounds = { "base.bg_fire" },
       },
       {
          _id = "portable_cooking_tool",

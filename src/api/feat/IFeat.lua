@@ -1,6 +1,5 @@
 local IEventEmitter = require("api.IEventEmitter")
 local IMapObject = require("api.IMapObject")
-local IObject = require("api.IObject")
 local IModdable = require("api.IModdable")
 
 -- A feat is anything that is a part of the map with a position. Feats
@@ -22,7 +21,7 @@ end
 
 function IFeat:instantiate()
    self.params = self.params or {}
-   IObject.instantiate(self)
+   IMapObject.instantiate(self)
    self:emit("base.on_feat_instantiated")
 end
 

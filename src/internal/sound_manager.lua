@@ -155,6 +155,28 @@ function sound_manager:stop(channel)
    self.sources[channel] = nil
 end
 
+function sound_manager:set_source_pos(tag, x, y)
+   assert(type(tag) == "string")
+
+   local source = self.looping_sources[tag]
+   if source == nil then
+      error("No source with tag " .. tostring(tag) .. " found.")
+   end
+
+   local src = source.source
+
+   if src:getChannelCount() == 1 then
+      if x ~= nil and y ~= nil then
+         src:setRelative(false)
+         src:setPosition(x, y)
+         src:setAttenuationDistances(100, 500)
+      else
+         src:setRelative(true)
+         src:setAttenuationDistances(0, 0)
+      end
+   end
+end
+
 function sound_manager:play_music(sound_id)
    if _IS_LOVEJS then
       return

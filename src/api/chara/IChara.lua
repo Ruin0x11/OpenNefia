@@ -22,7 +22,6 @@ local ICharaTraits = require("api.chara.ICharaTraits")
 local ICharaBuffs = require("api.chara.ICharaBuffs")
 local ICharaRoles = require("api.chara.ICharaRoles")
 local ICharaAi = require("api.chara.ICharaAi")
-local IObject = require("api.IObject")
 local ILocalizable = require("api.ILocalizable")
 local ICharaTalk = require("api.chara.ICharaTalk")
 local IModdable = require("api.IModdable")
@@ -30,7 +29,6 @@ local IFactioned = require("api.IFactioned")
 local IMapObject = require("api.IMapObject")
 local IEventEmitter = require("api.IEventEmitter")
 local save = require("internal.global.save")
-local IDrawable = require("api.gui.IDrawable")
 local PriorityMap = require("api.PriorityMap")
 
 -- TODO: move out of api
@@ -134,7 +132,7 @@ function IChara:build()
 end
 
 function IChara:instantiate()
-   IObject.instantiate(self)
+   IMapObject.instantiate(self)
    ICharaTalk.instantiate(self)
 
    self:emit("base.on_chara_instantiated")

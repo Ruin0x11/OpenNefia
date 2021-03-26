@@ -1569,7 +1569,7 @@ data:add {
                   Skill.modify_impression(owner, -20)
                end
 
-               Effect.turn_guards_hostile(map, chara)
+               Effect.turn_guards_hostile(chara)
             end
 
             local should_abort = caught_stealing or false
