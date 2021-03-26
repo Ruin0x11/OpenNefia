@@ -106,7 +106,7 @@ local unique = {
       name = "Noyel"
    },
    miral_and_garoks_workshop = {
-      name = "Miral and Garok's Workshop"
+      name = "Miral and Garokk's Workshop"
    },
    show_house = {
       name = "Show House"

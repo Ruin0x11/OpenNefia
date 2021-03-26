@@ -556,7 +556,6 @@ do
       chara:add_role("elona.special")
 
       chara = Chara.create("elona.miral", 8, 16, nil, map)
-      chara:add_role("elona.shopkeeper", {inventory_id="elona.miral"})
 
       for _=1,5 do
          chara = Chara.create("elona.cat", nil, nil, nil, map)

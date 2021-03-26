@@ -490,4 +490,11 @@ function ElonaItem.open_chest(item, gen_filter_cb, item_count, loot_level, seed,
    -- <<<<<<<< shade2/action.hsp:1022 	iParam1(ri)=0 ..
 end
 
+function ElonaItem.find_small_medals(chara)
+   return chara:iter_items()
+      :filter(function(i) return i._id == "elona.small_medal" end)
+      :into_sorted(function(a, b) return a.amount > b.amount end)
+      :nth(1)
+end
+
 return ElonaItem

@@ -1420,3 +1420,75 @@ function inv_take.on_select(ctxt, item, amount)
 end
 
 data:add(inv_take)
+
+local inv_buy_small_medals = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_buy_small_medals",
+   elona_id = 28,
+
+   sources = { "shop" },
+   shortcuts = false,
+   icon = nil,
+   query_amount = false,
+   show_money = true,
+   window_title = "ui.inventory_command.buy",
+   query_text = "ui.inv.title.buy",
+   window_detail_header = "ui.inv.buy.window.price",
+
+   get_item_detail_text = function(name, item)
+      return I18N.get("ui.inv.trade_medals.medal_value", Calc.calc_item_medal_value(item))
+   end,
+   sort = function(ctxt, a, b)
+      return Calc.calc_item_medal_value(a.item) < Calc.calc_item_medal_value(b.item)
+   end,
+
+   on_query = function(ctxt)
+      -- >>>>>>>> shade2/command.hsp:3477 		if invCtrl=28{ ...
+      local medals = ElonaItem.find_small_medals(ctxt.chara)
+      local medal_amount = medals and medals.amount or 0
+      Gui.mes("ui.inv.trade_medals.medals", medal_amount)
+      -- <<<<<<<< shade2/command.hsp:3481 			} ..
+   end,
+
+   can_select = function(ctxt, item)
+      if not can_take(item) then
+         return "turn_end"
+      end
+
+      return true
+   end,
+   on_select = function(ctxt, item, amount)
+      -- >>>>>>>> shade2/command.hsp:3969 			txtNew ...
+      Gui.mes_newline()
+
+      amount = 1
+      local cost = Calc.calc_item_medal_value(item)
+
+      if ctxt.chara:is_inventory_full() then
+         Gui.mes("ui.inv.trade_medals.inventory_full")
+         Gui.play_sound("base.fail1")
+         return "inventory_continue"
+      end
+
+      local medals = ElonaItem.find_small_medals(ctxt.chara)
+
+      if medals == nil or cost > medals.amount then
+         Gui.mes("ui.inv.trade_medals.not_enough_medals")
+         Gui.play_sound("base.fail1")
+         return "inventory_continue"
+      end
+
+      medals:remove(cost)
+      Gui.play_sound("base.paygold1", ctxt.chara.x, ctxt.chara.y)
+      local new_item = item:clone()
+      item.amount = amount
+      assert(ctxt.chara:take_item(new_item))
+      Gui.mes("ui.inv.trade_medals.you_receive", new_item:build_name(amount))
+      item:stack(true)
+      -- TODO convertArtifact
+
+      return "inventory_continue"
+      -- <<<<<<<< shade2/command.hsp:3979 			goto *com_inventory ..
+   end
+}
+data:add(inv_buy_small_medals)

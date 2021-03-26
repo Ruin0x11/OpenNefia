@@ -28,30 +28,6 @@ end
 
 local deed_items = make_id_list(Filters.isetdeed)
 
-local medal_items = make_id_list(
-   {
-      "elona.scroll_of_growth",
-      "elona.scroll_of_faith",
-      "elona.scroll_of_superior_material",
-      "elona.rod_of_domination",
-      "elona.artifact_seed",
-      "elona.presidents_chair",
-      "elona.bill",
-      "elona.potion_of_cure_corruption",
-      "elona.bottle_of_water",
-      "elona.tax_masters_tax_box",
-      "elona.cat_sisters_diary",
-      "elona.little_sisters_diary",
-      "elona.girls_diary",
-      "elona.shrine_gate",
-      "elona.bottle_of_hermes_blood",
-      "elona.sages_helm",
-      "elona.diablo",
-      "elona.license_of_the_void_explorer",
-      "elona.garoks_hammer"
-   }
-)
-
 local filter_set_wear = make_filter_list(Filters.fsetwear)
 
 local merchant_rules = {
@@ -245,8 +221,8 @@ data:add_multi(
             { one_in = 3, quality = 3  },
             { one_in = 10, quality = 4 },
          },
-         item_number = function(args)
-            return 6 + args.shopkeeper.shop_rank / 10
+         item_number = function(shopkeeper, item_number)
+            return 6 + shopkeeper.shop_rank / 10
          end,
          item_base_value = function(args)
             -- >>>>>>>> shade2/chat.hsp:3546 	if cRole(tc)=cRoleShopBlack{ ...
@@ -396,7 +372,7 @@ data:add_multi(
          rules = {
             { categories = "elona.tag_spshop" },
          },
-         item_number = function(args) return args.item_number / 2 end,
+         item_number = function(shopkeeper, item_number) return item_number / 2 end,
          item_base_value = function(args)
             local price = math.clamp(args.item.value, 1, 1000000) * 50
             if args.item.id == "elona.gift" then
@@ -450,14 +426,26 @@ data:add_multi(
          --    they are generated successfully.
          _id = "miral",
          elona_id = 1016,
-         rules = medal_items,
-         item_number = function() return #medal_items end,
+         rules = function()
+            -- >>>>>>>> shade2/chat.hsp:3471 	if cRole(tc)=cRoleShopMirok{ ...
+            local is_medal_item = function(item) return type(item.medal_value) == "number" end
+            local medal_item_ids = data["base.item"]:iter():filter(is_medal_item):to_list()
+            return make_id_list(medal_item_ids)
+            -- <<<<<<<< shade2/chat.hsp:3492 	} ..
+         end,
+         item_number = function(_, _, rules)
+            -- >>>>>>>> shade2/chat.hsp:3310 	if cRole(tc)=cRoleShopMirok	:p=20 ...
+            return #rules
+            -- <<<<<<<< shade2/chat.hsp:3310 	if cRole(tc)=cRoleShopMirok	:p=20 ..
+         end,
          on_generate_item = function(args)
-            args.item.number = 1
+            -- >>>>>>>> shade2/chat.hsp:3497 	if cRole(tc)=cRoleShopMirok{ ...
+            args.item.amount = 1
             args.item.curse_state = Enum.CurseState.Normal
             if args.item.id == "elona.rod_of_domination" then
                args.item.count = 4
             end
+            -- <<<<<<<< shade2/chat.hsp:3501 		} ..
          end
       }
 })

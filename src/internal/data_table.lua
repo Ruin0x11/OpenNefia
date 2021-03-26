@@ -300,7 +300,7 @@ function data_table:add(dat)
    local _type = dat._type
 
    if not (string.nonempty(_id) and string.nonempty(_type)) then
-      self:error("Missing _id (%s) or _type (%s)", tostring(_id), tostring(_type))
+      self:error("Missing _id (%s) or _type (%s)", "error", tostring(_id), tostring(_type))
       return nil
    end
 

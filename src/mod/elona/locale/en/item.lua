@@ -1864,7 +1864,7 @@ local item = {
     name = "garbage"
   },
   garoks_hammer = {
-    name = "Garok's hammer",
+    name = "Garokk's hammer",
     unidentified_name = "master hammer"
   },
   gazania = {
