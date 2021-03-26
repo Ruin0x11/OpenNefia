@@ -182,7 +182,7 @@ data:add {
    end,
    events = {
       {
-         id = "base.on_object_instantiated",
+         id = "base.on_object_finalized",
          name = "Set difficulty.",
          callback = function(self) self.difficulty = self.difficulty or 5 end
       }

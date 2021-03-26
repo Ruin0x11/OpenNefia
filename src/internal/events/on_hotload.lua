@@ -26,12 +26,13 @@ end
 Event.register("base.on_hotload_begin", "Clean up events missing in chunk on hotload", on_hotload_begin, {priority = 1})
 Event.register("base.on_hotload_end", "Clean up events missing in chunk on hotload", on_hotload_end, {priority = 9999999999})
 
-Event.register("base.on_object_prototype_changed", "reload events for object", function(obj, params)
-                  if class.is_an(IEventEmitter, obj) then
+Event.register("base.on_object_prototype_changed", "reload events for object",
+               function(obj, params)
+                  if params.old_id ~= nil and class.is_an(IEventEmitter, obj) then
                      IEventEmitter.on_reload_prototype(obj, params.old_id)
                   end
-                                                                               end,
-{priority = 1000})
+               end,
+               {priority = 1000})
 
 Event.register("base.on_hotload_end", "Notify objects in map of prototype hotload",
                function(_, params)

@@ -62,7 +62,7 @@ data:add {
 
    events = {
       {
-         id = "base.on_object_instantiated",
+         id = "base.on_object_finalized",
          name = "Randomize image",
 
          callback = function(self)

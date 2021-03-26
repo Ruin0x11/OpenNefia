@@ -7312,7 +7312,7 @@ local chara = {
 
       events = {
          {
-            id = "base.on_object_instantiated",
+            id = "base.on_object_finalized",
             name = "Set image",
 
             callback = function(self)
