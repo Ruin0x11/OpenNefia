@@ -79,6 +79,7 @@ function ChangeAppearanceMenu:init(charamake_data)
    self.input:bind_keys(self:make_keymap())
 
    self.caption = "chara_make.customize_appearance.caption"
+   self.intro_sound = "base.port"
 
    self:build_preview()
 end
