@@ -22,7 +22,7 @@ function MorePrompt:init()
 end
 
 function MorePrompt:default_z_order()
-   return 1000000
+   return Gui.LAYER_Z_ORDER_HUD + 100000
 end
 
 function MorePrompt:make_keymap()
