@@ -58,14 +58,14 @@ function DeferredEvents.ragnarok(chara)
       if (i - 1) % 4 == 0 then
          local level = 100
          local quality = Calc.calc_object_quality(Enum.Quality.Good)
-         local tag_filters
+         local race_filter
          if Rand.one_in(4) then
-            tag_filters = { "giant" }
+            race_filter = "elona.giant"
          else
-            tag_filters = { "dragon" }
+            race_filter = "elona.dragon"
          end
 
-         local spawned = Charagen.create(x, y, { level = level, quality = quality, tag_filters = tag_filters })
+         local spawned = Charagen.create(x, y, { level = level, quality = quality, race_filter = race_filter })
          if spawned then
             spawned.is_summoned = true
          end
