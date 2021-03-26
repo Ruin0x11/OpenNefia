@@ -54,7 +54,6 @@ end
 
 function ExHelpPrompt:make_keymap()
    local next_section = function()
-      Gui.play_sound("base.ok1")
       self.more_prompt:run_keybind_action("enter")
    end
 

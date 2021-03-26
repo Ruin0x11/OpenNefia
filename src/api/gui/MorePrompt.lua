@@ -27,7 +27,7 @@ end
 
 function MorePrompt:make_keymap()
    local function proceed()
-      if self.can_cancel then
+      if self.can_cancel and not self.canceled then
          Gui.play_sound("base.ok1")
          self.canceled = true
       end
