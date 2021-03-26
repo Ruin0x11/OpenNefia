@@ -30,7 +30,8 @@ Event.register("base.on_object_prototype_changed", "reload events for object", f
                   if class.is_an(IEventEmitter, obj) then
                      IEventEmitter.on_reload_prototype(obj, params.old_id)
                   end
-end)
+                                                                               end,
+{priority = 1000})
 
 Event.register("base.on_hotload_end", "Notify objects in map of prototype hotload",
                function(_, params)

@@ -53,8 +53,8 @@ end
 
 function IObject:instantiate()
    if class.is_an(IEventEmitter, self) then
-      self:emit("base.on_object_instantiated")
       self:emit("base.on_object_prototype_changed", {old_id=nil})
+      self:emit("base.on_object_instantiated")
    end
 end
 

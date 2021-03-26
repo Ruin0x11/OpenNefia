@@ -16,7 +16,6 @@ function IFeat:normal_build()
 end
 
 function IFeat:build()
-   self:emit("base.on_build_feat")
 end
 
 function IFeat:instantiate()

@@ -182,9 +182,9 @@ data:add {
    end,
    events = {
       {
-         id = "base.on_build_feat",
+         id = "base.on_object_instantiated",
          name = "Set difficulty.",
-         callback = function(self) self.difficulty = 5 end
+         callback = function(self) self.difficulty = self.difficulty or 5 end
       }
    }
 }

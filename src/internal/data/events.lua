@@ -52,7 +52,6 @@ data:add_multi(
       { _id = "on_data_add" },
       { _id = "on_build_chara" },
       { _id = "on_build_item" },
-      { _id = "on_build_feat" },
       { _id = "on_pre_build" },
       { _id = "on_chara_normal_build" },
       { _id = "calc_status_indicators" },

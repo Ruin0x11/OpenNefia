@@ -57,11 +57,15 @@ data:add {
 
    events = {
       {
-         id = "base.on_build_feat",
+         id = "base.on_object_instantiated",
          name = "Randomize image",
 
          callback = function(self)
             -- >>>>>>>> shade2/map_func.hsp:843 		cell_featSet x,y,tile_RE@+rnd(3),objRE ...
+            if self.image ~= nil then
+               return
+            end
+
             local images = {
                "elona.feat_material_dig",
                "elona.feat_material_gem",
