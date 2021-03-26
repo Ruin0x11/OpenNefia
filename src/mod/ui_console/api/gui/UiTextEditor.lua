@@ -40,10 +40,14 @@ function UiTextEditor:make_keymap()
       west = function() self:move_cursor(-1, 0) end,
       east = function() self:move_cursor(1, 0) end,
       repl_page_up = function()
-         self:move_cursor(0, -self.cursor_y)
+         self:move_cursor(-self.cursor_x, -self.cursor_y)
       end,
       repl_page_down = function()
-         self:move_cursor(0, #self.lines-self.cursor_y-1)
+         local dx = 0
+         if self.cursor_y+1 == #self.lines then
+            dx = #self.lines[#self.lines] - self.cursor_x
+         end
+         self:move_cursor(dx, #self.lines-self.cursor_y-1)
       end,
       repl_first_char = function()
          self:move_cursor(-self.cursor_x, 0)

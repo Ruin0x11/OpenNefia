@@ -50,7 +50,7 @@ function TextEditorPrompt:update(dt)
    self.editor:update(dt)
 
    if canceled then
-      return self.editor:merge_lines(), "canceled"
+      return self.editor:merge_lines(), nil
    end
 end
 

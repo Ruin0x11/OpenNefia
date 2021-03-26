@@ -2,7 +2,7 @@ local Draw = require("api.Draw")
 local UiTheme = require("api.gui.UiTheme")
 
 local IConfigItemWidget = require("api.gui.menu.config.item.IConfigItemWidget")
-local ColorEditorMenu = require("mod.color_config_option.api.gui.ColorEditorMenu")
+local ColorEditorMenu = require("mod.extra_config_options.api.gui.ColorEditorMenu")
 
 local ConfigItemColorWidget = class.class("ConfigItemColorWidget", IConfigItemWidget)
 
@@ -49,7 +49,7 @@ end
 
 function ConfigItemColorWidget:draw()
    Draw.set_color(self.t.base.text_color)
-   Draw.filled_rect(self.x-1, self.y-1, 20, 20)
+   Draw.line_rect(self.x-1, self.y-1, 20, 20)
    Draw.set_color(self.value)
    Draw.filled_rect(self.x, self.y, 18, 18)
 end

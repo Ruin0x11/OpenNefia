@@ -4,7 +4,7 @@ local InputHandler = require("api.gui.InputHandler")
 local UiTheme = require("api.gui.UiTheme")
 local UiWindow = require("api.gui.UiWindow")
 local Draw = require("api.Draw")
-local ColorEditorMenuList = require("mod.color_config_option.api.gui.ColorEditorMenuList")
+local ColorEditorMenuList = require("mod.extra_config_options.api.gui.ColorEditorMenuList")
 local Ui = require("api.Ui")
 local Gui = require("api.Gui")
 

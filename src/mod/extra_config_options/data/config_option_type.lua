@@ -11,7 +11,7 @@ data:add {
    _id = "color",
 
    fields = {},
-   widget = "mod.color_config_option.api.gui.ConfigItemColorWidget",
+   widget = "mod.extra_config_options.api.gui.ConfigItemColorWidget",
 
    validate = function(option, value)
       local ok, err = typecheck(value, "table")
@@ -34,5 +34,17 @@ data:add {
       end
 
       return true
+   end,
+}
+
+data:add {
+   _type = "base.config_option_type",
+   _id = "text",
+
+   fields = {},
+   widget = "mod.extra_config_options.api.gui.ConfigItemTextWidget",
+
+   validate = function(option, value)
+      return typecheck(value, "string")
    end,
 }
