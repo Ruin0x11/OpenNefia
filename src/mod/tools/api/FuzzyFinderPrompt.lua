@@ -50,7 +50,7 @@ end
 function FuzzyFinderPrompt:make_keymap()
    return {
       text_entered = function(t)
-         self.text_prompt:run_key_action(t)
+         self.text_prompt:run_text_action(t)
          self:update_match()
       end,
       raw_backspace = function()
