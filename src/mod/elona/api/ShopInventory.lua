@@ -57,7 +57,7 @@ function ShopInventory.apply_rule_properties(rule, ret, index, shopkeeper)
    return ret
 end
 
-function ShopInventory.apply_rules(index, shopkeeper, inv)
+function ShopInventory.apply_rules(index, shopkeeper, rules)
    -- >>>>>>>> shade2/chat.hsp:3314 	flt calcObjLv(cRoleShopLv(tc)),calcFixLv(fixNorma ...
    local ret = {
       level = Calc.calc_object_level(shopkeeper:calc("shop_rank"), shopkeeper:current_map()),
@@ -65,11 +65,11 @@ function ShopInventory.apply_rules(index, shopkeeper, inv)
    }
    -- <<<<<<<< shade2/chat.hsp:3314 	flt calcObjLv(cRoleShopLv(tc)),calcFixLv(fixNorma ..
 
-   if not inv.rules then
+   if not rules then
       return ret
    end
 
-   for _, rule in ipairs(inv.rules) do
+   for _, rule in ipairs(rules) do
       if ShopInventory.test_rule_predicate(rule, index, shopkeeper) then
          ret = ShopInventory.apply_rule_properties(rule, ret, index, shopkeeper)
 
@@ -230,17 +230,23 @@ function ShopInventory.generate(inv_id, shopkeeper)
    local inv = data["elona.shop_inventory"]:ensure(inv_id)
    local result = Inventory:new(nil, "base.item", nil) -- will set _parent later
 
+   local rules = inv.rules
+   if type(rules) == "function" then
+      rules = rules(shopkeeper)
+      assert(type(rules) == "table")
+   end
+
    -- Determine how many items to create. Shops can also adjust the
    -- amount with a formula.
    local items_to_create = ShopInventory.default_item_number({shopkeeper = shopkeeper})
    if inv.item_number then
-      items_to_create = inv.item_number({shopkeeper = shopkeeper, item_number = items_to_create})
+      items_to_create = inv.item_number(shopkeeper, items_to_create, rules)
    end
 
    local go = function(index)
       -- Go through each generation rule the shop defines and get back
       -- a table of options for Item.create().
-      local args = ShopInventory.apply_rules(index, shopkeeper, inv)
+      local args = ShopInventory.apply_rules(index, shopkeeper, rules)
 
       if not args then
          return
@@ -312,10 +318,12 @@ function ShopInventory.generate(inv_id, shopkeeper)
    return result
 end
 
-function ShopInventory.refresh_shop(shopkeeper)
+function ShopInventory.refresh_shop(shopkeeper, inv_id)
    -- TODO multiple shop roles
-   local role = shopkeeper:find_role("elona.shopkeeper")
-   local inv_id = role.inventory_id
+   if inv_id == nil then
+      local role = shopkeeper:find_role("elona.shopkeeper")
+      inv_id = role.inventory_id
+   end
    local inv_data = data["elona.shop_inventory"]:ensure(inv_id)
    shopkeeper.shop_inventory = ShopInventory.generate(inv_id, shopkeeper)
    shopkeeper.shop_inventory:set_owner(shopkeeper)

@@ -124,7 +124,7 @@ function Effect.modify_karma(chara, delta)
    elseif delta < 0 then
       if chara.karma >= Const.KARMA_BAD and chara.karma + delta < Const.KARMA_BAD then
          Gui.mes_c("chara_status.karma.you_are_criminal_now", "Purple")
-         Calc.make_guards_hostile()
+         Effect.turn_guards_hostile(chara:current_map(), chara)
       end
    end
 

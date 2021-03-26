@@ -107,10 +107,6 @@ function Calc.round_margin(a, b)
    end
 end
 
-function Calc.make_guards_hostile(map)
-   -- TODO
-end
-
 -- @tparam IItem item
 -- @tparam string mode "buy" (default), "sell", "player_shop"
 -- @tparam boolean is_shop
@@ -241,6 +237,10 @@ function Calc.calc_item_value(item, mode, is_shop)
 
    return math.floor(value)
    -- <<<<<<<< shade2/calculation.hsp:670 	return value ..
+end
+
+function Calc.calc_item_medal_value(item)
+   return item:calc("medal_value") or 0
 end
 
 -- >>>>>>>> shade2/calculation.hsp:802 #defcfunc calcTrainCost int id,int c,int mode ..
@@ -622,6 +622,14 @@ function Calc.calc_restore_cost(chara)
 end
 
 function Calc.calc_informer_investigate_cost(player, ally)
+   return 10000
+end
+
+function Calc.calc_cargo_limit_upgrade_cost(chara)
+   return (chara.max_cargo_weight - chara.initial_max_cargo_weight) / 10000 + 1
+end
+
+function Calc.calc_cargo_limit_upgrade_amount(chara)
    return 10000
 end
 
