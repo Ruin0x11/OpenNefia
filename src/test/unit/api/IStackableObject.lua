@@ -176,6 +176,8 @@ function test_IStackableObject_stack__chara()
    local item_b = test_util.stripped_item("elona.putitoro", chara)
    local item_c = test_util.stripped_item("elona.apple", chara)
 
+   item_b:stack()
+
    Assert.eq(0, item_a.amount)
    Assert.eq(2, item_b.amount)
    Assert.eq(1, item_c.amount)
