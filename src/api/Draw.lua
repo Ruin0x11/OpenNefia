@@ -148,8 +148,10 @@ function Draw.line_rect(x, y, width, height, color)
    if color then
       Draw.set_color(color[1], color[2], color[3], color[4])
    end
-   width = width + 1
-   height = height + 1
+   x = x + 1
+   y = y + 1
+   width = width - 1
+   height = height - 1
    love.graphics.polygon("line", x, y, x + width, y, x + width, y + height, x, y + height)
 end
 

@@ -9,6 +9,7 @@ InputHandler:delegate("keys", {
                          "unbind_keys",
                          "receive_key",
                          "run_key_action",
+                         "run_text_action",
                          "run_keybind_action",
                          "key_held_frames",
                          "is_modifier_held",

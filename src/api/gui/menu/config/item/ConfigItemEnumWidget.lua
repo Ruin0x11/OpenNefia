@@ -82,6 +82,7 @@ function ConfigItemEnumWidget:draw()
    end
 
    Draw.set_color(color)
+   Draw.set_font(14)
    Draw.text(self.text, self.x, self.y)
 end
 

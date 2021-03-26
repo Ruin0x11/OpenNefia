@@ -203,6 +203,15 @@ function KeyHandler:run_key_action(key, ...)
    return ran, result
 end
 
+function KeyHandler:run_text_action(key, ...)
+   for _, forward in ipairs(self.forwards) do
+      local did_something, first_result = forward:run_text_action(key, ...)
+      if did_something then
+         return did_something, first_result
+      end
+   end
+end
+
 function KeyHandler:run_keybind_action(keybind, pressed, ...)
    local func = self.bindings[keybind]
    if func then

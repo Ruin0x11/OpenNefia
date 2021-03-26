@@ -150,7 +150,7 @@ do
                for i = 1, max_rain do
 
                   if rain_y[i] == nil or rain_y[i] <= 0 or prev_weather ~= save.elona.weather_id then
-                     rain_y[i] = Draw.get_width() - (Gui.message_window_y() - 16) - 8 - Rand.rnd(100)
+                     rain_y[i] = Draw.get_height() - (Gui.message_window_y() - 16) - 8 - Rand.rnd(100)
                      rain_x[i] = Rand.rnd(Draw.get_width())
                   else
                      rain_x[i] = rain_x[i] + Rand.rnd(3) - 1
