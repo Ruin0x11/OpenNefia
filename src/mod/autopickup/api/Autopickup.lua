@@ -165,6 +165,7 @@ function Autopickup.run_rule(chara, item, rule)
 
    if ops[Autopickup.OP.SET_NO_DROP] then
       Gui.mes("ui.inv.examine.no_drop.set", item:build_name())
+      item.is_no_drop = true
    end
 
    Action.get(chara, item)
