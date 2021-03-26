@@ -16,12 +16,11 @@ function IFeat:normal_build()
 end
 
 function IFeat:build()
-   self:emit("base.on_build_feat")
 end
 
-function IFeat:instantiate()
+function IFeat:instantiate(no_bind_events)
    self.params = self.params or {}
-   IMapObject.instantiate(self)
+   IMapObject.instantiate(self, no_bind_events)
    self:emit("base.on_feat_instantiated")
 end
 

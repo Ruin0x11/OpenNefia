@@ -63,7 +63,6 @@ function ISoundHolder:play_ambient_sound(sound_id, volume)
       local coords = Draw.get_coords()
       sx, sy = coords:tile_to_screen(self.x, self.y)
    end
-   print(sx, sy)
 
    global_sound_manager:play_looping(tag, sound_id, "sound", sx, sy, volume)
    self._sounds[tag] = true

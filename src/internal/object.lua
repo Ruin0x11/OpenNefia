@@ -177,6 +177,7 @@ function object.deserialize(self, _type, _id)
 end
 
 function object.clear_last_deserialized_objects()
+   -- TODO make event
    local ISoundHolder = require("api.ISoundHolder")
    ISoundHolder.stop_all_ambient_sounds_global()
 

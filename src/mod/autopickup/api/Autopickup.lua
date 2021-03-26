@@ -126,8 +126,8 @@ function Autopickup.run_rule(chara, item, rule)
 
    local destroy = false
    if ops[Autopickup.OP.DESTROY_PROMPT] then
-      Gui.update_screen()
       Gui.mes("autopickup.act.destroy.prompt", item:build_name())
+      Gui.update_screen()
       if Input.yes_no() then
          destroy = true
       else
@@ -165,6 +165,7 @@ function Autopickup.run_rule(chara, item, rule)
 
    if ops[Autopickup.OP.SET_NO_DROP] then
       Gui.mes("ui.inv.examine.no_drop.set", item:build_name())
+      item.is_no_drop = true
    end
 
    Action.get(chara, item)

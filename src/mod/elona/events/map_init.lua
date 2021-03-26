@@ -7,6 +7,7 @@ local Home = require("mod.elona.api.Home")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local DeferredEvents = require("mod.elona.api.DeferredEvents")
 local ElonaWorld = require("mod.elona.api.ElonaWorld")
+local ExHelp = require("mod.elona.api.ExHelp")
 
 local function spawn_random_sites(map, params)
    local amount = Calc.calc_random_site_generate_count(map)
@@ -57,3 +58,42 @@ local function update_world_map(map)
    -- <<<<<<<< shade2/map.hsp:2070 		} ..
 end
 Event.register("base.on_map_enter", "Update world map", update_world_map, 90000)
+
+local function show_first_ex_help(map, params)
+   -- >>>>>>>> shade2/map.hsp:124 	if mType=mTypeHome 	: help 1 ...
+   if params.previous_map and Home.is_home(params.previous_map) then
+      ExHelp.show("elona.first")
+   end
+   -- <<<<<<<< shade2/map.hsp:124 	if mType=mTypeHome 	: help 1 ..
+end
+Event.register("base.on_map_enter", "Show first EX help", show_first_ex_help, 10000)
+
+local function show_map_ex_help(map, params)
+   -- >>>>>>>> shade2/map.hsp:2137 	if mType=mTypeWorld	: help 2 ...
+   if map:has_type("world_map") then
+      ExHelp.show("elona.world_map")
+   end
+
+   if map:has_type("town") then
+      ExHelp.show("elona.town")
+   end
+
+   if map._archetype == "elona.shelter" then
+      ExHelp.show("elona.shelter")
+   end
+   -- <<<<<<<< shade2/map.hsp:2139 	if gArea=areaShelter	: help 14 ..
+end
+Event.register("base.after_map_entered", "Show map EX help", show_map_ex_help, 10000)
+
+local function show_role_ex_help(chara)
+   -- >>>>>>>> shade2/chat.hsp:44 	if cRole(tc)=cRoleShopInn :help 7,1 ...
+   if chara:find_role("elona.innkeeper") then
+      ExHelp.show("elona.innkeeper")
+   end
+
+   if chara:find_role("elona.trainer") then
+      ExHelp.show("elona.trainer")
+   end
+   -- <<<<<<<< shade2/chat.hsp:45 	if cRole(tc)=cRoleTrainer :help 8,1 ..
+end
+Event.register("elona_sys.on_chara_dialog_start", "Show role EX help", show_role_ex_help, 10000)

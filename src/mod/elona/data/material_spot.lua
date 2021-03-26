@@ -2,6 +2,7 @@ local Material = require("mod.elona.api.Material")
 local Rand = require("api.Rand")
 local Gui = require("api.Gui")
 local Skill = require("mod.elona_sys.api.Skill")
+local ExHelp = require("mod.elona.api.ExHelp")
 
 data:add_type {
    name = "material_spot",
@@ -44,6 +45,10 @@ data:add {
       if params.chara:is_player() then
          local mes = try_get_spot_info(self, "on_stepped_on_text") or "action.move.feature.material.spot"
          Gui.mes(mes)
+
+         -- >>>>>>>> shade2/action.hsp:782  			if rangeFeatRE(feat(1)) : help 5 ...
+         ExHelp.show("elona.material_spot")
+         -- <<<<<<<< shade2/action.hsp:782  			if rangeFeatRE(feat(1)) : help 5 ..
       end
    end,
 
@@ -57,11 +62,15 @@ data:add {
 
    events = {
       {
-         id = "base.on_build_feat",
+         id = "base.on_object_finalized",
          name = "Randomize image",
 
          callback = function(self)
             -- >>>>>>>> shade2/map_func.hsp:843 		cell_featSet x,y,tile_RE@+rnd(3),objRE ...
+            if self.image ~= nil then
+               return
+            end
+
             local images = {
                "elona.feat_material_dig",
                "elona.feat_material_gem",

@@ -53,8 +53,8 @@ function IItem:build(params)
    self:refresh()
 end
 
-function IItem:instantiate()
-   IMapObject.instantiate(self)
+function IItem:instantiate(no_bind_events)
+   IMapObject.instantiate(self, no_bind_events)
    self:emit("base.on_item_instantiated")
 end
 

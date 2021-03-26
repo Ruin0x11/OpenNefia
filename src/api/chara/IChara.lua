@@ -131,9 +131,9 @@ function IChara:build()
    self:heal_to_max()
 end
 
-function IChara:instantiate()
-   IMapObject.instantiate(self)
-   ICharaTalk.instantiate(self)
+function IChara:instantiate(no_bind_events)
+   IMapObject.instantiate(self, no_bind_events)
+   ICharaTalk.instantiate(self, no_bind_events)
 
    self:emit("base.on_chara_instantiated")
 end

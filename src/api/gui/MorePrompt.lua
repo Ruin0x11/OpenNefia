@@ -22,19 +22,19 @@ function MorePrompt:init()
 end
 
 function MorePrompt:default_z_order()
-   return 1000000
+   return Gui.LAYER_Z_ORDER_HUD + 100000
 end
 
 function MorePrompt:make_keymap()
    local function proceed()
-      if self.can_cancel then
+      if self.can_cancel and not self.canceled then
          Gui.play_sound("base.ok1")
          self.canceled = true
       end
    end
 
    return {
-      shift = proceed,
+      cancel = proceed,
       escape = proceed,
       enter = proceed
    }

@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 local TextHandler = require("api.gui.TextHandler")
 
 local IInput = require("api.gui.IInput")
@@ -27,6 +28,10 @@ function TextEditorLayer:make_keymap()
       escape = function() self.canceled = true end,
       text_canceled = function() self.canceled = true end,
    }
+end
+
+function TextEditorLayer:on_query()
+   Gui.play_sound("base.pop2")
 end
 
 function TextEditorLayer:relayout(x, y, width, height)

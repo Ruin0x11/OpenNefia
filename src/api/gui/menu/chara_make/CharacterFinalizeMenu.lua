@@ -1,5 +1,3 @@
-local Chara = require("api.Chara")
-local Draw = require("api.Draw")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
@@ -7,9 +5,9 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Enum = require("api.Enum")
 local Item = require("api.Item")
 local data = require("internal.data")
+local Rand = require("api.Rand")
 
 local Prompt = require("api.gui.Prompt")
-local I18N = require("api.I18N")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 local CharaMake = require("api.CharaMake")
@@ -32,7 +30,7 @@ function CharacterFinalizeMenu:init(charamake_data)
    self.input:bind_keys(self:make_keymap())
 
    self.caption = "chara_make.final_screen.caption"
-   self.intro_sound = "base.skill"
+   self.intro_sound = "base.chara"
 
    self:reroll()
 end
@@ -124,12 +122,15 @@ function CharacterFinalizeMenu:draw()
 end
 
 function CharacterFinalizeMenu:get_charamake_result(charamake_result, retval)
+   -- >>>>>>>> shade2/chara.hsp:1078 	cnName(rc)=cmName ...
    local chara = charamake_result.chara
    if self.name then
       chara.name = self.name
    else
       chara.name = Event.trigger("base.generate_chara_name", {}, "player")
    end
+   chara.gold = 400 + Rand.rnd(200)
+   -- <<<<<<<< shade2/chara.hsp:1079 	cGold(pc)=400+rnd(200) ..
    CharacterFinalizeMenu.finalize_chara(chara)
    return charamake_result
 end
@@ -156,6 +157,7 @@ function CharacterFinalizeMenu:update()
          local name, canceled = Input.query_text(10)
          if not canceled then
             self.name = name
+            Gui.play_sound("base.skill")
             return true
          end
       elseif res.index == 2 then

@@ -19,6 +19,9 @@ end
 Event.register("elona_sys.on_gain_skill_exp", "Proc title earned", proc_title_earned_chara)
 
 local function proc_title_earned_player()
-   Title.check_earned(Chara.player())
+   local player = Chara.player()
+   if Chara.is_alive(player) then
+      Title.check_earned(player)
+   end
 end
 Event.register("base.on_map_enter", "Proc title earned", proc_title_earned_player)

@@ -94,7 +94,7 @@ function Object.finalize(obj, params)
    if not params.no_build then
       obj:normal_build()
       obj:finalize(params.build_params)
-      obj:instantiate()
+      obj:instantiate(true) -- events are bound by :finalize()
    end
 end
 

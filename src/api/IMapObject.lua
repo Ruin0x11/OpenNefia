@@ -33,9 +33,9 @@ function IMapObject:refresh_cell_on_map()
    end
 end
 
-function IMapObject:instantiate()
-   IObject.instantiate(self)
-   ISoundHolder.instantiate(self)
+function IMapObject:instantiate(no_bind_events)
+   IObject.instantiate(self, no_bind_events)
+   ISoundHolder.instantiate(self, no_bind_events)
 end
 
 --- Refreshes this map object.

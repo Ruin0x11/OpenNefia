@@ -488,15 +488,16 @@ function ElonaMagic.do_cast_spell(skill_id, caster, use_mp)
 
    if caster:has_effect("elona.confusion") or caster:has_effect("elona.dimming") then
       Gui.mes_visible("action.cast.confused", caster.x, caster.y, caster)
-      local success = ElonaMagic.try_to_read_spellbook(caster, skill_data.difficulty, caster:skill_level(skill_data._id))
-      if not success then
+      local read_success = ElonaMagic.try_to_read_spellbook(caster, skill_data.difficulty, caster:skill_level(skill_data._id))
+      if not read_success then
          return true
       end
    else
+      local cast_style = "ui.cast_style." .. (caster:calc("cast_style") or "default")
       if caster:is_player() then
-         Gui.mes_visible("action.cast.self", caster.x, caster.y, caster, "ability." .. skill_id .. ".name")
+         Gui.mes_visible("action.cast.self", caster.x, caster.y, caster, "ability." .. skill_id .. ".name", cast_style)
       else
-         Gui.mes_visible("action.cast.other", caster.x, caster.y, caster, "ui.cast_style." .. (caster:calc("cast_style") or "default"))
+         Gui.mes_visible("action.cast.other", caster.x, caster.y, caster, cast_style)
       end
    end
 

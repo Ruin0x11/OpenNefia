@@ -249,14 +249,6 @@ local function proc_map_entered(map)
    end
    -- <<<<<<<< shade2/map.hsp:287 	if areaDeepest(gArea)<gLevel:areaDeepest(gArea)=g ..
 
-   if Map.is_world_map(map) then
-      ExHelp.maybe_show(2)
-   elseif map:has_type("town") then
-      ExHelp.maybe_show(3)
-   elseif map._archetype == "elona.shelter" then
-      ExHelp.maybe_show(14)
-   end
-
    if map:has_type("town")
       or map:has_type("guild")
       or map:calc("is_travel_destination")

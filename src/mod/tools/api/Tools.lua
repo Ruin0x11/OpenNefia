@@ -501,38 +501,6 @@ function Tools.open_dictionary()
    return "player_turn_query"
 end
 
-function Tools.inspect_at()
-   local things = Tools.things_at()
-   if things == nil then
-      return
-   end
-
-   local thing
-
-   if things:length() == 0 then
-      Gui.mes("Nothing at position.")
-      return
-   elseif things:length() == 1 then
-      thing = things:nth(1)
-   else
-      Gui.mes("Which to inspect?")
-      local choices = things:map(function(t) return ("%s (uid: %d)"):format(t._id, t.uid) end):to_list()
-      local choice, canceled = Input.prompt(choices)
-      if canceled then
-         return
-      end
-      thing = things:nth(choice.index)
-   end
-
-   local InspectView = require("mod.tools.api.InspectView")
-   local SidebarMenu = require("api.gui.menu.SidebarMenu")
-
-   local view = InspectView:new(thing)
-   SidebarMenu:new(view):query()
-
-   return "player_turn_query"
-end
-
 function Tools.goto_down_stairs()
    local stairs = Map.current():iter_feats():filter(function(f) return f._id == "elona.stairs_down" end):nth(1)
    if stairs then
