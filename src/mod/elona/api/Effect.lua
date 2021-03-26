@@ -124,7 +124,7 @@ function Effect.modify_karma(chara, delta)
    elseif delta < 0 then
       if chara.karma >= Const.KARMA_BAD and chara.karma + delta < Const.KARMA_BAD then
          Gui.mes_c("chara_status.karma.you_are_criminal_now", "Purple")
-         Effect.turn_guards_hostile(chara:current_map(), chara)
+         Effect.turn_guards_hostile(chara)
       end
    end
 
@@ -780,7 +780,12 @@ function Effect.end_incognito(source)
 end
 
 --- @hsp goHostile
-function Effect.turn_guards_hostile(map, target)
+function Effect.turn_guards_hostile(target)
+   local map = target:current_map()
+   if map == nil then
+      return
+   end
+
    target = target or Chara.player()
 
    -- >>>>>>>> shade2/module.hsp:125 	#module ...
