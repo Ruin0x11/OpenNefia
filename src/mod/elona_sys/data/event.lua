@@ -49,6 +49,7 @@ local event = {
       { _id = "before_player_move" },
       { _id = "on_chara_search" },
       { _id = "on_chara_gained_level" },
+      { _id = "on_cast_magic" },
 }
 
 data:add_multi("base.event", event)
