@@ -71,3 +71,11 @@ function test_map_entrance_sets_child_area_position()
    Assert.eq(20, y)
    Assert.eq(1, floor)
 end
+
+function test_material_spot_finalized_events()
+   local spring = Feat.create("elona.material_spot", nil, nil, {params={material_spot_info="elona.spring"},ownerless=true})
+   local bush = Feat.create("elona.material_spot", nil, nil, {params={material_spot_info="elona.bush"},ownerless=true})
+
+   Assert.eq("elona.feat_material_fish", spring.image)
+   Assert.eq("elona.feat_material_plant", bush.image)
+end
