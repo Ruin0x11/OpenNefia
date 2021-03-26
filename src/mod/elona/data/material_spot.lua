@@ -45,11 +45,11 @@ data:add {
       if params.chara:is_player() then
          local mes = try_get_spot_info(self, "on_stepped_on_text") or "action.move.feature.material.spot"
          Gui.mes(mes)
-      end
 
-      -- >>>>>>>> shade2/action.hsp:782  			if rangeFeatRE(feat(1)) : help 5 ...
-      ExHelp.show("elona.material_spot")
-      -- <<<<<<<< shade2/action.hsp:782  			if rangeFeatRE(feat(1)) : help 5 ..
+         -- >>>>>>>> shade2/action.hsp:782  			if rangeFeatRE(feat(1)) : help 5 ...
+         ExHelp.show("elona.material_spot")
+         -- <<<<<<<< shade2/action.hsp:782  			if rangeFeatRE(feat(1)) : help 5 ..
+      end
    end,
 
    on_search = function(self, params)
