@@ -152,6 +152,7 @@ function RandomEvent.trigger(random_event_id)
       proto.image,
       choice_texts)
 
+   Gui.update_screen()
    local index = prompt:query()
 
    local choices = proto.choices
