@@ -132,11 +132,13 @@ function RandomEventPrompt:update(dt)
    self.list:update(dt)
 
    if chosen then
+      Gui.play_sound("base.click1")
       local index = self.list:selected_index()
       return index, nil
    end
 
    if canceled then
+      Gui.play_sound("base.click1")
       return nil, "canceled"
    end
 end
