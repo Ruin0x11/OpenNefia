@@ -930,10 +930,6 @@ local function teleport_to(chara, x, y, check_cb, pos_cb, success_message, ...)
       return true
    end
 
-   if chara:is_in_fov() then
-      Gui.play_sound("base.teleport1", chara.x, chara.y)
-   end
-
    for attempt = 1, 200 do
       local next_x, next_y = pos_cb(x, y, attempt)
       next_x = math.floor(next_x)
@@ -945,6 +941,15 @@ local function teleport_to(chara, x, y, check_cb, pos_cb, success_message, ...)
                Gui.mes(success_message, ...)
             else
                Gui.mes("magic.teleport.disappears", chara)
+            end
+         end
+
+
+         if chara:is_in_fov() then
+            if chara:is_player() then
+               Gui.play_sound("base.teleport1", next_x, next_y)
+            else
+               Gui.play_sound("base.teleport1", chara.x, chara.y)
             end
          end
 
