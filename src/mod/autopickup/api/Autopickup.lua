@@ -176,7 +176,7 @@ end
 
 function Autopickup.can_autopickup(item)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:82445 		if (iNumber(cnt) > 0) { ...
-   return Item.is_alive(item) and item:calc("own_state") <= Enum.OwnState.NotOwned
+   return Item.is_alive(item) and item:calc("own_state") < Enum.OwnState.NotOwned
    -- <<<<<<<< oomSEST/src/southtyris.hsp:82446 			if (iOwnState(cnt) < 1) { ..
 end
 

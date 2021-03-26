@@ -356,6 +356,7 @@ function inv_give.on_select(ctxt, item, amount)
 
    local sep = item:separate(1)
    sep:remove_ownership()
+   ElonaItem.ensure_free_item_slot(target)
    assert(target:take_item(sep))
    sep:stack(true)
 
@@ -942,6 +943,7 @@ local inv_put_food_container = {
       -- >>>>>>>> shade2/command.hsp:3421 		if invCtrl(1)=3: if refType!fltFood:continue ...
          and item:has_category("elona.food")
       -- <<<<<<<< shade2/command.hsp:3421 		if invCtrl(1)=3: if refType!fltFood:continue ..
+         and not item:is_item_container()
    end,
 
    on_select = function(ctxt, item, amount)

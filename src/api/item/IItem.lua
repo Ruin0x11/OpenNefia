@@ -12,6 +12,7 @@ local Log = require("api.Log")
 local Gui = require("api.Gui")
 local data = require("internal.data")
 local Enum = require("api.Enum")
+local IComparable = require("api.IComparable")
 
 local IItem = class.interface("IItem",
                          {},
@@ -255,15 +256,24 @@ function IItem:remove_activity(no_message)
 end
 
 function IItem:can_stack_with(other)
-   -- TODO: this gets super complicated when adding new fields. There
-   -- should be a way to specify a field will not have any effect on
-   -- the stacking behavior between two objects.
    if not IStackableObject.can_stack_with(self, other) then
       return false
    end
 
+   if self._id ~= other._id then
+      return false
+   end
+
+   -- >>>>>>>> shade2/item_func.hsp:723 	if iID(cnt)=idMedal{ ...
+   if self.proto.always_stack then
+      local map = self:current_map()
+      if map and map == other:current_map() then
+         return true
+      end
+   end
+   -- <<<<<<<< shade2/item_func.hsp:726 	}		 ..
+
    local ignored_fields = table.set {
-      "uid",
       "amount",
       "temp",
 
@@ -273,9 +283,9 @@ function IItem:can_stack_with(other)
       "global_events",
    }
 
-   local ok, err = IEventEmitter.compare_events(self, other)
+   local ok, id, name = IEventEmitter.compare_events(self, other)
    if not ok then
-      return false, "events don't match"
+      return false, "events don't match: " .. id .. ":" .. name
    end
 
    for field, my_val in pairs(self) do
@@ -288,7 +298,14 @@ function IItem:can_stack_with(other)
             and my_val.__class == nil
             and my_val.uid == nil
 
-         if do_deepcompare then
+         if class.is_an(IComparable, my_val)
+            and class.is_an(IComparable, their_val)
+            and my_val.__class == their_val.__class
+         then
+            if not my_val:compare(their_val) then
+               return false, field
+            end
+         elseif do_deepcompare then
             if not #my_val == #their_val then
                return false, field
             end

@@ -484,6 +484,8 @@ function ElonaItem.open_chest(item, gen_filter_cb, item_count, loot_level, seed,
       Item.create("elona.small_medal", x, y, { amount = 1 }, map)
    end
 
+   item:stack()
+
    Save.queue_autosave()
    -- <<<<<<<< shade2/action.hsp:1022 	iParam1(ri)=0 ..
 end

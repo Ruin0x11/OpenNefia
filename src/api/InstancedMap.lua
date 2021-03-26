@@ -674,11 +674,11 @@ end
 
 local function set_events_on_self(map)
    local archetype = map:archetype()
-   if archetype == nil then
+   if archetype == nil or archetype.events == nil then
       return
    end
 
-   IEventEmitter.init(map, archetype.events)
+   map:connect_self_multiple(archetype.events, true)
 end
 
 function InstancedMap:deserialize()

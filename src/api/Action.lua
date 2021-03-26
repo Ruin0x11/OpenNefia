@@ -136,7 +136,13 @@ function Action.get(chara, item, amount)
       item = items[#items]
    end
 
-   return item:emit("base.on_get_item", {chara=chara,amount=amount}, false)
+   local result = item:emit("base.on_get_item", {chara=chara,amount=amount}, false)
+
+   if result then
+      item:stack(true)
+   end
+
+   return result
 end
 
 --- @tparam IChara chara
@@ -151,6 +157,7 @@ function Action.drop(chara, item, amount)
    local dropped = chara:drop_item(item, amount)
    if dropped then
       dropped:emit("base.on_drop_item", {chara=chara,amount=amount})
+      dropped:stack()
       Gui.mes("action.drop.execute", item:build_name(amount))
       Gui.play_sound("base.drop1", chara.x, chara.y)
       chara:refresh_weight()
@@ -167,6 +174,10 @@ end
 --- @treturn[2] string turn_result
 function Action.take_from_container(chara, item, amount, container_item)
    local result = item:emit("base.on_get_item", {chara=chara,amount=amount,source=item:get_location()}, false)
+
+   if result then
+      item:stack(true)
+   end
 
    if container_item then
       container_item:emit("base.after_container_provide_item", {chara=chara,item=item,amount=amount})
