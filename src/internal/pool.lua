@@ -1,5 +1,6 @@
 local ICloneable = require("api.ICloneable")
 local ILocation = require("api.ILocation")
+local Log = require("api.Log")
 
 -- Low-level storage for map objects of the same types. Pretty much
 -- anything that needs to store map objects uses this internally.
@@ -66,7 +67,10 @@ function pool:take_object(obj, x, y)
    local old_location = mt.location
    mt.location = self
 
-   xpcall(obj.on_set_location, debug.traceback, obj, old_location)
+   local ok, err = xpcall(obj.on_set_location, debug.traceback, obj, old_location)
+   if not ok then
+      Log.error("IOwned:on_set_location(): %s", err)
+   end
 
    local entry = { data = obj, array_index = #self.uids + 1 }
 
@@ -106,7 +110,10 @@ function pool:move_object(obj, x, y)
    mt.x = x
    mt.y = y
 
-   xpcall(obj.on_set_pos, debug.traceback, obj, old_x, old_y)
+   local ok, err = xpcall(obj.on_set_pos, debug.traceback, obj, old_x, old_y)
+   if not ok then
+      Log.error("IOwned:on_set_pos(): %s", err)
+   end
 
    return obj
 end
