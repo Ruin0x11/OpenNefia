@@ -282,9 +282,10 @@ function sparse_batch:draw(x, y, width, height)
             local cx = xc[ind]
             local cy = yc[ind]
             if cx >= tx and cx < tdx and cy >= ty and cy < tdy then
-               local i, j = self.coords:tile_to_screen(cx - tx, cy - ty)
+               local i, j = self.coords:tile_to_screen(cx, cy)
                local px = i + xo[ind]
                local py = j + yo[ind]
+               print("ADD", i, j)
                if cr[ind] then
                   batch:setColor(cr[ind], cg[ind], cb[ind])
                else
@@ -327,28 +328,22 @@ function sparse_batch:draw(x, y, width, height)
       self.updated = false
    end
 
-   if x < 0 then
-      x = -tw + math.abs((x - 1) % tw)
-   end
-   if y < 0 then
-      y = -th + math.abs((y - 1) % th)
-   end
-
    for idx = 1, #self.to_draw_inds do
       local ind = self.to_draw_inds[idx]
       local drawable = self.to_draw_drawables[idx]
+      local i, j = self.coords:tile_to_screen(xc[ind], yc[ind])
       if drawable.draw then
-         local i, j = self.coords:tile_to_screen(xc[ind] - tx, yc[ind] - ty)
-         drawable:draw(x - tw + offset_x + i + xo[ind],
-                       y - th + offset_y + j + yo[ind],
+         drawable:draw(x + offset_x + i + xo[ind],
+                       y + offset_y + j + yo[ind],
                        nil,
                        nil,
                        false,
                        rots[ind])
       else
+         print(x, y)
          love.graphics.draw(drawable,
-                            x - tw + offset_x,
-                            y - th + offset_y)
+                            x + offset_x,
+                            y + offset_y)
       end
    end
 end

@@ -42,10 +42,10 @@ end
 --- function in the draw() method of a class implementing IUiLayer to
 --- change where the camera will be positioned.
 ---
---- @tparam int x
---- @tparam int y
-function Gui.set_camera_pos(x, y)
-   field:set_camera_pos(x, y)
+--- @tparam int sx screen X
+--- @tparam int sy screen Y
+function Gui.set_camera_pos(sx, sy)
+   field:set_camera_pos(sx, sy)
    scroll = false
 end
 
