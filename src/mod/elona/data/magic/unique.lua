@@ -419,7 +419,7 @@ data:add {
          map:reveal_tile(x, y, default_tile)
       end
 
-      return do_sense(self, params, 2, reveal, forget, "magic.sense.magic_mapping")
+      return do_sense(self, params, 1, reveal, forget, "magic.sense.magic_mapping")
    end
 }
 
@@ -454,7 +454,7 @@ data:add {
          map:forget_objects(x, y)
       end
 
-      return do_sense(self, params, 1, reveal, forget, "magic.sense.sense_object")
+      return do_sense(self, params, 2, reveal, forget, "magic.sense.sense_object")
    end
 }
 

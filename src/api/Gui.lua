@@ -49,6 +49,12 @@ function Gui.set_camera_pos(sx, sy)
    scroll = false
 end
 
+--- @tparam int sdx screen delta X
+--- @tparam int sdy screen delta Y
+function Gui.set_camera_offset(sdx, sdy)
+   field:set_camera_offset(sdx, sdy)
+end
+
 --- Updates the HUD. Call this if you change anything that might need
 --- to be reflected in the HUD, such as player equipment.
 function Gui.refresh_hud(relayout)

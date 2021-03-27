@@ -23,6 +23,11 @@ function field_layer:init()
    self.renderer = nil
    self.repl = nil
 
+   self.camera_x = nil
+   self.camera_y = nil
+   self.camera_dx = 0
+   self.camera_dy = 0
+
    self.loaded = false
    self.map_changed = false
    self.no_scroll = true
@@ -123,15 +128,38 @@ function field_layer:get_object(_type, uid)
    return self.map and self.map:get_object_of_type(_type, uid)
 end
 
+function field_layer:update_draw_pos(scroll_frames)
+   local player = self.player
+   local center_x = self.camera_x or nil
+   local center_y = self.camera_y or nil
+
+   if center_x == nil and player then
+      local coords = draw.get_coords()
+      center_x, center_y = coords:tile_to_screen(player.x, player.y)
+   end
+
+   if center_x then
+      self.renderer:update_draw_pos(center_x + self.camera_dx, center_y + self.camera_dy, scroll_frames or 0)
+   end
+end
+
 function field_layer:set_camera_pos(sx, sy)
    if sx and sy then
       self.camera_x = sx
       self.camera_y = sy
-      self.renderer:update_draw_pos(sx, sy, 0)
    else
       self.camera_x = nil
       self.camera_y = nil
    end
+   self:update_draw_pos()
+   self.renderer:update(self.map, 0)
+   self:refresh_hud()
+end
+
+function field_layer:set_camera_offset(sdx, sdy)
+   self.camera_dx = sdx or 0
+   self.camera_dy = sdy or 0
+   self:update_draw_pos()
    self.renderer:update(self.map, 0)
    self:refresh_hud()
 end
@@ -151,20 +179,7 @@ function field_layer:update_screen(dt, and_draw, scroll)
       scroll_frames = 3
    end
 
-   local center_x = self.camera_x or nil
-   local center_y = self.camera_y or nil
-
-   if center_x == nil and player then
-      local coords = draw.get_coords()
-      center_x, center_y = coords:tile_to_screen(player.x, player.y)
-      if scroll then
-         scroll_frames = player:calc("scroll") or scroll_frames
-      end
-   end
-
-   if center_x then
-      self.renderer:update_draw_pos(center_x, center_y, scroll_frames)
-   end
+   self:update_draw_pos(scroll_frames)
 
    if player then
       self.map:calc_screen_sight(player.x, player.y, player:calc("fov") or 15)

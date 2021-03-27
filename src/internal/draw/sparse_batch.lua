@@ -285,7 +285,6 @@ function sparse_batch:draw(x, y, width, height)
                local i, j = self.coords:tile_to_screen(cx, cy)
                local px = i + xo[ind]
                local py = j + yo[ind]
-               print("ADD", i, j)
                if cr[ind] then
                   batch:setColor(cr[ind], cg[ind], cb[ind])
                else
@@ -340,7 +339,6 @@ function sparse_batch:draw(x, y, width, height)
                        false,
                        rots[ind])
       else
-         print(x, y)
          love.graphics.draw(drawable,
                             x + offset_x,
                             y + offset_y)
