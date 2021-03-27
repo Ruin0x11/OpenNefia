@@ -2,7 +2,7 @@ local IKeyInput = require("api.gui.IKeyInput")
 local Log = require("api.Log")
 local KeybindTranslator = require("api.gui.KeybindTranslator")
 local Queue = require("api.Queue")
-
+local data = require("internal.data")
 local input = require("internal.input")
 
 local TextHandler = class.class("TextHandler", IKeyInput)
@@ -114,6 +114,31 @@ function TextHandler:halt_input()
    self.modifiers = {}
    self.halted = true
    self:clear_macro_queue()
+end
+
+-- Special key repeat for keys bound to a movement action.
+function TextHandler:is_shift_delayed_key(key, modifiers)
+   local kb = self.keybinds:key_to_keybind(key, modifiers)
+   if kb == nil then
+      return false
+   end
+
+   local _id = self.keybinds:full_keybind_id(kb)
+   if _id == nil then
+      return false
+   end
+   local proto = data["base.keybind"]:ensure(_id)
+   if proto and proto.uses_shift_delay then
+      return true
+   end
+
+   for _, forward in ipairs(self.forwards) do
+      if forward:is_shift_delayed_key(key, modifiers) then
+         return true
+      end
+   end
+
+   return false
 end
 
 function TextHandler:update_repeats()

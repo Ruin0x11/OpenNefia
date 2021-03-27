@@ -119,7 +119,7 @@ end
 -- @treturn[1] IItem
 -- @treturn[2] nil
 -- @retval_ownership self where
-function IStackableObject:move_some(amount, where, x, y, no_stack)
+function IStackableObject:move_some(amount, where, x, y)
    amount = amount or self.amount
    local separated = self:separate(amount, false)
 
@@ -133,10 +133,6 @@ function IStackableObject:move_some(amount, where, x, y, no_stack)
    end
 
    assert(where:take_object(separated, x, y))
-
-   if not no_stack then
-      separated:stack()
-   end
 
    return separated
 end

@@ -42,11 +42,11 @@ function atlas_batch:add(chip, x, y, width, height, color, centered, rotation)
    local ox, oy
    if centered then
       ox = (width or ttw) / 2
-      oy = (width or tth) / 2
+      oy = (height or tth) / 2
    end
 
    local x = math.floor(x)
-   local y = math.floor(y + tile.offset_y)
+   local y = math.floor(y)
 
    self.batch:add(tile.quad,
                   x,

@@ -12,6 +12,8 @@ local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local AliasPrompt = require("api.gui.AliasPrompt")
 local I18N = require("api.I18N")
 local IItemEnchantments = require("api.item.IItemEnchantments")
+local Env = require("api.Env")
+local global = require("mod.smithing.internal.global")
 
 local Smithing = {}
 
@@ -250,13 +252,17 @@ function Smithing.calc_smith_extend_chance(hammer, extend)
    -- <<<<<<<< oomSEST/src/southtyris.hsp:98541 			if (rnd(limitmin(200 + extend * 50 - iEnhanceme ..
 end
 
+function Smithing.calc_hammer_required_exp(hammer)
+   return Calc.calc_living_weapon_required_exp(hammer.params.hammer_level)
+end
+
 -- >>>>>>>> oomSEST/src/southtyris.hsp:104907 #deffunc modexpsmith int __fff, int __ggg ..
 function Smithing.gain_hammer_experience(hammer, amount)
    amount = math.floor(amount)
 
    local level = hammer.params.hammer_level
    local cur_exp = hammer.params.hammer_experience
-   local req_exp = Calc.calc_living_weapon_required_exp(level)
+   local req_exp = Smithing.calc_hammer_required_exp(hammer)
 
    if level >= Smithing.calc_required_hammer_levels_to_next_bonus(hammer) then
       hammer.params.hammer_experience = (cur_exp + amount) % req_exp
@@ -280,7 +286,7 @@ function Smithing.gain_hammer_experience(hammer, amount)
       Gui.mes_c("smithing.blacksmith_hammer.skill_increases", "Green")
    end
 
-   local exp_perc = (hammer.params.hammer_experience * 100.0) / Calc.calc_living_weapon_required_exp(hammer.params.hammer_level)
+   local exp_perc = (hammer.params.hammer_experience * 100.0) / Smithing.calc_hammer_required_exp(hammer)
    exp_perc = ("%3.6f"):format(exp_perc):sub(1, 6)
    Gui.mes(("%s(Lv: %d Exp:%s%%)"):format(I18N.space(), hammer.params.hammer_level, string.right_pad(tostring(exp_perc), 6)))
 
@@ -469,6 +475,15 @@ function Smithing.create_equipment(hammer, chara, target_item, material, categor
    Smithing.gain_hammer_experience(hammer, hammer_exp)
    hammer.params.hammer_total_uses = hammer.params.hammer_total_uses + 1
    Skill.gain_skill_exp(chara, "elona.stat_constitution", 50)
+
+   local display = config.smithing.display_hammer_level
+   if display == "sps" or display == "level_and_sps" then
+      local timestamp = Env.get_time()
+      if global.previous_sps_time then
+         global.sps_intervals:push(timestamp - global.previous_sps_time)
+      end
+      global.previous_sps_time = timestamp
+   end
 
    return created
    -- <<<<<<<< oomSEST/src/southtyris.hsp:98697 		} ..

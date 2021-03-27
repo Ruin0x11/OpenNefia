@@ -1,0 +1,3 @@
+return {
+   disabled_indicators = {}
+}

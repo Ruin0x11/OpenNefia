@@ -38,7 +38,15 @@ return {
                return ("You successfully create %s!"):format(item_name)
             end,
 
-            prompt_name_artifact = "What do you want to name this artifact?"
+            prompt_name_artifact = "What do you want to name this artifact?",
+
+            again = {
+               prompt = "Create the same again?",
+               choices = {
+                  infinity = "As many as possible"
+               },
+               insufficent_material = "Insufficient material."
+            }
          },
 
          repair_furniture = {
@@ -57,6 +65,10 @@ return {
                upgrade = function(item)
                   return ("Finished upgrading %s."):format(itemname(item))
                end
+            },
+
+            again = {
+               prompt = "Repair the same again?",
             }
          },
 
@@ -67,7 +79,7 @@ return {
             end,
          },
 
-         skill_increases = "Your Smithing skill increases."
+         skill_increases = "Your Smithing skill increases.",
       }
    }
 }

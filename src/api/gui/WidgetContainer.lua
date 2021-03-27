@@ -32,6 +32,7 @@ function WidgetContainer:add(widget, tag, opts)
    assert(class.is_an(IUiWidget, widget))
    assert(type(tag) == "string")
 
+   -- TODO auto namespace by adding mod
    if self.map:get(tag) then
       if Env.is_hotloading() then
          return

@@ -91,6 +91,7 @@ function Command.move(player, x, y)
       -- Run the general-purpose movement command. This will also
       -- handle blocked tiles.
 
+      -- TODO maybe return turn action here
       Action.move(player, next_pos.x, next_pos.y)
       Gui.set_scroll()
    end

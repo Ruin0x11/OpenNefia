@@ -141,6 +141,9 @@ function Map.load(uid)
 end
 
 function Map.delete(uid)
+   if class.is_an(InstancedMap, uid) then
+      uid = uid.uid
+   end
    assert(type(uid) == "number")
 
    Event.trigger("base.on_map_deleted", {map_uid=uid})
@@ -663,6 +666,15 @@ function Map.travel_to(map, params)
 
    Map.set_map(map, "traveled", prev_x, prev_y)
    collectgarbage()
+
+
+   if current.is_temporary then
+      local path = Fs.join("map", tostring(current.uid))
+      if SaveFs.exists(path, "temp") then
+         Log.warn("Deleting temporary map %d", current.uid)
+         Map.delete(current)
+      end
+   end
 
    Gui.update_screen()
 

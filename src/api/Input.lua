@@ -191,6 +191,7 @@ function Input.reload_keybinds()
          kbs[id] = {
             primary = kb.default,
             alternate = kb.default_alternate,
+            full_id = kb._id
          }
       end
    end

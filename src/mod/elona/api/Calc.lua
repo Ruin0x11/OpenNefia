@@ -45,7 +45,7 @@ function Calc.calc_object_level(base, map)
 end
 
 function Calc.calc_object_quality(quality)
-   local ret = quality or Enum.Quality.Normal
+   local ret = math.floor(quality or Enum.Quality.Normal)
    if ret == 0 then
       ret = Enum.Quality.Normal
    end

@@ -124,16 +124,6 @@ function ElonaCommand.throw(player)
    return query_inventory(player, "elona.inv_throw")
 end
 
-function ElonaCommand.do_dig(player, x, y)
-   if player.stamina < 0 then
-      Gui.mes("action.dig.too_exhausted")
-      return false
-   end
-
-   player:start_activity("elona.mining", {x = x, y = y})
-   return true
-end
-
 function ElonaCommand.dig(player)
    Gui.mes("action.dig.prompt")
    local dir = Input.query_direction()
@@ -143,31 +133,9 @@ function ElonaCommand.dig(player)
       return "player_turn_query"
    end
 
-   local player = Chara.player()
    local x, y = Pos.add_direction(dir, player.x, player.y)
 
-   if x == player.x and y == player.y then
-      player:start_activity("elona.digging_spot")
-      return "turn_end"
-   end
-
-   -- Don't allow digging into water.
-   local tile = player:current_map():tile(x, y)
-   local can_dig = tile.is_solid and tile.role ~= Enum.TileRole.Water
-
-   if not can_dig then
-      Gui.mes("common.it_is_impossible")
-      return "player_turn_query"
-   end
-
-   Gui.update_screen()
-   local result = ElonaCommand.do_dig(player, x, y)
-
-   if not result then
-      return "player_turn_query"
-   end
-
-   return "turn_end"
+   return ElonaAction.dig(player, x, y)
 end
 
 function ElonaCommand.fire(player)
@@ -444,7 +412,7 @@ local function get_ammo_enchantments(ammo)
    --- To implement an effect like "improves the power of all active
    --- enchantments of type X", we'd have to implement IModdable for
    --- InstancedEnchantment, which I think is reasonable to do.
-   local iter = ammo:iter_merged_enchantments():filter(function(enc) return enc._id == "elona.ammo" end)
+   local iter = ammo:iter_base_enchantments():filter(function(enc) return enc._id == "elona.ammo" end)
 
    -- Comparison is by reference, not value
    local current_idx = iter:index_by(function(enc) return ammo.params.ammo_loaded == enc end)
@@ -466,7 +434,7 @@ function ElonaCommand.ammo(player)
 
    if ammo_enc_count == 0 then
       ammo.params.ammo_loaded = nil
-      Gui.mes("action.ammo.is_not_capable", ammo)
+      Gui.mes("action.ammo.is_not_capable", ammo:build_name())
       return "player_turn_query"
    end
 

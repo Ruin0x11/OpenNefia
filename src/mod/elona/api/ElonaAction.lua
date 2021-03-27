@@ -514,4 +514,39 @@ function ElonaAction.do_sex(chara, target)
    chara:start_activity("elona.sex", {partner=target,is_host=true})
 end
 
+function ElonaAction.do_dig(chara, x, y)
+   if chara.stamina < 0 then
+      Gui.mes("action.dig.too_exhausted")
+      return false
+   end
+
+   chara:start_activity("elona.mining", {x = x, y = y})
+   return true
+end
+
+function ElonaAction.dig(chara, x, y)
+   if x == chara.x and y == chara.y then
+      chara:start_activity("elona.digging_spot")
+      return "turn_end"
+   end
+
+   -- Don't allow digging into water.
+   local tile = chara:current_map():tile(x, y)
+   local can_dig = tile.is_solid and tile.role ~= Enum.TileRole.Water
+
+   if not can_dig then
+      Gui.mes("common.it_is_impossible")
+      return "player_turn_query"
+   end
+
+   Gui.update_screen()
+   local result = ElonaAction.do_dig(chara, x, y)
+
+   if not result then
+      return "player_turn_query"
+   end
+
+   return "turn_end"
+end
+
 return ElonaAction

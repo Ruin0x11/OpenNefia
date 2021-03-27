@@ -1,6 +1,17 @@
 local Input = require("api.Input")
 local Env = require("api.Env")
 
+local CAN_SHIFT = table.set {
+   "north",
+   "south",
+   "west",
+   "east",
+   "northwest",
+   "northeast",
+   "southwest",
+   "southeast",
+}
+
 local function add_keybinds(raw)
    local kbs = {}
    for id, default in pairs(raw) do
@@ -10,6 +21,9 @@ local function add_keybinds(raw)
          kbs[#kbs+1] = { _id = id, default = default[1], default_alternate = rest }
       else
          kbs[#kbs+1] = { _id = id, default = default }
+      end
+      if CAN_SHIFT[id] then
+         kbs[#kbs].uses_shift_delay = true
       end
    end
    data:add_multi("base.keybind", kbs)

@@ -99,6 +99,7 @@ data:add {
 local function title_effect_god_of_war(source, params)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:63950 			if (dist(cX(cc), cY(cc), dx, dy) > sdataref(3,  ...
    if Title.state("omake_overhaul.god_of_war") == "effect_on"
+      and params.magic._id == "elona.swarm"
       and MapObject.is_map_object(source, "base.chara")
       and source:is_player()
    then

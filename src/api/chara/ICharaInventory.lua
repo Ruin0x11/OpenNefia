@@ -125,6 +125,14 @@ function ICharaInventory:take_item(item, amount)
    return item:move_some(amount, self)
 end
 
+function ICharaInventory:find_items(_id)
+   return self:iter_inventory():filter(function(i) return i._id == _id end)
+end
+
+function ICharaInventory:find_item(_id)
+   return self:find_items(_id):nth(1)
+end
+
 --- Iterates the items in the character's inventory (excluding
 --- equipment).
 ---

@@ -67,7 +67,15 @@ return {
             end,
          },
 
-         skill_increases = "あなたは鍛冶の技術の向上を感じた。"
+         skill_increases = "あなたは鍛冶の技術の向上を感じた。",
+
+         create_again = {
+            prompt = "同じものをもう一度作成する？",
+            choices = {
+               infinity = "何度も"
+            },
+            insufficent_material = "素材が足りない。"
+         }
       }
    }
 }

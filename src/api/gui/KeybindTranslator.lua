@@ -1,5 +1,6 @@
 local KeybindTranslator = class.class("KeybindTranslator")
 local config = require("internal.config")
+local data = require("internal.data")
 
 -- TODO: assumes en_US
 local SHIFTS = {
@@ -21,19 +22,9 @@ for ch in string.chars(CHARS) do
    SHIFTS[string.upper(ch)] = ch
 end
 
-local IGNORE_SHIFT = table.set {
-   "north",
-   "south",
-   "west",
-   "east",
-   "northwest",
-   "northeast",
-   "southwest",
-   "southeast"
-}
-
 function KeybindTranslator:init()
    self.translations = {}
+   self.full_keybind_ids = {}
    self.accepts = {}
    self.ignored_modifiers = {}
    self.dirty = false
@@ -91,9 +82,11 @@ end
 function KeybindTranslator:reload()
    local keybinds = config.base.keybinds
    self.translations = {}
+   self.full_keybind_ids = {}
    for action, kb in pairs(keybinds) do
       if self.accepts[action] then
          self:load_key(kb.primary, action)
+         self.full_keybind_ids[action] = kb.full_id
 
          if kb.alternate then
             for _, key in ipairs(kb.alternate) do
@@ -102,6 +95,10 @@ function KeybindTranslator:reload()
          end
       end
    end
+end
+
+function KeybindTranslator:full_keybind_id(action)
+   return self.full_keybind_ids[action]
 end
 
 function KeybindTranslator:load_key(key, action)
@@ -129,20 +126,21 @@ function KeybindTranslator:key_to_keybind(key, modifiers, ignore_shift)
 
    local ident = ""
 
-   if modifiers.ctrl and not self.ignored_modifiers.ctrl then
+   if modifiers and modifiers.ctrl and not self.ignored_modifiers.ctrl then
       ident = ident .. "ctrl_"
    end
-   if modifiers.alt and not self.ignored_modifiers.alt then
+   if modifiers and modifiers.alt and not self.ignored_modifiers.alt then
       ident = ident .. "alt_"
    end
-   if modifiers.shift
+   if modifiers
+      and modifiers.shift
       and key ~= "shift"
       and not ignore_shift
       and not self.ignored_modifiers.shift
    then
       ident = ident .. "shift_"
    end
-   if modifiers.gui and not self.ignored_modifiers.gui then
+   if modifiers and modifiers.gui and not self.ignored_modifiers.gui then
       ident = ident .. "gui_"
    end
    ident = ident .. key
@@ -150,8 +148,14 @@ function KeybindTranslator:key_to_keybind(key, modifiers, ignore_shift)
    local event = self.translations[ident]
 
    if ignore_shift then
-      if event and not IGNORE_SHIFT[event] then
-         event = nil
+      if event then
+         local keybind_id = self.full_keybind_ids[event]
+         if keybind_id then
+            local kb = data["base.keybind"]:ensure(keybind_id)
+            if kb and not kb.uses_shift_delay then
+               event = nil
+            end
+         end
       end
    elseif event == nil then
       event = self:key_to_keybind(key, modifiers, true)
