@@ -109,7 +109,8 @@ function InstancedMap:init(width, height, uids, tile)
    self._object_memory = t()
    self._object_memory_at = t()
    self._object_memory_pos = t()
-   self._object_memory_dirty = t()
+   self._object_memory_added = t()
+   self._object_memory_removed = t()
    self._object_memory_free_indices = t()
 
    -- Ambient light information. See IItem.light.
@@ -507,7 +508,7 @@ function InstancedMap:reveal_objects(x, y)
          dead[#dead+1] = self._object_memory[index]
          self._object_memory[index] = nil
          self._object_memory_pos[index] = nil
-         self._object_memory_dirty[index] = true
+         self._object_memory_removed[index] = true
          table.insert(self._object_memory_free_indices, index)
       end
    end
@@ -531,7 +532,7 @@ function InstancedMap:reveal_objects(x, y)
             self._object_memory[index] = m
             table.insert(self._object_memory_at[ind], index)
             self._object_memory_pos[index] = ind
-            self._object_memory_dirty[index] = true
+            self._object_memory_added[index] = true
          end
       end
    end
@@ -545,7 +546,8 @@ function InstancedMap:forget_objects(x, y)
       for _, index in ipairs(existing) do
          self._object_memory[index] = nil
          self._object_memory_pos[index] = nil
-         self._object_memory_dirty[index] = true
+         self._object_memory_removed[index] = true
+         table.insert(self._object_memory_free_indices, index)
       end
    end
    self._object_memory_at[ind] = nil

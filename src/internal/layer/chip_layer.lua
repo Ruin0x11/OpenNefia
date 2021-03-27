@@ -110,6 +110,7 @@ function chip_layer:draw_drop_shadow(index, i, x, y, y_offset)
          self.drop_shadow_batch.xoffs[index] = x_offset
          self.drop_shadow_batch.yoffs[index] = y_offset
          self.drop_shadow_batch.rotations[index] = math.rad(rotation)
+         self.drop_shadow_batch.updated = true
       end
    else
       self.drop_shadow_batch:remove_tile(index)
@@ -149,13 +150,13 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
    local x_offset = i.x_offset or 0
    local y_offset_base = CONFIG[chip_type].y_offset
    local y_offset = (i.y_offset or 0) + y_offset_base - (stack_height or 0)
+   local z_order = ind + CONFIG[chip_type].z_order
    if batch_ind == nil then
       -- tiles at the top of the screen should be drawn
       -- first, so they have the lowest z-order. conveniently
       -- this is already representable by tile indices since
       -- index 0 represents (0, 0), 1 represents (1, 0), and
       -- so on.
-      local z_order = ind + CONFIG[chip_type].z_order
 
       self.chip_batch:add_tile(index, {
          tile = image,
@@ -195,8 +196,10 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
          self.chip_batch.colors_g[index] = 1
          self.chip_batch.colors_b[index] = 1
       end
+      self.chip_batch.z_orders[index] = z_order
       self.chip_batch.drawables[index] = i.drawables
       self.chip_batch.drawables_after[index] = i.drawables_after
+      self.chip_batch.updated = true
 
       batch_ind.x = x
       batch_ind.y = y
@@ -209,9 +212,11 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
       if batch_ind.shadow_type == "normal" then
          self.shadow_batch:remove_tile(index)
          self.shadow_batch_inds[index] = nil
+         self.shadow_batch.updated = true
       elseif batch_ind.shadow_type == "drop_shadow" then
          self.drop_shadow_batch:remove_tile(index)
          self.drop_shadow_batch_inds[index] = nil
+         self.drop_shadow_batch.updated = true
       end
    end
 
@@ -225,6 +230,7 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
          self.shadow_batch.xcoords[index] = x
          self.shadow_batch.ycoords[index] = y
          self.shadow_batch.yoffs[index] = y_offset
+         self.shadow_batch.updated = true
       else
          self.shadow_batch:add_tile(index, {
             tile = "shadow",
@@ -264,27 +270,24 @@ function chip_layer:update(map, dt, screen_updated, scroll_frames)
 
    assert(map ~= nil)
 
-   for index, _ in pairs(map._object_memory_dirty) do
+   for index, _ in pairs(map._object_memory_removed) do
+      self.chip_batch_inds[index] = nil
+      self.shadow_batch_inds[index] = nil
+      self.drop_shadow_batch_inds[index] = nil
+
+      self.chip_batch:remove_tile(index)
+      self.shadow_batch:remove_tile(index)
+      self.drop_shadow_batch:remove_tile(index)
+   end
+   table.clear(map._object_memory_removed)
+
+   for index, _ in pairs(map._object_memory_added) do
       local mem = map._object_memory[index]
       local ind = map._object_memory_pos[index]
-      if mem then
-         local chip_type = mem._type
-         self:draw_normal(index, ind, map, mem, chip_type)
-
-         self.chip_batch.updated = true
-         self.shadow_batch.updated = true
-         self.drop_shadow_batch.updated = true
-      else
-         self.chip_batch_inds[index] = nil
-         self.shadow_batch_inds[index] = nil
-         self.drop_shadow_batch_inds[index] = nil
-
-         self.chip_batch:remove_tile(index)
-         self.shadow_batch:remove_tile(index)
-         self.drop_shadow_batch:remove_tile(index)
-      end
+      local chip_type = mem._type
+      self:draw_normal(index, ind, map, mem, chip_type)
    end
-   table.clear(map._object_memory_dirty)
+   table.clear(map._object_memory_added)
 
    for index, ind in pairs(map._object_memory_pos) do
       if map._in_sight[ind] ~= map._last_sight_id then -- if not map:is_in_fov(x, y) then
@@ -293,6 +296,7 @@ function chip_layer:update(map, dt, screen_updated, scroll_frames)
             self.chip_batch_inds[index] = nil
             self.shadow_batch_inds[index] = nil
             self.drop_shadow_batch_inds[index] = nil
+
             self.chip_batch:remove_tile(index)
             self.shadow_batch:remove_tile(index)
             self.drop_shadow_batch:remove_tile(index)
