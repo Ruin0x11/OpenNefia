@@ -822,7 +822,7 @@ data:add {
       for i = 1, times do
          Gui.play_sound("base.pray1", source.x, source.y)
          local level = Calc.calc_object_level(params.power / 10, map)
-         local quality = Calc.calc_object_quality("good")
+         local quality = Calc.calc_object_quality(Enum.Quality.Good)
 
          local id = "elona.gold_piece"
          local amount = 400 + Rand.rnd(params.power)

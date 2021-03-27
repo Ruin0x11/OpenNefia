@@ -117,13 +117,13 @@ function ConfigMenuList:change(item, delta)
 
    if delta < 0 then
       if left then
-         Gui.play_sound("base.cursor1")
+         Gui.play_sound("base.ok1")
          widget:on_change(delta)
          self:run_on_changed(item)
       end
    elseif delta > 0 then
       if right then
-         Gui.play_sound("base.cursor1")
+         Gui.play_sound("base.ok1")
          widget:on_change(delta)
          self:run_on_changed(item)
       end

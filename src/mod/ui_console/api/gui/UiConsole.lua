@@ -1,6 +1,5 @@
 local IUiElement = require("api.gui.IUiElement")
 local Draw = require("api.Draw")
-local DefaultConsoleRenderer = require("mod.ui_console.api.gui.DefaultConsoleRenderer")
 local IUiConsoleRenderer = require("mod.ui_console.api.gui.IUiConsoleRenderer")
 local ConsoleConsts = require("mod.ui_console.api.gui.ConsoleConsts")
 

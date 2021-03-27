@@ -18,6 +18,7 @@ function chip_layer:init(width, height)
    self.chip_batch_inds = {}
    self.shadow_batch_inds = {}
    self.drop_shadow_batch_inds = {}
+   self.stacking_inds = {}
 
    self.shadow_shader = love.graphics.newShader([[
 vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
@@ -58,6 +59,7 @@ function chip_layer:reset()
    self.chip_batch_inds = {}
    self.shadow_batch_inds = {}
    self.drop_shadow_batch_inds = {}
+   self.stacking_inds = {}
 
    self.chip_batch:clear()
    self.shadow_batch:clear()
@@ -110,7 +112,7 @@ function chip_layer:draw_drop_shadow(index, i, x, y, y_offset)
          self.drop_shadow_batch.xoffs[index] = x_offset
          self.drop_shadow_batch.yoffs[index] = y_offset
          self.drop_shadow_batch.rotations[index] = math.rad(rotation)
-         self.drop_shadow_batch.updated = true
+         -- self.drop_shadow_batch.updated = true
       end
    else
       self.drop_shadow_batch:remove_tile(index)
@@ -150,7 +152,7 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
    local x_offset = i.x_offset or 0
    local y_offset_base = CONFIG[chip_type].y_offset
    local y_offset = (i.y_offset or 0) + y_offset_base - (stack_height or 0)
-   local z_order = ind + CONFIG[chip_type].z_order + index
+   local z_order = ind + CONFIG[chip_type].z_order * index
    if batch_ind == nil then
       -- tiles at the top of the screen should be drawn
       -- first, so they have the lowest z-order. conveniently
@@ -181,6 +183,9 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
          hp_bar = i.hp_bar
       }
       self.chip_batch_inds[index] = batch_ind
+
+      self.stacking_inds[ind] = self.stacking_inds[ind] or {}
+      self.stacking_inds[ind][index] = nil
    else
       self.chip_batch:set_tile_image(index, image)
       self.chip_batch.xcoords[index] = x
@@ -199,7 +204,10 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
       self.chip_batch.z_orders[index] = z_order
       self.chip_batch.drawables[index] = i.drawables
       self.chip_batch.drawables_after[index] = i.drawables_after
-      self.chip_batch.updated = true
+      -- self.chip_batch.updated = true
+
+      self.stacking_inds[ind] = self.stacking_inds[ind] or {}
+      self.stacking_inds[ind][index] = nil
 
       batch_ind.x = x
       batch_ind.y = y
@@ -212,11 +220,11 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
       if batch_ind.shadow_type == "normal" then
          self.shadow_batch:remove_tile(index)
          self.shadow_batch_inds[index] = nil
-         self.shadow_batch.updated = true
+         -- self.shadow_batch.updated = true
       elseif batch_ind.shadow_type == "drop_shadow" then
          self.drop_shadow_batch:remove_tile(index)
          self.drop_shadow_batch_inds[index] = nil
-         self.drop_shadow_batch.updated = true
+         -- self.drop_shadow_batch.updated = true
       end
    end
 
@@ -230,7 +238,7 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
          self.shadow_batch.xcoords[index] = x
          self.shadow_batch.ycoords[index] = y
          self.shadow_batch.yoffs[index] = y_offset
-         self.shadow_batch.updated = true
+         -- self.shadow_batch.updated = true
       else
          self.shadow_batch:add_tile(index, {
             tile = "shadow",
@@ -255,6 +263,52 @@ function chip_layer:draw_normal(index, ind, map, mem, chip_type)
 
    if show then
       self:draw_one(index, ind, x, y, mem, chip_type)
+   end
+end
+
+function chip_layer:update_stacking(index, ind, map, stack, chip_type)
+   local x = (ind-1) % map:width()
+   local y = math.floor((ind-1) / map:width())
+
+   local show_count = 0
+   local to_show = {}
+   local first
+   for _, i in ipairs(stack) do
+      if i.uid then
+         first = first or i
+         local show = i.show
+         if not map:is_in_fov(x, y) then
+            show = show and CONFIG[chip_type].show_memory
+         end
+         if show then
+            to_show[i] = show
+            show_count = show_count + 1
+         end
+      end
+   end
+
+   if show_count > 3 then
+      -- HACK
+      local i = {
+         uid = first.uid,
+         show = true,
+         image = "elona.item_stack",
+         color = {255, 255, 255},
+         x_offset = 0,
+         y_offset = 0,
+         shadow_type = "drop_shadow"
+      }
+      self:draw_one(ind, x, y, i, chip_type, 0)
+   else
+      local stack_height = 0
+      for _, i in ipairs(stack) do
+         if i.uid then
+            if to_show[i] then
+               self:draw_one(ind, x, y, i, chip_type, stack_height)
+               stack_height = stack_height + i.stack_height
+            end
+         end
+      end
    end
 end
 
