@@ -434,7 +434,7 @@ function ElonaCommand.ammo(player)
 
    if ammo_enc_count == 0 then
       ammo.params.ammo_loaded = nil
-      Gui.mes("action.ammo.is_not_capable", ammo)
+      Gui.mes("action.ammo.is_not_capable", ammo:build_name())
       return "player_turn_query"
    end
 
