@@ -100,7 +100,7 @@ function SaveFs.read(path, kind, save)
 end
 
 function SaveFs.delete(path, kind, save)
-   local full_path = load_path(path, kind, save)
+   local full_path = SaveFs.save_path(path, kind, save)
 
    if not fs.exists(full_path) then
       return false, ("file does not exist: %s"):format(full_path)
