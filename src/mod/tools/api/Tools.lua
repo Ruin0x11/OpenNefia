@@ -376,13 +376,12 @@ function Tools.print_memory(map)
    Gui.update_screen()
    map = map or Map.current()
    local res = ""
-   for i, m in map:iter_tile_memory("base.map_tile") do
+   for i, t in map:iter_tile_memory() do
       local c = " "
       local x = (i-1) % map:width()
       local y = math.floor((i-1) / map:width())
 
-      if m then
-         local t = m[1]
+      if t then
          local tile = data["base.map_tile"][t._id]
          if map:is_in_fov(x, y) then
             if tile.is_opaque then
