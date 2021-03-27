@@ -51,7 +51,7 @@ function debris_layer:update(map, dt, screen_updated)
    local blood_parts = {}
    local fragment_parts = {}
 
-   for ind, d in pairs(map.debris) do
+   for ind, d in map:iter_debris_memory() do
       local x = (ind-1) % map:width()
       local y = math.floor((ind-1) / map:width())
       local sx, sy = Gui.tile_to_screen(x, y)

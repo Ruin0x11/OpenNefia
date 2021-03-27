@@ -63,10 +63,9 @@ function UiMinimap:refresh_visible(map)
    self.blocked_batch:clear()
 
    -- >>>>>>>> shade2/screen.hsp:1270 *rader_preDraw ..
-   for ind = 1, mw * mh do
+   for ind, memory in map:iter_tile_memory() do
       local x = (ind-1) % mw
       local y = math.floor((ind-1) / mw)
-      local memory = map._memory["base.map_tile"]
       if memory and memory[ind] and memory[ind][1] then
          local tile = memory[ind][1]
 

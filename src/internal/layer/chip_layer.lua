@@ -203,22 +203,20 @@ function chip_layer:draw_one(ind, x, y, i, chip_type, stack_height)
    end
 end
 
-function chip_layer:draw_normal(ind, map, stack, chip_type, found)
+function chip_layer:draw_normal(ind, map, mem, chip_type, found)
    local x = (ind-1) % map:width()
    local y = math.floor((ind-1) / map:width())
 
-   for _, i in ipairs(stack) do
-      if i.uid then
-         found[i.uid] = true
+   if mem.uid then
+      found[mem.uid] = true
 
-         local show = i.show
-         if not map:is_in_fov(x, y) then
-            show = show and CONFIG[chip_type].show_memory
-         end
+      local show = mem.show
+      if not map:is_in_fov(x, y) then
+         show = show and CONFIG[chip_type].show_memory
+      end
 
-         if show then
-            self:draw_one(ind, x, y, i, chip_type)
-         end
+      if show then
+         self:draw_one(ind, x, y, mem, chip_type)
       end
    end
 end
@@ -298,11 +296,14 @@ function chip_layer:update(map, dt, screen_updated, scroll_frames)
    self.drop_shadow_batch_inds = {}
 
    for _, chip_type in ipairs(TYPES) do
-      for ind, stack in map:iter_memory(chip_type) do
-         if CONFIG[chip_type].is_stacking then
-            self:draw_stacking(ind, map, stack, chip_type, found)
-         else
-            self:draw_normal(ind, map, stack, chip_type, found)
+      for uid, mem in map:iter_memory(chip_type) do
+         local ind = map._object_memory_pos[uid]
+         if ind then
+            -- if CONFIG[chip_type].is_stacking then
+            -- self:draw_stacking(ind, map, mem, chip_type, found)
+            -- else
+            self:draw_normal(ind, map, mem, chip_type, found)
+            -- end
          end
       end
    end
