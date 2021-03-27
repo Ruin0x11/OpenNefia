@@ -412,7 +412,7 @@ local function get_ammo_enchantments(ammo)
    --- To implement an effect like "improves the power of all active
    --- enchantments of type X", we'd have to implement IModdable for
    --- InstancedEnchantment, which I think is reasonable to do.
-   local iter = ammo:iter_merged_enchantments():filter(function(enc) return enc._id == "elona.ammo" end)
+   local iter = ammo:iter_base_enchantments():filter(function(enc) return enc._id == "elona.ammo" end)
 
    -- Comparison is by reference, not value
    local current_idx = iter:index_by(function(enc) return ammo.params.ammo_loaded == enc end)
