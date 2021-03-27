@@ -15,7 +15,7 @@ function Enum.has_value(self, v)
          return true
       end
    end
-   return false
+   return false, ("Unknown enum value '%s.%s'"):format(self.__name, v)
 end
 
 function Enum.to_string(self, v)
