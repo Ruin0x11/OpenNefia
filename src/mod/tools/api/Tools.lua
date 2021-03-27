@@ -605,6 +605,10 @@ function Tools.forget_map()
    Map.current():iter_tiles():each(function(x, y) Map.current():reveal_tile(x, y, "elona.wall_stone_4_fog") end)
 end
 
+function Tools.forget_objects()
+   Map.current():iter_tiles():each(function(x, y) Map.current():forget_objects(x, y) end)
+end
+
 function Tools.fill_with_mef(id, duration, power)
    Map.current():iter_tiles():each(function(x, y) Mef.create(id, x, y, { duration = duration, power = power }) end)
 end

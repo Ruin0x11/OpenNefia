@@ -150,7 +150,7 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
    local x_offset = i.x_offset or 0
    local y_offset_base = CONFIG[chip_type].y_offset
    local y_offset = (i.y_offset or 0) + y_offset_base - (stack_height or 0)
-   local z_order = ind + CONFIG[chip_type].z_order
+   local z_order = ind + CONFIG[chip_type].z_order + index
    if batch_ind == nil then
       -- tiles at the top of the screen should be drawn
       -- first, so they have the lowest z-order. conveniently
@@ -270,6 +270,11 @@ function chip_layer:update(map, dt, screen_updated, scroll_frames)
 
    assert(map ~= nil)
 
+   if map._redraw_all then
+      self:reset()
+      map._redraw_all = false
+   end
+
    for index, _ in pairs(map._object_memory_removed) do
       self.chip_batch_inds[index] = nil
       self.shadow_batch_inds[index] = nil
@@ -283,9 +288,11 @@ function chip_layer:update(map, dt, screen_updated, scroll_frames)
 
    for index, _ in pairs(map._object_memory_added) do
       local mem = map._object_memory[index]
-      local ind = map._object_memory_pos[index]
-      local chip_type = mem._type
-      self:draw_normal(index, ind, map, mem, chip_type)
+      if mem then
+         local ind = map._object_memory_pos[index]
+         local chip_type = mem._type
+         self:draw_normal(index, ind, map, mem, chip_type)
+      end
    end
    table.clear(map._object_memory_added)
 

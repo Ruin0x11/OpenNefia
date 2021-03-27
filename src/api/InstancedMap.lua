@@ -111,7 +111,7 @@ function InstancedMap:init(width, height, uids, tile)
    self._object_memory_pos = t()
    self._object_memory_added = t()
    self._object_memory_removed = t()
-   self._object_memory_free_indices = t()
+   self._redraw_all = false
 
    -- Ambient light information. See IItem.light.
    self._light = t()
@@ -509,7 +509,6 @@ function InstancedMap:reveal_objects(x, y)
          self._object_memory[index] = nil
          self._object_memory_pos[index] = nil
          self._object_memory_removed[index] = true
-         table.insert(self._object_memory_free_indices, index)
       end
    end
    self._object_memory_at[ind] = nil
@@ -518,7 +517,7 @@ function InstancedMap:reveal_objects(x, y)
    if objs then
       for _, obj in ipairs(objs) do
          self._object_memory_at[ind] = self._object_memory_at[ind] or {}
-         local index = table.remove(self._object_memory_free_indices) or #self._object_memory + 1
+         local index = #self._object_memory + 1
          local m = dead[#dead]
          if m == nil then
             m = {}
@@ -547,7 +546,6 @@ function InstancedMap:forget_objects(x, y)
          self._object_memory[index] = nil
          self._object_memory_pos[index] = nil
          self._object_memory_removed[index] = true
-         table.insert(self._object_memory_free_indices, index)
       end
    end
    self._object_memory_at[ind] = nil
@@ -671,6 +669,10 @@ function InstancedMap:redraw_all_tiles()
    for _, x, y in Pos.iter_rect(0, 0, self:width()-1, self:height()-1)  do
       self._tiles_dirty[#self._tiles_dirty+1] = y * self._width + x + 1
    end
+   for index, _ in pairs(self._object_memory) do
+      self._object_memory_added[index] = true
+   end
+   self._redraw_all = true
 end
 
 function InstancedMap:replace_with(other)
