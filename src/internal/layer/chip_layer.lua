@@ -58,10 +58,14 @@ function chip_layer:reset()
    self.chip_batch_inds = {}
    self.shadow_batch_inds = {}
    self.drop_shadow_batch_inds = {}
+
+   self.chip_batch:clear()
+   self.shadow_batch:clear()
+   self.drop_shadow_batch:clear()
 end
 
 function chip_layer:draw_drop_shadow(index, i, x, y, y_offset)
-   local batch_ind = self.shadow_batch_inds[index]
+   local batch_ind = self.drop_shadow_batch_inds[index]
    local image = i.image
    local x_offset = i.x_offset
    local rotation = i.shadow_angle or 20
@@ -90,7 +94,7 @@ function chip_layer:draw_drop_shadow(index, i, x, y, y_offset)
    end
 
    if draw then
-      if batch_ind == nil or batch_ind == 0 then
+      if batch_ind == nil then
          self.drop_shadow_batch_inds[index] = self.drop_shadow_batch:add_tile(index, {
             tile = image,
             x = x,
@@ -105,7 +109,7 @@ function chip_layer:draw_drop_shadow(index, i, x, y, y_offset)
          self.drop_shadow_batch.ycoords[index] = y
          self.drop_shadow_batch.xoffs[index] = x_offset
          self.drop_shadow_batch.yoffs[index] = y_offset
-         self.drop_shadow_batch.rotations[index] = rotation
+         self.drop_shadow_batch.rotations[index] = math.rad(rotation)
       end
    else
       self.drop_shadow_batch:remove_tile(index)
@@ -167,7 +171,7 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
 
       -- Extra data needed for rendering non-chip things like
       -- the HP bar.
-      self.chip_batch_inds[index] = {
+      batch_ind = {
          ind = index,
          x = x,
          y = y,
@@ -175,8 +179,9 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
          hp_ratio = i.hp_ratio,
          hp_bar = i.hp_bar
       }
+      self.chip_batch_inds[index] = batch_ind
    else
-      self.chip_batch.tiles[index] = image
+      self.chip_batch:set_tile_image(index, image)
       self.chip_batch.xcoords[index] = x
       self.chip_batch.ycoords[index] = y
       self.chip_batch.xoffs[index] = x_offset
@@ -200,6 +205,16 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
       batch_ind.hp_bar = i.hp_bar
    end
 
+   if batch_ind.shadow_type ~= shadow_type then
+      if batch_ind.shadow_type == "normal" then
+         self.shadow_batch:remove_tile(index)
+         self.shadow_batch_inds[index] = nil
+      elseif batch_ind.shadow_type == "drop_shadow" then
+         self.drop_shadow_batch:remove_tile(index)
+         self.drop_shadow_batch_inds[index] = nil
+      end
+   end
+
    if shadow_type == "drop_shadow" then
       --
       -- Item drop shadow.
@@ -210,12 +225,6 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
          self.shadow_batch.xcoords[index] = x
          self.shadow_batch.ycoords[index] = y
          self.shadow_batch.yoffs[index] = y_offset
-
-         batch_ind.x = x
-         batch_ind.y = y
-         batch_ind.y_offset = y_offset
-         batch_ind.hp_ratio = i.hp_ratio
-         batch_ind.hp_bar = i.hp_bar
       else
          self.shadow_batch:add_tile(index, {
             tile = "shadow",
@@ -224,7 +233,7 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
             y_offset = y_offset,
             z_order = 0
          })
-         self.shadow_batch_inds[index] = { ind = index, x = x, y = y }
+         self.shadow_batch_inds[index] = true
       end
    end
 end
@@ -234,7 +243,7 @@ function chip_layer:draw_normal(index, ind, map, mem, chip_type)
    local y = math.floor((ind-1) / map:width())
 
    local show = mem.show
-   if not map:is_in_fov(x, y) then
+   if map._in_sight[ind] ~= map._last_sight_id then -- if not map:is_in_fov(x, y) then
       show = show and CONFIG[chip_type].show_memory
    end
 
@@ -255,15 +264,16 @@ function chip_layer:update(map, dt, screen_updated, scroll_frames)
 
    assert(map ~= nil)
 
-   local found = {}
-
-   print(table.count(map._object_memory_dirty))
    for index, _ in pairs(map._object_memory_dirty) do
       local mem = map._object_memory[index]
+      local ind = map._object_memory_pos[index]
       if mem then
-         local ind = map._object_memory_pos[index]
          local chip_type = mem._type
-         self:draw_normal(index, ind, map, mem, chip_type, found)
+         self:draw_normal(index, ind, map, mem, chip_type)
+
+         self.chip_batch.updated = true
+         self.shadow_batch.updated = true
+         self.drop_shadow_batch.updated = true
       else
          self.chip_batch_inds[index] = nil
          self.shadow_batch_inds[index] = nil
@@ -276,20 +286,19 @@ function chip_layer:update(map, dt, screen_updated, scroll_frames)
    end
    table.clear(map._object_memory_dirty)
 
-   -- for uid, _ in pairs(self.chip_batch_inds) do
-   --    if not found[uid] then
-   --       local chip_uid = self.chip_batch_inds[uid]
-   --       if chip_uid then
-   --          self.chip_batch:remove_tile(chip_uid)
-   --       end
-   --       local shadow_uid = self.shadow_batch_inds[uid]
-   --       if shadow_uid then
-   --          self.shadow_batch:remove_tile(shadow_uid)
-   --       end
-   --       self.chip_batch_inds[uid] = nil
-   --       self.shadow_batch_inds[uid] = nil
-   --    end
-   -- end
+   for index, ind in pairs(map._object_memory_pos) do
+      if map._in_sight[ind] ~= map._last_sight_id then -- if not map:is_in_fov(x, y) then
+         local mem = map._object_memory[index]
+         if mem and not CONFIG[mem._type].show_memory then
+            self.chip_batch_inds[index] = nil
+            self.shadow_batch_inds[index] = nil
+            self.drop_shadow_batch_inds[index] = nil
+            self.chip_batch:remove_tile(index)
+            self.shadow_batch:remove_tile(index)
+            self.drop_shadow_batch:remove_tile(index)
+         end
+      end
+   end
 end
 
 function chip_layer:draw_hp_bars(draw_x, draw_y, offx, offy)

@@ -24,7 +24,6 @@ function sparse_batch:init(width, height, offset_x, offset_y)
    self.drawables = {}
    self.drawables_after = {}
 
-   self.free_indices = {}
    self.free_anims = {}
 
    self.batches = {}
@@ -63,6 +62,24 @@ function sparse_batch:find_tile_at(x, y)
    end
 
    return ind
+end
+
+function sparse_batch:set_tile_image(ind, tile)
+   if type(tile) == "string" then
+      if self.tiles[ind] and self.tiles[ind].tile_id == tile then
+         return
+      end
+
+      local the_anim = table.remove(self.free_anims)
+      if the_anim == nil then
+         the_anim = self.atlas:make_anim(tile)
+      else
+         self.atlas:update_anim(the_anim, tile)
+      end
+      tile = the_anim
+   end
+
+   self.tiles[ind] = tile
 end
 
 function sparse_batch:add_tile(ind, params)
@@ -108,14 +125,26 @@ end
 
 function sparse_batch:remove_tile(ind)
    local tile = self.tiles[ind]
-   self.tiles[ind] = 0
-   table.insert(self.free_indices, ind)
    if class.is_an(anim, tile) then
       table.insert(self.free_anims, tile)
    end
    if self.z_orders[ind] ~= nil then
       self.ordering:delete(self.z_orders[ind], ind)
    end
+
+   self.tiles[ind] = nil
+   self.xcoords[ind] = nil
+   self.ycoords[ind] = nil
+   self.xoffs[ind] = nil
+   self.yoffs[ind] = nil
+   self.rotations[ind] = nil
+   self.colors_r[ind] = nil
+   self.colors_g[ind] = nil
+   self.colors_b[ind] = nil
+   self.z_orders[ind] = nil
+   self.drawables[ind] = nil
+   self.drawables_after[ind] = nil
+
    self.updated = true
 end
 
@@ -136,12 +165,12 @@ function sparse_batch:clear()
    self.colors_g = {}
    self.colors_b = {}
    self.z_orders = {}
+   self.drawables = {}
+   self.drawables_after = {}
    self.batches = {}
    self.to_draw_inds = {}
    self.to_draw_drawables = {}
    self.ordering = SkipList:new()
-
-   self.free_indices = {}
 
    self.updated = true
 end
@@ -159,10 +188,10 @@ end
 
 function sparse_batch:update(dt)
    for _, t in pairs(self.tiles) do
-      -- if class.is_an(anim, t) then
-      --    local changed_frame = t:update(dt)
-      --    self.updated = changed_frame or self.updated
-      -- end
+      if class.is_an(anim, t) then
+         local changed_frame = t:update(dt)
+         self.updated = changed_frame or self.updated
+      end
    end
    for _, drawable in ipairs(self.to_draw_drawables) do
       if drawable.update then

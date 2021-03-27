@@ -110,6 +110,7 @@ function InstancedMap:init(width, height, uids, tile)
    self._object_memory_at = t()
    self._object_memory_pos = t()
    self._object_memory_dirty = t()
+   self._object_memory_free_indices = t()
 
    -- Ambient light information. See IItem.light.
    self._light = t()
@@ -507,6 +508,7 @@ function InstancedMap:reveal_objects(x, y)
          self._object_memory[index] = nil
          self._object_memory_pos[index] = nil
          self._object_memory_dirty[index] = true
+         table.insert(self._object_memory_free_indices, index)
       end
    end
    self._object_memory_at[ind] = nil
@@ -515,7 +517,7 @@ function InstancedMap:reveal_objects(x, y)
    if objs then
       for _, obj in ipairs(objs) do
          self._object_memory_at[ind] = self._object_memory_at[ind] or {}
-         local index = #self._object_memory+1
+         local index = table.remove(self._object_memory_free_indices) or #self._object_memory + 1
          local m = dead[#dead]
          if m == nil then
             m = {}
@@ -524,11 +526,13 @@ function InstancedMap:reveal_objects(x, y)
             dead[#dead] = nil
          end
          obj:produce_memory(m)
-         m._type = obj._type
-         self._object_memory[index] = m
-         table.insert(self._object_memory_at[ind], index)
-         self._object_memory_pos[index] = ind
-         self._object_memory_dirty[index] = true
+         if m.show then
+            m._type = obj._type
+            self._object_memory[index] = m
+            table.insert(self._object_memory_at[ind], index)
+            self._object_memory_pos[index] = ind
+            self._object_memory_dirty[index] = true
+         end
       end
    end
 end
