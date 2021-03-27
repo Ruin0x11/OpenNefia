@@ -6,6 +6,10 @@ local Event = {}
 
 local global_events = require("internal.global.global_events")
 
+Event.Result = {
+   Blocked = "blocked"
+}
+
 function Event.global()
    return global_events
 end

@@ -37,7 +37,6 @@ data:add {
    render = function(player)
       -- >>>>>>>> oomSEST/src/net.hsp:914 			if (length(spsIntervals) == 0) { ...
       local skin_sum = fun.wrap(global.sps_intervals:iter()):sum()
-      print(skin_sum)
       if skin_sum > 0 then
          local sps = 100.0 / skin_sum
          return ("SPS:%.03f"):format(sps)
