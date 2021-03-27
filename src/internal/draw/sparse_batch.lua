@@ -65,12 +65,10 @@ function sparse_batch:find_tile_at(x, y)
    return ind
 end
 
-function sparse_batch:add_tile(params)
+function sparse_batch:add_tile(ind, params)
    if params.tile == nil or params.tile == "" then
       return
    end
-
-   local ind = table.remove(self.free_indices) or #self.tiles + 1
 
    local z_order = params.z_order or 0
    self.ordering:insert(z_order, ind)
@@ -86,16 +84,21 @@ function sparse_batch:add_tile(params)
       tile = the_anim
    end
 
-   params.color = params.color or {}
    self.tiles[ind] = tile
    self.xcoords[ind] = params.x or 0
    self.ycoords[ind] = params.y or 0
    self.xoffs[ind] = params.x_offset or 0
    self.yoffs[ind] = params.y_offset or 0
    self.rotations[ind] = params.rotation or 0
-   self.colors_r[ind] = (params.color[1] or 255) / 255
-   self.colors_g[ind] = (params.color[2] or 255) / 255
-   self.colors_b[ind] = (params.color[3] or 255) / 255
+   if params.color then
+      self.colors_r[ind] = (params.color[1] or 255) / 255
+      self.colors_g[ind] = (params.color[2] or 255) / 255
+      self.colors_b[ind] = (params.color[3] or 255) / 255
+   else
+      self.colors_r[ind] = 1
+      self.colors_g[ind] = 1
+      self.colors_b[ind] = 1
+   end
    self.z_orders[ind] = z_order
    self.drawables[ind] = params.drawables or nil
    self.drawables_after[ind] = params.drawables_after or nil
@@ -156,10 +159,10 @@ end
 
 function sparse_batch:update(dt)
    for _, t in pairs(self.tiles) do
-      if class.is_an(anim, t) then
-         local changed_frame = t:update(dt)
-         self.updated = changed_frame or self.updated
-      end
+      -- if class.is_an(anim, t) then
+      --    local changed_frame = t:update(dt)
+      --    self.updated = changed_frame or self.updated
+      -- end
    end
    for _, drawable in ipairs(self.to_draw_drawables) do
       if drawable.update then

@@ -127,10 +127,11 @@ local class_mt = {
 _classes[class_mt] = tostring(class_mt)
 setmetatable(class_mt, { __tostring = class_mt.__tostring })
 
-local function verify(instance, interface)
+local function verify(instance, interface, message)
    if not _interfaces[interface] then
-      return string.format("%s must be an interface", tostring(interface))
+      return false, message and string.format("%s must be an interface", tostring(interface))
    end
+   local ok = true
    local err
 
    -- At this point the instance must have all the fields specified in
@@ -153,11 +154,14 @@ local function verify(instance, interface)
       end
 
       if type(instance[name]) ~= required_type and not optional then
-         err = (err or "") .. string.format("\n    %s (%s)", name, required_type)
+         ok = false
+         if message then
+            err = (err or "") .. string.format("\n    %s (%s)", name, required_type)
+         end
       end
    end
 
-   return err
+   return ok, err
 end
 
 -- TODO: this system is really bloated and doesn't preserve "self" inside nested
@@ -187,7 +191,7 @@ function class.is_an(interface, obj)
    end
 
    if type(obj) ~= "table" then
-      return false, ("Needed class '%s', got value of type '%s'"):format(tostring(interface), type(obj))
+      return false
    end
 
    if _classes[interface] then
@@ -197,20 +201,41 @@ function class.is_an(interface, obj)
          if type(name) == "table" then
             name = tostring(obj.__class)
          end
-         return false, ("Needed class '%s', got '%s'"):format(tostring(interface), tostring(name))
+         return false
       end
 
       return true
    end
 
-   local err = verify(obj, interface)
-
-   return err == nil, err
+   return verify(obj, interface)
 end
 
 function class.assert_is_an(interface, obj)
-   local ok, err = class.is_an(interface, obj)
+   local ok = class.is_an(interface, obj)
    if not ok then
+      local err = ""
+      if type(obj) ~= "table" then
+         err = ("Needed class '%s', got value of type '%s'"):format(tostring(interface), type(obj))
+      end
+
+      if err == nil then
+         if _classes[interface] then
+            local result = obj.__class == interface
+            if not result then
+               local name = obj.__class
+               if type(name) == "table" then
+                  name = tostring(obj.__class)
+               end
+               err = ("Needed class '%s', got '%s'"):format(tostring(interface), tostring(name))
+            end
+         end
+      end
+
+      if err == nil then
+         local ok
+         ok, err = verify(obj, interface, true)
+      end
+
       error(string.format("%s (%s) is not an instance of %s: %s", obj, type(obj), interface, err))
    end
 end

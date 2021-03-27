@@ -107,7 +107,9 @@ function InstancedMap:init(width, height, uids, tile)
    self._tile_memory = t()
    self._debris_memory = t()
    self._object_memory = t()
+   self._object_memory_at = t()
    self._object_memory_pos = t()
+   self._object_memory_dirty = t()
 
    -- Ambient light information. See IItem.light.
    self._light = t()
@@ -497,17 +499,36 @@ end
 function InstancedMap:reveal_objects(x, y)
    local ind = y * self._width + x + 1
 
+   local dead = {}
+   local existing = self._object_memory_at[ind]
+   if existing then
+      for _, index in ipairs(existing) do
+         dead[#dead+1] = self._object_memory[index]
+         self._object_memory[index] = nil
+         self._object_memory_pos[index] = nil
+         self._object_memory_dirty[index] = true
+      end
+   end
+   self._object_memory_at[ind] = nil
+
    local objs = self._multi_pool.positional[ind]
    if objs then
       for _, obj in ipairs(objs) do
-         self._object_memory[obj._type] = self._object_memory[obj._type] or {}
-         local m = self._object_memory[obj._type][obj.uid]
+         self._object_memory_at[ind] = self._object_memory_at[ind] or {}
+         local index = #self._object_memory+1
+         local m = dead[#dead]
          if m == nil then
             m = {}
+         else
+            table.clear(m)
+            dead[#dead] = nil
          end
          obj:produce_memory(m)
-         self._object_memory[obj._type][obj.uid] = m
-         self._object_memory_pos[obj.uid] = ind
+         m._type = obj._type
+         self._object_memory[index] = m
+         table.insert(self._object_memory_at[ind], index)
+         self._object_memory_pos[index] = ind
+         self._object_memory_dirty[index] = true
       end
    end
 end
@@ -515,19 +536,19 @@ end
 function InstancedMap:forget_objects(x, y)
    local ind = y * self._width + x + 1
 
-   for _type, m in pairs(self._object_memory) do
-      for uid, _ in pairs(m) do
-         local other_ind = self._object_memory_pos[uid]
-         if other_ind == ind then
-            self._object_memory[_type][uid] = nil
-            self._object_memory_pos[uid] = nil
-         end
+   local existing = self._object_memory_at[ind]
+   if existing then
+      for _, index in ipairs(existing) do
+         self._object_memory[index] = nil
+         self._object_memory_pos[index] = nil
+         self._object_memory_dirty[index] = true
       end
    end
+   self._object_memory_at[ind] = nil
 end
 
-function InstancedMap:iter_memory(_type)
-   return next, self._object_memory[_type] or {}, nil
+function InstancedMap:iter_memory()
+   return next, self._object_memory, nil
 end
 
 function InstancedMap:iter_charas()
