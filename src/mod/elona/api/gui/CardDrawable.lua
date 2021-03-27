@@ -27,9 +27,6 @@ function CardDrawable:draw(x, y, w, h, centered, rot)
       self.dirty = false
    end
 
-   local coords = Draw.get_coords()
-   local tw, th = coords:get_size()
-
    -- >>>>>>>> shade2/module.hsp:576 	:if %%1=528:gmode 2:pos 0,960:gcopy selItem,0,768, ...
    if self.chip_id and self.chip_id ~= "" then
       Draw.set_color(255, 255, 255, 255)

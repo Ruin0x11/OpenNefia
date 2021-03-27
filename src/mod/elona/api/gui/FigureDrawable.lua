@@ -28,10 +28,9 @@ function FigureDrawable:draw(x, y, w, h, centered, rot)
       self.dirty = false
    end
 
-   local width, height = self.batch:tile_size(self.chip_id)
-
    -- >>>>>>>> shade2/module.hsp:577 	:if %%1=531:pos 8,1058-chipCh(%%2):gcopy selChr,chi ...
    if self.chip_id and self.chip_id ~= "" then
+      local width, height = self.batch:tile_size(self.chip_id)
       Draw.set_color(255, 255, 255, 255)
       self.batch:clear()
       self.batch:add(self.chip_id, x+8, y+2, width-16, height-8, self.color)
