@@ -60,22 +60,22 @@ local function iter(state, i)
 end
 
 local function iter_reverse(state, i)
-   if i >= #state.history then
+   if i < 1 then
       return nil
    end
 
-   i = i + 1
-   local value = CircularBuffer.get(state, -i)
+   local value = CircularBuffer.get(state, i)
+   i = i - 1
 
    return i, value
 end
 
 function CircularBuffer:iter()
-   return iter, self, 1
+   return iter, self, 0
 end
 
 function CircularBuffer:iter_reverse()
-   return iter_reverse, self, 1
+   return iter_reverse, self, #self.history
 end
 
 function CircularBuffer:__len()
