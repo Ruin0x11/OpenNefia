@@ -40,8 +40,14 @@ function ICharaActivity:remove_activity()
 end
 
 function ICharaActivity:finish_activity()
-   self.activity:finish()
-   self:remove_activity()
+   local act = self.activity
+   act:finish()
+
+   -- Check if the :finish() callback started another activity, and if so don't
+   -- try to remove it.
+   if self.activity == act then
+      self:remove_activity()
+   end
 end
 
 function ICharaActivity:_proc_activity_interrupted()

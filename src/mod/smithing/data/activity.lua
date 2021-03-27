@@ -2,6 +2,9 @@ local Rand = require("api.Rand")
 local Gui = require("api.Gui")
 local Smithing = require("mod.smithing.api.Smithing")
 local Effect = require("mod.elona.api.Effect")
+local Input = require("api.Input")
+local Item = require("api.Item")
+local Prompt = require("api.gui.Prompt")
 
 data:add {
    _type = "base.activity",
@@ -45,7 +48,7 @@ data:add {
    _type = "base.activity",
    _id = "create_equipment",
 
-   params = { hammer = "table", extend = "number", categories = "table", target_item = "table", material_item = "table" },
+   params = { hammer = "table", extend = "number", categories = "table", target_item = "table", material_item = "table", infinite = "boolean" },
    default_turns = Smithing.calc_hammer_activity_turns,
 
    animation_wait = 20,
@@ -81,6 +84,49 @@ data:add {
 
    on_finish = function(self, params)
       Smithing.create_equipment(self.params.hammer, params.chara, self.params.target_item, self.params.material_item, self.params.categories, self.params.extend)
+
+      -- >>>>>>>> oomSEST/src/hammer.hsp:596 		if (hmrepeat != 2) { ...
+      local do_repeat
+      local infinite = self.params.infinite
+      if infinite then
+         do_repeat = true
+      else
+         Gui.mes("smithing.blacksmith_hammer.create.again.prompt")
+         Gui.update_screen()
+         local choices = {
+            { text = "ui.yes", key = "y" },
+            { text = "ui.no",  key = "n" }
+         }
+         if self.params.hammer.bonus >= 7 then
+            choices[#choices+1] = { text = "smithing.blacksmith_hammer.create.again.choices.infinity", key = "h" }
+         end
+         local res = Prompt:new(choices):query()
+         do_repeat = res.index == 1 or res.index == 3
+         infinite = res.index == 3
+      end
+
+      if do_repeat then
+         local proceed = true
+
+         local new_target = params.chara:find_item(self.params.target_item._id)
+         if not Item.is_alive(new_target) then
+            proceed = false
+         end
+         local new_material
+         if self.params.material_item then
+            new_material = params.chara:find_item(self.params.material_item._id)
+            if not Item.is_alive(new_material) then
+               proceed = false
+            end
+         end
+
+         if proceed then
+            params.chara:start_activity("smithing.create_equipment", {hammer=self.params.hammer, categories=self.params.categories, target_item=new_target, material_item=new_material, infinite=infinite})
+         else
+            Gui.mes("smithing.blacksmith_hammer.create.again.insufficent_material")
+         end
+      end
+      -- <<<<<<<< oomSEST/src/hammer.hsp:660 		} ..
    end
 }
 

@@ -2,10 +2,6 @@ local Item = require("api.Item")
 local global = require("mod.smithing.internal.global")
 local Smithing = require("mod.smithing.api.Smithing")
 
-local function find_hammer(player)
-   return player:iter_items():filter(function(i) return i._id == "smithing.blacksmith_hammer" end):nth(1)
-end
-
 data:add {
    _type = "simple_indicators.indicator",
    _id = "hammer_level",
@@ -19,7 +15,7 @@ data:add {
       end
 
       if global.tracked_hammer == nil then
-         global.tracked_hammer = find_hammer(player)
+         global.tracked_hammer = player:find_item("smithing.blacksmith_hammer")
       end
 
       if Item.is_alive(global.tracked_hammer) then
@@ -41,8 +37,9 @@ data:add {
    render = function(player)
       -- >>>>>>>> oomSEST/src/net.hsp:914 			if (length(spsIntervals) == 0) { ...
       local skin_sum = fun.wrap(global.sps_intervals:iter()):sum()
+      print(skin_sum)
       if skin_sum > 0 then
-         local sps = skin_sum / 1000.0
+         local sps = 100.0 / skin_sum
          return ("SPS:%.03f"):format(sps)
       end
       -- <<<<<<<< oomSEST/src/net.hsp:926 			} ..
