@@ -130,7 +130,7 @@ data:add {
 
    match = function(item)
       return item:calc("identify_state") >= Enum.IdentifyState.Quality
-         and item:calc("quality") == Enum.Quality.Good
+         and item:calc("quality") == Enum.Quality.Normal
    end
 }
 
@@ -140,7 +140,7 @@ data:add {
 
    match = function(item)
       return item:calc("identify_state") >= Enum.IdentifyState.Quality
-         and item:calc("quality") == Enum.Quality.Great
+         and item:calc("quality") == Enum.Quality.Good
    end
 }
 
@@ -150,7 +150,7 @@ data:add {
 
    match = function(item)
       return item:calc("identify_state") >= Enum.IdentifyState.Quality
-         and item:calc("quality") == Enum.Quality.Miracle
+         and item:calc("quality") == Enum.Quality.Great
    end
 }
 
@@ -160,7 +160,7 @@ data:add {
 
    match = function(item)
       return item:calc("identify_state") >= Enum.IdentifyState.Quality
-         and item:calc("quality") == Enum.Quality.Godly
+         and item:calc("quality") == Enum.Quality.God
    end
 }
 
@@ -170,7 +170,7 @@ data:add {
 
    match = function(item)
       return item:calc("identify_state") >= Enum.IdentifyState.Quality
-         and item:calc("quality") == Enum.Quality.Special
+         and item:calc("quality") == Enum.Quality.Unique
    end
 }
 
