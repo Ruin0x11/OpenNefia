@@ -13,6 +13,7 @@ InputHandler:delegate("keys", {
                          "run_keybind_action",
                          "key_held_frames",
                          "is_modifier_held",
+                         "is_shift_delayed_key",
                          "ignore_modifiers",
                          "release_key",
 })

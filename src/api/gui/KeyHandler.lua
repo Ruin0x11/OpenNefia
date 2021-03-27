@@ -2,20 +2,9 @@ local Log = require("api.Log")
 local IKeyInput = require("api.gui.IKeyInput")
 local KeybindTranslator = require("api.gui.KeybindTranslator")
 local Queue = require("api.Queue")
+local data = require("internal.data")
 
 local input = require("internal.input")
-
--- TODO: needs to handle direction keypress combinations
-local REPEATS = table.set {
-   "north",
-   "south",
-   "west",
-   "east",
-   "northwest",
-   "northeast",
-   "southwest",
-   "southeast"
-}
 
 local MODIFIERS = table.set {
    "ctrl",
@@ -124,8 +113,25 @@ function KeyHandler:halt_input()
 end
 
 -- Special key repeat for keys bound to a movement action.
-function KeyHandler:is_repeating_key(key)
-   return REPEATS[self.keybinds:key_to_keybind(key, {}) or ""]
+function KeyHandler:is_shift_delayed_key(key, modifiers)
+   local kb = self.keybinds:key_to_keybind(key, modifiers)
+   if kb then
+      local _id = self.keybinds:full_keybind_id(kb)
+      if _id then
+         local proto = data["base.keybind"]:ensure(_id)
+         if proto and proto.uses_shift_delay then
+            return true
+         end
+      end
+   end
+
+   for _, forward in ipairs(self.forwards) do
+      if forward:is_shift_delayed_key(key, modifiers) then
+         return true
+      end
+   end
+
+   return false
 end
 
 function KeyHandler:prepend_key_modifiers(key)
@@ -157,16 +163,26 @@ end
 
 function KeyHandler:run_key_action(key, ...)
    local it = self.repeat_delays[key]
+   local can_shift = self:is_shift_delayed_key(key, self.modifiers)
+
    if it then
       it.wait_remain = it.wait_remain - 1
       if it.wait_remain <= 0 then
-         if self:is_repeating_key(key) then
-            it.delay = 40 * 2
+         if can_shift then
+            if self.no_repeat_delay then
+               it.delay = 40 * 2
+            else
+               it.delay = 20
+            end
          end
          it.fast = true
       elseif it.fast then
-         if self:is_repeating_key(key) then
-            it.delay = 40 * 2
+         if can_shift then
+            if self.no_repeat_delay then
+               it.delay = 40 * 2
+            else
+               it.delay = 20
+            end
          else
             it.delay = 10
          end
@@ -223,9 +239,10 @@ end
 
 function KeyHandler:handle_repeat(key, dt)
    local it = self.repeat_delays[key] or {}
+   local can_shift = self:is_shift_delayed_key(key, self.modifiers)
 
    if it.wait_remain == nil then
-      if self:is_repeating_key(key) then
+      if can_shift then
          if self.no_repeat_delay then
             it.wait_remain = 0
             it.delay = 40
@@ -247,7 +264,7 @@ function KeyHandler:handle_repeat(key, dt)
       end
    end
 
-   if self.pressed["shift"] then
+   if can_shift and self.pressed["shift"] then
       it.delay = 10
    end
 

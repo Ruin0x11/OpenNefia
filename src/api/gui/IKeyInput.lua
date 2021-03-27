@@ -11,6 +11,7 @@ return class.interface("IKeyInput",
                     unbind_keys = "function",
                     key_held_frames = "function",
                     is_modifier_held = "function",
+                    is_shift_delayed_key = "function",
                     ignore_modifiers = "function",
                     release_key = "function"
                  },
