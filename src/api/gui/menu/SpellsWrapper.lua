@@ -1,15 +1,11 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
-local I18N = require("api.I18N")
-local Chara = require("api.Chara")
 
 local IInput = require("api.gui.IInput")
 local IUiLayer = require("api.gui.IUiLayer")
 local IconBar = require("api.gui.menu.IconBar")
 local InputHandler = require("api.gui.InputHandler")
 local UiTheme = require("api.gui.UiTheme")
-local data = require("internal.data")
-local WindowTitle = require("api.gui.menu.WindowTitle")
 local SpellsMenu = require("api.gui.menu.SpellsMenu")
 local SkillsMenu = require("api.gui.menu.SkillsMenu")
 
@@ -17,11 +13,12 @@ local SpellsWrapper = class.class("SpellsWrapper", IUiLayer)
 
 SpellsWrapper:delegate("input", IInput)
 
-function SpellsWrapper:init(index)
+function SpellsWrapper:init(player, starting_menu)
    self.x = 0
    self.y = 0
    self.width = Draw.get_width()
    self.height = Draw.get_height()
+   self.player = player
 
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
@@ -37,14 +34,20 @@ function SpellsWrapper:init(index)
       SkillsMenu
    }
 
-   self.selected_index = math.clamp(index or 1, 1, #self.menus)
-   self.sound = self.menus[self.selected_index].sound
+   if starting_menu then
+      self.selected_index = table.index_of(self.menus, starting_menu)
+      if self.selected_index == nil then
+         error(("Unknown spells menu %s"):format(starting_menu))
+      end
+   else
+      self.selected_index = 1
+   end
+
+   self.menus = fun.iter(self.menus)
+      :map(function(klass) return klass:new(self.player) end)
+      :to_list()
 
    self:switch_context()
-end
-
-function SpellsWrapper:on_query()
-   Gui.play_sound(self.sound)
 end
 
 function SpellsWrapper:make_keymap()
@@ -63,8 +66,6 @@ function SpellsWrapper:next_menu()
    end
 
    self:switch_context()
-
-   Gui.play_sound(self.menus[self.selected_index].sound)
 end
 
 function SpellsWrapper:previous_menu()
@@ -73,14 +74,13 @@ function SpellsWrapper:previous_menu()
       self.selected_index = #self.menus
    end
 
-   Gui.play_sound("base.pop1")
-
    self:switch_context()
 end
 
 function SpellsWrapper:switch_context()
-   self.submenu = self.menus[self.selected_index]:new(Chara.player())
+   self.submenu = self.menus[self.selected_index]
    self.input:forward_to(self.submenu)
+   self.submenu:on_query()
 
    self.icon_bar:select(self.selected_index)
 

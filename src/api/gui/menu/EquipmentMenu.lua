@@ -236,6 +236,15 @@ function EquipmentMenu.message_weapon_stats(chara)
    -- <<<<<<<< shade2/command.hsp:3074 	return ..
 end
 
+function EquipmentMenu:on_exit_result()
+   if self.changed_equipment then
+      Gui.mes("action.equip.you_change")
+      return "turn_end"
+   end
+
+   return "player_turn_query"
+end
+
 function EquipmentMenu:update(dt)
    local canceled = self.canceled
    local chosen = self.pages.chosen
@@ -246,12 +255,7 @@ function EquipmentMenu:update(dt)
    self.pages:update(dt)
 
    if canceled then
-      if self.changed_equipment then
-         Gui.mes("action.equip.you_change")
-         return "turn_end"
-      end
-
-      return "player_turn_query"
+      return nil, "canceled"
    end
 
    if chosen then

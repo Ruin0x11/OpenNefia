@@ -76,8 +76,6 @@ function SkillsMenu.generate_list(chara)
    return list
 end
 
-SkillsMenu.sound = "base.skill"
-
 local last_index
 
 function SkillsMenu:init(chara)
@@ -96,6 +94,10 @@ function SkillsMenu:init(chara)
    if last_index then
       self.pages:select(last_index)
    end
+end
+
+function SkillsMenu:on_query()
+   Gui.play_sound("base.skill")
 end
 
 function SkillsMenu:make_keymap()

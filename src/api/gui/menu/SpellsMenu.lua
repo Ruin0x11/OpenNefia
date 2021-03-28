@@ -73,8 +73,6 @@ function SpellsMenu.generate_list(chara)
    return list
 end
 
-SpellsMenu.sound = "base.spell"
-
 local last_index
 
 function SpellsMenu:init(chara)
@@ -93,6 +91,10 @@ function SpellsMenu:init(chara)
    if last_index then
       self.pages:select(last_index)
    end
+end
+
+function SpellsMenu:on_query()
+   Gui.play_sound("base.spell")
 end
 
 function SpellsMenu:make_keymap()

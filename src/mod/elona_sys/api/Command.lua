@@ -16,6 +16,10 @@ local Prompt = require("api.gui.Prompt")
 local Feat = require("api.Feat")
 local JournalMenu = require("api.gui.menu.JournalMenu")
 local Shortcut = require("mod.elona.api.Shortcut")
+local CharacterInfoMenu = require("api.gui.menu.CharacterInfoMenu")
+local SpellsMenu = require("api.gui.menu.SpellsMenu")
+local SkillsMenu = require("api.gui.menu.SkillsMenu")
+local CharacterInfoWrapper = require("api.gui.menu.CharacterInfoWrapper")
 
 --- Game logic intended for the player only.
 local Command = {}
@@ -165,7 +169,7 @@ function Command.dip(player)
 end
 
 function Command.wear(player)
-   return EquipmentMenu:new(player):query()
+   return CharacterInfoWrapper:new(player, EquipmentMenu):query()
 end
 
 function Command.close(player)
@@ -304,11 +308,8 @@ function Command.quit_game()
    -- <<<<<<<< shade2/command.hsp:4374 	goto *pc_turn ..
 end
 
-local CharacterInfoWrapper = require("api.gui.menu.CharacterInfoWrapper")
-
-function Command.chara_info()
-   CharacterInfoWrapper:new():query()
-   return "player_turn_query"
+function Command.chara_info(player)
+   return CharacterInfoWrapper:new(player, CharacterInfoMenu):query()
 end
 
 local SpellsWrapper = require("api.gui.menu.SpellsWrapper")
@@ -339,7 +340,7 @@ local function handle_spells_result(result, chara)
 end
 
 function Command.cast(player)
-   local result, canceled = SpellsWrapper:new(1):query()
+   local result, canceled = SpellsWrapper:new(player, SpellsMenu):query()
    if canceled then
       return "player_turn_query"
    end
@@ -347,7 +348,7 @@ function Command.cast(player)
 end
 
 function Command.skill(player)
-   local result, canceled = SpellsWrapper:new(2):query()
+   local result, canceled = SpellsWrapper:new(player, SkillsMenu):query()
    if canceled then
       return "player_turn_query"
    end
