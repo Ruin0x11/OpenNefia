@@ -220,10 +220,6 @@ function field_layer:refresh_hud(relayout)
    end
 end
 
-function field_layer:get_message_window()
-   return self.hud.widgets:get("hud_message_window"):widget()
-end
-
 function field_layer:update(dt, ran_action, result)
    self.renderer:update(self.map, dt)
 

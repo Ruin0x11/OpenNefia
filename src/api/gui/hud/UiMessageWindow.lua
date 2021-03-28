@@ -4,8 +4,9 @@ local IUiWidget = require("api.gui.IUiWidget")
 local CircularBuffer = require("api.CircularBuffer")
 local save = require("internal.global.save")
 local config = require("internal.config")
+local IEventEmitter = require("api.IEventEmitter")
 
-local UiMessageWindow = class.class("UiMessageWindow", IUiWidget)
+local UiMessageWindow = class.class("UiMessageWindow", {IUiWidget, IEventEmitter})
 
 function UiMessageWindow:init()
    self.width = 800
@@ -28,12 +29,32 @@ function UiMessageWindow:init()
    self:recalc_lines()
 end
 
+function UiMessageWindow:handle_on_hud_message(params)
+   local action = params.action
+
+   if action == "message" then
+      self:message(params.text, params.color)
+   elseif action == "newline" then
+      self:do_newline()
+   elseif action == "new_turn" then
+      self:new_turn()
+   elseif action == "clear" then
+      self:clear()
+   end
+end
+
 function UiMessageWindow:default_widget_position(x, y, width, height)
    return x + 124, height - (72 + 16), width - 124, 72
 end
 
 function UiMessageWindow:default_widget_z_order()
    return 50000
+end
+
+function UiMessageWindow:bind_events()
+   self:connect_global("base.on_hud_message",
+                       "Handle HUD message",
+                       function(_, params) self:handle_on_hud_message(params) end)
 end
 
 function UiMessageWindow:relayout(x, y, width, height)

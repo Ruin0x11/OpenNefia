@@ -150,6 +150,9 @@ function startup.run(mods)
    draw.reload_window_mode()
    draw.set_default_font(config.base.default_font)
 
+   -- Load built-in event hooks.
+   events.require_all()
+
    Event.trigger("base.before_engine_init")
 
    progress("Loading tilemaps...")
@@ -161,9 +164,6 @@ function startup.run(mods)
    i18n.switch_language(config.base.language)
 
    field:setup_repl()
-
-   -- Load built-in event hooks.
-   events.require_all()
 
    Event.trigger("base.on_engine_init")
 

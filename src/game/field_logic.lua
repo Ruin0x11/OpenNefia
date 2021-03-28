@@ -184,7 +184,7 @@ function field_logic.turn_begin()
    -- BUG: don't pass time if just loaded from save
    World.pass_time_in_seconds(starting_turn_time / 5 + 1)
 
-   field:get_message_window():new_turn()
+   Event.trigger("base.on_hud_message", {action="new_turn"})
 
    return "pass_turns"
 end

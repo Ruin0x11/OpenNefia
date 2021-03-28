@@ -7,6 +7,8 @@ local Ui = require("api.Ui")
 local ColorBand = require("mod.skill_tracker_ex.api.gui.ColorBand")
 local LogWidget = require("mod.tools.api.gui.LogWidget")
 local UiShadowedText = require("api.gui.UiShadowedText")
+local Map = require("api.Map")
+local Chara = require("api.Chara")
 
 local UiSkillTrackerEx = class.class("UiSkillTrackerEx", {IUiWidget, ISettable})
 
@@ -108,9 +110,6 @@ function UiSkillTrackerEx:on_gain_skill_exp(skill_id, base_amount, actual_amount
    self.log_widget:print_raw(("%s    %s%d (%d)"):format(skill_name, sign, base_amount, actual_amount), color)
 end
 
-local Chara
-local Map
-
 function UiSkillTrackerEx:draw()
    local y = self.y
 
@@ -139,10 +138,6 @@ function UiSkillTrackerEx:draw()
 end
 
 function UiSkillTrackerEx:update(dt)
-   -- HACK
-   Map = Map or require("api.Map")
-   Chara = Chara or require("api.Chara")
-
    local remove = {}
    for uid, _ in pairs(self.tracked_skill_ids) do
       local chara = Map.current():get_object(uid)

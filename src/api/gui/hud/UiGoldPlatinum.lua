@@ -28,18 +28,7 @@ function UiGoldPlatinum:relayout(x, y)
    self.t = UiTheme.load(self)
 end
 
-local Chara
-
 function UiGoldPlatinum:draw()
-   -- HACK hud
-   Chara = Chara or require("api.Chara")
-   local chara = Chara.player()
-   if not chara then
-      return
-   end
-   local gold = chara.gold
-   local plat = chara.platinum
-
    Draw.set_font(12)
 
    Draw.set_color(255, 255, 255)
