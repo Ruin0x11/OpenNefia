@@ -278,7 +278,8 @@ function InventoryMenu.build_list(ctxt)
                item_name = source:get_item_name(item_name, item)
             end
             for _, index, sc in Shortcut.iter() do
-               if sc.inventory_proto_id == ctxt.proto._id
+               if sc.item_id == item._id
+                  and sc.inventory_proto_id == ctxt.proto._id
                   and (not config.elona.item_shortcuts_respect_curse_state or sc.curse_state == item:calc("curse_state"))
                then
                   item_name = ("%s {%d}"):format(item_name, index)
