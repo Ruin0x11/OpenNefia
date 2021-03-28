@@ -161,6 +161,7 @@ function Nefia.spawn_boss(map)
 
    boss.is_precious = true
    boss.name = ("%s Lv%d"):format(boss.name, boss.level)
+   boss.relation = Enum.Relation.Enemy
 
    return boss
    -- <<<<<<<< shade2/main.hsp:1749 	swbreak ..
