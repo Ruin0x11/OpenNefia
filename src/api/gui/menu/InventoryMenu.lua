@@ -7,6 +7,7 @@ local Chara = require("api.Chara")
 local MapObjectBatch = require("api.draw.MapObjectBatch")
 local save = require("internal.global.save")
 local config = require("internal.config")
+local Shortcut = require("mod.elona.api.Shortcut")
 
 local IInput = require("api.gui.IInput")
 local UiList = require("api.gui.UiList")
@@ -187,38 +188,13 @@ function InventoryMenu:assign_shortcut(index)
 
    Gui.play_sound("base.ok1")
 
-   local sc = {
-      type = "item",
-      item_id = item._id,
-      inventory_proto_id = self.ctxt.proto._id,
-      curse_state = item:calc("curse_state")
-   }
-
-   local scs_equal = function(sc, other_sc)
-      return sc.type == other_sc.type
-         and sc.item_id == other_sc.item_id
-         and sc.inventory_proto_id == other_sc.inventory_proto_id
-         and (not config.elona.item_shortcuts_respect_curse_state or sc.curse_state == other_sc.curse_state)
-   end
-
    -- TODO Break this dependency (#30)
-   local other = save.elona.shortcuts[index]
-   if other and scs_equal(sc, other) then
-      save.elona.shortcuts[index] = nil
-      self:update_filtering() -- update the shortcut text ("{1}")
-      return
+   local result = Shortcut.bind_item_shortcut(index, item._id, self.ctxt.proto._id, item:calc("curse_state"))
+
+   if result == "bind" then
+      Gui.mes("ui.assign_shortcut", index)
    end
-
-   for other_index, other_sc in pairs(save.elona.shortcuts) do
-      if scs_equal(sc, other_sc) then
-         save.elona.shortcuts[other_index] = nil
-      end
-   end
-
-   save.elona.shortcuts[index] = sc
-   self:update_filtering() -- update the shortcut text ("{1}")
-
-   Gui.mes("ui.assign_shortcut", index)
+   self:update_filtering()
    -- <<<<<<<< oomSEST/src/southtyris.hsp:52068 		} ..
 end
 

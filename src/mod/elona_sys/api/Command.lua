@@ -15,6 +15,7 @@ local ConfigMenuWrapper = require("api.gui.menu.config.ConfigMenuWrapper")
 local Prompt = require("api.gui.Prompt")
 local Feat = require("api.Feat")
 local JournalMenu = require("api.gui.menu.JournalMenu")
+local Shortcut = require("mod.elona.api.Shortcut")
 
 --- Game logic intended for the player only.
 local Command = {}
@@ -110,58 +111,6 @@ function Command.move(player, x, y)
    -- >>>>>>>> shade2/action.hsp:598 		} ..
 end
 
---- Causes the same behavior as selecting the given item in a given
---- inventory context. The item must be contained in the inventory's
---- sources and be selectable.
----
---- @tparam IItem item
---- @tparam string operation
---- @tparam[opt] table params
---- @treturn[opt] IItem non-nil on success
---- @treturn[opt] string error
-function Command.activate_shortcut(item, operation, params, rest)
-   if type(operation) ~= "string" then
-      error(string.format("Invalid inventory operation: %s", operation))
-   end
-
-   if not Item.is_alive(item) then
-      return nil, "item_dead"
-   end
-
-   local proto = data["elona_sys.inventory_proto"]:ensure(operation)
-
-   params = params or {}
-   params.chara = params.chara or item:get_owning_chara() or nil
-   params.map = (params.chara and params.chara:current_map()) or nil
-
-   local InventoryContext = require("api.gui.menu.InventoryContext")
-   local ctxt = InventoryContext:new(proto, params)
-
-   local turn_result, err = ctxt:on_shortcut(item)
-   if turn_result ~= nil then
-      return nil, err, "on_shortcut"
-   end
-
-   local ok
-   ok, err = ctxt:filter(item)
-   if not ok then
-      return nil, err, "filter"
-   end
-
-   turn_result = ctxt:after_filter({item})
-   if turn_result ~= nil then
-      return nil, nil, "after_filter"
-   end
-
-   ok, err = ctxt:can_select(item)
-   if not ok then
-      return nil, err, "can_select"
-   end
-
-   ok, err = ctxt:on_select(item, nil, rest or nil)
-   return ok, err, "on_select"
-end
-
 function Command.get(player)
    -- TODO: plants
    -- traps
@@ -180,7 +129,7 @@ function Command.get(player)
 
    if #items == 1 then
       local item = items[1]
-      Command.activate_shortcut(item, "elona.inv_get", { chara = player })
+      Shortcut.activate_item_shortcut(item, "elona.inv_get", { chara = player })
       return "turn_end"
    end
 

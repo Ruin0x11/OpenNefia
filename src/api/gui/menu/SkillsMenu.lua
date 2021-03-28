@@ -5,6 +5,7 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Ui = require("api.Ui")
 local data = require("internal.data")
 local save = require("internal.global.save")
+local Shortcut = require("mod.elona.api.Shortcut")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local UiList = require("api.gui.UiList")
@@ -122,39 +123,15 @@ function SkillsMenu:assign_shortcut(index)
       return
    end
 
-   local sc = {
-      type = "skill",
-      skill_id = entry._id,
-   }
-
-   local rebuild_list = function()
-      local list = SkillsMenu.generate_list(self.chara) -- update the shortcut text ("{1}")
-      self.pages:set_data(list)
-   end
-
-   local scs_equal = function(sc, other_sc)
-      return sc.type == other_sc.type
-         and sc.skill_id == other_sc.skill_id
-   end
-
    -- TODO Break this dependency (#30)
-   local other = save.elona.shortcuts[index]
-   if other and scs_equal(sc, other) then
-      save.elona.shortcuts[index] = nil
-      rebuild_list()
-      return
+   local result = Shortcut.bind_skill_shortcut(index, entry._id)
+
+   if result == "bind" then
+      Gui.mes("ui.assign_shortcut", index)
    end
 
-   for other_index, other_sc in pairs(save.elona.shortcuts) do
-      if scs_equal(sc, other_sc) then
-         save.elona.shortcuts[other_index] = nil
-      end
-   end
-
-   save.elona.shortcuts[index] = sc
-   rebuild_list()
-
-   Gui.mes("ui.assign_shortcut", index)
+   local list = SkillsMenu.generate_list(self.chara) -- update the shortcut text ("{1}")
+   self.pages:set_data(list)
    -- <<<<<<<< oomSEST/src/southtyris.hsp:45961 	} ..
 end
 
