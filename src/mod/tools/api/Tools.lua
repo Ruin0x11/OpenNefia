@@ -10,8 +10,6 @@ local Rand = require("api.Rand")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Mef = require("api.Mef")
-local IOwned = require("api.IOwned")
-local ElonaItem = require("mod.elona.api.ElonaItem")
 local Enum = require("api.Enum")
 local Effect = require("mod.elona.api.Effect")
 local Area = require("api.Area")
@@ -30,6 +28,7 @@ local ElonaAction = require("mod.elona.api.ElonaAction")
 local Hunger = require("mod.elona.api.Hunger")
 local Home = require("mod.elona.api.Home")
 local IMef = require("api.mef.IMef")
+local Shortcut = require("mod.elona.api.Shortcut")
 
 local Tools = {}
 
@@ -1009,6 +1008,14 @@ function Tools.powerup(chara, levels)
 
    chara:refresh()
    chara:heal_to_max()
+
+   if chara:is_player() then
+      Shortcut.assign_skill_shortcut(1, "elona.spell_crystal_spear")
+      Shortcut.assign_skill_shortcut(2, "elona.spell_magic_storm")
+      Shortcut.assign_skill_shortcut(4, "elona.spell_healing_rain")
+      Shortcut.assign_skill_shortcut(8, "elona.spell_sense_object")
+      Shortcut.assign_skill_shortcut(9, "elona.spell_magic_map")
+   end
 end
 
 local function visit_quest_giver(quest)

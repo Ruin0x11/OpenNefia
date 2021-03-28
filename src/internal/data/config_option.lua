@@ -425,8 +425,9 @@ data:add {
       "base.always_center",
       "base.alert_wait",
       "base.screen_refresh",
-      "base.anime_wait",
       "base.background_effect_wait",
+      "base.anime_wait",
+      "base.anime_wait_type",
       "base.scroll_when_run"
    }
 }
