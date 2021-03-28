@@ -265,11 +265,6 @@ function InventoryMenu.build_list(ctxt)
       sources = {sources}
    end
 
-   local shortcuts = Shortcut.iter()
-      :filter(function(i, sc) return sc.type == "item" end)
-      :map(function(i, sc) return sc.item_id, i end)
-      :to_map()
-
    -- Obtain an iterator of IItem for each source. For example, calls
    -- IChara:iter_inventory() for the "chara" and "target" sources.
    for _, source in pairs(sources) do
@@ -282,14 +277,12 @@ function InventoryMenu.build_list(ctxt)
             if source.get_item_name then
                item_name = source:get_item_name(item_name, item)
             end
-            local shortcut_index = shortcuts[item._id]
-            if shortcut_index then
-               print("GET", inspect(shortcut_index))
-               local sc = Shortcut.get(shortcut_index)
+            for _, index, sc in Shortcut.iter() do
                if sc.inventory_proto_id == ctxt.proto._id
                   and (not config.elona.item_shortcuts_respect_curse_state or sc.curse_state == item:calc("curse_state"))
                then
-                  item_name = ("%s {%d}"):format(item_name, shortcut_index)
+                  item_name = ("%s {%d}"):format(item_name, index)
+                  break
                end
             end
 
