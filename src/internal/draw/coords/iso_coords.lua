@@ -31,10 +31,11 @@ function iso_coords:find_bounds(x, y, width, height)
    return tx, ty, tdx, tdy
 end
 
-function iso_coords:get_draw_pos(tx, ty, mw, mh, width, height)
-   local tile_size = 64
-   local x = tx * tile_size - width / 2 - tile_size - 48
-   local y = ty * tile_size - height / 2 - tile_size*2 - 48
+function iso_coords:get_draw_pos(sx, sy, mw, mh, width, height)
+   local tile_width = 64
+   local tile_height = 64
+   local x = sx - width / 2 - tile_width - 48
+   local y = sy - height / 2 - tile_height*2 - 48
    return x, y
 end
 

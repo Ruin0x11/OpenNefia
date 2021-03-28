@@ -24,3 +24,5 @@ local function proc_autopickup(chara)
    -- <<<<<<<< oomSEST/src/southtyris.hsp:67722 		} ..
 end
 Event.register("base.on_chara_moved", "Proc autopickup", proc_autopickup)
+
+Event.register("base.on_game_initialize", "Clear autopickup cache", Autopickup.clear_cache)

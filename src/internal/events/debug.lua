@@ -1,5 +1,6 @@
 local Event = require("api.Event")
 local config = require("internal.config")
+local DebugStatsHook = require("mod.tools.api.debug.DebugStatsHook")
 
 local function impl_debug_hp_always_full(chara, params, result)
    -- >>>>>>>> shade2/chara_func.hsp:1476 		if dbg_hpAlwaysFull@:cHP(tc)=cMHP(tc) ...
@@ -11,3 +12,5 @@ local function impl_debug_hp_always_full(chara, params, result)
    return result
 end
 Event.register("base.after_chara_damaged", "Implement config.base.hp_always_full", impl_debug_hp_always_full)
+
+Event.register("base.on_hotload_end", "Reset debug hook", DebugStatsHook.clear_results, {priority = 100000})

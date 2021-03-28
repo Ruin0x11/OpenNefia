@@ -104,7 +104,15 @@ function InstancedMap:init(width, height, uids, tile)
 
    -- Memory data produced by map objects. These are expected to be
    -- interpreted by each rendering layer.
-   self._memory = t()
+   self._tile_memory = t()
+   self._debris_memory = t()
+   self._object_memory = t()
+   self._object_memory_at = t()
+   self._object_memory_z_order = t()
+   self._object_memory_pos = t()
+   self._object_memory_added = t()
+   self._object_memory_removed = t()
+   self._redraw_all = false
 
    -- Ambient light information. See IItem.light.
    self._light = t()
@@ -236,7 +244,11 @@ function InstancedMap:iter_tiles()
 end
 
 function InstancedMap:iter_tile_memory()
-   return fun.range(self._width * self._height):map(function(i) return (self._memory["base.map_tile"] or {})[i] end)
+   return next, self._tile_memory, nil
+end
+
+function InstancedMap:iter_debris_memory()
+   return next, self._debris_memory, nil
 end
 
 function InstancedMap:set_tile(x, y, id)
@@ -255,14 +267,6 @@ end
 
 function InstancedMap:tile(x, y)
    return self._tiles[y*self._width+x+1]
-end
-
-function InstancedMap:memory(x, y, kind)
-   local memory = self._memory[kind]
-   if memory == nil then
-      return nil
-   end
-   return memory[y*self._width+x+1]
 end
 
 function InstancedMap:light(x, y)
@@ -455,57 +459,33 @@ function InstancedMap:memorize_tile(x, y)
 
    self._in_sight[ind] = self._last_sight_id
 
-   local memory = self._memory
-   for m, _ in pairs(memory) do
-      if m ~= "base.map_tile" then
-         if memory[m][ind] then
-            for i = 1, #memory[m][ind] do
-               local t = memory[m][ind][i]
-               for k, _ in pairs(t) do
-                  t[k] = nil
-               end
-            end
-         end
-      end
-   end
+   self._tile_memory[ind] = self:tile(x, y)
+   self._debris_memory[ind] = table.deepcopy(self.debris[ind])
 
-   memory["base.map_tile"] = memory["base.map_tile"] or {}
-   memory["base.map_tile"][ind] = memory["base.map_tile"][ind] or {}
-   memory["base.map_tile"][ind][1] = self:tile(x, y)
-
-   local objs = self._multi_pool.positional[ind]
-   if objs then
-      for _, obj in ipairs(objs) do
-         local m = {}
-         obj:produce_memory(m)
-         memory[obj._type] = memory[obj._type] or {}
-         memory[obj._type][ind] = memory[obj._type][ind] or {}
-         table.insert(memory[obj._type][ind], m)
-      end
-   end
+   self:reveal_objects(x, y)
 
    self._tiles_dirty[#self._tiles_dirty+1] = y * self._width + x + 1
    self._memorized[ind] = true
 end
 
 function InstancedMap:is_memorized(x, y)
-   local memory = self._memory
-   local ind = y * self._width + x + 1;
+   local ind = y * self._width + x + 1
 
    if self._memorized[ind] ~= nil then
       return self._memorized[ind]
    end
 
-   local result = memory["base.map_tile"]
-      and memory["base.map_tile"][ind]
-      and memory["base.map_tile"][ind][1]._id == self:tile(x, y)._id
+   local memory = self._tile_memory[ind]
+   if memory == nil then
+      return false
+   end
 
+   local result = memory._id == self:tile(x, y)._id
    self._memorized[ind] = result
    return result
 end
 
 function InstancedMap:reveal_tile(x, y, tile_id)
-   local memory = self._memory
    local ind = y * self._width + x + 1
 
    local tile
@@ -513,39 +493,83 @@ function InstancedMap:reveal_tile(x, y, tile_id)
       tile = data["base.map_tile"]:ensure(tile_id)
    end
 
-   memory["base.map_tile"] = memory["base.map_tile"] or {}
-   memory["base.map_tile"][ind] = { tile or self:tile(x, y) }
+   self._tile_memory[ind] = tile or self:tile(x, y)
 
    self._tiles_dirty[#self._tiles_dirty+1] = y * self._width + x + 1
    self._memorized[ind] = nil
 end
 
 function InstancedMap:reveal_objects(x, y)
-   local memory = self._memory
-   local ind = y * self._width + x + 1;
+   local ind = y * self._width + x + 1
 
-   for _, obj in self._multi_pool:objects_at_pos(x, y) do
-      local m = {}
-      obj:produce_memory(m)
-      memory[obj._type] = memory[obj._type] or {}
-      memory[obj._type][ind] = memory[obj._type][ind] or {}
-      table.insert(memory[obj._type][ind], m)
+   local dead = {}
+   local dead_mem = {}
+   local existing = self._object_memory_at[ind]
+   if existing then
+      for _, index in ipairs(existing) do
+         local mem = self._object_memory[index]
+         dead[mem.uid] = index
+         dead_mem[index] = mem
+         self._object_memory[index] = nil
+         self._object_memory_pos[index] = nil
+         self._object_memory_z_order[index] = nil
+
+         self._object_memory_removed[index] = true
+      end
    end
-end
+   self._object_memory_at[ind] = nil
 
-function InstancedMap:forget_objects(x, y)
-   local memory = self._memory
-   local ind = y * self._width + x + 1;
-
-   for t, m in pairs(memory) do
-      if t ~= "base.map_tile" then
-         table.replace_with(m, {})
+   local objs = self._multi_pool.positional[ind]
+   if objs then
+      for i, obj in ipairs(objs) do
+         self._object_memory_at[ind] = self._object_memory_at[ind] or {}
+         local index = dead[obj.uid]
+         local reuse = false
+         local m
+         if index == nil then
+            index = #self._object_memory + 1
+            m = {}
+         else
+            reuse = true
+            m = dead_mem[index]
+            table.clear(m)
+            dead[obj.uid] = nil
+         end
+         obj:produce_memory(m)
+         if m.show then
+            m._type = obj._type
+            m.uid = obj.uid
+            self._object_memory[index] = m
+            table.insert(self._object_memory_at[ind], index)
+            self._object_memory_pos[index] = ind
+            self._object_memory_z_order[index] = i
+            self._object_memory_added[index] = true
+            if reuse then
+               self._object_memory_removed[index] = nil
+            end
+         end
       end
    end
 end
 
-function InstancedMap:iter_memory(_type)
-   return fun.iter(pairs(self._memory[_type] or {}))
+function InstancedMap:forget_objects(x, y)
+   local ind = y * self._width + x + 1
+
+   local existing = self._object_memory_at[ind]
+   if existing then
+      for _, index in ipairs(existing) do
+         self._object_memory[index] = nil
+         self._object_memory_pos[index] = nil
+         self._object_memory_z_order[index] = nil
+
+         self._object_memory_removed[index] = true
+      end
+   end
+   self._object_memory_at[ind] = nil
+end
+
+function InstancedMap:iter_memory()
+   return next, self._object_memory, nil
 end
 
 function InstancedMap:iter_charas()
@@ -662,6 +686,10 @@ function InstancedMap:redraw_all_tiles()
    for _, x, y in Pos.iter_rect(0, 0, self:width()-1, self:height()-1)  do
       self._tiles_dirty[#self._tiles_dirty+1] = y * self._width + x + 1
    end
+   for index, _ in pairs(self._object_memory) do
+      self._object_memory_added[index] = true
+   end
+   self._redraw_all = true
 end
 
 function InstancedMap:replace_with(other)

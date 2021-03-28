@@ -621,7 +621,7 @@ function Anim.miracle(positions, sound)
    -- <<<<<<<< shade2/screen.hsp:825 	swbreak ...
 end
 
-function Anim.meteor()
+function Anim.meteor(meteors, use_screen_pos)
    -- >>>>>>>> shade2/screen.hsp:829 	case aniMeteor ...
    if config.base.anime_wait == 0 then
       return function()
@@ -641,31 +641,39 @@ function Anim.meteor()
          frame = Rand.rnd(8)
       }
    end
-   local meteors = fun.tabulate(gen):take(75):to_list()
+   meteors = meteors or fun.tabulate(gen):take(75):to_list()
 
-   return function()
+   return function(draw_x, draw_y)
       local frame = 0
       local delta = 1
       local drew_any
 
       repeat
-         -- TODO screen shake
+         if delta > 0 then
+            Gui.set_camera_offset(5 - Rand.rnd(10), 5 - Rand.rnd(10))
+         end
 
          drew_any = false
 
          -- draw
          for _, m in ipairs(meteors) do
+            local sx = m.x
+            local sy = m.y
+            if use_screen_pos then
+               sx = sx + draw_x
+               sy = sy + draw_y
+            end
             if m.frame < 16 then
                drew_any = true
 
-               local y = m.y * math.clamp(20 - m.frame, 0, 6) / 6 - 96
+               local y = sy * math.clamp(20 - m.frame, 0, 6) / 6 - 96
                if m.frame >= 10 then
                   -- impact
-                  asset_impact:draw_region(math.clamp(m.frame - 10 + 1, 1, 5), m.x - 48, m.y)
+                  asset_impact:draw_region(math.clamp(m.frame - 10 + 1, 1, 5), sx - 48, sy)
                end
                if m.frame < 16 then
                   -- meteor disintegration
-                  asset_meteor:draw_region(math.clamp(m.frame - 8, 0, 8)+1, m.x, m.y)
+                  asset_meteor:draw_region(math.clamp(m.frame - 8, 0, 8)+1, sx, sy)
                end
             end
          end
@@ -686,10 +694,11 @@ function Anim.meteor()
             end
          end
 
-         local _
-         _, _, delta = Draw.yield(config.base.anime_wait + 40)
+         draw_x, draw_y, delta = Draw.yield(config.base.anime_wait + 40)
          frame = frame + delta
       until not drew_any
+
+      Gui.set_camera_offset(nil, nil)
    end
    -- <<<<<<<< shade2/screen.hsp:874 	swbreak ...
 end
@@ -715,8 +724,12 @@ function Anim.ragnarok(flames, use_screen_pos)
    return function(draw_x, draw_y)
       local did_something
       local cur_frame = 0
-      local delta = 0
+      local delta = 1
       repeat
+         if delta > 0 then
+            Gui.set_camera_offset(5 - Rand.rnd(10), 5 - Rand.rnd(10))
+         end
+
          did_something = false
          -- TODO screen shake
          for _, flame in ipairs(flames) do

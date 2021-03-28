@@ -39,7 +39,7 @@ function tiled_coords:find_bounds(x, y, draw_width, draw_height)
    return tx, ty, tdx, tdy
 end
 
-function tiled_coords:get_draw_pos(tx, ty, mw, mh, width, height)
+function tiled_coords:get_draw_pos(sx, sy, mw, mh, width, height)
    local tile_size = 48
 
    local msw = mw * tile_size
@@ -48,8 +48,6 @@ function tiled_coords:get_draw_pos(tx, ty, mw, mh, width, height)
    local max_x = (msw - width)
    local max_y = (msh - height)
 
-   local sx = tx * tile_size
-   local sy = ty * tile_size
    local offset_x = math.max((width - msw) / 2, 0)
    local offset_y = math.max((height - msh) / 2, 0)
 

@@ -95,9 +95,9 @@ function field_renderer:set_scroll(dx, dy, scroll_frames)
    self.scroll_frames = self.scroll_max_frames
 end
 
-function field_renderer:update_draw_pos(player_x, player_y, scroll_frames)
-   local draw_x, draw_y = self.coords:get_draw_pos(player_x,
-                                                   player_y,
+function field_renderer:update_draw_pos(sx, sy, scroll_frames)
+   local draw_x, draw_y = self.coords:get_draw_pos(sx,
+                                                   sy,
                                                    self.map_width,
                                                    self.map_height,
                                                    self.width,
@@ -112,7 +112,7 @@ function field_renderer:update_draw_pos(player_x, player_y, scroll_frames)
 
    self:set_draw_pos(draw_x, draw_y)
 
-   sound_manager:set_listener_pos(self.coords:tile_to_screen(player_x, player_y))
+   sound_manager:set_listener_pos(sx, sy)
 end
 
 function field_renderer:set_draw_pos(draw_x, draw_y)

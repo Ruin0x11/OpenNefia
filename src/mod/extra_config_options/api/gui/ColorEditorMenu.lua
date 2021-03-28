@@ -27,7 +27,7 @@ function ColorEditorMenu:make_keymap()
 end
 
 function ColorEditorMenu:on_query()
-   self.canceled = false
+   Gui.play_sound("base.pop2")
 end
 
 function ColorEditorMenu:relayout()
@@ -56,7 +56,6 @@ function ColorEditorMenu:update(dt)
 
    local color, canceled = self.list:update(dt)
    if color then
-      Gui.play_sound("base.ok1")
       return color
    end
 end

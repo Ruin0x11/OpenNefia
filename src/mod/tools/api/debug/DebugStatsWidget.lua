@@ -56,7 +56,9 @@ function DebugStatsWidget:update(dt)
             ("%02.02fms"):format(rec.time),
             ("%02.02fKBs"):format(rec.mem),
             ("%02.02fms/h"):format(rec.time / rec.hits),
-            ("%02.02fKBs/h"):format(rec.mem / rec.hits)
+            ("%02.02fKBs/h"):format(rec.mem / rec.hits),
+            ("%02.02fms last"):format(rec.last_time),
+            ("%02.02fKBs last"):format(rec.last_mem)
          }
       end
    end

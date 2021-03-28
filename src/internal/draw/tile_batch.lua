@@ -13,6 +13,10 @@ function tile_batch:init(width, height, offset_x, offset_y)
    self.tiles = {}
    self.batch = nil
    self.updated = true
+   self.tx = 0
+   self.ty = 0
+   self.tdx = 0
+   self.tdy = 0
 end
 
 function tile_batch:on_theme_switched(atlas, coords)
@@ -51,14 +55,21 @@ function tile_batch:update_tile(x, y, tile)
 end
 
 function tile_batch:update(dt)
-   for i=1,self.width * self.height do
-      local t = self.tiles[i]
-      if t then
-         local changed_frame = t:update(dt)
-         self.updated = changed_frame or self.updated
+   for y=self.ty,self.tdy do
+      if y >= 0 and y < self.height then
+         for x=self.tx,self.tdx do
+            if x >= 0 and x < self.width then
+               local t = self.tiles[y*self.width+x+1]
+               if t then
+                  local changed_frame = t:update(dt)
+                  self.updated = changed_frame or self.updated
+               end
+            end
+         end
       end
    end
 end
+
 
 function tile_batch:draw(x, y, width, height)
    -- slight speedup
@@ -91,6 +102,7 @@ function tile_batch:draw(x, y, width, height)
 
       batch:flush()
 
+      self.tx, self.ty, self.tdx, self.tdy = tx, ty, tdx, tdy
       self.updated = false
    end
 

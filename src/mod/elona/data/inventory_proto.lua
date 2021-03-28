@@ -439,8 +439,6 @@ local inv_buy = {
          end
       end
 
-      Gui.refresh_hud()
-
       return "inventory_continue"
    end
 }

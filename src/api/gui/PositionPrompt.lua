@@ -90,7 +90,8 @@ function PositionPrompt:make_keymap()
 end
 
 function PositionPrompt:update_target_text()
-   Gui.set_camera_pos(self.target_x, self.target_y)
+   local sx, sy = Draw.get_coords():tile_to_screen(self.target_x, self.target_y)
+   Gui.set_camera_pos(sx, sy)
    if self.chara then
       self.target_text, self.can_see = Action.target_text(self.chara, self.target_x, self.target_y, true)
    end
@@ -192,12 +193,12 @@ end
 
 function PositionPrompt:update(dt)
    if self.canceled then
-      Gui.set_camera_pos(self.origin_x, self.origin_y)
+      Gui.set_camera_pos()
       return nil, "canceled"
    end
 
    if self.result then
-      Gui.set_camera_pos(self.origin_x, self.origin_y)
+      Gui.set_camera_pos()
       return self.result, nil
    end
 end

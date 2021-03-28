@@ -97,7 +97,7 @@ end
 
 function Prompt:make_keymap()
    return {
-      shift = function() if self.can_cancel then self.canceled = true end end,
+      cancel = function() if self.can_cancel then self.canceled = true end end,
       escape = function() if self.can_cancel then self.canceled = true end end,
    }
 end

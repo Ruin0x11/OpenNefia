@@ -421,6 +421,7 @@ function InventoryMenu:update(dt)
             if result == "inventory_continue" then
                self:update_filtering()
                self:show_query_text()
+               Gui.update_screen()
             elseif result == "inventory_cancel" then
                return nil, "canceled"
             else

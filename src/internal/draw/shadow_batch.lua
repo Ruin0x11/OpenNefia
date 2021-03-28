@@ -327,13 +327,13 @@ function shadow_batch:draw(x, y, width, height)
    Draw.set_scissor()
    Draw.set_color(255, 255, 255, self.shadow_strength * ((256-9) / 256))
    if x < scx then
-      Draw.filled_rect(x, scy, scx - x, sch + height)
+      Draw.filled_rect(x, scy, scx - x, sch + height * 2)
    end
    if y < scy then
       Draw.filled_rect(x, y, scw + width, scy - y)
    end
    if scx + scw < width then
-      Draw.filled_rect(scx + scw, scy, width - (scx + scw), sch + height)
+      Draw.filled_rect(scx + scw, scy, width - (scx + scw), sch + height * 2)
    end
    if scy + sch < height then
       Draw.filled_rect(scx, scy + sch, scw, height - (scy + sch))

@@ -419,7 +419,7 @@ data:add {
          map:reveal_tile(x, y, default_tile)
       end
 
-      return do_sense(self, params, 2, reveal, forget, "magic.sense.magic_mapping")
+      return do_sense(self, params, 1, reveal, forget, "magic.sense.magic_mapping")
    end
 }
 
@@ -454,7 +454,7 @@ data:add {
          map:forget_objects(x, y)
       end
 
-      return do_sense(self, params, 1, reveal, forget, "magic.sense.sense_object")
+      return do_sense(self, params, 2, reveal, forget, "magic.sense.sense_object")
    end
 }
 
@@ -822,7 +822,7 @@ data:add {
       for i = 1, times do
          Gui.play_sound("base.pray1", source.x, source.y)
          local level = Calc.calc_object_level(params.power / 10, map)
-         local quality = Calc.calc_object_quality("good")
+         local quality = Calc.calc_object_quality(Enum.Quality.Good)
 
          local id = "elona.gold_piece"
          local amount = 400 + Rand.rnd(params.power)

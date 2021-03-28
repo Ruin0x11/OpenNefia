@@ -53,10 +53,9 @@ function tile_overhang_layer:update(map, dt, screen_updated)
    for _, p in ipairs(map._tiles_dirty) do
       local x = (p - 1) % map:width()
       local y = math.floor((p - 1) / map:width())
-      local m = map:memory(x, y, "base.map_tile")
+      local t = map._tile_memory[p]
 
-      if m then
-         local t = m[1]
+      if t then
          local id = t._id
          if t.wall then
             local one_tile_down = map:tile(x, y+1)
