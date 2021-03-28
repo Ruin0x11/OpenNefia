@@ -65,10 +65,10 @@ end
 
 function PicViewer:make_keymap()
    return {
-      north = function() self.offset_y = self.offset_y + self.delta end,
-      south = function() self.offset_y = self.offset_y - self.delta end,
-      east = function() self.offset_x = self.offset_x - self.delta end,
-      west = function() self.offset_x = self.offset_x + self.delta end,
+      north = function() self.offset_y = self.offset_y - self.delta end,
+      south = function() self.offset_y = self.offset_y + self.delta end,
+      east = function() self.offset_x = self.offset_x + self.delta end,
+      west = function() self.offset_x = self.offset_x - self.delta end,
       repl_page_up = function() self.scale = self.scale + 0.1 end,
       repl_page_down = function() self.scale = math.max(0.1, self.scale - 0.1) end,
       mode = function() self.draw_border = not self.draw_border end,
@@ -121,6 +121,12 @@ local function is_type(_type, comp, _id)
    return _type == comp or (comp == nil and data[_type][_id])
 end
 
+local function drawable_to_image(drawable, width, height)
+   local canvas = Draw.create_canvas(width, height)
+   Draw.with_canvas(canvas, function() drawable:draw(0, 0) end)
+   return Draw.new_image(canvas:newImageData())
+end
+
 function PicViewer.start(asset, _type)
    local drawable = asset
 
@@ -130,14 +136,17 @@ function PicViewer.start(asset, _type)
          if drawable == nil then
             error("unknown asset " .. asset)
          end
+         drawable = drawable_to_image(drawable, drawable:get_width(), drawable:get_height())
       elseif is_type("base.chip", _type, asset) then
          local width, height = Draw.get_coords():get_size()
          drawable = Draw.make_chip_batch("chip")
          drawable:add(asset, 0, 0, width, height)
+         drawable = drawable_to_image(drawable, width, height)
       elseif is_type("base.map_tile", _type, asset) then
          local width, height = Draw.get_coords():get_size()
          drawable = Draw.make_chip_batch("tile")
          drawable:add(asset, 0, 0, width, height)
+         drawable = drawable_to_image(drawable, width, height)
       else
          error(("unknown type %s"):format(_type))
       end
