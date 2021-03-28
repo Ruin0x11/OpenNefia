@@ -5,6 +5,8 @@ local UiTheme = require("api.gui.UiTheme")
 local I18N = require("api.I18N")
 local save = require("internal.global.save")
 local UiShadowedText = require("api.gui.UiShadowedText")
+local Map = require("api.Map")
+local Chara = require("api.Chara")
 
 local UiSkillTracker = class.class("UiSkillTracker", {IUiWidget, ISettable})
 
@@ -58,9 +60,6 @@ function UiSkillTracker:relayout(x, y)
    self.text_height = Draw.text_height()
 end
 
-local Chara
-local Map
-
 function UiSkillTracker:draw()
    -- >>>>>>>> shade2/screen.hsp:352 	ap3=0 ...
    local y = self.y
@@ -84,10 +83,6 @@ function UiSkillTracker:draw()
 end
 
 function UiSkillTracker:update()
-   -- HACK
-   Map = Map or require("api.Map")
-   Chara = Chara or require("api.Chara")
-
    local remove = {}
    for uid, _ in pairs(self.tracked_skill_ids) do
       local chara = Map.current():get_object(uid)
