@@ -141,5 +141,6 @@ data:add_multi(
       { _id = "on_object_prototype_changed" },
       { _id = "on_chara_calc_can_recruit_allies" },
       { _id = "on_map_generated_from_archetype" },
+      { _id = "on_hud_message" },
    }
 )

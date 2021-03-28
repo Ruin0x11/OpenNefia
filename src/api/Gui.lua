@@ -1,5 +1,4 @@
 --- @module Gui
-local MapObject = require("api.MapObject")
 
 local Env = require("api.Env")
 local I18N = require("api.I18N")
@@ -16,6 +15,8 @@ local data = require("internal.data")
 local field_renderer = require("internal.field_renderer")
 local InstancedMap = require("api.InstancedMap")
 local draw_layer_spec = require("internal.draw_layer_spec")
+local MapObject = require("api.MapObject")
+local Event = require("api.Event")
 
 local Gui = {}
 
@@ -387,9 +388,7 @@ function Gui.mes_c(text, color, ...)
          print(ansicolors(mes))
       end
    else
-      if field.is_active then
-         field:get_message_window():message(text, color_tbl)
-      end
+      Event.trigger("base.on_hud_message", {action="message",text=text,color=color_tbl})
    end
 end
 
@@ -457,7 +456,7 @@ end
 
 --- Clears the HUD message window.
 function Gui.mes_clear()
-   field:get_message_window():clear()
+   Event.trigger("base.on_hud_message", {action="clear"})
    capitalize = true
    newline = true
 end
@@ -465,7 +464,7 @@ end
 --- Starts a new line in the HUD message window.
 -- TODO: just use \n inline
 function Gui.mes_newline()
-   field:get_message_window():do_newline()
+   Event.trigger("base.on_hud_message", {action="newline"})
    newline = true
 end
 
@@ -474,7 +473,7 @@ function Gui.mes_continue_sentence()
 end
 
 function Gui.mes_duplicate()
-   field:get_message_window():prevent_next_duplicate()
+   Event.trigger("base.on_hud_message", {action="duplicate"})
 end
 
 function Gui.mes_halt()

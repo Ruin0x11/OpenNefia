@@ -3,6 +3,7 @@ local IUiElement = require("api.gui.IUiElement")
 local WidgetHolder = require("api.gui.WidgetHolder")
 local IUiWidget = require("api.gui.IUiWidget")
 local PriorityMap = require("api.PriorityMap")
+local IEventEmitter = require("api.IEventEmitter")
 
 local WidgetContainer = class.class("WidgetContainer", IUiElement)
 
@@ -40,6 +41,9 @@ function WidgetContainer:add(widget, tag, opts)
          error(("tag '%s' is already in use"):format(tag))
       end
    end
+
+   IEventEmitter.init(widget)
+   widget:bind_events()
 
    local holder = WidgetHolder:new(widget,
                                    tag,
