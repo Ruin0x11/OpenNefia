@@ -2,6 +2,7 @@ local Draw = require("api.Draw")
 local I18N = require("api.I18N")
 local Ui = require("api.Ui")
 local MapObjectBatch = require("api.draw.MapObjectBatch")
+local Gui = require("api.Gui")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local InputHandler = require("api.gui.InputHandler")
@@ -105,6 +106,10 @@ function ChooseNpcMenu:init(charas, topic)
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
    self.input:bind_keys(self:make_keymap())
+end
+
+function ChooseNpcMenu:on_query()
+   Gui.play_sound("base.pop2")
 end
 
 function ChooseNpcMenu:make_keymap()
