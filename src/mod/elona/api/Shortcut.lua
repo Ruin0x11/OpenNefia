@@ -128,6 +128,11 @@ local function shortcut_skill(player, sc)
       return "player_turn_query"
    end
 
+   if not player:has_skill(skill_id) then
+      Gui.mes("action.shortcut.cannot_use_anymore")
+      return "player_turn_query"
+   end
+
    if skill_proto.type == "skill_action" or skill_proto.type == "action" then
       local did_something = ElonaMagic.do_action(skill_id, player)
       if did_something then
