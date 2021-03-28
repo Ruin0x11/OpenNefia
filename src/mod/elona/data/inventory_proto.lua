@@ -20,8 +20,7 @@ local World = require("api.World")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
-      Gui.mes("action.cannot_do_in_global")
-      return "player_turn_query"
+      return "player_turn_query", "action.cannot_do_in_global"
    end
 end
 
@@ -56,7 +55,7 @@ local inv_examine = {
    window_title = "ui.inventory_command.general",
    query_text = "ui.inv.title.general",
    on_select = function(ctxt, item, amount, rest)
-      local list = rest:to_list()
+      local list = rest and rest:to_list()
       ItemDescriptionMenu:new(item, list):query()
 
       return "inventory_continue"
@@ -749,6 +748,7 @@ local inv_throw = {
 
    sources = { "chara", "ground" },
    icon = 18,
+   shortcuts = true,
    on_shortcut = fail_in_world_map,
    window_title = "ui.inventory_command.throw",
    query_text = "ui.inv.title.throw",

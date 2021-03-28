@@ -109,8 +109,6 @@ data:add {
       self:refresh()
    end,
    on_close = function(self, params)
-      if not self.opened then return end
-
       self.opened = false
       self.is_solid = true
       self.is_opaque = true
@@ -121,6 +119,7 @@ data:add {
       end
 
       self:refresh()
+      return "turn_end"
    end,
    on_bash = function(self, params)
       -- >>>>>>>> elona122/shade2/action.hsp:443 		if feat(1)=objDoorClosed{ ..

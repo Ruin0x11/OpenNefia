@@ -26,6 +26,7 @@ local Feat = require("api.Feat")
 local global = require("mod.elona.internal.global")
 local RandomEvent = require("mod.elona.api.RandomEvent")
 local Calc = require("mod.elona.api.Calc")
+local ElonaMagic = require("mod.elona.api.ElonaMagic")
 
 local ElonaCommand = {}
 
@@ -55,6 +56,10 @@ function ElonaCommand.inventory(player)
 end
 
 function ElonaCommand.bash(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    Gui.mes("action.bash.prompt")
    local dir = Input.query_direction()
 
@@ -105,6 +110,10 @@ function ElonaCommand.drink(player)
 end
 
 function ElonaCommand.zap(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    return query_inventory(player, "elona.inv_zap")
 end
 
@@ -113,14 +122,26 @@ function ElonaCommand.use(player)
 end
 
 function ElonaCommand.open(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    return query_inventory(player, "elona.inv_open")
 end
 
 function ElonaCommand.dip(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    return query_inventory(player, "elona.inv_dip_source")
 end
 
 function ElonaCommand.throw(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    return query_inventory(player, "elona.inv_throw")
 end
 
@@ -140,6 +161,10 @@ end
 
 function ElonaCommand.fire(player)
    -- >>>>>>>> shade2/command.hsp:4278 *com_fire ...
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    local target = Action.find_target(player)
 
    if not target then
@@ -519,14 +544,13 @@ local function choose_command_dwim(player)
       if item:has_category("elona.container") then
          command = ElonaCommand.open
       elseif item:has_category("elona.furniture_well") then
-         Log.error("TODO dip")
-         -- command = Command.dip
+         command = ElonaCommand.dip
       elseif item:has_category("elona.furniture_altar") then
          Log.error("TODO god")
          if player:calc("god") then
-            --command = Command.offer
+            command = ElonaCommand.offer
          else
-            --command = Command.pray
+            command = ElonaCommand.pray
          end
       elseif item:calc("can_use") then
          command = ElonaCommand.use
@@ -628,6 +652,10 @@ end
 
 function ElonaCommand.give(player)
    -- >>>>>>>> shade2/command.hsp:1825 *com_give ...
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    Gui.mes("action.which_direction.ask")
 
    local dir, canceled = Input.query_direction(player)
@@ -669,6 +697,146 @@ function ElonaCommand.name(player, target)
 
    return "player_turn_query"
    -- <<<<<<<< shade2/command.hsp:1926 	gosub *screen_refresh :goto *pc_turn ..
+end
+
+function ElonaCommand.offer(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
+   Log.error("TODO offer")
+end
+
+function ElonaCommand.pray(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
+   Log.error("TODO pray")
+end
+
+local function shortcut_item(player, sc)
+   -- >>>>>>>> oomSEST/src/southtyris.hsp:50222 *label_1283 ...
+   local item_id = sc.item_id
+   local inv_proto_id = sc.inventory_proto_id
+   local curse_state = sc.curse_state
+
+   local filter = function(item)
+      if item._id ~= item_id then
+         return false
+      end
+
+      if config.elona.item_shortcuts_respect_curse_state then
+         if item:calc("curse_state") ~= curse_state then
+            return false
+         end
+      end
+
+      if (item.proto.charge_level or 0) > 0 and item.charges <= 0 then
+         return false
+      end
+
+      return true
+   end
+
+   local rest = player:iter_items():filter(filter)
+   local found = rest:nth(1)
+
+   if not Item.is_alive(found) then
+      Gui.mes("ui.inv.common.does_not_exist")
+      return "player_turn_query"
+   end
+
+   local result, err, cb_name = Command.activate_shortcut(found, inv_proto_id, { chara = player }, rest)
+
+   if not result then
+      err = err or "action.shortcut.cannot_use_anymore"
+      Gui.mes(err)
+      Log.debug("Could not run shortcut for %s, %s: %s", item_id, inv_proto_id, cb_name)
+      return "player_turn_query"
+   end
+
+   if result == "inventory_continue"
+      or result == "inventory_cancel"
+   then
+      result = "player_turn_query"
+   end
+
+   return result
+   -- <<<<<<<< oomSEST/src/southtyris.hsp:50268 	} ..
+end
+
+local function shortcut_skill(player, sc)
+   -- >>>>>>>> oomSEST/src/southtyris.hsp:45589 		efid = ogdata(36 + sc) ...
+   local skill_id = sc.skill_id
+   local skill_proto = data["base.skill"][skill_id]
+   if skill_proto == nil then
+      Gui.error("Missing shortcut skill ID %s", skill_id)
+      Gui.mes("action.shortcut.cannot_use_anymore")
+      return "player_turn_query"
+   end
+
+   if skill_proto.type == "skill_action" then
+      local did_something = ElonaMagic.do_action(skill_id, player)
+      if did_something then
+         return "turn_end"
+      end
+      return "player_turn_query"
+   elseif skill_proto.type == "action" then
+      if Command.block_if_world_map(player) then
+         return "player_turn_query"
+      end
+
+      local did_something = ElonaMagic.do_action(skill_id, player)
+      if did_something then
+         return "turn_end"
+      end
+      return "player_turn_query"
+   elseif skill_proto.type == "spell" then
+      if Command.block_if_world_map(player) then
+         return "player_turn_query"
+      end
+
+      if player.spell_stocks[skill_id] <= 0 then
+         Gui.mes_duplicate()
+         Gui.mes("action.shortcut.cannot_use_spell_anymore")
+         return "player_turn_query"
+      end
+
+      local did_something = ElonaMagic.cast_spell(skill_id, player, false)
+      if did_something then
+         return "turn_end"
+      end
+      return "player_turn_query"
+   end
+
+   Gui.error("Cannot activate shortcut for skill %s (%s)", skill_id, skill_proto.type)
+   return "player_turn_query"
+   -- <<<<<<<< oomSEST/src/southtyris.hsp:45682 	goto *label_1623 ..
+end
+
+function ElonaCommand.do_shortcut(player, sc)
+   if sc.type == "item" then
+      return shortcut_item(player, sc)
+   elseif sc.type == "skill" then
+      return shortcut_skill(player, sc)
+   end
+
+   Log.error("Unknown shortcut type %s", sc.type)
+   return "player_turn_query"
+end
+
+function ElonaCommand.shortcut(player, index)
+   -- >>>>>>>> oomSEST/src/southtyris.hsp:45576 	menucycle = 0 ...
+   local sc = save.elona.shortcuts[index]
+   if sc == nil then
+      Gui.mes_duplicate()
+      Gui.mes("action.shortcut.unassigned")
+      return "player_turn_query"
+   end
+
+   return ElonaCommand.do_shortcut(player, sc)
+   -- <<<<<<<< oomSEST/src/southtyris.hsp:45682 	goto *label_1623 ..
 end
 
 return ElonaCommand

@@ -36,8 +36,18 @@ end
 function ConfigItemBooleanWidget:set_value(value)
    self.value = value
 
-   local yes_no = (self.item._id and I18N.get_optional("config.option." .. self.item._id .. ".yes_no")) or "config.common.yes_no.default"
-   self.text = I18N.get(yes_no .. "." .. (self.value and "yes" or "no"))
+   local key = self.value and "yes" or "no"
+   local _id = self.item._id
+   if _id == nil then
+      self.text = I18N.get("config.common.yes_no.default." .. key)
+   else
+      local locale_root = "config.option." .. _id
+      self.text = I18N.get_optional(locale_root .. "." .. key)
+      if self.text == nil then
+         local yes_no = I18N.get_optional(locale_root .. ".yes_no") or "config.common.yes_no.default"
+         self.text = I18N.get(yes_no .. "." .. key)
+      end
+   end
 end
 
 function ConfigItemBooleanWidget:can_choose()

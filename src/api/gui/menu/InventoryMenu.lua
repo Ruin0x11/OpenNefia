@@ -5,6 +5,8 @@ local I18N = require("api.I18N")
 local InventoryTargetEquipWindow = require("api.gui.menu.InventoryTargetEquipWindow")
 local Chara = require("api.Chara")
 local MapObjectBatch = require("api.draw.MapObjectBatch")
+local save = require("internal.global.save")
+local config = require("internal.config")
 
 local IInput = require("api.gui.IInput")
 local UiList = require("api.gui.UiList")
@@ -101,11 +103,20 @@ function InventoryMenu:init(ctxt, returns_item)
 end
 
 function InventoryMenu:make_keymap()
-   return {
+   local keymap = {
       identify = function() self:show_item_description() end,
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end,
    }
+
+   for i = 0, 39 do
+      local action = ("shortcut_%d"):format(i)
+      keymap[action] = function()
+         self:assign_shortcut(i)
+      end
+   end
+
+   return keymap
 end
 
 function InventoryMenu:on_query()
@@ -155,6 +166,60 @@ function InventoryMenu:show_item_description()
    end
    local rest = self.pages:iter_all_pages():extract("item"):to_list()
    ItemDescriptionMenu:new(item, rest):query()
+end
+
+function InventoryMenu:assign_shortcut(index)
+   -- >>>>>>>> oomSEST/src/southtyris.hsp:52037 		if (key == "sc") { ...
+   if not self.ctxt.proto.shortcuts then
+      return
+   end
+
+   local item = self:selected_item_object()
+   if item == nil then
+      return
+   end
+
+   if (item:calc("cargo_weight") or 0) > 0 then
+      Gui.play_sound("base.fail1")
+      Gui.mes("ui.inv.common.shortcut.cargo")
+      return
+   end
+
+   Gui.play_sound("base.ok1")
+
+   local sc = {
+      type = "item",
+      item_id = item._id,
+      inventory_proto_id = self.ctxt.proto._id,
+      curse_state = item:calc("curse_state")
+   }
+
+   local scs_equal = function(sc, other_sc)
+      return sc.type == other_sc.type
+         and sc.item_id == other_sc.item_id
+         and sc.inventory_proto_id == other_sc.inventory_proto_id
+         and (not config.elona.item_shortcuts_respect_curse_state or sc.curse_state == other_sc.curse_state)
+   end
+
+   -- TODO Break this dependency (#30)
+   local other = save.elona.shortcuts[index]
+   if other and scs_equal(sc, other) then
+      save.elona.shortcuts[index] = nil
+      self:update_filtering() -- update the shortcut text ("{1}")
+      return
+   end
+
+   for other_index, other_sc in pairs(save.elona.shortcuts) do
+      if scs_equal(sc, other_sc) then
+         save.elona.shortcuts[other_index] = nil
+      end
+   end
+
+   save.elona.shortcuts[index] = sc
+   self:update_filtering() -- update the shortcut text ("{1}")
+
+   Gui.mes("ui.assign_shortcut", index)
+   -- <<<<<<<< oomSEST/src/southtyris.hsp:52068 		} ..
 end
 
 function InventoryMenu:can_select()
@@ -224,6 +289,11 @@ function InventoryMenu.build_list(ctxt)
       sources = {sources}
    end
 
+   local shortcuts = fun.iter_pairs(save.elona.shortcuts)
+      :filter(function(i, sc) return sc.type == "item" end)
+      :map(function(i, sc) return sc.item_id, i end)
+      :to_map()
+
    -- Obtain an iterator of IItem for each source. For example, calls
    -- IChara:iter_inventory() for the "chara" and "target" sources.
    for _, source in pairs(sources) do
@@ -235,6 +305,15 @@ function InventoryMenu.build_list(ctxt)
             end
             if source.get_item_name then
                item_name = source:get_item_name(item_name, item)
+            end
+            local shortcut_index = shortcuts[item._id]
+            if shortcut_index then
+               local sc = save.elona.shortcuts[shortcut_index]
+               if sc.inventory_proto_id == ctxt.proto._id
+                  and (not config.elona.item_shortcuts_respect_curse_state or sc.curse_state == item:calc("curse_state"))
+               then
+                  item_name = ("%s {%d}"):format(item_name, shortcut_index)
+               end
             end
 
             local detail_text = default_detail_text(item)

@@ -4,6 +4,7 @@ local I18N = require("api.I18N")
 local Skill = require("mod.elona_sys.api.Skill")
 local Ui = require("api.Ui")
 local data = require("internal.data")
+local save = require("internal.global.save")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local UiList = require("api.gui.UiList")
@@ -48,10 +49,20 @@ function SkillsMenu.generate_list(chara)
             cost = data["elona_sys.magic"]:ensure(entry.effect_id).cost
          end
 
+         local name = I18N.get("ability." .. entry._id .. ".name")
+
+         -- TODO break this dependency (#30)
+         for index, sc in pairs(save.elona.shortcuts) do
+            if sc.type == "skill" and sc.skill_id == entry._id then
+               name = ("%s {%d}"):format(name, index)
+               break
+            end
+         end
+
          list[#list+1] = {
             _id = entry._id,
             ordering = (entry.elona_id or 0) * 100,
-            name = I18N.get("ability." .. entry._id .. ".name"),
+            name = name,
             cost = ("%d Sp"):format(cost),
             description = utf8.wide_sub(Skill.get_description(entry._id, chara), 0, 34),
             icon = Ui.skill_icon(entry.related_skill)
@@ -73,9 +84,8 @@ function SkillsMenu:init(chara)
 
    self.win = UiWindow:new("ui.skill.title", true, "key help", 0, 60)
 
-   self.data = SkillsMenu.generate_list(self.chara)
-
-   self.pages = UiList:new_paged(self.data, 16)
+   local list = SkillsMenu.generate_list(self.chara)
+   self.pages = UiList:new_paged(list, 16)
    table.merge(self.pages, UiListExt(self))
 
    self.input = InputHandler:new()
@@ -88,10 +98,64 @@ function SkillsMenu:init(chara)
 end
 
 function SkillsMenu:make_keymap()
-   return {
+   local keymap = {
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
    }
+
+   for i = 0, 39 do
+      local action = ("shortcut_%d"):format(i)
+      keymap[action] = function()
+         self:assign_shortcut(i)
+      end
+   end
+
+   return keymap
+end
+
+function SkillsMenu:assign_shortcut(index)
+   -- >>>>>>>> oomSEST/src/southtyris.hsp:45945 	if (key == "sc") { ...
+   Gui.play_sound("base.ok1")
+
+   local entry = self.pages:selected_item()
+   if entry == nil then
+      return
+   end
+
+   local sc = {
+      type = "skill",
+      skill_id = entry._id,
+   }
+
+   local rebuild_list = function()
+      local list = SkillsMenu.generate_list(self.chara) -- update the shortcut text ("{1}")
+      self.pages:set_data(list)
+   end
+
+   local scs_equal = function(sc, other_sc)
+      return sc.type == other_sc.type
+         and sc.skill_id == other_sc.skill_id
+   end
+
+   -- TODO Break this dependency (#30)
+   local other = save.elona.shortcuts[index]
+   if other and scs_equal(sc, other) then
+      save.elona.shortcuts[index] = nil
+      rebuild_list()
+      return
+   end
+
+   for other_index, other_sc in pairs(save.elona.shortcuts) do
+      if scs_equal(sc, other_sc) then
+         save.elona.shortcuts[other_index] = nil
+      end
+   end
+
+   save.elona.shortcuts[index] = sc
+   rebuild_list()
+
+   Gui.mes("ui.assign_shortcut", index)
+   -- <<<<<<<< oomSEST/src/southtyris.hsp:45961 	} ..
 end
 
 function SkillsMenu:relayout(x, y)
@@ -119,21 +183,30 @@ function SkillsMenu:draw()
    self.pages:draw()
 end
 
-function SkillsMenu:update()
-   if self.canceled then
+function SkillsMenu:update(dt)
+   local canceled = self.canceled
+   local changed = self.pages.changed
+   local chosen = self.pages.chosen
+
+   self.canceled = false
+   self.win:update(dt)
+   self.pages:update(dt)
+
+   if canceled then
       last_index = self.pages:selected_index()
       return nil, "canceled"
    end
 
-   if self.pages.changed then
+   if changed then
       self.win:set_pages(self.pages)
-   elseif self.pages.chosen then
+   elseif chosen then
       last_index = self.pages:selected_index()
-      return { type = "skill", _id = self.pages:selected_item()._id }
+      local entry = self.pages:selected_item()
+      if entry == nil then
+         return nil, "canceled"
+      end
+      return { type = "skill", _id = entry._id }
    end
-
-   self.win:update()
-   self.pages:update()
 end
 
 function SkillsMenu:on_hotload_layer()
