@@ -23,12 +23,8 @@ end
 --- @treturn[opt] IItem non-nil on success
 --- @treturn[opt] string error
 function Shortcut.activate_item_shortcut(item, operation, params, rest)
-   if type(operation) ~= "string" then
-      error(string.format("Invalid inventory operation: %s", operation))
-   end
-
    if not Item.is_alive(item) then
-      return nil, "item_dead"
+      return nil, nil, "item_dead"
    end
 
    local proto = data["elona_sys.inventory_proto"]:ensure(operation)
