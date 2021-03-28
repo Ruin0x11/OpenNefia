@@ -1,9 +1,8 @@
 local anim = require("internal.draw.anim")
-local Draw = require("api.Draw")
 local IBatch = require("internal.draw.IBatch")
 local IChipRenderable = require("api.gui.IChipRenderable")
-local SkipList = require("api.SkipList")
 local sparse_batch = class.class("sparse_batch", IBatch)
+local PriorityMap = require("api.PriorityMap")
 
 function sparse_batch:init(width, height, offset_x, offset_y)
    self.width = width
@@ -23,6 +22,7 @@ function sparse_batch:init(width, height, offset_x, offset_y)
    self.z_orders = {}
    self.drawables = {}
    self.drawables_after = {}
+   self.hiddens = {}
 
    self.free_anims = {}
 
@@ -34,7 +34,7 @@ function sparse_batch:init(width, height, offset_x, offset_y)
    self.tile_height = nil
    self.offset_x = offset_x or 0
    self.offset_y = offset_y or 0
-   self.ordering = SkipList:new()
+   self.ordering = PriorityMap:new()
 end
 
 function sparse_batch:on_theme_switched(atlas, coords)
@@ -82,13 +82,26 @@ function sparse_batch:set_tile_image(ind, tile)
    self.tiles[ind] = tile
 end
 
+function sparse_batch:get_tile_image(ind)
+   return self.tiles[ind].tile_id
+end
+
+function sparse_batch:set_z_order(ind, z_order)
+   z_order = z_order or 0
+   self.ordering:set(ind, ind, z_order)
+   self.z_orders[ind] = z_order
+end
+
 function sparse_batch:add_tile(ind, params)
    if params.tile == nil or params.tile == "" then
       return
    end
 
+   if self.tiles[ind] then
+      self:remove_tile(ind)
+   end
+
    local z_order = params.z_order or 0
-   self.ordering:insert(z_order, ind)
 
    local tile = params.tile
    if type(params.tile) == "string" then
@@ -116,7 +129,7 @@ function sparse_batch:add_tile(ind, params)
       self.colors_g[ind] = 1
       self.colors_b[ind] = 1
    end
-   self.z_orders[ind] = z_order
+   self:set_z_order(ind, z_order)
    self.drawables[ind] = params.drawables or nil
    self.drawables_after[ind] = params.drawables_after or nil
    self.updated = true
@@ -128,9 +141,8 @@ function sparse_batch:remove_tile(ind)
    if class.is_an(anim, tile) then
       table.insert(self.free_anims, tile)
    end
-   if self.z_orders[ind] ~= nil then
-      self.ordering:delete(self.z_orders[ind], ind)
-   end
+
+   self.ordering:set(ind, nil)
 
    self.tiles[ind] = nil
    self.xcoords[ind] = nil
@@ -144,6 +156,7 @@ function sparse_batch:remove_tile(ind)
    self.z_orders[ind] = nil
    self.drawables[ind] = nil
    self.drawables_after[ind] = nil
+   self.hiddens[ind] = nil
 
    self.updated = true
 end
@@ -170,7 +183,8 @@ function sparse_batch:clear()
    self.batches = {}
    self.to_draw_inds = {}
    self.to_draw_drawables = {}
-   self.ordering = SkipList:new()
+   self.hiddens = {}
+   self.ordering = PriorityMap:new()
 
    self.updated = true
 end
@@ -232,89 +246,92 @@ function sparse_batch:draw(x, y, width, height)
       local cb = self.colors_b
       local dr = self.drawables
       local dra = self.drawables_after
+      local hid = self.hiddens
 
-      for _, _, ind in self.ordering:iterate() do
-         local tile = self_tiles[ind]
+      for _, ind in self.ordering:iter() do
+         if not hid[ind] then
+            local tile = self_tiles[ind]
 
-         if dr[ind] then
-            if batch ~= nil then
-               batch:setColor(1, 1, 1)
-               batch:flush()
-               batch = nil
-            end
-            for _, drawable in dr[ind]:iter() do
-               self.to_draw_inds[#self.to_draw_inds+1] = ind
-               self.to_draw_drawables[#self.to_draw_drawables+1] = drawable
-            end
-         end
-
-         if class.is_an(IChipRenderable, tile) then -- TODO is this slow?
-            -- This is a renderable object with custom logic (like
-            -- PCCs). We have to stop drawing to the current sprite
-            -- batch to draw it, in order to keep the Z ordering
-            -- correct.
-            if batch ~= nil then
-               batch:setColor(1, 1, 1)
-               batch:flush()
-               batch = nil
-            end
-            self.to_draw_inds[#self.to_draw_inds+1] = ind
-            self.to_draw_drawables[#self.to_draw_drawables+1] = tile
-         elseif tile and tile ~= 0 then
-            -- This is a reference to a tile in the sprite atlas.
-            if batch == nil then
-               -- Reuse a sprite batch from a previous update instead
-               -- of allocating a new one every time
-               batch = self.batches[batch_ind]
-
-               if batch == nil then
-                  -- No free sprite batch available in pool, make a new one
-                  batch = love.graphics.newSpriteBatch(self.atlas.image)
-                  self.batches[batch_ind] = batch
-               end
-
-               batch_ind = batch_ind + 1
-
-               self.to_draw_inds[#self.to_draw_inds+1] = ind
-               self.to_draw_drawables[#self.to_draw_drawables+1] = batch
-            end
-
-            local cx = xc[ind]
-            local cy = yc[ind]
-            if cx >= tx and cx < tdx and cy >= ty and cy < tdy then
-               local i, j = self.coords:tile_to_screen(cx, cy)
-               local px = i + xo[ind]
-               local py = j + yo[ind]
-               if cr[ind] then
-                  batch:setColor(cr[ind], cg[ind], cb[ind])
-               else
+            if dr[ind] then
+               if batch ~= nil then
                   batch:setColor(1, 1, 1)
+                  batch:flush()
+                  batch = nil
                end
-               local tile_tbl = tiles[tile.image]
-               if tile_tbl ~= nil then
-                  --print(tile.image, tile_tbl.quad:getViewport())
-                  local _, _, ttw, tth = tile_tbl.quad:getViewport()
-                  batch:add(tile_tbl.quad,
-                            px + (ttw / 2),
-                            py + tile_tbl.offset_y + (tth / 2),
-                            rots[ind],
-                            1,
-                            1,
-                            ttw / 2,
-                            tth / 2)
+               for _, drawable in dr[ind]:iter() do
+                  self.to_draw_inds[#self.to_draw_inds+1] = ind
+                  self.to_draw_drawables[#self.to_draw_drawables+1] = drawable
                end
             end
-         end
 
-         if dra[ind] then
-            if batch ~= nil then
-               batch:setColor(1, 1, 1)
-               batch:flush()
-               batch = nil
-            end
-            for _, drawable in dra[ind]:iter() do
+            if class.is_an(IChipRenderable, tile) then -- TODO is this slow?
+               -- This is a renderable object with custom logic (like
+               -- PCCs). We have to stop drawing to the current sprite
+               -- batch to draw it, in order to keep the Z ordering
+               -- correct.
+               if batch ~= nil then
+                  batch:setColor(1, 1, 1)
+                  batch:flush()
+                  batch = nil
+               end
                self.to_draw_inds[#self.to_draw_inds+1] = ind
-               self.to_draw_drawables[#self.to_draw_drawables+1] = drawable
+               self.to_draw_drawables[#self.to_draw_drawables+1] = tile
+            elseif tile and tile ~= 0 then
+               -- This is a reference to a tile in the sprite atlas.
+               if batch == nil then
+                  -- Reuse a sprite batch from a previous update instead
+                  -- of allocating a new one every time
+                  batch = self.batches[batch_ind]
+
+                  if batch == nil then
+                     -- No free sprite batch available in pool, make a new one
+                     batch = love.graphics.newSpriteBatch(self.atlas.image)
+                     self.batches[batch_ind] = batch
+                  end
+
+                  batch_ind = batch_ind + 1
+
+                  self.to_draw_inds[#self.to_draw_inds+1] = ind
+                  self.to_draw_drawables[#self.to_draw_drawables+1] = batch
+               end
+
+               local cx = xc[ind]
+               local cy = yc[ind]
+               if cx >= tx and cx < tdx and cy >= ty and cy < tdy then
+                  local i, j = self.coords:tile_to_screen(cx, cy)
+                  local px = i + xo[ind]
+                  local py = j + yo[ind]
+                  if cr[ind] then
+                     batch:setColor(cr[ind], cg[ind], cb[ind])
+                  else
+                     batch:setColor(1, 1, 1)
+                  end
+                  local tile_tbl = tiles[tile.image]
+                  if tile_tbl ~= nil then
+                     --print(tile.image, tile_tbl.quad:getViewport())
+                     local _, _, ttw, tth = tile_tbl.quad:getViewport()
+                     batch:add(tile_tbl.quad,
+                               px + (ttw / 2),
+                               py + tile_tbl.offset_y + (tth / 2),
+                               rots[ind],
+                               1,
+                               1,
+                               ttw / 2,
+                               tth / 2)
+                  end
+               end
+            end
+
+            if dra[ind] then
+               if batch ~= nil then
+                  batch:setColor(1, 1, 1)
+                  batch:flush()
+                  batch = nil
+               end
+               for _, drawable in dra[ind]:iter() do
+                  self.to_draw_inds[#self.to_draw_inds+1] = ind
+                  self.to_draw_drawables[#self.to_draw_drawables+1] = drawable
+               end
             end
          end
       end

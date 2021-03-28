@@ -11,6 +11,7 @@ local chip_layer = class.class("chip_layer", IDrawLayer)
 function chip_layer:init(width, height)
    self.width = width
    self.height = height
+
    self.chip_batch = sparse_batch:new(self.width, self.height)
    self.shadow_batch = sparse_batch:new(self.width, self.height)
    self.drop_shadow_batch = sparse_batch:new(self.width, self.height)
@@ -107,12 +108,13 @@ function chip_layer:draw_drop_shadow(index, i, x, y, y_offset)
             z_order = 0,
          })
       else
+         self.drop_shadow_batch:set_tile_image(index, image)
          self.drop_shadow_batch.xcoords[index] = x
          self.drop_shadow_batch.ycoords[index] = y
          self.drop_shadow_batch.xoffs[index] = x_offset
          self.drop_shadow_batch.yoffs[index] = y_offset
          self.drop_shadow_batch.rotations[index] = math.rad(rotation)
-         -- self.drop_shadow_batch.updated = true
+         self.drop_shadow_batch.updated = true
       end
    else
       self.drop_shadow_batch:remove_tile(index)
@@ -145,14 +147,15 @@ local CONFIG = {
 
 local TYPES = table.keys(CONFIG)
 
-function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
+function chip_layer:draw_one(index, ind, x, y, i, chip_type, map_size, z_order)
    local shadow_type = i.shadow_type
    local batch_ind = self.chip_batch_inds[index]
    local image = i.drawable or i.image
    local x_offset = i.x_offset or 0
    local y_offset_base = CONFIG[chip_type].y_offset
-   local y_offset = (i.y_offset or 0) + y_offset_base - (stack_height or 0)
-   local z_order = ind + CONFIG[chip_type].z_order * index
+   local y_offset = (i.y_offset or 0) + y_offset_base
+   local z_order = ind * CONFIG[chip_type].z_order * map_size + z_order
+   local is_stacking = CONFIG[chip_type].is_stacking
    if batch_ind == nil then
       -- tiles at the top of the screen should be drawn
       -- first, so they have the lowest z-order. conveniently
@@ -175,17 +178,22 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
       -- Extra data needed for rendering non-chip things like
       -- the HP bar.
       batch_ind = {
-         ind = index,
+         index = index,
+         ind = ind,
+         is_stacking = is_stacking,
          x = x,
          y = y,
          y_offset = y_offset,
          hp_ratio = i.hp_ratio,
-         hp_bar = i.hp_bar
+         hp_bar = i.hp_bar,
+         stack_height = i.stack_height
       }
       self.chip_batch_inds[index] = batch_ind
 
-      self.stacking_inds[ind] = self.stacking_inds[ind] or {}
-      self.stacking_inds[ind][index] = nil
+      if batch_ind.is_stacking then
+         self.stacking_inds[ind] = self.stacking_inds[ind] or {}
+         table.insert(self.stacking_inds[ind], index)
+      end
    else
       self.chip_batch:set_tile_image(index, image)
       self.chip_batch.xcoords[index] = x
@@ -201,30 +209,42 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
          self.chip_batch.colors_g[index] = 1
          self.chip_batch.colors_b[index] = 1
       end
-      self.chip_batch.z_orders[index] = z_order
+      self.chip_batch:set_z_order(index, z_order)
       self.chip_batch.drawables[index] = i.drawables
       self.chip_batch.drawables_after[index] = i.drawables_after
-      -- self.chip_batch.updated = true
+      self.chip_batch.updated = true
 
-      self.stacking_inds[ind] = self.stacking_inds[ind] or {}
-      self.stacking_inds[ind][index] = nil
+      if batch_ind.is_stacking then
+         local old_ind = batch_ind.ind
+         self.stacking_inds[old_ind] = self.stacking_inds[old_ind] or {}
+         table.iremove_value(self.stacking_inds[old_ind], index)
 
+         self.stacking_inds[ind] = self.stacking_inds[ind] or {}
+         table.insert(self.stacking_inds[ind], index)
+
+         -- Refresh stacking chip for both tiles
+         self.stacking_inds[old_ind].is_chip_set = nil
+         self.stacking_inds[ind].is_chip_set = nil
+      end
+
+      batch_ind.ind = ind
       batch_ind.x = x
       batch_ind.y = y
       batch_ind.y_offset = y_offset
       batch_ind.hp_ratio = i.hp_ratio
       batch_ind.hp_bar = i.hp_bar
+      batch_ind.stack_height = i.stack_height
    end
 
    if batch_ind.shadow_type ~= shadow_type then
       if batch_ind.shadow_type == "normal" then
          self.shadow_batch:remove_tile(index)
          self.shadow_batch_inds[index] = nil
-         -- self.shadow_batch.updated = true
+         self.shadow_batch.updated = true
       elseif batch_ind.shadow_type == "drop_shadow" then
          self.drop_shadow_batch:remove_tile(index)
          self.drop_shadow_batch_inds[index] = nil
-         -- self.drop_shadow_batch.updated = true
+         self.drop_shadow_batch.updated = true
       end
    end
 
@@ -238,7 +258,7 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, stack_height)
          self.shadow_batch.xcoords[index] = x
          self.shadow_batch.ycoords[index] = y
          self.shadow_batch.yoffs[index] = y_offset
-         -- self.shadow_batch.updated = true
+         self.shadow_batch.updated = true
       else
          self.shadow_batch:add_tile(index, {
             tile = "shadow",
@@ -262,52 +282,97 @@ function chip_layer:draw_normal(index, ind, map, mem, chip_type)
    end
 
    if show then
-      self:draw_one(index, ind, x, y, mem, chip_type)
+      local z_order = map._object_memory_z_order[index]
+      self:draw_one(index, ind, x, y, mem, chip_type, map:width() * map:height(), z_order)
    end
 end
 
-function chip_layer:update_stacking(index, ind, map, stack, chip_type)
-   local x = (ind-1) % map:width()
-   local y = math.floor((ind-1) / map:width())
+function chip_layer:set_stacking_chip(ind)
+   local stack = self.stacking_inds[ind]
+   local index = stack[1]
 
-   local show_count = 0
-   local to_show = {}
-   local first
-   for _, i in ipairs(stack) do
-      if i.uid then
-         first = first or i
-         local show = i.show
-         if not map:is_in_fov(x, y) then
-            show = show and CONFIG[chip_type].show_memory
-         end
-         if show then
-            to_show[i] = show
-            show_count = show_count + 1
-         end
-      end
+   if stack.is_chip_set then
+      return
    end
 
-   if show_count > 3 then
-      -- HACK
-      local i = {
-         uid = first.uid,
-         show = true,
-         image = "elona.item_stack",
-         color = {255, 255, 255},
-         x_offset = 0,
-         y_offset = 0,
-         shadow_type = "drop_shadow"
-      }
-      self:draw_one(ind, x, y, i, chip_type, 0)
-   else
-      local stack_height = 0
-      for _, i in ipairs(stack) do
-         if i.uid then
-            if to_show[i] then
-               self:draw_one(ind, x, y, i, chip_type, stack_height)
-               stack_height = stack_height + i.stack_height
-            end
+   self.chip_batch:set_tile_image(index, "elona.item_stack")
+   self.chip_batch.xoffs[index] = 0
+   self.chip_batch.yoffs[index] = 0
+   self.chip_batch.colors_r[index] = 1
+   self.chip_batch.colors_g[index] = 1
+   self.chip_batch.colors_b[index] = 1
+   self.chip_batch.drawables[index] = nil
+   self.chip_batch.drawables_after[index] = nil
+   self.chip_batch.hiddens[index] = nil
+
+   self.drop_shadow_batch:set_tile_image(index, "elona.item_stack")
+   self.drop_shadow_batch.yoffs[index] = 0
+   self.shadow_batch.yoffs[index] = 0
+
+   stack.is_chip_set = true
+end
+
+function chip_layer:unset_stacking_chip(ind, map, mem)
+   local stack = self.stacking_inds[ind]
+   local index = stack[1]
+
+   if not stack.is_chip_set then
+      return
+   end
+
+   local x = (ind-1) % map:width()
+   local y = math.floor((ind-1) / map:width())
+   local chip_type = mem._type
+
+   self:draw_normal(index, ind, map, mem, chip_type)
+
+   stack.is_chip_set = nil
+end
+
+function chip_layer:update_stacking(map)
+   for ind, stack in pairs(self.stacking_inds) do
+      local x = (ind-1) % map:width()
+      local y = math.floor((ind-1) / map:width())
+
+      if #stack > 3 then
+         for i = 2, #stack do
+            local index = stack[i]
+            self.chip_batch.hiddens[index] = true
+            self.shadow_batch.hiddens[index] = true
+            self.drop_shadow_batch.hiddens[index] = true
          end
+
+         local first_ind = stack[1]
+         self.drop_shadow_batch.hiddens[first_ind] = nil
+         self.drop_shadow_batch:set_tile_image(first_ind, "elona.item_stack")
+
+         self:set_stacking_chip(ind)
+      else
+         local stack_height = 0
+         local map_size = map:width() * map:height()
+
+         for _, index in ipairs(stack) do
+            local batch_ind = self.chip_batch_inds[index]
+            self.chip_batch.hiddens[index] = nil
+            self.shadow_batch.hiddens[index] = nil
+            self.drop_shadow_batch.hiddens[index] = nil
+
+            local yoff = batch_ind.y_offset - stack_height
+
+            self.chip_batch.yoffs[index] = yoff
+            self.shadow_batch.yoffs[index] = yoff
+            self.drop_shadow_batch.yoffs[index] = yoff
+            stack_height = stack_height + batch_ind.stack_height or 0
+
+            local mem = map._object_memory[index]
+            local z_order = ind * CONFIG[mem._type].z_order * map_size + map._object_memory_z_order[index]
+
+            self.chip_batch:set_z_order(index, z_order)
+            self.shadow_batch:set_z_order(index, z_order)
+            self.drop_shadow_batch:set_z_order(index, z_order)
+         end
+
+         self:unset_stacking_chip(ind, map, map._object_memory[stack[1]])
       end
    end
 end
@@ -330,6 +395,8 @@ function chip_layer:update(map, dt, screen_updated, scroll_frames)
    end
 
    for index, _ in pairs(map._object_memory_removed) do
+      local batch_ind = self.chip_batch_inds[index]
+
       self.chip_batch_inds[index] = nil
       self.shadow_batch_inds[index] = nil
       self.drop_shadow_batch_inds[index] = nil
@@ -337,6 +404,15 @@ function chip_layer:update(map, dt, screen_updated, scroll_frames)
       self.chip_batch:remove_tile(index)
       self.shadow_batch:remove_tile(index)
       self.drop_shadow_batch:remove_tile(index)
+
+      local stacked = batch_ind and batch_ind.is_stacking and self.stacking_inds[batch_ind.ind]
+      if stacked then
+         local old_ind = batch_ind.ind
+         table.iremove_value(self.stacking_inds[old_ind], index)
+         if #self.stacking_inds[old_ind] == 0 then
+            self.stacking_inds[old_ind] = nil
+         end
+      end
    end
    table.clear(map._object_memory_removed)
 
@@ -354,6 +430,8 @@ function chip_layer:update(map, dt, screen_updated, scroll_frames)
       if map._in_sight[ind] ~= map._last_sight_id then -- if not map:is_in_fov(x, y) then
          local mem = map._object_memory[index]
          if mem and not CONFIG[mem._type].show_memory then
+            local batch_ind = self.chip_batch_inds[index]
+
             self.chip_batch_inds[index] = nil
             self.shadow_batch_inds[index] = nil
             self.drop_shadow_batch_inds[index] = nil
@@ -361,9 +439,19 @@ function chip_layer:update(map, dt, screen_updated, scroll_frames)
             self.chip_batch:remove_tile(index)
             self.shadow_batch:remove_tile(index)
             self.drop_shadow_batch:remove_tile(index)
+
+            if batch_ind and batch_ind.is_stacking and self.stacking_inds[batch_ind.ind] then
+               local old_ind = batch_ind.ind
+               table.iremove_value(self.stacking_inds[old_ind], index)
+               if #self.stacking_inds[old_ind] == 0 then
+                  self.stacking_inds[old_ind] = nil
+               end
+            end
          end
       end
    end
+
+   self:update_stacking(map)
 end
 
 function chip_layer:draw_hp_bars(draw_x, draw_y, offx, offy)

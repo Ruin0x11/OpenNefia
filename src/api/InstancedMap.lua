@@ -108,6 +108,7 @@ function InstancedMap:init(width, height, uids, tile)
    self._debris_memory = t()
    self._object_memory = t()
    self._object_memory_at = t()
+   self._object_memory_z_order = t()
    self._object_memory_pos = t()
    self._object_memory_added = t()
    self._object_memory_removed = t()
@@ -502,12 +503,17 @@ function InstancedMap:reveal_objects(x, y)
    local ind = y * self._width + x + 1
 
    local dead = {}
+   local dead_mem = {}
    local existing = self._object_memory_at[ind]
    if existing then
       for _, index in ipairs(existing) do
-         dead[#dead+1] = self._object_memory[index]
+         local mem = self._object_memory[index]
+         dead[mem.uid] = index
+         dead_mem[index] = mem
          self._object_memory[index] = nil
          self._object_memory_pos[index] = nil
+         self._object_memory_z_order[index] = nil
+
          self._object_memory_removed[index] = true
       end
    end
@@ -515,23 +521,32 @@ function InstancedMap:reveal_objects(x, y)
 
    local objs = self._multi_pool.positional[ind]
    if objs then
-      for _, obj in ipairs(objs) do
+      for i, obj in ipairs(objs) do
          self._object_memory_at[ind] = self._object_memory_at[ind] or {}
-         local index = #self._object_memory + 1
-         local m = dead[#dead]
-         if m == nil then
+         local index = dead[obj.uid]
+         local reuse = false
+         local m
+         if index == nil then
+            index = #self._object_memory + 1
             m = {}
          else
+            reuse = true
+            m = dead_mem[index]
             table.clear(m)
-            dead[#dead] = nil
+            dead[obj.uid] = nil
          end
          obj:produce_memory(m)
          if m.show then
             m._type = obj._type
+            m.uid = obj.uid
             self._object_memory[index] = m
             table.insert(self._object_memory_at[ind], index)
             self._object_memory_pos[index] = ind
+            self._object_memory_z_order[index] = i
             self._object_memory_added[index] = true
+            if reuse then
+               self._object_memory_removed[index] = nil
+            end
          end
       end
    end
@@ -545,6 +560,8 @@ function InstancedMap:forget_objects(x, y)
       for _, index in ipairs(existing) do
          self._object_memory[index] = nil
          self._object_memory_pos[index] = nil
+         self._object_memory_z_order[index] = nil
+
          self._object_memory_removed[index] = true
       end
    end
