@@ -265,7 +265,7 @@ function InventoryMenu.build_list(ctxt)
       sources = {sources}
    end
 
-   local shortcuts = fun.iter_pairs(save.elona.shortcuts)
+   local shortcuts = Shortcut.iter()
       :filter(function(i, sc) return sc.type == "item" end)
       :map(function(i, sc) return sc.item_id, i end)
       :to_map()
@@ -284,7 +284,8 @@ function InventoryMenu.build_list(ctxt)
             end
             local shortcut_index = shortcuts[item._id]
             if shortcut_index then
-               local sc = save.elona.shortcuts[shortcut_index]
+               print("GET", inspect(shortcut_index))
+               local sc = Shortcut.get(shortcut_index)
                if sc.inventory_proto_id == ctxt.proto._id
                   and (not config.elona.item_shortcuts_respect_curse_state or sc.curse_state == item:calc("curse_state"))
                then

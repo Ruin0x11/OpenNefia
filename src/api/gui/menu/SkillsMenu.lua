@@ -53,7 +53,7 @@ function SkillsMenu.generate_list(chara)
          local name = I18N.get("ability." .. entry._id .. ".name")
 
          -- TODO break this dependency (#30)
-         for index, sc in pairs(save.elona.shortcuts) do
+         for _, index, sc in Shortcut.iter() do
             if sc.type == "skill" and sc.skill_id == entry._id then
                name = ("%s {%d}"):format(name, index)
                break

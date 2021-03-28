@@ -717,7 +717,7 @@ end
 
 function ElonaCommand.shortcut(player, index)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:45576 	menucycle = 0 ...
-   local sc = save.elona.shortcuts[index]
+   local sc = Shortcut.get(index)
    if sc == nil then
       Gui.mes_duplicate()
       Gui.mes("action.shortcut.unassigned")

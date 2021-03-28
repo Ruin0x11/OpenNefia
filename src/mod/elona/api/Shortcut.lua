@@ -5,6 +5,14 @@ local ElonaMagic = require("mod.elona.api.ElonaMagic")
 
 local Shortcut = {}
 
+function Shortcut.iter()
+   return fun.iter_pairs(save.elona.shortcuts)
+end
+
+function Shortcut.get(index)
+   return save.elona.shortcuts[index]
+end
+
 --- Causes the same behavior as selecting the given item in a given
 --- inventory context. The item must be contained in the inventory's
 --- sources and be selectable.
