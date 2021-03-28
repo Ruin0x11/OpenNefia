@@ -340,6 +340,11 @@ function field_logic.player_turn_query()
       return "player_died", player
    end
 
+   if field_logic_state.about_to_autosave then
+      field_logic_state.about_to_autosave = false
+      Save.save_game()
+   end
+
    Gui.update_screen(dt, true)
 
    -- Wait for draw callbacks if necessary.
@@ -356,11 +361,6 @@ function field_logic.player_turn_query()
    if result then
       field:update(dt)
       return result, player
-   end
-
-   if field_logic_state.about_to_autosave then
-      field_logic_state.about_to_autosave = false
-      Save.save_game()
    end
 
    while going do
