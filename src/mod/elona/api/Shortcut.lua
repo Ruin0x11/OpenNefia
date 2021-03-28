@@ -157,7 +157,7 @@ local function shortcut_skill(player, sc)
    -- <<<<<<<< oomSEST/src/southtyris.hsp:45682 	goto *label_1623 ..
 end
 
-function Shortcut.bind_skill_shortcut(index, skill_id)
+function Shortcut.assign_skill_shortcut(index, skill_id)
    local sc = {
       type = "skill",
       skill_id = skill_id
@@ -171,7 +171,7 @@ function Shortcut.bind_skill_shortcut(index, skill_id)
    local other = save.elona.shortcuts[index]
    if other and scs_equal(sc, other) then
       save.elona.shortcuts[index] = nil
-      return "unbind"
+      return "unassign"
    end
 
    for other_index, other_sc in pairs(save.elona.shortcuts) do
@@ -181,10 +181,10 @@ function Shortcut.bind_skill_shortcut(index, skill_id)
    end
 
    save.elona.shortcuts[index] = sc
-   return "bind"
+   return "assign"
 end
 
-function Shortcut.bind_item_shortcut(index, item_id, inventory_proto_id, curse_state)
+function Shortcut.assign_item_shortcut(index, item_id, inventory_proto_id, curse_state)
    local sc = {
       type = "item",
       item_id = item_id,
@@ -202,7 +202,7 @@ function Shortcut.bind_item_shortcut(index, item_id, inventory_proto_id, curse_s
    local other = save.elona.shortcuts[index]
    if other and scs_equal(sc, other) then
       save.elona.shortcuts[index] = nil
-      return "unbind"
+      return "unassign"
    end
 
    for other_index, other_sc in pairs(save.elona.shortcuts) do
@@ -212,7 +212,7 @@ function Shortcut.bind_item_shortcut(index, item_id, inventory_proto_id, curse_s
    end
 
    save.elona.shortcuts[index] = sc
-   return "bind"
+   return "assign"
 end
 
 function Shortcut.activate(player, sc)

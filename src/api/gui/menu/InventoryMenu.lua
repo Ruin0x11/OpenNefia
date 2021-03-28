@@ -189,9 +189,9 @@ function InventoryMenu:assign_shortcut(index)
    Gui.play_sound("base.ok1")
 
    -- TODO Break this dependency (#30)
-   local result = Shortcut.bind_item_shortcut(index, item._id, self.ctxt.proto._id, item:calc("curse_state"))
+   local result = Shortcut.assign_item_shortcut(index, item._id, self.ctxt.proto._id, item:calc("curse_state"))
 
-   if result == "bind" then
+   if result == "assign" then
       Gui.mes("ui.assign_shortcut", index)
    end
    self:update_filtering()

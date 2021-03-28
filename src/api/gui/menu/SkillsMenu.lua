@@ -124,9 +124,9 @@ function SkillsMenu:assign_shortcut(index)
    end
 
    -- TODO Break this dependency (#30)
-   local result = Shortcut.bind_skill_shortcut(index, entry._id)
+   local result = Shortcut.assign_skill_shortcut(index, entry._id)
 
-   if result == "bind" then
+   if result == "assign" then
       Gui.mes("ui.assign_shortcut", index)
    end
 
