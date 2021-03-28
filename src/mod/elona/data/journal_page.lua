@@ -72,7 +72,10 @@ local function format_sidequest_status(sidequest_id, progress)
    if is_complete then
       text = ("%s%s"):format(I18N.get("sidequest.journal.done"), name)
    else
-      text = ("(%s)\n%s"):format(name, Sidequest.localize_progress_text(sidequest_id, progress))
+      text = Sidequest.localize_progress_text(sidequest_id, progress)
+      if text then
+         text = ("(%s)\n%s"):format(name, text)
+      end
    end
 
    return text
@@ -92,7 +95,7 @@ data:add {
       local quest_infos = Quest.iter_accepted():map(format_quest_status):to_list()
       local quest_info = table.concat(quest_infos, "\n\n")
 
-      local sub_quest_infos = Sidequest.iter():map(format_sidequest_status):to_list()
+      local sub_quest_infos = Sidequest.iter():map(format_sidequest_status):filter(fun.op.truth):to_list()
       local sub_quest_info = table.concat(sub_quest_infos, "\n\n")
 
       return ([[
