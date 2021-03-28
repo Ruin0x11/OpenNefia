@@ -50,7 +50,7 @@ end
 
 function SidebarMenu:make_keymap()
    return {
-      shift = function() self.canceled = true end,
+      cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end
    }
 end

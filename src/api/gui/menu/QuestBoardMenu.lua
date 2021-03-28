@@ -27,7 +27,7 @@ end
 function QuestBoardMenu:make_keymap()
    return {
       escape = function() self.canceled = true end,
-      shift = function() self.canceled = true end
+      cancel = function() self.canceled = true end
    }
 end
 
