@@ -38,7 +38,12 @@ function Autoplant.is_autoplantable(item)
       return false
    end
 
-   local has_shortcut = Shortcut.iter():filter(function(i, sc) return sc.type == "item" and sc.item_id == item._id end)
+   local is_use_shortcut = function(i, sc)
+      return sc.type == "item"
+         and sc.item_id == item._id
+         and sc.inventory_proto_id == "elona.inv_use"
+   end
+   local has_shortcut = Shortcut.iter():any(is_use_shortcut)
    if not has_shortcut then
       return false
    end
