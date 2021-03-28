@@ -1,10 +1,8 @@
 --- @module Quest
 local Save = require("api.Save")
 local Enum = require("api.Enum")
-
 local Rand = require("api.Rand")
 local Chara = require("api.Chara")
-local Map = require("api.Map")
 local Log = require("api.Log")
 local World = require("api.World")
 local Item = require("api.Item")
@@ -13,7 +11,6 @@ local I18N = require("api.I18N")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Effect = require("mod.elona.api.Effect")
-local Calc = require("mod.elona.api.Calc")
 local Area = require("api.Area")
 
 local Quest = {}
@@ -29,7 +26,7 @@ end
 ---
 --- @treturn iterator(IQuest)
 function Quest.iter_accepted()
-   return Quest.iter():filter(function(q) return q.state ~= "not_accepted" end)
+   return Quest.iter():filter(function(q) return q.state == "accepted" or q.state == "completed" end)
 end
 
 function Quest.get(uid)
