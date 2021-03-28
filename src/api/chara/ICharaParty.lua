@@ -169,11 +169,16 @@ function ICharaParty:recruit_as_ally(target, no_message)
    target.relation = self.relation
    target:refresh()
 
+   if self:get_target() == target then
+      self:set_target(nil)
+   end
+
    if self:is_player() and not no_message then
       Gui.mes_c("action.ally_joins.success", "Yellow", target)
       Gui.play_sound("base.pray1");
    end
    target:emit("base.on_recruited_as_ally", { no_message = no_message })
+
    return true
 end
 
