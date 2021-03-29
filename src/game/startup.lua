@@ -4,8 +4,6 @@ local data = require("internal.data")
 local doc = require("internal.doc")
 local draw = require("internal.draw")
 local field = require("game.field")
-local Stopwatch = require("api.Stopwatch")
-local UiTheme = require("api.gui.UiTheme")
 local Event = require("api.Event")
 local Log = require("api.Log")
 local Doc = require("api.Doc")
@@ -16,6 +14,7 @@ local config = require("internal.config")
 local theme = require("internal.theme")
 local events = require("internal.events")
 local config_store = require("internal.config_store")
+local midi = require("internal.midi")
 
 local startup = {}
 
@@ -179,6 +178,7 @@ end
 
 function startup.shutdown()
    doc.save()
+   midi.stop()
 end
 
 local atlas = require("internal.draw.atlas")

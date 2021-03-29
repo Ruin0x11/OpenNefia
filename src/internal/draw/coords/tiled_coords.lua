@@ -34,8 +34,8 @@ function tiled_coords:find_bounds(x, y, draw_width, draw_height)
    local tile_height = 48
    local tx = math.max(0, math.floor(-x / tile_width)) - 1
    local ty = math.max(0, math.floor(-y / tile_height)) - 1
-   local tdx = tx + math.ceil((draw_width) / tile_width) + 1
-   local tdy = ty + math.ceil((draw_height) / tile_height) + 1
+   local tdx = tx + math.ceil((draw_width) / tile_width) + 2
+   local tdy = ty + math.ceil((draw_height) / tile_height) + 2
    return tx, ty, tdx, tdy
 end
 

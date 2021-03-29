@@ -4,6 +4,7 @@ local config = require("internal.config")
 local Log = require("api.Log")
 local startup = require("game.startup")
 local ISoundHolder = require("api.ISoundHolder")
+local midi = require("internal.midi")
 
 data:add_multi(
    "base.config_option",
@@ -143,6 +144,17 @@ data:add {
 -- Menu: screen
 --
 
+local function replay_music()
+   local Gui = require("api.Gui")
+   local sound_manager = require("internal.global.global_sound_manager")
+
+   local music_id = sound_manager.music_id
+   if music_id then
+      Gui.stop_music()
+      Gui.play_music(music_id)
+   end
+end
+
 data:add_multi(
    "base.config_option",
    {
@@ -222,6 +234,46 @@ data:add_multi(
          end
       },
       {
+         _id = "midi_driver",
+
+         type = "enum",
+         choices = { "generic", "native" },
+         default = "generic",
+
+         on_changed = function(value)
+            if midi.is_playing() then
+               replay_music()
+            end
+         end
+      },
+      {
+         _id = "midi_device",
+
+         type = "enum",
+         choices = function()
+            if not midi.is_loaded() then
+               return { "<none>" }
+            end
+
+            local ports = midi.get_ports()
+            if #ports == 0 then
+               return { "<none>" }
+            end
+
+            local function map(port)
+               return ("%d: %s"):format(port.index, port.name)
+            end
+
+            return fun.iter(ports):map(map):to_list()
+         end,
+
+         on_changed = function(value)
+            if midi.is_playing() then
+               replay_music()
+            end
+         end
+      },
+      {
          _id = "heartbeat_threshold",
 
          type = "integer",
@@ -265,6 +317,8 @@ data:add {
    items = {
       "base.sound",
       "base.music",
+      "base.midi_driver",
+      "base.midi_device",
       "base.positional_audio",
       "base.screen_mode",
       "base.screen_resolution",

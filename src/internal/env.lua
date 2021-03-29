@@ -178,10 +178,11 @@ local LOVE2D_REQUIRES = table.set {
    "socket.http",
    "socket.https",
    "ltn12",
+   "midplay_lua"
 }
 
 local NATIVE_REQUIRES = table.set {
-   "vips",
+   "vips"
 }
 
 local global_require = require

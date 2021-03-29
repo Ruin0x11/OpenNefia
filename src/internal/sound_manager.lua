@@ -1,4 +1,5 @@
 local Log = require("api.Log")
+local midi = require("internal.midi")
 
 -- Borrowed from https://love2d.org/wiki/Minimalist_Sound_Manager
 local sound_manager = class.class("sound_manager")
@@ -29,6 +30,10 @@ function sound_manager:update()
    end
 end
 
+local function is_midi_file(filepath)
+   return filepath:lower():match("%.mid$")
+end
+
 function sound_manager:play_looping(tag, id, ty, x, y, volume)
    if _IS_LOVEJS then
       -- sound is completely broken in love.js (introduces lag and
@@ -42,41 +47,56 @@ function sound_manager:play_looping(tag, id, ty, x, y, volume)
       return
    end
 
-   local function setup_source(src)
-      src:setLooping(true)
-      src:setVolume(math.clamp(volume or 1.0, 0.0, 1.0))
-      if src:getChannelCount() == 1 then
-         if x ~= nil and y ~= nil then
-            src:setRelative(false)
-            src:setPosition(x, y)
-            src:setAttenuationDistances(100, 500)
-         else
-            src:setRelative(true)
-            src:setAttenuationDistances(0, 0)
+   local src, src_type
+
+   if is_midi_file(sound.file) then
+      if tag ~= "global_music" or ty ~= "music" then
+         error("MIDI files can only be played as music, not background sounds.")
+      end
+      src_type = "midi"
+      midi.play(sound.file)
+   else
+      src_type = "love"
+      local function setup_source(src)
+         src:setLooping(true)
+         src:setVolume(math.clamp(volume or 1.0, 0.0, 1.0))
+         if src:getChannelCount() == 1 then
+            if x ~= nil and y ~= nil then
+               src:setRelative(false)
+               src:setPosition(x, y)
+               src:setAttenuationDistances(100, 500)
+            else
+               src:setRelative(true)
+               src:setAttenuationDistances(0, 0)
+            end
          end
       end
-   end
 
-   local existing = self.looping_sources[tag]
-   if existing then
-      if existing.file == sound.file then
-         setup_source(existing.source)
-         return
-      else
-         self:stop_looping(tag, ty)
+      local existing = self.looping_sources[tag]
+      if existing then
+         if existing.file == sound.file then
+            setup_source(existing.source)
+            return
+         else
+            self:stop_looping(tag, ty)
+         end
       end
+
+      src = love.audio.newSource(sound.file, "stream")
+      setup_source(src)
+
+      if sound.volume then
+         src:setVolume(sound.volume)
+      end
+
+      src:play()
    end
 
-   local src = love.audio.newSource(sound.file, "stream")
-   setup_source(src)
-
-   if sound.volume then
-      src:setVolume(sound.volume)
-   end
-
-   src:play()
-
-   self.looping_sources[tag] = { source = src, file = sound.file }
+   self.looping_sources[tag] = {
+      source = src,
+      file = sound.file,
+      type = src_type
+   }
 end
 
 function sound_manager:stop_looping(tag, ty)
@@ -97,7 +117,15 @@ function sound_manager:stop_looping(tag, ty)
    local src = self.looping_sources[tag]
    if src == nil then return end
 
-   love.audio.stop(src.source)
+   if src.type == "midi" then
+      midi.stop()
+   else
+      love.audio.stop(src.source)
+   end
+
+   if tag == "global_music" and ty == "music" then
+      self.music_id = nil
+   end
 
    self.looping_sources[tag] = nil
 end
