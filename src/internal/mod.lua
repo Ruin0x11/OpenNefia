@@ -96,6 +96,20 @@ function mod.load_manifest(manifest_path)
    return manifest, nil
 end
 
+function mod.get_mod_info(manifest_file)
+   local manifest, err = mod.load_manifest(manifest_file)
+   if not manifest then
+      error(string.format("Error initializing %s:\n\t%s", manifest_file, err))
+   end
+
+   local mod_id = manifest.id
+   if type(mod_id) ~= "string" then
+      error(string.format("Manifest must contain 'id' field. (%s)", manifest_file))
+   end
+
+   return { manifest_path = manifest_file, root_path = fs.parent(manifest_file), id = mod_id, manifest = manifest }
+end
+
 function mod.calculate_load_order(mods)
    local graph = tsort.new()
 
@@ -106,15 +120,9 @@ function mod.calculate_load_order(mods)
    local seen = {}
 
    for _, manifest_file in ipairs(mods) do
-      local manifest, err = mod.load_manifest(manifest_file)
-      if not manifest then
-         error(string.format("Error initializing %s:\n\t%s", manifest_file, err))
-      end
+      local info = mod.get_mod_info(manifest_file)
 
-      local mod_id = manifest.id
-      if type(mod_id) ~= "string" then
-         error(string.format("Manifest must contain 'id' field. (%s)", manifest_file))
-      end
+      local mod_id = info.id
 
       if seen[mod_id] then
          error(("Mod %s was registered twice."):format(mod_id))
@@ -122,11 +130,11 @@ function mod.calculate_load_order(mods)
       seen[mod_id] = true
 
       graph:add(0, mod_id) -- root
-      for dep_id, version in pairs(manifest.dependencies) do
+      for dep_id, version in pairs(info.manifest.dependencies) do
          graph:add(dep_id, mod_id)
       end
 
-      paths[mod_id] = { manifest_path = manifest_file, root_path = fs.parent(manifest_file), id = mod_id }
+      paths[mod_id] = info
    end
 
    local order, cycle = graph:sort()

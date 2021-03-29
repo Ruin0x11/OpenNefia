@@ -215,13 +215,25 @@ return function(args)
 
    local sw = Stopwatch:new()
 
-   for i = 1, 3 do
-      local enabled_mods
-      if args.load_all_mods then
-         enabled_mods = nil
-      else
-         enabled_mods = { "base", "elona_sys", "elona", "extlibs" }
+   local mods = mod.scan_mod_dir()
+   local mods_with_tests = {}
+
+   for _, manifest_path in ipairs(mods) do
+      local mod_info = mod.get_mod_info(manifest_path)
+      local tests_dir = fs.join(mod_info.root_path, "test")
+      if fs.exists(tests_dir) then
+         table.insert(mods_with_tests, { mod_info = mod_info, tests_dir = tests_dir })
       end
+   end
+
+   print(("Test suites found: %d"):format(#mods_with_tests))
+   for _, entry in ipairs(mods_with_tests) do
+      print(("  + %s: %s"):format(entry.mod_info.id, entry.tests_dir))
+   end
+
+   print()
+
+   local function run_tests(tests_dir, enabled_mods, message)
       local mods = mod.scan_mod_dir(enabled_mods)
       startup.run_all(mods)
 
@@ -231,9 +243,6 @@ return function(args)
       field:init_global_data()
 
       local seed = args.seed or math.floor(socket.gettime())
-
-      print("Seed: " .. seed)
-      print("")
 
       local spl = string.split(args.filter, ":")
       local filter_file_name = spl[1]
@@ -247,7 +256,12 @@ return function(args)
          table.sort(files)
          return files
       end
-      local files = get_files("test/unit/")
+      local files = get_files(tests_dir)
+
+      print()
+      print(("===== Running %s... ====="):format(message))
+      print("Seed: " .. seed)
+      print()
 
       while #files > 0 do
          local path = files[#files]
@@ -267,10 +281,26 @@ return function(args)
       cleanup_globals()
 
       print("\n")
+   end
 
-      if i < 3 then
-         reset_all_globals()
+   local base_mods = { "base", "elona_sys", "elona", "extlibs" }
+
+   -- Base engine tests, under src/test/unit.
+   run_tests("test/unit", base_mods, "base engine tests")
+
+   for _, entry in ipairs(mods_with_tests) do
+      local mod_info = entry.mod_info
+      local tests_dir = entry.tests_dir
+
+      reset_all_globals()
+
+      local deps = table.set(base_mods)
+      for dep_id, version in pairs(mod_info.manifest.dependencies) do
+         deps[dep_id] = true
       end
+
+      deps = table.keys(deps)
+      run_tests(tests_dir, deps, ("tests for mod '%s'"):format(mod_info.id))
    end
 
    print("\n")
