@@ -211,14 +211,14 @@ end
 local function proc_scene()
    -- >>>>>>>> shade2/map.hsp:1995 	proc "Map:Proc scene" ..
    -- TODO main quest
-   -- this should get folded into base.on_map_loaded_events
+   -- this should get folded into base.on_map_loaded
    -- <<<<<<<< shade2/map.hsp:2015 		} ..
 end
 
 local function proc_map_loaded_events(map, prev_map, prev_x, prev_y)
    -- >>>>>>>> shade2/map.hsp:2018 	proc "Map:Area specific" ..
    -- TODO
-   map:emit("base.on_map_loaded_events", {previous_map=prev_map,previous_x=prev_x,previous_y=prev_y})
+   map:emit("base.on_map_loaded", {previous_map=prev_map,previous_x=prev_x,previous_y=prev_y})
    -- <<<<<<<< shade2/map.hsp:2054 		} ..
 end
 

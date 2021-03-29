@@ -31,7 +31,7 @@ function arc.on_map_renew_major(map)
    end
 end
 
-function arc.on_map_loaded_events(map)
+function arc.on_map_loaded(map)
    local to_minor = map.renew_minor_date - World.date_hours()
    local to_major = map.renew_major_date - World.date_hours()
    Gui.mes_c("Time to minor renew: " .. to_minor .. " hours", "Yellow")
@@ -54,7 +54,7 @@ local putit_room = {
    starting_pos = MapEntrance.stairs_up
 }
 
-function putit_room.on_map_loaded_events(map)
+function putit_room.on_map_loaded(map)
    Gui.mes_c("*puti*", "Yellow")
 end
 
