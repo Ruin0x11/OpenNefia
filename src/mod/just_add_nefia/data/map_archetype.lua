@@ -27,7 +27,7 @@ local firey_life = {
    }
 }
 
-function firey_life.on_map_entered_events(map)
+function firey_life.on_map_entered(map)
    local ext = map:get_mod_data("just_add_nefia")
    ext.firey_life_turns = 0
 

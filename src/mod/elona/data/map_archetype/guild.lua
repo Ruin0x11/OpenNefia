@@ -72,7 +72,7 @@ function thieves_guild.on_generate_map()
 end
 
 
-function thieves_guild.on_map_entered_events(map, params)
+function thieves_guild.on_map_entered(map, params)
    local prev_map = params.previous_map
    local prev_x = params.previous_x
    local prev_y = params.previous_y
@@ -148,7 +148,7 @@ function fighters_guild.on_generate_map()
    return map
 end
 
-function fighters_guild.on_map_entered_events(map, params)
+function fighters_guild.on_map_entered(map, params)
    local prev_map = params.previous_map
    local prev_x = params.previous_x
    local prev_y = params.previous_y
@@ -229,7 +229,7 @@ function mages_guild.on_generate_map()
    return map
 end
 
-function mages_guild.on_map_entered_events(map, params)
+function mages_guild.on_map_entered(map, params)
    local prev_map = params.previous_map
    local prev_x = params.previous_x
    local prev_y = params.previous_y

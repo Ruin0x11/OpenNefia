@@ -15,7 +15,7 @@ local function set_return_restriction(map)
       map.prevents_return = true
    end
 end
-Event.register("base.on_map_entered_events", "Set return restriction", set_return_restriction)
+Event.register("base.on_map_entered", "Set return restriction", set_return_restriction)
 
 local function proc_return(chara)
    if not chara:is_player() then

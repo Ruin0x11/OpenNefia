@@ -88,7 +88,7 @@ function food.on_map_pass_turn(map)
    player.nutrition = 100000
 end
 
-function food.on_map_entered_events(map)
+function food.on_map_entered(map)
    if Chara.player():iter_other_party_members(map):all(function(i) return i._id ~= "elona.golden_knight" end) then
       for _ = 1, 14 do
          local knight = Chara.create("elona.golden_knight", nil, nil, {}, map)

@@ -237,7 +237,7 @@ local function proc_map_entered_events(map, prev_map, prev_x, prev_y)
    end
 
    -- TODO
-   map:emit("base.on_map_entered_events", {previous_map=prev_map,previous_x=prev_x,previous_y=prev_y})
+   map:emit("base.on_map_entered", {previous_map=prev_map,previous_x=prev_x,previous_y=prev_y})
    -- <<<<<<<< shade2/map.hsp:2087 	mode=mode_Main:screenUpdate=-1:gosub *screen_refr ..
 end
 

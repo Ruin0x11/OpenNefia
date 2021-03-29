@@ -119,7 +119,7 @@ data:add_multi(
       { _id = "on_map_renew_major", },
       { _id = "on_map_renew_geometry" },
       { _id = "on_map_loaded_events" },
-      { _id = "on_map_entered_events" },
+      { _id = "on_map_entered" },
       { _id = "calc_map_starting_pos" },
       { _id = "on_generate_area_floor" },
       { _id = "on_map_initialize" },

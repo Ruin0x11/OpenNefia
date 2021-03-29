@@ -210,7 +210,7 @@ local function display_quest_message_party(map)
    end
    -- <<<<<<<< shade2/map.hsp:2160 			} ..
 end
-Event.register("base.on_map_entered_events", "Display quest message (party)", display_quest_message_party)
+Event.register("base.on_map_entered", "Display quest message (party)", display_quest_message_party)
 
 local function ai_drink_in_party(chara, _, result)
    if result then

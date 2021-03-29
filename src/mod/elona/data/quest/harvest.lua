@@ -44,7 +44,7 @@ local quest_harvest = {
    }
 }
 
-function quest_harvest.on_map_entered_events(map)
+function quest_harvest.on_map_entered(map)
    if not Item.find("elona.masters_delivery_chest", "ground", map) then
       local player = Chara.player()
       local harvest_chest = Item.create("elona.masters_delivery_chest", player.x, player.y, {}, map)
@@ -223,7 +223,7 @@ local function display_quest_message_harvest(map)
    end
    -- <<<<<<<< shade2/map.hsp:2164 			} ..
 end
-Event.register("base.on_map_entered_events", "Display quest message (harvest)", display_quest_message_harvest)
+Event.register("base.on_map_entered", "Display quest message (harvest)", display_quest_message_harvest)
 
 local CAN_INCLUDE_QUEST_ITEMS = table.set {
    "elona.inv_examine",

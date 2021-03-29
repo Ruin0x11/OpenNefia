@@ -137,4 +137,4 @@ local function display_quest_message_conquer(map)
    end
    -- <<<<<<<< shade2/map.hsp:2167 			} ..
 end
-Event.register("base.on_map_entered_events", "Display quest message (conquer)", display_quest_message_conquer)
+Event.register("base.on_map_entered", "Display quest message (conquer)", display_quest_message_conquer)
