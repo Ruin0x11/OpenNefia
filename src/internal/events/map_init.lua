@@ -332,9 +332,9 @@ local function prepare_map(map, params)
    proc_quest_message(map)
 end
 
-Event.register("base.on_map_enter", "Prepare map after load", prepare_map)
+Event.register("base.on_map_changed", "Prepare map after load", prepare_map)
 
-Event.register("base.on_map_enter", "Reveal fog if town",
+Event.register("base.on_map_changed", "Reveal fog if town",
                function(map, params)
                   if map:has_type({"town", "world_map", "player_owned", "guild"}) then
                      map:mod("reveals_fog", true)

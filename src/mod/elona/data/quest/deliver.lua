@@ -247,7 +247,7 @@ function mark_delivery_targets(map)
    end
 end
 
-Event.register("base.on_map_enter", "Mark quest delivery targets", mark_delivery_targets)
+Event.register("base.on_map_changed", "Mark quest delivery targets", mark_delivery_targets)
 
 local function add_quest_delivery_choice(speaker, _, result)
    if speaker.is_quest_delivery_target then

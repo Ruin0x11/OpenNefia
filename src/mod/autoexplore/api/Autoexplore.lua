@@ -170,10 +170,10 @@ local function on_killed(chara)
 end
 Event.register("base.on_chara_killed", "Stop autoexplore on death", on_killed)
 
-local function on_map_enter()
+local function on_map_changed()
    Autoexplore.stop()
 end
-Event.register("base.on_map_enter", "Stop autoexplore on map enter", on_map_enter)
+Event.register("base.on_map_changed", "Stop autoexplore on map changed", on_map_changed)
 
 
 -- TODO: It would be ideal to integrate this with the continuous

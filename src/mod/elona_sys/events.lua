@@ -363,7 +363,7 @@ Event.register("base.on_chara_vanquished", "Refresh sidequests (when chara vanqu
                   end
                end)
 
-Event.register("base.on_map_enter", "Refresh sidequests (when map entered)",
+Event.register("base.on_map_changed", "Refresh sidequests (when map entered)",
                function(map)
                   map:emit("elona_sys.on_quest_check")
 end)
@@ -406,7 +406,7 @@ local function play_map_music(map)
    end
 end
 
-Event.register("base.on_map_enter", "Play map music", play_map_music)
+Event.register("base.on_map_changed", "Play map music", play_map_music)
 
 local PlayerLightDrawable = require("api.gui.PlayerLightDrawable")
 local function add_player_light(player, params)

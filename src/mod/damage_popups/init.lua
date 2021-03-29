@@ -5,7 +5,7 @@ Event.register("base.on_init_save", "Init save (damage popups)", function()
                   save.damage_popups.popups = { count = 0 }
 end)
 
-Event.register("base.on_map_enter", "Clear damage popups", DamagePopup.clear)
+Event.register("base.on_map_changed", "Clear damage popups", DamagePopup.clear)
 
 DamagePopup.install()
 

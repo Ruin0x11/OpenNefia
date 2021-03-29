@@ -74,7 +74,7 @@ data:add_multi(
       { _id = "on_hotload_prototype" },
       { _id = "on_chara_generated" },
       { _id = "on_object_cloned" },
-      { _id = "on_map_enter" },
+      { _id = "on_map_changed" },
       { _id = "after_map_entered" },
       { _id = "on_map_leave" },
       { _id = "on_chara_place_failure" },

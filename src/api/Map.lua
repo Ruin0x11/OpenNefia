@@ -44,7 +44,7 @@ function Map.set_map(map, load_type, prev_x, prev_y)
    end
 
    save.base.is_first_turn = true
-   map:emit("base.on_map_enter", {load_type=load_type,previous_map=field.map,previous_x=prev_x,previous_y=prev_y})
+   map:emit("base.on_map_changed", {load_type=load_type,previous_map=field.map,previous_x=prev_x,previous_y=prev_y})
    map.visit_times = map.visit_times + 1
 
    local previous_map = field.map

@@ -24,7 +24,7 @@ local function spoil_items_on_enter(map)
       Effect.spoil_items(map)
    end
 end
-Event.register("base.on_map_enter", "Spoil items on enter", spoil_items_on_enter, 150000)
+Event.register("base.on_map_changed", "Spoil items on enter", spoil_items_on_enter, 150000)
 -- <<<<<<<< shade2/map.hsp:2124 		} ..
 
 
@@ -35,7 +35,7 @@ local function welcome_home(map)
    end
    -- <<<<<<<< shade2/system.hsp:28 		} ..
 end
-Event.register("base.on_map_enter", "Make servants welcome the player", welcome_home, 100000)
+Event.register("base.on_map_changed", "Make servants welcome the player", welcome_home, 100000)
 
 local function generate_initial_nefias(map)
    -- >>>>>>>> shade2/map.hsp:917 	if gArea=areaNorthTyris{ ...
@@ -57,7 +57,7 @@ local function update_world_map(map)
    end
    -- <<<<<<<< shade2/map.hsp:2070 		} ..
 end
-Event.register("base.on_map_enter", "Update world map", update_world_map, 90000)
+Event.register("base.on_map_changed", "Update world map", update_world_map, 90000)
 
 local function show_first_ex_help(map, params)
    -- >>>>>>>> shade2/map.hsp:124 	if mType=mTypeHome 	: help 1 ...
@@ -66,7 +66,7 @@ local function show_first_ex_help(map, params)
    end
    -- <<<<<<<< shade2/map.hsp:124 	if mType=mTypeHome 	: help 1 ..
 end
-Event.register("base.on_map_enter", "Show first EX help", show_first_ex_help, 10000)
+Event.register("base.on_map_changed", "Show first EX help", show_first_ex_help, 10000)
 
 local function show_map_ex_help(map, params)
    -- >>>>>>>> shade2/map.hsp:2137 	if mType=mTypeWorld	: help 2 ...

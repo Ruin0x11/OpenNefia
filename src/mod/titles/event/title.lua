@@ -24,4 +24,4 @@ local function proc_title_earned_player()
       Title.check_earned(player)
    end
 end
-Event.register("base.on_map_enter", "Proc title earned", proc_title_earned_player)
+Event.register("base.on_map_changed", "Proc title earned", proc_title_earned_player)
