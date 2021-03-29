@@ -1,3 +1,4 @@
+local Env = require("api.Env")
 local Log = require("api.Log")
 local config = require("internal.config")
 
@@ -7,9 +8,11 @@ local config = require("internal.config")
 -- otherwise.) So for now the DLL for midplay will be put under src/.
 local ok, midplay = pcall(require, "midplay_lua")
 
-if not ok then
-   local err = midplay
-   Log.debug("midplay failed to load, so no MIDI support. (%s)", err)
+if not ok or Env.is_headless() then
+   if not ok then
+      local err = midplay
+      Log.debug("midplay failed to load, so no MIDI support. (%s)", err)
+   end
    return {
       is_loaded = function() return false end,
       get_ports = function() return {} end,
