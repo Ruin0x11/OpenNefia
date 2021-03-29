@@ -2,10 +2,13 @@ local Env = require("api.Env")
 local Log = require("api.Log")
 local config = require("internal.config")
 
--- XXX: I have no idea why, but when running under LÖVE, the Lua runtime will
--- refuse to load any native modules unless they're directly under src/ or in
--- the same folder as the LÖVE binary. (It gives "specified module not found"
--- otherwise.) So for now the DLL for midplay will be put under src/.
+-- XXX: I have no idea why, but when running LÖVE under Windows, the Lua runtime
+-- can't load any native modules unless they're directly under src/ or in the
+-- same folder as the LÖVE binary. (It gives "specified module not found"
+-- otherwise.) So for now the Windows DLL for midplay will be put under src/.
+--
+-- This does not occur on Linux; the native libs under lib/ are all loaded
+-- successfully.
 local ok, midplay = pcall(require, "midplay_lua")
 
 if not ok or Env.is_headless() then
