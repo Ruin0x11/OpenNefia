@@ -127,7 +127,7 @@ function Map.load(uid)
       return false, map
    end
 
-   map:emit("base.on_map_loaded")
+   map:emit("base.on_map_deserialized")
 
    -- Instantiate every object that was loaded by the deserializer, to ensure
    -- things like event handlers that get loaded from the prototype are
