@@ -216,7 +216,7 @@ local function check_escort_destination_reached(map)
       end
    end
 end
-Event.register("base.on_map_changed", "Check if escort destination is reached", check_escort_destination_reached)
+Event.register("base.on_map_entered", "Check if escort destination is reached", check_escort_destination_reached)
 
 local function event_client_dead(chara)
    -- >>>>>>>> shade2/main.hsp:1782 	case evClientDead ..

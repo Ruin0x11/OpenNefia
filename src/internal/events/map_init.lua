@@ -334,14 +334,14 @@ end
 
 Event.register("base.on_map_changed", "Prepare map after load", prepare_map)
 
-Event.register("base.on_map_changed", "Reveal fog if town",
-               function(map, params)
-                  if map:has_type({"town", "world_map", "player_owned", "guild"}) then
-                     map:mod("reveals_fog", true)
-                  end
-                  if map:calc("reveals_fog") then
-                     for _, x, y in map:iter_tiles() do
-                        map:memorize_tile(x, y)
-                     end
-                  end
-end)
+local function reveal_fog(map, params)
+   if map:has_type({"town", "world_map", "player_owned", "guild"}) then
+      map:mod("reveals_fog", true)
+   end
+   if map:calc("reveals_fog") then
+      for _, x, y in map:iter_tiles() do
+         map:memorize_tile(x, y)
+      end
+   end
+end
+Event.register("base.on_map_entered", "Reveal fog if town", reveal_fog)

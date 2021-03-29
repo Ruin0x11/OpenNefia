@@ -363,7 +363,7 @@ Event.register("base.on_chara_vanquished", "Refresh sidequests (when chara vanqu
                   end
                end)
 
-Event.register("base.on_map_changed", "Refresh sidequests (when map entered)",
+Event.register("base.on_map_entered", "Refresh sidequests (when map entered)",
                function(map)
                   map:emit("elona_sys.on_quest_check")
 end)
