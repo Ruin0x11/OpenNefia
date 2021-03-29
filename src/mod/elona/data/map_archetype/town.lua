@@ -169,7 +169,7 @@ do
       util.reload_122_map_geometry(map, "vernis")
    end
 
-   function vernis.on_map_loaded_events(map)
+   function vernis.on_map_loaded(map)
       -- >>>>>>>> shade2/map.hsp:2035 	if gArea=areaVernis{ ..
       if save.elona.main_quest_progress == 0 then
          Scene.play("elona.story1")

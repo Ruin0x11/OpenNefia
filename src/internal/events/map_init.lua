@@ -211,14 +211,14 @@ end
 local function proc_scene()
    -- >>>>>>>> shade2/map.hsp:1995 	proc "Map:Proc scene" ..
    -- TODO main quest
-   -- this should get folded into base.on_map_loaded_events
+   -- this should get folded into base.on_map_loaded
    -- <<<<<<<< shade2/map.hsp:2015 		} ..
 end
 
 local function proc_map_loaded_events(map, prev_map, prev_x, prev_y)
    -- >>>>>>>> shade2/map.hsp:2018 	proc "Map:Area specific" ..
    -- TODO
-   map:emit("base.on_map_loaded_events", {previous_map=prev_map,previous_x=prev_x,previous_y=prev_y})
+   map:emit("base.on_map_loaded", {previous_map=prev_map,previous_x=prev_x,previous_y=prev_y})
    -- <<<<<<<< shade2/map.hsp:2054 		} ..
 end
 
@@ -237,7 +237,7 @@ local function proc_map_entered_events(map, prev_map, prev_x, prev_y)
    end
 
    -- TODO
-   map:emit("base.on_map_entered_events", {previous_map=prev_map,previous_x=prev_x,previous_y=prev_y})
+   map:emit("base.on_map_entered", {previous_map=prev_map,previous_x=prev_x,previous_y=prev_y})
    -- <<<<<<<< shade2/map.hsp:2087 	mode=mode_Main:screenUpdate=-1:gosub *screen_refr ..
 end
 
@@ -332,16 +332,16 @@ local function prepare_map(map, params)
    proc_quest_message(map)
 end
 
-Event.register("base.on_map_enter", "Prepare map after load", prepare_map)
+Event.register("base.on_map_changed", "Prepare map after load", prepare_map)
 
-Event.register("base.on_map_enter", "Reveal fog if town",
-               function(map, params)
-                  if map:has_type({"town", "world_map", "player_owned", "guild"}) then
-                     map:mod("reveals_fog", true)
-                  end
-                  if map:calc("reveals_fog") then
-                     for _, x, y in map:iter_tiles() do
-                        map:memorize_tile(x, y)
-                     end
-                  end
-end)
+local function reveal_fog(map, params)
+   if map:has_type({"town", "world_map", "player_owned", "guild"}) then
+      map:mod("reveals_fog", true)
+   end
+   if map:calc("reveals_fog") then
+      for _, x, y in map:iter_tiles() do
+         map:memorize_tile(x, y)
+      end
+   end
+end
+Event.register("base.on_map_entered", "Reveal fog if town", reveal_fog)

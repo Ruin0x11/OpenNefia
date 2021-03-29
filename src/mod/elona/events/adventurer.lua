@@ -109,4 +109,4 @@ local function cleanup_dead_adventurers(map)
    end
    -- <<<<<<<< shade2/chara_func.hsp:1668 				cRespawn(tc)=dateId+respawnTimeAdv+rnd(respawn ..
 end
-Event.register("base.on_map_enter", "Cleanup dead adventurers", cleanup_dead_adventurers, { priority = 300000 })
+Event.register("base.on_map_changed", "Cleanup dead adventurers", cleanup_dead_adventurers, { priority = 300000 })

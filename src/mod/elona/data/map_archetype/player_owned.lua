@@ -108,7 +108,7 @@ do
       -- <<<<<<<< shade2/map.hsp:2228 		if areaId(gArea)=areaRanch : gosub *ranch_update ..
    end
 
-   function ranch.on_map_entered_events(map)
+   function ranch.on_map_entered(map)
       -- >>>>>>>> elona122/shade2/map.hsp:2128 	if areaId(gArea)=areaRanch{ ..
       ElonaBuilding.ranch_reset_aggro(map)
       -- <<<<<<<< elona122/shade2/map.hsp:2132 		} ..
@@ -214,7 +214,7 @@ do
       }
    end
 
-   function museum.on_map_entered_events(map)
+   function museum.on_map_entered(map)
       -- >>>>>>>> shade2/map.hsp:2117 	if (areaId(gArea)=areaMuseum)or(areaId(gArea)=are ..
       for _ = 1, 5 do
          ElonaChara.spawn_mobs(map)
@@ -307,7 +307,7 @@ do
       }
    end
 
-   function shop.on_map_entered_events(map)
+   function shop.on_map_entered(map)
       -- >>>>>>>> shade2/map.hsp:2117 	if (areaId(gArea)=areaMuseum)or(areaId(gArea)=are ..
       for _ = 1, 5 do
          ElonaChara.spawn_mobs(map)

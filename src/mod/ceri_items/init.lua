@@ -84,7 +84,7 @@ local function set_item_images(map)
    end
 end
 
-Event.register("base.on_map_enter", "Set item image to FFHP override", set_item_images)
+Event.register("base.on_map_changed", "Set item image to FFHP override", set_item_images)
 Event.register("base.on_theme_switched", "Set item image to FFHP override",
                function()
                   local player = Chara.player()

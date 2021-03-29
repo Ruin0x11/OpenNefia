@@ -246,8 +246,7 @@ function mark_delivery_targets(map)
       chara.is_quest_delivery_target = item_id or nil
    end
 end
-
-Event.register("base.on_map_enter", "Mark quest delivery targets", mark_delivery_targets)
+Event.register("base.on_map_entered", "Mark quest delivery targets", mark_delivery_targets)
 
 local function add_quest_delivery_choice(speaker, _, result)
    if speaker.is_quest_delivery_target then
@@ -286,6 +285,11 @@ Event.register("base.on_chara_turn_end", "Set quest target emotion icon", set_qu
 
 local function reset_quest_emoicon(_, params)
    local chara = params.client
+   if chara == nil then
+      -- Can be nil inside the escort quest, because the client exists in a
+      -- different map.
+      return
+   end
    if chara.emotion_icon == "elona.quest_target"
       or chara.emotion_icon == "elona.quest_client"
    then

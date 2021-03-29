@@ -44,13 +44,13 @@ function Map.set_map(map, load_type, prev_x, prev_y)
    end
 
    save.base.is_first_turn = true
-   map:emit("base.on_map_enter", {load_type=load_type,previous_map=field.map,previous_x=prev_x,previous_y=prev_y})
+   map:emit("base.on_map_changed", {load_type=load_type,previous_map=field.map,previous_x=prev_x,previous_y=prev_y})
    map.visit_times = map.visit_times + 1
 
    local previous_map = field.map
    field:set_map(map)
 
-   map:emit("base.after_map_entered", {load_type=load_type,previous_map=previous_map,previous_x=prev_x,previous_y=prev_y})
+   map:emit("base.after_map_changed", {load_type=load_type,previous_map=previous_map,previous_x=prev_x,previous_y=prev_y})
 
    for _, obj in map:iter() do
       ISoundHolder.on_set_location(obj, obj.location)
@@ -127,7 +127,7 @@ function Map.load(uid)
       return false, map
    end
 
-   map:emit("base.on_map_loaded")
+   map:emit("base.on_map_deserialized")
 
    -- Instantiate every object that was loaded by the deserializer, to ensure
    -- things like event handlers that get loaded from the prototype are
@@ -666,7 +666,6 @@ function Map.travel_to(map, params)
 
    Map.set_map(map, "traveled", prev_x, prev_y)
    collectgarbage()
-
 
    if current.is_temporary then
       local path = Fs.join("map", tostring(current.uid))
