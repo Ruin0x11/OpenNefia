@@ -5,6 +5,7 @@ local Log = require("api.Log")
 local startup = require("game.startup")
 local ISoundHolder = require("api.ISoundHolder")
 local midi = require("internal.midi")
+local global_sound_manager = require("internal.global.global_sound_manager")
 
 data:add_multi(
    "base.config_option",
@@ -220,16 +221,11 @@ data:add_multi(
 
          on_changed = function(value)
             local Gui = require("api.Gui")
-            local field = require("game.field")
 
             if not value then
                Gui.stop_music()
             else
-               if field.is_active then
-                  Gui.play_default_music()
-               else
-                  Gui.play_music("elona.opening")
-               end
+               replay_music()
             end
          end
       },
@@ -241,7 +237,7 @@ data:add_multi(
          default = "generic",
 
          on_changed = function(value)
-            if midi.is_playing() then
+            if global_sound_manager:is_playing_midi() then
                replay_music()
             end
          end
@@ -268,7 +264,7 @@ data:add_multi(
          end,
 
          on_changed = function(value)
-            if midi.is_playing() then
+            if global_sound_manager:is_playing_midi() then
                replay_music()
             end
          end

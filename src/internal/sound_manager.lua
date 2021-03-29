@@ -1,5 +1,6 @@
 local Log = require("api.Log")
 local midi = require("internal.midi")
+local config = require("internal.config")
 
 -- Borrowed from https://love2d.org/wiki/Minimalist_Sound_Manager
 local sound_manager = class.class("sound_manager")
@@ -32,6 +33,15 @@ end
 
 local function is_midi_file(filepath)
    return filepath:lower():match("%.mid$")
+end
+
+function sound_manager:is_playing_midi()
+   local src = self.looping_sources["global_music"]
+   if src == nil then
+      return false
+   end
+
+   return src.type == "midi"
 end
 
 function sound_manager:play_looping(tag, id, ty, x, y, volume)
@@ -123,10 +133,6 @@ function sound_manager:stop_looping(tag, ty)
       love.audio.stop(src.source)
    end
 
-   if tag == "global_music" and ty == "music" then
-      self.music_id = nil
-   end
-
    self.looping_sources[tag] = nil
 end
 
@@ -212,7 +218,9 @@ function sound_manager:play_music(sound_id)
 
    assert(type(sound_id) == "string")
 
-   if self.music_id == sound_id then
+   local is_playing = self.looping_sources["global_music"] ~= nil
+
+   if is_playing and self.music_id == sound_id then
       return
    end
 
@@ -220,8 +228,13 @@ function sound_manager:play_music(sound_id)
       self:stop_music()
    end
 
-   self:play_looping("global_music", sound_id, "music")
    self.music_id = sound_id
+
+   if not config.base.music then
+      return
+   end
+
+   self:play_looping("global_music", sound_id, "music")
 end
 
 function sound_manager:stop_music()
