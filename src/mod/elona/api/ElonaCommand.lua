@@ -26,6 +26,7 @@ local Feat = require("api.Feat")
 local global = require("mod.elona.internal.global")
 local RandomEvent = require("mod.elona.api.RandomEvent")
 local Calc = require("mod.elona.api.Calc")
+local Shortcut = require("mod.elona.api.Shortcut")
 
 local ElonaCommand = {}
 
@@ -55,6 +56,10 @@ function ElonaCommand.inventory(player)
 end
 
 function ElonaCommand.bash(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    Gui.mes("action.bash.prompt")
    local dir = Input.query_direction()
 
@@ -105,6 +110,10 @@ function ElonaCommand.drink(player)
 end
 
 function ElonaCommand.zap(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    return query_inventory(player, "elona.inv_zap")
 end
 
@@ -113,14 +122,26 @@ function ElonaCommand.use(player)
 end
 
 function ElonaCommand.open(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    return query_inventory(player, "elona.inv_open")
 end
 
 function ElonaCommand.dip(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    return query_inventory(player, "elona.inv_dip_source")
 end
 
 function ElonaCommand.throw(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    return query_inventory(player, "elona.inv_throw")
 end
 
@@ -140,6 +161,10 @@ end
 
 function ElonaCommand.fire(player)
    -- >>>>>>>> shade2/command.hsp:4278 *com_fire ...
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    local target = Action.find_target(player)
 
    if not target then
@@ -519,14 +544,13 @@ local function choose_command_dwim(player)
       if item:has_category("elona.container") then
          command = ElonaCommand.open
       elseif item:has_category("elona.furniture_well") then
-         Log.error("TODO dip")
-         -- command = Command.dip
+         command = ElonaCommand.dip
       elseif item:has_category("elona.furniture_altar") then
          Log.error("TODO god")
          if player:calc("god") then
-            --command = Command.offer
+            command = ElonaCommand.offer
          else
-            --command = Command.pray
+            command = ElonaCommand.pray
          end
       elseif item:calc("can_use") then
          command = ElonaCommand.use
@@ -628,6 +652,10 @@ end
 
 function ElonaCommand.give(player)
    -- >>>>>>>> shade2/command.hsp:1825 *com_give ...
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    Gui.mes("action.which_direction.ask")
 
    local dir, canceled = Input.query_direction(player)
@@ -669,6 +697,35 @@ function ElonaCommand.name(player, target)
 
    return "player_turn_query"
    -- <<<<<<<< shade2/command.hsp:1926 	gosub *screen_refresh :goto *pc_turn ..
+end
+
+function ElonaCommand.offer(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
+   Log.error("TODO offer")
+end
+
+function ElonaCommand.pray(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
+   Log.error("TODO pray")
+end
+
+function ElonaCommand.shortcut(player, index)
+   -- >>>>>>>> oomSEST/src/southtyris.hsp:45576 	menucycle = 0 ...
+   local sc = Shortcut.get(index)
+   if sc == nil then
+      Gui.mes_duplicate()
+      Gui.mes("action.shortcut.unassigned")
+      return "player_turn_query"
+   end
+
+   return Shortcut.activate(player, sc)
+   -- <<<<<<<< oomSEST/src/southtyris.hsp:45682 	goto *label_1623 ..
 end
 
 return ElonaCommand

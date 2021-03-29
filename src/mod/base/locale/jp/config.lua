@@ -266,9 +266,22 @@ return {
                name = "アニメウェイト"
             },
 
+            anime_wait_type = {
+               name = "アニメーションウェイト種類",
+               variants = {
+                  always_wait = "待つ",
+                  at_turn_start = "ターン開始に待つ",
+                  never_wait = "待たない"
+               }
+            },
+
             weather_effect = {
                doc = "天候に関わるアニメーションを表示します。",
                name = "天候エフェクト"
+            },
+
+            background_effect_wait = {
+               name = "背景エフェクトウェイト",
             },
 
             scroll_when_run = {

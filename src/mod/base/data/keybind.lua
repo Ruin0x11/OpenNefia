@@ -81,7 +81,7 @@ local keybinds = {
    give = "G",
    throw = "T",
    mode = "z",
-   mode2 = { "kp*", "8" },
+   mode2 = "kp*",
    ammo = "A",
    previous_page = "kp-",
    next_page = "kp+",
@@ -102,6 +102,20 @@ local keybinds = {
    repl_complete = "tab",
    repl_toggle_fullscreen = "ctrl_f",
 }
+
+for i = 0, 9 do
+   local shortcut = ("shortcut_%d"):format(i)
+   keybinds[shortcut] = ("%d"):format(i)
+
+   shortcut = ("shortcut_%d"):format(i + 10)
+   keybinds[shortcut] = ("ctrl_%d"):format(i)
+
+   shortcut = ("shortcut_%d"):format(i + 20)
+   keybinds[shortcut] = ("shift_%d"):format(i)
+
+   shortcut = ("shortcut_%d"):format(i + 30)
+   keybinds[shortcut] = ("ctrl_shift_%d"):format(i)
+end
 
 local dualshock = {
    north = {"joystick_14", "joystick_axis_2_-"},

@@ -15,9 +15,22 @@ local ConfigMenuWrapper = require("api.gui.menu.config.ConfigMenuWrapper")
 local Prompt = require("api.gui.Prompt")
 local Feat = require("api.Feat")
 local JournalMenu = require("api.gui.menu.JournalMenu")
+local Shortcut = require("mod.elona.api.Shortcut")
+local CharacterInfoMenu = require("api.gui.menu.CharacterInfoMenu")
+local SpellsMenu = require("api.gui.menu.SpellsMenu")
+local SkillsMenu = require("api.gui.menu.SkillsMenu")
+local CharacterInfoWrapper = require("api.gui.menu.CharacterInfoWrapper")
 
 --- Game logic intended for the player only.
 local Command = {}
+
+function Command.block_if_world_map(player)
+   local map = player:current_map()
+   if map and map:has_type("world_map") then
+      Gui.mes("action.cannot_do_in_global")
+      return "player_turn_query"
+   end
+end
 
 local function travel_to_map_hook(source, params, result)
    assert(Map.travel_to(params.outer_map, { start_x = params.x, start_y = params.y }))
@@ -120,7 +133,7 @@ function Command.get(player)
 
    if #items == 1 then
       local item = items[1]
-      Item.activate_shortcut(item, "elona.inv_get", { chara = player })
+      Shortcut.activate_item_shortcut(item, "elona.inv_get", { chara = player })
       return "turn_end"
    end
 
@@ -132,6 +145,10 @@ function Command.get(player)
 end
 
 function Command.drop(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    local result, canceled = Input.query_inventory(player, "elona.inv_drop", nil, "elona.main")
    if canceled then
       return nil, canceled
@@ -140,6 +157,10 @@ function Command.drop(player)
 end
 
 function Command.dip(player)
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
+   end
+
    local result, canceled = Input.query_inventory(player, "elona.inv_dip_source", nil, "elona.main")
    if canceled then
       return nil, canceled
@@ -148,22 +169,36 @@ function Command.dip(player)
 end
 
 function Command.wear(player)
-   return EquipmentMenu:new(player):query()
-end
-
-local function feats_surrounding(player, field)
-   return Pos.iter_surrounding(player.x, player.y):flatmap(Feat.at):filter(function(f) return f:calc(field) end)
+   return CharacterInfoWrapper:new(player, EquipmentMenu):query()
 end
 
 function Command.close(player)
-   local f = feats_surrounding(player, "can_close"):nth(1)
-   if f then
-      if Chara.at(f.x, f.y) then
-         Gui.mes("action.close.blocked")
-      else
-         f:emit("elona_sys.on_feat_close", {chara=player})
-      end
+   if Command.block_if_world_map(player) then
+      return "player_turn_query"
    end
+
+   Gui.mes("action.which_direction.door")
+   local dir = Input.query_direction(player)
+   if dir == nil then
+      Gui.mes("common.it_is_impossible")
+      Gui.update_screen()
+      return "player_turn_query"
+   end
+   local x, y = Pos.add_direction(dir, player.x, player.y)
+   local map = player:current_map()
+   local feat = Feat.at(x, y, map):filter(function(f) return f:calc("can_close") end):nth(1)
+
+   if not Feat.is_alive(feat) then
+      Gui.mes("action.close.nothing_to_close")
+      return "player_turn_query"
+   end
+
+   if Chara.at(feat.x, feat.y, map) then
+      Gui.mes("action.close.blocked")
+      return "player_turn_query"
+   end
+
+   return feat:emit("elona_sys.on_feat_close", {chara=player}, "turn_end")
 end
 
 local function feats_under(player, field)
@@ -273,11 +308,8 @@ function Command.quit_game()
    -- <<<<<<<< shade2/command.hsp:4374 	goto *pc_turn ..
 end
 
-local CharacterInfoWrapper = require("api.gui.menu.CharacterInfoWrapper")
-
-function Command.chara_info()
-   CharacterInfoWrapper:new():query()
-   return "player_turn_query"
+function Command.chara_info(player)
+   return CharacterInfoWrapper:new(player, CharacterInfoMenu):query()
 end
 
 local SpellsWrapper = require("api.gui.menu.SpellsWrapper")
@@ -285,6 +317,10 @@ local SpellsWrapper = require("api.gui.menu.SpellsWrapper")
 local function handle_spells_result(result, chara)
    local command_type = result.type
    local skill_id = result._id
+
+   if Command.block_if_world_map(chara) then
+      return "player_turn_query"
+   end
 
    if command_type == "spell" then
       local did_something = ElonaMagic.cast_spell(skill_id, chara, false)
@@ -304,7 +340,7 @@ local function handle_spells_result(result, chara)
 end
 
 function Command.cast(player)
-   local result, canceled = SpellsWrapper:new(1):query()
+   local result, canceled = SpellsWrapper:new(player, SpellsMenu):query()
    if canceled then
       return "player_turn_query"
    end
@@ -312,7 +348,7 @@ function Command.cast(player)
 end
 
 function Command.skill(player)
-   local result, canceled = SpellsWrapper:new(2):query()
+   local result, canceled = SpellsWrapper:new(player, SkillsMenu):query()
    if canceled then
       return "player_turn_query"
    end

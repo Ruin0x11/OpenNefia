@@ -321,7 +321,7 @@ function DungeonMap.add_mobs_and_traps(dungeon, crowd_density, mob_density, item
    if not dungeon.is_temporary then
       local kill_count = 0
       if Rand.one_in(15 + kill_count * 2) then
-         Chara.create("elona.little_sister")
+         Chara.create("elona.little_sister", nil, nil, {}, dungeon)
       end
    end
 end

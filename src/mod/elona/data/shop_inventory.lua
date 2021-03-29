@@ -442,8 +442,8 @@ data:add_multi(
             -- >>>>>>>> shade2/chat.hsp:3497 	if cRole(tc)=cRoleShopMirok{ ...
             args.item.amount = 1
             args.item.curse_state = Enum.CurseState.Normal
-            if args.item.id == "elona.rod_of_domination" then
-               args.item.count = 4
+            if args.item._id == "elona.rod_of_domination" then
+               args.item.charges = 4
             end
             -- <<<<<<<< shade2/chat.hsp:3501 		} ..
          end

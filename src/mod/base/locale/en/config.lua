@@ -260,9 +260,22 @@ return {
                name = "Animation Wait"
             },
 
+            anime_wait_type = {
+               name = "Animation Wait Type",
+               variants = {
+                  always_wait = "Always wait",
+                  at_turn_start = "At turn start",
+                  never_wait = "Don't wait"
+               }
+            },
+
             weather_effect = {
                doc = "Play weather-related animations.",
                name = "Weather Effect"
+            },
+
+            background_effect_wait = {
+               name = "Background Effect Wait",
             },
 
             scroll_when_run = {

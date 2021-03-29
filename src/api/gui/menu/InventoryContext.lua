@@ -260,7 +260,7 @@ function InventoryContext:on_shortcut(item)
       return self.proto.on_shortcut(self, item)
    end
 
-   return true
+   return nil
 end
 
 function InventoryContext:filter(item)

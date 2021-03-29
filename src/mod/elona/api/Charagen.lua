@@ -34,7 +34,7 @@ end
 Event.register("base.on_hotload_end", "Clear charagen cache", clear_cache_itemgen)
 
 local function chara_gen_weight(chara, objlv)
-   return math.floor((chara.rarity or 100000) / (500 + math.abs(chara.level - objlv) * chara.coefficient))
+   return math.floor((chara.rarity or 100000) / (500 + math.abs(chara.level - objlv) * chara.coefficient) + 1)
 end
 
 function Charagen.random_chara_id_raw(objlv, fltselect, category, race_filter, tag_filters)

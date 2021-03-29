@@ -16,11 +16,12 @@ local CharacterInfoWrapper = class.class("CharacterInfoWrapper", IUiLayer)
 
 CharacterInfoWrapper:delegate("input", IInput)
 
-function CharacterInfoWrapper:init()
+function CharacterInfoWrapper:init(player, starting_menu)
    self.x = 0
    self.y = 0
    self.width = Draw.get_width()
    self.height = Draw.get_height()
+   self.player = player
 
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
@@ -39,7 +40,19 @@ function CharacterInfoWrapper:init()
       MaterialsMenu
    }
 
-   self.selected_index = 1
+   if starting_menu then
+      self.selected_index = table.index_of(self.menus, starting_menu)
+      if self.selected_index == nil then
+         error(("Unknown chara info menu %s"):format(starting_menu))
+      end
+   else
+      self.selected_index = 1
+   end
+
+   self.menus = fun.iter(self.menus)
+      :map(function(klass) return klass:new(self.player) end)
+      :to_list()
+
    self:switch_context()
 end
 
@@ -71,8 +84,7 @@ function CharacterInfoWrapper:previous_menu()
 end
 
 function CharacterInfoWrapper:switch_context()
-   local menu = self.menus[self.selected_index]
-   self.submenu = menu:new(Chara.player())
+   self.submenu = self.menus[self.selected_index]
    self.input:forward_to(self.submenu)
    self.submenu:on_query()
 
@@ -99,15 +111,28 @@ function CharacterInfoWrapper:draw()
 end
 
 function CharacterInfoWrapper:update()
+   local self_canceled = self.canceled
    local result, canceled = self.submenu:update()
-   if canceled then
-      return nil, "canceled"
-   elseif result then
-      return result
-   end
 
-   if self.canceled then
-      return nil, "canceled"
+   self.canceled = false
+
+   if self_canceled or canceled or result then
+      -- We have to check if the player changed equipment in the equipment menu
+      -- at some point, to ensure their turn gets ended.
+      for _, menu in ipairs(self.menus) do
+         if menu.on_exit_result then
+            local result, canceled = menu:on_exit_result()
+            if result or canceled then
+               return result, canceled
+            end
+         end
+      end
+
+      if canceled or self_canceled then
+         return nil, "canceled"
+      elseif result then
+         return result
+      end
    end
 end
 

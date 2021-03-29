@@ -13,6 +13,7 @@ data:add_multi(
       { _id = "hide_shop_results", type = "enum", choices = {"none", "could_not_sell", "all"}, default = "none" },
       { _id = "hide_autoidentify", type = "enum", choices = {"none", "quality", "all"}, default = "none" },
       { _id = "skip_fishing_animation", type = "boolean", default = false },
+      { _id = "item_shortcuts_respect_curse_state", type = "boolean", default = false },
 
       { _id = "debug_living_weapon", type = "boolean", default = false },
       { _id = "debug_always_drop_figure_card", type = "boolean", default = false },
@@ -81,3 +82,14 @@ Gui.bind_keys {
       return ElonaCommand.ascend(me)
    end,
 }
+
+local function to_shortcut_key(i)
+   i = i - 1
+   local action = ("shortcut_%d"):format(i)
+   local fn = function(_, me)
+      return ElonaCommand.shortcut(me, i)
+   end
+   return action, fn
+end
+local shortcut_keys = fun.range(40):map(to_shortcut_key):to_map()
+Gui.bind_keys(shortcut_keys)

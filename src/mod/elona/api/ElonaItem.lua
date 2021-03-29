@@ -449,7 +449,7 @@ function ElonaItem.open_chest(item, gen_filter_cb, item_count, loot_level, seed,
          quality = Enum.Quality.Good
       end
 
-      filter.level = Calc.calc_object_level(quality, map)
+      filter.level = Calc.calc_object_level(loot_level, map)
       filter.quality = Calc.calc_object_quality(quality)
       filter.categories = { Rand.choice(Filters.fsetchest) }
 

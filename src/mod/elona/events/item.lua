@@ -83,7 +83,7 @@ local function on_potion_thrown(item, params, result)
             item = item,
             triggered_by = "potion_thrown"
          }
-         item:on_drink(drink_params)
+         item.proto.on_drink(item, drink_params)
       else
          Log.warn("Potion mef '%s' missing 'on_drink' callback", item.proto._id)
       end

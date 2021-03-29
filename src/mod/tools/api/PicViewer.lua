@@ -11,15 +11,15 @@ local PicViewer = class.class("PicViewer", IUiLayer)
 
 PicViewer:delegate("input", IInput)
 
-function PicViewer:init(drawable)
+function PicViewer:init(drawable, orig)
    self.regions = {}
 
-   if type(drawable.draw) == "function" then
-      self.width = drawable:get_width() + 20
-      self.height = drawable:get_height() + 20
+   if type(orig.draw) == "function" then
+      self.width = orig:get_width()
+      self.height = orig:get_height()
 
-      if type(drawable.quads) == "table" then
-         local to_region = function(q, tbl)
+      if type(orig.quads) == "table" then
+         local to_region = function(_, q, tbl)
             if q.typeOf and q:typeOf("Quad") then
                local tx, ty, tw, th, iw, ih = q:getViewport()
                return {
@@ -41,7 +41,7 @@ function PicViewer:init(drawable)
 
             return nil
          end
-         self.regions = fun.iter(drawable.quads):map(to_region):to_list()
+         self.regions = fun.iter_pairs(orig.quads):map(to_region):to_list()
       end
    else
       self.width = drawable:getWidth()
@@ -65,10 +65,10 @@ end
 
 function PicViewer:make_keymap()
    return {
-      north = function() self.offset_y = self.offset_y + self.delta end,
-      south = function() self.offset_y = self.offset_y - self.delta end,
-      east = function() self.offset_x = self.offset_x - self.delta end,
-      west = function() self.offset_x = self.offset_x + self.delta end,
+      north = function() self.offset_y = self.offset_y - self.delta end,
+      south = function() self.offset_y = self.offset_y + self.delta end,
+      east = function() self.offset_x = self.offset_x + self.delta end,
+      west = function() self.offset_x = self.offset_x - self.delta end,
       repl_page_up = function() self.scale = self.scale + 0.1 end,
       repl_page_down = function() self.scale = math.max(0.1, self.scale - 0.1) end,
       mode = function() self.draw_border = not self.draw_border end,
@@ -93,10 +93,13 @@ function PicViewer:draw()
 
    local width = math.floor(self.width * self.scale)
    local height = math.floor(self.height * self.scale)
+   local pad = 10 * self.scale
+   local border_width = width + pad
+   local border_height = height + pad
 
    if self.draw_border then
-      Draw.filled_rect(x, y, width, height, {0, 0, 0})
-      Draw.line_rect(x-2, y-2, width+4, height+4, {255, 255, 255})
+      Draw.filled_rect(x-pad/2, y-pad/2, border_width, border_height, {0, 0, 0})
+      Draw.line_rect(x-pad/2, y-pad/2, border_width, border_height, {255, 255, 255})
    end
 
    Draw.set_color(255, 255, 255)
@@ -107,7 +110,7 @@ function PicViewer:draw()
    end
 
    for _, r in ipairs(self.regions) do
-      Draw.line_rect(x + r.x, y + r.y, r.width * self.scale, r.height * self.scale, {255, 0, 0})
+      Draw.line_rect(x + r.x * self.scale, y + r.y * self.scale, r.width * self.scale, r.height * self.scale, {255, 0, 0})
    end
 end
 
@@ -121,23 +124,33 @@ local function is_type(_type, comp, _id)
    return _type == comp or (comp == nil and data[_type][_id])
 end
 
+local function drawable_to_image(drawable, width, height)
+   local canvas = Draw.create_canvas(width, height)
+   Draw.with_canvas(canvas, function() drawable:draw(0, 0) end)
+   return Draw.new_image(canvas:newImageData())
+end
+
 function PicViewer.start(asset, _type)
+   local orig = asset
    local drawable = asset
 
    if type(asset) == "string" then
       if is_type("base.asset", _type, asset) then
-         drawable = UiTheme.load()[asset]
-         if drawable == nil then
+         orig = UiTheme.load()[asset]
+         if orig == nil then
             error("unknown asset " .. asset)
          end
+         drawable = drawable_to_image(orig, orig:get_width(), orig:get_height())
       elseif is_type("base.chip", _type, asset) then
-         local width, height = Draw.get_coords():get_size()
+         local width, height = Draw.get_chip_size("chip", asset)
          drawable = Draw.make_chip_batch("chip")
          drawable:add(asset, 0, 0, width, height)
+         drawable = drawable_to_image(drawable, width, height)
       elseif is_type("base.map_tile", _type, asset) then
          local width, height = Draw.get_coords():get_size()
          drawable = Draw.make_chip_batch("tile")
          drawable:add(asset, 0, 0, width, height)
+         drawable = drawable_to_image(drawable, width, height)
       else
          error(("unknown type %s"):format(_type))
       end
@@ -149,7 +162,7 @@ function PicViewer.start(asset, _type)
       drawable = Draw.new_image(asset)
    end
 
-   PicViewer:new(drawable):query()
+   PicViewer:new(drawable, orig):query()
 end
 
 return PicViewer

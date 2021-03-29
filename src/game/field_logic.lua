@@ -340,7 +340,18 @@ function field_logic.player_turn_query()
       return "player_died", player
    end
 
+   if field_logic_state.about_to_autosave then
+      field_logic_state.about_to_autosave = false
+      Save.save_game()
+   end
+
    Gui.update_screen(dt, true)
+
+   -- Wait for draw callbacks if necessary.
+   dt = coroutine.yield()
+   while field:update_draw_callbacks(dt) do
+      dt = coroutine.yield()
+   end
 
    if config.base.anime_wait_type == "at_turn_start" then
       Gui.wait_for_draw_callbacks()
@@ -350,11 +361,6 @@ function field_logic.player_turn_query()
    if result then
       field:update(dt)
       return result, player
-   end
-
-   if field_logic_state.about_to_autosave then
-      field_logic_state.about_to_autosave = false
-      Save.save_game()
    end
 
    while going do
@@ -530,14 +536,6 @@ function field_logic.run_one_event(event, target_chara)
       Log.error("Player is nil, returning to title.")
       return false
    end
-
-   -- Wait for draw callbacks if necessary.
-   while field:update_draw_callbacks(dt) do
-      dt = coroutine.yield()
-   end
-
-   -- Subsequent events should not draw anything.
-   dt = 0
 
    if field.map_changed == true then
       event = "turn_begin"

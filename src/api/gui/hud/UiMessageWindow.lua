@@ -25,6 +25,7 @@ function UiMessageWindow:init()
    self.is_new_turn = true
    self.checking_for_duplicate = false
    self.previous_text = nil
+   self.duplicate_times = 1
 
    self:recalc_lines()
 end
@@ -38,6 +39,8 @@ function UiMessageWindow:handle_on_hud_message(params)
       self:do_newline()
    elseif action == "new_turn" then
       self:new_turn()
+   elseif action == "duplicate" then
+      self:prevent_next_duplicate()
    elseif action == "clear" then
       self:clear()
    end
@@ -316,11 +319,13 @@ function UiMessageWindow:message(text, color)
    if self.checking_for_duplicate then
       self.checking_for_duplicate = false
       if text == self.previous_text then
+         self.duplicate_times = self.duplicate_times + 1
          return
       end
    end
 
    self.previous_text = text
+   self.duplicate_times = 1
 
    if self.is_new_turn then
       self.is_new_turn = false

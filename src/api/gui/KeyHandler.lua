@@ -170,7 +170,7 @@ function KeyHandler:run_key_action(key, ...)
       if it.wait_remain <= 0 then
          if can_shift then
             if self.no_repeat_delay then
-               it.delay = 40 * 2
+               it.delay = 100
             else
                it.delay = 20
             end
@@ -179,7 +179,7 @@ function KeyHandler:run_key_action(key, ...)
       elseif it.fast then
          if can_shift then
             if self.no_repeat_delay then
-               it.delay = 40 * 2
+               it.delay = 100
             else
                it.delay = 20
             end

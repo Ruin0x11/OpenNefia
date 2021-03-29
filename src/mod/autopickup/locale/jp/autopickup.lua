@@ -9,7 +9,7 @@ return {
             prompt = function(_1) return ("%sを拾う？"):format(_1) end,
          },
       },
-      matcher = {
+      predicate = {
          _ = {
             autopickup = {
                all = {

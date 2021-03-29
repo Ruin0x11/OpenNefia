@@ -13,8 +13,6 @@ local UiSkillTracker = require("api.gui.hud.UiSkillTracker")
 local UiAutoTurn = require("api.gui.hud.UiAutoTurn")
 
 local function add_default_widgets()
-   -- TODO to avoid circular dependencies, move all this into a
-   -- `base.on_engine_init` handler.
    Gui.add_hud_widget(UiMessageWindow:new(), "hud_message_window")
    Gui.add_hud_widget(UiStatusEffects:new(), "hud_status_effects")
    Gui.add_hud_widget(UiClock:new(), "hud_clock")

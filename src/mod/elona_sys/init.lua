@@ -319,8 +319,8 @@ Gui.bind_keys {
    quickload = function()
       return Command.load_game()
    end,
-   chara_info = function()
-      return Command.chara_info()
+   chara_info = function(_, me)
+      return Command.chara_info(me)
    end,
    cast = function(_, me)
       return Command.cast(me)
