@@ -304,7 +304,7 @@ function Equipment.apply_equipment_spec(chara, equip_spec, gen_chance, add_quali
          -- parts.
          local specs_for_part = body_to_specs[entry.body_part._id]
          if specs_for_part == nil then
-            Log.warn("Missing equipment generator entries for %s", entry.body_part._id)
+            Log.error("Missing equipment generator entries for %s", entry.body_part._id)
             specs_for_part = {}
          end
 

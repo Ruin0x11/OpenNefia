@@ -512,6 +512,10 @@ end
 --- @tparam[opt] number volume
 --- @tparam[opt] int channel
 function Gui.play_sound(sound_id, x, y, volume, channel)
+   if not config.base.sound then
+      return
+   end
+
    local sound_manager = require("internal.global.global_sound_manager")
    local coords = draw.get_coords()
 
@@ -532,6 +536,12 @@ end
 --- @tparam[opt] number volume
 --- @see Gui.stop_background_sound
 function Gui.play_background_sound(sound_id, tag, x, y, volume)
+   -- TODO we need an event to restore/reset background sounds when the sound
+   -- option is changed/save is loaded
+   if not config.base.sound then
+      return
+   end
+
    local sound_manager = require("internal.global.global_sound_manager")
    local coords = draw.get_coords()
 
@@ -561,11 +571,6 @@ end
 --- @tparam id:base.music music_id
 function Gui.play_music(music_id, no_loop)
    local sound_manager = require("internal.global.global_sound_manager")
-
-   if not config.base.music then
-      sound_manager:stop_music()
-      return
-   end
 
    sound_manager:play_music(music_id)
 end

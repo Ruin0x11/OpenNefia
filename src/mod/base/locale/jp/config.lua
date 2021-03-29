@@ -150,6 +150,18 @@ return {
                yes_no = "config.common.yes_no.ari_nashi"
             },
 
+            midi_driver = {
+               name = "MIDIのドライバー",
+               variants = {
+                  generic = "汎用",
+                  native = "MCI"
+               }
+            },
+
+            midi_device = {
+               name = "MIDIのデバイス"
+            },
+
             positional_audio = {
                doc = "音が鳴った場所に応じてSEを再生します。\n例えば、画面左で鳴ったSEが左から聞こえるようになります。\n",
                name = "ステレオサウンド"

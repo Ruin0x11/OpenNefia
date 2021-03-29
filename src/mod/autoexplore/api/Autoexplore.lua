@@ -5,6 +5,7 @@ local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Map = require("api.Map")
 local Enum = require("api.Enum")
+local Effect = require("mod.elona.api.Effect")
 
 local Pathing = require("mod.autoexplore.api.Pathing")
 local Util = require("mod.autoexplore.api.Util")
@@ -77,7 +78,10 @@ local function step_autoexplore()
 
    for _, x, y in iter_fov() do
       local chara = Chara.at(x, y)
-      if chara and chara:relation_towards(Chara.player()) <= Enum.Relation.Enemy then
+      if Chara.is_alive(chara)
+         and chara:relation_towards(Chara.player()) <= Enum.Relation.Enemy
+         and Effect.is_visible(chara)
+      then
          Gui.mes("autoexplore.enemy_sighted", chara, I18N.get("autoexplore." .. pathing.type .. ".name"))
          Autoexplore.stop()
          return

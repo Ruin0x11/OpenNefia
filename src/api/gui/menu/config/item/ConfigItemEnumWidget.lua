@@ -56,6 +56,8 @@ function ConfigItemEnumWidget:set_value(value)
    else
       self.text = tostring(self.value)
    end
+
+   self.text = utf8.wide_sub(self.text, 0, 14)
 end
 
 function ConfigItemEnumWidget:can_choose()

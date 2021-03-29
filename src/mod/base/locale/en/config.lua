@@ -135,6 +135,20 @@ return {
                yes_no = "config.common.yes_no.on_off"
             },
 
+            midi_driver = {
+               doc = "Driver to use for MIDI playback.\nThe generic driver will work across all platforms.\nThe MCI driver is Windows-only.",
+               name = "MIDI Driver",
+               variants = {
+                  generic = "Generic",
+                  native = "MCI"
+               }
+            },
+
+            midi_device = {
+               doc = "Device to use for MIDI playback.\nOnly applies when using the generic MIDI driver.",
+               name = "MIDI Device"
+            },
+
             sound = {
                doc = "Enable or disable sound.",
                name = "Sound*",

@@ -177,11 +177,11 @@ local LOVE2D_REQUIRES = table.set {
    "socket.core",
    "socket.http",
    "socket.https",
-   "ltn12",
+   "ltn12"
 }
 
 local NATIVE_REQUIRES = table.set {
-   "vips",
+   "vips"
 }
 
 local global_require = require
@@ -224,8 +224,17 @@ local function get_require_path(path, mod_env)
       -- Some modules like luasocket aren't in package.cpath but can
       -- be loaded with 'require' anyway because they're a part of
       -- LÖVE.
-      if LOVE2D_REQUIRES[path] and global_require(path) then
-         return path, true
+      if LOVE2D_REQUIRES[path] then
+         -- Catch any errors that might occur if we attempt to load the native
+         -- library but fail.
+         local ok, err = xpcall(global_require, debug.traceback, path)
+         if ok then
+            return path, true
+         end
+
+         Log.debug("Failed to load native library \"%s\": %s", path, err)
+
+         return nil, false
       end
    end
 
@@ -243,7 +252,15 @@ local function env_dofile(path, mod_env)
    Log.trace("resolved path: %s -> %s", path, resolved)
 
    if require_now then
-      return global_require(resolved)
+      -- Catch any errors that might occur if we attempt to load a native
+      -- library but fail.
+      local success, err = xpcall(global_require, debug.traceback, resolved)
+      if not success then
+         return nil, err
+      end
+
+      local result = err
+      return result, nil
    end
 
    if resolved == nil then
