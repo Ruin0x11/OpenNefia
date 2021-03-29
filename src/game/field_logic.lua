@@ -16,7 +16,7 @@ local data = require("internal.data")
 local save = require("internal.global.save")
 local chara_make = require("game.chara_make")
 local Save = require("api.Save")
-local field_logic_state = require("internal.global.field_logic_state")
+local state = require("internal.global.field_logic_state")
 local fs = require("util.fs")
 local SaveFs = require("api.SaveFs")
 
@@ -124,11 +124,6 @@ function field_logic.update_chara_time_this_turn(time_this_turn)
    end
 end
 
-local player_finished_turn = false
-local chara_iter = nil
-local chara_iter_state = nil
-local chara_iter_index = 0
-
 local function update_mefs(map)
    for _, mef in Mef.iter(map) do
       mef:step_turn()
@@ -164,9 +159,9 @@ function field_logic.turn_begin()
    -- previously accomplished by simply iterating the cdata[] array by
    -- increasing index, since the player was always index 0, allies
    -- index 1-15, adventurers 15-56, and so on.
-   player_finished_turn = false
+   state.player_finished_turn = false
 
-   chara_iter, chara_iter_state, chara_iter_index = Chara.iter_all()
+   state.chara_iter, state.chara_iter_state, state.chara_iter_index = Chara.iter_all()
 
    local speed = player:emit("base.on_calc_speed")
 
@@ -193,14 +188,14 @@ function field_logic.determine_turn()
    local player = Chara.player()
    assert(player ~= nil)
 
-   if chara_iter == nil then
+   if state.chara_iter == nil then
       Log.warn("chara iter was nil, probably hotloaded.")
       return nil
    end
 
    -- TODO: check if player can go first, then allies, then others.
-   if not player_finished_turn then
-      player_finished_turn = true
+   if not state.player_finished_turn then
+      state.player_finished_turn = true
       return player
    end
 
@@ -212,21 +207,21 @@ function field_logic.determine_turn()
 
    while going do
       repeat
-         chara_iter_index, chara = chara_iter(chara_iter_state, chara_iter_index)
+         state.chara_iter_index, chara = state.chara_iter(state.chara_iter_state, state.chara_iter_index)
 
          if chara ~= nil and chara.time_this_turn >= field:turn_cost() then
             found = chara
             any_moved = true
          end
-      until found ~= nil or chara_iter_index == nil
+      until found ~= nil or state.chara_iter_index == nil
 
       if found or any_moved == false then
          going = false
       end
 
-      if chara_iter_index == nil then
+      if state.chara_iter_index == nil then
          any_moved = false
-         chara_iter, chara_iter_state, chara_iter_index = Chara.iter_all()
+         state.chara_iter, state.chara_iter_state, state.chara_iter_index = Chara.iter_all()
       end
    end
 
@@ -340,8 +335,8 @@ function field_logic.player_turn_query()
       return "player_died", player
    end
 
-   if field_logic_state.about_to_autosave then
-      field_logic_state.about_to_autosave = false
+   if state.about_to_autosave then
+      state.about_to_autosave = false
       Save.save_game()
    end
 
@@ -447,9 +442,9 @@ local function do_revive_player()
 end
 
 local function revive_player()
-   field_logic_state.player_about_to_respawn = true
+   state.player_about_to_respawn = true
    local ok, err = xpcall(do_revive_player, debug.traceback)
-   field_logic_state.player_about_to_respawn = false
+   state.player_about_to_respawn = false
 
    if not ok then
       error(err)

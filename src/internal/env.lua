@@ -93,6 +93,7 @@ local LOADING_MODS = {}
 -- modify upvalues. it should be used instead.
 local require_path_cache = setmetatable({}, { __mode = "k" })
 
+local paths_loaded_by_hooked_require = {}
 
 -- This table supports retrieving a module/class table given a function object.
 local fn_to_module = setmetatable({}, { __mode = "k" })
@@ -515,6 +516,8 @@ local function gen_require(chunk_loader, can_load_path)
          end
       end
 
+      paths_loaded_by_hooked_require[req_path] = true
+
       return package.loaded[req_path]
    end
 end
@@ -750,6 +753,34 @@ end
 function env.restart_debug_server()
    Log.warn("Restarting debug server...")
    env.server_needs_restart = true
+end
+
+function env.reset()
+   -- Unload all tables that were loaded though the hooked 'require' added by
+   -- env.hook_global_require(). This should not unload the chunk for
+   -- `internal.env`, which was put inside `package.loaded` by the original
+   -- `require` function.
+   for path, _ in pairs(paths_loaded_by_hooked_require) do
+      package.loaded[path] = nil
+   end
+
+   -- `api.Log` is weird, since we use it in really low level places like
+   -- `internal.env`, but it also has a dependency on an event
+   -- (`base.on_log_message`), meaning we need to flush its chunk references so
+   -- it can get a pointer to the new global data table.
+   package.loaded["api.Log"] = nil
+
+   -- `internal.global.main_state` is also weird, since it doesn't get loaded by
+   -- the hooked require, so we must make sure it's in package.loaded.
+   package.loaded["internal.global.main_state"] = nil
+   package.loaded["internal.global.main_state"] = global_require("internal.global.main_state")
+
+   paths_loaded_by_hooked_require = {}
+   require_path_cache = setmetatable({}, { __mode = "k" })
+   fn_to_module = setmetatable({}, { __mode = "k" })
+   hotloaded_this_frame = false
+
+   Log = require("api.Log")
 end
 
 return env

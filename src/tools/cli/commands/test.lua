@@ -18,6 +18,38 @@ local test_util = require("test.lib.test_util")
 local Advice = require("api.Advice")
 local main_state = require("internal.global.main_state")
 
+local function reset_all_globals()
+   print("Resetting global state.")
+   startup.reset_all_globals()
+
+   -- Now we need to make sure that the chunks loaded by main.lua will get
+   -- loaded again, causing all the global state chunks to be reloaded too.
+   require("game")
+   require("internal.data.base")
+
+   -- Finally, we need to reload the module references in this file because
+   -- package.loaded was cleared.
+   field = require("game.field")
+   mod = require("internal.mod")
+   startup = require("game.startup")
+   fs = require("util.fs")
+   Event = require("api.Event")
+   env = require("internal.env")
+   socket = require("socket")
+   Rand = require("api.Rand")
+   elona_repl = require("internal.elona_repl")
+   Repl = require("api.Repl")
+   ansicolors = require("thirdparty.ansicolors")
+   Log = require("api.Log")
+   config_store = require("internal.config_store")
+   save_store = require("internal.save_store")
+   SaveFs = require("api.SaveFs")
+   Stopwatch = require("api.Stopwatch")
+   test_util = require("test.lib.test_util")
+   Advice = require("api.Advice")
+   main_state = require("internal.global.main_state")
+end
+
 -- Make an environment rejecting the setting of global variables except
 -- functions that are named "test_*".
 local function make_test_env()
@@ -109,35 +141,35 @@ local function run_test(name, test_fn, seed, debug_on_error)
    local redir_out = StringIO.create()
    print = function(...) for _, i in ipairs({...}) do redir_out:write(tostring(i) .. "\t"); end redir_out:write("\n") end
 
-   local ok, err = xpcall(test_fn, capture)
+      local ok, err = xpcall(test_fn, capture)
 
-   print = _print
+      print = _print
 
-   if ok then
-      io.write(ansicolors("%{green}.%{reset}"))
-      io.flush()
-      return true, nil
-   else
-      io.write(ansicolors("%{red}F"))
+      if ok then
+         io.write(ansicolors("%{green}.%{reset}"))
+         io.flush()
+         return true, nil
+      else
+         io.write(ansicolors("%{red}F"))
 
-      local result = {
-         test_name = name,
-         traceback = err,
-         stdout = tostring(redir_out)
-      }
+         local result = {
+            test_name = name,
+            traceback = err,
+            stdout = tostring(redir_out)
+         }
 
-      if debug_on_error then
-         print_result(result)
-         local repl_env, history = Repl.generate_env(locals)
-         elona_repl.set_environment(repl_env)
-         print(inspect(table.keys(locals)))
-         elona_repl:run()
+         if debug_on_error then
+            print_result(result)
+            local repl_env, history = Repl.generate_env(locals)
+            elona_repl.set_environment(repl_env)
+            print(inspect(table.keys(locals)))
+            elona_repl:run()
+         end
+
+         io.flush()
+
+         return false, result
       end
-
-      io.flush()
-
-      return false, result
-   end
 end
 
 local function test_file(file, filter_test_name, seed, debug_on_error)
@@ -178,61 +210,69 @@ return function(args)
       fs.create_directory(fs.get_save_directory())
    end
 
-   local enabled_mods
-   if args.load_all_mods then
-      enabled_mods = nil
-   else
-      enabled_mods = { "base", "elona_sys", "elona", "extlibs" }
-   end
-   local mods = mod.scan_mod_dir(enabled_mods)
-   startup.run_all(mods)
-
-   load_test_mod()
-
-   Event.trigger("base.on_startup")
-   field:init_global_data()
-
-   local seed = args.seed or math.floor(socket.gettime())
-
-   print("Seed: " .. seed)
-   print("")
-
-   local spl = string.split(args.filter, ":")
-   local filter_file_name = spl[1]
-   local filter_test_name = spl[2] or ".*"
-
-   Log.debug("Test filter: %s:%s", filter_file_name, filter_test_name)
-
    local failures = {}
    local total = 0
    local disabled = 0
 
-   local function get_files(path)
-      local items = fs.get_directory_items(path)
-      local files = fun.iter(items):map(function(f) return fs.join(path, f) end):to_list()
-      table.sort(files)
-      return files
-   end
-   local files = get_files("test/unit/")
-
    local sw = Stopwatch:new()
 
-   while #files > 0 do
-      local path = files[#files]
-      files[#files] = nil
-      if fs.is_directory(path) then
-         table.append(files, get_files(path))
+   for i = 1, 3 do
+      local enabled_mods
+      if args.load_all_mods then
+         enabled_mods = nil
       else
-         if string.match(path, filter_file_name) then
-            local failures_, total_, disabled_ = test_file(path, filter_test_name, seed, args.debug_on_error)
-            failures = table.append(failures, failures_)
-            total = total + total_
-            disabled = disabled + disabled_
+         enabled_mods = { "base", "elona_sys", "elona", "extlibs" }
+      end
+      local mods = mod.scan_mod_dir(enabled_mods)
+      startup.run_all(mods)
+
+      load_test_mod()
+
+      Event.trigger("base.on_startup")
+      field:init_global_data()
+
+      local seed = args.seed or math.floor(socket.gettime())
+
+      print("Seed: " .. seed)
+      print("")
+
+      local spl = string.split(args.filter, ":")
+      local filter_file_name = spl[1]
+      local filter_test_name = spl[2] or ".*"
+
+      Log.debug("Test filter: %s:%s", filter_file_name, filter_test_name)
+
+      local function get_files(path)
+         local items = fs.get_directory_items(path)
+         local files = fun.iter(items):map(function(f) return fs.join(path, f) end):to_list()
+         table.sort(files)
+         return files
+      end
+      local files = get_files("test/unit/")
+
+      while #files > 0 do
+         local path = files[#files]
+         files[#files] = nil
+         if fs.is_directory(path) then
+            table.append(files, get_files(path))
+         else
+            if string.match(path, filter_file_name) then
+               local failures_, total_, disabled_ = test_file(path, filter_test_name, seed, args.debug_on_error)
+               failures = table.append(failures, failures_)
+               total = total + total_
+               disabled = disabled + disabled_
+            end
          end
       end
-   end
 
-   cleanup_globals()
+      cleanup_globals()
+
+      print("\n")
+
+      if i < 3 then
+         reset_all_globals()
+      end
+   end
 
    print("\n")
 

@@ -202,4 +202,23 @@ function startup.load_batches()
    theme.reload_all(progress)
 end
 
+
+local save_store = require("internal.save_store")
+local global = require("internal.global.init")
+
+--- Resets *all* global state in the engine. This is so the test runner can
+--- reinitialize mods for a specific test configuration, without needing to start
+--- a separate process per test suite.
+---
+--- After calling this function, you *must* require "game.startup" again from
+--- the script that called this function.
+function startup.reset_all_globals()
+   config_store.clear()
+   save_store.clear()
+   field:init_global_data()
+   global.clear()
+
+   collectgarbage()
+end
+
 return startup
