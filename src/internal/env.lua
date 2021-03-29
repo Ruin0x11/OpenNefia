@@ -764,6 +764,13 @@ function env.reset()
       package.loaded[path] = nil
    end
 
+   -- Some paths with global state need to be be required again, using the
+   -- global context (bypassing the hooked `require`).
+   local function rerequire_globally(path)
+      package.loaded[path] = nil
+      package.loaded[path] = global_require(path)
+   end
+
    -- `api.Log` is weird, since we use it in really low level places like
    -- `internal.env`, but it also has a dependency on an event
    -- (`base.on_log_message`), meaning we need to flush its chunk references so
@@ -771,9 +778,14 @@ function env.reset()
    package.loaded["api.Log"] = nil
 
    -- `internal.global.main_state` is also weird, since it doesn't get loaded by
-   -- the hooked require, so we must make sure it's in package.loaded.
-   package.loaded["internal.global.main_state"] = nil
-   package.loaded["internal.global.main_state"] = global_require("internal.global.main_state")
+   -- the hooked require, so we must make sure it's in package.loaded before the
+   -- hooked require gets run on it.
+   rerequire_globally("internal.global.main_state")
+
+   -- `util.class` is also weird, because it depends on binser. binser's
+   -- serializers are global, so we need to reset those too.
+   local binser = assert(package.loaded["thirdparty.binser"])
+   binser.clearRegistry()
 
    paths_loaded_by_hooked_require = {}
    require_path_cache = setmetatable({}, { __mode = "k" })

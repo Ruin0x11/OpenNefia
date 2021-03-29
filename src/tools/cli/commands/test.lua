@@ -24,7 +24,6 @@ local function reset_all_globals()
 
    -- Now we need to make sure that the chunks loaded by main.lua will get
    -- loaded again, causing all the global state chunks to be reloaded too.
-   require("game")
    require("internal.data.base")
 
    -- Finally, we need to reload the module references in this file because
