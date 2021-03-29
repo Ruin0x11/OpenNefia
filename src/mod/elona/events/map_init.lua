@@ -83,7 +83,7 @@ local function show_map_ex_help(map, params)
    end
    -- <<<<<<<< shade2/map.hsp:2139 	if gArea=areaShelter	: help 14 ..
 end
-Event.register("base.after_map_entered", "Show map EX help", show_map_ex_help, 10000)
+Event.register("base.after_map_changed", "Show map EX help", show_map_ex_help, 10000)
 
 local function show_role_ex_help(chara)
    -- >>>>>>>> shade2/chat.hsp:44 	if cRole(tc)=cRoleShopInn :help 7,1 ...
