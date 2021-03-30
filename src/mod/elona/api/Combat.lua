@@ -529,6 +529,7 @@ function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_range
 
    damage = pierce_damage + normal_damage
 
+   -- BUGFIX: Opatos physical damage reduction
    if target:has_trait("elona.god_earth") then
       damage = damage * 95 / 100
    end

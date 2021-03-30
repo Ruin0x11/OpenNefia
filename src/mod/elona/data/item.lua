@@ -11484,6 +11484,39 @@ local item =
          medal_value = 3,
          categories = {
             "elona.drink",
+         },
+
+         events = {
+            {
+               id = "base.on_drop_item",
+               name = "Bless water on altar of god",
+
+               callback = function(self, params)
+                  -- >>>>>>>> shade2/action.hsp:298 	if iId(ti)=idWater{ ...
+                  local chara = params.chara
+                  local god_id = chara:calc("god")
+                  if god_id == nil then
+                     return
+                  end
+
+                  local function find_altar(x, y, map)
+                     return Item.at(x, y, map)
+                        :filter(function(i) return i:has_category("elona.furniture_altar")
+                              and i.params.altar_god_id == god_id
+                            end)
+                        :nth(1)
+                  end
+
+                  local map = self:current_map()
+                  local altar = find_altar(self.x, self.y, map)
+                  if Item.is_alive(altar) and self.curse_state ~= Enum.CurseState.Blessed then
+                     Gui.play_sound("base.pray1", self.x, self.y)
+                     self.curse_state = Enum.CurseState.Blessed
+                     Gui.mes_c("action.drop.water_is_blessed", "Green")
+                  end
+                  -- <<<<<<<< shade2/action.hsp:301 		} ..
+               end
+            }
          }
       },
       {

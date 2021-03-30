@@ -151,7 +151,7 @@ end
 --- @treturn bool success
 function Action.drop(chara, item, amount)
    if item == nil then
-      return false
+      return nil
    end
 
    local dropped = chara:drop_item(item, amount)
@@ -161,10 +161,10 @@ function Action.drop(chara, item, amount)
       Gui.mes("action.drop.execute", item:build_name(amount))
       Gui.play_sound("base.drop1", chara.x, chara.y)
       chara:refresh_weight()
-      return true
+      return dropped
    end
 
-   return false
+   return nil
 end
 
 --- @tparam IChara chara

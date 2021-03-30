@@ -4,6 +4,7 @@ local Rand = require("api.Rand")
 local Gui = require("api.Gui")
 local Calc = require("mod.elona.api.Calc")
 local Itemgen = require("mod.elona.api.Itemgen")
+local Item = require("api.Item")
 
 local function kumiromi_harvest_seeds(item, params)
    -- >>>>>>>> shade2/item.hsp:425 		if p=pc : if cGod(pc)=godHarvest : i=iTypeMinor( ...

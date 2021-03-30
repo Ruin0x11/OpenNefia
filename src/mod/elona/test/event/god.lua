@@ -5,6 +5,30 @@ local Rand = require("api.Rand")
 local Effect = require("mod.elona.api.Effect")
 local Assert = require("api.test.Assert")
 local Skill = require("mod.elona_sys.api.Skill")
+local Action = require("api.Action")
+local Enum = require("api.Enum")
+
+function test_god_bless_water_on_altar()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.grass_rocks")
+   local player = TestUtil.set_player(map, 5, 5)
+
+   local altar = Item.create("elona.altar", 5, 5, {}, map)
+
+   local water = Item.create("elona.bottle_of_water", nil, nil, {amount=2}, player)
+   water.curse_state = Enum.CurseState.Normal
+
+   altar.params.altar_god_id = "elona.jure"
+   player.god = nil
+   local sep = Action.drop(player, water, 1)
+   Assert.eq(true, Item.is_alive(sep))
+   Assert.eq(Enum.CurseState.Normal, sep.curse_state)
+
+   player.god = "elona.jure"
+   sep = Action.drop(player, water, 1)
+   Assert.eq(true, Item.is_alive(sep))
+   Assert.eq(Enum.CurseState.Blessed, sep.curse_state)
+end
 
 function test_god_kumiromi_harvest_seeds()
    local map = InstancedMap:new(10, 10)

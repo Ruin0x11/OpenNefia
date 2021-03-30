@@ -159,7 +159,7 @@ end
 
 function Tools.drop_all()
    local drop = function(item)
-      local success = Action.drop(Chara.player(), item)
+      local success = Action.drop(Chara.player(), item) ~= nil
       -- if success then
       --    local nx, ny = Map.find_position_for_chara(item.x, item.y)
       --    if nx then
