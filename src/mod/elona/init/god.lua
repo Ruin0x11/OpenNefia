@@ -13,9 +13,9 @@ data:add_type {
 data:add_index("elona.god", "elona_id")
 
 local function set_god(chara)
-   local has_dialog = true
+   local has_dialog = chara.can_talk or chara.dialog
 
-   if not chara:is_player() and has_dialog then
+   if not chara:is_player() and has_dialog and chara.god == nil then
       chara.god = God.random_god_id()
    end
 end

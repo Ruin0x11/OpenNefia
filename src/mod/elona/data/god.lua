@@ -10,7 +10,6 @@ local god = {
       elona_id = 1,
       is_primary_god = true,
 
-      wish_name = "mani",
       summon = "elona.mani",
       servant = "elona.android",
       items = {
@@ -28,9 +27,9 @@ local god = {
          God.make_skill_blessing("elona.jeweler", 350, 12),
       },
       offerings = {
-         "elona.equip_ranged_gun",
-         "elona.equip_ranged_laser_gun",
-         "elona.offering_sf"
+         { type = "category", id = "elona.equip_ranged_gun" },
+         { type = "category", id = "elona.equip_ranged_laser_gun" },
+         { type = "category", id = "elona.offering_sf" }
       }
    },
    {
@@ -38,7 +37,6 @@ local god = {
       elona_id = 2,
       is_primary_god = true,
 
-      wish_name = "lulwy",
       summon = "elona.lulwy",
       servant = "elona.black_angel",
       items = {
@@ -54,8 +52,8 @@ local god = {
          God.make_skill_blessing("elona.magic_device", 550, 8),
       },
       offerings = {
-         "elona.equip_ranged_bow",
-         "elona.equip_ranged_crossbow",
+         { type = "category", id = "elona.equip_ranged_bow" },
+         { type = "category", id = "elona.equip_ranged_crossbow" },
       },
 
       on_join_faith = function(chara)
@@ -75,7 +73,6 @@ local god = {
       elona_id = 3,
       is_primary_god = true,
 
-      wish_name = "itzpalt",
       servant = "elona.exile",
       items = {
          secret_treasure("elona.god_element"),
@@ -89,7 +86,7 @@ local god = {
          God.make_skill_blessing("elona.element_lightning", 50, 200),
       },
       offerings = {
-         "elona.equip_melee_staff",
+         { type = "category", id = "elona.equip_melee_staff" },
       },
 
       on_join_faith = function(chara)
@@ -109,7 +106,6 @@ local god = {
       elona_id = 4,
       is_primary_god = true,
 
-      wish_name = "ehekatl",
       summon = "elona.ehekatl",
       servant = "elona.black_cat",
       items = {
@@ -125,7 +121,7 @@ local god = {
          God.make_skill_blessing("elona.lock_picking", 450, 8),
       },
       offerings = {
-         "elona.offering_fish"
+         { type = "category", id = "elona.offering_fish" }
       }
    },
    {
@@ -133,7 +129,6 @@ local god = {
       elona_id = 5,
       is_primary_god = true,
 
-      wish_name = "opatos",
       summon = "elona.opatos",
       servant = "elona.golden_knight",
       items = {
@@ -149,7 +144,7 @@ local god = {
          God.make_skill_blessing("elona.magic_device", 450, 8),
       },
       offerings = {
-         "elona.offering_ore"
+         { type = "category", id = "elona.offering_ore" }
       }
    },
    {
@@ -157,7 +152,6 @@ local god = {
       elona_id = 6,
       is_primary_god = true,
 
-      wish_name = "jure",
       servant = "elona.defender",
       items = {
          { id = "elona.jures_gem_stone_of_holy_rain", only_once = true },
@@ -174,7 +168,7 @@ local god = {
          God.make_skill_blessing("elona.magic_capacity", 400, 12),
       },
       offerings = {
-         "elona.offering_ore",
+         { type = "category", id = "elona.offering_ore" },
       },
 
       on_join_faith = function(chara)
@@ -194,7 +188,6 @@ local god = {
       elona_id = 7,
       is_primary_god = true,
 
-      wish_name = "kumiromi",
       summon = "elona.kumiromi",
       servant = "elona.cute_fairy",
       items = {
@@ -211,8 +204,8 @@ local god = {
          God.make_skill_blessing("elona.literacy", 350, 8),
       },
       offerings = {
-         "elona.offering_vegetable",
-         "elona.crop_seed",
+         { type = "category", id = "elona.offering_vegetable" },
+         { type = "category", id = "elona.crop_seed" },
       }
    },
 }

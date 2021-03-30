@@ -1,6 +1,7 @@
 local Sjis = require("mod.extlibs.api.Sjis")
 local Enum = require("api.Enum")
 local CodeGenerator = require("api.CodeGenerator")
+local Log = require("api.Log")
 
 local Util = {}
 
@@ -37,6 +38,16 @@ function Util.convert_122_color_index(color_idx)
    return Enum.Color[color]
 end
 
+function Util.filter_spec(to)
+   return {
+      to = to,
+      type = "string",
+      cb = function(filter)
+         return fun.iter(string.split(filter, "/")):filter(function(s) return s ~= "" end):to_list()
+      end
+   }
+end
+
 function Util.get_number(custom_file, key, default)
    default = default or 0
 
@@ -67,6 +78,20 @@ function Util.get_string(custom_file, key, default)
    end
 
    return value
+end
+
+function Util.get_localized_string(custom_file, key, is_jp)
+   local value = Util.get_string(custom_file, key)
+   if value then
+      local split = string.split(value, ",")
+      if is_jp then
+         return split[2]
+      else
+         return split[1]
+      end
+   end
+
+   return nil
 end
 
 function Util.get_int_list(custom_file, key, default)
@@ -131,6 +156,12 @@ function Util.apply_spec(result, spec, file_data, mod_id)
             end
             result[v.to] = value
          end
+      end
+   end
+
+   for k, _ in pairs(file_data.options) do
+      if not spec[k] then
+         Log.debug("Missing key %s in spec", k)
       end
    end
 

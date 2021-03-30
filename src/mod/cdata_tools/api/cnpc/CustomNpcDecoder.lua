@@ -150,13 +150,7 @@ local chara_spec = {
          return class_id
       end
    },
-   filter = {
-      to = "tags",
-      type = "string",
-      cb = function(filter)
-         return fun.iter(string.split(filter, "/")):filter(function(s) return s ~= "" end):to_list()
-      end
-   },
+   filter = Util.filter_spec("tags"),
    fixFaith = { to = "god", type = "string", cb = function(fixFaith, mod) return ("%s.%s"):format(mod, fixFaith) end },
    fixLv = { to = "quality", type = Enum.Quality },
    level = { to = "level" },
@@ -180,13 +174,12 @@ local chara_spec = {
    relation = { to = "relation", type = Enum.Relation },
    resist = {
       to = "resistances",
-      type = "string",
+      type = "int_list",
       cb = function(resist)
-         local spl = string.split(resist, ",")
          local resistances = {}
-         for i = 1, #spl/2, 2 do
-            local element_elona_id = tonumber(spl[i*2-1])
-            local resist_grade = tonumber(spl[i*2])
+         for i = 1, #resist/2, 2 do
+            local element_elona_id = tonumber(resist[i*2-1])
+            local resist_grade = tonumber(resist[i*2])
             local id = assert(Compat.convert_122_id("base.element", element_elona_id))
             local power = resist_grade * 50
             resistances[id] = power
@@ -203,19 +196,11 @@ local function make_chara_locale_data(item_data, locale, mod_id, chara_id)
 
    local is_jp = locale == "jp"
 
-   local name = Util.get_string(item_data, "name")
-   if name then
-      local split = string.split(name, ",")
-      if is_jp then
-         result.name = split[2]
-      else
-         result.name = split[1]
-      end
-   end
+   result.name = Util.get_localized_string(item_data, "name", is_jp)
 
    if is_jp then
       local raceAlias = Util.get_string(item_data, "raceAlias")
-      if raceAlias then
+      if raceAlias and raceAlias ~= "" then
          result.race_alias = raceAlias
       end
    end
@@ -228,15 +213,6 @@ local function make_chara_locale_data(item_data, locale, mod_id, chara_id)
          }
       }
    }
-end
-
-local function find_item_type(elona_item_type)
-   local filter = function(t) return t.ordering == elona_item_type end
-   local ty = data["base.item_type"]:iter():filter(filter):nth(1)
-   if ty == nil then
-      error("Could not find Elona item type " .. elona_item_type)
-   end
-   return ty._id
 end
 
 function CustomNpcDecoder.decode(archive, mod_id, chara_id)
@@ -255,12 +231,9 @@ function CustomNpcDecoder.decode(archive, mod_id, chara_id)
    chara_data = CustomFileDecoder.decode(chara_data)
 
    if chara_id == nil then
-      local name = Util.get_string(chara_data, "name")
-      if name then
-         local split = string.split(name, ",")
-         if Util.is_ascii_only(split[1]) then
-            chara_id = split[1]:gsub(" ", "_")
-         end
+      local name = Util.get_localized_string(chara_data, "name", false)
+      if name and Util.is_ascii_only(name) then
+         chara_id = name:gsub(" ", "_")
       end
    end
 

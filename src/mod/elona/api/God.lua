@@ -104,9 +104,17 @@ function God.can_offer_item_to(god_id, item)
 
    -- TODO optimize
    local god_proto = data["elona.god"]:ensure(god_id)
-   for _, category in pairs(god_proto.offerings or {}) do
-      if item:has_category(category) then
-         return true
+   for _, offering in pairs(god_proto.offerings or {}) do
+      if offering.type == "category" then
+         if item:has_category(offering.id) then
+            return true
+         end
+      elseif offering.type == "item" then
+         if item._id == offering.id then
+            return true
+         end
+      else
+         error(("Invalid god offering type '%s'"):format(offering.type))
       end
    end
 

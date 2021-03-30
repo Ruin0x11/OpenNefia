@@ -5,6 +5,7 @@ local CodeGenerator = require("api.CodeGenerator")
 local fs = require("util.fs")
 local paths = require("internal.paths")
 local CustomNpcDecoder = require("mod.cdata_tools.api.cnpc.CustomNpcDecoder")
+local CustomGodDecoder = require("mod.cdata_tools.api.cnpc.CustomGodDecoder")
 
 Log.set_level("debug")
 
@@ -43,6 +44,7 @@ function converters.item(name, mod_id, raw, root)
    local image_path = ("graphic/item/%s.bmp"):format(name)
    decoded.chip.proto.image = fs.join(root, image_path)
 
+   -- TODO locale namespace standardization
    return {
       [image_path] = decoded.chip._bmp,
       ["data/item.lua"] = decoded.data,
@@ -72,7 +74,13 @@ function converters.map(name, mod_id, raw, root)
 end
 
 function converters.god(name, mod_id, raw, root)
-   return {}
+   local decoded = CustomGodDecoder.decode(raw, mod_id)
+
+   return {
+      ["data/god.lua"] = decoded.data,
+      ["locale/en/god.lua"] = decoded.locale_data.en,
+      ["locale/jp/god.lua"] = decoded.locale_data.jp
+   }
 end
 
 local function convert_god(hll, mod_id, root)

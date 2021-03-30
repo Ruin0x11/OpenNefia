@@ -60,7 +60,8 @@ local item_spec = {
 function(self, params)
    return true
 end]]
-      end
+      end,
+      ifilterref = Util.filter_spec("tags"),
    },
 }
 
@@ -69,24 +70,16 @@ local function make_item_locale_data(item_data, locale, mod_id, item_id)
 
    local is_jp = locale == "jp"
 
-   local name = Util.get_string(item_data, "name")
-   if name then
-      local split = string.split(name, ",")
-      if is_jp then
-         result.name = split[2]
-      else
-         result.name = split[1]
-      end
-   end
+   result.name = Util.get_localized_string(item_data, "name", is_jp)
 
    if is_jp then
       local iknownnameref = Util.get_string(item_data, "iknownnameref")
-      if iknownnameref then
+      if iknownnameref and iknownnameref ~= "" then
          result.unidentified_name = iknownnameref
       end
 
       local ialphanameref = Util.get_string(item_data, "ialphanameref")
-      if ialphanameref then
+      if ialphanameref and ialphanameref ~= "" then
          result.katakana_name = ialphanameref
       end
    end
@@ -158,12 +151,9 @@ function CustomItemDecoder.decode(archive, mod_id, item_id)
    item_data = CustomFileDecoder.decode(item_data)
 
    if item_id == nil then
-      local name = Util.get_string(item_data, "name")
-      if name then
-         local split = string.split(name, ",")
-         if Util.is_ascii_only(split[1]) then
-            item_id = split[1]:gsub(" ", "_")
-         end
+      local name = Util.get_localized_string(item_data, "name", false)
+      if name and Util.is_ascii_only(name) then
+         item_id = name:gsub(" ", "_")
       end
    end
 
@@ -213,16 +203,6 @@ function CustomItemDecoder.decode(archive, mod_id, item_id)
       result.gods = {}
       for _, elona_god_id in ipairs(gods) do
          table.insert(result.gods, Compat.convert_122_id("elona.god", elona_god_id))
-      end
-   end
-
-   local tags = Util.get_string(item_data, "ifilterref")
-   if tags then
-      result.tags = {}
-      for _, tag in ipairs(string.split(tags, "/")) do
-         if tag ~= "" then
-            table.insert(result.tags, tag)
-         end
       end
    end
 
