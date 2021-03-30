@@ -59,7 +59,7 @@ local test = {
       "111", -- setting non-standard global variable 'X'
    }
 }
-files["test/unit/**/*.lua"] = test
+files["test/**/*.lua"] = test
 files["**/mod/*/test/**/*.lua"] = test
 
 files["**/locale/**/*.lua"] = {ignore = {"212"}}

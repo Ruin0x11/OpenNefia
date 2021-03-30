@@ -304,9 +304,9 @@ return function(args)
 
    local base_mods = { "base", "elona_sys", "elona", "extlibs" }
 
-   -- Base engine tests, under src/test/unit.
+   -- Base engine tests, under src/test.
    if filter_mod_name == "@base@" or filter_mod_name == ".*" then
-      run_tests("test/unit", base_mods, "base engine tests")
+      run_tests("test", base_mods, "base engine tests")
    end
 
    for _, mod_info in ipairs(mods_with_tests) do

@@ -3,7 +3,7 @@ local Calc = require("mod.elona.api.Calc")
 local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
 local TestUtil = require("api.test.TestUtil")
-local Advice_TestModule = require("test.unit.api.Advice_TestModule")
+local Advice_TestModule = require("test.api.Advice_TestModule")
 
 local function double_fame_income(orig_fn, chara)
    return orig_fn(chara) * 2
@@ -183,7 +183,7 @@ function test_Advice__locations_before()
       Assert.eq(false, arg.called)
       return "dood", 100
    end
-   Advice.add("before", "test.unit.api.Advice_TestModule", "test", "Test before", before)
+   Advice.add("before", "test.api.Advice_TestModule", "test", "Test before", before)
 
    local result1, result2 = Advice_TestModule.test(arg)
 
@@ -199,7 +199,7 @@ function test_Advice__locations_after()
       Assert.eq(true, arg.called)
       return "dood", 100
    end
-   Advice.add("after", "test.unit.api.Advice_TestModule", "test", "Test after", after)
+   Advice.add("after", "test.api.Advice_TestModule", "test", "Test after", after)
 
    local result1, result2 = Advice_TestModule.test(arg)
 
@@ -217,7 +217,7 @@ function test_Advice__locations_around()
       Assert.eq(true, arg.called)
       return "dood", 100
    end
-   Advice.add("around", "test.unit.api.Advice_TestModule", "test", "Test around", around)
+   Advice.add("around", "test.api.Advice_TestModule", "test", "Test around", around)
 
    local result1, result2 = Advice_TestModule.test(arg)
 
@@ -233,7 +233,7 @@ function test_Advice__locations_override()
       Assert.eq(false, arg.called)
       return "dood", 100
    end
-   Advice.add("override", "test.unit.api.Advice_TestModule", "test", "Test override", override)
+   Advice.add("override", "test.api.Advice_TestModule", "test", "Test override", override)
 
    local result1, result2 = Advice_TestModule.test(arg)
 
@@ -251,7 +251,7 @@ function test_Advice__locations_before_while()
       Assert.eq(false, arg.called)
       return do_return
    end
-   Advice.add("before_while", "test.unit.api.Advice_TestModule", "test", "Test before while", before_while)
+   Advice.add("before_while", "test.api.Advice_TestModule", "test", "Test before while", before_while)
 
    do_return = false
    local result1, result2 = Advice_TestModule.test(arg)
@@ -280,7 +280,7 @@ function test_Advice__locations_before_until()
          return "dood", 100
       end
    end
-   Advice.add("before_until", "test.unit.api.Advice_TestModule", "test", "Test before until", before_until)
+   Advice.add("before_until", "test.api.Advice_TestModule", "test", "Test before until", before_until)
 
    do_return = false
    local result1, result2 = Advice_TestModule.test(arg)
@@ -307,7 +307,7 @@ function test_Advice__locations_after_while()
       Assert.eq(true, arg.called)
       return "dood", 100
    end
-   Advice.add("after_while", "test.unit.api.Advice_TestModule", "test", "Test after while", after_while)
+   Advice.add("after_while", "test.api.Advice_TestModule", "test", "Test after while", after_while)
 
    called = false
    local result1, result2 = Advice_TestModule.test(arg)
@@ -335,7 +335,7 @@ function test_Advice__locations_after_while_false()
       called = true
       return "dood", 100
    end
-   Advice.add("after_while", "test.unit.api.Advice_TestModule", "test_false", "Test after while (false)", after_while)
+   Advice.add("after_while", "test.api.Advice_TestModule", "test_false", "Test after while (false)", after_while)
 
    called = false
    local result1, result2 = Advice_TestModule.test_false(arg)
@@ -354,7 +354,7 @@ function test_Advice__locations_after_until()
       called = true
       return "dood", 100
    end
-   Advice.add("after_until", "test.unit.api.Advice_TestModule", "test", "Test after until", after_until)
+   Advice.add("after_until", "test.api.Advice_TestModule", "test", "Test after until", after_until)
 
    called = false
    local result1, result2 = Advice_TestModule.test(arg)
@@ -382,7 +382,7 @@ function test_Advice__locations_after_until_false()
       called = true
       return "dood", 100
    end
-   Advice.add("after_until", "test.unit.api.Advice_TestModule", "test_false", "Test after until (false)", after_until)
+   Advice.add("after_until", "test.api.Advice_TestModule", "test_false", "Test after until (false)", after_until)
 
    called = false
    local result1, result2 = Advice_TestModule.test_false(arg)
@@ -403,7 +403,7 @@ function test_Advice__locations_filter_args()
       arg1.extra = 42
       return arg1, 100
    end
-   Advice.add("filter_args", "test.unit.api.Advice_TestModule", "test_args", "Test filter args", filter_args)
+   Advice.add("filter_args", "test.api.Advice_TestModule", "test_args", "Test filter args", filter_args)
 
    called = false
    local result1, result2 = Advice_TestModule.test_args(arg, 5)
@@ -425,7 +425,7 @@ function test_Advice__locations_filter_return()
       Assert.eq(42, result2)
       return "dood", 100
    end
-   Advice.add("filter_return", "test.unit.api.Advice_TestModule", "test", "Test filter return", filter_return)
+   Advice.add("filter_return", "test.api.Advice_TestModule", "test", "Test filter return", filter_return)
 
    called = false
    local result1, result2 = Advice_TestModule.test(arg)
