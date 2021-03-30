@@ -4,6 +4,7 @@ local CustomItemDecoder = require("mod.cdata_tools.api.citem.CustomItemDecoder")
 local CodeGenerator = require("api.CodeGenerator")
 local fs = require("util.fs")
 local paths = require("internal.paths")
+local CustomNpcDecoder = require("mod.cdata_tools.api.cnpc.CustomNpcDecoder")
 
 Log.set_level("debug")
 
@@ -52,7 +53,18 @@ function converters.item(name, mod_id, raw, root)
 end
 
 function converters.npc(name, mod_id, raw, root)
-   return {}
+   local decoded = CustomNpcDecoder.decode(raw, mod_id, name)
+
+   local image_path = ("graphic/chara/%s.bmp"):format(name)
+   decoded.chip.proto.image = fs.join(root, image_path)
+
+   return {
+      [image_path] = decoded.chip._bmp,
+      ["data/chara.lua"] = decoded.data,
+      ["data/chip.lua"] = decoded.chip.proto,
+      ["locale/en/chara.lua"] = decoded.locale_data.en,
+      ["locale/jp/chara.lua"] = decoded.locale_data.jp
+   }
 end
 
 function converters.map(name, mod_id, raw, root)

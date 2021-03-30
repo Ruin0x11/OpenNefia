@@ -1222,7 +1222,7 @@ data:add {
 
    on_refresh = function(power, params, item, chara)
       -- >>>>>>>> shade2/calculation.hsp:478 		if rp2=encResDamage	:cResDamage(r1)+	=iEncP(cnt, ...
-      chara:mod("is_resistant_to_bleeding", true)
+      chara:mod("cures_bleeding_quickly", true)
       -- <<<<<<<< shade2/calculation.hsp:478 		if rp2=encResDamage	:cResDamage(r1)+	=iEncP(cnt, ..
    end
 }

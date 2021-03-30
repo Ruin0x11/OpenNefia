@@ -6,7 +6,7 @@ local Smithing = require("mod.smithing.api.Smithing")
 data:add {
    _type = "base.item",
    _id = "blacksmith_hammer",
-   custom_item_author = "名も知れぬ鍛冶屋",
+   custom_author = "名も知れぬ鍛冶屋",
 
    image = "smithing.blacksmith_hammer",
    level = 1,

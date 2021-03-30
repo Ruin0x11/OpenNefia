@@ -5360,7 +5360,7 @@ local chara = {
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
       ai_move_chance = 100,
-      effect_immunities = { "elona.fear" },
+      pffect_immunities = { "elona.fear" },
    },
    {
       _id = "steel_golem",

@@ -26,54 +26,6 @@ local FLTMAJOR_TO_EQSLOT  = {
    ["elona.waist"]        = "elona.waist",
 }
 
-local function get_number(custom_file, key, default)
-   default = default or 0
-
-   local value = custom_file.options[key]
-   if value == nil then
-      return nil
-   end
-
-   value = tonumber(value)
-   if value == default then
-      return nil
-   end
-
-   return value
-end
-
-local function get_string(custom_file, key, default)
-   default = default or 0
-
-   local value = custom_file.options[key]
-   if value == nil then
-      return nil
-   end
-
-   value = Sjis.to_utf8(value)
-   if value == default then
-      return nil
-   end
-
-   return value
-end
-
-local function get_int_list(custom_file, key, default)
-   default = default or 0
-
-   local value = custom_file.options[key]
-   if value == nil then
-      return nil
-   end
-
-   value = fun.iter(string.split(value, ",")):map(tonumber):to_list()
-   if table.deepcompare(value, default) then
-      return nil
-   end
-
-   return value
-end
-
 local chip_spec = {
    isetpos      = { to = "y_offset" },
    ipilepos     = { to = "stack_height" },
@@ -100,7 +52,7 @@ local item_spec = {
    ibitvaluable = { to = "is_precious", cb = function(valuable) if valuable ~= 0 then return true end end },
    relaskill    = { to = "skill", cb = function(skill_id) return assert(Compat.convert_122_id("base.skill", skill_id)) end },
    -- irangepow    = { to = "effective_power", type = "int_list", default = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }, -- TODO
-   author       = { to = "custom_item_author", type = "string" },
+   author       = { to = "custom_author", type = "string" },
    ieffect = {
       to = "on_use",
       cb = function(_)
@@ -112,44 +64,12 @@ end]]
    },
 }
 
-local function apply_spec(result, spec, file_data)
-   for k, v in pairs(spec) do
-      local ty = v.type or "number"
-      local value
-      if ty == "number" then
-         local default = v.default or 0
-         value = get_number(file_data, k, default)
-      elseif ty == "string" then
-         local default = v.default or {}
-         value = get_string(file_data, k, default)
-      elseif ty == "int_list" then
-         local default = v.default or {}
-         value = get_int_list(file_data, k, default)
-      elseif type(ty) == "table" and ty.__enum then
-         local default = v.default or 0
-         value = get_number(file_data, k, default)
-         if value then
-            assert(ty:has_value(value))
-         end
-      else
-         error("Unknown type " .. ty)
-      end
-
-      if value then
-         if v.cb then
-            value = v.cb(value)
-         end
-         result[v.to] = value
-      end
-   end
-end
-
 local function make_item_locale_data(item_data, locale, mod_id, item_id)
    local result = {}
 
    local is_jp = locale == "jp"
 
-   local name = get_string(item_data, "name")
+   local name = Util.get_string(item_data, "name")
    if name then
       local split = string.split(name, ",")
       if is_jp then
@@ -160,12 +80,12 @@ local function make_item_locale_data(item_data, locale, mod_id, item_id)
    end
 
    if is_jp then
-      local iknownnameref = get_string(item_data, "iknownnameref")
+      local iknownnameref = Util.get_string(item_data, "iknownnameref")
       if iknownnameref then
          result.unidentified_name = iknownnameref
       end
 
-      local ialphanameref = get_string(item_data, "ialphanameref")
+      local ialphanameref = Util.get_string(item_data, "ialphanameref")
       if ialphanameref then
          result.katakana_name = ialphanameref
       end
@@ -201,6 +121,7 @@ local function make_item_locale_data(item_data, locale, mod_id, item_id)
       end
    end
 
+   -- TODO locale namespace standardization
    return {
       item = {
          info = {
@@ -210,15 +131,6 @@ local function make_item_locale_data(item_data, locale, mod_id, item_id)
          }
       }
    }
-end
-
-local function is_ascii_only(str)
-   for c in string.chars(str) do
-      if string.byte(c) >= 128 then
-         return false
-      end
-   end
-   return true
 end
 
 local function find_item_type(elona_item_type)
@@ -245,13 +157,11 @@ function CustomItemDecoder.decode(archive, mod_id, item_id)
    item_data = CustomFileParser.parse(item_data)
    item_data = CustomFileDecoder.decode(item_data)
 
-   print(inspect(item_data))
-
    if item_id == nil then
-      local name = get_string(item_data, "name")
+      local name = Util.get_string(item_data, "name")
       if name then
          local split = string.split(name, ",")
-         if is_ascii_only(split[1]) then
+         if Util.is_ascii_only(split[1]) then
             item_id = split[1]:gsub(" ", "_")
          end
       end
@@ -267,30 +177,30 @@ function CustomItemDecoder.decode(archive, mod_id, item_id)
       }
    }
 
-   apply_spec(chip_result, chip_spec, item_data)
+   Util.apply_spec(chip_result, chip_spec, item_data)
 
    local result = {
       _type = "base.item",
       _id = item_id
    }
 
-   apply_spec(result, item_spec, item_data)
+   Util.apply_spec(result, item_spec, item_data)
 
    for i = 0, 8 do
-      local fixenc = get_int_list(item_data, "fixenc" .. i, { 0, 0 })
+      local fixenc = Util.get_int_list(item_data, "fixenc" .. i, { 0, 0 })
       if fixenc then
          print(inspect(fixenc))
          print("TODO enchantments")
       end
    end
 
-   local light = get_number(item_data, "ilight")
+   local light = Util.get_number(item_data, "ilight")
    if light then
       print(inspect(light))
       print("TODO light")
    end
 
-   local gods = get_int_list(item_data, "givegod", { -1 })
+   local gods = Util.get_int_list(item_data, "givegod", { -1 })
    if gods then
       result.gods = {}
       for _, elona_god_id in ipairs(gods) do
@@ -298,7 +208,7 @@ function CustomItemDecoder.decode(archive, mod_id, item_id)
       end
    end
 
-   local tags = get_string(item_data, "ifilterref")
+   local tags = Util.get_string(item_data, "ifilterref")
    if tags then
       result.tags = {}
       for _, tag in ipairs(string.split(tags, "/")) do
@@ -309,7 +219,7 @@ function CustomItemDecoder.decode(archive, mod_id, item_id)
    end
 
    result.categories = {}
-   local major_category = get_number(item_data, "reftype")
+   local major_category = Util.get_number(item_data, "reftype")
    if major_category then
       local major_item_type = find_item_type(major_category)
       table.insert(result.categories, major_item_type)
@@ -319,7 +229,7 @@ function CustomItemDecoder.decode(archive, mod_id, item_id)
          table.insert(result.equip_slots, equip_slot)
       end
    end
-   local minor_category = get_number(item_data, "reftypeminor")
+   local minor_category = Util.get_number(item_data, "reftypeminor")
    if minor_category then
       table.insert(result.categories, find_item_type(minor_category))
    end
@@ -329,7 +239,7 @@ function CustomItemDecoder.decode(archive, mod_id, item_id)
       en = make_item_locale_data(item_data, "en", mod_id, item_id),
    }
 
-   result.image = ("%s.item_%s"):format(mod_id, item_id)
+   result.image = ("%s.%s"):format(mod_id, chip_result.proto._id)
 
    return {
       chip = chip_result,
