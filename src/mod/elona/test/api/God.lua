@@ -2,6 +2,10 @@ local Compat = require("mod.elona_sys.api.Compat")
 local Item = require("api.Item")
 local Assert = require("api.test.Assert")
 local God = require("mod.elona.api.God")
+local InstancedMap = require("api.InstancedMap")
+local TestUtil = require("api.test.TestUtil")
+local Chara = require("api.Chara")
+local Env = require("api.Env")
 
 local VANILLA_OFFERINGS = {
    [788] = { "elona.lulwy" },
@@ -94,4 +98,84 @@ function test_God_can_offer_item_to__vanilla()
          end
       end
    end
+end
+
+function test_God_create_gift_servant__servant_limit()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+   local player = TestUtil.set_player(map)
+   TestUtil.register_map(map)
+
+   local golden_knight = Chara.create("elona.golden_knight", 5, 5, {}, map)
+   player:recruit_as_ally(golden_knight)
+
+   local ally = God.create_gift_servant("elona.defender", player, "elona.jure")
+   Assert.eq(true, Chara.is_alive(ally))
+
+   Env.push_ui_result { { index = 1 }, nil }
+   local declined
+   ally, declined = God.create_gift_servant("elona.android", player, "elona.mani")
+   Assert.eq(false, Chara.is_alive(ally))
+   Assert.eq("declined", declined)
+end
+
+function test_God_create_gift_servant__party_limit()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+   local player = TestUtil.set_player(map)
+   TestUtil.register_map(map)
+
+   player:mod_skill_level("elona.stat_charisma", 1, "set")
+
+   local putit = Chara.create("elona.putit", 5, 5, {}, map)
+   player:recruit_as_ally(putit)
+   putit = Chara.create("elona.putit", 5, 5, {}, map)
+   player:recruit_as_ally(putit)
+
+   Env.push_ui_result { { index = 1 }, nil }
+   local ally, declined = God.create_gift_servant("elona.android", player, "elona.mani")
+   Assert.eq(false, Chara.is_alive(ally))
+   Assert.eq("declined", declined)
+end
+
+function test_God_create_gift_items()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+   local player = TestUtil.set_player(map)
+   TestUtil.register_map(map)
+
+   local specs = {
+      { id = "elona.jures_gem_stone_of_holy_rain", only_once = true },
+      { id = "elona.secret_treasure", no_stack = true, properties = { params = { secret_treasure_trait = "elona.god_heal" } } }
+   }
+
+   local items = God.create_gift_items(specs, player, "elona.jure")
+
+   Assert.eq(2, #items)
+   Assert.eq("elona.jures_gem_stone_of_holy_rain", items[1]._id)
+   Assert.eq("elona.secret_treasure", items[2]._id)
+   Assert.eq("elona.god_heal", items[2].params.secret_treasure_trait)
+
+   items = God.create_gift_items(specs, player, "elona.jure")
+   Assert.eq(2, #items)
+   Assert.eq("elona.potion_of_cure_corruption", items[1]._id)
+   Assert.eq("elona.secret_treasure", items[2]._id)
+   Assert.eq("elona.god_heal", items[2].params.secret_treasure_trait)
+   Assert.eq(1, items[2].amount)
+end
+
+function test_God_create_gift_artifact()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+   local player = TestUtil.set_player(map)
+   TestUtil.register_map(map)
+
+   local item = God.create_gift_artifact("elona.holy_lance", player, "elona.jure")
+
+   Assert.eq(true, Item.is_alive(item))
+   Assert.eq("elona.holy_lance", item._id)
+
+   item = God.create_gift_artifact("elona.holy_lance", player, "elona.jure")
+   Assert.eq(true, Item.is_alive(item))
+   Assert.eq("elona.treasure_map", item._id)
 end

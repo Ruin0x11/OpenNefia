@@ -1,7 +1,7 @@
 local God = require("mod.elona.api.God")
 
 local function secret_treasure(id)
-   return { id = "elona.secret_treasure", param1 = id, nostack = true }
+   return { id = "elona.secret_treasure", no_stack = true, properties = { params = { secret_treasure_trait = id } } }
 end
 
 local god = {
@@ -14,7 +14,7 @@ local god = {
       summon = "elona.mani",
       servant = "elona.android",
       items = {
-         { id = "elona.gemstone_of_mani", _only_once = true }
+         { id = "elona.gemstone_of_mani", only_once = true }
       },
       artifact = "elona.winchester_premium",
       blessings = {
@@ -42,7 +42,7 @@ local god = {
       summon = "elona.lulwy",
       servant = "elona.black_angel",
       items = {
-         { id = "elona.lulwys_gem_stone_of_god_speed", _only_once = true }
+         { id = "elona.lulwys_gem_stone_of_god_speed", only_once = true }
       },
       artifact = "elona.wind_bow",
       blessings = {
@@ -66,7 +66,7 @@ local god = {
       wish_name = "itzpalt",
       servant = "elona.exile",
       items = {
-         secret_treasure(165),
+         secret_treasure("elona.god_element"),
       },
       artifact = "elona.elemental_staff",
       blessings = {
@@ -89,7 +89,7 @@ local god = {
       summon = "elona.ehekatl",
       servant = "elona.black_cat",
       items = {
-         secret_treasure(163),
+         secret_treasure("elona.god_luck"),
       },
       artifact = "elona.lucky_dagger",
       blessings = {
@@ -113,7 +113,7 @@ local god = {
       summon = "elona.opatos",
       servant = "elona.golden_knight",
       items = {
-         secret_treasure(164),
+         secret_treasure("elona.god_earth"),
       },
       artifact = "elona.gaia_hammer",
       blessings = {
@@ -136,8 +136,8 @@ local god = {
       wish_name = "jure",
       servant = "elona.defender",
       items = {
-         { id = "elona.jures_gem_stone_of_holy_rain", _only_once = true },
-         secret_treasure(166),
+         { id = "elona.jures_gem_stone_of_holy_rain", only_once = true },
+         secret_treasure("elona.god_heal"),
       },
       artifact = "elona.holy_lance",
       blessings = {
@@ -162,7 +162,7 @@ local god = {
       summon = "elona.kumiromi",
       servant = "elona.cute_fairy",
       items = {
-         { id = "elona.kumiromis_gem_stone_of_rejuvenation", _only_once = true },
+         { id = "elona.kumiromis_gem_stone_of_rejuvenation", only_once = true },
       },
       artifact = "elona.kumiromi_scythe",
       blessings = {

@@ -5,6 +5,9 @@ local Magic = require("mod.elona_sys.api.Magic")
 local Anim = require("mod.elona_sys.api.Anim")
 local Item = require("api.Item")
 local Rand = require("api.Rand")
+local ItemMemory = require("mod.elona_sys.api.ItemMemory")
+local StayingCharas = require("api.StayingCharas")
+local Chara = require("api.Chara")
 
 -- TODO implement gods as capability (god ID, piety, prayer charge, god rank in one struct)
 local God = {}
@@ -28,7 +31,12 @@ end
 
 function God.modify_piety(chara, amount)
    local rank = chara.god_rank
-   local piety = chara:calc("piety")
+   local piety = chara.piety
+
+   if chara:skill_level("elona.faith") * 100 < piety then
+      Gui.mes("god.pray.indifferent", chara.god)
+      return false
+   end
 
    if rank == 4 and piety >= 4000 then
       chara.god_rank = chara.god_rank + 1
@@ -43,14 +51,11 @@ function God.modify_piety(chara, amount)
       God.say(chara, "elona.god_gift_1")
    end
 
-   if chara:skill_level("elona.faith") * 100 < piety then
-      Gui.mes("god.pray.indifferent", chara.god)
-      return
-   end
-
    -- TODO show house
 
    chara.piety = chara.piety + amount
+
+   return true
 end
 
 function God.can_offer_item_to(god_id, item)
@@ -93,7 +98,7 @@ function God.make_skill_blessing(skill, coefficient, add)
    -- data["base.skill"]:ensure(skill) TODO
    return function(chara)
       if chara:has_skill(skill) then
-         local amount = math.clamp((chara:calc("piety") or 0) / coefficient, 1, add + chara:skill_level("elona.faith") / 10)
+         local amount = math.clamp((chara.piety or 0) / coefficient, 1, add + chara:skill_level("elona.faith") / 10)
          chara:mod_skill_level(skill, amount, "add")
       end
    end
@@ -109,7 +114,7 @@ function God.switch_religion_with_penalty(chara, new_god)
       God.say(chara.god, "elona.god_stop_believing")
 
       Magic.cast("elona.buff_punishment", { power = 10000, target = chara })
-      Gui.play_sound("base.punish1")
+      Gui.play_sound("base.punish1", chara.x, chara.y)
       Gui.wait(500)
    end
 
@@ -141,10 +146,15 @@ function God.switch_religion(chara, new_god)
 end
 
 function God.pray(chara, altar)
-   if not chara:calc("god") then
+   -- >>>>>>>> shade2/god.hsp:280 	if cGod(pc)=0:txt lang(name(pc)+"は神を信仰していないが、試しに祈 ...
+   local god_id = chara:calc("god")
+
+   if god_id == nil then
       Gui.mes("god.pray.do_not_believe")
       return "turn_end"
    end
+
+   local god_proto = data["elona.god"]:ensure(god_id)
 
    if chara:is_player() then
       Gui.mes("god.pray.prompt")
@@ -153,6 +163,123 @@ function God.pray(chara, altar)
          return "player_turn_query"
       end
    end
+
+   local god_name = ("god.%s.name"):format(god_id)
+
+   Gui.mes("god.pray.you_pray_to", god_name)
+
+   if chara.piety < 200 or chara.prayer_charge < 1000 then
+      Gui.mes("god.pray.indifferent", god_name)
+      return "turn_end"
+   end
+
+   local positions = {{ x = chara.x, y = chara.y }}
+   local cb = Anim.miracle(positions)
+   Gui.start_draw_callback(cb)
+   Gui.play_sound("base.pray2", chara.x, chara.y)
+
+   Magic.cast("elona.effect_elixir", { power = 100, target = chara })
+   Magic.cast("elona.buff_holy_veil", { power = 200, target = chara })
+
+   chara.prayer_charge = 0
+   chara.piety = math.max(math.floor(chara.piety * 85 / 100), 0)
+
+   if chara.god_rank % 2 == 1 then
+      God.say(chara, "elona.god_gift")
+
+      if chara.god_rank == 1 then
+         local servant = god_proto.servant
+         if servant then
+            local ally, declined = God.create_gift_servant(servant, chara, god_id)
+            if not Chara.is_alive(ally) then
+               if declined == "declined" then
+                  chara.god_rank = chara.god_rank + 1
+               end
+               return "turn_end"
+            end
+         end
+      elseif chara.god_rank == 3 then
+         local specs = god_proto.items
+         if specs and #specs > 0 then
+            God.create_gift_items(specs, chara, god_id)
+            Gui.mes("common.something_is_put_on_the_ground")
+         end
+      elseif chara.god_rank == 5 then
+         local artifact = god_proto.artifact
+         if artifact then
+            God.create_gift_artifact(artifact, chara, god_id)
+            Gui.mes("common.something_is_put_on_the_ground")
+         end
+      end
+
+      chara.god_rank = chara.god_rank + 1
+   end
+   -- <<<<<<<< shade2/god.hsp:364 	goto *turn_end ..
+end
+
+function God.create_gift_servant(chara_id, chara, god_id)
+   -- >>>>>>>> shade2/god.hsp:305 			f=false:p=0 ...
+   local map = chara:current_map()
+   local servants_in_party = StayingCharas.iter_allies_and_stayers(map)
+      :filter(function(c) return c.race == "elona.servant" end)
+      :length()
+
+   local success = true
+
+   if servants_in_party >= 2 then
+      Gui.mes("god.pray.servant.no_more")
+      success = false
+   elseif not chara:can_recruit_allies() then
+      Gui.mes("god.pray.servant.party_is_full")
+      success = false
+   end
+
+   if not success then
+      Gui.mes("god.pray.servant.prompt_decline")
+      if Input.yes_no() then
+         return nil, "declined"
+      end
+
+      return nil
+   end
+
+   local ally = Chara.create(chara_id, chara.x, chara.y, { no_modify = true }, chara:current_map())
+   Gui.mes_c("god." .. god_id .. ".servant", "Blue")
+   chara:recruit_as_ally(ally)
+
+   return ally
+   -- <<<<<<<< shade2/god.hsp:326 			rc=nc:gosub *add_ally ..
+end
+
+function God.create_gift_items(specs, chara, god_id)
+   -- >>>>>>>> shade2/god.hsp:330 			flt :dbId=0 ...
+   local items = {}
+   for _, spec in ipairs(specs) do
+      local _id = spec.id
+      local no_stack = spec.no_stack
+      if spec.only_once and ItemMemory.generated(_id) > 0 then
+         _id = "elona.potion_of_cure_corruption"
+         no_stack = false
+      end
+      local item = Item.create(_id, chara.x, chara.y, { no_stack = no_stack }, chara:current_map())
+      if Item.is_alive(item) then
+         if spec.properties then
+            table.merge(item, spec.properties)
+         end
+         items[#items+1] = item
+      end
+   end
+   return items
+   -- <<<<<<<< shade2/god.hsp:346 			txtQuestItem ..
+end
+
+function God.create_gift_artifact(item_id, chara, god_id)
+   -- >>>>>>>> shade2/god.hsp:350 			flt :dbId=0 ...
+   if ItemMemory.generated(item_id) > 0 then
+      item_id = "elona.treasure_map"
+   end
+   return Item.create(item_id, chara.x, chara.y, {}, chara:current_map())
+   -- <<<<<<<< shade2/god.hsp:359 			item_create -1,dbId,cX(pc),cY(pc):txtQuestItem ..
 end
 
 function God.offer(chara, item, altar)
@@ -164,15 +291,15 @@ function God.offer(chara, item, altar)
    end
 
    local god_proto = data["elona.god"]:ensure(god_id)
+   local god_name = ("god.%s.name"):format(god_id)
 
    item:remove_activity()
    local item = item:separate()
 
-   local god_name = ("god.%s.name"):format(god_id)
    Gui.mes("action.offer.execute", item:build_name(), god_name)
 
    Gui.play_sound("base.offer2", chara.x, chara.y)
-   local cb = Anim.heal(chara.x, chara.x, "base.offer_effect")
+   local cb = Anim.heal(chara.x, chara.y, "base.offer_effect")
    Gui.start_draw_callback(cb)
 
    if not Item.is_alive(altar) then
@@ -252,6 +379,14 @@ end
 
 function God.punish(chara)
    -- >>>>>>>> shade2/god.hsp:432 *god_punish ...
+   Magic.cast("elona.effect_curse", { power = 500, target = chara })
+   if Rand.one_in(2) then
+      Magic.cast("elona.buff_punishment", { power = 250, target = chara })
+      Gui.play_sound("base.punish1", chara.x, chara.y)
+   end
+   if Rand.one_in(2) then
+      Magic.cast("elona.effect_punish_decrement_stats", { power = 100, target = chara })
+   end
    -- <<<<<<<< shade2/god.hsp:435 	if rnd(2) : call effect,(efId=efDecStats,efP=100, ..
 end
 

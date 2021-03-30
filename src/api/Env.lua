@@ -96,7 +96,11 @@ function Env.pop_ui_result()
    if not Env.is_headless() then
       error("This function can only be used in headless mode.")
    end
-   return ui_results:pop()
+   local result = ui_results:pop()
+   if result == nil then
+      return nil
+   end
+   return table.unpack(result)
 end
 
 function Env.clear_ui_results()

@@ -897,7 +897,7 @@ data:add {
    },
 
    dice = function(self, params)
-      local piety = params.source:calc("piety")
+      local piety = params.source.piety
       return {
          x = 1 + params.power / 10,
          y = piety / 70 + 1 + 1,

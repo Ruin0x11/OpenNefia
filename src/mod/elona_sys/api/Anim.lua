@@ -215,6 +215,8 @@ function Anim.heal(tx, ty, asset, sound, rot_delta, wait)
 
          for j = 1, 15 do
             local p = particles[j]
+            Draw.set_color(255, 255, 255)
+            print(scx, p.x, scy, p.y)
             asset:draw(scx + p.x, scy + p.y + frame2 / p.rot, tw - frame2 * 2, th - frame2 * 2, nil, true, frame2 * p.rot)
          end
 

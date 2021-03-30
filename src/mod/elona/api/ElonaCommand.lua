@@ -711,7 +711,7 @@ function ElonaCommand.offer(player)
       return "player_turn_query"
    end
 
-   local result, canceled = Input.query_inventory(player, "elona_inv_offer", nil, nil)
+   local result, canceled = Input.query_inventory(player, "elona.inv_offer", nil, nil)
    if canceled then
       return "player_turn_query"
    end

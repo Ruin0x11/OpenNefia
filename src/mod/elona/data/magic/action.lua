@@ -252,7 +252,7 @@ data:add {
 
    dice = function(self, params)
       local level = params.source:skill_level("elona.action_absorb_magic")
-      local piety = params.source:calc("piety")
+      local piety = params.source.piety
       return {
          x = 1 + level / 20,
          y = piety / 140 + 1 + 1,
