@@ -346,8 +346,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_summon_monsters" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       skills = {
          "elona.spell_cure_of_jure",
          "elona.spell_magic_dart",
@@ -503,8 +503,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_fire_breath" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -570,8 +570,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.buff_boost" }
          },
-         sub_action_chance = 2
       },
+      ai_sub_action_chance = 2,
       skills = {
          "elona.buff_boost"
       },
@@ -700,8 +700,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_nerve_arrow" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       skills = {
          "elona.spell_nerve_arrow"
       },
@@ -738,8 +738,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.buff_slow" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 3,
       ai_move_chance = 60,
       skills = {
@@ -841,8 +841,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" },
             { id = "elona.skill", skill_id = "elona.buff_mist_of_silence" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 1,
       ai_move_chance = 60,
       skills = {
@@ -881,8 +881,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 1,
       ai_move_chance = 60,
       skills = {
@@ -923,8 +923,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 1,
       ai_move_chance = 60,
       skills = {
@@ -985,8 +985,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.action_insult" },
             { id = "elona.skill", skill_id = "elona.action_eye_of_insanity" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 2,
       ai_move_chance = 60,
       skills = {
@@ -1012,8 +1012,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_mewmewmew" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 2,
       ai_move_chance = 60,
       skills = {
@@ -1044,8 +1044,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.action_draw_shadow" },
             { id = "elona.skill", skill_id = "elona.action_drain_blood" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
@@ -1080,8 +1080,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_mewmewmew" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -1113,8 +1113,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_mewmewmew" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -1146,8 +1146,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_mewmewmew" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -1180,8 +1180,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.action_draw_shadow" },
             { id = "elona.skill", skill_id = "elona.action_drain_blood" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
@@ -1280,8 +1280,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_acid_ground" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 1,
       ai_move_chance = 60,
       skills = {
@@ -1348,8 +1348,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_touch_of_weakness" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 20,
       skills = {
@@ -1378,8 +1378,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_eye_of_dimness" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 20,
       skills = {
@@ -1514,8 +1514,8 @@ local chara = {
          sub = {
             { id = "elona.throw_potion", item_id = "elona.bottle_of_salt" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 3,
       ai_move_chance = 50
    },
@@ -1675,8 +1675,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_suspicious_hand" }
          },
-         sub_action_chance = 50
       },
+      ai_sub_action_chance = 50,
       skills = {
          "elona.action_suspicious_hand"
       },
@@ -2051,8 +2051,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_summon_yeek" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 2,
       ai_move_chance = 70,
       skills = {
@@ -2127,8 +2127,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" }
          },
-         sub_action_chance = 10
       },
+      ai_sub_action_chance = 10,
       ai_distance = 2,
       ai_move_chance = 10,
       skills = {
@@ -2191,8 +2191,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" },
             { id = "elona.skill", skill_id = "elona.action_curse" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -2520,8 +2520,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_curse" }
          },
-         sub_action_chance = 10
       },
+      ai_sub_action_chance = 10,
       ai_move_chance = 60,
       skills = {
          "elona.spell_fire_bolt",
@@ -2587,8 +2587,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.buff_boost" }
          },
-         sub_action_chance = 5
       },
+      ai_sub_action_chance = 5,
       skills = {
          "elona.buff_boost"
       },
@@ -2651,8 +2651,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.spell_nerve_arrow" },
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       skills = {
          "elona.spell_magic_dart",
          "elona.spell_nerve_arrow",
@@ -2769,8 +2769,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.buff_slow" },
             { id = "elona.skill", skill_id = "elona.buff_holy_veil" }
          },
-         sub_action_chance = 10
       },
+      ai_sub_action_chance = 10,
       ai_distance = 2,
       skills = {
          "elona.spell_magic_dart",
@@ -2988,8 +2988,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 1,
       ai_move_chance = 60,
       skills = {
@@ -3023,8 +3023,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 1,
       ai_move_chance = 60,
       skills = {
@@ -3058,8 +3058,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 1,
       ai_move_chance = 60,
       skills = {
@@ -3095,8 +3095,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.buff_death_word" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 60,
       skills = {
@@ -3142,8 +3142,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.buff_death_word" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 70,
       skills = {
@@ -3212,8 +3212,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_fire_breath" }
          },
-         sub_action_chance = 12
       },
+      ai_sub_action_chance = 12,
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
@@ -3243,8 +3243,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_cold_breath" }
          },
-         sub_action_chance = 12
       },
+      ai_sub_action_chance = 12,
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
@@ -3273,8 +3273,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_lightning_breath" }
          },
-         sub_action_chance = 12
       },
+      ai_sub_action_chance = 12,
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
@@ -3303,8 +3303,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_darkness_breath" }
          },
-         sub_action_chance = 12
       },
+      ai_sub_action_chance = 12,
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
@@ -3333,8 +3333,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_mind_breath" }
          },
-         sub_action_chance = 12
       },
+      ai_sub_action_chance = 12,
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
@@ -3363,8 +3363,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_nerve_breath" }
          },
-         sub_action_chance = 12
       },
+      ai_sub_action_chance = 12,
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
@@ -3393,8 +3393,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_poison_breath" }
          },
-         sub_action_chance = 12
       },
+      ai_sub_action_chance = 12,
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
@@ -3423,8 +3423,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_sound_breath" }
          },
-         sub_action_chance = 12
       },
+      ai_sub_action_chance = 12,
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
@@ -3453,8 +3453,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_nether_breath" }
          },
-         sub_action_chance = 12
       },
+      ai_sub_action_chance = 12,
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
@@ -3483,8 +3483,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_chaos_breath" }
          },
-         sub_action_chance = 12
       },
+      ai_sub_action_chance = 12,
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
@@ -3543,8 +3543,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.buff_slow" },
             { id = "elona.skill", skill_id = "elona.buff_mist_of_frailness" }
          },
-         sub_action_chance = 10
       },
+      ai_sub_action_chance = 10,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -3597,8 +3597,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_scavenge" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -3625,8 +3625,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_scavenge" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -3745,8 +3745,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_eye_of_mutation" }
          },
-         sub_action_chance = 10
       },
+      ai_sub_action_chance = 10,
       ai_distance = 1,
       ai_move_chance = 15,
       skills = {
@@ -3782,8 +3782,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_eye_of_insanity" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 1,
       ai_move_chance = 15,
       skills = {
@@ -3820,8 +3820,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_eye_of_mana" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 15,
       skills = {
@@ -3850,8 +3850,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_fire_breath" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -3874,8 +3874,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.buff_slow" },
             { id = "elona.skill", skill_id = "elona.buff_element_scar" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 3,
       ai_move_chance = 40,
       skills = {
@@ -3897,8 +3897,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_touch_of_poison" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
@@ -3920,8 +3920,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_touch_of_nerve" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 2,
       ai_move_chance = 30,
       skills = {
@@ -3982,8 +3982,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" },
             { id = "elona.skill", skill_id = "elona.buff_element_scar" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 2,
       ai_move_chance = 50,
       skills = {
@@ -4021,8 +4021,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 2,
       ai_move_chance = 50,
       skills = {
@@ -4059,8 +4059,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 2,
       ai_move_chance = 50,
       skills = {
@@ -4097,8 +4097,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.action_draw_shadow" },
             { id = "elona.skill", skill_id = "elona.action_touch_of_weakness" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 3,
       ai_move_chance = 25,
       skills = {
@@ -4128,8 +4128,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_draw_shadow" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 3,
       ai_move_chance = 25,
       skills = {
@@ -4162,8 +4162,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.action_draw_shadow" },
             { id = "elona.skill", skill_id = "elona.buff_mist_of_frailness" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 3,
       ai_move_chance = 25,
       skills = {
@@ -4299,8 +4299,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_touch_of_poison" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -4322,8 +4322,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_touch_of_poison" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -4347,8 +4347,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_fire_breath" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -4371,8 +4371,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_cold_breath" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -4397,8 +4397,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.action_touch_of_fear" },
             { id = "elona.skill", skill_id = "elona.action_touch_of_weakness" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -4435,8 +4435,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.action_touch_of_fear" },
             { id = "elona.skill", skill_id = "elona.action_touch_of_weakness" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -4473,8 +4473,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.action_touch_of_fear" },
             { id = "elona.skill", skill_id = "elona.action_touch_of_weakness" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -4514,8 +4514,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.buff_death_word" },
             { id = "elona.skill", skill_id = "elona.action_touch_of_weakness" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -4547,8 +4547,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_curse" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -4610,8 +4610,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.spell_summon_wild" },
             { id = "elona.skill", skill_id = "elona.buff_slow" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 85,
       skills = {
@@ -4668,8 +4668,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 2,
       ai_move_chance = 50,
       skills = {
@@ -4701,8 +4701,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 2,
       ai_move_chance = 50,
       skills = {
@@ -4826,8 +4826,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_touch_of_weakness" }
          },
-         sub_action_chance = 10
       },
+      ai_sub_action_chance = 10,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -4892,8 +4892,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.buff_mist_of_silence" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 2,
       ai_move_chance = 50,
       skills = {
@@ -4923,8 +4923,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.buff_slow" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -4973,8 +4973,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_power_breath" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -5000,8 +5000,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_fire_breath" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -5026,8 +5026,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_cold_breath" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -5053,8 +5053,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_lightning_breath" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -5080,8 +5080,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_nether_breath" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -5107,8 +5107,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_chaos_breath" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -5133,8 +5133,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_fire_breath" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -5199,8 +5199,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_web" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -5228,8 +5228,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_web" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -5259,8 +5259,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_web" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -5290,8 +5290,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_web" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -5320,8 +5320,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_web" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -5510,8 +5510,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.action_summon_fire" },
             { id = "elona.skill", skill_id = "elona.buff_element_scar" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 1,
       ai_move_chance = 85,
       skills = {
@@ -5640,8 +5640,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" },
             { id = "elona.skill", skill_id = "elona.buff_slow" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 2,
       ai_move_chance = 40,
       skills = {
@@ -5699,8 +5699,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 60,
       skills = {
@@ -5727,8 +5727,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_summon_pawn" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 3,
       ai_move_chance = 40,
       skills = {
@@ -5822,8 +5822,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.buff_boost" }
          },
-         sub_action_chance = 4
       },
+      ai_sub_action_chance = 4,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -5950,8 +5950,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.spell_magic_dart" },
             { id = "elona.skill", skill_id = "elona.buff_slow" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 2,
       ai_move_chance = 50,
       skills = {
@@ -6189,8 +6189,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_summon_cats" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 2,
       ai_move_chance = 50,
       skills = {
@@ -6217,8 +6217,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.spell_web" },
             { id = "elona.skill", skill_id = "elona.action_eye_of_dimness" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 70,
       skills = {
@@ -6428,8 +6428,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_summon_sister" }
          },
-         sub_action_chance = 100
       },
+      ai_sub_action_chance = 100,
       skills = {
          "elona.action_summon_sister"
       }
@@ -6473,8 +6473,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.buff_mist_of_frailness" },
             { id = "elona.skill", skill_id = "elona.buff_slow" }
          },
-         sub_action_chance = 10
       },
+      ai_sub_action_chance = 10,
       skills = {
          "elona.spell_healing_rain",
          "elona.buff_mist_of_frailness",
@@ -6511,8 +6511,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.buff_boost" }
          },
-         sub_action_chance = 4
       },
+      ai_sub_action_chance = 4,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -6553,8 +6553,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" },
             { id = "elona.skill", skill_id = "elona.buff_mist_of_silence" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 1,
       ai_move_chance = 60,
       skills = {
@@ -6900,8 +6900,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_gravity" }
          },
-         sub_action_chance = 15
       },
+      ai_sub_action_chance = 15,
       ai_distance = 3,
       ai_move_chance = 40,
       ai_regenerates_mana = true,
@@ -6955,8 +6955,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_eye_of_mutation" }
          },
-         sub_action_chance = 10
       },
+      ai_sub_action_chance = 10,
       ai_distance = 2,
       ai_move_chance = 80,
       skills = {
@@ -6990,8 +6990,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_eye_of_mutation" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 2,
       ai_move_chance = 80,
       skills = {
@@ -7023,8 +7023,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_eye_of_ether" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 2,
       ai_move_chance = 80,
       skills = {
@@ -7100,8 +7100,8 @@ local chara = {
          sub = {
             { id = "elona.throw_potion", id_set = Filters.isetthrowpotionminor }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 2,
       ai_move_chance = 50,
       unarmed_element_id = "elona.mind",
@@ -7130,8 +7130,8 @@ local chara = {
          sub = {
             { id = "elona.throw_potion", id_set = Filters.isetthrowpotionminor }
          },
-         sub_action_chance = 10
       },
+      ai_sub_action_chance = 10,
       ai_distance = 3,
       ai_move_chance = 80,
       unarmed_element_id = "elona.mind",
@@ -7160,8 +7160,8 @@ local chara = {
          sub = {
             { id = "elona.throw_potion", id_set = Filters.isetthrowpotionmajor }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 2,
       ai_move_chance = 50,
       unarmed_element_id = "elona.mind",
@@ -7190,8 +7190,8 @@ local chara = {
          sub = {
             { id = "elona.throw_potion", id_set = Filters.isetthrowpotiongreater }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 2,
       ai_move_chance = 50,
       unarmed_element_id = "elona.mind",
@@ -7266,8 +7266,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_fire_breath" }
          },
-         sub_action_chance = 65
       },
+      ai_sub_action_chance = 65,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -7344,8 +7344,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_fire_breath" }
          },
-         sub_action_chance = 65
       },
+      ai_sub_action_chance = 65,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -7584,8 +7584,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_suspicious_hand" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 1,
       ai_move_chance = 70,
       skills = {
@@ -7613,8 +7613,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_suspicious_hand" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 1,
       ai_move_chance = 70,
       skills = {
@@ -7668,8 +7668,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_suspicious_hand" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 1,
       ai_move_chance = 70,
       skills = {
@@ -7695,8 +7695,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_suspicious_hand" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 1,
       ai_move_chance = 70,
       skills = {
@@ -7722,8 +7722,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_suspicious_hand" }
          },
-         sub_action_chance = 25
       },
+      ai_sub_action_chance = 25,
       ai_distance = 1,
       ai_move_chance = 70,
       skills = {
@@ -7786,8 +7786,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.spell_summon_monsters" }
          },
-         sub_action_chance = 10
       },
+      ai_sub_action_chance = 10,
       ai_distance = 3,
       ai_move_chance = 0,
       skills = {
@@ -7813,8 +7813,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_touch_of_weakness" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -7847,8 +7847,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_eye_of_insanity" }
          },
-         sub_action_chance = 10
       },
+      ai_sub_action_chance = 10,
       ai_distance = 2,
       ai_move_chance = 50,
       skills = {
@@ -7880,8 +7880,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.spell_short_teleport" },
             { id = "elona.skill", skill_id = "elona.action_suspicious_hand" }
          },
-         sub_action_chance = 40
       },
+      ai_sub_action_chance = 40,
       ai_distance = 1,
       ai_move_chance = 60,
       skills = {
@@ -7929,8 +7929,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.action_drain_blood" },
             { id = "elona.skill", skill_id = "elona.action_eye_of_insanity" }
          },
-         sub_action_chance = 30
       },
+      ai_sub_action_chance = 30,
       ai_distance = 1,
       ai_move_chance = 75,
       skills = {
@@ -7965,8 +7965,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.buff_slow" },
             { id = "elona.skill", skill_id = "elona.spell_nether_arrow" }
          },
-         sub_action_chance = 20
       },
+      ai_sub_action_chance = 20,
       ai_distance = 2,
       ai_move_chance = 40,
       skills = {
@@ -7995,8 +7995,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.buff_boost" }
          },
-         sub_action_chance = 3
       },
+      ai_sub_action_chance = 3,
       ai_distance = 2,
       ai_move_chance = 40,
       skills = {
@@ -8033,8 +8033,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.buff_boost" },
             { id = "elona.skill", skill_id = "elona.buff_slow" }
          },
-         sub_action_chance = 8
       },
+      ai_sub_action_chance = 8,
       ai_distance = 1,
       ai_move_chance = 70,
       skills = {
@@ -8101,8 +8101,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.action_insult" },
             { id = "elona.skill", skill_id = "elona.buff_regeneration" }
          },
-         sub_action_chance = 8
       },
+      ai_sub_action_chance = 8,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -8137,8 +8137,8 @@ local chara = {
             { id = "elona.skill", skill_id = "elona.buff_holy_shield" },
             { id = "elona.skill", skill_id = "elona.buff_regeneration" }
          },
-         sub_action_chance = 8
       },
+      ai_sub_action_chance = 8,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
@@ -8467,8 +8467,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_insult" }
          },
-         sub_action_chance = 10
       },
+      ai_sub_action_chance = 10,
       ai_distance = 1,
       ai_move_chance = 80,
       skills = {
@@ -8643,8 +8643,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_insult" }
          },
-         sub_action_chance = 2
       },
+      ai_sub_action_chance = 2,
       ai_distance = 3,
       ai_move_chance = 50,
       skills = {
@@ -8667,8 +8667,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_vanish" }
          },
-         sub_action_chance = 1
       },
+      ai_sub_action_chance = 1,
       ai_distance = 4,
       ai_move_chance = 30,
       skills = {
@@ -8702,8 +8702,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_vanish" }
          },
-         sub_action_chance = 1
       },
+      ai_sub_action_chance = 1,
       ai_distance = 3,
       ai_move_chance = 30,
       skills = {
@@ -8737,8 +8737,8 @@ local chara = {
          sub = {
             { id = "elona.skill", skill_id = "elona.action_pregnant" }
          },
-         sub_action_chance = 7
       },
+      ai_sub_action_chance = 7,
       ai_distance = 1,
       ai_move_chance = 100,
       skills = {
