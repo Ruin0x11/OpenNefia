@@ -4,7 +4,7 @@ local Assert = require("api.test.Assert")
 local Chara = require("api.Chara")
 local StayingCharas = require("api.StayingCharas")
 local InstancedMap = require("api.InstancedMap")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 
 function test_Map_delete__removes_stayers()
    local north_tyris_area = Area.create_unique("elona.north_tyris", "root")

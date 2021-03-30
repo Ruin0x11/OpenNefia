@@ -1,6 +1,6 @@
 local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 local InstancedMap = require("api.InstancedMap")
 local StayingCharas = require("api.StayingCharas")
 local Map = require("api.Map")

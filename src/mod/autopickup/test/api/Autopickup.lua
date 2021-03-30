@@ -1,7 +1,7 @@
 local Autopickup = require("mod.autopickup.api.Autopickup")
 local Enum = require("api.Enum")
 local Assert = require("api.test.Assert")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 
 local function run_rule(rule, item)
    return Autopickup.compile_rule(rule)(item, test_util.stripped_chara("elona.putit"))

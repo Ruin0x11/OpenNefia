@@ -1,7 +1,7 @@
 local Assert = require("api.test.Assert")
 local Enum = require("api.Enum")
 local Rand = require("api.Rand")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 
 function test_ICharaEffects_apply_effect__adjusted_power()
    local chara = test_util.stripped_chara("elona.putit")

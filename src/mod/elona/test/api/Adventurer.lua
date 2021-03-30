@@ -2,7 +2,7 @@ local Adventurer = require("mod.elona.api.Adventurer")
 local Area = require("api.Area")
 local Assert = require("api.test.Assert")
 local Map = require("api.Map")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 local Chara = require("api.Chara")
 local IChara = require("api.chara.IChara")
 

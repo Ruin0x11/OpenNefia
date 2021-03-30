@@ -4,7 +4,7 @@ local Assert = require("api.test.Assert")
 local data = require("internal.data")
 local InstancedEnchantment = require("api.item.InstancedEnchantment")
 local ItemMaterial = require("mod.elona.api.ItemMaterial")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 
 local function enchantless_item(id)
    test_util.set_player()

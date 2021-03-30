@@ -3,7 +3,7 @@ local Assert = require("api.test.Assert")
 local config = require("internal.config")
 local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 
 function test_Save_save_game__sanitizes_save_id()
    local map = InstancedMap:new(10, 10)

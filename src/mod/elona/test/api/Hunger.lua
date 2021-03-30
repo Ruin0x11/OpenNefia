@@ -4,7 +4,7 @@ local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
 local Hunger = require("mod.elona.api.Hunger")
 local IOwned = require("api.IOwned")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 local IItem = require("api.item.IItem")
 
 function test_Hunger_apply_general_eating_effect__sustain_attribute()

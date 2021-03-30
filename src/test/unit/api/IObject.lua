@@ -2,7 +2,7 @@ local data = require("internal.data")
 local Enum = require("api.Enum")
 local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 local Assert = require("api.test.Assert")
 
 data:add {

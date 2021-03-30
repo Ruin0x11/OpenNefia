@@ -6,7 +6,7 @@ local save = require("internal.global.save")
 local Inventory = require("api.Inventory")
 local Rand = require("api.Rand")
 local Rank = require("mod.elona.api.Rank")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 
 function test_Home_is_home()
    local map = InstancedMap:new(10, 10)

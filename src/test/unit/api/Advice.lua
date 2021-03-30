@@ -2,7 +2,7 @@ local Advice = require("api.Advice")
 local Calc = require("mod.elona.api.Calc")
 local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 local Advice_TestModule = require("test.unit.api.Advice_TestModule")
 
 local function double_fame_income(orig_fn, chara)

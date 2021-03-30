@@ -5,7 +5,7 @@ local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local Feat = require("api.Feat")
 local IFeat = require("api.feat.IFeat")
 local Assert = require("api.test.Assert")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 
 function test_Nefia_create__sets_position_in_parent_map()
    local north_tyris = Area.create_unique("elona.north_tyris", "root")

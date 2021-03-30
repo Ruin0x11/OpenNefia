@@ -3,7 +3,7 @@ local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
 local Area = require("api.Area")
 local Map = require("api.Map")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 
 function test_Servant_calc_wage_cost()
    local maid = Chara.create("elona.maid", nil, nil, {ownerless=true})

@@ -3,7 +3,7 @@ local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
 local Item = require("api.Item")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 
 function test_wandering_merchant_trunk()
    local map = InstancedMap:new(10, 10)

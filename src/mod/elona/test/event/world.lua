@@ -4,7 +4,7 @@ local Assert = require("api.test.Assert")
 local Inventory = require("api.Inventory")
 local save = require("internal.global.save")
 local Rand = require("api.Rand")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 
 function test_rank_decay()
    Rank.set("elona.arena", 100)

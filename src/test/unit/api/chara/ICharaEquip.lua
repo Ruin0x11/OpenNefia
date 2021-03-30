@@ -3,7 +3,7 @@ local IOwned = require("api.IOwned")
 local Assert = require("api.test.Assert")
 local ICharaEquip = require("api.chara.ICharaEquip")
 local Item = require("api.Item")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 
 
 function test_ICharaEquip_equip_item()

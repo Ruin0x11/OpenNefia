@@ -3,7 +3,7 @@ local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
 local Map = require("api.Map")
-local test_util = require("test.lib.test_util")
+local test_util = require("api.test.test_util")
 local InstancedArea = require("api.InstancedArea")
 local Area = require("api.Area")
 
