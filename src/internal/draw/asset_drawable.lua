@@ -16,14 +16,17 @@ local function crop(proto)
    -- Reset global drawing state to be clean so the asset gets copied correctly
    local blend_mode = love.graphics.getBlendMode()
    local sx, sy, sw, sh = love.graphics.getScissor()
+   local r, g, b, a = love.graphics.getColor()
    love.graphics.setBlendMode("alpha")
    love.graphics.setScissor()
+   love.graphics.setColor(1, 1, 1, 1)
    love.graphics.setCanvas(canvas)
 
    love.graphics.draw(base, quad, 0, 0)
 
    love.graphics.setBlendMode(blend_mode)
    love.graphics.setScissor(sx, sy, sw, sh)
+   love.graphics.setColor(r, g, b, a)
    love.graphics.setCanvas(old_canvas)
 
    local image = love.graphics.newImage(canvas:newImageData())
@@ -35,8 +38,6 @@ local function crop(proto)
 end
 
 local function load_image_region(proto)
-   love.graphics.setColor(1, 1, 1, 1)
-
    if proto.image then
       return bmp_convert.load_image(proto.image, proto.key_color)
    end

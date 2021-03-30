@@ -46,14 +46,14 @@ end
 function test_Autopickup__ops()
    local item = TestUtil.stripped_item("elona.rod_of_identify")
    item.curse_state = Enum.CurseState.Blessed
-   item.identify_state = Enum.IdentifyState.Full -- otherwise we won't know if it's blessed
+   item.identify_state = Enum.IdentifyState.Full
 
    Assert.same({}, ops("all item", item))
    Assert.same({Autopickup.OP.DESTROY}, ops("!all item", item))
    Assert.same({Autopickup.OP.DESTROY, Autopickup.OP.DESTROY}, ops("!!all item", item))
    Assert.same({Autopickup.OP.DESTROY_PROMPT}, ops("!?all item", item))
-   Assert.same({Autopickup.OP.DESTROY_PROMPT, Autopickup.OP.DESTROY}, ops("!?!all item", item))
    Assert.same({Autopickup.OP.PROMPT, Autopickup.OP.DESTROY}, ops("?!all item", item))
+   Assert.same({Autopickup.OP.DESTROY_PROMPT, Autopickup.OP.DESTROY}, ops("!?!all item", item))
    Assert.same({Autopickup.OP.NEGATION}, ops("~all item", item))
    Assert.same({Autopickup.OP.AUTOSAVE}, ops("%all item", item))
    Assert.same({Autopickup.OP.SET_NO_DROP}, ops("=all item", item))

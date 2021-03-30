@@ -12,6 +12,7 @@ love.graphics.getHeight = function() return 600 end
 love.graphics.getCanvas = function() return {} end
 love.graphics.getBlendMode = function() return "alpha" end
 love.graphics.getScissor = function() return 0, 0, 800, 600 end
+love.graphics.getColor = function() return 1, 1, 1, 1 end
 love.graphics.getFont = function()
    return
       {
