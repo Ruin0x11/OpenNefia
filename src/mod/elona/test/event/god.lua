@@ -7,6 +7,7 @@ local Assert = require("api.test.Assert")
 local Skill = require("mod.elona_sys.api.Skill")
 local Action = require("api.Action")
 local Enum = require("api.Enum")
+local God = require("mod.elona.api.God")
 
 function test_god_bless_water_on_altar()
    local map = InstancedMap:new(10, 10)
@@ -28,6 +29,36 @@ function test_god_bless_water_on_altar()
    sep = Action.drop(player, water, 1)
    Assert.eq(true, Item.is_alive(sep))
    Assert.eq(Enum.CurseState.Blessed, sep.curse_state)
+end
+
+function test_god_join_leave_faith_spacts()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.grass_rocks")
+   local player = TestUtil.set_player(map, 5, 5)
+
+   Assert.eq(false, player:has_skill("elona.action_prayer_of_jure"))
+   Assert.eq(false, player:has_skill("elona.action_absorb_magic"))
+   Assert.eq(false, player:has_skill("elona.buff_lulwys_trick"))
+
+   God.switch_religion(player, "elona.jure")
+   Assert.eq(true, player:has_skill("elona.action_prayer_of_jure"))
+   Assert.eq(false, player:has_skill("elona.action_absorb_magic"))
+   Assert.eq(false, player:has_skill("elona.buff_lulwys_trick"))
+
+   God.switch_religion(player, "elona.itzpalt")
+   Assert.eq(false, player:has_skill("elona.action_prayer_of_jure"))
+   Assert.eq(true, player:has_skill("elona.action_absorb_magic"))
+   Assert.eq(false, player:has_skill("elona.buff_lulwys_trick"))
+
+   God.switch_religion(player, "elona.lulwy")
+   Assert.eq(false, player:has_skill("elona.action_prayer_of_jure"))
+   Assert.eq(false, player:has_skill("elona.action_absorb_magic"))
+   Assert.eq(true, player:has_skill("elona.buff_lulwys_trick"))
+
+   God.switch_religion(player, nil)
+   Assert.eq(false, player:has_skill("elona.action_prayer_of_jure"))
+   Assert.eq(false, player:has_skill("elona.action_absorb_magic"))
+   Assert.eq(false, player:has_skill("elona.buff_lulwys_trick"))
 end
 
 function test_god_kumiromi_harvest_seeds()

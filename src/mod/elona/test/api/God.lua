@@ -179,3 +179,19 @@ function test_God_create_gift_artifact()
    Assert.eq(true, Item.is_alive(item))
    Assert.eq("elona.treasure_map", item._id)
 end
+
+function test_God_switch_religion__resets()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.grass_rocks")
+   local player = TestUtil.set_player(map, 5, 5)
+
+   player.prayer_charge = 9999
+   player.piety = 9999
+   player.god_rank = 3
+
+   God.switch_religion(player, "elona.jure")
+
+   Assert.eq(0, player.piety)
+   Assert.eq(500, player.prayer_charge)
+   Assert.eq(0, player.god_rank)
+end

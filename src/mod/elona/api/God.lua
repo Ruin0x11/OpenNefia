@@ -8,6 +8,7 @@ local Rand = require("api.Rand")
 local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local StayingCharas = require("api.StayingCharas")
 local Chara = require("api.Chara")
+local Log = require("api.Log")
 
 -- TODO implement gods as capability (god ID, piety, prayer charge, god rank in one struct)
 local God = {}
@@ -39,7 +40,7 @@ function God.say(god_id, talk_event_id)
 
    if god_id then
       local god = data["elona.god"][god_id]
-      if god and god.talk_id then
+      if god then
          -- local mes = Talk.message(god.talk_id, talk_event_id, chara)
          -- Gui.mes_c(mes, "Yellow")
          Gui.mes_c("TODO god talk " .. talk_event_id, "Yellow")
@@ -141,13 +142,25 @@ function God.switch_religion_with_penalty(chara, new_god)
 end
 
 function God.switch_religion(chara, new_god)
+   local new_god_proto
    if new_god ~= nil then
-      data["elona.god"]:ensure(new_god)
+      new_god_proto = data["elona.god"]:ensure(new_god)
    end
 
    chara.piety = 0
    chara.prayer_charge = 500
    chara.god_rank = 0
+
+   if chara.god then
+      local old_god_proto = data["elona.god"][chara.god]
+      if old_god_proto then
+         if old_god_proto.on_leave_faith then
+            old_god_proto.on_leave_faith(chara)
+         end
+      else
+         Log.warn("missing god id %s", chara.god)
+      end
+   end
 
    chara.god = new_god
 
@@ -158,6 +171,10 @@ function God.switch_religion(chara, new_god)
       Gui.play_sound("base.complete1")
       Gui.mes_c("god.switch.follower", "Yellow", god_name)
       God.say(chara.god, "elona.god_new_believer")
+
+      if new_god_proto.on_join_faith then
+         new_god_proto.on_join_faith(chara)
+      end
    end
 
    chara:refresh()

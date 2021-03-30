@@ -57,6 +57,18 @@ local god = {
          "elona.equip_ranged_bow",
          "elona.equip_ranged_crossbow",
       },
+
+      on_join_faith = function(chara)
+         -- >>>>>>>> shade2/god.hsp:274 		if cGod(pc)=godWind	:spGain(actGodWind) ...
+         chara:mod_base_skill_level("elona.buff_lulwys_trick", 1, "set")
+         -- <<<<<<<< shade2/god.hsp:274 		if cGod(pc)=godWind	:spGain(actGodWind) ..
+      end,
+
+      on_leave_faith = function(chara)
+         -- >>>>>>>> shade2/god.hsp:265 	spDel(actGodWind) ...
+         chara:mod_base_skill_level("elona.buff_lulwys_trick", 0, "set")
+         -- <<<<<<<< shade2/god.hsp:265 	spDel(actGodWind) ..
+      end
    },
    {
       _id = "itzpalt",
@@ -79,6 +91,18 @@ local god = {
       offerings = {
          "elona.equip_melee_staff",
       },
+
+      on_join_faith = function(chara)
+         -- >>>>>>>> shade2/god.hsp:272 		if cGod(pc)=godElement	:spGain(actAbsorbMana) ...
+         chara:mod_base_skill_level("elona.action_absorb_magic", 1, "set")
+         -- <<<<<<<< shade2/god.hsp:272 		if cGod(pc)=godElement	:spGain(actAbsorbMana) ..
+      end,
+
+      on_leave_faith = function(chara)
+         -- >>>>>>>> shade2/god.hsp:264 	spDel(actAbsorbMana) ...
+         chara:mod_base_skill_level("elona.action_absorb_magic", 0, "set")
+         -- <<<<<<<< shade2/god.hsp:264 	spDel(actAbsorbMana) ..
+      end
    },
    {
       _id = "ehekatl",
@@ -152,6 +176,18 @@ local god = {
       offerings = {
          "elona.offering_ore",
       },
+
+      on_join_faith = function(chara)
+         -- >>>>>>>> shade2/god.hsp:273 		if cGod(pc)=godHeal	:spGain(actHealJure) ...
+         chara:mod_base_skill_level("elona.action_prayer_of_jure", 1, "set")
+         -- <<<<<<<< shade2/god.hsp:273 		if cGod(pc)=godHeal	:spGain(actHealJure) ..
+      end,
+
+      on_leave_faith = function(chara)
+         -- >>>>>>>> shade2/god.hsp:263 	spDel(actHealJure) ...
+         chara:mod_base_skill_level("elona.action_prayer_of_jure", 0, "set")
+         -- <<<<<<<< shade2/god.hsp:263 	spDel(actHealJure) ..
+      end
    },
    {
       _id = "kumiromi",
