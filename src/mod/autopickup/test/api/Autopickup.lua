@@ -4,10 +4,9 @@ local Assert = require("api.test.Assert")
 local test_util = require("test.lib.test_util")
 
 local function matches(rule, item)
-   return select(1, Autopickup.compile_rule(rule)(item, test_util.stripped_chara()))
+   return select(1, Autopickup.compile_rule(rule)(item, test_util.stripped_chara("elona.putit")))
 end
 
-disable("TODO individual mod test")
 function test_Autopickup__predicates()
    local item = test_util.stripped_item("elona.rod_of_identify")
    item.curse_state = Enum.CurseState.Blessed
@@ -20,7 +19,6 @@ function test_Autopickup__predicates()
    Assert.eq(false, matches("all blessed cursed item", item))
 end
 
-disable("TODO individual mod test")
 function test_Autopickup__targets()
    local item = test_util.stripped_item("elona.rod_of_identify")
    item.curse_state = Enum.CurseState.Blessed

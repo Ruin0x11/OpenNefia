@@ -901,19 +901,21 @@ removed.  Return the new string.  If STRING is nil, return nil."
 
 (defun open-nefia-run-tests (&optional arg)
   (interactive "P")
-  (open-nefia--run-tests ".*:.*" arg))
+  (open-nefia--run-tests ".*:.*:.*" arg))
 
 (defun open-nefia-run-tests-this-file (&optional arg)
   (interactive "P")
-  (open-nefia--run-tests
-   (format "%s:%s" (format "/%s.lua$" (file-name-base (buffer-file-name))) ".*") arg))
+  (let ((mod-id "@base@"))
+    (open-nefia--run-tests
+     (format "%s:%s:%s" mod-id (format "/%s.lua$" (file-name-base (buffer-file-name))) ".*") arg)))
 
 (defun open-nefia-run-test-at-point (&optional arg)
   (interactive "P")
-  (let ((func-at-point (which-function)))
+  (let ((mod-id "@base@")
+        (func-at-point (which-function)))
     (if func-at-point
         (open-nefia--run-tests
-         (format "%s:%s" (format "/%s.lua$" (file-name-base (buffer-file-name))) (format "^%s$" func-at-point) arg))
+         (format "%s:%s:%s" mod-id (format "/%s.lua$" (file-name-base (buffer-file-name))) (format "^%s$" func-at-point) arg))
       (message "No function at point."))))
 
 (defun open-nefia-run-previous-tests (&optional arg)

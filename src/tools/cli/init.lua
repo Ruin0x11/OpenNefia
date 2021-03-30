@@ -31,7 +31,7 @@ local function build_app()
        :argname("<lua_file>")
 
    local test_command = parser:command("test", "Runs tests.")
-   test_command:option("-f --filter", "Filter for test files and test function names.", ".*:.*")
+   test_command:option("-f --filter", "Filter for mod IDs, test files and test function names.", ".*:.*:.*")
        :argname("<filter>")
    test_command:flag("-d --debug-on-error", "Starts a REPL on test failure.")
    test_command:option("-s --seed", "Seed for random number generators.")

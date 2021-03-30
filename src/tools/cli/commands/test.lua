@@ -19,7 +19,7 @@ local Advice = require("api.Advice")
 local main_state = require("internal.global.main_state")
 
 local function reset_all_globals()
-   print("Resetting global state.")
+   Log.debug("Resetting global state.")
    startup.reset_all_globals()
 
    -- Now we need to make sure that the chunks loaded by main.lua will get
@@ -215,25 +215,41 @@ return function(args)
 
    local sw = Stopwatch:new()
 
-   local mods = mod.scan_mod_dir()
+
+   local spl = string.split(args.filter, ":")
+   local filter_mod_name = spl[1]
+   local filter_file_name = spl[2] or ".*"
+   local filter_test_name = spl[3] or ".*"
+
+   Log.debug("Test filter: %s:%s", filter_file_name, filter_test_name)
+
+   local all_mods = mod.scan_mod_dir()
    local mods_with_tests = {}
 
-   for _, manifest_path in ipairs(mods) do
-      local mod_info = mod.get_mod_info(manifest_path)
-      local tests_dir = fs.join(mod_info.root_path, "test")
-      if fs.exists(tests_dir) then
-         table.insert(mods_with_tests, { mod_info = mod_info, tests_dir = tests_dir })
+   if filter_mod_name ~= "@base@" then
+      for _, mod_info in ipairs(all_mods) do
+         local tests_dir = fs.join(mod_info.root_path, "test")
+         if fs.exists(tests_dir) and mod_info.id:match(filter_mod_name) then
+            table.insert(mods_with_tests, { mod_info = mod_info, tests_dir = tests_dir })
+         end
       end
    end
 
-   print(("Test suites found: %d"):format(#mods_with_tests))
-   for _, entry in ipairs(mods_with_tests) do
-      print(("  + %s: %s"):format(entry.mod_info.id, entry.tests_dir))
+   local mod_names = table.concat(fun.iter(mods_with_tests):extract("mod_info"):extract("id"):to_list(), ", ")
+
+   if #mods_with_tests > 0 then
+      print(("Test suites found: %d (%s)"):format(#mods_with_tests, mod_names))
+      print()
    end
 
-   print()
+   local seed = args.seed or math.floor(socket.gettime())
+   print("Seed: " .. seed)
 
    local function run_tests(tests_dir, enabled_mods, message)
+      print()
+      print(("===== Running %s... ====="):format(message))
+      print()
+
       local mods = mod.scan_mod_dir(enabled_mods)
       startup.run_all(mods)
 
@@ -242,13 +258,7 @@ return function(args)
       Event.trigger("base.on_startup")
       field:init_global_data()
 
-      local seed = args.seed or math.floor(socket.gettime())
-
-      local spl = string.split(args.filter, ":")
-      local filter_file_name = spl[1]
-      local filter_test_name = spl[2] or ".*"
-
-      Log.debug("Test filter: %s:%s", filter_file_name, filter_test_name)
+      print()
 
       local function get_files(path)
          local items = fs.get_directory_items(path)
@@ -257,11 +267,6 @@ return function(args)
          return files
       end
       local files = get_files(tests_dir)
-
-      print()
-      print(("===== Running %s... ====="):format(message))
-      print("Seed: " .. seed)
-      print()
 
       while #files > 0 do
          local path = files[#files]
@@ -280,13 +285,15 @@ return function(args)
 
       cleanup_globals()
 
-      print("\n")
+      print()
    end
 
    local base_mods = { "base", "elona_sys", "elona", "extlibs" }
 
    -- Base engine tests, under src/test/unit.
-   run_tests("test/unit", base_mods, "base engine tests")
+   if filter_mod_name == "@base@" or filter_mod_name == ".*" then
+      run_tests("test/unit", base_mods, "base engine tests")
+   end
 
    for _, entry in ipairs(mods_with_tests) do
       local mod_info = entry.mod_info
@@ -294,12 +301,9 @@ return function(args)
 
       reset_all_globals()
 
-      local deps = table.set(base_mods)
-      for dep_id, version in pairs(mod_info.manifest.dependencies) do
-         deps[dep_id] = true
-      end
+      local deps = table.deepcopy(base_mods)
+      deps[#deps+1] = mod_info.id
 
-      deps = table.keys(deps)
       run_tests(tests_dir, deps, ("tests for mod '%s'"):format(mod_info.id))
    end
 
