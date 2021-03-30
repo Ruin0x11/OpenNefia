@@ -4,7 +4,7 @@ local Assert = require("api.test.Assert")
 local Inventory = require("api.Inventory")
 local save = require("internal.global.save")
 local Rand = require("api.Rand")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 
 function test_rank_decay()
    Rank.set("elona.arena", 100)
@@ -42,7 +42,7 @@ end
 
 function test_salary_is_generated()
    save.base.date.day = 14
-   local player = test_util.set_player()
+   local player = TestUtil.set_player()
    player.level = 10
    player.fame = 1000
    Rank.set("elona.home", 5000)
@@ -61,7 +61,7 @@ end
 
 function test_bill_not_generated_below_sixth_level()
    save.base.date.day = 30
-   local player = test_util.set_player()
+   local player = TestUtil.set_player()
    player.level = 5
    player.fame = 1000
    Rank.set("elona.home", 5000)
@@ -81,7 +81,7 @@ end
 
 function test_salary_and_bill_are_generated()
    save.base.date.day = 30
-   local player = test_util.set_player()
+   local player = TestUtil.set_player()
    player.level = 10
    player.fame = 1000
    Rank.set("elona.home", 5000)

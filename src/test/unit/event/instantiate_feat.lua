@@ -1,6 +1,6 @@
 local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 local Assert = require("api.test.Assert")
 local data = require("internal.data")
 local Feat = require("api.Feat")
@@ -32,13 +32,13 @@ function test_feat_event_emitter_callbacks_restored()
 
       local player = Chara.create("base.player", 5, 5, {}, map)
       Chara.set_player(player)
-      test_util.register_map(map)
+      TestUtil.register_map(map)
 
       local feat = Feat.create("@test@.bashable", 2, 2, {}, map)
       Assert.is_truthy(feat:has_event_handler("elona_sys.on_feat_bash"))
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local player = Chara.player()
@@ -56,7 +56,7 @@ function test_object_change_prototype__feat_callbacks_added()
 
       local player = Chara.create("base.player", 5, 5, {}, map)
       Chara.set_player(player)
-      test_util.register_map(map)
+      TestUtil.register_map(map)
 
       local feat = Feat.create("@test@.nonbashable", 2, 2, {}, map)
       Assert.is_falsy(feat:has_event_handler("elona_sys.on_feat_bash"))
@@ -65,7 +65,7 @@ function test_object_change_prototype__feat_callbacks_added()
       Assert.is_truthy(feat:has_event_handler("elona_sys.on_feat_bash"))
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local player = Chara.player()
@@ -83,7 +83,7 @@ function test_object_change_prototype__feat_callbacks_removed()
 
       local player = Chara.create("base.player", 5, 5, {}, map)
       Chara.set_player(player)
-      test_util.register_map(map)
+      TestUtil.register_map(map)
 
       local feat = Feat.create("@test@.bashable", 2, 2, {}, map)
       Assert.is_truthy(feat:has_event_handler("elona_sys.on_feat_bash"))
@@ -92,7 +92,7 @@ function test_object_change_prototype__feat_callbacks_removed()
       Assert.is_falsy(feat:has_event_handler("elona_sys.on_feat_bash"))
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local player = Chara.player()
@@ -109,7 +109,7 @@ function test_object_change_prototype__feat_callbacks_preserved()
 
    local player = Chara.create("base.player", 5, 5, {}, map)
    Chara.set_player(player)
-   test_util.register_map(map)
+   TestUtil.register_map(map)
 
    local feat = Feat.create("@test@.bashable", 2, 2, {}, map)
    feat:connect_self("elona_sys.on_feat_bash", "Unrelated event", function() end)

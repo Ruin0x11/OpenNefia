@@ -2,7 +2,7 @@ local data = require("internal.data")
 local Enum = require("api.Enum")
 local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 local Assert = require("api.test.Assert")
 
 data:add {
@@ -50,7 +50,7 @@ function test_IObject_change_prototype__IEventEmitter_prototype_callbacks_added(
 
       local player = Chara.create("@test@.noneventful", 5, 5, {}, map)
       Chara.set_player(player)
-      test_util.register_map(map)
+      TestUtil.register_map(map)
 
       Assert.is_falsy(player:has_event_handler("elona.on_chara_displaced"))
 
@@ -58,7 +58,7 @@ function test_IObject_change_prototype__IEventEmitter_prototype_callbacks_added(
       Assert.is_truthy(player:has_event_handler("elona.on_chara_displaced"))
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local player = Chara.player()
@@ -74,7 +74,7 @@ function test_IObject_change_prototype__IEventEmitter_prototype_callbacks_remove
 
       local player = Chara.create("@test@.eventful", 5, 5, {}, map)
       Chara.set_player(player)
-      test_util.register_map(map)
+      TestUtil.register_map(map)
 
       Assert.is_truthy(player:has_event_handler("elona.on_chara_displaced"))
 
@@ -82,7 +82,7 @@ function test_IObject_change_prototype__IEventEmitter_prototype_callbacks_remove
       Assert.is_falsy(player:has_event_handler("elona.on_chara_displaced"))
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local player = Chara.player()
@@ -97,7 +97,7 @@ function test_IObject_change_prototype__IEventEmitter_prototype_callbacks_preser
 
    local player = Chara.create("@test@.eventful", 5, 5, {}, map)
    Chara.set_player(player)
-   test_util.register_map(map)
+   TestUtil.register_map(map)
 
    player:connect_self("elona.on_chara_displaced", "Unrelated event", function() end)
    Assert.is_truthy(player:has_event_handler("elona.on_chara_displaced"))

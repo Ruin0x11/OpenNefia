@@ -6,7 +6,7 @@ local save = require("internal.global.save")
 local Inventory = require("api.Inventory")
 local Rand = require("api.Rand")
 local Rank = require("mod.elona.api.Rank")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 
 function test_Home_is_home()
    local map = InstancedMap:new(10, 10)
@@ -61,7 +61,7 @@ function test_Home_add_salary_to_salary_chest()
 end
 
 function test_Home_add_monthly_bill_to_salary_chest_and_update()
-   local chara = test_util.stripped_chara("elona.putit")
+   local chara = TestUtil.stripped_chara("elona.putit")
    chara.fame = 1000
    chara.karma = 20
 

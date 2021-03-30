@@ -3,13 +3,13 @@ local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
 local Item = require("api.Item")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 
 function test_wandering_merchant_trunk()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 
-   test_util.set_player(map, 2, 2)
+   TestUtil.set_player(map, 2, 2)
 
    local merchant = Chara.create("elona.shopkeeper", 4, 5, {}, map)
    merchant:add_role("elona.shopkeeper", { inventory_id = "elona.wandering_merchant" })

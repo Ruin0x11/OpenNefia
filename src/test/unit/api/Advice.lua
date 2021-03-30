@@ -2,7 +2,7 @@ local Advice = require("api.Advice")
 local Calc = require("mod.elona.api.Calc")
 local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 local Advice_TestModule = require("test.unit.api.Advice_TestModule")
 
 local function double_fame_income(orig_fn, chara)
@@ -51,14 +51,14 @@ function test_Advice_is_advised()
    player.fame = 30000
 
    Assert.eq(false, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income"))
-   Assert.eq(false, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Double fame income"))
-   Assert.eq(false, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "dood"))
+   Assert.eq(false, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "Double fame income"))
+   Assert.eq(false, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "dood"))
    Assert.eq(false, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income", "dood", "Double fame income"))
 
    Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income)
    Assert.eq(true, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income"))
-   Assert.eq(true, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Double fame income"))
-   Assert.eq(false, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "dood"))
+   Assert.eq(true, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "Double fame income"))
+   Assert.eq(false, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "dood"))
    Assert.eq(false, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income", "dood", "Double fame income"))
 end
 
@@ -69,7 +69,7 @@ function test_Advice_remove()
    local fn = Calc.calc_fame_income
 
    Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income)
-   Advice.remove("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Double fame income")
+   Advice.remove("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "Double fame income")
 
    Assert.eq(false, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income"))
    Assert.eq(3050, Calc.calc_fame_income(player))
@@ -115,29 +115,29 @@ function test_Advice_set_enabled()
    Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Additional fame income", additional_fame_income, { priority = 200000 })
    Assert.eq(24998, Calc.calc_fame_income(player))
 
-   Advice.set_enabled("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Flat fame income", false)
+   Advice.set_enabled("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "Flat fame income", false)
    Assert.eq(11100, Calc.calc_fame_income(player))
 
-   Advice.set_enabled("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Additional fame income", false)
+   Advice.set_enabled("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "Additional fame income", false)
    Assert.eq(6100, Calc.calc_fame_income(player))
 
-   Advice.set_enabled("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Double fame income", false)
+   Advice.set_enabled("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "Double fame income", false)
    Assert.eq(3050, Calc.calc_fame_income(player))
    Assert.eq(true, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income"))
-   Assert.eq(true, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Double fame income"))
+   Assert.eq(true, Advice.is_advised("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "Double fame income"))
 
-   Advice.set_enabled("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Flat fame income", true)
+   Advice.set_enabled("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "Flat fame income", true)
    Assert.eq(9999, Calc.calc_fame_income(player))
 
-   Advice.set_enabled("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Additional fame income", true)
+   Advice.set_enabled("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "Additional fame income", true)
    Assert.eq(14999, Calc.calc_fame_income(player))
 
-   Advice.set_enabled("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Double fame income", true)
+   Advice.set_enabled("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "Double fame income", true)
    Assert.eq(24998, Calc.calc_fame_income(player))
 end
 
 function test_Advice_set_enabled__validation()
-   Assert.throws_error(function() Advice.set_enabled("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Flat fame income", false) end,
+   Assert.throws_error(function() Advice.set_enabled("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "Flat fame income", false) end,
       "Advice from mod '@test@' with identifier 'Flat fame income' does not exist.")
 end
 
@@ -147,7 +147,7 @@ function test_Advice_add__multi_remove()
 
    Advice.add("around", "mod.elona.api.Calc", "calc_fame_income", "Double fame income", double_fame_income, { priority = 100000 })
    Advice.add("override", "mod.elona.api.Calc", "calc_fame_income", "Flat fame income", flat_fame_income, { priority = 50000 })
-   Advice.remove("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Flat fame income")
+   Advice.remove("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "Flat fame income")
 
    Assert.eq(6100, Calc.calc_fame_income(player))
 end
@@ -162,7 +162,7 @@ function test_Advice_add__validation()
 end
 
 function test_Advice_remove__validation()
-   Assert.throws_error(function() Advice.remove("mod.elona.api.Calc", "calc_fame_income", test_util.TEST_MOD_ID, "Flat fame income") end,
+   Assert.throws_error(function() Advice.remove("mod.elona.api.Calc", "calc_fame_income", TestUtil.TEST_MOD_ID, "Flat fame income") end,
       "Advice from mod '@test@' with identifier 'Flat fame income' does not exist.")
    Assert.throws_error(function() Advice.remove("dood", "calc_fame_income", "Flat fame income", flat_fame_income) end,
       "The module at require path 'dood' was not defined publicly.")

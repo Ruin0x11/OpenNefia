@@ -4,28 +4,27 @@ local Area = require("api.Area")
 local Map = require("api.Map")
 local Chara = require("api.Chara")
 local field = require("game.field")
-local IOwned = require("api.IOwned")
 local Item = require("api.Item")
 local Enum = require("api.Enum")
 local IItem = require("api.item.IItem")
 
-local test_util = {}
+local TestUtil = {}
 
-test_util.TEST_MOD_ID = "@test@"
-test_util.TEST_SAVE_ID = "__test__"
+TestUtil.TEST_MOD_ID = "@test@"
+TestUtil.TEST_SAVE_ID = "__test__"
 
-function test_util.set_player(map, x, y)
+function TestUtil.set_player(map, x, y)
    if map == nil then
-      field.player = assert(test_util.stripped_chara("base.player", nil, x, y))
+      field.player = assert(TestUtil.stripped_chara("base.player", nil, x, y))
       return field.player
    else
-      local player = assert(test_util.stripped_chara("base.player", map, x, y))
+      local player = assert(TestUtil.stripped_chara("base.player", map, x, y))
       Chara.set_player(player)
       return player
    end
 end
 
-function test_util.register_map(map)
+function TestUtil.register_map(map)
    assert(Chara.player(), "player must be set")
    local area = InstancedArea:new()
    Area.register(area, { parent = "root" })
@@ -34,12 +33,12 @@ function test_util.register_map(map)
    Map.set_map(map)
 end
 
-function test_util.save_cycle()
-   Save.save_game(test_util.TEST_SAVE_ID)
-   Save.load_game(test_util.TEST_SAVE_ID)
+function TestUtil.save_cycle()
+   Save.save_game(TestUtil.TEST_SAVE_ID)
+   Save.load_game(TestUtil.TEST_SAVE_ID)
 end
 
-function test_util.stripped_chara(id, map, x, y)
+function TestUtil.stripped_chara(id, map, x, y)
    local chara
    if map then
       chara = Chara.create(id, x, y, {}, map)
@@ -50,7 +49,7 @@ function test_util.stripped_chara(id, map, x, y)
    return chara
 end
 
-function test_util.stripped_item(id, map, x, y, amount)
+function TestUtil.stripped_item(id, map, x, y, amount)
    local item
    if map == nil then
       item = Item.create(id, x, y, {ownerless=true,amount=amount or 1})
@@ -62,4 +61,4 @@ function test_util.stripped_item(id, map, x, y, amount)
    return item
 end
 
-return test_util
+return TestUtil

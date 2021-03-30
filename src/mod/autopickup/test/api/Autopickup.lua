@@ -1,10 +1,10 @@
 local Autopickup = require("mod.autopickup.api.Autopickup")
 local Enum = require("api.Enum")
 local Assert = require("api.test.Assert")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 
 local function run_rule(rule, item)
-   return Autopickup.compile_rule(rule)(item, test_util.stripped_chara("elona.putit"))
+   return Autopickup.compile_rule(rule)(item, TestUtil.stripped_chara("elona.putit"))
 end
 
 local function matches(rule, item)
@@ -16,7 +16,7 @@ local function ops(rule, item)
 end
 
 function test_Autopickup__predicates()
-   local item = test_util.stripped_item("elona.rod_of_identify")
+   local item = TestUtil.stripped_item("elona.rod_of_identify")
    item.curse_state = Enum.CurseState.Blessed
    item.identify_state = Enum.IdentifyState.Full -- otherwise we won't know if it's blessed
 
@@ -32,7 +32,7 @@ function test_Autopickup__predicates()
 end
 
 function test_Autopickup__targets()
-   local item = test_util.stripped_item("elona.rod_of_identify")
+   local item = TestUtil.stripped_item("elona.rod_of_identify")
    item.curse_state = Enum.CurseState.Blessed
    item.identify_state = Enum.IdentifyState.Full
 
@@ -44,7 +44,7 @@ function test_Autopickup__targets()
 end
 
 function test_Autopickup__ops()
-   local item = test_util.stripped_item("elona.rod_of_identify")
+   local item = TestUtil.stripped_item("elona.rod_of_identify")
    item.curse_state = Enum.CurseState.Blessed
    item.identify_state = Enum.IdentifyState.Full -- otherwise we won't know if it's blessed
 

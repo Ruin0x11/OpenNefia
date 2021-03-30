@@ -1,4 +1,4 @@
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
 local Item = require("api.Item")
@@ -13,7 +13,7 @@ function test_IItem_get_owning_chara()
 
       local player = Chara.create("base.player", 5, 5, {}, map)
       Chara.set_player(player)
-      test_util.register_map(map)
+      TestUtil.register_map(map)
 
       local item = Item.create("elona.long_bow", nil, nil, {}, map)
 
@@ -23,7 +23,7 @@ function test_IItem_get_owning_chara()
       Assert.eq(player, IItem.get_owning_chara(item))
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local player = Chara.player()
@@ -36,7 +36,7 @@ function test_IItem_get_owning_chara()
       Assert.eq(player, IItem.get_owning_chara(item))
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local player = Chara.player()

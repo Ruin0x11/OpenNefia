@@ -3,7 +3,7 @@ local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
 local Area = require("api.Area")
 local Map = require("api.Map")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 
 function test_Servant_calc_wage_cost()
    local maid = Chara.create("elona.maid", nil, nil, {ownerless=true})
@@ -72,7 +72,7 @@ function test_Servant_calc_total_labor_expenses()
    local your_home_area = Area.create_unique("elona.your_home", north_tyris_area)
    local ok, first_floor = your_home_area:load_or_generate_floor(your_home_area:starting_floor())
 
-   local player = test_util.set_player(first_floor)
+   local player = TestUtil.set_player(first_floor)
 
    player.karma = 0
 

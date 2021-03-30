@@ -4,7 +4,7 @@ local Assert = require("api.test.Assert")
 local Chara = require("api.Chara")
 local StayingCharas = require("api.StayingCharas")
 local InstancedMap = require("api.InstancedMap")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 
 function test_Map_delete__removes_stayers()
    local north_tyris_area = Area.create_unique("elona.north_tyris", "root")
@@ -46,11 +46,11 @@ function test_Map_travel_to__deletes_saved_temporary_maps()
       temp.is_temporary = true
       temp_uid = temp.uid
 
-      test_util.set_player(temp)
-      test_util.register_map(temp)
+      TestUtil.set_player(temp)
+      TestUtil.register_map(temp)
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local main = InstancedMap:new(10, 10)
@@ -73,11 +73,11 @@ function test_Map_travel_to__preserves_saved_nontemporary_maps()
       map.is_temporary = false
       map_uid = map.uid
 
-      test_util.set_player(map)
-      test_util.register_map(map)
+      TestUtil.set_player(map)
+      TestUtil.register_map(map)
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local main = InstancedMap:new(10, 10)

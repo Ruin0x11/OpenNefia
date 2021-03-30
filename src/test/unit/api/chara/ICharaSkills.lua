@@ -1,15 +1,15 @@
 local Assert = require("api.test.Assert")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 
 function test_ICharaSkills_init__prototype_default_skills()
-   local chara = test_util.stripped_chara("elona.zeome")
+   local chara = TestUtil.stripped_chara("elona.zeome")
 
    Assert.eq(true, chara:has_skill("elona.spell_cure_of_jure"))
    Assert.eq(1, chara:skill_level("elona.spell_cure_of_jure"))
 end
 
 function test_ICharaSkills_init__initial_skills()
-   local chara = test_util.stripped_chara("elona.putit")
+   local chara = TestUtil.stripped_chara("elona.putit")
 
    Assert.eq(true, chara:has_skill("elona.axe"))
    Assert.eq(true, chara:has_skill("elona.blunt"))

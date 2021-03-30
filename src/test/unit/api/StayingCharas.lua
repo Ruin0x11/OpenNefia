@@ -3,7 +3,7 @@ local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
 local Map = require("api.Map")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 local InstancedArea = require("api.InstancedArea")
 local Area = require("api.Area")
 
@@ -165,7 +165,7 @@ function test_StayingCharas_do_transfer__will_not_transfer_player()
    local area_inside = InstancedArea:new()
    Area.register(area_inside, { parent = area_outside })
    area_inside:add_floor(inside, 1)
-   local chara = test_util.set_player(inside)
+   local chara = TestUtil.set_player(inside)
 
    staying:register(chara, area_inside, 1)
 

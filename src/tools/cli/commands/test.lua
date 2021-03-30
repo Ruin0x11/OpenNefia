@@ -14,7 +14,7 @@ local config_store = require("internal.config_store")
 local save_store = require("internal.save_store")
 local SaveFs = require("api.SaveFs")
 local Stopwatch = require("api.Stopwatch")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 local Advice = require("api.Advice")
 local main_state = require("internal.global.main_state")
 
@@ -44,7 +44,7 @@ local function reset_all_globals()
    save_store = require("internal.save_store")
    SaveFs = require("api.SaveFs")
    Stopwatch = require("api.Stopwatch")
-   test_util = require("api.test.test_util")
+   TestUtil = require("api.test.TestUtil")
    Advice = require("api.Advice")
    main_state = require("internal.global.main_state")
 end
@@ -52,7 +52,7 @@ end
 -- Make an environment rejecting the setting of global variables except
 -- functions that are named "test_*".
 local function make_test_env()
-   local tests = env.generate_sandbox(test_util.TEST_MOD_ID)
+   local tests = env.generate_sandbox(TestUtil.TEST_MOD_ID)
    tests.require = require
    tests.getmetatable = getmetatable
    tests.setmetatable = setmetatable
@@ -94,17 +94,17 @@ end
 
 local function load_test_mod()
    -- TODO this will have its own manifest loaded "virtually" at some point
-   main_state.loaded_mods[test_util.TEST_MOD_ID] = true
+   main_state.loaded_mods[TestUtil.TEST_MOD_ID] = true
 end
 
 local function cleanup_globals()
    config_store.clear()
    save_store.clear()
-   fs.remove(fs.parent(SaveFs.save_path("", "save", test_util.TEST_SAVE_ID)))
+   fs.remove(fs.parent(SaveFs.save_path("", "save", TestUtil.TEST_SAVE_ID)))
    fs.remove(SaveFs.save_path("", "temp"))
    fs.remove(SaveFs.save_path("", "global"))
    field:init_global_data()
-   Advice.remove_by_mod(test_util.TEST_MOD_ID)
+   Advice.remove_by_mod(TestUtil.TEST_MOD_ID)
 
    config_store.proxy().base.autosave = false
 end

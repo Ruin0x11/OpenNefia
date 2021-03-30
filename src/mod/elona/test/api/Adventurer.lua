@@ -2,7 +2,7 @@ local Adventurer = require("mod.elona.api.Adventurer")
 local Area = require("api.Area")
 local Assert = require("api.test.Assert")
 local Map = require("api.Map")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 local Chara = require("api.Chara")
 local IChara = require("api.chara.IChara")
 
@@ -22,7 +22,7 @@ function test_Adventurer__area_of__in_map()
    Adventurer.initialize()
 
    local ok, north_tyris_map = assert(north_tyris_area:load_or_generate_floor(north_tyris_area:starting_floor()))
-   test_util.set_player(north_tyris_map)
+   TestUtil.set_player(north_tyris_map)
    Map.set_map(north_tyris_map)
 
    local vernis_area = Area.create_unique("elona.vernis", north_tyris_area)
@@ -55,7 +55,7 @@ function test_Adventurer__iter_in_map()
    Adventurer.initialize()
 
    local ok, north_tyris_map = assert(north_tyris_area:load_or_generate_floor(north_tyris_area:starting_floor()))
-   test_util.set_player(north_tyris_map)
+   TestUtil.set_player(north_tyris_map)
    Map.set_map(north_tyris_map)
 
    Assert.eq(0, Adventurer.iter_in_map(north_tyris_map):length())

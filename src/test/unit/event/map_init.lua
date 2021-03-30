@@ -1,5 +1,5 @@
 local Area = require("api.Area")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 local Item = require("api.Item")
 local Assert = require("api.test.Assert")
 local Map = require("api.Map")
@@ -12,7 +12,7 @@ function test_home_preserves_items_on_renew()
    local your_home_area = Area.create_unique("elona.your_home", north_tyris_area)
    local ok, first_floor = assert(your_home_area:load_or_generate_floor(your_home_area:starting_floor()))
 
-   test_util.set_player(north_tyris_map)
+   TestUtil.set_player(north_tyris_map)
    Map.set_map(north_tyris_map)
 
    local item = Item.create("elona.putitoro", 10, 10, {}, first_floor)
@@ -35,7 +35,7 @@ function test_town_removes_items_on_renew()
    local vernis_area = Area.create_unique("elona.vernis", north_tyris_area)
    local ok, vernis = assert(vernis_area:load_or_generate_floor(vernis_area:starting_floor()))
 
-   test_util.set_player(north_tyris_map)
+   TestUtil.set_player(north_tyris_map)
    Map.set_map(north_tyris_map)
 
    local item = Item.create("elona.putitoro", 10, 10, {}, vernis)

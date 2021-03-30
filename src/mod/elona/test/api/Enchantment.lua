@@ -1,10 +1,10 @@
 local Item = require("api.Item")
 local Assert = require("api.test.Assert")
 local Enchantment = require("mod.elona.api.Enchantment")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 
 local function enchantless_item(id)
-   test_util.set_player()
+   TestUtil.set_player()
 
    local item = Item.create(id, nil, nil, {ownerless=true})
 

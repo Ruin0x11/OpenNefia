@@ -3,11 +3,11 @@ local IOwned = require("api.IOwned")
 local Assert = require("api.test.Assert")
 local ICharaEquip = require("api.chara.ICharaEquip")
 local Item = require("api.Item")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 
 
 function test_ICharaEquip_equip_item()
-   local chara = test_util.stripped_chara("elona.the_leopard_warrior")
+   local chara = TestUtil.stripped_chara("elona.the_leopard_warrior")
    local item = Item.create("elona.long_bow", nil, nil, {ownerless=true})
 
    Assert.eq(false, item:is_equipped())
@@ -44,7 +44,7 @@ local function enchantless_item(id)
 end
 
 function test_ICharaEquip_iter_merged_enchantments__single()
-   local chara = test_util.stripped_chara("elona.the_leopard_warrior")
+   local chara = TestUtil.stripped_chara("elona.the_leopard_warrior")
 
    Assert.eq(0, ICharaEquip.iter_merged_enchantments(chara):length())
 
@@ -100,7 +100,7 @@ function test_ICharaEquip_iter_merged_enchantments__single()
 end
 
 function test_ICharaEquip_iter_merged_enchantments__multiple()
-   local chara = test_util.stripped_chara("elona.the_leopard_warrior")
+   local chara = TestUtil.stripped_chara("elona.the_leopard_warrior")
 
    Assert.eq(0, ICharaEquip.iter_merged_enchantments(chara):length())
 

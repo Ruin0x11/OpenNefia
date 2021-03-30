@@ -1,6 +1,6 @@
 local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 local Assert = require("api.test.Assert")
 local data = require("internal.data")
 local Mef = require("api.Mef")
@@ -32,7 +32,7 @@ function test_object_change_prototype__mef_callbacks_added()
 
       local player = Chara.create("base.player", 5, 5, {}, map)
       Chara.set_player(player)
-      test_util.register_map(map)
+      TestUtil.register_map(map)
 
       local mef = Mef.create("@test@.nonsteppable", 2, 2, {}, map)
       Assert.is_falsy(mef:has_event_handler("elona_sys.on_mef_stepped_on"))
@@ -41,7 +41,7 @@ function test_object_change_prototype__mef_callbacks_added()
       Assert.is_truthy(mef:has_event_handler("elona_sys.on_mef_stepped_on"))
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local player = Chara.player()
@@ -59,7 +59,7 @@ function test_object_change_prototype__mef_callbacks_removed()
 
       local player = Chara.create("base.player", 5, 5, {}, map)
       Chara.set_player(player)
-      test_util.register_map(map)
+      TestUtil.register_map(map)
 
       local mef = Mef.create("@test@.steppable", 2, 2, {}, map)
       Assert.is_truthy(mef:has_event_handler("elona_sys.on_mef_stepped_on"))
@@ -68,7 +68,7 @@ function test_object_change_prototype__mef_callbacks_removed()
       Assert.is_falsy(mef:has_event_handler("elona_sys.on_mef_stepped_on"))
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local player = Chara.player()
@@ -85,7 +85,7 @@ function test_object_change_prototype__mef_callbacks_preserved()
 
    local player = Chara.create("base.player", 5, 5, {}, map)
    Chara.set_player(player)
-   test_util.register_map(map)
+   TestUtil.register_map(map)
 
    local mef = Mef.create("@test@.steppable", 2, 2, {}, map)
    mef:connect_self("elona_sys.on_mef_stepped_on", "Unrelated event", function() end)

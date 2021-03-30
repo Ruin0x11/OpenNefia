@@ -1,4 +1,4 @@
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
 local Mef = require("api.Mef")
@@ -11,13 +11,13 @@ function test_mef_serialize_origin()
 
       local player = Chara.create("base.player", 5, 5, {}, map)
       Chara.set_player(player)
-      test_util.register_map(map)
+      TestUtil.register_map(map)
 
       local mef = Mef.create("elona.potion", 5, 4, { origin = player, duration = -1, power = 50 }, map)
       Assert.eq(mef:get_origin(), player)
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local player = Chara.player()

@@ -1,7 +1,7 @@
 local Chara = require("api.Chara")
 local Assert = require("api.test.Assert")
 local InstancedMap = require("api.InstancedMap")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 local Item = require("api.Item")
 local Inventory = require("api.Inventory")
 local Map = require("api.Map")
@@ -54,11 +54,11 @@ function test_object_serialize()
 
       local player = Chara.create("base.player", 4, 5, {}, map)
       Chara.set_player(player)
-      test_util.register_map(map)
+      TestUtil.register_map(map)
       uid = player.uid
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local player = Chara.player()
@@ -88,8 +88,8 @@ function test_object_change_prototype()
    do
       local map = InstancedMap:new(10, 10)
       map:clear("elona.cobble")
-      test_util.set_player(map)
-      test_util.register_map(map)
+      TestUtil.set_player(map)
+      TestUtil.register_map(map)
 
       local putit = Chara.create("elona.putit", 5, 5, {}, map)
       Assert.eq("elona.putit", putit._id)
@@ -101,7 +101,7 @@ function test_object_change_prototype()
       Assert.eq("elona.zeome", putit.proto._id)
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local player = Chara.player()
@@ -118,8 +118,8 @@ function test_object_instantiate_events_save()
    do
       local map = InstancedMap:new(10, 10)
       map:clear("elona.cobble")
-      test_util.set_player(map)
-      test_util.register_map(map)
+      TestUtil.set_player(map)
+      TestUtil.register_map(map)
 
       local inv = Inventory.get_or_create("@test@.test")
       local gold = Item.create("elona.gold_piece", 5, 5, {}, inv)
@@ -127,7 +127,7 @@ function test_object_instantiate_events_save()
       Assert.eq(true, gold:has_event_handler("base.on_get_item"))
    end
 
-   test_util.save_cycle()
+   TestUtil.save_cycle()
 
    do
       local inv = Inventory.get_or_create("@test@.test")
@@ -144,8 +144,8 @@ function test_object_instantiate_events_map_load()
    do
       local map = InstancedMap:new(10, 10)
       map:clear("elona.cobble")
-      test_util.set_player(map)
-      test_util.register_map(map)
+      TestUtil.set_player(map)
+      TestUtil.register_map(map)
 
       local gold = Item.create("elona.gold_piece", 5, 5, {}, map)
 

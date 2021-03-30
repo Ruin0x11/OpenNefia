@@ -1,5 +1,5 @@
 local Area = require("api.Area")
-local test_util = require("api.test.test_util")
+local TestUtil = require("api.test.TestUtil")
 local Map = require("api.Map")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local Assert = require("api.test.Assert")
@@ -19,7 +19,7 @@ function test_map_entrance_sets_child_area_position()
    Assert.eq(24, y)
    Assert.eq(1, floor)
 
-   local player = test_util.set_player(north_tyris_map, 29, 24)
+   local player = TestUtil.set_player(north_tyris_map, 29, 24)
    Map.set_map(north_tyris_map)
 
    ElonaCommand.descend(player)
