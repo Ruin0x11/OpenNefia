@@ -56,17 +56,22 @@ Event.register("base.on_hour_passed", "Update awake hours, rot food", hourly_eve
 
 local function hourly_events_2()
    if not global.is_player_sleeping then
-      -- TODO god
       local map = Map.current()
+      local player = Chara.player()
       if map then
          if not map:has_type("world_map") then
             if Rand.one_in(40) then
+               player.piety = player.piety - 1
+               player.prayer_charge = player.prayer_charge + 4
             end
          else
-            if Rand.one_in(40) then
+            if Rand.one_in(5) then
+               player.piety = player.piety - 1
+               player.prayer_charge = player.prayer_charge + 32
             end
          end
       end
+      player.piety = math.max(player.piety, 0)
    end
 
    -- TODO shelter

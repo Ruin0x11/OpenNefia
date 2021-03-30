@@ -46,6 +46,8 @@ function TestUtil.stripped_chara(id, map, x, y)
       chara = Chara.create(id, nil, nil, {ownerless=true})
    end
    chara:iter_items():each(IItem.remove_ownership)
+   -- TODO event
+   chara.god = nil
    return chara
 end
 

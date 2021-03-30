@@ -7,6 +7,7 @@ local Feat = require("api.Feat")
 local Item = require("api.Item")
 local Filters = require("mod.elona.api.Filters")
 local Itemgen = require("mod.elona.api.Itemgen")
+local God = require("mod.elona.api.God")
 
 local MapgenUtils = {}
 
@@ -80,7 +81,7 @@ function MapgenUtils.spawn_random_site(map, is_first_renewal, x, y)
             local altar = Item.create("elona.altar", x, y, {}, map)
             if altar then
                altar.own_state = Enum.OwnState.NotOwned
-               -- TODO god
+               altar.params.altar_god_id = God.random_god_id()
                return true
             end
          end

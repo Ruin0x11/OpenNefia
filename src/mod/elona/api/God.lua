@@ -12,6 +12,24 @@ local Chara = require("api.Chara")
 -- TODO implement gods as capability (god ID, piety, prayer charge, god rank in one struct)
 local God = {}
 
+function God.random_god_id(no_eyth)
+   local gods = data["elona.god"]:iter()
+   :filter(function(god) return god.is_primary_god end)
+      :extract("_id")
+      :to_list()
+
+   if not no_eyth then
+      gods[#gods+1] = "eyth"
+   end
+
+   local god_id = Rand.choice(gods)
+   if god_id == "eyth"  then
+      god_id = nil
+   end
+
+   return god_id
+end
+
 function God.say(god_id, talk_event_id)
    local chara
    if class.is_an(IChara, god_id) then
@@ -30,8 +48,8 @@ function God.say(god_id, talk_event_id)
 end
 
 function God.modify_piety(chara, amount)
-   local rank = chara.god_rank
-   local piety = chara.piety
+   local rank = chara.god_rank or 0
+   local piety = chara.piety or 0
 
    if chara:skill_level("elona.faith") * 100 < piety then
       Gui.mes("god.pray.indifferent", chara.god)
@@ -39,21 +57,21 @@ function God.modify_piety(chara, amount)
    end
 
    if rank == 4 and piety >= 4000 then
-      chara.god_rank = chara.god_rank + 1
+      chara.god_rank = rank + 1
       God.say(chara, "elona.god_gift_2")
    end
    if rank == 2 and piety >= 2500 then
-      chara.god_rank = chara.god_rank + 1
+      chara.god_rank = rank + 1
       God.say(chara, "elona.god_gift_1")
    end
    if rank == 0 and piety >= 1500 then
-      chara.god_rank = chara.god_rank + 1
+      chara.god_rank = rank + 1
       God.say(chara, "elona.god_gift_1")
    end
 
    -- TODO show house
 
-   chara.piety = chara.piety + amount
+   chara.piety = math.floor(piety + amount)
 
    return true
 end
@@ -282,6 +300,20 @@ function God.create_gift_artifact(item_id, chara, god_id)
    -- <<<<<<<< shade2/god.hsp:359 			item_create -1,dbId,cX(pc),cY(pc):txtQuestItem ..
 end
 
+function God.calc_item_piety_value(item)
+   -- TODO capability
+   local points
+   if item._id == "elona.corpse" then
+      points = math.clamp(item:calc("weight") / 200, 1, 50)
+      if (item.spoilage_date or 0) < 0 then
+         points = 0
+      end
+   else
+      points = 25
+   end
+   return points
+end
+
 function God.offer(chara, item, altar)
    -- >>>>>>>> shade2/god.hsp:368 *god_offer ...
    local god_id = chara:calc("god")
@@ -306,17 +338,7 @@ function God.offer(chara, item, altar)
       return "turn_end"
    end
 
-   local points
-
-   -- TODO capability
-   if item._id == "elona.corpse" then
-      points = math.clamp(item:calc("weight") / 200, 1, 50)
-      if (item.spoilage_date or 0) < 0 then
-         points = 0
-      end
-   else
-      points = 25
-   end
+   local points = God.calc_item_piety_value(item)
 
    if altar.params.altar_god_id ~= god_id then
       local other_god_name
