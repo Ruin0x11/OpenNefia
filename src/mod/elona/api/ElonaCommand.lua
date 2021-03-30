@@ -27,6 +27,7 @@ local global = require("mod.elona.internal.global")
 local RandomEvent = require("mod.elona.api.RandomEvent")
 local Calc = require("mod.elona.api.Calc")
 local Shortcut = require("mod.elona.api.Shortcut")
+local God = require("mod.elona.api.God")
 
 local ElonaCommand = {}
 
@@ -704,7 +705,9 @@ function ElonaCommand.offer(player)
       return "player_turn_query"
    end
 
-   Log.error("TODO offer")
+   error("offer")
+
+   return God.offer(player)
 end
 
 function ElonaCommand.pray(player)
@@ -712,7 +715,31 @@ function ElonaCommand.pray(player)
       return "player_turn_query"
    end
 
-   Log.error("TODO pray")
+   -- TODO capability
+   local map = player:current_map()
+   local altar = Item.at(player.x, player.y, map)
+      :filter(function(i) return i:has_category("elona.furniture_altar") end)
+      :nth(1)
+
+   if Item.is_alive(altar) then
+      local god_id = altar.params.altar_god_id
+      if player.god ~= god_id then
+         local result, canceled = GodConvertMenu:new(player, god_id):query()
+
+         if result and not canceled then
+            if result.action == "convert" then
+               local new_god_id = result.god_id
+               if new_god_id then
+                  God.switch_religion_with_penalty(player, new_god_id)
+               end
+            end
+         end
+
+         return "turn_end"
+      end
+   end
+
+      return God.pray(player)
 end
 
 function ElonaCommand.shortcut(player, index)

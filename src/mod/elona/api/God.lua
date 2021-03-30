@@ -3,6 +3,7 @@ local IChara = require("api.chara.IChara")
 local Input = require("api.Input")
 local Talk = require("api.Talk")
 
+-- TODO implement gods as capability (god ID, piety, prayer charge, god rank in one struct)
 local God = {}
 
 function God.say(god_id, talk_event_id)
@@ -15,15 +16,14 @@ function God.say(god_id, talk_event_id)
    if god_id then
       local god = data["elona.god"]:ensure(god_id)
       if god.talk_id then
-         local mes = Talk.message(god.talk_id, talk_event_id, chara)
-         Gui.mes_c(mes, "Yellow")
+         -- local mes = Talk.message(god.talk_id, talk_event_id, chara)
+         -- Gui.mes_c(mes, "Yellow")
+         Gui.mes_c("TODO god talk " .. talk_event_id, "Yellow")
       end
    end
 end
 
-function God.modify_piety(chara, amount, params)
-   params = params or {}
-
+function God.modify_piety(chara, amount)
    local rank = chara.god_rank
    local piety = chara:calc("piety")
 
@@ -60,9 +60,7 @@ function God.make_skill_blessing(skill, coefficient, add)
    end
 end
 
-function God.switch_religion_with_penalty(chara, new_god, params)
-   params = params or {}
-
+function God.switch_religion_with_penalty(chara, new_god)
    Gui.update_screen()
 
    if chara.god ~= nil then
@@ -71,19 +69,17 @@ function God.switch_religion_with_penalty(chara, new_god, params)
       Gui.play_sound("base.punish1")
    end
 
-   God.switch_religion(chara, new_god, params)
+   God.switch_religion(chara, new_god)
 end
 
-function God.switch_religion(chara, new_god, params)
-   params = params or {}
-
+function God.switch_religion(chara, new_god)
    chara:reset("piety", 0)
    chara:reset("prayer_charge", 500)
    chara:reset("god_rank", 0)
 
    chara:reset("god_id", new_god)
 
-   if not new_god then
+   if new_god == nil then
       Gui.mes_c("god.switch.unbeliever", "Yellow")
    else
       Gui.play_sound("base.complete1")
@@ -94,7 +90,7 @@ function God.switch_religion(chara, new_god, params)
    chara:refresh()
 end
 
-function God.pray(chara)
+function God.pray(chara, altar)
    if not chara:calc("god") then
       Gui.mes("god.pray.do_not_believe")
       return "turn_end"
@@ -107,6 +103,10 @@ function God.pray(chara)
          return "player_turn_query"
       end
    end
+end
+
+function God.offer(player)
+   error("offer")
 end
 
 return God

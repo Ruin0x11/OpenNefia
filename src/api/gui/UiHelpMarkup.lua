@@ -1,6 +1,7 @@
 local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 local ISettable = require("api.gui.ISettable")
+local UiTheme = require("api.gui.UiTheme")
 
 local UiHelpMarkup = class.class("UiHelpMarkup", {IUiElement, ISettable})
 
@@ -20,6 +21,7 @@ function UiHelpMarkup:relayout(x, y, width, height)
    self.y = y
    self.width = width
    self.height = height
+   self.t = UiTheme.load(self)
    self.dirty = true
 end
 
@@ -98,6 +100,7 @@ function UiHelpMarkup.parse_elona_markup(text, width, color, font_size)
          wait_to_break_line = true
       elseif c == "<" then
          -- Parse a markup tag. (This isn't HTML.)
+         x = 0
          push_result(x, y)
          append = false
 
@@ -124,6 +127,7 @@ function UiHelpMarkup.parse_elona_markup(text, width, color, font_size)
                y = y + tag.y_delta
             end
             if tag.reset_x then
+               current_text = current_text .. "\n"
                x = 0
             end
             if tag.font_delta then
@@ -153,7 +157,7 @@ function UiHelpMarkup.parse_elona_markup(text, width, color, font_size)
          append = false
          if current_text ~= "" then
             x = 0
-            y = y + font_size + 2
+            y = y + Draw.text_height() + 2
             push_result(x, y)
          end
       end
@@ -162,7 +166,7 @@ function UiHelpMarkup.parse_elona_markup(text, width, color, font_size)
          current_text = current_text .. c
          if not wait_to_break_line and x > width then
             x = 0
-            y = y + font_size + 2
+            y = y + Draw.text_height() + 2
             push_result(x, y)
          end
 
@@ -174,15 +178,16 @@ function UiHelpMarkup.parse_elona_markup(text, width, color, font_size)
    end
 
    push_result(x, y)
+   print(inspect(result))
 
    return result
 end
 
-function UiHelpMarkup.draw_elona_markup(markup, x, y, shadow)
+function UiHelpMarkup.draw_elona_markup(markup, x, y, shadow_color)
    for _, item in ipairs(markup) do
       Draw.set_font(item.font_size, item.font_style)
-      if shadow then
-         Draw.text(item.text, x + item.x + 1, y + item.y + 1, {160, 160, 140})
+      if shadow_color then
+         Draw.text(item.text, x + item.x + 1, y + item.y + 1, shadow_color)
       end
       Draw.set_color(item.color)
       Draw.text(item.text, x + item.x, y + item.y)
@@ -194,7 +199,11 @@ function UiHelpMarkup:draw()
       self.parsed = UiHelpMarkup.parse_elona_markup(self.text, self.width, self.color, self.font_size)
       self.dirty = false
    end
-   UiHelpMarkup.draw_elona_markup(self.parsed, self.x, self.y, self.shadow)
+   local shadow_color
+   if self.shadow then
+      shadow_color = self.t.elona.help_markup_text_shadow_color
+   end
+   UiHelpMarkup.draw_elona_markup(self.parsed, self.x, self.y, shadow_color)
 end
 
 function UiHelpMarkup:update(dt)

@@ -4,10 +4,10 @@ return {
          ehekatl = {
             name = "Ehekatl of Luck",
             desc = {
-               ability = "Ehekatl school of magic (Passive: Randomize casting mana<br>cost.)<p>",
-               bonus = "CHR/LUCK/Evasion/Magic Capacity/Fishing/Lockpick<p>",
-               offering = "Corpses/Fish<p>",
-               text = "Ehekatl is a goddess of luck. Those faithful to Ehekatl are<br>really lucky.<p><p>"
+               ability = "Ehekatl school of magic (Passive: Randomize casting mana<br>cost.)",
+               bonus = "CHR/LUCK/Evasion/Magic Capacity/Fishing/Lockpick",
+               offering = "Corpses/Fish",
+               text = "Ehekatl is a goddess of luck. Those faithful to Ehekatl are<br>really lucky."
             },
             servant = "Weapons and armor licked by this cat receive a blessing of Ehekatl which adds an extra enchantment.",
             talk = {
@@ -31,10 +31,10 @@ return {
          itzpalt = {
             name = "Itzpalt of Element",
             desc = {
-               ability = "Absorb mana (Absorb mana from the air.)<p>",
-               bonus = "MAG/Meditation/RES Fire/RES Cold/RES Lightning<p>",
-               offering = "Corpses/Staves<p>",
-               text = "Itzpalt is a god of elements. Those faithful to Itzpalt are<br>protected from elemental damages and learn to absorb mana from<br>their surroundings.<p>"
+               ability = "Absorb mana (Absorb mana from the air.)",
+               bonus = "MAG/Meditation/RES Fire/RES Cold/RES Lightning",
+               offering = "Corpses/Staves",
+               text = "Itzpalt is a god of elements. Those faithful to Itzpalt are<br>protected from elemental damages and learn to absorb mana from<br>their surroundings."
             },
             servant = "This exile can cast several spells in a row.",
             talk = {
@@ -55,10 +55,10 @@ return {
          jure = {
             name = "Jure of Healing",
             desc = {
-               ability = "Prayer of Jure (Heal yourself.)<p>",
-               bonus = "WIL/Healing/Meditation/Anatomy/Cooking/Magic Device/Magic Capacity<p>",
-               offering = "Corpses/Ores<p>",
-               text = "Jure is a god of healing. Those faithful to Jure can heal wounds.<p><p>"
+               ability = "Prayer of Jure (Heal yourself.)",
+               bonus = "WIL/Healing/Meditation/Anatomy/Cooking/Magic Device/Magic Capacity",
+               offering = "Corpses/Ores",
+               text = "Jure is a god of healing. Those faithful to Jure can heal wounds."
             },
             servant = "This defender can use Lay on hand to heal a mortally wounded ally. The ability becomes re-useable after sleeping.",
             talk = {
@@ -79,10 +79,10 @@ return {
          kumiromi = {
             name = "Kumiromi of Harvest",
             desc = {
-               ability = "Kumiromi's recycle (Passive: Extract seeds from rotten <p>foods.)<p>",
-               bonus = "PER/DEX/LER/Gardening/Alchemy/Tailoring/Literacy<p>",
-               offering = "Corpses/Vegetables/Seeds<p>",
-               text = "Kumiromi is a god of harvest. Those faithful to Kumiromi receive<br>the blessings of nature.<p><p>"
+               ability = "Kumiromi's recycle (Passive: Extract seeds from rotten <p>foods.)",
+               bonus = "PER/DEX/LER/Gardening/Alchemy/Tailoring/Literacy",
+               offering = "Corpses/Vegetables/Seeds",
+               text = "Kumiromi is a god of harvest. Those faithful to Kumiromi receive<br>the blessings of nature."
             },
             servant = "This fairy generates a seed after eating.",
             talk = {
@@ -103,10 +103,10 @@ return {
          lulwy = {
             name = "Lulwy of Wind",
             desc = {
-               ability = "Lulwy's trick (Boost your speed for a short time.)<p>",
-               bonus = "PER/SPD/Bow/Crossbow/Stealth/Magic Device<p>",
-               offering = "Corpses/Bows<p>",
-               text = "Lulwy is a goddess of wind. Those faithful to Lulwy receive<br>the blessing of wind and can move swiftly.<p>"
+               ability = "Lulwy's trick (Boost your speed for a short time.)",
+               bonus = "PER/SPD/Bow/Crossbow/Stealth/Magic Device",
+               offering = "Corpses/Bows",
+               text = "Lulwy is a goddess of wind. Those faithful to Lulwy receive<br>the blessing of wind and can move swiftly."
             },
             servant = "This black angel shows enormous strength when boosting.",
             talk = {
@@ -127,10 +127,10 @@ return {
          mani = {
             name = "Mani of Machine",
             desc = {
-               ability = "Mani's decomposition (Passive: Extract materials<br>from traps.)<p>",
-               bonus = "DEX/PER/Firearm/Healing/Detection/Jeweler/Lockpick/Carpentry<p>",
-               offering = "Corpses/Guns/Machinery<p>",
-               text = "Mani is a clockwork god of machinery. Those faithful to Mani<br>receive immense knowledge of machines and learn a way to use them<br>effectively.<p>"
+               ability = "Mani's decomposition (Passive: Extract materials<br>from traps.)",
+               bonus = "DEX/PER/Firearm/Healing/Detection/Jeweler/Lockpick/Carpentry",
+               offering = "Corpses/Guns/Machinery",
+               text = "Mani is a clockwork god of machinery. Those faithful to Mani<br>receive immense knowledge of machines and learn a way to use them<br>effectively."
             },
             servant = "This android shows enormous strength when boosting.",
             talk = {
@@ -151,10 +151,10 @@ return {
          opatos = {
             name = "Opatos of Earth",
             desc = {
-               ability = "Opatos' shell (Passive: Reduce any physical damage you<br>receive.)<p>",
-               bonus = "STR/CON/Shield/Weight Lifting/Mining/Magic Device<p>",
-               offering = "Corpses/Ores<p>",
-               text = "Opatos is a god of earth. Those faithful to Opatos have massive<br>strength and defense.<p><p>"
+               ability = "Opatos' shell (Passive: Reduce any physical damage you<br>receive.)",
+               bonus = "STR/CON/Shield/Weight Lifting/Mining/Magic Device",
+               offering = "Corpses/Ores",
+               text = "Opatos is a god of earth. Those faithful to Opatos have massive<br>strength and defense."
             },
             servant = "This knight can hold really heavy stuff for you.",
             talk = {

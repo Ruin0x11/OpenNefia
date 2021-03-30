@@ -71,7 +71,7 @@ function TopicWindow:draw()
 
    if fill_style == 6 then
       Draw.set_color(255, 255, 255, 180)
-      Draw.image(self.batch, x + width / 2, y + height / 2, width - 4, height - 4)
+      Draw.image(self.batch, x, y, width - 4, height - 4)
    elseif fill_style < 5 then
       local rect = true
       if fill_style == 0 then

@@ -10,8 +10,13 @@ data:add_multi("base.asset", {
       color = {80, 60, 50}
    },
    {
-      _id = "ex_help_text_shadow_color",
+      _id = "help_markup_text_color",
       type = "color",
       color = {30, 30, 30}
+   },
+   {
+      _id = "help_markup_text_shadow_color",
+      type = "color",
+      color = {160, 160, 140}
    },
 })

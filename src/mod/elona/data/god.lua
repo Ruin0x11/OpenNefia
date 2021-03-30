@@ -8,6 +8,8 @@ local god = {
    {
       _id = "mani",
       elona_id = 1,
+      generate_altars = true,
+
       wish_name = "mani",
       summon = "elona.mani",
       servant = "elona.android",
@@ -44,6 +46,8 @@ local god = {
    {
       _id = "lulwy",
       elona_id = 2,
+      generate_altars = true,
+
       wish_name = "lulwy",
       summon = "elona.lulwy",
       servant = "elona.black_angel",
@@ -69,6 +73,8 @@ local god = {
    {
       _id = "itzpalt",
       elona_id = 3,
+      generate_altars = true,
+
       wish_name = "itzpalt",
       servant = "elona.exile",
       items = {
@@ -90,6 +96,8 @@ local god = {
    {
       _id = "ehekatl",
       elona_id = 4,
+      generate_altars = true,
+
       wish_name = "ehekatl",
       summon = "elona.ehekatl",
       servant = "elona.black_cat",
@@ -123,6 +131,8 @@ local god = {
    {
       _id = "opatos",
       elona_id = 5,
+      generate_altars = true,
+
       wish_name = "opatos",
       summon = "elona.opatos",
       servant = "elona.golden_knight",
@@ -153,6 +163,8 @@ local god = {
    {
       _id = "jure",
       elona_id = 6,
+      generate_altars = true,
+
       wish_name = "jure",
       servant = "elona.defender",
       items = {
@@ -184,6 +196,8 @@ local god = {
    {
       _id = "kumiromi",
       elona_id = 7,
+      generate_altars = true,
+
       wish_name = "kumiromi",
       summon = "elona.kumiromi",
       servant = "elona.cute_fairy",
