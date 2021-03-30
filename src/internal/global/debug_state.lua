@@ -1,3 +1,0 @@
-return {
-   hooked_fns = {}
-}

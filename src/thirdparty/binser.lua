@@ -735,6 +735,15 @@ local function newbinser()
         return class
     end
 
+    local function clearRegistry()
+       mts = {}
+       resources = {}
+       ids = {}
+       serializers = {}
+       deserializers = {}
+       resources_by_name = {}
+    end
+
     return {
         VERSION = "0.0-8",
         -- aliases
@@ -758,6 +767,7 @@ local function newbinser()
         hasResource = hasResource,
         hasRegistry = hasRegistry,
         registerClass = registerClass,
+        clearRegistry = clearRegistry,
 
         newbinser = newbinser
     }

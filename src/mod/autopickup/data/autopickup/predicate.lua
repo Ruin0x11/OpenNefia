@@ -18,7 +18,7 @@ data:add {
    _id = "unknown",
 
    match = function(item)
-      return item:calc("identify_state") == Enum.IdentifyState.Unknown
+      return item:calc("identify_state") == Enum.IdentifyState.None
    end
 }
 

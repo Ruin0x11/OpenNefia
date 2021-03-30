@@ -96,6 +96,20 @@ function mod.load_manifest(manifest_path)
    return manifest, nil
 end
 
+function mod.get_mod_info(manifest_file)
+   local manifest, err = mod.load_manifest(manifest_file)
+   if not manifest then
+      error(string.format("Error initializing %s:\n\t%s", manifest_file, err))
+   end
+
+   local mod_id = manifest.id
+   if type(mod_id) ~= "string" then
+      error(string.format("Manifest must contain 'id' field. (%s)", manifest_file))
+   end
+
+   return { manifest_path = manifest_file, root_path = fs.parent(manifest_file), id = mod_id, manifest = manifest }
+end
+
 function mod.calculate_load_order(mods)
    local graph = tsort.new()
 
@@ -105,16 +119,8 @@ function mod.calculate_load_order(mods)
    local paths = {}
    local seen = {}
 
-   for _, manifest_file in ipairs(mods) do
-      local manifest, err = mod.load_manifest(manifest_file)
-      if not manifest then
-         error(string.format("Error initializing %s:\n\t%s", manifest_file, err))
-      end
-
-      local mod_id = manifest.id
-      if type(mod_id) ~= "string" then
-         error(string.format("Manifest must contain 'id' field. (%s)", manifest_file))
-      end
+   for _, mod_info in ipairs(mods) do
+      local mod_id = mod_info.id
 
       if seen[mod_id] then
          error(("Mod %s was registered twice."):format(mod_id))
@@ -122,11 +128,11 @@ function mod.calculate_load_order(mods)
       seen[mod_id] = true
 
       graph:add(0, mod_id) -- root
-      for dep_id, version in pairs(manifest.dependencies) do
+      for dep_id, version in pairs(mod_info.manifest.dependencies) do
          graph:add(dep_id, mod_id)
       end
 
-      paths[mod_id] = { manifest_path = manifest_file, root_path = fs.parent(manifest_file), id = mod_id }
+      paths[mod_id] = mod_info
    end
 
    local order, cycle = graph:sort()
@@ -148,23 +154,39 @@ end
 
 --- @tparam table mod_ids list of mod_ids to scan for
 function mod.scan_mod_dir(mod_ids)
-   mod_ids = mod_ids or nil
-   if mod_ids then
-      mod_ids = table.set(mod_ids)
+   if mod_ids == nil then
+      -- Loop through src/mods/ and assume the directory names correspond to mod
+      -- IDs.
+      mod_ids = {}
+      for _, mod_id in fs.iter_directory_items(MOD_DIR .. "/") do
+         mod_ids[#mod_ids+1] = mod_id
+      end
+   else
+      mod_ids = table.shallow_copy(mod_ids)
    end
 
    local mods = {}
 
-   for _, mod_id in fs.iter_directory_items(MOD_DIR .. "/") do
-      if not mod_ids or (mod_ids[mod_id]) then
+   while #mod_ids > 0 do
+      local mod_id = mod_ids[#mod_ids]
+      mod_ids[#mod_ids] = nil
+
+      if mods[mod_id] == nil then
          local manifest_file = fs.find_loadable(MOD_DIR, mod_id, "mod")
-         if manifest_file then
-            mods[#mods+1] = manifest_file
+         if not manifest_file then
+            error("Could not find mod " .. mod_id .. " in mods folder.")
+         end
+
+         local mod_info = mod.get_mod_info(manifest_file)
+         mods[mod_id] = mod_info
+
+         for dep_id, version in pairs(mod_info.manifest.dependencies) do
+            mod_ids[#mod_ids+1] = dep_id
          end
       end
    end
 
-   return mods
+   return table.values(mods)
 end
 
 local MOD_ID_REGEX = "^[a-z][_a-z0-9]*$"

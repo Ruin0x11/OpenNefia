@@ -62,13 +62,7 @@ function data_table:__inspect()
 end
 
 function data_table:clear()
-   self.inner = {}
-   self.index = {}
-   self.schemas = {}
-   self.metatables = {}
-
-   self.errors = {}
-   self.fallbacks = {}
+   self:init()
 end
 
 function data_table:types(kind)
