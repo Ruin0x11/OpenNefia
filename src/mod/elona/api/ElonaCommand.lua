@@ -700,14 +700,22 @@ function ElonaCommand.name(player, target)
    -- <<<<<<<< shade2/command.hsp:1926 	gosub *screen_refresh :goto *pc_turn ..
 end
 
+local function find_altar(x, y, map)
+   return Item.at(x, y, map)
+      :filter(function(i) return i:has_category("elona.furniture_altar") end)
+      :nth(1)
+end
+
 function ElonaCommand.offer(player)
    if Command.block_if_world_map(player) then
       return "player_turn_query"
    end
 
-   error("offer")
-
-   return God.offer(player)
+   local result, canceled = Input.query_inventory(player, "elona_inv_offer", nil, nil)
+   if canceled then
+      return "player_turn_query"
+   end
+   return result.result
 end
 
 function ElonaCommand.prompt_convert(player, god_id)
@@ -729,9 +737,7 @@ function ElonaCommand.pray(player)
 
    -- TODO capability
    local map = player:current_map()
-   local altar = Item.at(player.x, player.y, map)
-      :filter(function(i) return i:has_category("elona.furniture_altar") end)
-      :nth(1)
+   local altar = find_altar(player.x, player.y)
 
    if Item.is_alive(altar) then
       local god_id = altar.params.altar_god_id

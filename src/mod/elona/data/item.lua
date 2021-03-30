@@ -1215,12 +1215,11 @@ local item =
          category = 77000,
          coefficient = 100,
 
-         gods = { "elona.jure", "elona.opatos" },
-
          rftags = { "ore" },
          color = { 255, 255, 175 },
          categories = {
-            "elona.ore"
+            "elona.ore",
+            "elona.offering_ore"
          }
       },
       {
@@ -1232,12 +1231,11 @@ local item =
          category = 77000,
          coefficient = 100,
 
-         gods = { "elona.jure", "elona.opatos" },
-
          rftags = { "ore" },
          color = { 255, 155, 155 },
          categories = {
-            "elona.ore"
+            "elona.ore",
+            "elona.offering_ore"
          }
       },
       {
@@ -1249,12 +1247,11 @@ local item =
          category = 77000,
          coefficient = 100,
 
-         gods = { "elona.jure", "elona.opatos" },
-
          rftags = { "ore" },
          color = { 255, 215, 175 },
          categories = {
-            "elona.ore"
+            "elona.ore",
+            "elona.offering_ore"
          },
          light = light.crystal
       },
@@ -1268,12 +1265,11 @@ local item =
          rarity = 500000,
          coefficient = 100,
 
-         gods = { "elona.jure", "elona.opatos" },
-
          rftags = { "ore" },
 
          categories = {
-            "elona.ore"
+            "elona.ore",
+            "elona.offering_ore"
          },
 
          light = light.crystal
@@ -1290,13 +1286,12 @@ local item =
          coefficient = 100,
          originalnameref2 = "raw ore",
 
-         gods = { "elona.jure", "elona.opatos" },
-
          rftags = { "ore" },
          color = { 255, 155, 155 },
          categories = {
             "elona.ore_valuable",
-            "elona.ore"
+            "elona.ore",
+            "elona.offering_ore",
          },
          light = light.crystal
       },
@@ -1311,13 +1306,12 @@ local item =
          coefficient = 100,
          originalnameref2 = "raw ore",
 
-         gods = { "elona.jure", "elona.opatos" },
-
          rftags = { "ore" },
 
          categories = {
             "elona.ore_valuable",
-            "elona.ore"
+            "elona.ore",
+            "elona.offering_ore",
          }
       },
       {
@@ -1332,13 +1326,12 @@ local item =
          coefficient = 100,
          originalnameref2 = "raw ore",
 
-         gods = { "elona.jure", "elona.opatos" },
-
          rftags = { "ore" },
          color = { 175, 255, 175 },
          categories = {
             "elona.ore_valuable",
-            "elona.ore"
+            "elona.ore",
+            "elona.offering_ore",
          },
          light = light.crystal
       },
@@ -1354,13 +1347,12 @@ local item =
          coefficient = 100,
          originalnameref2 = "raw ore",
 
-         gods = { "elona.jure", "elona.opatos" },
-
          rftags = { "ore" },
          color = { 175, 175, 255 },
          categories = {
             "elona.ore_valuable",
-            "elona.ore"
+            "elona.ore",
+            "elona.offering_ore",
          },
          light = light.crystal
       },
@@ -1390,13 +1382,12 @@ local item =
          subcategory = 64000,
          coefficient = 100,
 
-         gods = { "elona.jure", "elona.opatos" },
-
          rftags = { "ore" },
 
          categories = {
             "elona.junk_in_field",
-            "elona.ore"
+            "elona.ore",
+            "elona.offering_ore"
          }
       },
       {
@@ -1721,8 +1712,6 @@ local item =
 
          skill = "elona.bow",
 
-         gods = { "elona.lulwy" },
-
          effective_range = { 50, 90, 100, 90, 80, 80, 70, 60, 50, 20 },
 
          pierce_rate = 20,
@@ -1771,8 +1760,6 @@ local item =
          coefficient = 100,
 
          skill = "elona.firearm",
-
-         gods = { "elona.mani" },
 
          tags = { "sf" },
 
@@ -3859,6 +3846,7 @@ local item =
 
          params = { food_type = "elona.fruit" },
          spoilage_hours = 72,
+
          categories = {
             "elona.food_vegetable",
             "elona.food"
@@ -3877,6 +3865,7 @@ local item =
 
          params = { food_type = "elona.fruit" },
          spoilage_hours = 72,
+
          categories = {
             "elona.food_vegetable",
             "elona.food"
@@ -3896,11 +3885,10 @@ local item =
          params = { food_type = "elona.vegetable" },
          spoilage_hours = 48,
 
-         gods = { "elona.kumiromi" },
-
          categories = {
             "elona.junk_in_field",
-            "elona.food"
+            "elona.food",
+            "elona.offering_vegetable",
          }
       },
       {
@@ -4008,11 +3996,10 @@ local item =
          params = { food_type = "elona.vegetable" },
          spoilage_hours = 72,
 
-         gods = { "elona.kumiromi" },
-
          categories = {
             "elona.food_vegetable",
-            "elona.food"
+            "elona.food",
+            "elona.offering_vegetable"
          }
       },
       {
@@ -4029,11 +4016,10 @@ local item =
          params = { food_type = "elona.vegetable" },
          spoilage_hours = 72,
 
-         gods = { "elona.kumiromi" },
-
          categories = {
             "elona.food_vegetable",
-            "elona.food"
+            "elona.food",
+            "elona.offering_vegetable"
          }
       },
       {
@@ -4048,14 +4034,13 @@ local item =
 
          params = { food_type = "elona.vegetable" },
 
-         gods = { "elona.kumiromi" },
-
          tags = { "fest" },
 
          categories = {
             "elona.food_vegetable",
             "elona.tag_fest",
-            "elona.food"
+            "elona.food",
+            "elona.offering_vegetable"
          }
       },
       {
@@ -4072,11 +4057,10 @@ local item =
          params = { food_type = "elona.vegetable" },
          spoilage_hours = 72,
 
-         gods = { "elona.kumiromi" },
-
          categories = {
             "elona.food_vegetable",
-            "elona.food"
+            "elona.food",
+            "elona.offering_vegetable"
          }
       },
       {
@@ -4103,11 +4087,10 @@ local item =
 
          params = { food_type = "elona.vegetable" },
 
-         gods = { "elona.kumiromi" },
-
          categories = {
             "elona.food_vegetable",
-            "elona.food"
+            "elona.food",
+            "elona.offering_vegetable"
          }
       },
       {
@@ -4158,11 +4141,10 @@ local item =
 
          params = { food_type = "elona.vegetable" },
 
-         gods = { "elona.kumiromi" },
-
          categories = {
             "elona.junk_in_field",
-            "elona.food"
+            "elona.food",
+            "elona.offering_vegetable",
          }
       },
       {
@@ -4255,11 +4237,10 @@ local item =
          params = { food_type = "elona.vegetable" },
          spoilage_hours = 72,
 
-         gods = { "elona.kumiromi" },
-
          categories = {
             "elona.food_vegetable",
-            "elona.food"
+            "elona.food",
+            "elona.offering_vegetable"
          }
       },
       {
@@ -4276,11 +4257,10 @@ local item =
          params = { food_type = "elona.vegetable" },
          spoilage_hours = 72,
 
-         gods = { "elona.kumiromi" },
-
          categories = {
             "elona.food_vegetable",
-            "elona.food"
+            "elona.food",
+            "elona.offering_vegetable"
          }
       },
       {
@@ -4297,11 +4277,10 @@ local item =
          params = { food_type = "elona.vegetable" },
          spoilage_hours = 72,
 
-         gods = { "elona.kumiromi" },
-
          categories = {
             "elona.food_vegetable",
-            "elona.food"
+            "elona.food",
+            "elona.offering_vegetable"
          }
       },
       {
@@ -4318,11 +4297,10 @@ local item =
          params = { food_type = "elona.vegetable" },
          spoilage_hours = 2,
 
-         gods = { "elona.kumiromi" },
-
          categories = {
             "elona.food_vegetable",
-            "elona.food"
+            "elona.food",
+            "elona.offering_vegetable"
          }
       },
       {
@@ -4392,8 +4370,9 @@ local item =
 
          params = { food_type = "elona.meat", chara_id = nil },
          spoilage_hours = 4,
-
-         gods = { "any" },
+         gods = {
+            any = true
+         },
 
          on_eat = function(self, params)
             -- >>>>>>>> shade2/item.hsp:1097 	if iId(ci)=204:if iSubName(ci)=319{ ...
@@ -4691,8 +4670,6 @@ local item =
          coefficient = 100,
 
          skill = "elona.stave",
-
-         gods = { "elona.itzpalt" },
 
          categories = {
             "elona.equip_melee_staff",
@@ -5021,8 +4998,6 @@ local item =
 
          skill = "elona.stave",
 
-         gods = { "elona.itzpalt" },
-
          categories = {
             "elona.equip_melee_staff",
             "elona.equip_melee"
@@ -5045,8 +5020,6 @@ local item =
          coefficient = 100,
 
          skill = "elona.bow",
-
-         gods = { "elona.lulwy" },
 
          effective_range = { 70, 100, 100, 80, 60, 20, 20, 20, 20, 20 },
 
@@ -5074,8 +5047,6 @@ local item =
          coefficient = 100,
 
          skill = "elona.firearm",
-
-         gods = { "elona.mani" },
 
          tags = { "sf" },
 
@@ -5788,10 +5759,9 @@ local item =
          params = { food_type = "elona.fish" },
          spoilage_hours = 6,
 
-         gods = { "elona.ehekatl" },
-
          categories = {
-            "elona.food"
+            "elona.food",
+            "elona.offering_fish"
          }
       },
       {
@@ -7359,13 +7329,12 @@ local item =
          params = { food_type = "elona.fish" },
          spoilage_hours = 4,
 
-         gods = { "elona.ehekatl" },
-
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
             "elona.tag_fish",
-            "elona.food"
+            "elona.food",
+            "elona.offering_fish",
          }
       },
       {
@@ -7383,13 +7352,12 @@ local item =
          params = { food_type = "elona.fish" },
          spoilage_hours = 4,
 
-         gods = { "elona.ehekatl" },
-
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
             "elona.tag_fish",
-            "elona.food"
+            "elona.food",
+            "elona.offering_fish",
          }
       },
       {
@@ -7407,13 +7375,12 @@ local item =
          params = { food_type = "elona.fish" },
          spoilage_hours = 4,
 
-         gods = { "elona.ehekatl" },
-
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
             "elona.tag_fish",
-            "elona.food"
+            "elona.food",
+            "elona.offering_fish",
          }
       },
       {
@@ -7431,13 +7398,12 @@ local item =
          params = { food_type = "elona.fish" },
          spoilage_hours = 4,
 
-         gods = { "elona.ehekatl" },
-
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
             "elona.tag_fish",
-            "elona.food"
+            "elona.food",
+            "elona.offering_fish",
          }
       },
       {
@@ -7454,13 +7420,12 @@ local item =
          params = { food_type = "elona.fish" },
          spoilage_hours = 4,
 
-         gods = { "elona.ehekatl" },
-
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
             "elona.tag_fish",
-            "elona.food"
+            "elona.food",
+            "elona.offering_fish",
          }
       },
       {
@@ -7477,13 +7442,12 @@ local item =
          params = { food_type = "elona.fish" },
          spoilage_hours = 4,
 
-         gods = { "elona.ehekatl" },
-
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
             "elona.tag_fish",
-            "elona.food"
+            "elona.food",
+            "elona.offering_fish",
          }
       },
       {
@@ -7501,13 +7465,12 @@ local item =
          params = { food_type = "elona.fish" },
          spoilage_hours = 4,
 
-         gods = { "elona.ehekatl" },
-
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
             "elona.tag_fish",
-            "elona.food"
+            "elona.food",
+            "elona.offering_fish",
          }
       },
       {
@@ -7525,13 +7488,12 @@ local item =
          params = { food_type = "elona.fish" },
          spoilage_hours = 4,
 
-         gods = { "elona.ehekatl" },
-
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
             "elona.tag_fish",
-            "elona.food"
+            "elona.food",
+            "elona.offering_fish",
          }
       },
       {
@@ -7549,13 +7511,12 @@ local item =
          params = { food_type = "elona.fish" },
          spoilage_hours = 4,
 
-         gods = { "elona.ehekatl" },
-
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
             "elona.tag_fish",
-            "elona.food"
+            "elona.food",
+            "elona.offering_fish",
          }
       },
       {
@@ -7573,13 +7534,12 @@ local item =
          params = { food_type = "elona.fish" },
          spoilage_hours = 4,
 
-         gods = { "elona.ehekatl" },
-
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
             "elona.tag_fish",
-            "elona.food"
+            "elona.food",
+            "elona.offering_fish",
          }
       },
       {
@@ -9166,8 +9126,6 @@ local item =
 
          params = { food_quality = 1, seed_plant_id = "elona.vegetable" },
 
-         gods = { "elona.kumiromi" },
-
          color = { 175, 255, 175 },
 
          categories = {
@@ -9189,8 +9147,6 @@ local item =
 
          params = { food_quality = 1, seed_plant_id = "elona.fruit" },
 
-         gods = { "elona.kumiromi" },
-
          color = { 255, 255, 175 },
 
          categories = {
@@ -9211,8 +9167,6 @@ local item =
          coefficient = 100,
 
          params = { food_quality = 1, seed_plant_id = "elona.herb" },
-
-         gods = { "elona.kumiromi" },
 
          color = { 175, 175, 255 },
 
@@ -9236,8 +9190,6 @@ local item =
 
          params = { food_quality = 1, seed_plant_id = "elona.unknown_plant" },
 
-         gods = { "elona.kumiromi" },
-
          categories = {
             "elona.crop_seed",
             "elona.food"
@@ -9256,8 +9208,6 @@ local item =
          coefficient = 100,
 
          params = { food_quality = 1, seed_plant_id = "elona.artifact" },
-
-         gods = { "elona.kumiromi" },
 
          tags = { "noshop", "spshop" },
          color = { 255, 215, 175 },
@@ -10741,8 +10691,6 @@ local item =
 
          skill = "elona.crossbow",
 
-         gods = { "elona.lulwy" },
-
          effective_range = { 80, 100, 90, 80, 70, 60, 50, 20, 20, 20 },
 
          pierce_rate = 25,
@@ -10842,13 +10790,12 @@ local item =
          rarity = 200000,
          coefficient = 100,
 
-         gods = { "elona.mani" },
-
          tags = { "sf" },
 
          categories = {
             "elona.tag_sf",
-            "elona.furniture"
+            "elona.furniture",
+            "elona.offering_sf"
          },
 
          light = light.item
@@ -10864,13 +10811,12 @@ local item =
          rarity = 300000,
          coefficient = 100,
 
-         gods = { "elona.mani" },
-
          tags = { "sf" },
 
          categories = {
             "elona.tag_sf",
-            "elona.furniture"
+            "elona.furniture",
+            "elona.offering_sf"
          },
 
          light = light.item
@@ -10893,13 +10839,12 @@ local item =
             -- <<<<<<<< shade2/action.hsp:1853 	swbreak ..
          end,
 
-         gods = { "elona.mani" },
-
          tags = { "sf" },
 
          categories = {
             "elona.tag_sf",
-            "elona.furniture"
+            "elona.furniture",
+            "elona.offering_sf",
          }
       },
       {
@@ -10912,14 +10857,13 @@ local item =
          rarity = 100000,
          coefficient = 100,
 
-         gods = { "elona.mani" },
-
          tags = { "sf", "fest" },
 
          categories = {
             "elona.tag_sf",
             "elona.tag_fest",
-            "elona.furniture"
+            "elona.furniture",
+            "elona.offering_sf",
          }
       },
       {
@@ -10933,13 +10877,12 @@ local item =
          rarity = 100000,
          coefficient = 100,
 
-         gods = { "elona.mani" },
-
          tags = { "sf" },
 
          categories = {
             "elona.tag_sf",
-            "elona.furniture"
+            "elona.furniture",
+            "elona.offering_sf"
          }
       },
       {
@@ -10953,13 +10896,12 @@ local item =
          rarity = 100000,
          coefficient = 100,
 
-         gods = { "elona.mani" },
-
          tags = { "sf" },
 
          categories = {
             "elona.tag_sf",
-            "elona.furniture"
+            "elona.furniture",
+            "elona.offering_sf"
          }
       },
       {
@@ -10973,13 +10915,12 @@ local item =
          rarity = 100000,
          coefficient = 100,
 
-         gods = { "elona.mani" },
-
          tags = { "sf" },
 
          categories = {
             "elona.tag_sf",
-            "elona.furniture"
+            "elona.furniture",
+            "elona.offering_sf"
          }
       },
       {
@@ -11007,13 +10948,12 @@ local item =
          rarity = 500000,
          coefficient = 100,
 
-         gods = { "elona.mani" },
-
          tags = { "sf" },
 
          categories = {
             "elona.tag_sf",
-            "elona.furniture"
+            "elona.furniture",
+            "elona.offering_sf",
          }
       },
       {
@@ -11026,13 +10966,12 @@ local item =
          rarity = 500000,
          coefficient = 100,
 
-         gods = { "elona.mani" },
-
          tags = { "sf" },
 
          categories = {
             "elona.tag_sf",
-            "elona.furniture"
+            "elona.furniture",
+            "elona.offering_sf"
          },
 
          light = light.item
@@ -11055,8 +10994,6 @@ local item =
          coefficient = 100,
 
          skill = "elona.firearm",
-
-         gods = { "elona.mani" },
 
          tags = { "sf" },
 
@@ -11425,8 +11362,6 @@ local item =
 
          skill = "elona.firearm",
 
-         gods = { "elona.mani" },
-
          tags = { "sf" },
 
          effective_range = { 100, 100, 100, 100, 100, 100, 100, 20, 20, 20 },
@@ -11434,7 +11369,7 @@ local item =
          categories = {
             "elona.equip_ranged_laser_gun",
             "elona.tag_sf",
-            "elona.equip_ranged"
+            "elona.equip_ranged",
          }
       },
       {
@@ -12351,8 +12286,6 @@ local item =
 
          params = { food_quality = 1, seed_plant_id = "elona.gem" },
 
-         gods = { "elona.kumiromi" },
-
          color = { 185, 155, 215 },
 
          categories = {
@@ -12373,8 +12306,6 @@ local item =
          coefficient = 100,
 
          params = { food_quality = 1, seed_plant_id = "elona.magical_plant" },
-
-         gods = { "elona.kumiromi" },
 
          color = { 155, 205, 205 },
 
@@ -13940,13 +13871,12 @@ local item =
          params = { food_type = "elona.fish", fish_id = "elona.bug" },
          spoilage_hours = 4,
 
-         gods = { "elona.ehekatl" },
-
          rftags = { "fish" },
 
          categories = {
             "elona.no_generate",
-            "elona.food"
+            "elona.food",
+            "elona.offering_fish",
          }
       },
       {
@@ -18559,8 +18489,6 @@ local item =
          coefficient = 100,
 
          skill = "elona.bow",
-
-         gods = { "elona.lulwy" },
 
          effective_range = { 60, 90, 100, 100, 80, 60, 20, 20, 20, 20 },
 

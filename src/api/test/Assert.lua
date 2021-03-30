@@ -118,4 +118,8 @@ function Assert.throws_error(f, err_match, ...)
    end
 end
 
+function Assert.fail(message, ...)
+   error(message:format(...))
+end
+
 return Assert

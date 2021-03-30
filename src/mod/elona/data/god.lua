@@ -28,19 +28,9 @@ local god = {
          God.make_skill_blessing("elona.jeweler", 350, 12),
       },
       offerings = {
-         "elona.laser_gun",
-         "elona.shot_gun",
-         "elona.blank_disc",
-         "elona.chip",
-         "elona.storage",
-         "elona.server",
-         "elona.microwave_oven",
-         "elona.camera",
-         "elona.training_machine",
-         "elona.computer",
-         "elona.machine",
-         "elona.machine_gun",
-         "elona.pistol",
+         "elona.equip_ranged_gun",
+         "elona.equip_ranged_laser_gun",
+         "elona.offering_sf"
       }
    },
    {
@@ -64,10 +54,8 @@ local god = {
          God.make_skill_blessing("elona.magic_device", 550, 8),
       },
       offerings = {
-         "elona.skull_bow",
-         "elona.crossbow",
-         "elona.short_bow",
-         "elona.long_bow",
+         "elona.equip_ranged_bow",
+         "elona.equip_ranged_crossbow",
       },
    },
    {
@@ -89,8 +77,7 @@ local god = {
          God.make_skill_blessing("elona.element_lightning", 50, 200),
       },
       offerings = {
-         "elona.long_staff",
-         "elona.staff",
+         "elona.equip_melee_staff",
       },
    },
    {
@@ -114,18 +101,7 @@ local god = {
          God.make_skill_blessing("elona.lock_picking", 450, 8),
       },
       offerings = {
-         "elona.fish",
-         "elona.sandborer",
-         "elona.cutlassfish",
-         "elona.tuna",
-         "elona.globefish",
-         "elona.salmon",
-         "elona.seabream",
-         "elona.manboo",
-         "elona.flatfish",
-         "elona.sardine",
-         "elona.moonfish",
-         "elona.bomb_fish",
+         "elona.offering_fish"
       }
    },
    {
@@ -149,15 +125,7 @@ local god = {
          God.make_skill_blessing("elona.magic_device", 450, 8),
       },
       offerings = {
-         "elona.junk_stone",
-         "elona.raw_ore_of_diamond",
-         "elona.raw_ore_of_emerald",
-         "elona.raw_ore_of_mica",
-         "elona.raw_ore_of_rubynus",
-         "elona.gold_bar",
-         "elona.sun_crystal",
-         "elona.mana_crystal",
-         "elona.earth_crystal",
+         "elona.offering_ore"
       }
    },
    {
@@ -182,15 +150,7 @@ local god = {
          God.make_skill_blessing("elona.magic_capacity", 400, 12),
       },
       offerings = {
-         "elona.junk_stone",
-         "elona.raw_ore_of_diamond",
-         "elona.raw_ore_of_emerald",
-         "elona.raw_ore_of_mica",
-         "elona.raw_ore_of_rubynus",
-         "elona.gold_bar",
-         "elona.sun_crystal",
-         "elona.mana_crystal",
-         "elona.earth_crystal",
+         "elona.offering_ore",
       },
    },
    {
@@ -215,24 +175,8 @@ local god = {
          God.make_skill_blessing("elona.literacy", 350, 8),
       },
       offerings = {
-         "elona.magical_seed",
-         "elona.gem_seed",
-         "elona.artifact_seed",
-         "elona.unknown_seed",
-         "elona.herb_seed",
-         "elona.fruit_seed",
-         "elona.vegetable_seed",
-         "elona.leccho",
-         "elona.melon",
-         "elona.cbocchi",
-         "elona.green_pea",
-         "elona.healthy_leaf",
-         "elona.imo",
-         "elona.lettuce",
-         "elona.sweet_potato",
-         "elona.radish",
-         "elona.carrot",
-         "elona.edible_wild_plant",
+         "elona.offering_vegetable",
+         "elona.crop_seed",
       }
    },
 }

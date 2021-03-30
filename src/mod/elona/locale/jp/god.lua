@@ -3,6 +3,7 @@ return {
       elona = {
          ehekatl = {
             name = "幸運のエヘカトル",
+            short_name = "エヘカトル",
             desc = {
                ability = "エヘカトル流魔術(自動:マナの消費がランダムになる)",
                bonus = "魅力 / 運 / 回避 / 魔力の限界 / 釣り/ 鍵開け",
@@ -22,14 +23,17 @@ return {
                ready_to_receive_gift2 = "「好き！好き好き好きっ！だいすき！君とは死ぬまでずっと一緒だよ。だよ！」",
                receive_gift = "「これあげるぅ…大切にしてね！…してね！」",
                take_over = "「わおっ♪嬉しい！好き！大好き！」",
-               welcome = "「みゃみゃ？帰って来たの？来たの？たくさん待ってたよ！」"
+               welcome = "「みゃみゃ？帰って来たの？来たの？たくさん待ってたよ！」",
+               wish_summon = "「うみみゅみゅぁ！」",
             }
          },
          eyth = {
-            name = "無のエイス"
+            name = "無のエイス",
+            short_name = "エイス"
          },
          itzpalt = {
             name = "元素のイツパロトル",
+            short_name = "イツパロトル",
             desc = {
                ability = "魔力の吸収(スキル:周囲の空気からマナを吸い出す)",
                bonus = "魔力 / 瞑想 / 火炎耐性 / 冷気耐性 / 電撃耐性",
@@ -49,11 +53,13 @@ return {
                ready_to_receive_gift2 = "「見事なり、定命の者よ。汝を、我が信頼に値する唯一の存在として認めよう」",
                receive_gift = "「汝の忠誠に答え、贈り物を授けよう」",
                take_over = "「良し。汝の行いは覚えておこう」",
-               welcome = "「定命の者よ、よくぞ戻ってきた」"
+               welcome = "「定命の者よ、よくぞ戻ってきた」",
+               wish_summon = nil -- TODO No summon for now.
             }
          },
          jure = {
             name = "癒しのジュア",
+            short_name = "ジュア",
             desc = {
                ability = "ジュアの祈り(スキル:失った体力を回復)",
                bonus = "意思 / 治癒 / 瞑想 / 解剖学 / 料理 / 魔道具 / 魔力の限界",
@@ -73,11 +79,13 @@ return {
                ready_to_receive_gift2 = "「べ、別にアンタのこと愛してなんかいないんだからっ。あたしの傍から離れたらしょうちしないからねっ！このバカぁ…！",
                receive_gift = "「ア、アンタのためにしてあげるんじゃないんだからっ」",
                take_over = "「な、なによ。ほ、褒めてなんかあげないわよ！」",
-               welcome = "「べ、別にアンタが帰ってくるのを待ってたんじゃないからね！」"
+               welcome = "「べ、別にアンタが帰ってくるのを待ってたんじゃないからね！」",
+               wish_summon = nil -- TODO No summon for now.
             }
          },
          kumiromi = {
             name = "収穫のクミロミ",
+            short_name = "クミロミ",
             desc = {
                ability = "生命の輪廻(自動：腐った作物から種を取り出す)",
                bonus = "感覚 / 器用 / 習得 / 栽培 / 錬金術 / 裁縫 / 読書",
@@ -97,11 +105,13 @@ return {
                ready_to_receive_gift2 = "「ずっと一緒…だよね？…もう離さない…君が死ぬまで」",
                receive_gift = "「いいもの…あげる…」",
                take_over = "「よくやった…ほんとに…」",
-               welcome = "「おかえり…待っていた」"
+               welcome = "「おかえり…待っていた」",
+               wish_summon = "工事中。"
             }
          },
          lulwy = {
             name = "風のルルウィ",
+            short_name = "ルルウィ",
             desc = {
                ability = "ルルウィの憑依(スキル:瞬間的に高速になる)",
                bonus = "感覚 / 速度 / 弓 / クロスボウ / 隠密 / 魔道具",
@@ -121,11 +131,13 @@ return {
                ready_to_receive_gift2 = "「私に従え。全てを委ねろ。オマエの綺麗な顔を傷つけるブタどもは、私がミンチにしてあげるわ」",
                receive_gift = "「下僕のオマエにご褒美よ。大事に使いなさい。」",
                take_over = "「褒めてあげるわ。私の可愛い小さなお人形さん」",
-               welcome = "「どこホッツキ歩いてたのよ。もっと調教が必要ね」"
+               welcome = "「どこホッツキ歩いてたのよ。もっと調教が必要ね」",
+               wish_summon = "「アタシを呼びつけるとは生意気ね。」"
             }
          },
          mani = {
             name = "機械のマニ",
+            short_name = "マニ",
             desc = {
                ability = "マニの分解術(自動:罠からマテリアルを取り出す)",
                bonus = "器用 / 感覚 / 銃 / 治癒 / 探知 / 宝石細工 / 鍵開け / 大工",
@@ -145,11 +157,13 @@ return {
                ready_to_receive_gift2 = "「お前は最愛のシモベだ。その魂を私に捧げろ。お前を必ず守ってみせよう」",
                receive_gift = "「お前は忠実なるシモベだ。これを有効に使うがいい」",
                take_over = "「やるじゃないか。見直したよ」",
-               welcome = "「戻ってきたか。案外ホネのある奴だな」"
+               welcome = "「戻ってきたか。案外ホネのある奴だな」",
+               wish_summon = "工事中。"
             }
          },
          opatos = {
             name = "地のオパートス",
+            short_name = "オパートス",
             desc = {
                ability = "オパートスの甲殻(自動:受ける物理ダメージを減らす)",
                bonus = "筋力 / 耐久 / 盾 / 重量挙げ / 採掘 / 魔道具",
@@ -169,7 +183,8 @@ return {
                ready_to_receive_gift2 = "「ファハハハハハハハハハハハハハー！フワハァー！」",
                receive_gift = "「フハハハァ！受け取れィ」",
                take_over = "「フハハッ、いいぞいいぞ」",
-               welcome = "「フハハハハハ！！おかえり」"
+               welcome = "「フハハハハハ！！おかえり」",
+               wish_summon = "工事中。"
             }
          }
       }

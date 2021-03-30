@@ -607,21 +607,21 @@ return {
                :format(_1, _2)
          end,
          result = {
-            best = function(_1)
-               return ("%s shine%s all aruond and dissappear%s.")
+            best = function(_1, _2)
+               return ("%s shine%s all around and dissappear%s.")
                   :format(_1, s(_1), s(_1))
             end,
-            good = function(_1)
+            good = function(_1, _2)
                return ("%s for a moment and disappear%s. A three-leaved falls from the altar.")
-                  :format(_1, s(_1))
+                  :format(_1, s(_2))
             end,
-            okay = function(_1)
+            okay = function(_1, _2)
                return ("%s shine%s for a moment and disappear%s.")
-                  :format(_1, s(_1), s(_1))
+                  :format(_1, s(_2), s(_2))
             end,
-            poor = function(_1)
+            poor = function(_1, _2)
                return ("%s disappear%s.")
-                  :format(_1, s(_1))
+                  :format(_1, s(_2))
             end
          },
          take_over = {

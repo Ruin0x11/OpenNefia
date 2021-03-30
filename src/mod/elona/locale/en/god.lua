@@ -3,6 +3,7 @@ return {
       elona = {
          ehekatl = {
             name = "Ehekatl of Luck",
+            short_name = "Lulwy",
             desc = {
                ability = "Ehekatl school of magic (Passive: Randomize casting mana<br>cost.)",
                bonus = "CHR/LUCK/Evasion/Magic Capacity/Fishing/Lockpick",
@@ -22,14 +23,17 @@ return {
                ready_to_receive_gift2 = "I love you! Love you! You will be with me forever...promise!",
                receive_gift = "Here's a gift! For you! Mewmew!",
                take_over = "Weeee! I'm so happy. I like you! I like you!",
-               welcome = "Weeee♪ You are back? You are back!"
+               welcome = "Weeee♪ You are back? You are back!",
+               wish_summon = "\"Meeewmew!\"",
             }
          },
          eyth = {
-            name = "Eyth of Infidel"
+            name = "Eyth of Infidel",
+            short_name = "Eyth"
          },
          itzpalt = {
             name = "Itzpalt of Element",
+            short_name = "Itzpalt",
             desc = {
                ability = "Absorb mana (Absorb mana from the air.)",
                bonus = "MAG/Meditation/RES Fire/RES Cold/RES Lightning",
@@ -49,11 +53,13 @@ return {
                ready_to_receive_gift2 = "Very impressive, mortal. You shall be the one worthy to carry my name.",
                receive_gift = "To answer your loyalty, you shall have this reward.",
                take_over = "Impressive. Your action shall be remembered.",
-               welcome = "And so the mortal returns. You shall serve me again."
+               welcome = "And so the mortal returns. You shall serve me again.",
+               wish_summon = nil -- TODO No summon for now.
             }
          },
          jure = {
             name = "Jure of Healing",
+            short_name = "Jure",
             desc = {
                ability = "Prayer of Jure (Heal yourself.)",
                bonus = "WIL/Healing/Meditation/Anatomy/Cooking/Magic Device/Magic Capacity",
@@ -73,11 +79,13 @@ return {
                ready_to_receive_gift2 = "I-I'm not falling l-love with you! D-don't you never ever leave me...okay? You stupid...!",
                receive_gift = "I-I'm not giving it to you as my gratitude! I-I r-really am not! Silly!",
                take_over = "W-What? I-I'm not gonna praise you. I'm not!",
-               welcome = "N-no...I-I wasn't looking for you! Silly!"
+               welcome = "N-no...I-I wasn't looking for you! Silly!",
+               wish_summon = nil -- TODO No summon for now.
             }
          },
          kumiromi = {
             name = "Kumiromi of Harvest",
+            short_name = "Kumiromi",
             desc = {
                ability = "Kumiromi's recycle (Passive: Extract seeds from rotten <p>foods.)",
                bonus = "PER/DEX/LER/Gardening/Alchemy/Tailoring/Literacy",
@@ -97,11 +105,13 @@ return {
                ready_to_receive_gift2 = { "NOTE it is machine-translated: Together foreaver...right? I will not let you go...until you die." },
                receive_gift = "Here...there's something for...you...",
                take_over = "Good work...truly...",
-               welcome = "Welcome back...I was...waiting for you."
+               welcome = "Welcome back...I was...waiting for you.",
+               wish_summon = "Under construction.",
             }
          },
          lulwy = {
             name = "Lulwy of Wind",
+            short_name = "Lulwy",
             desc = {
                ability = "Lulwy's trick (Boost your speed for a short time.)",
                bonus = "PER/SPD/Bow/Crossbow/Stealth/Magic Device",
@@ -121,11 +131,13 @@ return {
                ready_to_receive_gift2 = "Obey me and surrender everything. I shall mince all the pigs that try to hurt your beautiful face, my kitty.",
                receive_gift = "My dear little kitty, you deserve a reward, don't you think?",
                take_over = "Oh my little puppet, you serve me well.",
-               welcome = "Where were you until now? You need more breaking, it seems."
+               welcome = "Where were you until now? You need more breaking, it seems.",
+               wish_summon = "\"You dare to call my name?\"",
             }
          },
          mani = {
             name = "Mani of Machine",
+            short_name = "Mani",
             desc = {
                ability = "Mani's decomposition (Passive: Extract materials<br>from traps.)",
                bonus = "DEX/PER/Firearm/Healing/Detection/Jeweler/Lockpick/Carpentry",
@@ -145,11 +157,13 @@ return {
                ready_to_receive_gift2 = "Sacrifice your very soul to me and I shall protect you with my name.",
                receive_gift = "You've been a faithful servant of me. Here, use it wisely.",
                take_over = "Well done. After all, you might be useful than I thought.",
-               welcome = "Ah, you've returned. You're tougher than I thought."
+               welcome = "Ah, you've returned. You're tougher than I thought.",
+               wish_summon = "Under construction.",
             }
          },
          opatos = {
             name = "Opatos of Earth",
+            short_name = "Opatos",
             desc = {
                ability = "Opatos' shell (Passive: Reduce any physical damage you<br>receive.)",
                bonus = "STR/CON/Shield/Weight Lifting/Mining/Magic Device",
@@ -169,7 +183,8 @@ return {
                ready_to_receive_gift2 = "Muwahahahaha! Mwaaaahahaha!",
                receive_gift = "Muwahahahaha, take it!",
                take_over = "Muwahaha muwaha. Good. Good!",
-               welcome = "Muwahahahahaha! Welcome back."
+               welcome = "Muwahahahahaha! Welcome back.",
+               wish_summon = "Under construction."
             }
          },
       }
