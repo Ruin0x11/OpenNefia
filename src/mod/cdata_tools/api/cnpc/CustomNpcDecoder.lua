@@ -187,15 +187,14 @@ local chara_spec = {
          for i = 1, #spl/2, 2 do
             local element_elona_id = tonumber(spl[i*2-1])
             local resist_grade = tonumber(spl[i*2])
-            resistances[#resistances+1] = {
-               _id = assert(Compat.convert_122_id("base.element", element_elona_id)),
-               power = resist_grade * 50,
-            }
+            local id = assert(Compat.convert_122_id("base.element", element_elona_id))
+            local power = resist_grade * 50
+            resistances[id] = power
          end
          return resistances
       end
    },
-   sex = { to = "gender", type = "string", cb = function(sex) return sex == "1" and "female" or "male" end }, -- TODO gender
+   sex = { to = "gender", type = "number", cb = function(sex) return sex == 1 and "female" or "male" end }, -- TODO gender
    spawnType = { to = "__oomsest_spawntype", type = "number" } -- TODO unimplemented
 }
 
@@ -255,8 +254,6 @@ function CustomNpcDecoder.decode(archive, mod_id, chara_id)
    chara_data = CustomFileParser.parse(chara_data)
    chara_data = CustomFileDecoder.decode(chara_data)
 
-   print(inspect(chara_data))
-
    if chara_id == nil then
       local name = Util.get_string(chara_data, "name")
       if name then
@@ -274,17 +271,24 @@ function CustomNpcDecoder.decode(archive, mod_id, chara_id)
       proto = {
          _type = "base.chip",
          _id = ("chara_%s"):format(chara_id)
-      }
+      },
+      requires = {}
    }
 
    -- apply_spec(chip_result, chip_spec, chara_data)
 
-   local result = {
+   local proto = {
       _type = "base.chara",
-      _id = chara_id
+      _id = chara_id,
+     
+      image = ("%s.%s"):format(mod_id, chip_result.proto._id)
    }
 
-   Util.apply_spec(result, chara_spec, chara_data, mod_id)
+   local requires = Util.apply_spec(proto, chara_spec, chara_data, mod_id)
+   local result = {
+      proto = proto,
+      requires = requires
+   }
 
    local txt = chara_data.txt
    print("TODO custom talk")
@@ -294,12 +298,11 @@ function CustomNpcDecoder.decode(archive, mod_id, chara_id)
       en = make_chara_locale_data(chara_data, "en", mod_id, chara_id),
    }
 
-   result.image = ("%s.%s"):format(mod_id, chip_result.proto._id)
-
    return {
       chip = chip_result,
       data = result,
-      locale_data = locale_data
+      locale_data = locale_data,
+      requires = requires
    }
 end
 

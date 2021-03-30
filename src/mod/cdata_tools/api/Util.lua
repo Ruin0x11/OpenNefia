@@ -95,6 +95,8 @@ function Util.is_ascii_only(str)
 end
 
 function Util.apply_spec(result, spec, file_data, mod_id)
+   local requires = {}
+
    for k, v in pairs(spec) do
       if type(v) == "function" then
          local value = Util.get_string(file_data, k, "")
@@ -118,6 +120,7 @@ function Util.apply_spec(result, spec, file_data, mod_id)
                assert(ty:has_value(value))
             end
             value = CodeGenerator.gen_literal(("Enum.%s.%s"):format(ty.__name, ty:to_string(value)))
+            requires["api.Enum"] = true
          else
             error("Unknown type " .. ty)
          end
@@ -130,6 +133,10 @@ function Util.apply_spec(result, spec, file_data, mod_id)
          end
       end
    end
+
+   requires = table.keys(requires)
+   table.sort(requires)
+   return requires
 end
 
 return Util

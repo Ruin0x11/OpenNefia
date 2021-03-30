@@ -174,17 +174,25 @@ function CustomItemDecoder.decode(archive, mod_id, item_id)
       proto = {
          _type = "base.chip",
          _id = ("item_%s"):format(item_id)
-      }
+      },
+      requires = {}
    }
 
-   Util.apply_spec(chip_result, chip_spec, item_data)
+   local requires = Util.apply_spec(chip_result, chip_spec, item_data)
+   chip_result.requires = requires
 
-   local result = {
+   local proto = {
       _type = "base.item",
       _id = item_id
    }
 
-   Util.apply_spec(result, item_spec, item_data)
+   requires = Util.apply_spec(proto, item_spec, item_data)
+   local result = {
+      proto = proto,
+      requires = requires,
+
+      image = ("%s.%s"):format(mod_id, chip_result.proto._id)
+   }
 
    for i = 0, 8 do
       local fixenc = Util.get_int_list(item_data, "fixenc" .. i, { 0, 0 })
@@ -238,8 +246,6 @@ function CustomItemDecoder.decode(archive, mod_id, item_id)
       jp = make_item_locale_data(item_data, "jp", mod_id, item_id),
       en = make_item_locale_data(item_data, "en", mod_id, item_id),
    }
-
-   result.image = ("%s.%s"):format(mod_id, chip_result.proto._id)
 
    return {
       chip = chip_result,

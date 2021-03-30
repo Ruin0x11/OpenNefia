@@ -46,7 +46,7 @@ function converters.item(name, mod_id, raw, root)
    return {
       [image_path] = decoded.chip._bmp,
       ["data/item.lua"] = decoded.data,
-      ["data/chip.lua"] = decoded.chip.proto,
+      ["data/chip.lua"] = decoded.chip,
       ["locale/en/item.lua"] = decoded.locale_data.en,
       ["locale/jp/item.lua"] = decoded.locale_data.jp
    }
@@ -61,7 +61,7 @@ function converters.npc(name, mod_id, raw, root)
    return {
       [image_path] = decoded.chip._bmp,
       ["data/chara.lua"] = decoded.data,
-      ["data/chip.lua"] = decoded.chip.proto,
+      ["data/chip.lua"] = decoded.chip,
       ["locale/en/chara.lua"] = decoded.locale_data.en,
       ["locale/jp/chara.lua"] = decoded.locale_data.jp
    }
@@ -126,6 +126,7 @@ local function serialize_god(converted, root)
    local file_to_content = {}
    local locale_files = {}
    local data_requires = {}
+   local data_file_requires = {}
 
    for _, result in pairs(converted) do
       for filename, content in pairs(result) do
@@ -135,6 +136,13 @@ local function serialize_god(converted, root)
             locale_files[path] = locale_files[path] or {}
             table.merge_ex(locale_files[path], content)
          elseif filename:match("^data/") then
+            local proto = assert(content.proto)
+            local requires = assert(content.requires)
+            for _, req_path in ipairs(requires) do
+               data_file_requires[path] = data_file_requires[path] or {}
+               data_file_requires[path][req_path] = true
+            end
+
             local first = file_to_content[path] == nil
             file_to_content[path] = file_to_content[path] or ""
 
@@ -144,7 +152,7 @@ local function serialize_god(converted, root)
                gen:tabify()
             end
             gen:write("data:add ")
-            gen:write_table(content)
+            gen:write_table(proto)
 
             file_to_content[path] = file_to_content[path] .. tostring(gen)
 
@@ -164,6 +172,22 @@ local function serialize_god(converted, root)
       gen:write_table(locale)
 
       file_to_content[path] = tostring(gen)
+   end
+
+   local function mkrequire(req_path)
+      return ("require(\"%s\")"):format(req_path)
+   end
+
+   for path, req_paths in pairs(data_file_requires) do
+      local prelude = {}
+      for req_path, _ in pairs(req_paths) do
+         local name = req_path:gsub("^.*%.([^.]+)$", "%1")
+         prelude[#prelude+1] = ("local %s = require(\"%s\")"):format(name, req_path)
+      end
+      if #prelude > 0 then
+         prelude[#prelude+1] = "\n"
+      end
+      file_to_content[path] = table.concat(prelude, "\n") .. file_to_content[path]
    end
 
    data_requires = table.keys(data_requires)

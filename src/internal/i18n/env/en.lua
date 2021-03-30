@@ -19,7 +19,9 @@ function en.name(obj, ignore_sight)
 
       local name = obj.name or i18n.get("chara.something")
       local first = name:sub(1, 1)
-      if first == "\"" or first == "<" then
+
+      -- HACK should be a property instead, like `has_own_name = true/"random"`
+      if first == "\"" or first == "<" or first == "{" then
          return name
       elseif not obj.has_own_name then
          return "the " .. name
