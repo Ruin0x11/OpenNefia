@@ -230,14 +230,16 @@ return function(args)
       for _, mod_info in ipairs(all_mods) do
          local tests_dir = fs.join(mod_info.root_path, "test")
          if fs.exists(tests_dir) and mod_info.id:match(filter_mod_name) then
-            table.insert(mods_with_tests, { mod_info = mod_info, tests_dir = tests_dir })
+            table.insert(mods_with_tests, mod_info)
          end
       end
    end
 
-   local mod_names = table.concat(fun.iter(mods_with_tests):extract("mod_info"):extract("id"):to_list(), ", ")
-
    if #mods_with_tests > 0 then
+      mods_with_tests = mod.calculate_load_order(mods_with_tests)
+
+      local mod_names = table.concat(fun.iter(mods_with_tests):extract("id"):to_list(), ", ")
+
       print(("Test suites found: %d (%s)"):format(#mods_with_tests, mod_names))
       print()
    end
@@ -245,18 +247,30 @@ return function(args)
    local seed = args.seed or math.floor(socket.gettime())
    print("Seed: " .. seed)
 
+   local last_mods = nil
+
    local function run_tests(tests_dir, enabled_mods, message)
       print()
       print(("===== Running %s... ====="):format(message))
       print()
 
-      local mods = mod.scan_mod_dir(enabled_mods)
-      startup.run_all(mods)
+      enabled_mods = table.keys(table.set(enabled_mods))
+      table.sort(enabled_mods)
 
-      load_test_mod()
+      -- Only reset the global state if the list of mods to load changes.
+      if not table.deepcompare(last_mods, enabled_mods) then
+         reset_all_globals()
 
-      Event.trigger("base.on_startup")
-      field:init_global_data()
+         local mods = mod.scan_mod_dir(enabled_mods)
+         startup.run_all(mods)
+
+         load_test_mod()
+
+         Event.trigger("base.on_startup")
+         field:init_global_data()
+
+         last_mods = enabled_mods
+      end
 
       print()
 
@@ -295,11 +309,8 @@ return function(args)
       run_tests("test/unit", base_mods, "base engine tests")
    end
 
-   for _, entry in ipairs(mods_with_tests) do
-      local mod_info = entry.mod_info
-      local tests_dir = entry.tests_dir
-
-      reset_all_globals()
+   for _, mod_info in ipairs(mods_with_tests) do
+      local tests_dir = fs.join(mod_info.root_path, "test")
 
       local deps = table.deepcopy(base_mods)
       deps[#deps+1] = mod_info.id

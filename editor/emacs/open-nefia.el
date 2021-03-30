@@ -905,13 +905,13 @@ removed.  Return the new string.  If STRING is nil, return nil."
 
 (defun open-nefia-run-tests-this-file (&optional arg)
   (interactive "P")
-  (let ((mod-id "@base@"))
+  (let ((mod-id (open-nefia--containing-mod-id-this-file)))
     (open-nefia--run-tests
      (format "%s:%s:%s" mod-id (format "/%s.lua$" (file-name-base (buffer-file-name))) ".*") arg)))
 
 (defun open-nefia-run-test-at-point (&optional arg)
   (interactive "P")
-  (let ((mod-id "@base@")
+  (let ((mod-id (open-nefia--containing-mod-id-this-file))
         (func-at-point (which-function)))
     (if func-at-point
         (open-nefia--run-tests
@@ -976,5 +976,13 @@ removed.  Return the new string.  If STRING is nil, return nil."
 (defun open-nefia-locale-search (query)
   (interactive "sSearch localized strings: \n")
   (open-nefia--send "locale_search" (list :query query)))
+
+(defun open-nefia--containing-mod-id-this-file ()
+  (let* ((path (file-relative-name
+                (buffer-file-name)
+                (string-join (list (projectile-project-root) "src")))))
+    (if (string-match "^mod/\\([a-z0-9][a-z0-9_]+\\)/" path)
+        (match-string 1 path)
+      "@base@")))
 
 (provide 'open-nefia)
