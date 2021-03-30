@@ -478,8 +478,7 @@ function ElonaMagic.do_cast_spell(skill_id, caster, use_mp)
          stock = math.max(stock - Skill.calc_spell_stock_cost(skill_id, caster), 0)
          caster:set_spell_stock(skill_id, stock)
       end
-      local mp_used = Skill.calc_spell_mp_cost(skill_id, caster)
-      -- TODO god blessing
+      local mp_used = Skill.calc_actual_spell_mp_cost(skill_id, caster)
       caster:damage_mp(mp_used, false, true)
       if not Chara.is_alive(caster) then
          return true

@@ -51,6 +51,7 @@ local event = {
       { _id = "on_chara_gained_level" },
       { _id = "on_cast_magic" },
       { _id = "on_chara_dialog_start" },
+      { _id = "calc_chara_spell_mp_cost" },
 }
 
 data:add_multi("base.event", event)

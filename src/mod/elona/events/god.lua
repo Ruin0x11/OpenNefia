@@ -26,3 +26,14 @@ local function kumiromi_harvest_seeds(item, params)
    -- <<<<<<<< shade2/item.hsp:430 		} ...
 end
 Event.register("elona.on_item_rot", "Kumiromi: Harvest seeds from rotten food", kumiromi_harvest_seeds, { priority = 120000 })
+
+local function ehekatl_mp_cost(chara, params, mp_cost)
+   -- >>>>>>>> shade2/proc.hsp:1307 		if cc=pc:if cGod(pc)=godLuck:mp=rnd(mp*140/100+1 ...
+   if chara:is_player() and chara:calc("god") == "elona.ehekatl" then
+      return Rand.rnd(mp_cost * 140 / 100 + 1) + 1
+   end
+
+   return mp_cost
+   -- <<<<<<<< shade2/proc.hsp:1307 		if cc=pc:if cGod(pc)=godLuck:mp=rnd(mp*140/100+1 ..
+end
+Event.register("elona_sys.calc_chara_spell_mp_cost", "Ehekatl: Adjust spell MP cost", ehekatl_mp_cost, { priority = 100000 })

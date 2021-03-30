@@ -4,6 +4,7 @@ local Item = require("api.Item")
 local Rand = require("api.Rand")
 local Effect = require("mod.elona.api.Effect")
 local Assert = require("api.test.Assert")
+local Skill = require("mod.elona_sys.api.Skill")
 
 function test_god_kumiromi_harvest_seeds()
    local map = InstancedMap:new(10, 10)
@@ -28,4 +29,21 @@ function test_god_kumiromi_harvest_seeds()
    Assert.eq("elona.fruit_seed", seed._id)
    Assert.eq(4, seed.amount)
    Assert.eq(true, seed:has_category("elona.crop_seed"))
+end
+
+function test_god_ehekatl_spell_mp_cost()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.grass_rocks")
+   local player = TestUtil.set_player(map)
+
+   Rand.set_seed(1)
+
+   Assert.eq(40, Skill.calc_spell_mp_cost("elona.spell_magic_storm", player))
+   Assert.eq(40, Skill.calc_actual_spell_mp_cost("elona.spell_magic_storm", player))
+   Assert.eq(40, Skill.calc_actual_spell_mp_cost("elona.spell_magic_storm", player))
+
+   player.god = "elona.ehekatl"
+   Assert.eq(40, Skill.calc_spell_mp_cost("elona.spell_magic_storm", player))
+   Assert.eq(19, Skill.calc_actual_spell_mp_cost("elona.spell_magic_storm", player))
+   Assert.eq(1, Skill.calc_actual_spell_mp_cost("elona.spell_magic_storm", player))
 end

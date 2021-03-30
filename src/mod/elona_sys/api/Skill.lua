@@ -625,6 +625,12 @@ function Skill.calc_spell_mp_cost(skill_id, chara)
    return math.floor(cost)
 end
 
+function Skill.calc_actual_spell_mp_cost(skill_id, chara)
+   local base = Skill.calc_spell_mp_cost(skill_id, chara)
+
+   return math.floor(chara:emit("elona_sys.calc_chara_spell_mp_cost", {skill_id=skill_id}, base) or base)
+end
+
 function Skill.calc_spell_stock_cost(skill_id, chara)
    local skill_entry = data["base.skill"]:ensure(skill_id)
    local cost = skill_entry.cost * 200 / (chara:skill_level(skill_id) * 3 + 100)
