@@ -178,7 +178,6 @@ function UiHelpMarkup.parse_elona_markup(text, width, color, font_size)
    end
 
    push_result(x, y)
-   print(inspect(result))
 
    return result
 end

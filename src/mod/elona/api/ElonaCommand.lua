@@ -28,6 +28,7 @@ local RandomEvent = require("mod.elona.api.RandomEvent")
 local Calc = require("mod.elona.api.Calc")
 local Shortcut = require("mod.elona.api.Shortcut")
 local God = require("mod.elona.api.God")
+local GodConvertMenu = require("mod.elona.api.gui.GodConvertMenu")
 
 local ElonaCommand = {}
 
@@ -524,7 +525,7 @@ function ElonaCommand.enter_field_map(player)
    return "turn_begin"
 end
 
-local function choose_command_dwim(player)
+function ElonaCommand.get_enter_action(player)
    -- >>>>>>>> shade2/main.hsp:1242 		inv_getHeader -1 :p=0 ..
    local command
    local map = player:current_map()
@@ -547,8 +548,7 @@ local function choose_command_dwim(player)
       elseif item:has_category("elona.furniture_well") then
          command = ElonaCommand.dip
       elseif item:has_category("elona.furniture_altar") then
-         Log.error("TODO god")
-         if player:calc("god") then
+         if player:calc("god") ~= nil then
             command = ElonaCommand.offer
          else
             command = ElonaCommand.pray
@@ -613,7 +613,7 @@ function ElonaCommand.ascend(player)
 end
 
 function ElonaCommand.enter_action(player)
-   local command = choose_command_dwim(player)
+   local command = ElonaCommand.get_enter_action(player)
 
    return command(player)
 end
@@ -710,6 +710,18 @@ function ElonaCommand.offer(player)
    return God.offer(player)
 end
 
+function ElonaCommand.prompt_convert(player, god_id)
+   local result, canceled = GodConvertMenu:new(player, god_id):query()
+
+   if result and not canceled then
+      if result.action == "convert" then
+         God.switch_religion_with_penalty(player, god_id)
+      end
+   end
+
+   return "turn_end"
+end
+
 function ElonaCommand.pray(player)
    if Command.block_if_world_map(player) then
       return "player_turn_query"
@@ -724,22 +736,11 @@ function ElonaCommand.pray(player)
    if Item.is_alive(altar) then
       local god_id = altar.params.altar_god_id
       if player.god ~= god_id then
-         local result, canceled = GodConvertMenu:new(player, god_id):query()
-
-         if result and not canceled then
-            if result.action == "convert" then
-               local new_god_id = result.god_id
-               if new_god_id then
-                  God.switch_religion_with_penalty(player, new_god_id)
-               end
-            end
-         end
-
-         return "turn_end"
+         return ElonaCommand.prompt_convert(player, god_id)
       end
    end
 
-      return God.pray(player)
+   return God.pray(player)
 end
 
 function ElonaCommand.shortcut(player, index)

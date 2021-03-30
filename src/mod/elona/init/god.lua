@@ -14,7 +14,11 @@ local function set_god(chara)
    local has_dialog = true
 
    if not chara:is_player() and has_dialog then
-      local gods = data["elona.god"]:iter():extract("_id"):to_list()
+      local gods = data["elona.god"]:iter()
+         :filter(function(god) return god.is_primary_god end)
+         :extract("_id")
+         :to_list()
+
       gods[#gods+1] = "eyth"
       chara.god = Rand.choice(gods)
       if chara.god == "eyth" then

@@ -30,6 +30,7 @@ local IMapObject = require("api.IMapObject")
 local IEventEmitter = require("api.IEventEmitter")
 local save = require("internal.global.save")
 local PriorityMap = require("api.PriorityMap")
+local CharaMake = require("api.CharaMake")
 
 -- TODO: move out of api
 local IChara = class.interface("IChara",
@@ -296,7 +297,18 @@ end
 ---
 --- @treturn bool
 function IChara:is_player()
-   return not not (field.player and field.player.uid == self.uid)
+   if field.player then
+      return field.player.uid == self.uid
+   end
+
+   if CharaMake.is_active() then
+      local in_progress_result = CharaMake.get_in_progress_result()
+      if in_progress_result then
+         return self == in_progress_result.chara
+      end
+   end
+
+   return false
 end
 
 --- Swaps the positions of this character with another.
