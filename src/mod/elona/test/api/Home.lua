@@ -27,8 +27,8 @@ function test_Home_is_home__multiple_floors()
    local your_home_area = Area.create_unique("elona.your_home", north_tyris_area)
 
    local _, first_floor = your_home_area:load_or_generate_floor(1)
-   local _, second_floor = your_home_area:load_or_generate_floor(1)
-   local _, third_floor = your_home_area:load_or_generate_floor(1)
+   local _, second_floor = your_home_area:load_or_generate_floor(2)
+   local _, third_floor = your_home_area:load_or_generate_floor(3)
 
    Assert.eq(true, Home.is_home(first_floor))
    Assert.eq(true, Home.is_home(second_floor))

@@ -212,7 +212,7 @@ local function god(wish, chara)
    local max_priority = 0
 
    for _, god_proto in data["elona.god"]:iter() do
-      local god_name = I18N.get("god." .. god._id .. ".name")
+      local god_name = I18N.get("god." .. god_proto._id .. ".name")
       local priority = fuzzy_match(wish, god_name)
       if priority > max_priority then
          max_priority = priority
@@ -221,12 +221,18 @@ local function god(wish, chara)
    end
 
    if found and found.summon ~= nil then
+      local map = chara:current_map()
+      if Chara.find(found.summon, "all", map) then
+         return false
+      end
+
       -- TODO talk
-      local text = I18N.get_optional(("god.%s.talk.wish_summon"):format(god._id))
+      local text = I18N.get_optional(("god.%s.talk.wish_summon"):format(found._id))
       if text then
          Gui.mes_c(text, "Talk")
       end
-      Chara.create(god.summon, chara.x, chara.y, {}, chara:current_map())
+      Chara.create(found.summon, chara.x, chara.y, {}, chara:current_map())
+      return true
    end
 end
 add_wish_handler("god", nil, god, 50000)
