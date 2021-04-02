@@ -15,7 +15,6 @@ data:add {
                Gui.play_sound("base.dig1")
                played_sound = true
             end
-
             t.base.auto_turn_mining:draw_region(math.floor(frame/2)%5+1, x, y)
             local frames_passed = select(3, Draw.yield(40))
             frame = frame + frames_passed

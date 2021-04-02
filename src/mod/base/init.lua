@@ -65,7 +65,6 @@ local music_loader = {
 }
 
 require("mod.base.sound")
-require("mod.base.resolver")
 
 data["base.effect"]:edit("register status effect indicator",
    function(dat)

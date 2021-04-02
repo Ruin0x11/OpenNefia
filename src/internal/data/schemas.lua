@@ -1155,17 +1155,6 @@ data:add_type {
    },
 }
 
-data:add_type(
-   {
-      name = "resolver",
-      schema = schema.Record {
-         invariants = schema.Table,
-         params = schema.Table,
-         resolve = schema.Function,
-      },
-   }
-)
-
 data:add_type {
    name = "scenario",
    fields = {

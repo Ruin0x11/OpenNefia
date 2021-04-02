@@ -22,8 +22,7 @@ function ColorEditorMenu:init(color)
 end
 
 function ColorEditorMenu:make_keymap()
-   return {
-   }
+   return {}
 end
 
 function ColorEditorMenu:on_query()
