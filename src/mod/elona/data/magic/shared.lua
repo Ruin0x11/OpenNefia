@@ -1893,10 +1893,10 @@ data:add {
             if level ~= 0 then
                local message, color
                if level > 0 then
-                  message = "trait." .. trait._id .. ".on_gain_level"
+                  message = I18N.localize("base.trait", trait._id, "on_gain_level")
                   color = "Green"
                else
-                  message = "trait." .. trait._id .. ".on_lose_level"
+                  message = I18N.localize("base.trait", trait._id, "on_lose_level")
                   color = "Red"
                end
 

@@ -32,7 +32,7 @@ local UiListExt = function(feats_menu)
       if item.type == "header" then
          text = item.text
       elseif item.type == "can_acquire" then
-         text = item.name or "a"
+         text = item.name
       elseif item.type == "have" then
          local category = item.trait.type
 
@@ -105,18 +105,17 @@ function FeatsMenu.localize_trait(id, level, chara)
      max = true
   end
 
-  local root = "trait." .. id .. "." .. tostring(level)
   local desc
   if trait_data.locale_params then
-    desc = I18N.get(root .. ".desc", trait_data.locale_params({ level = level }, chara))
+     desc = I18N.localize("base.trait", id, tostring(level) .. ".desc", trait_data.locale_params({ level = level }, chara))
   else
-    desc = I18N.get_optional(root .. ".desc")
+     desc = I18N.localize_optional("base.trait", id, tostring(level) .. ".desc")
   end
-  local name = I18N.get_optional(root .. ".name")
-  if name and max then
+  local name = I18N.localize("base.trait", id, tostring(level) .. ".name")
+  if max then
      name = name .. "(MAX)"
   end
-  local menu_desc = I18N.get_optional("trait." .. id .. ".menu_desc")
+  local menu_desc = I18N.localize_optional("base.trait", id, "menu_desc")
 
   return { name = name, desc = desc, menu_desc = menu_desc }
 end
