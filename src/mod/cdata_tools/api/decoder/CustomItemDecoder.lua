@@ -114,10 +114,9 @@ local function make_item_locale_data(item_data, locale, mod_id, item_id)
       end
    end
 
-   -- TODO locale namespace standardization
    return {
       item = {
-         info = {
+         _ = {
             [mod_id] = {
                [item_id] = result
             }

@@ -101,11 +101,12 @@ local function make_god_locale_data(item_data, locale, mod_id, god_id)
    result.short_name = Util.get_localized_string(item_data, "shortname", is_jp)
    -- result.special_power_alias = Util.get_localized_string(item_data, "specialpoweralias", is_jp) -- TODO
 
-   -- TODO locale namespace standardization
    return {
       god = {
-         [mod_id] = {
-            [god_id] = result
+         _ = {
+            [mod_id] = {
+               [god_id] = result
+            }
          }
       }
    }

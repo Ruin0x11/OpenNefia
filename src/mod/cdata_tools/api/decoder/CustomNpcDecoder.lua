@@ -205,11 +205,12 @@ local function make_chara_locale_data(item_data, locale, mod_id, chara_id)
       end
    end
 
-   -- TODO locale namespace standardization
    return {
       chara = {
-         [mod_id] = {
-            [chara_id] = result
+         _ = {
+            [mod_id] = {
+               [chara_id] = result
+            }
          }
       }
    }

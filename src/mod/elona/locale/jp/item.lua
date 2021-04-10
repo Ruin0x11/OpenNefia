@@ -10714,7 +10714,7 @@ local item = {
 
 return {
    item = {
-      info = {
+      _ = {
          elona = item
       }
    }

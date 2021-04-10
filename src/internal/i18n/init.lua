@@ -210,12 +210,10 @@ function i18n.localize(_type, _id, key, ...)
    local cache = i18n.data[i18n.language]
 
    if cache[_type] == nil then
-      print(no1)
       return nil
    end
    local for_type = cache[_type]
    if for_type[_id] == nil then
-      print("no2")
       return nil
    end
 

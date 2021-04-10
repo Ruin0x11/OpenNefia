@@ -85,16 +85,17 @@ local function item_name_sub(s, item, jp)
    local identify = item:calc("identify_state")
 
    if _id == "elona.kitty_bank" then
-      s = s .. I18N.get("item.info." .. _id .. ".amount", "item.info." .. _id .. ".names._" .. item.params.bank_gold_increment)
+      local increment = I18N.localize("base.item", _id, "names._" .. item.params.bank_gold_increment)
+      s = s .. I18N.localize("base.item", _id, "amount", increment)
    elseif _id == "elona.bait" then
-      s = s .. I18N.space() .. I18N.get("item.info." .. _id .. ".title", "bait._." .. item.params.bait_type .. ".name")
+      s = s .. I18N.space() .. I18N.localize("base.item", _id, "title", "bait._." .. item.params.bait_type .. ".name")
    elseif _id == "elona.ancient_book" then
       if jp and item.params.ancient_book_is_decoded then
          s = s .. "解読済みの"
       end
       if identify >= IdentifyState.Full then
-         local title = "item.info." .. _id .. ".titles._" .. item.params.ancient_book_difficulty
-         s = s .. I18N.get("item.info." .. _id .. ".title", title)
+         local title = I18N.localize("base.item", _id, "titles._" .. item.params.ancient_book_difficulty)
+         s = s .. I18N.localize("base.item", _id, "title", title)
       end
    elseif _id == "elona.recipe" then
       -- TODO recipe
@@ -103,11 +104,11 @@ local function item_name_sub(s, item, jp)
    if item:has_category("elona.book") then
       if _id == "elona.textbook" then
          local skill_name = I18N.get("ability." .. item.params.textbook_skill_id .. ".name")
-         s = s .. I18N.get("item.info." .. _id .. ".title", skill_name)
+         s = s .. I18N.localize("base.item", _id, "title", skill_name)
       elseif _id == "elona.book_of_rachel" then
-         s = s .. I18N.get("item.info." .. _id .. ".title", item.params.book_of_rachel_number)
+         s = s .. I18N.localize("base.item", _id, "title", item.params.book_of_rachel_number)
       elseif _id == "elona.book" then
-         s = s .. I18N.get("item.info." .. _id .. ".title", "_.elona.book." .. item.params.book_id .. ".title")
+         s = s .. I18N.localize("base.item", _id, "title", "_.elona.book." .. item.params.book_id .. ".title")
       end
    end
 
@@ -129,7 +130,7 @@ local function item_name_sub(s, item, jp)
             local fish_name = "fish._." .. item.params.fish_id .. ".name"
             s = s .. Hunger.food_name(item.params.food_type, fish_name, item.params.food_quality)
          else
-            local original_name = "item.info." .. _id .. ".name"
+            local original_name = I18N.localize("base.item", _id, "name")
             local chara_id = item.params.chara_id or nil
             s = s .. Hunger.food_name(item.params.food_type, original_name, item.params.food_quality, chara_id)
          end
@@ -163,9 +164,9 @@ local function item_name_sub(s, item, jp)
 
    if _id == "elona.deed" then
       local home_name = "ui.home." .. item.params.deed_home_id
-      s = s .. I18N.get("item.info." .. _id .. ".title", home_name)
+      s = s .. I18N.localize("base.item", _id, "title", home_name)
    elseif _id == "elona.bill" then
-      s = s .. I18N.get("item.info." .. _id .. ".title", item.params.bill_gold_amount)
+      s = s .. I18N.localize("base.item", _id, "title", item.params.bill_gold_amount)
    elseif _id == "elona.vomit" and item.params.chara_id then
       local chara_name = I18N.localize("base.chara", item.params.chara_id, "name")
       if not jp then
@@ -176,7 +177,7 @@ local function item_name_sub(s, item, jp)
          s = s .. "の"
       end
    elseif _id == "elona.secret_treasure" then
-      s = s .. I18N.get("item.info." .. _id .. ".of." .. item.params.secret_treasure_trait)
+      s = s .. I18N.localize("base.item", _id, "of." .. item.params.secret_treasure_trait)
    end
 
    return s, skip
@@ -195,7 +196,7 @@ function itemname.jp(item, amount, no_article)
    local quality = item:calc("quality")
    local identify = item:calc("identify_state")
    local curse = item:calc("curse_state")
-   local name = I18N.get("item.info." .. _id .. ".name")
+   local name = I18N.localize("base.item", _id, "name")
 
    local is_cooked_dish =
       item:has_category("elona.food") and item.params.food_type and (item.params.food_quality or 0) > 0
@@ -266,7 +267,7 @@ function itemname.jp(item, amount, no_article)
    end
 
    if _id == "elona.gift" then
-      s = s .. I18N.get("item.info." .. _id .. ".ranks._" .. item.params.gift_value)
+      s = s .. I18N.localize("base.item", _id, "ranks._" .. item.params.gift_value)
    end
 
    local katakana = false
@@ -316,7 +317,7 @@ function itemname.jp(item, amount, no_article)
             s = "☆" .. s
          end
          if katakana then
-            s = s .. I18N.get("item.info." .. _id .. ".katakana_name")
+            s = s .. I18N.localize("base.item", _id, "katakana_name")
          else
             s = s .. name
          end
@@ -343,7 +344,7 @@ function itemname.jp(item, amount, no_article)
    -- >>>>>>>> shade2/item_func.hsp:640 	if iId(id)=idFishingPole{ ..
    if _id == "elona.fishing_pole" then
       if item.params.bait_amount > 0 then
-         s = s .. I18N.get("item.info." .. _id .. ".remaining", "bait._." .. item.params.bait_type .. ".name", item.params.bait_amount)
+         s = s .. I18N.localize("base.item", _id, "remaining", "bait._." .. item.params.bait_type .. ".name", item.params.bait_amount)
       end
    elseif _id == "elona.monster_ball" then
       local chara_id = item.params.monster_ball_captured_chara_id
@@ -351,10 +352,10 @@ function itemname.jp(item, amount, no_article)
          local chara_name = I18N.localize("base.chara", chara_id, "name")
          s = s .. ("(%s)"):format(chara_name)
       else
-         s = s .. I18N.get("item.info." .. _id .. ".level", item.params.monster_ball_max_level)
+         s = s .. I18N.localize("base.item", _id, "level", item.params.monster_ball_max_level)
       end
    elseif _id == "elona.small_gamble_chest" then
-      s = s .. I18N.get("item.info." .. _id .. ".level", item.params.chest_lockpick_difficulty)
+      s = s .. I18N.localize("base.item", _id, "level", item.params.chest_lockpick_difficulty)
    end
 
    if identify == IdentifyState.Quality and ElonaItem.is_equipment(item) then
@@ -369,7 +370,7 @@ function itemname.jp(item, amount, no_article)
 
    if item:has_category("elona.container") then
       if _id == "elona.shopkeepers_trunk" then
-         s = s .. I18N.get("item.info." .. _id .. ".temporal")
+         s = s .. I18N.localize("base.item", _id, "temporal")
       else
          if item.inv == nil and item.params.chest_item_level == 0 then
             s = s .. I18N.get("item.chest_empty")
@@ -422,7 +423,7 @@ function itemname.en(item, amount, no_article)
    local quality = item:calc("quality")
    local identify = item:calc("identify_state")
    local curse = item:calc("curse_state")
-   local name = I18N.get("item.info." .. _id .. ".name")
+   local name = I18N.localize("base.item", _id, "name")
 
    local is_cooked_dish =
       item:has_category("elona.food") and item.params.food_type and (item.params.food_quality or 0) > 0
@@ -440,7 +441,7 @@ function itemname.en(item, amount, no_article)
       end
    end
 
-   local unidentified_name = I18N.get_optional("item.info." .. item._id .. ".unidentified_name")
+   local unidentified_name = I18N.localize_optional("base.item", item._id, "unidentified_name")
 
    local s2 = ""
    local s3 = ""
@@ -516,7 +517,7 @@ function itemname.en(item, amount, no_article)
    end
 
    if _id == "elona.gift" then
-      s = s .. I18N.get("item.info." .. _id .. ".ranks._" .. item.params.gift_value) .. " "
+      s = s .. I18N.localize("base.item", _id, "ranks._" .. item.params.gift_value) .. " "
    end
 
    if not skip then
@@ -607,7 +608,7 @@ function itemname.en(item, amount, no_article)
    -- >>>>>>>> shade2/item_func.hsp:640 	if iId(id)=idFishingPole{ ..
    if _id == "elona.fishing_pole" then
       if item.params.bait_amount > 0 then
-         s = s .. I18N.get("item.info." .. _id .. ".remaining", "bait._." .. item.params.bait_type .. ".name", item.params.bait_amount)
+         s = s .. I18N.localize("base.item", _id, "remaining", "bait._." .. item.params.bait_type .. ".name", item.params.bait_amount)
       end
    elseif _id == "elona.monster_ball" then
       local chara_id = item.params.monster_ball_captured_chara_id
@@ -615,10 +616,10 @@ function itemname.en(item, amount, no_article)
          local chara_name = I18N.localize("base.chara", chara_id, "name")
          s = s .. (" (%s)"):format(chara_name)
       else
-         s = s .. I18N.get("item.info." .. _id .. ".level", item.params.monster_ball_max_level)
+         s = s .. I18N.localize("base.item", _id, "level", item.params.monster_ball_max_level)
       end
    elseif _id == "elona.small_gamble_chest" then
-      s = s .. I18N.get("item.info." .. _id .. ".level", item.params.chest_lockpick_difficulty)
+      s = s .. I18N.localize("base.item", _id, "level", item.params.chest_lockpick_difficulty)
    end
 
    if identify == IdentifyState.Quality and ElonaItem.is_equipment(item) then
@@ -633,7 +634,7 @@ function itemname.en(item, amount, no_article)
 
    if item:has_category("elona.container") then
       if _id == "elona.shopkeepers_trunk" then
-         s = s .. I18N.get("item.info." .. _id .. ".temporal")
+         s = s .. I18N.localize("base.item", _id, "temporal")
       else
          if item.inv == nil and item.params.chest_item_level == 0 then
             s = s .. I18N.get("item.chest_empty")
@@ -690,7 +691,8 @@ end
 -- >>>>>>>> shade2/init.hsp:254 	#defcfunc cnvItemName int id ..
 function Itemname.qualify_name(item_id)
    local item_entry = data["base.item"]:ensure(item_id)
-   return I18N.get("item.qualified_name", "item.info." .. item_id .. ".name", item_entry.originalnameref2)
+   local name = I18N.localize("base.item", item_id, "name")
+   return I18N.get("item.qualified_name", name, item_entry.originalnameref2)
 end
 -- <<<<<<<< shade2/init.hsp:257 	return iOriginalNameRef2@(id)+" of "+iOriginalNam ..
 

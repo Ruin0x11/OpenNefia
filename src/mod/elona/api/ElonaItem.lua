@@ -25,7 +25,7 @@ local ElonaItem = {}
 function ElonaItem.generate_oracle_text(item)
    -- >>>>>>>> shade2/item.hsp:631 	if fixLv=fixUnique:if mode!mode_shop:if noOracle= ...
    local date = save.base.date
-   local known_name = "item.info." .. item._id .. ".name"
+   local known_name = I18N.localize("base.item", item._id, "name")
 
    local owner = item:get_owning_chara()
 

@@ -143,7 +143,7 @@ local function build_description(item, _, result)
 
    -- >>>>>>>> shade2/command.hsp:4100 	dbId=iID(ci):dbMode=dbModeRef:gosub *db_item ..
    if item:calc("identify_state") >= Enum.IdentifyState.Full then
-      local desc = I18N.get_optional("item.info." .. item._id .. ".desc.main.text")
+      local desc = I18N.localize_optional("base.item", item._id, "desc.main.text")
       if desc then
          result[#result+1] = { text = I18N.capitalize(desc) }
       end
@@ -217,7 +217,7 @@ local function add_flavor_text(item, params, result)
    -- NOTE: unused in vanilla
    local show_footnote = false
    if show_footnote then
-      local footnote = I18N.get_optional("item.info." .. item._id .. ".desc.main.footnote")
+      local footnote = I18N.localize_optional("base.item", item._id, "desc.main.footnote")
       if footnote then
          result[#result+1] = { text = "" }
          result[#result+1] = { text = footnote, type = "flavor_italic" }
@@ -226,12 +226,12 @@ local function add_flavor_text(item, params, result)
 
    local i = 0
    repeat
-      local extra_desc = I18N.get_optional("item.info." .. item._id .. ".desc._" .. i .. ".text")
+      local extra_desc = I18N.localize_optional("base.item", item._id, "desc._" .. i .. ".text")
       if extra_desc then
          result[#result+1] = { text = "" }
          result[#result+1] = { text = extra_desc, type = "flavor" }
       end
-      local extra_footnote = I18N.get_optional("item.info." .. item._id .. ".desc._" .. i .. ".footnote")
+      local extra_footnote = I18N.localize_optional("base.item", item._id, "desc._" .. i .. ".footnote")
       if extra_footnote then
          result[#result+1] = { text = extra_footnote, type = "flavor_italic" }
       end
