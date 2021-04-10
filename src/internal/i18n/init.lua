@@ -145,6 +145,10 @@ function i18n.get_language_id()
 end
 
 local function get_namespace_and_key(key)
+   if type(key) ~= "string" then
+      return "base", tostring(key)
+   end
+
    local pos = key:find(":")
    if pos == nil then
       -- If the namespace is omitted, assume it's `base`.
