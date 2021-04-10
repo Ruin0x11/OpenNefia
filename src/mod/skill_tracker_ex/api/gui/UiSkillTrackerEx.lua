@@ -52,7 +52,7 @@ function UiSkillTrackerEx:set_data(player)
       local potential = player:skill_potential(skill_id)
       local color = self.gradient:evaluate(potential / 400.0)
 
-      local name = utf8.sub(I18N.get("ability." .. skill_id .. ".name"), 0, 14)
+      local name = utf8.sub(I18N.localize("base.skill", skill_id, "name"), 0, 14)
 
       local desc = ("%d.%03d (%d%%)"):format(player:base_skill_level(skill_id),
                                              player:skill_experience(skill_id) % 1000,
@@ -106,7 +106,7 @@ function UiSkillTrackerEx:on_gain_skill_exp(skill_id, base_amount, actual_amount
    if actual_amount < 0 then
       sign = ""
    end
-   local skill_name = I18N.get("ability." .. skill_id .. ".name")
+   local skill_name = I18N.localize("base.skill", skill_id, "name")
    self.log_widget:print_raw(("%s    %s%d (%d)"):format(skill_name, sign, base_amount, actual_amount), color)
 end
 

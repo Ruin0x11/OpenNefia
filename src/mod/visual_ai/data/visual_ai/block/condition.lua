@@ -111,7 +111,7 @@ data:add {
       if vars.skill_id == "none" then
          name = "<none>"
       else
-         name = "ability." .. vars.skill_id .. ".name"
+         name = I18N.localize("base.skill", vars.skill_id, "name")
       end
       return I18N.get("visual_ai.block." .. proto._id .. ".name", name)
    end,

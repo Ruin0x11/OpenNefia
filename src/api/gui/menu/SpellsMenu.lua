@@ -46,7 +46,7 @@ function SpellsMenu.generate_list(chara)
 
    for _, entry in data["base.skill"]:iter():filter(function(e) return e.type == "spell" end) do
       if chara:spell_stock(entry._id) > 0 then
-         local name = I18N.get("ability." .. entry._id .. ".name")
+         local name = I18N.localize("base.skill", entry._id, "name")
 
          -- TODO break this dependency (#30)
          for _, index, sc in Shortcut.iter() do

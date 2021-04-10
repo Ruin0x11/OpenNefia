@@ -244,7 +244,7 @@ local function skill(wish, chara)
    local found
    local max_priority = 0
    for _, skill_entry in data["base.skill"]:iter():filter(is_wishable_skill) do
-      local skill_name = I18N.get("ability." .. skill_entry._id .. ".name")
+      local skill_name = I18N.localize("base.skill", skill_entry._id, "name")
       local priority = fuzzy_match(wish, skill_name)
       if priority > max_priority then
          max_priority = priority
@@ -253,7 +253,7 @@ local function skill(wish, chara)
    end
 
    if found then
-      local skill_name = I18N.get("ability." .. found._id .. ".name")
+      local skill_name = I18N.localize("base.skill", found._id, "name")
       if chara:has_base_skill(found._id) then
          Gui.mes_c("wish.your_skill_improves", "Yellow", skill_name)
          Skill.gain_fixed_skill_exp(chara, found._id, 1000)

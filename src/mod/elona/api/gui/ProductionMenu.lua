@@ -141,7 +141,7 @@ function ProductionMenu:update_recipe_info()
 
       self.recipe_info = ("%s: %s %d(%d)")
          :format(I18N.get("production.menu.skill_needed"),
-                 I18N.get("ability." .. self.skill_id .. ".name"),
+                 I18N.localize("base.skill", self.skill_id, "name"),
                  required,
                  have)
 

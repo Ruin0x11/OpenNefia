@@ -103,7 +103,7 @@ local function item_name_sub(s, item, jp)
 
    if item:has_category("elona.book") then
       if _id == "elona.textbook" then
-         local skill_name = I18N.get("ability." .. item.params.textbook_skill_id .. ".name")
+         local skill_name = I18N.localize("base.skill", item.params.textbook_skill_id, "name")
          s = s .. I18N.localize("base.item", _id, "title", skill_name)
       elseif _id == "elona.book_of_rachel" then
          s = s .. I18N.localize("base.item", _id, "title", item.params.book_of_rachel_number)

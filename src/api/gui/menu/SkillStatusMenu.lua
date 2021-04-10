@@ -224,8 +224,8 @@ function SkillStatusMenu.build_list(chara, mode, trainer_skills)
    for _, skill_entry in skill_iter:unwrap() do
       list[#list+1] = {
          _id = skill_entry._id,
-         name = I18N.get("ability." .. skill_entry._id .. ".name"),
-         desc = I18N.get("ability." .. skill_entry._id .. ".description"),
+         name = I18N.localize("base.skill", skill_entry._id, "name"),
+         desc = I18N.localize("base.skill", skill_entry._id, "description"),
          power = skill_power(skill_entry._id),
          detail = skill_detail(skill_entry._id),
          kind = "skill",
@@ -251,8 +251,8 @@ function SkillStatusMenu.build_list(chara, mode, trainer_skills)
       if add then
          list[#list+1] = {
             _id = skill_entry._id,
-            name = I18N.get("ability." .. skill_entry._id .. ".name"),
-            desc = I18N.get("ability." .. skill_entry._id .. ".description"),
+            name = I18N.localize("base.skill", skill_entry._id, "name"),
+            desc = I18N.localize("base.skill", skill_entry._id, "description"),
             kind = "skill",
             power = skill_power(skill_entry._id),
             detail = skill_detail(skill_entry._id),

@@ -63,7 +63,7 @@ function RollAttributesMenu:init(charamake_data)
       :map(function(id)
             return {
                id = id,
-               text = I18N.get("ability." .. id .. ".name")
+               text = I18N.localize("base.skill", id, "name")
             }
           end)
       :to_list()

@@ -101,7 +101,7 @@ function UiRaceInfo:draw()
          end
 
          local skill_id = ATTRIBUTES[i * 3 + j + 1]
-         local skill_name = utf8.wide_sub(I18N.get("ability." .. skill_id .. ".name"), 0, 2)
+         local skill_name = utf8.wide_sub(I18N.localize("base.skill", skill_id, "name"), 0, 2)
          local skill_level = self.race.proto.skills[skill_id] or 0
          local text_color, proficiency = skill_info(skill_level)
          local skill_text = ("%s: %s"):format(skill_name, proficiency)
@@ -138,7 +138,7 @@ function UiRaceInfo:draw()
    skill_text = right_pad(skill_text, pad_size)
 
    for _, proto in Skill.iter_weapon_proficiencies() do
-      local skill_name = I18N.get("ability." .. proto._id .. ".name")
+      local skill_name = I18N.localize("base.skill", proto._id, "name")
       local skill_level = self.race.proto.skills[proto._id] or 0
       if skill_level > 0 then
          if skill_count == 0 then
@@ -168,7 +168,7 @@ function UiRaceInfo:draw()
    for _, proto in Skill.iter_normal_skills() do
       local skill_level = self.race.proto.skills[proto._id] or 0
       if skill_level > 0 then
-         local skill_name = I18N.get("ability." .. proto._id .. ".name")
+         local skill_name = I18N.localize("base.skill", proto._id, "name")
          skill_name = right_pad(skill_name, pad_size)
 
          self.t.base.skill_icons:draw_region(
@@ -180,7 +180,7 @@ function UiRaceInfo:draw()
             {255, 255, 255},
             true)
 
-         local skill_desc = I18N.get("ability." .. proto._id .. ".description")
+         local skill_desc = I18N.localize("base.skill", proto._id, "description")
 
          if utf8.wide_len(skill_desc) > 43 then
             skill_desc = utf8.wide_sub(skill_desc, 0, 40) .. "..."

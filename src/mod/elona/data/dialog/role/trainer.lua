@@ -40,8 +40,9 @@ data:add {
       end,
       train_confirm = {
          text = function(t, state)
+            local skill_name = I18N.localize("base.skill", state.skill_id, "name")
             return {
-               I18N.get("talk.npc.trainer.cost.training", "ability." .. state.skill_id .. ".name", state.cost)
+               I18N.get("talk.npc.trainer.cost.training", skill_name, state.cost)
             }
          end,
          choices = function(t, state)
@@ -74,8 +75,9 @@ data:add {
       end,
       learn_confirm = {
          text = function(t, state)
+            local skill_name = I18N.localize("base.skill", state.skill_id, "name")
             return {
-               I18N.get("talk.npc.trainer.cost.learning", "ability." .. state.skill_id .. ".name", state.cost)
+               I18N.get("talk.npc.trainer.cost.learning", skill_name, state.cost)
             }
          end,
          choices = function(t, state)

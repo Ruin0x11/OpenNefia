@@ -188,19 +188,21 @@ end
 local function skill_change_text(chara, skill_id, is_increase)
    local text
    if is_increase then
-      text = I18N.get_optional("skill." .. skill_id .. ".increase", chara)
+      text = I18N.localize_optional("base.skill", skill_id, "on_increase", chara)
    else
-      text = I18N.get_optional("skill." .. skill_id .. ".decrease", chara)
+      text = I18N.localize_optional("base.skill", skill_id, "on_decrease", chara)
    end
 
    if text then
       return text
    end
 
+   local skill_name = I18N.localize("base.skill", skill_id, "name")
+
    if is_increase then
-      return I18N.get("skill.default.increase", chara, "ability." .. skill_id .. ".name")
+      return I18N.get("skill.default.increase", chara, skill_name)
    else
-      return I18N.get("skill.default.decrease", chara, "ability." .. skill_id .. ".name")
+      return I18N.get("skill.default.decrease", chara, skill_name)
    end
 end
 
@@ -754,7 +756,7 @@ function Skill.get_description(skill_id, chara)
    end
    desc = desc .. " "
 
-   return desc .. I18N.get("ability." .. skill_id .. ".description")
+   return desc .. I18N.localize("base.skill", skill_id, "description")
 end
 
 function Skill.gain_skill(chara, skill_id, initial_level, initial_stock, initial_potential)

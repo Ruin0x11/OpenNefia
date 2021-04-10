@@ -17,6 +17,7 @@ local SkillCheck = require("mod.elona.api.SkillCheck")
 local Log = require("api.Log")
 local Hunger = require("mod.elona.api.Hunger")
 local Const = require("api.Const")
+local I18N = require("api.I18N")
 
 local ElonaMagic = {}
 
@@ -494,7 +495,8 @@ function ElonaMagic.do_cast_spell(skill_id, caster, use_mp)
    else
       local cast_style = "ui.cast_style." .. (caster:calc("cast_style") or "default")
       if caster:is_player() then
-         Gui.mes_visible("action.cast.self", caster.x, caster.y, caster, "ability." .. skill_id .. ".name", cast_style)
+         local skill_name = I18N.localize("base.skill", skill_id, "name")
+         Gui.mes_visible("action.cast.self", caster.x, caster.y, caster, skill_name, cast_style)
       else
          Gui.mes_visible("action.cast.other", caster.x, caster.y, caster, cast_style)
       end
