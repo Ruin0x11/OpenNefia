@@ -242,7 +242,7 @@ end
 --- @tparam[opt] uint seed Seed used for randomized color/name
 --- @treturn string,color
 function Text.unidentified_item_name(item, seed)
-   local unknown_name = I18N.get_optional("item.info." .. item._id .. ".unidentified_name")
+   local unknown_name = I18N.localize_optional("base.item", item._id, "unidentified_name")
    if unknown_name then
       return unknown_name
    end
@@ -262,7 +262,7 @@ function Text.unidentified_item_name(item, seed)
       return unknown_name
    end
 
-   return I18N.get("item.info." .. item._id .. ".name")
+   return I18N.localize("base.item", item._id, "name")
 end
 
 function Text.random_subname_seed()

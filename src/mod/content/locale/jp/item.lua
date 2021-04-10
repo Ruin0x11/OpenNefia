@@ -18,7 +18,7 @@ local item = {
 
 return {
    item = {
-      info = {
+      _ = {
          content = item
       }
    }

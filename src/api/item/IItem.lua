@@ -43,7 +43,7 @@ end
 
 function IItem:build(params)
    params = params or {}
-   self.name = I18N.get("item.info." .. self._id .. ".name")
+   self.name = I18N.localize("base.item", self._id, "name")
 
    IItemContainer.build(self)
 

@@ -64,7 +64,7 @@ data:add {
 local function putitify(chara)
    chara.image = "elona.chara_race_slime"
    chara.portrait = nil
-   chara.name = I18N.get("chara.elona.putit.name")
+   chara.name = I18N.get("chara._.elona.putit.name")
    if chara.own_name then
       chara.name = I18N.get("chara.job.own_name", chara.name, chara.own_name)
    end
