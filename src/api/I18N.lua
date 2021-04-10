@@ -73,7 +73,7 @@ function I18N.get_optional(text, ...)
 
    local result = i18n.get(text, table.unpack(args))
 
-   result = Event.trigger("base.after_get_translation", { language_id = i18n.language_id, id = text, args = args }, result)
+   result = Event.trigger("base.after_get_translation", { language_id = i18n.language_id, kind = "get", id = text, args = args }, result)
 
    return result
 end
@@ -94,6 +94,29 @@ function I18N.get(text, ...)
 end
 
 I18N.get_array = i18n.get_array
+
+function I18N.localize_optional(_type, _id, key, ...)
+   local args = {}
+   for i = 1, select("#", ...) do
+      local arg = select(i, ...)
+      local i18n = require("internal.i18n.init")
+      if class.is_an(ILocalizable, arg) then
+         args[i] = arg:produce_locale_data()
+      else
+         args[i] = I18N.get_optional(arg) or arg
+      end
+   end
+
+   local result = i18n.localize(_type, _id, key, table.unpack(args))
+
+   result = Event.trigger("base.after_get_translation", { language_id = i18n.language_id, kind = "localize", _type = _type, _id = _id, args = args }, result)
+
+   return result
+end
+
+function I18N.localize(_type, _id, key, ...)
+   return I18N.localize_optional(_type, _id, key, ...) or ("<error: %s:%s.%s>"):format(_type, _id, key)
+end
 
 
 -- TODO for itemname, provide a set of "cut points" so the user can

@@ -9,6 +9,7 @@ local data = require("internal.data")
 local i18n = {}
 i18n.db = {}
 i18n.index = nil
+i18n.data = {}
 
 local reify_one
 reify_one = function(_db, item, key)
@@ -35,7 +36,7 @@ reify_one = function(_db, item, key)
    end
 end
 
-function i18n.load_single_translation(path, merged)
+function i18n.load_single_translation(path, merged, localize, namespace)
    path = fs.normalize(path)
    Log.debug("Loading translations at %s", path)
    local chunk, err = love.filesystem.load(path)
@@ -56,14 +57,34 @@ function i18n.load_single_translation(path, merged)
    end
 
    reify_one(merged, result, "")
+
+   for k, v in pairs(result) do
+      local _type = namespace .. "." .. k
+      if rawget(data, "schemas")[_type] then
+         localize[_type] = localize[_type] or {}
+         if type(v) == "table" and v._ then
+            for mod_id, v in pairs(v._) do
+               for name, v in pairs(v) do
+                  local _id = ("%s.%s"):format(mod_id, name)
+                  if data[_type][_id] then
+                     localize[_type][_id] = {}
+                     reify_one(localize[_type][_id], v, "")
+                  end
+               end
+            end
+         end
+      end
+   end
 end
 
 local load_translations
-load_translations = function(path, merged)
+load_translations = function(path, merged, localize, namespace)
+   merged[namespace] = merged[namespace] or {}
+
    for _, file in fs.iter_directory_items(path) do
       local full_path = fs.join(path, file)
       if fs.is_file(full_path) and fs.can_load(full_path) then
-         i18n.load_single_translation(full_path, merged)
+         i18n.load_single_translation(full_path, merged[namespace], localize, namespace)
       end
    end
 end
@@ -86,18 +107,28 @@ function i18n.switch_language(lang, force)
    if i18n.db[i18n.language] == nil or force then
       i18n.db[i18n.language] = {}
    end
+   if i18n.data[i18n.language] == nil or force then
+      i18n.data[i18n.language] = {}
+   end
 
    i18n.index = nil
 
    local sw = Stopwatch:new()
 
    for _, mod in mod.iter_loaded() do
-      local path = fs.join(mod.root_path, "locale")
+      local locale_folder = fs.join(mod.root_path, "locale")
 
-      if fs.is_directory(path) then
-         local path = fs.join(path, i18n.language)
+      if fs.is_directory(locale_folder) then
+         local path = fs.join(locale_folder, i18n.language)
          if fs.is_directory(path) then
-            i18n.load_translations(path, i18n.db[i18n.language])
+            i18n.load_translations(path, i18n.db[i18n.language], i18n.data[i18n.language], "base")
+            for _, item in fs.iter_directory_items(path) do
+               local full_path = fs.join(path, item)
+               if fs.is_directory(full_path) then
+                  local namespace = item
+                  i18n.load_translations(full_path, i18n.db[i18n.language], i18n.data[i18n.language], namespace)
+               end
+            end
          end
       end
    end
@@ -113,8 +144,19 @@ function i18n.get_language_id()
    return i18n.language_id
 end
 
-function i18n.get_array(key, ...)
-   local entry = i18n.db[i18n.language][key]
+local function get_namespace_and_key(key)
+   local pos = key:find(":")
+   if pos == nil then
+      -- If the namespace is omitted, assume it's `base`.
+      return "base", key
+   end
+
+   return key:sub(1, pos-1), key:sub(pos+1)
+end
+
+function i18n.get_array(full_key, ...)
+   local namespace, key = get_namespace_and_key(full_key)
+   local entry = i18n.db[i18n.language][namespace][key]
    if not entry then
       return nil
    end
@@ -128,8 +170,9 @@ function i18n.get_array(key, ...)
    return nil
 end
 
-function i18n.get(key, ...)
-   local entry = i18n.db[i18n.language][key]
+function i18n.get(full_key, ...)
+   local namespace, key = get_namespace_and_key(full_key)
+   local entry = i18n.db[i18n.language][namespace][key]
    if not entry then
       return nil
    end
@@ -143,7 +186,39 @@ function i18n.get(key, ...)
    elseif type(entry) == "function" then
       local success, result = pcall(entry, ...)
       if not success then
-         return ("<error [%s]: %s>"):format(key, result)
+         return ("<error [%s:%s]: %s>"):format(namespace, key, result)
+      end
+      return result
+   end
+
+   return nil
+end
+
+function i18n.localize(_type, _id, key, ...)
+   local cache = i18n.data[i18n.language]
+
+   if cache[_type] == nil then
+      print(no1)
+      return nil
+   end
+   local for_type = cache[_type]
+   if for_type[_id] == nil then
+      print("no2")
+      return nil
+   end
+
+   local entry = for_type[_id][key]
+
+   if type(entry) == "table" and entry[1] then
+      entry = Rand.choice(entry)
+   end
+
+   if type(entry) == "string" then
+      return entry
+   elseif type(entry) == "function" then
+      local success, result = pcall(entry, ...)
+      if not success then
+         return ("<error [%s:%s._%s]: %s>"):format(_type, _id, key, result)
       end
       return result
    end

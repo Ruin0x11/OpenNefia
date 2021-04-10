@@ -586,13 +586,16 @@ function env.hotload_path(path, also_deps)
          local i18n = require("internal.i18n")
          local filepath = get_require_path(path)
          filepath = filepath:gsub("^%./", "")
-         Log.info("Hotloading translations at %s for language '%s'.", path, lang)
+         local namespace = string.match(path, "^mod%." .. mod_name .. "%.locale%.[a-z_]+%.([a-z_]+)%..*$") or "base"
+         Log.info("Hotloading translations at %s:%s for language '%s'.", namespace, path, lang)
 
          -- The locale DB might not be loaded yet, so we should create
          -- it if so.
          i18n.db[lang] = i18n.db[lang] or {}
+         i18n.db[lang][namespace] = i18n.db[lang][namespace] or {}
+         i18n.data[lang] = i18n.data[lang] or {}
 
-         i18n.load_single_translation(filepath, i18n.db[lang])
+         i18n.load_single_translation(filepath, i18n.db[lang][namespace], i18n.data[lang], namespace)
 
          i18n.index = nil
 
