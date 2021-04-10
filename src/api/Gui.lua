@@ -575,9 +575,10 @@ function Gui.play_music(music_id, no_loop)
    sound_manager:play_music(music_id)
 end
 
-function Gui.play_default_music()
-   if field.map then
-      local music_id = field.map:emit("elona_sys.calc_map_music", {}, field.map.music)
+function Gui.play_default_music(map)
+   map = map or field.map
+   if map then
+      local music_id = map:emit("elona_sys.calc_map_music", {}, map.music)
       if music_id and data["base.music"][music_id] then
          Gui.play_music(music_id)
       end
