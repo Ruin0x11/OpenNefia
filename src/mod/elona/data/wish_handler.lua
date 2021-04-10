@@ -337,7 +337,7 @@ local function extract_chara_id(wish)
    local found
    local max_priority = 0
    for _, chara_entry in data["base.chara"]:iter() do
-      local chara_name = I18N.get("chara." .. chara_entry._id .. ".name")
+      local chara_name = I18N.localize("base.chara", chara_entry._id, "name")
       local priority = fuzzy_match(wish, chara_name)
       print(priority, wish, chara_name)
       if priority > 0 then

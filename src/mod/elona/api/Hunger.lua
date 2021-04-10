@@ -26,7 +26,7 @@ function Hunger.food_name(food_type, original_name, food_quality, chara_id)
    end
 
    if chara_id then
-      origin = I18N.get("chara." .. chara_id .. ".name")
+      origin = I18N.localize("base.chara", chara_id, "name")
    end
 
    return I18N.get("food.names." .. food_type .. "._" .. food_quality, origin)

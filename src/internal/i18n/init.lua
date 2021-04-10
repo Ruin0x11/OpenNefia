@@ -160,7 +160,11 @@ end
 
 function i18n.get_array(full_key, ...)
    local namespace, key = get_namespace_and_key(full_key)
-   local entry = i18n.db[i18n.language][namespace][key]
+   local root = i18n.db[i18n.language][namespace]
+   if not root then
+      return nil
+   end
+   local entry = root[key]
    if not entry then
       return nil
    end
@@ -176,7 +180,11 @@ end
 
 function i18n.get(full_key, ...)
    local namespace, key = get_namespace_and_key(full_key)
-   local entry = i18n.db[i18n.language][namespace][key]
+   local root = i18n.db[i18n.language][namespace]
+   if not root then
+      return nil
+   end
+   local entry = root[key]
    if not entry then
       return nil
    end

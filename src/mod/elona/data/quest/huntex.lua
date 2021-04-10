@@ -64,7 +64,7 @@ local huntex = {
       return true
    end,
    locale_data = function(self)
-      local objective = I18N.get("chara." .. self.params.enemy_id .. ".name")
+      local objective = I18N.localize("base.chara", self.params.enemy_id, "name")
       return { objective = objective, enemy_level = self.params.enemy_level }
    end,
 

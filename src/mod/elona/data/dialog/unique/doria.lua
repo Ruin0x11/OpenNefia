@@ -107,7 +107,7 @@ data:add {
             {"talk.unique.doria.nonmember.want_to_join._0"},
             start_trial,
             function()
-               local chara_name = I18N.get("chara." .. save.elona.guild_fighter_target_chara_id .. ".name")
+               local chara_name = I18N.localize("base.chara", save.elona.guild_fighter_target_chara_id, "name")
                return I18N.get("talk.unique.doria.nonmember.want_to_join._1", save.elona.guild_fighter_target_chara_quota, chara_name)
             end
          },
@@ -117,7 +117,7 @@ data:add {
       },
       guild_join_waiting = {
          text = function()
-            local chara_name = I18N.get("chara." .. save.elona.guild_fighter_target_chara_id .. ".name")
+            local chara_name = I18N.localize("base.chara", save.elona.guild_fighter_target_chara_id, "name")
             return I18N.get("talk.unique.doria.nonmember.quota", save.elona.guild_fighter_target_chara_quota, chara_name)
          end,
          choices = {
@@ -153,7 +153,7 @@ data:add {
       guild_quota_new = {
          on_start = update_quota,
          text = function()
-            local chara_name = I18N.get("chara." .. save.elona.guild_fighter_target_chara_id .. ".name")
+            local chara_name = I18N.localize("base.chara", save.elona.guild_fighter_target_chara_id, "name")
             return I18N.get("talk.unique.doria.member.new_quota", save.elona.guild_fighter_target_chara_quota, chara_name)
          end,
          choices = {
