@@ -1,9 +1,7 @@
 local Env = require("api.Env")
 local Chara = require("api.Chara")
 local Draw = require("api.Draw")
-local Event = require("api.Event")
 local Gui = require("api.Gui")
-local IChara = require("api.chara.IChara")
 local Log = require("api.Log")
 local MapObject = require("api.MapObject")
 
@@ -214,7 +212,7 @@ function CharaMakeWrapper:update(dt)
          self.results[#self.submenu_trail+1] = new_cm_result
          self:proceed()
       else
-         assert(class.is_an(IChara, new_cm_result.chara))
+         assert(MapObject.is_map_object(new_cm_result.chara, "base.chara"))
 
          local success, err = xpcall(
             function()

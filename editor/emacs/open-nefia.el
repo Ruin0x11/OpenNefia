@@ -671,7 +671,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
          (case-fold-search nil)
          (filter (lambda (f)
                    (and (string-match-p regexp f)
-                        (not (string-match-p "src/test/unit" f))
+                        (not (string-match-p "src/test/" f))
                         (not (string-match-p "mod/.*/test/" f)))))
          (filtered (-filter filter cands)))
     (cl-case (length filtered)

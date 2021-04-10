@@ -1,5 +1,7 @@
 local Event = require("api.Event")
 local Rand = require("api.Rand")
+local schema = require("thirdparty.schema")
+local God = require("mod.elona.api.God")
 
 data:add_type {
    name = "god",
@@ -11,15 +13,10 @@ data:add_type {
 data:add_index("elona.god", "elona_id")
 
 local function set_god(chara)
-   local has_dialog = true
+   local has_dialog = chara.can_talk or chara.dialog
 
-   if not chara:is_player() and has_dialog then
-      local gods = data["elona.god"]:iter():extract("_id"):to_list()
-      gods[#gods+1] = "eyth"
-      chara.god = Rand.choice(gods)
-      if chara.god == "eyth" then
-         chara.god = nil
-      end
+   if not chara:is_player() and has_dialog and chara.god == nil then
+      chara.god = God.random_god_id()
    end
 end
 

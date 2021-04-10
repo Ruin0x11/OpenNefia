@@ -41,7 +41,8 @@ function ExHelpPrompt:init(help_id)
    self.section_index = 1
    self.finished = false
 
-   self.text = UiHelpMarkup:new(self.sections[self.section_index], 15)
+   local font_size = 14 -- 15
+   self.text = UiHelpMarkup:new(self.sections[self.section_index], font_size, true)
 
    self.topic_win_a = TopicWindow:new(4, 0)
    self.topic_win_b = TopicWindow:new(0, 1)
@@ -96,7 +97,7 @@ function ExHelpPrompt:relayout(x, y, width, height)
    -- <<<<<<<< shade2/init.hsp:3898 	return ..
 
    self.text:relayout(self.x + 120, self.y + 55, self.width - 158, self.height - 55)
-   self.text:set_shadow(self.t.elona.ex_help_text_shadow_color)
+   self.text:set_color(self.t.elona.help_markup_text_color)
 end
 
 function ExHelpPrompt:draw()

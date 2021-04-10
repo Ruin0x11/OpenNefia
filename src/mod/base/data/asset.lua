@@ -654,6 +654,10 @@ local assets = {
       key_color = "none"
    },
    {
+      _id = "bg_altar",
+      image = "graphic/bg_altar.bmp"
+   },
+   {
       _id = "bg_night",
       image = "graphic/bg_night.bmp"
    },

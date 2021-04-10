@@ -7,6 +7,8 @@ local Feat = require("api.Feat")
 local Item = require("api.Item")
 local Filters = require("mod.elona.api.Filters")
 local Itemgen = require("mod.elona.api.Itemgen")
+local God = require("mod.elona.api.God")
+local ElonaChara = require("mod.elona.api.ElonaChara")
 
 local MapgenUtils = {}
 
@@ -21,19 +23,8 @@ function MapgenUtils.spray_tile(map, tile_id, density)
 end
 
 function MapgenUtils.generate_chara(map, x, y, extra_params)
-   local params
-   local archetype = map:archetype()
-   if archetype and archetype.chara_filter then
-      params = archetype.chara_filter(map)
-      assert(type(params) == "table")
-   else
-      -- >>>>>>>> shade2/map.hsp:100 	flt calcObjLv(cLevel(pc)),calcFixLv(fixNormal) ...
-      local player = Chara.player()
-      local level = Calc.calc_object_level((player and player.level) or 1, map)
-      local quality = Calc.calc_object_quality(Enum.Quality.Normal)
-      params = { level = level, quality = quality }
-      -- <<<<<<<< shade2/map.hsp:100 	flt calcObjLv(cLevel(pc)),calcFixLv(fixNormal) ..
-   end
+   local filter = ElonaChara.random_filter(map)
+   local params = filter(map)
    if extra_params then
       table.merge(params, extra_params)
    end
@@ -80,7 +71,7 @@ function MapgenUtils.spawn_random_site(map, is_first_renewal, x, y)
             local altar = Item.create("elona.altar", x, y, {}, map)
             if altar then
                altar.own_state = Enum.OwnState.NotOwned
-               -- TODO god
+               altar.params.altar_god_id = God.random_god_id()
                return true
             end
          end

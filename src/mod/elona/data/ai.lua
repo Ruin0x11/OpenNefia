@@ -389,7 +389,7 @@ local function basic_action(chara, params)
       return Ai.run("elona.melee", chara)
    end
 
-   local choosing_sub_act = Rand.percent_chance(chara.ai_actions.sub_action_chance or 0)
+   local choosing_sub_act = Rand.percent_chance(chara.ai_sub_action_chance or 0)
    local choice
 
    if choosing_sub_act then

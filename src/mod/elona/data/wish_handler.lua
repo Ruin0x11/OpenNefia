@@ -90,37 +90,6 @@ local function man_inside(wish)
 end
 add_wish_handler("man_inside", function(wish) return wish:match(I18N.get("wish.special_wish.man_inside")) end, man_inside, 10000)
 
--- TODO custom god summoning
-local function ehekatl(wish, chara)
-   Gui.mes_c(I18N.quote_speech("wish.wish_ehekatl"), "Talk")
-   Chara.create("elona.ehekatl", chara.x, chara.y, {}, chara:current_map())
-end
-add_wish_handler("ehekatl", "wish.special_wish.ehekatl", ehekatl, 10000)
-
-local function lulwy(wish, chara)
-   Gui.mes_c(I18N.quote_speech("wish.wish_lulwy"), "Talk")
-   Chara.create("elona.lulwy", chara.x, chara.y, {}, chara:current_map())
-end
-add_wish_handler("lulwy", "wish.special_wish.lulwy", lulwy, 10000)
-
-local function opatos(wish, chara)
-   Gui.mes_c(I18N.quote_speech("wish.wish_opatos"), "Talk")
-   Chara.create("elona.opatos", chara.x, chara.y, {}, chara:current_map())
-end
-add_wish_handler("opatos", "wish.special_wish.opatos", opatos, 10000)
-
-local function kumiromi(wish, chara)
-   Gui.mes_c(I18N.quote_speech("wish.wish_kumiromi"), "Talk")
-   Chara.create("elona.kumiromi", chara.x, chara.y, {}, chara:current_map())
-end
-add_wish_handler("kumiromi", "wish.special_wish.kumiromi", kumiromi, 10000)
-
-local function mani(wish, chara)
-   Gui.mes_c(I18N.quote_speech("wish.wish_mani"), "Talk")
-   Chara.create("elona.mani", chara.x, chara.y, {}, chara:current_map())
-end
-add_wish_handler("mani", "wish.special_wish.mani", mani, 10000)
-
 local function youth(wish, chara)
    Gui.mes("wish.wish_youth")
    chara.age = math.min(chara.age + 20, save.base.date.year - 12)
@@ -237,6 +206,36 @@ end
 local function is_wishable_skill(skill_entry)
    return skill_entry.type ~= "resistance" and skill_entry.type ~= "stat_special"
 end
+
+local function god(wish, chara)
+   local found
+   local max_priority = 0
+
+   for _, god_proto in data["elona.god"]:iter() do
+      local god_name = I18N.get("god." .. god_proto._id .. ".name")
+      local priority = fuzzy_match(wish, god_name)
+      if priority > max_priority then
+         max_priority = priority
+         found = god_proto
+      end
+   end
+
+   if found and found.summon ~= nil then
+      local map = chara:current_map()
+      if Chara.find(found.summon, "all", map) then
+         return false
+      end
+
+      -- TODO talk
+      local text = I18N.get_optional(("god.%s.talk.wish_summon"):format(found._id))
+      if text then
+         Gui.mes_c(text, "Talk")
+      end
+      Chara.create(found.summon, chara.x, chara.y, {}, chara:current_map())
+      return true
+   end
+end
+add_wish_handler("god", nil, god, 50000)
 
 -- >>>>>>>> shade2/command.hsp:1616 *wish_skill ..
 local function skill(wish, chara)

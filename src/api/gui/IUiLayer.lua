@@ -152,6 +152,11 @@ function IUiLayer:query(z_order)
    return res, canceled
 end
 
+function IUiLayer:is_querying()
+   local current = draw.get_current_layer().layer
+   return self == current
+end
+
 function IUiLayer:release()
 end
 

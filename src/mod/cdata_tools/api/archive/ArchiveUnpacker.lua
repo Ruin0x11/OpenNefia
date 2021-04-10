@@ -1,4 +1,5 @@
 local Fs = require("api.Fs")
+local Log = require("api.Log")
 local Compress = require("api.Compress")
 local struct = require("mod.extlibs.api.struct")
 local StringIO = require("mod.extlibs.api.StringIO")
@@ -18,21 +19,33 @@ local function fsize (file)
    return size
 end
 
-function ArchiveUnpacker.unpack_stream(inp)
+function ArchiveUnpacker.unpack_stream(inp, opts)
    local result = {}
+   opts = opts or {}
+
+   opts.layout = opts.layout or {}
 
    local size = fsize(inp)
 
    while true do
       local filename = struct.unpack("s", inp:read(40)):gsub("\0", "")
       local entry_size = tonumber(struct.unpack("c10", inp:read(10):gsub("\0", "")))
-      if entry_size == 0 then
+      if entry_size == nil or entry_size == 0 then
          break
       end
 
-      local deflated = inp:read(entry_size - 50)
-      local file_content = Compress.decompress("string", "gzip", deflated)
-      result[filename] = file_content
+      Log.debug("filename: %s  size: %2.2fkb", filename, entry_size)
+
+      local raw = inp:read(entry_size - 50)
+
+      local layout = opts.layout[filename]
+      if type(layout) == "table" and layout.type == "archive" then
+         local inner_opts = { layout = layout.layout }
+         result[filename] = ArchiveUnpacker.unpack_string(raw, inner_opts)
+      else
+         local file_content = Compress.decompress("string", "gzip", raw)
+         result[filename] = file_content
+      end
 
       if inp:seek() >= size then
          break
@@ -44,14 +57,14 @@ function ArchiveUnpacker.unpack_stream(inp)
    return result
 end
 
-function ArchiveUnpacker.unpack_string(str)
+function ArchiveUnpacker.unpack_string(str, opts)
    local stream = StringIO.open(str)
-   return ArchiveUnpacker.unpack_stream(stream)
+   return ArchiveUnpacker.unpack_stream(stream, opts)
 end
 
-function ArchiveUnpacker.unpack_file(filepath)
+function ArchiveUnpacker.unpack_file(filepath, opts)
    local file = assert(Fs.open(filepath, "rb"))
-   return ArchiveUnpacker.unpack_stream(file)
+   return ArchiveUnpacker.unpack_stream(file, opts)
 end
 
 -- function ArchiveUnpacker.unpack_map(file, subfile)

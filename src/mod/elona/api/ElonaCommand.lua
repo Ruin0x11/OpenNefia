@@ -27,6 +27,8 @@ local global = require("mod.elona.internal.global")
 local RandomEvent = require("mod.elona.api.RandomEvent")
 local Calc = require("mod.elona.api.Calc")
 local Shortcut = require("mod.elona.api.Shortcut")
+local God = require("mod.elona.api.God")
+local GodConvertMenu = require("mod.elona.api.gui.GodConvertMenu")
 
 local ElonaCommand = {}
 
@@ -523,7 +525,7 @@ function ElonaCommand.enter_field_map(player)
    return "turn_begin"
 end
 
-local function choose_command_dwim(player)
+function ElonaCommand.get_enter_action(player)
    -- >>>>>>>> shade2/main.hsp:1242 		inv_getHeader -1 :p=0 ..
    local command
    local map = player:current_map()
@@ -546,8 +548,7 @@ local function choose_command_dwim(player)
       elseif item:has_category("elona.furniture_well") then
          command = ElonaCommand.dip
       elseif item:has_category("elona.furniture_altar") then
-         Log.error("TODO god")
-         if player:calc("god") then
+         if player:calc("god") ~= nil then
             command = ElonaCommand.offer
          else
             command = ElonaCommand.pray
@@ -612,7 +613,7 @@ function ElonaCommand.ascend(player)
 end
 
 function ElonaCommand.enter_action(player)
-   local command = choose_command_dwim(player)
+   local command = ElonaCommand.get_enter_action(player)
 
    return command(player)
 end
@@ -699,12 +700,34 @@ function ElonaCommand.name(player, target)
    -- <<<<<<<< shade2/command.hsp:1926 	gosub *screen_refresh :goto *pc_turn ..
 end
 
+local function find_altar(x, y, map)
+   return Item.at(x, y, map)
+      :filter(function(i) return i:has_category("elona.furniture_altar") end)
+      :nth(1)
+end
+
 function ElonaCommand.offer(player)
    if Command.block_if_world_map(player) then
       return "player_turn_query"
    end
 
-   Log.error("TODO offer")
+   local result, canceled = Input.query_inventory(player, "elona.inv_offer", nil, nil)
+   if canceled then
+      return "player_turn_query"
+   end
+   return result.result
+end
+
+function ElonaCommand.prompt_convert(player, god_id)
+   local result, canceled = GodConvertMenu:new(player, god_id):query()
+
+   if result and not canceled then
+      if result.action == "convert" then
+         God.switch_religion_with_penalty(player, god_id)
+      end
+   end
+
+   return "turn_end"
 end
 
 function ElonaCommand.pray(player)
@@ -712,7 +735,18 @@ function ElonaCommand.pray(player)
       return "player_turn_query"
    end
 
-   Log.error("TODO pray")
+   -- TODO capability
+   local map = player:current_map()
+   local altar = find_altar(player.x, player.y)
+
+   if Item.is_alive(altar) then
+      local god_id = altar.params.altar_god_id
+      if player.god ~= god_id then
+         return ElonaCommand.prompt_convert(player, god_id)
+      end
+   end
+
+   return God.pray(player)
 end
 
 function ElonaCommand.shortcut(player, index)

@@ -72,6 +72,12 @@ Gui.bind_keys {
    open = function(_, me)
       return ElonaCommand.open(me)
    end,
+   pray = function(_, me)
+      return ElonaCommand.pray(me)
+   end,
+   offer = function(_, me)
+      return ElonaCommand.offer(me)
+   end,
    enter = function(_, me)
       return ElonaCommand.enter_action(me)
    end,

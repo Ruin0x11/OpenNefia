@@ -14,7 +14,7 @@ function Wish.query_wish()
 
    Gui.mes(I18N.quote_speech(I18N.get("wish.your_wish", wish)))
 
-   Save.save_game()
+   Save.queue_autosave()
 
    wish = string.strip_whitespace(wish)
 

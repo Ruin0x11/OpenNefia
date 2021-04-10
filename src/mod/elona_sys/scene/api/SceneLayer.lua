@@ -174,6 +174,12 @@ function SceneLayer:draw()
 end
 
 function SceneLayer:update(dt)
+  -- It's nontrivial to update this layer in the background, because of how it
+  -- depends on animations and querying a dialog menu inside :update().
+  if not self:is_querying() then
+    return
+  end
+
   if self.wait > 0 then
     self.wait = self.wait - dt
     if self.wait < 0 then

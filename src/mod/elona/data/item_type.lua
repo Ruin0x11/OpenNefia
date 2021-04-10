@@ -548,3 +548,31 @@ data:add_multi("base.item_type", categories)
 data:add_multi("base.item_type", subcategories)
 data:add_multi("base.item_type", tags)
 data:add_multi("base.item_type", categories3)
+
+-- Special categories for god offerings where a blanket whitelist doesn't work.
+-- For example, some items tagged "fish" can't be offered to Ehekatl (wood
+-- piece, garbage, etc.)
+
+-- Mani
+data:add {
+   _type = "base.item_type",
+   _id = "offering_sf",
+}
+
+-- Ehekatl
+data:add {
+   _type = "base.item_type",
+   _id = "offering_fish",
+}
+
+-- Kumiromi
+data:add {
+   _type = "base.item_type",
+   _id = "offering_vegetable",
+}
+
+-- Jure/Opatos
+data:add {
+   _type = "base.item_type",
+   _id = "offering_ore",
+}

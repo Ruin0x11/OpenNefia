@@ -1,18 +1,19 @@
 local God = require("mod.elona.api.God")
 
 local function secret_treasure(id)
-   return { id = "elona.secret_treasure", param1 = id, nostack = true }
+   return { id = "elona.secret_treasure", no_stack = true, properties = { params = { secret_treasure_trait = id } } }
 end
 
 local god = {
    {
       _id = "mani",
       elona_id = 1,
-      wish_name = "mani",
+      is_primary_god = true,
+
       summon = "elona.mani",
       servant = "elona.android",
       items = {
-         { id = "elona.gemstone_of_mani", _only_once = true }
+         { id = "elona.gemstone_of_mani", only_once = true }
       },
       artifact = "elona.winchester_premium",
       blessings = {
@@ -26,29 +27,20 @@ local god = {
          God.make_skill_blessing("elona.jeweler", 350, 12),
       },
       offerings = {
-         "elona.laser_gun",
-         "elona.shot_gun",
-         "elona.blank_disc",
-         "elona.chip",
-         "elona.storage",
-         "elona.server",
-         "elona.microwave_oven",
-         "elona.camera",
-         "elona.training_machine",
-         "elona.computer",
-         "elona.machine",
-         "elona.machine_gun",
-         "elona.pistol",
+         { type = "category", id = "elona.equip_ranged_gun" },
+         { type = "category", id = "elona.equip_ranged_laser_gun" },
+         { type = "category", id = "elona.offering_sf" }
       }
    },
    {
       _id = "lulwy",
       elona_id = 2,
-      wish_name = "lulwy",
+      is_primary_god = true,
+
       summon = "elona.lulwy",
       servant = "elona.black_angel",
       items = {
-         { id = "elona.lulwys_gem_stone_of_god_speed", _only_once = true }
+         { id = "elona.lulwys_gem_stone_of_god_speed", only_once = true }
       },
       artifact = "elona.wind_bow",
       blessings = {
@@ -60,19 +52,30 @@ local god = {
          God.make_skill_blessing("elona.magic_device", 550, 8),
       },
       offerings = {
-         "elona.skull_bow",
-         "elona.crossbow",
-         "elona.short_bow",
-         "elona.long_bow",
+         { type = "category", id = "elona.equip_ranged_bow" },
+         { type = "category", id = "elona.equip_ranged_crossbow" },
       },
+
+      on_join_faith = function(chara)
+         -- >>>>>>>> shade2/god.hsp:274 		if cGod(pc)=godWind	:spGain(actGodWind) ...
+         chara:mod_base_skill_level("elona.buff_lulwys_trick", 1, "set")
+         -- <<<<<<<< shade2/god.hsp:274 		if cGod(pc)=godWind	:spGain(actGodWind) ..
+      end,
+
+      on_leave_faith = function(chara)
+         -- >>>>>>>> shade2/god.hsp:265 	spDel(actGodWind) ...
+         chara:mod_base_skill_level("elona.buff_lulwys_trick", 0, "set")
+         -- <<<<<<<< shade2/god.hsp:265 	spDel(actGodWind) ..
+      end
    },
    {
       _id = "itzpalt",
       elona_id = 3,
-      wish_name = "itzpalt",
+      is_primary_god = true,
+
       servant = "elona.exile",
       items = {
-         secret_treasure(165),
+         secret_treasure("elona.god_element"),
       },
       artifact = "elona.elemental_staff",
       blessings = {
@@ -83,18 +86,30 @@ local god = {
          God.make_skill_blessing("elona.element_lightning", 50, 200),
       },
       offerings = {
-         "elona.long_staff",
-         "elona.staff",
+         { type = "category", id = "elona.equip_melee_staff" },
       },
+
+      on_join_faith = function(chara)
+         -- >>>>>>>> shade2/god.hsp:272 		if cGod(pc)=godElement	:spGain(actAbsorbMana) ...
+         chara:mod_base_skill_level("elona.action_absorb_magic", 1, "set")
+         -- <<<<<<<< shade2/god.hsp:272 		if cGod(pc)=godElement	:spGain(actAbsorbMana) ..
+      end,
+
+      on_leave_faith = function(chara)
+         -- >>>>>>>> shade2/god.hsp:264 	spDel(actAbsorbMana) ...
+         chara:mod_base_skill_level("elona.action_absorb_magic", 0, "set")
+         -- <<<<<<<< shade2/god.hsp:264 	spDel(actAbsorbMana) ..
+      end
    },
    {
       _id = "ehekatl",
       elona_id = 4,
-      wish_name = "ehekatl",
+      is_primary_god = true,
+
       summon = "elona.ehekatl",
       servant = "elona.black_cat",
       items = {
-         secret_treasure(163),
+         secret_treasure("elona.god_luck"),
       },
       artifact = "elona.lucky_dagger",
       blessings = {
@@ -106,28 +121,18 @@ local god = {
          God.make_skill_blessing("elona.lock_picking", 450, 8),
       },
       offerings = {
-         "elona.fish",
-         "elona.sandborer",
-         "elona.cutlassfish",
-         "elona.tuna",
-         "elona.globefish",
-         "elona.salmon",
-         "elona.seabream",
-         "elona.manboo",
-         "elona.flatfish",
-         "elona.sardine",
-         "elona.moonfish",
-         "elona.bomb_fish",
+         { type = "category", id = "elona.offering_fish" }
       }
    },
    {
       _id = "opatos",
       elona_id = 5,
-      wish_name = "opatos",
+      is_primary_god = true,
+
       summon = "elona.opatos",
       servant = "elona.golden_knight",
       items = {
-         secret_treasure(164),
+         secret_treasure("elona.god_earth"),
       },
       artifact = "elona.gaia_hammer",
       blessings = {
@@ -139,25 +144,18 @@ local god = {
          God.make_skill_blessing("elona.magic_device", 450, 8),
       },
       offerings = {
-         "elona.junk_stone",
-         "elona.raw_ore_of_diamond",
-         "elona.raw_ore_of_emerald",
-         "elona.raw_ore_of_mica",
-         "elona.raw_ore_of_rubynus",
-         "elona.gold_bar",
-         "elona.sun_crystal",
-         "elona.mana_crystal",
-         "elona.earth_crystal",
+         { type = "category", id = "elona.offering_ore" }
       }
    },
    {
       _id = "jure",
       elona_id = 6,
-      wish_name = "jure",
+      is_primary_god = true,
+
       servant = "elona.defender",
       items = {
-         { id = "elona.jures_gem_stone_of_holy_rain", _only_once = true },
-         secret_treasure(166),
+         { id = "elona.jures_gem_stone_of_holy_rain", only_once = true },
+         secret_treasure("elona.god_heal"),
       },
       artifact = "elona.holy_lance",
       blessings = {
@@ -170,25 +168,30 @@ local god = {
          God.make_skill_blessing("elona.magic_capacity", 400, 12),
       },
       offerings = {
-         "elona.junk_stone",
-         "elona.raw_ore_of_diamond",
-         "elona.raw_ore_of_emerald",
-         "elona.raw_ore_of_mica",
-         "elona.raw_ore_of_rubynus",
-         "elona.gold_bar",
-         "elona.sun_crystal",
-         "elona.mana_crystal",
-         "elona.earth_crystal",
+         { type = "category", id = "elona.offering_ore" },
       },
+
+      on_join_faith = function(chara)
+         -- >>>>>>>> shade2/god.hsp:273 		if cGod(pc)=godHeal	:spGain(actHealJure) ...
+         chara:mod_base_skill_level("elona.action_prayer_of_jure", 1, "set")
+         -- <<<<<<<< shade2/god.hsp:273 		if cGod(pc)=godHeal	:spGain(actHealJure) ..
+      end,
+
+      on_leave_faith = function(chara)
+         -- >>>>>>>> shade2/god.hsp:263 	spDel(actHealJure) ...
+         chara:mod_base_skill_level("elona.action_prayer_of_jure", 0, "set")
+         -- <<<<<<<< shade2/god.hsp:263 	spDel(actHealJure) ..
+      end
    },
    {
       _id = "kumiromi",
       elona_id = 7,
-      wish_name = "kumiromi",
+      is_primary_god = true,
+
       summon = "elona.kumiromi",
       servant = "elona.cute_fairy",
       items = {
-         { id = "elona.kumiromis_gem_stone_of_rejuvenation", _only_once = true },
+         { id = "elona.kumiromis_gem_stone_of_rejuvenation", only_once = true },
       },
       artifact = "elona.kumiromi_scythe",
       blessings = {
@@ -201,24 +204,8 @@ local god = {
          God.make_skill_blessing("elona.literacy", 350, 8),
       },
       offerings = {
-         "elona.magical_seed",
-         "elona.gem_seed",
-         "elona.artifact_seed",
-         "elona.unknown_seed",
-         "elona.herb_seed",
-         "elona.fruit_seed",
-         "elona.vegetable_seed",
-         "elona.leccho",
-         "elona.melon",
-         "elona.cbocchi",
-         "elona.green_pea",
-         "elona.healthy_leaf",
-         "elona.imo",
-         "elona.lettuce",
-         "elona.sweet_potato",
-         "elona.radish",
-         "elona.carrot",
-         "elona.edible_wild_plant",
+         { type = "category", id = "elona.offering_vegetable" },
+         { type = "category", id = "elona.crop_seed" },
       }
    },
 }

@@ -17,6 +17,8 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Chara = require("api.Chara")
 local Const = require("api.Const")
 local World = require("api.World")
+local Item = require("api.Item")
+local God = require("mod.elona.api.God")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
@@ -1193,6 +1195,57 @@ local inv_identify = {
    end
 }
 data:add(inv_identify)
+
+local function find_altar(x, y, map)
+   return Item.at(x, y, map)
+   :filter(function(i) return i:has_category("elona.furniture_altar") end)
+      :nth(1)
+end
+
+local inv_offer = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_offer",
+   elona_id = 19,
+
+   sources = { "chara" },
+   icon = nil,
+   show_money = false,
+   query_amount = false,
+   window_title = "ui.inventory_command.offer",
+   query_text = "ui.inv.title.offer",
+
+   filter = function(ctxt, item)
+      local god = ctxt.chara:calc("god")
+      return God.can_offer_item_to(god, item)
+   end,
+
+   after_filter = function(ctxt, filtered)
+      -- >>>>>>>> shade2/command.hsp:3460 	if invCtrl=19: item_find fltAltar ,2 : if stat=fa ...
+      local altar = find_altar(ctxt.chara.x, ctxt.chara.y, ctxt.chara:current_map())
+
+      if not Item.is_alive(altar) then
+         Gui.mes_duplicate()
+         Gui.mes("ui.inv.offer.no_altar")
+         return "player_turn_query"
+      end
+      -- <<<<<<<< shade2/command.hsp:3460 	if invCtrl=19: item_find fltAltar ,2 : if stat=fa ..
+   end,
+
+   can_select = function(ctxt, item)
+      if item:calc("is_no_drop") then
+         return false, "marked as no drop"
+      end
+
+      return true
+   end,
+
+   on_select = function(ctxt, item, amount)
+      local altar = find_altar(ctxt.chara.x, ctxt.chara.y, ctxt.chara:current_map())
+
+      return God.offer(ctxt.chara, item, altar)
+   end
+}
+data:add(inv_offer)
 
 local inv_equipment = {
    _type = "elona_sys.inventory_proto",

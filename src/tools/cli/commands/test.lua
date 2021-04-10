@@ -17,6 +17,7 @@ local Stopwatch = require("api.Stopwatch")
 local TestUtil = require("api.test.TestUtil")
 local Advice = require("api.Advice")
 local main_state = require("internal.global.main_state")
+local Env = require("api.Env")
 
 local function reset_all_globals()
    Log.debug("Resetting global state.")
@@ -47,6 +48,7 @@ local function reset_all_globals()
    TestUtil = require("api.test.TestUtil")
    Advice = require("api.Advice")
    main_state = require("internal.global.main_state")
+   Env = require("api.Env")
 end
 
 -- Make an environment rejecting the setting of global variables except
@@ -105,13 +107,14 @@ local function cleanup_globals()
    fs.remove(SaveFs.save_path("", "global"))
    field:init_global_data()
    Advice.remove_by_mod(TestUtil.TEST_MOD_ID)
+   Env.clear_ui_results()
 
    config_store.proxy().base.autosave = false
 end
 
 local function print_result(result)
    io.write(ansicolors("%{red}\nFailure: " .. result.test_name .. "\n"))
-   io.write(ansicolors("============(traceback)\n%{reset}" .. result.traceback .. "\n"))
+   io.write(ansicolors("============(traceback)\n%{reset}" .. tostring(result.traceback) .. "\n"))
    io.write("============(stdout)\n" .. result.stdout .. "")
    io.write("============\n")
 end

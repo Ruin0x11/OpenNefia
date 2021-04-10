@@ -93,7 +93,16 @@ function config_holder:__inspect()
 end
 
 function config_holder:__completions()
-   return table.keys(self._data)
+   local format = function(o)
+      return o._id:gsub("([a-zA-Z0-9_]+)%.([a-zA-Z0-9_]+)", "%2")
+   end
+
+   local Env = require("api.Env")
+   return data["base.config_option"]:iter()
+      :filter(Env.mod_filter(self._mod_id))
+      :map(format)
+      :into_sorted()
+      :to_list()
 end
 
 return config_holder

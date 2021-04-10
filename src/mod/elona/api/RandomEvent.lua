@@ -52,8 +52,7 @@ function RandomEvent.random_event_id(kind)
    end
 
    if kind == "sleep" then
-      -- TODO god
-
+      if player:calc("god") ~= nil and Rand.one_in(12) then id = "elona.gaining_faith" end
       if Rand.one_in(80) then id = "elona.creepy_dream" end
       if Rand.one_in(20) then id = "elona.development" end
       if Rand.one_in(25) then id = "elona.wizards_dream" end
