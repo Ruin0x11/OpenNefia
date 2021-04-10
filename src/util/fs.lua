@@ -325,6 +325,15 @@ function fs.copy_directory(from, to)
    return true, nil
 end
 
+function fs.move(from, to)
+   local ok, err = fs.copy(from, to)
+   if not ok then
+      return false, err
+   end
+
+   return fs.remove(from)
+end
+
 function fs.get_temporary_directory()
    if is_windows then
       -- os.tmpname() doesn't include %TEMP% on Windows

@@ -69,7 +69,8 @@ function IChara:pre_build()
    IMapObject.init(self)
 
    self.state = "Dead"
-   self.name = I18N.get_optional("chara." .. self._id .. ".name") or self.name
+
+   self.name = I18N.localize_optional("base.chara", self._id, "name") or self.name
 
    -- NOTE: to add new interfaces/behaviors in mods, connect_self to
    -- base.on_pre_build and run their init() functions there.

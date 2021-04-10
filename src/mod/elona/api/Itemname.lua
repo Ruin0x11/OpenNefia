@@ -147,7 +147,7 @@ local function item_name_sub(s, item, jp)
    end
 
    if item.params.chara_id and item.own_state ~= Enum.OwnState.Quest then
-      local chara_name = I18N.get("chara." .. item.params.chara_id .. ".name")
+      local chara_name = I18N.localize("base.chara", item.params.chara_id, "name")
       if not jp then
          s = s .. " of "
       end
@@ -167,7 +167,7 @@ local function item_name_sub(s, item, jp)
    elseif _id == "elona.bill" then
       s = s .. I18N.get("item.info." .. _id .. ".title", item.params.bill_gold_amount)
    elseif _id == "elona.vomit" and item.params.chara_id then
-      local chara_name = I18N.get("chara." .. item.params.chara_id .. ".name")
+      local chara_name = I18N.localize("base.chara", item.params.chara_id, "name")
       if not jp then
          s = s .. " of "
       end
@@ -348,7 +348,7 @@ function itemname.jp(item, amount, no_article)
    elseif _id == "elona.monster_ball" then
       local chara_id = item.params.monster_ball_captured_chara_id
       if chara_id then
-         local chara_name = I18N.get("chara." .. chara_id .. ".name")
+         local chara_name = I18N.localize("base.chara", chara_id, "name")
          s = s .. ("(%s)"):format(chara_name)
       else
          s = s .. I18N.get("item.info." .. _id .. ".level", item.params.monster_ball_max_level)
@@ -612,7 +612,7 @@ function itemname.en(item, amount, no_article)
    elseif _id == "elona.monster_ball" then
       local chara_id = item.params.monster_ball_captured_chara_id
       if chara_id then
-         local chara_name = I18N.get("chara." .. chara_id .. ".name")
+         local chara_name = I18N.localize("base.chara", chara_id, "name")
          s = s .. (" (%s)"):format(chara_name)
       else
          s = s .. I18N.get("item.info." .. _id .. ".level", item.params.monster_ball_max_level)

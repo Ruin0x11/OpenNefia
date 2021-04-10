@@ -51,7 +51,7 @@ local conquer = {
       if is_unknown then
          objective = I18N.get("quest.types.elona.conquer.unknown_monster")
       else
-         objective = I18N.get("chara." .. self.params.enemy_id .. ".name")
+         objective = I18N.localize("base.chara", self.params.enemy_id, "name")
       end
       return { objective = objective, enemy_level = self.params.enemy_level }
    end,
@@ -132,7 +132,7 @@ local function display_quest_message_conquer(map)
    local quest = Quest.get_immediate_quest()
    -- >>>>>>>> shade2/map.hsp:2165 		if gQuest=qConquer{ ...
    if quest and quest._id == "elona.conquer" then
-      local objective = I18N.get("chara." .. quest.params.enemy_id .. ".name")
+      local objective = I18N.localize("base.chara", quest.params.enemy_id, "name")
       Gui.mes_c("map.quest.on_enter.conquer", "SkyBlue", objective, save.elona_sys.quest_time_limit)
    end
    -- <<<<<<<< shade2/map.hsp:2167 			} ..

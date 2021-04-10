@@ -1,5 +1,4 @@
 local I18N = require("api.I18N")
-local Log = require("api.Log")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Save = require("api.Save")
@@ -55,7 +54,7 @@ function Autopickup.compile_rule(rule)
    while going do
       going = false
       for _, pred in data["autopickup.predicate"]:iter() do
-         local ident = I18N.get_optional(("autopickup.predicate._.%s.identifier"):format(pred._id))
+         local ident = I18N.localize_optional("autopickup.predicate", pred._id, "identifier")
          if ident == nil then
             error(("Autopickup: Missing identifier for predicate %s"):format(pred._id))
          else
@@ -77,7 +76,7 @@ function Autopickup.compile_rule(rule)
    local target_pred = nil
 
    for _, target in data["autopickup.target"]:iter() do
-      local ident = I18N.get_optional(("autopickup.target._.%s.identifier"):format(target._id))
+      local ident = I18N.localize_optional("autopickup.target", target._id, "identifier")
       if ident == nil then
          error(("Autopickup: Missing identifier for target %s"):format(rule))
       else

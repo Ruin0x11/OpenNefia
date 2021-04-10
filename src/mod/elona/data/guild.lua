@@ -85,7 +85,7 @@ do
       progress = {
          [1] = function()
             local target_quota = save.elona.guild_fighter_target_chara_quota
-            local target_name = "chara." .. tostring(save.elona.guild_fighter_target_chara_id) .. ".name"
+            local target_name = I18N.localize("base.chara", save.elona.guild_fighter_target_chara_id, "name")
             return I18N.get("sidequest._.elona.guild_fighter_joining.progress._0", target_quota, target_name)
          end,
          [1000] = "",
@@ -101,7 +101,7 @@ do
       progress = {
          [1] = function()
             local target_quota = save.elona.guild_fighter_target_chara_quota
-            local target_name = "chara." .. tostring(save.elona.guild_fighter_target_chara_id) .. ".name"
+            local target_name = I18N.localize("base.chara", save.elona.guild_fighter_target_chara_id, "name")
             return I18N.get("sidequest._.elona.guild_fighter_quota.progress._0", target_quota, target_name)
          end,
          [1000] = "",
