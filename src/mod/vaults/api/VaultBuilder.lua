@@ -6,6 +6,7 @@ local Area = require("api.Area")
 local InstancedMap = require("api.InstancedMap")
 local Log = require("api.Log")
 local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
+local Rand = require("api.Rand")
 
 local VaultBuilder = class.class("VaultBuilder")
 
@@ -92,7 +93,7 @@ function VaultBuilder:shuffle(shuffle)
    fun.iter(shuffles):each(do_shuffle)
 end
 
-function VaultBuilder:build(area, floor)
+function VaultBuilder:build_raw(area, floor)
    class.assert_is_an("api.InstancedArea", area)
    assert(math.type(floor) == "integer")
    local map = InstancedMap:new(self.width, self.height)
@@ -129,6 +130,97 @@ function VaultBuilder:build(area, floor)
    end
 
    return map, exits
+end
+
+function VaultBuilder:rotate_map(clockwise)
+   if self._tags["no_rotate"] then
+      return
+   end
+
+   local xs, xe, xi, ys, ye, yi
+   if clockwise then
+      xs = 0
+      xe = self.width
+      xi = 1
+      ys = self.height - 1
+      ye = -1
+      yi = -1
+   else
+      xs = self.width - 1
+      xe = -1
+      xi = -1
+      ys = 0
+      ye = self.height
+      yi = 1
+   end
+
+   local new = {}
+
+   for i = xs, xe-1, xi do
+      for j = ys, ye-1, yi do
+         local idx = i + j * self.width + 1
+         new[#new+1] = self.tiles[idx]
+      end
+   end
+
+   self.tiles = new
+
+   local tmp = self.width
+   self.width = self.height
+   self.height = tmp
+end
+
+function VaultBuilder:swap(x1, y1, x2, y2)
+   local idx1 = x1 + y1 * self.width + 1
+   local idx2 = x2 + y2 * self.width + 1
+
+   local tmp = self.tiles[idx1]
+   self.tiles[idx1] = self.tiles[idx2]
+   self.tiles[idx2] = tmp
+end
+
+function VaultBuilder:vmirror_map()
+   if self._tags["no_vmirror"] then
+      return
+   end
+
+   local midpoint = math.floor(self.height / 2) - 1
+
+   for i = 0, self.width - 1 do
+      for j = 0, midpoint do
+         self:swap(i, j, i, self.height - 1 - j)
+      end
+   end
+end
+
+function VaultBuilder:hmirror_map()
+   if self._tags["no_hmirror"] then
+      return
+   end
+
+   local midpoint = math.floor(self.width / 2) - 1
+
+   for i = 0, midpoint do
+      for j = 0, self.height - 1 do
+         self:swap(i, j, self.width - 1 - i, j)
+      end
+   end
+end
+
+function VaultBuilder:build(area, floor)
+   if Rand.one_in(2) then
+      self:rotate_map(Rand.one_in(2) == 0)
+   end
+
+   if Rand.one_in(2) then
+      self:vmirror_map()
+   end
+
+   if Rand.one_in(2) then
+      self:hmirror_map()
+   end
+
+   return self:build_raw(area, floor)
 end
 
 function VaultBuilder.test()
