@@ -7,6 +7,9 @@ local InstancedMap = require("api.InstancedMap")
 local Log = require("api.Log")
 local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
 local Rand = require("api.Rand")
+local WeightedSampler = require("mod.tools.api.WeightedSampler")
+local Filters = require("mod.elona.api.Filters")
+local Itemgen = require("mod.elona.api.Itemgen")
 
 local VaultBuilder = class.class("VaultBuilder")
 
@@ -30,6 +33,7 @@ function VaultBuilder:init(tilemap)
 
    self.width, self.height, self.tiles = VaultTilemap.extract_params(tilemap)
 
+   self._weight = 10
    self._tileset = "vaults.default"
    self.tilemap = {
       ["."] = "vaults.builder_floor",
@@ -37,13 +41,32 @@ function VaultBuilder:init(tilemap)
       ["c"] = "vaults.builder_stone_wall",
       ["v"] = "vaults.builder_metal_wall",
       ["b"] = "vaults.builder_crystal_wall",
+      ["w"] = "vaults.builder_deep_water",
+      ["W"] = "vaults.builder_shallow_water",
    }
    self.callbacks = {
-      ["+"] = function(map, x, y)
-         Feat.create("elona.door", x, y, {}, map)
+      ["$"] = function(map, x, y)
+         Item.create("elona.gold_piece", x, y, {}, map)
+      end,
+      ["*"] = function(map, x, y)
+         local filter = {
+            categories = Rand.choice(Filters.fsetwear),
+            quality = Enum.Quality.Normal
+         }
+         Itemgen.create(x, y, filter, map)
+      end,
+      ["|"] = function(map, x, y)
+         local filter = {
+            categories = Rand.choice(Filters.fsetwear),
+            quality = Enum.Quality.Good
+         }
+         Itemgen.create(x, y, filter, map)
       end,
       ["T"] = function(map, x, y)
          Item.create("elona.fountain", x, y, {}, map)
+      end,
+      ["+"] = function(map, x, y)
+         Feat.create("elona.door", x, y, {}, map)
       end,
       ["}"] = function(map, x, y, area, floor)
          assert(Area.create_stairs_down(area, floor+1, x, y, {}, map))
@@ -72,6 +95,199 @@ end
 function VaultBuilder:tileset(tileset)
    data["elona_sys.map_tileset"]:ensure(tileset)
    self._tileset = tileset
+end
+
+function VaultBuilder:weight(weight)
+   local weight_num = tonumber(weight)
+   if not weight_num then
+      error("Invalid weight " .. tostring(weight))
+   end
+   self._weight = weight_num
+end
+
+function VaultBuilder:mons(mons)
+end
+
+function VaultBuilder:subst(subst)
+   assert(subst:len() > 2)
+   local placeholders = {}
+   local subst_type = nil
+   local pos = nil
+   local i = 1
+
+   for _, c in fun.iter(fun.dup(string.chars(subst))) do
+      Log.warn("%s, %s", i, c)
+      if i == 1 then
+         placeholders[c] = true
+      elseif c == "=" or c == ":" then
+         subst_type = c
+
+         pos = i + 1
+         break
+      end
+      i = i + 1
+   end
+
+   if subst_type == nil then
+      error("Invalid subst " .. subst)
+   end
+
+   local sampler = WeightedSampler:new()
+
+   local rest = string.split(subst:sub(pos), " ")
+   for _, s in fun.iter(rest):filter(function(s) return s ~= "" end) do
+      local colon_pos = s:find(":")
+      if colon_pos then
+         local chars = s:sub(1, colon_pos - 1)
+         local weight = s:sub(colon_pos + 1)
+         local weight_num = tonumber(weight)
+         if not weight_num then
+            error("Invalid weight " .. tostring(weight))
+         end
+         for c in string.chars(chars) do
+            sampler:add(c, weight_num)
+         end
+      else
+         for c in string.chars(s) do
+            sampler:add(c, 10)
+         end
+      end
+   end
+
+   if sampler:len() == 0 then
+      return
+   end
+
+   local new_tile
+   if subst_type == ":" then
+      new_tile = sampler:sample()
+   end
+
+   for idx, tile in ipairs(self.tiles) do
+      if placeholders[tile] then
+         if subst_type == "=" then
+            new_tile = sampler:sample()
+         end
+         self.tiles[idx] = new_tile
+      end
+   end
+end
+
+function VaultBuilder:nsubst(nsubst)
+   assert(nsubst:len() > 2)
+   local placeholders = {}
+   local pos = nil
+
+   local run_subst = function(subst)
+      subst = string.strip_whitespace(subst)
+
+      local num = ""
+      local subst_type = nil
+      local subst_count = nil
+      local pos = nil
+      local i = 1
+
+      for _, c in fun.iter(fun.dup(string.chars(subst))) do
+         if c:match("[0-9*]") then
+            num = num .. c
+         elseif c == "=" or c == ":" then
+            subst_type = c
+
+            if num == "*" then
+               subst_count = "*"
+            else
+               subst_count = tonumber(num)
+               if subst_count == nil then
+                  error("Invalid nsubst substitution " .. subst)
+               end
+            end
+
+            pos = i + 1
+            break
+         end
+         i = i + 1
+      end
+
+      if pos == nil then
+         error("Invalid nsubst substitution " .. subst)
+      end
+
+      local sampler = WeightedSampler:new()
+
+      local rest = string.split(subst:sub(pos), " ")
+      for _, s in fun.iter(rest):filter(function(s) return s ~= "" end) do
+         local colon_pos = s:find(":")
+         if colon_pos then
+            local chars = s:sub(1, colon_pos - 1)
+            local weight = s:sub(colon_pos + 1)
+            local weight_num = tonumber(weight)
+            if not weight_num then
+               error("Invalid weight " .. tostring(weight) .. " " .. s)
+            end
+            for c in string.chars(chars) do
+               sampler:add(c, weight_num)
+            end
+         else
+            for c in string.chars(s) do
+               sampler:add(c, 10)
+            end
+         end
+      end
+
+      if sampler:len() == 0 then
+         return
+      end
+
+      local new_tile
+      if subst_type == ":" then
+         new_tile = sampler:sample()
+      end
+
+      local choices = {}
+
+      for idx, tile in ipairs(self.tiles) do
+         if placeholders[tile] then
+            choices[#choices+1] = idx
+         end
+      end
+
+      Rand.shuffle(choices)
+
+      local limit = subst_count
+      if limit == "*" then
+         limit = #choices
+      end
+
+      for i = 1, limit do
+         local idx = choices[i]
+         if subst_type == "=" then
+            new_tile = sampler:sample()
+         end
+         self.tiles[idx] = new_tile
+      end
+   end
+
+   nsubst = string.strip_whitespace(nsubst)
+
+   local i = 1
+   for _, c in fun.iter(fun.dup(string.chars(nsubst))) do
+      if i == 1 then
+         placeholders[c] = true
+      elseif c == "=" then
+         pos = i + 1
+         break
+      end
+      i = i + 1
+   end
+
+   if pos == nil then
+      error("Invalid nsubst " .. nsubst)
+   end
+
+   local rest = string.split(nsubst:sub(pos), "/")
+   for _, subst in ipairs(rest) do
+      run_subst(subst)
+   end
 end
 
 function VaultBuilder:shuffle(shuffle)
@@ -224,17 +440,17 @@ function VaultBuilder:build(area, floor)
 end
 
 function VaultBuilder.test()
-   local test = require("mod.vaults.data.vaults.test")
+   local test = require("mod.vaults.data.vaults.test2")
 
    local builder = VaultBuilder:new(test.map)
    test.main(builder)
    local map, exits = builder:build(Area.current(), 20)
 
-   local parent = InstancedMap:new(50, 50)
+   local parent = InstancedMap:new(math.max(50, builder.width), math.max(50, builder.height))
    parent:clear("vaults.builder_rock_wall")
    parent.tileset = map.tileset
 
-   parent:splice(map, 25 - map:width() / 2, 25 - map:height() / 2)
+   parent:splice(map, parent:width() / 2 - map:width() / 2, parent:height() / 2 - map:height() / 2)
 
    MapTileset.apply(parent.tileset, parent)
 

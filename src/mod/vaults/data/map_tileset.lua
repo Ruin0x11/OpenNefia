@@ -7,6 +7,8 @@ data:add_multi(
       { _id = "builder_stone_wall", image = "graphic/default/floor.png", is_solid = true },
       { _id = "builder_metal_wall", image = "graphic/default/floor.png", is_solid = true },
       { _id = "builder_crystal_wall", image = "graphic/default/floor.png", is_solid = true },
+      { _id = "builder_deep_water", image = "graphic/default/floor.png", is_solid = true },
+      { _id = "builder_shallow_water", image = "graphic/default/floor.png", is_solid = false },
 })
 
 data:add {
@@ -19,6 +21,8 @@ data:add {
       ["vaults.builder_stone_wall"] = "elona.wall_concrete_light_top",
       ["vaults.builder_metal_wall"] = "elona.wall_concrete_light_top",
       ["vaults.builder_crystal_wall"] = "elona.wall_stone_6_top",
+      ["vaults.builder_deep_water"] = "elona.anime_water_sea",
+      ["vaults.builder_shallow_water"] = "elona.anime_water_shallow",
    },
 
    fog = "elona.wall_stone_4_fog"
