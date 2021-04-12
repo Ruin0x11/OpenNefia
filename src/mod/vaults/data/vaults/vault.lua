@@ -2,6 +2,12 @@ data:add_type {
    name = "vault"
 }
 
+require("mod.vaults.data.vaults.test2")
+require("mod.vaults.data.vaults.arrival")
+require("mod.vaults.data.vaults.lines")
+require("mod.vaults.data.vaults.float")
+
+
 --[[
 -- tags:
 --

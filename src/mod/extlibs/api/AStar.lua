@@ -25,7 +25,7 @@
 
 local Pos = require("api.Pos")
 
-local AStar = {}
+local AStar = class.class("AStar")
 
 ----------------------------------------------------------------
 -- local functions
@@ -138,38 +138,50 @@ end
 -- exposed functions
 ----------------------------------------------------------------
 
-function AStar.make_access_table(map)
-   local access = {}
-   for _, x, y in map:iter_tiles() do
-      local ind = y * map:width() + x + 1
-      access[ind] = { x = x, y = y, can_access = map:can_access(x, y) }
-   end
-   access.width = map:width()
-   access.height = map:height()
-   return access
+function AStar:init(map, cache, valid_node_cb, cost_cb)
+   self.map = map
+   self.access = {}
+   self.cache = cache or {}
+
+   self.valid_node_cb = valid_node_cb or nil
+   self.cost_cb = cost_cb or nil
+
+   self:refresh_from_map()
 end
 
-function AStar.path(start_x, start_y, goal_x, goal_y, access, cache, valid_node_cb, cost_cb)
-   local start_ind = start_y * access.width + start_x + 1;
-   local goal_ind = goal_y * access.width + goal_x + 1;
-   local start = assert(access[start_ind])
-   local goal = assert(access[goal_ind])
+function AStar:refresh_from_map()
+   local access = {}
+   for _, x, y in self.map:iter_tiles() do
+      local ind = y * self.map:width() + x + 1
+      access[ind] = { x = x, y = y, can_access = self.map:can_access(x, y) }
+   end
+   access.width = self.map:width()
+   access.height = self.map:height()
+
+   self.access = access
+end
+
+function AStar:path(start_x, start_y, goal_x, goal_y)
+   local start_ind = start_y * self.access.width + start_x + 1;
+   local goal_ind = goal_y * self.access.width + goal_x + 1;
+   local start = assert(self.access[start_ind])
+   local goal = assert(self.access[goal_ind])
    assert(start.x == start_x and start.y == start_y)
    assert(goal.x == goal_x and goal.y == goal_y)
 
-   if cache then
-      if not cache[start] then
-         cache[start] = {}
-      elseif cache[start][goal] then
-         return cache[start][goal]
+   if self.cache then
+      if not self.cache[start] then
+         self.cache[start] = {}
+      elseif self.cache[start][goal] then
+         return self.cache[start][goal]
       end
    end
 
-   local res_path = a_star(start, goal, access, valid_node_cb, cost_cb)
+   local res_path = a_star(start, goal, self.access, self.valid_node_cb, self.cost_cb)
 
-   if cache then
-      if not cache[start][goal] then
-         cache[start][goal] = res_path
+   if self.cache then
+      if not self.cache[start][goal] then
+         self.cache[start][goal] = res_path
       end
    end
 

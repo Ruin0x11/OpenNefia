@@ -262,72 +262,7 @@ local function place_vault(vault_id, map, area, floor, check_collisions, mask)
    return nil
 end
 
-local function get_connecting_path(map, exit, mask)
-   local ex = exit.x
-   local ey = exit.y
-
-   local function can_pass(x, y)
-      local border = 4
-      -- TODO capability data for existing vaults in map
-      return x >= border and y >= border
-         and x < map:width() - border and y < map:height() - border
-         and not (mask[x] and mask[x][y])
-   end
-
-   local tiles = {}
-   for _, x, y in Pos.iter_surrounding_orth(ex, ey):filter(can_pass) do
-      tiles[#tiles+1] = { x = x, y = y }
-   end
-
-   local path = {}
-   local seen = {}
-   local success = false
-
-   while next(tiles) and not success do
-      local key = Rand.choice(table.keys(tiles))
-      local pos = tiles[key]
-      tiles[key] = nil
-      seen[pos.x] = seen[pos.x] or {}
-      seen[pos.x][pos.y] = true
-
-      path[#path+1] = pos
-
-      for _, x, y in Pos.iter_surrounding_orth(pos.x, pos.y) do
-         local tile = map:tile(x, y)
-         if tile._id == "vaults.builder_floor" then
-            success = true
-         end
-
-         path[#path+1] = { x = x, y = y }
-         seen[x] = seen[x] or {}
-         seen[x][y] = true
-
-         if can_overwrite(map, x, y, false, mask) then
-            for _, x, y in Pos.iter_surrounding(pos.x, pos.y):filter(can_pass) do
-               if not seen[x] or not seen[x][y] then
-                  tiles[#tiles+1] = { x = x, y = y }
-               end
-            end
-         end
-      end
-   end
-
-   if success then
-      return path
-   end
-
-   return nil
-end
-
 local function connect_vault_exit(map, exit, mask)
-   local path = get_connecting_path(map, exit, mask)
-   if path then
-      for _, pos in ipairs(path) do
-         map:set_tile(pos.x, pos.y, "vaults.builder_floor")
-      end
-   end
-
-   return path
 end
 
 local function place_secondary_vaults(map, area, floor, mask)

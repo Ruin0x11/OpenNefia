@@ -303,6 +303,8 @@ function VaultBuilder:build_raw(area, floor)
          limit = #choices
       end
 
+      limit = math.min(limit, #choices)
+
       for i = 1, limit do
          local idx = choices[i]
          if subst.type == "=" then
