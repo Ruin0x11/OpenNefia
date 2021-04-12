@@ -40,7 +40,8 @@ local collect = {
    generate = function(self, client, start, map)
       local target_chara, target_item
 
-      local charas = Rand.shuffle(map:iter_charas():to_list())
+      local charas = map:iter_charas():to_list()
+      Rand.shuffle(charas)
 
       for _, chara in ipairs(charas)  do
          if chara.uid ~= client.uid then

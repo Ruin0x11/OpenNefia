@@ -105,21 +105,16 @@ function Rand.dice_max(dice_x, dice_y, add)
    return dice_x * dice_y + add
 end
 
--- Randomly shuffles the elements of a table. Returns a new table.
+-- Randomly shuffles the elements of a table.
 --
--- @tparam table tbl immutable
--- @tparam table res
+-- @tparam table tbl mutable
 function Rand.shuffle(tbl)
-   local res = table.shallow_copy(tbl)
-
-   for i=1, #res do
-      local j = Rand.rnd(#res-i+1) + i
-      local tmp = res[j]
-      res[j] = res[i]
-      res[i] = tmp
+   for i=1, #tbl do
+      local j = Rand.rnd(#tbl-i+1) + i
+      local tmp = tbl[j]
+      tbl[j] = tbl[i]
+      tbl[i] = tmp
    end
-
-   return res
 end
 
 return Rand

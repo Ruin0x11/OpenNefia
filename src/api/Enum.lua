@@ -54,11 +54,11 @@ local function enum_index(name)
    end
 end
 
-local function enum(name, tbl)
+function Enum.new(name, tbl)
    return setmetatable(tbl, { __index = enum_index(name) })
 end
 
-Enum.Quality = enum("Quality", {
+Enum.Quality = Enum.new("Quality", {
    Bad    = 1,
    Normal = 2,
    Good   = 3,
@@ -67,7 +67,7 @@ Enum.Quality = enum("Quality", {
    Unique = 6,
 })
 
-Enum.TileRole = enum("TileRole", {
+Enum.TileRole = Enum.new("TileRole", {
 	None          = 0,
 	Dryground     = 1,
 	Crop          = 2,
@@ -81,7 +81,7 @@ Enum.TileRole = enum("TileRole", {
 	SandWater     = 10
 })
 
-Enum.OwnState = enum("OwnState", {
+Enum.OwnState = Enum.new("OwnState", {
     Inherited    = -2,
     None         = 0,
     NotOwned     = 1, -- TODO rename to NPC
@@ -91,21 +91,21 @@ Enum.OwnState = enum("OwnState", {
     Unobtainable = 5
 })
 
-Enum.IdentifyState = enum("IdentifyState", {
+Enum.IdentifyState = Enum.new("IdentifyState", {
 	None    =  0,
 	Name    =  1,
 	Quality =  2,
 	Full    =  3
 })
 
-Enum.CurseState = enum("CurseState", {
+Enum.CurseState = Enum.new("CurseState", {
 	Doomed  = -2,
 	Cursed  = -1,
 	Normal  = 0,
 	Blessed = 1
 })
 
-Enum.Color = enum("Color", {
+Enum.Color = Enum.new("Color", {
    White =         { 255, 255, 255 },
    Green =         { 175, 255, 175 },
    Red =           { 255, 155, 155 },
@@ -128,7 +128,7 @@ Enum.Color = enum("Color", {
 })
 
 -- >>>>>>>> shade2/init.hsp:280 	#enum global aiNull=0 ..
-Enum.AiBehavior = enum("AiBehavior", {
+Enum.AiBehavior = Enum.new("AiBehavior", {
    Null = 0,
    Roam = 1,
    Dull = 2,
@@ -139,7 +139,7 @@ Enum.AiBehavior = enum("AiBehavior", {
 -- <<<<<<<< shade2/init.hsp:285 	#enum global aiSpecial ..
 
 -- >>>>>>>> shade2/init.hsp:825 	#enum global fltGoblin=1 ..
-Enum.CharaCategory = enum("CharaCategory", {
+Enum.CharaCategory = Enum.new("CharaCategory", {
    Goblin = 1,
    Orc = 2,
    Slime = 3,
@@ -167,7 +167,7 @@ Enum.CharaCategory = enum("CharaCategory", {
 -- <<<<<<<< shade2/init.hsp:847 	#enum global fltHoundChaos ...
 
 -- >>>>>>>> shade2/init.hsp:815 	#enum global fltSp=1 ..
-Enum.FltSelect = enum("FltSelect", {
+Enum.FltSelect = Enum.new("FltSelect", {
 	Sp = 1,
 	Unique = 2,
 	SpUnique = 3,
@@ -181,7 +181,7 @@ Enum.FltSelect = enum("FltSelect", {
 -- <<<<<<<< shade2/init.hsp:823 	#enum global fltTownSp ..
 
 -- >>>>>>>> shade2/init.hsp:366 	#define global cAlly		10 ...
-Enum.Relation = enum("Relation", {
+Enum.Relation = Enum.new("Relation", {
     Ally = 10,
     Neutral = 0,
     Dislike = -1,
@@ -190,7 +190,7 @@ Enum.Relation = enum("Relation", {
 })
 -- <<<<<<<< shade2/init.hsp:370 	#define global cEnemy		-3 ..
 
-Enum.Burden = enum("Burden", {
+Enum.Burden = Enum.new("Burden", {
     None = 0,
     Light = 1,
     Moderate = 2,

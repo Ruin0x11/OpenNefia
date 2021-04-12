@@ -754,8 +754,8 @@ function InstancedMap:set_previous_map_and_location(map, x, y)
 
    self._previous_map = {
       map_uid = map.uid,
-      x = x,
-      y = y
+      x = math.floor(x),
+      y = math.floor(y)
    }
 end
 
@@ -766,6 +766,22 @@ function InstancedMap:previous_map_and_location()
    end
 
    return prev.map_uid, prev.x, prev.y
+end
+
+function InstancedMap:splice(other_map, x, y)
+   class.assert_is_an("api.InstancedMap", other_map)
+   x = math.floor(x)
+   y = math.floor(y)
+   for _, ox, oy, tile in other_map:iter_tiles() do
+      for _, obj in self:objects_at_pos(x + ox, y + oy) do
+         obj:remove_ownership()
+      end
+      self:set_tile(x + ox, y + oy, tile._id)
+   end
+   for _, obj in other_map:iter() do
+      local new = obj:clone()
+      self:take_object(new, x + obj.x, y + obj.y)
+   end
 end
 
 --

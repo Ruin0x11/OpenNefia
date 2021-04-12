@@ -1,0 +1,3 @@
+local VaultMap = {}
+
+return VaultMap

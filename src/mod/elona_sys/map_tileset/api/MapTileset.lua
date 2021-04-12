@@ -1,5 +1,7 @@
-local MapTileset = {}
 local InstancedMap = require("api.InstancedMap")
+local Rand = require("api.Rand")
+
+local MapTileset = {}
 
 local function convert_fog(tileset, map)
    local fog = tileset.fog
@@ -18,7 +20,7 @@ local function convert_fog(tileset, map)
    map.default_tile = id
 end
 
-local function convert_tiles(tileset, map)
+local function convert_tiles(tileset, map, overwrite_all)
    local default = data["elona_sys.map_tileset"]["elona.default"]
 
    for _, x, y, tile in map:iter_tiles() do
@@ -37,7 +39,7 @@ local function convert_tiles(tileset, map)
          end
       end
 
-      if match == nil then
+      if match == nil and overwrite_all then
          match = default.tiles[tile._id]
       end
 
@@ -75,7 +77,7 @@ local function convert_doors(tileset, map)
    end
 end
 
-function MapTileset.apply(tileset_id, map)
+function MapTileset.apply(tileset_id, map, overwrite_all)
    local tileset = data["elona_sys.map_tileset"]:ensure(tileset_id)
 
    if tileset.fog then
@@ -83,7 +85,7 @@ function MapTileset.apply(tileset_id, map)
    end
 
    if tileset.tiles then
-      convert_tiles(tileset, map)
+      convert_tiles(tileset, map, overwrite_all)
    end
 
    if tileset.door then
@@ -120,6 +122,15 @@ end
 function MapTileset.get_default_tile(map)
    local tileset = data["elona_sys.map_tileset"]:ensure(map.tileset or "elona.default")
    return tileset.fog
+end
+
+function MapTileset.pick(choices, chance)
+   return function()
+      if Rand.one_in(chance) then
+         return Rand.choice(choices)
+      end
+      return choices[1]
+   end
 end
 
 return MapTileset
