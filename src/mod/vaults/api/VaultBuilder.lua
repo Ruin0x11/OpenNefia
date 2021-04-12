@@ -14,7 +14,6 @@ local Itemgen = require("mod.elona.api.Itemgen")
 local VaultBuilder = class.class("VaultBuilder")
 
 VaultBuilder.Orient = Enum.new("Orient", {
-   Minivault = "minivault",
    Float = "float",
    Encompass = "encompass",
    North = "north",
@@ -25,17 +24,20 @@ VaultBuilder.Orient = Enum.new("Orient", {
    Southeast = "southeast",
    East = "east",
    Northeast = "northeast",
+   Center = "center",
 })
 
-function VaultBuilder:init(tilemap)
-   self._tags = table.set {}
-   self._orient = VaultBuilder.Orient.Minivault
+function VaultBuilder:init(vault_id)
+   self._orient = nil
+   self.vault = data["vaults.vault"]:ensure(vault_id)
 
-   self.width, self.height, self.tiles = VaultTilemap.extract_params(tilemap)
+   self.width, self.height, self.tiles = VaultTilemap.extract_params(self.vault.tilemap)
 
    self._weight = 10
    self._tileset = "vaults.default"
+   self._substs = {}
    self.tilemap = {
+      [" "] = "vaults.builder_empty",
       ["."] = "vaults.builder_floor",
       ["x"] = "vaults.builder_rock_wall",
       ["c"] = "vaults.builder_stone_wall",
@@ -74,17 +76,19 @@ function VaultBuilder:init(tilemap)
       ["{"] = function(map, x, y, area, floor)
          if floor == 1 then
             local parent_area = Area.parent(area)
-            local _, _, floor = parent_area:child_area_position(area)
-            assert(Area.create_stairs_up(parent_area, floor, x, y, {}, map))
+            if parent_area then
+               local _, _, floor = parent_area:child_area_position(area)
+               assert(Area.create_stairs_up(parent_area, floor, x, y, {}, map))
+            else
+               Feat.create("elona.stairs_up", x, y, {}, map)
+            end
          else
             assert(Area.create_stairs_up(area, floor-1, x, y, {}, map))
          end
       end,
    }
-end
 
-function VaultBuilder:tags(tag)
-   self._tags[tag] = true
+   self.vault.build(self)
 end
 
 function VaultBuilder:orient(orient)
@@ -116,7 +120,6 @@ function VaultBuilder:subst(subst)
    local i = 1
 
    for _, c in fun.iter(fun.dup(string.chars(subst))) do
-      Log.warn("%s, %s", i, c)
       if i == 1 then
          placeholders[c] = true
       elseif c == "=" or c == ":" then
@@ -158,19 +161,7 @@ function VaultBuilder:subst(subst)
       return
    end
 
-   local new_tile
-   if subst_type == ":" then
-      new_tile = sampler:sample()
-   end
-
-   for idx, tile in ipairs(self.tiles) do
-      if placeholders[tile] then
-         if subst_type == "=" then
-            new_tile = sampler:sample()
-         end
-         self.tiles[idx] = new_tile
-      end
-   end
+   table.insert(self._substs, { placeholders = placeholders, type = subst_type, sampler = sampler, count = nil })
 end
 
 function VaultBuilder:nsubst(nsubst)
@@ -194,7 +185,7 @@ function VaultBuilder:nsubst(nsubst)
             subst_type = c
 
             if num == "*" then
-               subst_count = "*"
+               subst_count = nil
             else
                subst_count = tonumber(num)
                if subst_count == nil then
@@ -238,33 +229,7 @@ function VaultBuilder:nsubst(nsubst)
          return
       end
 
-      local new_tile
-      if subst_type == ":" then
-         new_tile = sampler:sample()
-      end
-
-      local choices = {}
-
-      for idx, tile in ipairs(self.tiles) do
-         if placeholders[tile] then
-            choices[#choices+1] = idx
-         end
-      end
-
-      Rand.shuffle(choices)
-
-      local limit = subst_count
-      if limit == "*" then
-         limit = #choices
-      end
-
-      for i = 1, limit do
-         local idx = choices[i]
-         if subst_type == "=" then
-            new_tile = sampler:sample()
-         end
-         self.tiles[idx] = new_tile
-      end
+      table.insert(self._substs, { placeholders = placeholders, type = subst_type, sampler = sampler, count = subst_count })
    end
 
    nsubst = string.strip_whitespace(nsubst)
@@ -317,6 +282,36 @@ function VaultBuilder:build_raw(area, floor)
 
    local exits = {}
 
+   for _, subst in ipairs(self._substs) do
+      local new_tile
+      if subst.type == ":" then
+         new_tile = subst.sampler:sample()
+      end
+
+      local choices = {}
+
+      for idx, tile in ipairs(self.tiles) do
+         if subst.placeholders[tile] then
+            choices[#choices+1] = idx
+         end
+      end
+
+      Rand.shuffle(choices)
+
+      local limit = subst.count
+      if limit == nil then
+         limit = #choices
+      end
+
+      for i = 1, limit do
+         local idx = choices[i]
+         if subst.type == "=" then
+            new_tile = subst.sampler:sample()
+         end
+         self.tiles[idx] = new_tile
+      end
+   end
+
    for idx, tile in ipairs(self.tiles) do
       local x = (idx-1) % self.width
       local y = math.floor((idx-1) / self.width)
@@ -334,7 +329,7 @@ function VaultBuilder:build_raw(area, floor)
 
       if map_tile == nil then
          if callback == nil then
-            Log.warn("Missing tile '%s' in vault tilemap", tile)
+            Log.debug("Missing tile '%s' in vault tilemap", tile)
          end
          map_tile = "vaults.builder_floor"
       end
@@ -348,8 +343,8 @@ function VaultBuilder:build_raw(area, floor)
    return map, exits
 end
 
-function VaultBuilder:rotate_map(clockwise)
-   if self._tags["no_rotate"] then
+function VaultBuilder:rotate_map(tags, clockwise)
+   if tags["no_rotate"] then
       return
    end
 
@@ -395,8 +390,8 @@ function VaultBuilder:swap(x1, y1, x2, y2)
    self.tiles[idx2] = tmp
 end
 
-function VaultBuilder:vmirror_map()
-   if self._tags["no_vmirror"] then
+function VaultBuilder:vmirror_map(tags)
+   if tags["no_vmirror"] then
       return
    end
 
@@ -409,8 +404,8 @@ function VaultBuilder:vmirror_map()
    end
 end
 
-function VaultBuilder:hmirror_map()
-   if self._tags["no_hmirror"] then
+function VaultBuilder:hmirror_map(tags)
+   if tags["no_hmirror"] then
       return
    end
 
@@ -424,37 +419,23 @@ function VaultBuilder:hmirror_map()
 end
 
 function VaultBuilder:build(area, floor)
+   local tags = self.vault.tags(area, floor)
+
    if Rand.one_in(2) then
-      self:rotate_map(Rand.one_in(2) == 0)
+      self:rotate_map(tags, Rand.one_in(2) == 0)
    end
 
    if Rand.one_in(2) then
-      self:vmirror_map()
+      self:vmirror_map(tags)
    end
 
    if Rand.one_in(2) then
-      self:hmirror_map()
+      self:hmirror_map(tags)
    end
 
-   return self:build_raw(area, floor)
-end
+   local map, exits = self:build_raw(area, floor)
 
-function VaultBuilder.test()
-   local test = require("mod.vaults.data.vaults.test2")
-
-   local builder = VaultBuilder:new(test.map)
-   test.main(builder)
-   local map, exits = builder:build(Area.current(), 20)
-
-   local parent = InstancedMap:new(math.max(50, builder.width), math.max(50, builder.height))
-   parent:clear("vaults.builder_rock_wall")
-   parent.tileset = map.tileset
-
-   parent:splice(map, parent:width() / 2 - map:width() / 2, parent:height() / 2 - map:height() / 2)
-
-   MapTileset.apply(parent.tileset, parent)
-
-   return parent
+   return map, exits, tags
 end
 
 return VaultBuilder

@@ -2,7 +2,7 @@ local VaultTilemap = {}
 local Rand = require("api.Rand")
 
 local function split_layout_string(str, pad_tile)
-   pad_tile = pad_tile or "x"
+   pad_tile = pad_tile or " "
    local lines = string.split(str, "\n")
 
    local max_len = fun.iter(lines):map(string.len):max()

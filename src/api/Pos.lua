@@ -329,4 +329,27 @@ function Pos.iter_surrounding(x, y)
    return fun.wrap(iter_border, {start_x=start_x,end_x=end_x,start_y=start_y,end_y=end_y}, {x=start_x,y=start_y})
 end
 
+local function iter_orth(state, index)
+   if index == 1 then
+      return index + 1, state.x - 1, state.y
+   elseif index == 2 then
+      return index + 1, state.x, state.y - 1
+   elseif index == 3 then
+      return index + 1, state.x + 1, state.y
+   elseif index == 4 then
+      return index + 1, state.x, state.y + 1
+   else
+      return nil
+   end
+end
+
+--- Iterates points surrounding a position in the orthogonal directions.
+---
+--- @tparam int x
+--- @tparam int y
+--- @treturn Iterator(int,int)
+function Pos.iter_surrounding_orth(x, y)
+   return fun.wrap(iter_orth, {x=x,y=y}, 1)
+end
+
 return Pos
