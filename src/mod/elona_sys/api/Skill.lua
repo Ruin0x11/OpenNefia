@@ -200,9 +200,9 @@ local function skill_change_text(chara, skill_id, is_increase)
    local skill_name = I18N.localize("base.skill", skill_id, "name")
 
    if is_increase then
-      return I18N.get("skill.default.increase", chara, skill_name)
+      return I18N.get("skill.default.on_increase", chara, skill_name)
    else
-      return I18N.get("skill.default.decrease", chara, skill_name)
+      return I18N.get("skill.default.on_decrease", chara, skill_name)
    end
 end
 
