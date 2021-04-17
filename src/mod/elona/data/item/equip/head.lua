@@ -2,77 +2,6 @@ local Enum = require("api.Enum")
 local light = require("mod.elona.data.item.light")
 
 --
--- Light Helm
---
-
-data:add {
-   _type = "base.item",
-   _id = "magic_hat",
-   elona_id = 5,
-   image = "elona.item_magic_hat",
-   value = 1400,
-   weight = 600,
-   pv = 4,
-   dv = 6,
-   material = "elona.soft",
-   level = 15,
-   category = 12000,
-   equip_slots = { "elona.head" },
-   subcategory = 12002,
-   coefficient = 100,
-   categories = {
-      "elona.equip_head_hat",
-      "elona.equip_head"
-   }
-}
-
-data:add {
-   _type = "base.item",
-   _id = "fairy_hat",
-   elona_id = 6,
-   image = "elona.item_fairy_hat",
-   value = 7200,
-   weight = 400,
-   pv = 5,
-   dv = 7,
-   material = "elona.soft",
-   level = 30,
-   category = 12000,
-   equip_slots = { "elona.head" },
-   subcategory = 12002,
-   coefficient = 100,
-
-   categories = {
-      "elona.equip_head_hat",
-      "elona.equip_head"
-   },
-
-   enchantments = {
-      { _id = "elona.res_mutation", power = 100 },
-   }
-}
-
-data:add {
-   _type = "base.item",
-   _id = "feather_hat",
-   elona_id = 463,
-   image = "elona.item_feather_hat",
-   value = 400,
-   weight = 500,
-   pv = 1,
-   dv = 5,
-   material = "elona.soft",
-   category = 12000,
-   equip_slots = { "elona.head" },
-   subcategory = 12002,
-   coefficient = 100,
-   categories = {
-      "elona.equip_head_hat",
-      "elona.equip_head"
-   }
-}
-
---
 -- Heavy Helm
 --
 
@@ -240,5 +169,76 @@ data:add {
       { _id = "elona.extra_shoot", power = 150 },
       { _id = "elona.damage_reflection", power = 180 },
       { _id = "elona.res_mutation", power = 100 },
+   }
+}
+
+--
+-- Light Helm
+--
+
+data:add {
+   _type = "base.item",
+   _id = "magic_hat",
+   elona_id = 5,
+   image = "elona.item_magic_hat",
+   value = 1400,
+   weight = 600,
+   pv = 4,
+   dv = 6,
+   material = "elona.soft",
+   level = 15,
+   category = 12000,
+   equip_slots = { "elona.head" },
+   subcategory = 12002,
+   coefficient = 100,
+   categories = {
+      "elona.equip_head_hat",
+      "elona.equip_head"
+   }
+}
+
+data:add {
+   _type = "base.item",
+   _id = "fairy_hat",
+   elona_id = 6,
+   image = "elona.item_fairy_hat",
+   value = 7200,
+   weight = 400,
+   pv = 5,
+   dv = 7,
+   material = "elona.soft",
+   level = 30,
+   category = 12000,
+   equip_slots = { "elona.head" },
+   subcategory = 12002,
+   coefficient = 100,
+
+   categories = {
+      "elona.equip_head_hat",
+      "elona.equip_head"
+   },
+
+   enchantments = {
+      { _id = "elona.res_mutation", power = 100 },
+   }
+}
+
+data:add {
+   _type = "base.item",
+   _id = "feather_hat",
+   elona_id = 463,
+   image = "elona.item_feather_hat",
+   value = 400,
+   weight = 500,
+   pv = 1,
+   dv = 5,
+   material = "elona.soft",
+   category = 12000,
+   equip_slots = { "elona.head" },
+   subcategory = 12002,
+   coefficient = 100,
+   categories = {
+      "elona.equip_head_hat",
+      "elona.equip_head"
    }
 }
