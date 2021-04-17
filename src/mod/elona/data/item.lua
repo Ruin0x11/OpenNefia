@@ -241,24 +241,6 @@ local item =
          is_wishable = false
       },
       {
-         _id = "decorative_ring",
-         elona_id = 13,
-         knownnameref = "ring",
-         image = "elona.item_decorative_ring",
-         value = 450,
-         weight = 50,
-         material = "elona.soft",
-         category = 32000,
-         equip_slots = { "elona.ring" },
-         subcategory = 32001,
-         coefficient = 100,
-         has_random_name = true,
-         categories = {
-            "elona.equip_ring_ring",
-            "elona.equip_ring"
-         }
-      },
-      {
          _id = "book_unreadable",
          elona_id = 23,
          image = "elona.item_book",
@@ -1135,10 +1117,6 @@ local item =
          equip_slots = { "elona.ring" },
          subcategory = 32001,
          coefficient = 100,
-
-         _copy = {
-            
-         },
 
          is_precious = true,
          identify_difficulty = 500,
