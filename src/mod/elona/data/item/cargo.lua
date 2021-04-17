@@ -17,7 +17,7 @@ data:add {
       "elona.cargo"
    },
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 1,
          cargo_weight = 6500
@@ -37,7 +37,7 @@ data:add {
       "elona.cargo"
    },
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 2,
          cargo_weight = 10000
@@ -58,7 +58,7 @@ data:add {
       "elona.cargo"
    },
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 4,
          cargo_weight = 50000
@@ -78,7 +78,7 @@ data:add {
       "elona.cargo"
    },
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 5,
          cargo_weight = 4800
@@ -99,7 +99,7 @@ data:add {
       "elona.cargo"
    },
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 3,
          cargo_weight = 12000
@@ -120,7 +120,7 @@ data:add {
       "elona.cargo"
    },
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 0,
          cargo_weight = 10000
@@ -141,7 +141,7 @@ data:add {
       "elona.cargo"
    },
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 3,
          cargo_weight = 48000
@@ -162,7 +162,7 @@ data:add {
       "elona.cargo"
    },
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 0,
          cargo_weight = 7500
@@ -183,7 +183,7 @@ data:add {
       "elona.cargo"
    },
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 2,
          cargo_weight = 16000
@@ -204,7 +204,7 @@ data:add {
       "elona.cargo"
    },
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 1,
          cargo_weight = 32000
@@ -226,7 +226,7 @@ data:add {
       "elona.cargo"
    },
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 5,
          cargo_weight = 1500
@@ -250,7 +250,7 @@ data:add {
 
    light = light.crystal_high,
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 6,
          cargo_weight = 60000
@@ -273,7 +273,7 @@ data:add {
 
    light = light.item,
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 6,
          cargo_weight = 11000
@@ -294,7 +294,7 @@ data:add {
       "elona.cargo"
    },
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 7,
          cargo_weight = 35000
@@ -314,7 +314,7 @@ data:add {
       "elona.cargo"
    },
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 7,
          cargo_weight = 7000
@@ -340,7 +340,7 @@ data:add {
       "elona.cargo_food"
    },
 
-   ext = {
+   _ext = {
       [IItemCargo] = {
          cargo_quality = 0,
          cargo_weight = 2000

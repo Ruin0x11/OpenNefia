@@ -11,7 +11,7 @@ function test_IAspectHolder_normal_build()
       _type = "base.item",
       _id = "aspected",
 
-      ext = {
+      _ext = {
          AspectHolder_ITestAspect
       }
    }
@@ -19,6 +19,7 @@ function test_IAspectHolder_normal_build()
    local item = Item.create("@test@.aspected", nil, nil, {ownerless = true})
 
    Assert.eq(1, IAspectHolder.iter_aspects(item):length())
+   Assert.eq(nil, item._ext)
 
    local aspect = IAspectHolder.get_aspect(item, AspectHolder_ITestAspect)
    Assert.eq(true, class.is_an(AspectHolder_TestAspect, aspect))
@@ -30,7 +31,7 @@ function test_IAspectHolder_normal_build__params()
       _type = "base.item",
       _id = "aspected_with_params",
 
-      ext = {
+      _ext = {
          [AspectHolder_ITestAspect] = {
             my_foo = 42
          }

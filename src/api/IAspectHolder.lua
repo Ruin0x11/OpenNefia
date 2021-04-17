@@ -21,9 +21,9 @@ local function default_aspect(obj, iface, params)
 end
 
 function IAspectHolder:normal_build(params)
-   local ext = self.proto.ext
-   if ext then
-      for k, v in pairs(ext) do
+   local _ext = self.proto._ext
+   if _ext then
+      for k, v in pairs(_ext) do
          if type(k) == "number" and is_aspect(v) then
             default_aspect(self, v, params)
          elseif is_aspect(k) then
