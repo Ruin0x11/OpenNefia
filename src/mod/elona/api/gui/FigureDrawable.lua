@@ -1,7 +1,8 @@
+local IComparable = require("api.IComparable")
 local IDrawable = require("api.gui.IDrawable")
 local Draw = require("api.Draw")
 
-local FigureDrawable = class.class("FigureDrawable", IDrawable)
+local FigureDrawable = class.class("FigureDrawable", { IDrawable, IComparable })
 
 function FigureDrawable:init(chip_id, color)
    self.batch = nil
@@ -37,6 +38,18 @@ function FigureDrawable:draw(x, y, w, h, centered, rot)
       self.batch:draw()
    end
    -- <<<<<<<< shade2/module.hsp:577 	:if %%1=531:pos 8,1058-chipCh(%%2):gcopy selChr,chi ..
+end
+
+function FigureDrawable:compare(other)
+   if self.chip_id ~= other.chip_id then
+      return false
+   end
+
+   if self.color and other.color then
+      return table.deepcompare(self.color, other.color)
+   end
+
+   return self.color == nil and other.color == nil
 end
 
 return FigureDrawable

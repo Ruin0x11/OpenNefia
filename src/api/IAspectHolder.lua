@@ -14,8 +14,15 @@ local function is_aspect(v)
 end
 
 local function default_aspect(obj, iface, params)
-   local default = Aspect.get_default_impl(iface)
-   local aspect = default:new(obj, params)
+   local klass
+   if params._impl then
+      class.assert_implements(iface, params._impl)
+      klass = params._impl
+      params._impl = nil
+   else
+      klass = Aspect.get_default_impl(iface)
+   end
+   local aspect = klass:new(obj, params)
    IAspectModdable.init(aspect)
    obj:set_aspect(iface, aspect)
 end
@@ -31,6 +38,11 @@ function IAspectHolder:normal_build(params)
             local _params = (params and params[k]) or {}
             if type(v) == "table" then
                _params = table.merge_ex(table.deepcopy(v), _params)
+
+               -- HACK it shouldn't be possible to deepcopy class tables
+               if v._impl then
+                  _params._impl = v._impl
+               end
             end
             default_aspect(self, k, _params)
          end

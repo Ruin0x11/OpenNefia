@@ -2,6 +2,9 @@
 -- Remains
 --
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
+local IItemMuseumValued = require("mod.elona.api.aspect.IItemMuseumValued")
+local ItemMuseumValuedFigureAspect = require("mod.elona.api.aspect.ItemMuseumValuedFigureAspect")
+local ItemMuseumValuedCardAspect = require("mod.elona.api.aspect.ItemMuseumValuedCardAspect")
 
 data:add {
    _type = "base.item",
@@ -105,7 +108,10 @@ data:add {
       "elona.no_generate"
    },
    _ext = {
-      IItemFromChara
+      IItemFromChara,
+      [IItemMuseumValued] = {
+         _impl = ItemMuseumValuedFigureAspect
+      }
    }
 }
 
@@ -124,6 +130,9 @@ data:add {
       "elona.no_generate"
    },
    _ext = {
-      IItemFromChara
+      IItemFromChara,
+      [IItemMuseumValued] = {
+         _impl = ItemMuseumValuedCardAspect
+      }
    }
 }

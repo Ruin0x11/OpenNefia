@@ -17,6 +17,7 @@ local Building = require("mod.elona.api.Building")
 local Inventory = require("api.Inventory")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
+local IItemMuseumValued = require("mod.elona.api.aspect.IItemMuseumValued")
 
 local ElonaBuilding = {}
 
@@ -217,8 +218,7 @@ function ElonaBuilding.update_shop_map(map)
 end
 -- <<<<<<<< shade2/map_user.hsp:616 	return ..
 
--- >>>>>>>> shade2/map_user.hsp:639 *museum_value ..
-function ElonaBuilding.calc_museum_item_value(item, seen)
+function ElonaBuilding.calc_default_museum_item_value(item, seen)
    local chara_entry = item:get_aspect(IItemFromChara):chara_data(item)
    if chara_entry == nil then
       return 0
@@ -241,24 +241,32 @@ function ElonaBuilding.calc_museum_item_value(item, seen)
       end
    end
 
-   if seen[chara_entry._id] then
+   local chara_id = item:calc_aspect(IItemFromChara, "chara_id")
+   if chara_id and seen[chara_id] then
       value = math.min(value / 3, 15)
    end
 
-   if item._id == "elona.card" then
-      value = value / 2
+   return value
+end
+
+-- >>>>>>>> shade2/map_user.hsp:639 *museum_value ..
+function ElonaBuilding.calc_museum_item_value(item, seen)
+   local museum_valued = item:get_aspect(IItemMuseumValued)
+   local value
+   if museum_valued then
+      value = museum_valued:calc(item, "museum_value")
+      if value == nil then
+         value = museum_valued:calc_value(item, seen)
+      end
    end
 
-   return math.floor(value)
+   return math.floor(value or 0)
 end
 -- <<<<<<<< shade2/map_user.hsp:653 	return ..
 
 function ElonaBuilding.calc_museum_rank(map)
    local filter = function(item)
-      local from_chara = item:get_aspect(IItemFromChara)
-      return (item._id == "elona.card" or item._id == "elona.figurine")
-         and from_chara
-         and data["base.chara"][from_chara:calc(item, "chara_id")] ~= nil
+      return item:get_aspect(IItemMuseumValued) ~= nil
    end
    local new_rank = 0
    local seen = table.set {}
@@ -267,7 +275,9 @@ function ElonaBuilding.calc_museum_rank(map)
       local value = ElonaBuilding.calc_museum_item_value(item, seen)
       new_rank = new_rank + value
       local chara_id = item:calc_aspect(IItemFromChara, "chara_id")
-      seen[chara_id] = true
+      if chara_id then
+         seen[chara_id] = true
+      end
    end
    new_rank = math.max(10000 - math.sqrt(new_rank) * 100, 100)
    return math.floor(new_rank)

@@ -1,4 +1,6 @@
-local PriorityMap = class.class("PriorityMap")
+local IComparable = require("api.IComparable")
+
+local PriorityMap = class.class("PriorityMap", IComparable)
 
 PriorityMap.DEFAULT_PRIORITY = 100000
 
@@ -51,6 +53,11 @@ end
 function PriorityMap:_update_sorting()
    self.sorted_keys = table.keys(self.map)
    table.sort(self.sorted_keys, function(a, b) return self.priority[a] < self.priority[b] end)
+end
+
+function PriorityMap:compare(other)
+   return table.deepcompare(self.map, other.map)
+      and table.deepcompare(self.priority, other.priority)
 end
 
 return PriorityMap

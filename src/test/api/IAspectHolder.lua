@@ -47,6 +47,29 @@ function test_IAspectHolder_normal_build__params()
    Assert.eq(42, aspect.foo)
 end
 
+function test_IAspectHolder_normal_build__impl()
+   data:add {
+      _type = "base.item",
+      _id = "aspected_with_impl",
+
+      _ext = {
+         [AspectHolder_ITestAspect] = {
+            _impl = AspectHolder_TestAspectModdable,
+            my_foo = 42
+         }
+      }
+   }
+
+   local item = Item.create("@test@.aspected_with_impl", nil, nil, {ownerless = true})
+
+   Assert.eq(1, IAspectHolder.iter_aspects(item):length())
+
+   local aspect = IAspectHolder.get_aspect(item, AspectHolder_ITestAspect)
+   Assert.eq(true, class.is_an(AspectHolder_TestAspectModdable, aspect))
+   Assert.eq(42, aspect.foo)
+   Assert.eq(4200, aspect:calc(item, "foo"))
+end
+
 function test_IAspectHolder_calc()
    local item = Item.create("@test@.aspected_with_params", nil, nil, {ownerless = true})
 
