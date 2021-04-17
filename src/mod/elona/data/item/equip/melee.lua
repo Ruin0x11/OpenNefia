@@ -1,3 +1,6 @@
+local Enum = require("api.Enum")
+local light = require("mod.elona.data.item.light")
+
 --
 -- Broadsword
 --
