@@ -1365,7 +1365,8 @@ data:add {
                Gui.mes("activity.study.start.training")
             else
                data["base.skill"]:ensure(self.params.skill_id)
-               Gui.mes("activity.study.start.studying", "ability." .. self.params.skill_id .. ".name")
+               local skill_name = I18N.localize("base.skill", self.params.skill_id, "name")
+               Gui.mes("activity.study.start.studying", skill_name)
             end
 
             -- TODO shelter
@@ -1431,7 +1432,8 @@ data:add {
             if self.params.skill_id == "random" then
                Gui.mes("activity.study.finish.training")
             else
-               Gui.mes("activity.study.finish.studying", "ability." .. self.params.skill_id .. ".name")
+               local skill_name = I18N.localize("base.skill", self.params.skill_id, "name")
+               Gui.mes("activity.study.finish.studying", skill_name)
             end
             -- <<<<<<<< shade2/proc.hsp:629 		} ..
          end

@@ -28,7 +28,7 @@ utils.vars = {
          if skill_id == "none" then
             return "<none>"
          else
-            return I18N.get("ability." .. skill_id .. ".name")
+            return I18N.localize("base.skill", skill_id, "name")
          end
       end
    }

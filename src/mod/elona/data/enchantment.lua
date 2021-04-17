@@ -67,7 +67,7 @@ data:add {
    localize = function(power, params, item)
       -- >>>>>>>> shade2/item_data.hsp:351 		if val(10)=encModAttb{ ..
       local adjusted_power = math.ceil(power / 50) + 1
-      local skill_name = "ability." .. params.skill_id .. ".name"
+      local skill_name = I18N.localize("base.skill", params.skill_id, "name")
       if item:has_category("elona.food") then
          if adjusted_power < 0 then
             return I18N.get("enchantment.with_parameters.attribute.in_food.decreases", skill_name) .. " " .. Enchantment.power_text(adjusted_power)
@@ -99,7 +99,7 @@ data:add {
          exp = exp * 5
       end
       Skill.gain_skill_exp(chara, enc_params.skill_id, exp)
-      local skill_name = "ability." .. enc_params.skill_id .. ".name"
+      local skill_name = I18N.localize("base.skill", enc_params.skill_id, "name")
       if exp >= 0 then
          Gui.mes_visible("food.effect.ability.develops", chara.x, chara.y, chara, skill_name)
       else
@@ -211,11 +211,11 @@ data:add {
       -- >>>>>>>> shade2/item_data.hsp:373 		if val(10)=encModSkill{ ..
       local adjusted_power = math.ceil(power / 50)
       local grade = adjusted_power / 5
-      local skill_name = "ability." .. params.skill_id .. ".name"
+      local skill_name = I18N.localize("base.skill", params.skill_id, "name")
       if power < 0 then
          return I18N.get("enchantment.with_parameters.skill.decreases", skill_name) .. " " .. Enchantment.power_text(grade)
       else
-         local s = I18N.get_optional("ability." .. params.skill_id .. ".enchantment_description")
+         local s = I18N.localize_optional("base.skill", params.skill_id, "enchantment_description")
          if s == nil then
             s = I18N.get("enchantment.with_parameters.skill.increases", skill_name)
          end
@@ -270,7 +270,7 @@ data:add {
    localize = function(power, params, item)
       -- >>>>>>>> shade2/item_data.hsp:384 		if val(10)=encSustain{ ..
       local adjusted_power = math.floor(power / 50) + 1
-      local skill_name = "ability." .. params.skill_id .. ".name"
+      local skill_name = I18N.localize("base.skill", params.skill_id, "name")
       if item:has_category("elona.food") then
          local grade = adjusted_power / 5
          return I18N.get("enchantment.with_parameters.skill_maintenance.in_food", skill_name) .. " " .. Enchantment.power_text(grade)
@@ -282,7 +282,7 @@ data:add {
 
    on_eat_food = function(power, enc_params, item, chara)
       -- >>>>>>>> shade2/item.hsp:1197 		if enc2=encSustain{ ...
-      local skill_name = "ability." .. enc_params.skill_id .. ".name"
+      local skill_name = I18N.localize("base.skill", enc_params.skill_id, "name")
       Gui.mes_visible("food.effect.sustains_growth", chara.x, chara.y, chara, skill_name)
       local adjusted_power = math.floor(power / 50) + 1
 
@@ -406,7 +406,7 @@ data:add {
    localize = function(power, params, item)
       -- >>>>>>>> shade2/item_data.hsp:398 		if val(10)=encProc{ ..
       local enc_skill_data = data["base.enchantment_skill"]:ensure(params.enchantment_skill_id)
-      local skill_name = "ability." .. enc_skill_data.skill_id .. ".name"
+      local skill_name = I18N.localize("base.skill", enc_skill_data.skill_id, "name")
       return I18N.get("enchantment.with_parameters.invokes", skill_name) .. " " .. Enchantment.power_text(power)
       -- <<<<<<<< shade2/item_data.hsp:403 			} ..
    end,

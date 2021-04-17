@@ -178,7 +178,7 @@ local ATTRS = {
 }
 
 function CharacterSheetMenu:text_attr()
-   local attr = fun.iter(ATTRS):map(function(id) return "ability." .. id .. ".short_name" end):to_list()
+   local attr = fun.iter(ATTRS):map(function(id) return I18N.localize("base.skill", id, "short_name") end):to_list()
    local font_size = 14
    if I18N.is_fullwidth() then
       font_size = 12

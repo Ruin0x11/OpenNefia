@@ -50,7 +50,7 @@ function SkillsMenu.generate_list(chara)
             cost = data["elona_sys.magic"]:ensure(entry.effect_id).cost
          end
 
-         local name = I18N.get("ability." .. entry._id .. ".name")
+         local name = I18N.localize("base.skill", entry._id, "name")
 
          -- TODO break this dependency (#30)
          for _, index, sc in Shortcut.iter() do

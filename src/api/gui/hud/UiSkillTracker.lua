@@ -30,7 +30,7 @@ function UiSkillTracker:set_data(player)
    local tracked_ids = table.keys(save.base.tracked_skill_ids or {})
 
    local map = function(skill_id)
-      local name = utf8.sub(I18N.get("ability." .. skill_id .. ".name"), 0, 6)
+      local name = utf8.sub(I18N.localize("base.skill", skill_id, "name"), 0, 6)
       local desc = ("%d.%03d"):format(player:base_skill_level(skill_id),
                          player:skill_experience(skill_id) % 1000)
 

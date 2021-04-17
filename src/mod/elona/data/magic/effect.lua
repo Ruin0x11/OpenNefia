@@ -562,7 +562,7 @@ data:add {
             end
 
             if consider then
-               local spell_name = "ability." .. spell._id .. ".name"
+               local spell_name = I18N.localize("base.skill", spell._id, "name")
 
                if not Effect.is_cursed(params.curse_state) then
                   if spell.related_skill ~= nil then
@@ -627,7 +627,7 @@ data:add {
       while true do
          local skill = Rand.choice(candidates)
 
-         local skill_name = "ability." .. skill._id .. ".name"
+         local skill_name = I18N.localize("base.skill", skill._id, "name")
 
          if not Effect.is_cursed(params.curse_state) then
             if skill.related_skill ~= nil then
@@ -806,7 +806,7 @@ data:add {
                      mes = "magic.gain_skill_potential.furthermore_the"
                   end
 
-                  local skill_name = "ability." .. skill._id .. ".name"
+                  local skill_name = I18N.localize("base.skill", skill._id, "name")
 
                   if not Effect.is_cursed(params.curse_state) then
                      if target:is_in_fov() then
@@ -884,7 +884,7 @@ data:add {
          Gui.play_sound("base.ding3", target.x, target.y)
       else
          local stat = Rand.choice(Skill.iter_base_attributes())
-         local stat_name = "ability." .. stat._id .. ".name"
+         local stat_name = I18N.localize("base.skill", stat._id, "name")
          if params.curse_state == Enum.CurseState.Normal then
             Gui.mes("magic.gain_potential.increases", target, stat_name)
             local amount = Rand.rnd(target:skill_potential(stat._id) / 10 + 10) + 1

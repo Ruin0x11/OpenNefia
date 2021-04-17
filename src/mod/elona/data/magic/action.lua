@@ -319,7 +319,8 @@ data:add {
       local cast_style = source:calc("cast_style")
       if cast_style then
          if source:is_player() then
-            Gui.mes_visible("action.cast.self", source, "ability." .. self._id .. ".name")
+            local skill_name = I18N.localize("base.skill", self._id, "name")
+            Gui.mes_visible("action.cast.self", source, skill_name)
          else
             Gui.mes_visible("action.cast.other", source, "ui.cast_style." .. cast_style)
          end
@@ -423,7 +424,8 @@ local function make_touch(opts)
          local cast_style = source:calc("cast_style")
          if cast_style then
             if source:is_player() then
-               Gui.mes_visible("action.cast.self", source, "ability." .. self._id .. ".name")
+               local skill_name = I18N.localize("base.skill", self._id, "name")
+               Gui.mes_visible("action.cast.self", source, skill_name)
             else
                Gui.mes_visible("action.cast.other", source, "ui.cast_style." .. cast_style)
             end
