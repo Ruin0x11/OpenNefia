@@ -1,11 +1,11 @@
 local ArchiveUnpacker = require("mod.cdata_tools.api.archive.ArchiveUnpacker")
 local Log = require("api.Log")
-local CustomItemDecoder = require("mod.cdata_tools.api.citem.CustomItemDecoder")
 local CodeGenerator = require("api.CodeGenerator")
 local fs = require("util.fs")
 local paths = require("internal.paths")
-local CustomNpcDecoder = require("mod.cdata_tools.api.cnpc.CustomNpcDecoder")
-local CustomGodDecoder = require("mod.cdata_tools.api.cnpc.CustomGodDecoder")
+local CustomItemDecoder = require("mod.cdata_tools.api.decoder.CustomItemDecoder")
+local CustomNpcDecoder = require("mod.cdata_tools.api.decoder.CustomNpcDecoder")
+local CustomGodDecoder = require("mod.cdata_tools.api.decoder.CustomGodDecoder")
 
 Log.set_level("debug")
 

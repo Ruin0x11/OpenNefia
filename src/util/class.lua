@@ -213,7 +213,7 @@ end
 function class.assert_is_an(interface, obj)
    local ok = class.is_an(interface, obj)
    if not ok then
-      local err = ""
+      local err = nil
       if type(obj) ~= "table" then
          err = ("Needed class '%s', got value of type '%s'"):format(tostring(interface), type(obj))
       end
@@ -443,8 +443,12 @@ function class.class(name, ifaces, opts)
    return setmetatable(c, class_mt)
 end
 
-function class.is_class_or_interface(tbl)
-   return _classes[tbl] or _interfaces[tbl]
+function class.is_class(tbl)
+   return not not _classes[tbl]
+end
+
+function class.is_interface(tbl)
+   return not not _interfaces[tbl]
 end
 
 function class.is_class_instance(tbl)

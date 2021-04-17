@@ -31,6 +31,7 @@ local IEventEmitter = require("api.IEventEmitter")
 local save = require("internal.global.save")
 local PriorityMap = require("api.PriorityMap")
 local CharaMake = require("api.CharaMake")
+local IObject = require("api.IObject")
 
 -- TODO: move out of api
 local IChara = class.interface("IChara",
@@ -98,8 +99,10 @@ end
 --- the parameters to Chara.create(), but it becomes the caller's
 --- responsibility to ensure that IChara:build() is also called at
 --- some later point.
-function IChara:normal_build()
+function IChara:normal_build(params)
    self:emit("base.on_chara_normal_build")
+
+   IObject.normal_build(self, params)
 end
 
 --- Finishes initializing this character. All characters must run this

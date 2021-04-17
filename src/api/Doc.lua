@@ -313,7 +313,6 @@ end
 
 function Doc.on_hotload(old, new)
    table.replace_with(old, new)
-   rawset(_G, "help", Doc.help)
    local field = require("game.field")
    if field.repl then
       field.repl.env.help = Doc.help
