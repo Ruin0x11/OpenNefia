@@ -1,5 +1,6 @@
 local Event = require("api.Event")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
+local IItemUseable = require("mod.elona.api.aspect.IItemUseable")
 
 -- This is where the callbacks on item prototypes
 -- like "on_use" and "on_drink" get used. It might
@@ -60,13 +61,16 @@ end
 Event.register("base.on_object_prototype_changed", "Connect item events", connect_item_events)
 
 local function permit_item_actions(item)
-   if item:get_aspect(IItemFood)
-   then
+   if item:get_aspect(IItemFood) then
       item.can_eat = true
    end
 
    if item:has_category("elona.drink") then
       item.can_throw = true
+   end
+
+   if item:iter_aspects(IItemUseable):length() > 0 then
+      item.can_use = true
    end
 end
 Event.register("base.on_item_instantiated", "Permit item actions", permit_item_actions)

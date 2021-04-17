@@ -13,6 +13,7 @@ local Home = require("mod.elona.api.Home")
 local Log = require("api.Log")
 local Item = require("api.Item")
 local Input = require("api.Input")
+local IItemSeed = require("mod.elona.api.aspect.IItemSeed")
 
 local function day_passes()
    local guests = save.elona.waiting_guests
@@ -39,18 +40,6 @@ Event.register("base.on_hour_passed", "Update museum every hour", update_museum,
 Event.register("base.on_get_item", "Update museum on item take", update_museum, 150000)
 Event.register("base.on_drop_item", "Update museum on item drop", update_museum, 150000)
 -- <<<<<<<< shade2/main.hsp:571 	if areaId(gArea)=areaMuseum 	: gosub *museum_upda ..
-
--- >>>>>>>> elona122/shade2/action.hsp:1729 	if iTypeMinor(ci)=fltSeed	:goto *item_seed ..
-local function use_seed(item, params, result)
-   if item:has_category("elona.crop_seed") then
-      if Gardening.plant_seed(item, params.chara) then
-         return "turn_end"
-      end
-   end
-   return result
-end
-Event.register("elona_sys.on_item_use", "Use seeds", use_seed)
--- <<<<<<<< elona122/shade2/action.hsp:1729 	if iTypeMinor(ci)=fltSeed	:goto *item_seed ..
 
 local function get_plant(chara, params, result)
    local map = chara:current_map()

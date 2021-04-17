@@ -1442,7 +1442,6 @@ data:add {
    image = "elona.item_seed",
    value = 240,
    weight = 40,
-   on_use = function() end,
    coefficient = 100,
 
    color = { 175, 255, 175 },
@@ -1469,7 +1468,6 @@ data:add {
    image = "elona.item_seed",
    value = 280,
    weight = 40,
-   on_use = function() end,
    rarity = 800000,
    coefficient = 100,
 
@@ -1497,7 +1495,6 @@ data:add {
    image = "elona.item_seed",
    value = 1800,
    weight = 40,
-   on_use = function() end,
    rarity = 100000,
    coefficient = 100,
 
@@ -1525,7 +1522,6 @@ data:add {
    image = "elona.item_seed",
    value = 2500,
    weight = 40,
-   on_use = function() end,
    rarity = 250000,
    coefficient = 100,
    random_color = "Furniture",
@@ -1552,7 +1548,6 @@ data:add {
    image = "elona.item_seed",
    value = 120000,
    weight = 40,
-   on_use = function() end,
    rarity = 20000,
    coefficient = 100,
 
@@ -1583,7 +1578,6 @@ data:add {
    image = "elona.item_seed",
    value = 4500,
    weight = 40,
-   on_use = function() end,
    rarity = 250000,
    coefficient = 100,
 
@@ -1611,7 +1605,6 @@ data:add {
    image = "elona.item_seed",
    value = 3500,
    weight = 40,
-   on_use = function() end,
    rarity = 250000,
    coefficient = 100,
 
