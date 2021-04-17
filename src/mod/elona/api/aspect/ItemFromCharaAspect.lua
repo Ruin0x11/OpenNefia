@@ -3,7 +3,6 @@ local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 local ItemFromCharaAspect = class.class("ItemFromCharaAspect", IItemFromChara)
 
 function ItemFromCharaAspect:init(item, params)
-   print(inspect(params.chara_id))
    if params.chara then
       self.chara_id = params.chara._id
    end

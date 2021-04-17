@@ -75,15 +75,18 @@ function test_Hunger_apply_general_eating_effect__exp_gains_fixed()
    local chara = TestUtil.stripped_chara("elona.putit", map)
    local food = TestUtil.stripped_item("elona.morgia", map)
 
+   chara.nutrition = 1000
    chara:mod_base_skill_level("elona.stat_strength", 10, "set")
    chara:mod_skill_potential("elona.stat_strength", 100, "set")
    Assert.eq(10, chara:base_skill_level("elona.stat_strength"))
    Assert.eq(0, chara:skill_experience("elona.stat_strength"))
+   Assert.eq(1000, chara.nutrition)
 
    Hunger.apply_general_eating_effect(chara, food)
 
    Assert.eq(15, chara:base_skill_level("elona.stat_strength"))
    Assert.eq(508, chara:skill_experience("elona.stat_strength"))
+   Assert.eq(1500, chara.nutrition)
 end
 
 function test_Hunger_apply_general_eating_effect__food_type()
@@ -217,7 +220,4 @@ function test_Hunger_apply_general_eating_effect__corpse_effects()
       Assert.eq(556, chara:skill_experience("elona.healing"))
       Assert.eq(8500, chara.nutrition)
    end
-end
-
-function test_Hunger_is_human_flesh()
 end

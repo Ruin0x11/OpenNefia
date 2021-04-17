@@ -411,10 +411,9 @@ function Hunger.apply_general_eating_effect(chara, food)
             amount = gain.amount
          }
       end
-      if food.nutrition then
-         nutrition = food.nutrition
-      end
    end
+
+   nutrition = aspect:calc(food, "nutrition") or nutrition
 
    if chara:is_player() and is_rotten then
       exp_gains, nutrition = Hunger.add_rotten_food_exp_losses(chara, exp_gains, nutrition)

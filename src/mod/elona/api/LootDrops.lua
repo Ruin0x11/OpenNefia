@@ -12,6 +12,7 @@ local Equipment = require("mod.elona.api.Equipment")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 local ItemFromCharaAspect = require("mod.elona.api.aspect.ItemFromCharaAspect")
+local Aspect = require("api.Aspect")
 
 local LootDrops = {}
 
@@ -249,7 +250,7 @@ end
 
 function LootDrops.make_remains(item, chara)
    -- >>>>>>>> shade2/item_func.hsp:689 #module ...
-   item:set_aspect(IItemFromChara, ItemFromCharaAspect:new(item, { chara = chara }))
+   item:set_aspect(IItemFromChara, Aspect.new_default(IItemFromChara, item, { chara = chara }))
    item.color = chara.color
    item.weight = chara.weight
    if item._id == "elona.corpse" then
@@ -340,7 +341,7 @@ function LootDrops.calc_loot_drops(chara, map, attacker)
 
       local function set_collectable_params(tag, drawable_klass)
          return function(item)
-            item:set_aspect(IItemFromChara, ItemFromCharaAspect:new(item, { chara = chara }))
+            item:set_aspect(IItemFromChara, Aspect.new_default(IItemFromChara, item, { chara = chara }))
 
             -- special case for card/figure. the color of the chara chip displayed
             -- is changed, not the figure/card itself. (so not item.color)

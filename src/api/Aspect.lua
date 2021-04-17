@@ -35,4 +35,8 @@ function Aspect.set_default_impl(iface, impl)
    aspect_state.default_impls[iface.__name] = impl
 end
 
+function Aspect.new_default(iface, obj, params)
+   return Aspect.get_default_impl(iface):new(obj, params)
+end
+
 return Aspect
