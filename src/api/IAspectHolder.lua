@@ -24,7 +24,6 @@ function IAspectHolder:normal_build(params)
    local ext = self.proto.ext
    if ext then
       for k, v in pairs(ext) do
-         print("Is aspect",k,v,is_aspect(k),is_aspect(v))
          if type(k) == "number" and is_aspect(v) then
             default_aspect(self, v, params)
          elseif is_aspect(k) then
@@ -65,7 +64,7 @@ function IAspectHolder:iter_aspects(iface)
 end
 
 function IAspectHolder:calc_aspect(iface, prop)
-   local aspect = self:get_aspect(self, iface)
+   local aspect = self:get_aspect(iface)
    if aspect == nil then
       return nil
    end
@@ -73,7 +72,7 @@ function IAspectHolder:calc_aspect(iface, prop)
 end
 
 function IAspectHolder:mod_aspect(iface, prop, v, method, params)
-   local aspect = self:get_aspect(self, iface)
+   local aspect = self:get_aspect(iface)
    if aspect == nil then
       error("Aspect is nil")
    end
@@ -81,7 +80,7 @@ function IAspectHolder:mod_aspect(iface, prop, v, method, params)
 end
 
 function IAspectHolder:mod_aspect_base(iface, prop, v, method, params)
-   local aspect = self:get_aspect(self, iface)
+   local aspect = self:get_aspect(iface)
    if aspect == nil then
       error("Aspect is nil")
    end

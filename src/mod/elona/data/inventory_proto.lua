@@ -19,6 +19,7 @@ local Const = require("api.Const")
 local World = require("api.World")
 local Item = require("api.Item")
 local God = require("mod.elona.api.God")
+local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
@@ -468,7 +469,7 @@ local inv_sell = {
 
    filter = function(ctxt, item)
       -- >>>>>>>> shade2/command.hsp:3368 		if shopTrade{ ...
-      if (item:calc("cargo_weight") or 0) > 0 then
+      if item:get_aspect(IItemCargo) then
          return false
       end
 

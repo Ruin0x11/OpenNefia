@@ -9,6 +9,7 @@ local Rank = require("mod.elona.api.Rank")
 local Filters = require("mod.elona.api.Filters")
 local Itemgen = require("mod.elona.api.Itemgen")
 local Item = require("api.Item")
+local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 
 local Calc = {}
 
@@ -164,8 +165,7 @@ function Calc.calc_item_value(item, mode, is_shop)
       value = value + math.clamp(fame / 40 + value * (fame / 80) / 100, 0, 800)
    end
 
-   local cargo_weight = item:calc("cargo_weight") or 0
-   if cargo_weight > 0 and is_shop and item:has_category("elona.cargo") then
+   if item:get_aspect(IItemCargo) and is_shop then
       -- TODO cargo rate fluctuation
       local trade_rate = 1
       value = value * trade_rate / 100
@@ -327,7 +327,7 @@ function Calc.will_chara_take_item(target, item, amount)
       end
    end
 
-   if item:calc("cargo_weight") > 0 then
+   if item:get_aspect(IItemCargo) then
       return false, "ui.inv.give.refuse_dialog.is_cargo"
    end
 

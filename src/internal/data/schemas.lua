@@ -706,8 +706,6 @@ If false, this item cannot be wished for.
          value = 1,
          params = {},
 
-         cargo_weight = 0,
-
          spoilage_date = nil,
 
          is_melee_weapon = nil,

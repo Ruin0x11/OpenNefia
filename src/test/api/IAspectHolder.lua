@@ -85,3 +85,17 @@ function test_IAspectHolder_calc__custom_moddable_impl()
    Assert.eq(42, aspect.foo)
    Assert.eq(4200, aspect:calc(item, "foo"))
 end
+
+function test_IAspectHolder_calc_aspect()
+   local item = Item.create("@test@.aspected_with_params", nil, nil, {ownerless = true})
+
+   Assert.eq(42, item:calc_aspect(AspectHolder_ITestAspect, "foo"))
+
+   item:mod_aspect(AspectHolder_ITestAspect, "foo", 10, "add")
+
+   Assert.eq(52, item:calc_aspect(AspectHolder_ITestAspect, "foo"))
+
+   item:refresh()
+
+   Assert.eq(42, item:calc_aspect(AspectHolder_ITestAspect, "foo"))
+end

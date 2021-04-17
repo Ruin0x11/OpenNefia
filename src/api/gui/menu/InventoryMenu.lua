@@ -8,6 +8,7 @@ local MapObjectBatch = require("api.draw.MapObjectBatch")
 local save = require("internal.global.save")
 local config = require("internal.config")
 local Shortcut = require("mod.elona.api.Shortcut")
+local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 
 local IInput = require("api.gui.IInput")
 local UiList = require("api.gui.UiList")
@@ -180,7 +181,7 @@ function InventoryMenu:assign_shortcut(index)
       return
    end
 
-   if (item:calc("cargo_weight") or 0) > 0 then
+   if item:get_aspect(IItemCargo) then
       Gui.play_sound("base.fail1")
       Gui.mes("ui.inv.common.shortcut.cargo")
       return
@@ -253,7 +254,11 @@ function InventoryMenu.filter_item(ctxt, item)
 end
 
 local function default_detail_text(item)
-   return Ui.display_weight(item:calc("weight") * item.amount)
+   local weight = item:calc("weight")
+   if item:get_aspect(IItemCargo) then
+      weight = item:calc_aspect(IItemCargo, "cargo_weight")
+   end
+   return Ui.display_weight(weight * item.amount)
 end
 
 function InventoryMenu.build_list(ctxt)
