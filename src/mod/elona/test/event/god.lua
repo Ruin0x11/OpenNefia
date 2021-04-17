@@ -68,7 +68,8 @@ function test_god_kumiromi_harvest_seeds()
    local player = TestUtil.set_player(map)
    player.god = "elona.kumiromi"
 
-   local corpse = Item.create("elona.corpse", 5, 5, {amount=5,aspects={[IItemFood]={spoilage_date=1}}}, player)
+   local corpse = Item.create("elona.corpse", 5, 5, {amount=5}, player)
+   corpse:get_aspect(IItemFood).spoilage_date = 1
 
    local items = player:iter_inventory()
    Assert.eq(1, items:length())

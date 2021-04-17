@@ -32,7 +32,6 @@ function IAspectHolder:normal_build(params)
             if type(v) == "table" then
                _params = table.merge_ex(table.deepcopy(v), _params)
             end
-            print(inspect(_params))
             default_aspect(self, k, _params)
          end
       end

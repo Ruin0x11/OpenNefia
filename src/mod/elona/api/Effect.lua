@@ -21,6 +21,7 @@ local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Log = require("api.Log")
 local Weather = require("mod.elona.api.Weather")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 
 local Effect = {}
 
@@ -1112,19 +1113,22 @@ function Effect.love_miracle(chara)
       return
    end
    Gui.mes_c("misc.love_miracle.uh", "SkyBlue")
+   local params = {
+      aspects = {
+         [IItemFromChara] = {
+            chara = chara
+         }
+      }
+   }
    if Rand.one_in(2) then
-      local item = Item.create("elona.egg", chara.x, chara.y, {}, chara:current_map())
+      local item = Item.create("elona.egg", chara.x, chara.y, params, chara:current_map())
       if item then
-         item.params.chara_id = chara._id
          local weight = chara:calc("weight")
          item.weight = weight * 10 + 250
          item.value = math.clamp(math.floor(weight * weight / 10000), 200, 40000)
       end
    else
-      local item = Item.create("elona.bottle_of_milk", chara.x, chara.y, {}, chara:current_map())
-      if item then
-         item.params.chara_id = chara._id
-      end
+      local item = Item.create("elona.bottle_of_milk", chara.x, chara.y, params, chara:current_map())
    end
 
    Gui.play_sound("base.atk_elec")

@@ -35,6 +35,10 @@ function IItemFood:can_cook(item)
    return not self:is_cooked(item) and (not not self:calc(item, "food_type"))
 end
 
+function IItemFood:is_cooked_dish(item)
+   return self:is_cooked(item) and (not not self:calc(item, "food_type"))
+end
+
 function IItemFood:rot(item)
    self.spoilage_date = -1
    item.image = "elona.item_rotten_food"

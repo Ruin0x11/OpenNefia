@@ -14,6 +14,7 @@ local I18N = require("api.I18N")
 local IItemEnchantments = require("api.item.IItemEnchantments")
 local Env = require("api.Env")
 local global = require("mod.smithing.internal.global")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 
 local Smithing = {}
 
@@ -105,9 +106,9 @@ function Smithing.can_use_item_as_weapon_material(item, hammer, selected_items)
       return true
    elseif item._id == "elona.vanilla_rock" then
       return true
-   elseif item._id == "elona.remains_skin" and item.params.chara_id then
-      local chara_data = data["base.chara"]:ensure(item.params.chara_id)
-      if table.set(chara_data.tags or {})["dragon"] then
+   elseif item._id == "elona.remains_skin" then
+      local chara_data = item:get_aspect(IItemFromChara):chara_data(item)
+      if chara_data and table.set(chara_data.tags or {})["dragon"] then
          return true
       end
    end
@@ -126,7 +127,8 @@ function Smithing.can_use_item_as_furniture_material(item, hammer, selected_item
 
    -- >>>>>>>> oomSEST/src/hammer.hsp:892 		if (iId(__invNo) == iId_skin | iId(__invNo) == i ..
    if item._id == "elona.remains_skin" or item._id == "elona.remains_bone" or item._id == "elona.corpse" then
-      if item.params.chara_id or item.is_precious then
+      local chara_data = item:get_aspect(IItemFromChara):chara_data(item)
+      if chara_data or item.is_precious then
          return true
       end
    end
@@ -352,7 +354,8 @@ function Smithing.random_item_filter_and_material(hammer, material, categories, 
 
       item_quality = Calc.calc_object_quality(math.clamp(quality_base, Enum.Quality.Normal, Enum.Quality.Great), map)
    elseif material._id == "elona.remains_skin" then
-      item_material = Smithing.material_for_chara(material.params.chara_id)
+      local chara_id = material:calc_aspect(IItemFromChara, "chara_id")
+      item_material = Smithing.material_for_chara(chara_id)
 
       local quality_base = quality / math.max(material.value * 20 / math.max(hammer.params.hammer_level * 2 / 25, 1))
 
@@ -507,7 +510,8 @@ function Smithing.repair_furniture(hammer, chara, target_item, material)
 
    local item_material
    if material._id == "elona.remains_skin" then
-      item_material = Smithing.material_for_chara(material.params.chara_id)
+      local chara_id = material:calc_aspect(IItemFromChara, "chara_id")
+      item_material = Smithing.material_for_chara(chara_id)
    elseif material._id == "elona.remains_bone" then
       item_material = "elona.bone"
    elseif material._id == "elona.remains_corpse" then

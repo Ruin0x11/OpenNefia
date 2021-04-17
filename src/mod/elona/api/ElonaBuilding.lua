@@ -16,6 +16,7 @@ local Charagen = require("mod.elona.api.Charagen")
 local Building = require("mod.elona.api.Building")
 local Inventory = require("api.Inventory")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 
 local ElonaBuilding = {}
 
@@ -218,7 +219,10 @@ end
 
 -- >>>>>>>> shade2/map_user.hsp:639 *museum_value ..
 function ElonaBuilding.calc_museum_item_value(item, seen)
-   local chara_entry = data["base.chara"]:ensure(item.params.chara_id)
+   local chara_entry = item:get_aspect(IItemFromChara):chara_data(item)
+   if chara_entry == nil then
+      return 0
+   end
 
    local value
    if chara_entry.quality == Enum.Quality.Unique then
@@ -251,8 +255,10 @@ end
 
 function ElonaBuilding.calc_museum_rank(map)
    local filter = function(item)
+      local from_chara = item:get_aspect(IItemFromChara)
       return (item._id == "elona.card" or item._id == "elona.figurine")
-         and data["base.chara"][item.params.chara_id] ~= nil
+         and from_chara
+         and data["base.chara"][from_chara:calc(item, "chara_id")] ~= nil
    end
    local new_rank = 0
    local seen = table.set {}
@@ -260,7 +266,8 @@ function ElonaBuilding.calc_museum_rank(map)
    for _, item in Item.iter(map):filter(filter) do
       local value = ElonaBuilding.calc_museum_item_value(item, seen)
       new_rank = new_rank + value
-      seen[item.params.chara_id] = true
+      local chara_id = item:calc_aspect(IItemFromChara, "chara_id")
+      seen[chara_id] = true
    end
    new_rank = math.max(10000 - math.sqrt(new_rank) * 100, 100)
    return math.floor(new_rank)
@@ -295,7 +302,12 @@ end
 function ElonaBuilding.ranch_generate_item(map, chara, x, y)
    local filter = {
       level = Calc.calc_object_level(chara:calc("level"), map),
-      quality = Enum.Quality.Normal
+      quality = Enum.Quality.Normal,
+      aspects = {
+         [IItemFromChara] = {
+            chara = chara
+         }
+      }
    }
 
    local item
@@ -311,7 +323,6 @@ function ElonaBuilding.ranch_generate_item(map, chara, x, y)
          total_generated = total_generated + 1
          item = Item.create("elona.egg", x, y, filter, map)
          if item then
-            item.params.chara_id = chara._id
             item.weight = chara:calc("weight") * 10 + 250
             item.value = math.floor(math.clamp(item.weight * item.weight / 10000, 200, 40000))
          end
@@ -324,16 +335,12 @@ function ElonaBuilding.ranch_generate_item(map, chara, x, y)
       if success then
          total_generated = total_generated + 1
          item = Item.create("elona.bottle_of_milk", x, y, filter, map)
-         if item then
-            item.params.chara_id = chara._id
-         end
       end
    elseif option == "shit" then
       local success = Rand.one_in(80)
       if success then
          item = Item.create("elona.shit", x, y, filter, map)
          if item then
-            item.params.chara_id = chara._id
             item.weight = chara:calc("weight") * 40 + 300
             item.value = math.floor(math.clamp(item.weight * item.weight / 5000, 1, 20000))
          end

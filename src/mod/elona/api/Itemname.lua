@@ -126,8 +126,7 @@ local function item_name_sub(s, item, jp)
 
    local food = item:get_aspect(IItemFood)
    if food then
-      local is_cooked_dish = food:can_cook(item) and food:is_cooked(item)
-      if is_cooked_dish then
+      if food:is_cooked_dish(item) then
          local food_type = food:calc(item, "food_type")
          local food_quality = food:calc(item, "food_quality")
          skip = true
@@ -137,7 +136,7 @@ local function item_name_sub(s, item, jp)
          else
             local original_name = I18N.localize("base.item", _id, "name")
             local chara_id = nil
-            local from_chara = food:get_aspect(IItemFromChara)
+            local from_chara = item:get_aspect(IItemFromChara)
             if from_chara then
                chara_id = from_chara:calc(food, "chara_id")
             end
@@ -156,8 +155,9 @@ local function item_name_sub(s, item, jp)
       s = s .. I18N.get("fish._." .. item.params.fish_id .. ".name")
    end
 
-   if item.params.chara_id and item.own_state ~= Enum.OwnState.Quest then
-      local chara_name = I18N.localize("base.chara", item.params.chara_id, "name")
+   local chara_id = item:calc_aspect(IItemFromChara, "chara_id")
+   if chara_id and item.own_state ~= Enum.OwnState.Quest then
+      local chara_name = I18N.localize("base.chara", chara_id, "name")
       if not jp then
          s = s .. " of "
       end
@@ -176,8 +176,8 @@ local function item_name_sub(s, item, jp)
       s = s .. I18N.localize("base.item", _id, "title", home_name)
    elseif _id == "elona.bill" then
       s = s .. I18N.localize("base.item", _id, "title", item.params.bill_gold_amount)
-   elseif _id == "elona.vomit" and item.params.chara_id then
-      local chara_name = I18N.localize("base.chara", item.params.chara_id, "name")
+   elseif _id == "elona.vomit" and chara_id then
+      local chara_name = I18N.localize("base.chara", chara_id, "name")
       if not jp then
          s = s .. " of "
       end
@@ -436,7 +436,7 @@ function itemname.en(item, amount, no_article)
    local name = I18N.localize("base.item", _id, "name")
 
    local food = item:get_aspect(IItemFood)
-   local is_cooked_dish = food and food:can_cook(item) and food:is_cooked(item)
+   local is_cooked_dish = food and food:is_cooked_dish(item)
 
    local s = ""
 

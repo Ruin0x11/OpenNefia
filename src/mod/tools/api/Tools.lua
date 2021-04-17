@@ -659,7 +659,7 @@ function Tools.apply_all_buffs(type, chara, power)
 end
 
 function Tools.identify_all()
-   Item.iter():each(function(i) Effect.identify_item(i, Enum.IdentifyState.Full) end)
+   Item.iter_in_everything(Map.current()):each(function(i) Effect.identify_item(i, Enum.IdentifyState.Full) end)
 end
 
 function Tools.goto_area(area_archetype_id, floor)

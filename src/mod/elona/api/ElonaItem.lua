@@ -236,7 +236,7 @@ local function init_food(item, params)
       end
    end
 
-   if food:can_cook(item) and food:is_cooked(item) then
+   if food:is_cooked_dish(item) then
       item.image = Hunger.get_food_image(food:calc(item, "food_type"), food:calc(item, "food_quality"))
    end
 
@@ -279,7 +279,7 @@ end
 
 function ElonaItem.default_item_image(item)
    local food = item:get_aspect(IItemFood)
-   if food and food:is_cooked(item) then
+   if food and food:is_cooked_dish(item) then
       return Hunger.get_food_image(food:calc(item, "food_type"), food:calc(item, "food_quality"))
    else
       return item.proto.image

@@ -82,7 +82,7 @@ function test_Effect_spoil_items__raw()
    ItemMaterial.change_item_material(dagger, "elona.fresh")
    Assert.eq("elona.item_dagger", dagger.image)
    Assert.eq("elona.dagger", dagger._id)
-   Assert.eq(nil, dagger:get_aspect_or_default(IItemFood).spoilage_date)
+   Assert.eq(0, dagger:get_aspect_or_default(IItemFood).spoilage_date)
 
    Effect.spoil_items(map)
    Assert.eq("elona.item_dagger", dagger.image)
@@ -93,10 +93,12 @@ function test_Effect_spoil_items__own_state()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 
-   local corpse = Item.create("elona.corpse", 5, 5, {aspects={[IItemFood]={spoilage_date=1}}}, map)
+   local corpse = Item.create("elona.corpse", 5, 5, {}, map)
    corpse.own_state = Enum.OwnState.NotOwned
+   corpse:get_aspect(IItemFood).spoilage_date = 1
    Assert.eq("elona.item_corpse", corpse.image)
    Assert.no_matches("rotten ", corpse:build_name())
+   Assert.eq(1, corpse:calc_aspect_base(IItemFood, "spoilage_date"))
 
    Effect.spoil_items(map)
    Assert.eq("elona.item_corpse", corpse.image)

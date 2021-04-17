@@ -17,10 +17,10 @@ local function create_dishes(x, y, map)
    local j = 0
    for _, _id in data["elona.food_type"]:iter():extract("_id") do
       local filter = function(i)
-         return i.ext
-            and i.ext[IItemFood]
-            and i.ext[IItemFood].food_type == _id
-            and i.ext[IItemFood].food_quality == nil
+         return i._ext
+            and i._ext[IItemFood]
+            and i._ext[IItemFood].food_type == _id
+            and i._ext[IItemFood].food_quality == nil
       end
       local item_proto = data["base.item"]:iter():filter(filter):nth(1)
       if item_proto then
@@ -43,8 +43,8 @@ local function create_corpses(x, y, width, map)
    end
 
    local create = function(c)
-      local item = Item.create("elona.corpse", nil, nil, {amount=3}, map)
-      item.params.chara_id = c._id
+      local item = Item.create("elona.corpse", nil, nil, {amount=3,aspects={[IItemFromChara]={chara_id=c._id}}}, map)
+      assert(item:calc_aspect(IItemFromChara, "chara_id"))
       Hunger.make_dish(item, Rand.rnd(5) + 2)
       return item
    end
@@ -119,7 +119,8 @@ function food.on_generate_map(area, floor)
 
    x, y = create_dishes(x, y, map)
 
-   Item.create("elona.putitoro", x, y, {amount=3, aspects={[IItemFood]={spoilage_date=-1}}}, map)
+   local putitoro = Item.create("elona.putitoro", x, y, {amount=3}, map)
+   putitoro:get_aspect(IItemFood).spoilage_date = -1
 
    local params = {
       [IItemFromChara] = {
