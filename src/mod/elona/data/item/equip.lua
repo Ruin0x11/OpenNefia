@@ -1,3 +1,5 @@
 require("mod.elona.data.item.equip.ammo")
+require("mod.elona.data.item.equip.cloak")
+require("mod.elona.data.item.equip.girdle")
 require("mod.elona.data.item.equip.melee")
 require("mod.elona.data.item.equip.ranged")
