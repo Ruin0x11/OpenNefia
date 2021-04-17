@@ -3,6 +3,7 @@ local Assert = require("api.test.Assert")
 local InstancedMap = require("api.InstancedMap")
 local Chara = require("api.Chara")
 local TestUtil = require("api.test.TestUtil")
+local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 
 function test_IStackableObject_separate__single()
    local item = TestUtil.stripped_item("elona.putitoro")
@@ -140,6 +141,22 @@ function test_IStackableObject_can_stack_with__separated_in_map()
 
    Assert.eq(true, item:can_stack_with(sep))
    Assert.eq(true, sep:can_stack_with(item))
+end
+
+function test_IStackableObject_stack__aspect()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+
+   local item = TestUtil.stripped_item("elona.cargo_piano", map, 1, 1, 5)
+   local sep = item:separate(2)
+
+   Assert.eq(true, item:can_stack_with(sep))
+   Assert.eq(true, sep:can_stack_with(item))
+
+   sep:mod_aspect(IItemCargo, "cargo_weight", 10, "add")
+
+   Assert.eq(false, item:can_stack_with(sep))
+   Assert.eq(false, sep:can_stack_with(item))
 end
 
 function test_IStackableObject_stack()

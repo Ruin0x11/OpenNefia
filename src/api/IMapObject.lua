@@ -40,6 +40,7 @@ end
 
 --- Refreshes this map object.
 function IMapObject:on_refresh()
+   IObject.on_refresh(self)
    self:refresh_cell_on_map()
 end
 

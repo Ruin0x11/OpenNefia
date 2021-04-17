@@ -15,6 +15,7 @@ local Chara = require("api.Chara")
 local Charagen = require("mod.elona.api.Charagen")
 local Building = require("mod.elona.api.Building")
 local Inventory = require("api.Inventory")
+local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 
 local ElonaBuilding = {}
 
@@ -59,7 +60,7 @@ function ElonaBuilding.is_item_sellable_in_shop(item)
       return false
    end
 
-   if item:calc("cargo_weight") > 0 or item:calc("quality") >= Enum.Quality.Unique or item:calc("value") < 50 then
+   if item:get_aspect(IItemCargo) or item:calc("quality") >= Enum.Quality.Unique or item:calc("value") < 50 then
       return false
    end
 

@@ -5,6 +5,10 @@ local IObject = require("api.IObject")
 
 local Object = {}
 
+local NO_SAVE_FIELDS = table.set {
+   "_ext"
+}
+
 -- Modification of penlight's algorithm to ignore class fields
 local function cycle_aware_copy(t, cache)
    -- TODO: standardize no-save fields
@@ -19,9 +23,11 @@ local function cycle_aware_copy(t, cache)
    local mt = getmetatable(t)
    for k,v in pairs(t) do
       -- TODO: standardize no-save fields
-      k = cycle_aware_copy(k, cache)
-      v = cycle_aware_copy(v, cache)
-      res[k] = v
+      if not NO_SAVE_FIELDS[k] then
+         k = cycle_aware_copy(k, cache)
+         v = cycle_aware_copy(v, cache)
+         res[k] = v
+      end
    end
    setmetatable(res,mt)
    return res
@@ -92,7 +98,7 @@ function Object.finalize(obj, params)
    params = params or {}
 
    if not params.no_build then
-      obj:normal_build()
+      obj:normal_build(params.build_params)
       obj:finalize(params.build_params)
       obj:instantiate(true) -- events are bound by :finalize()
    end

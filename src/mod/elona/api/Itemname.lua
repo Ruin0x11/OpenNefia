@@ -17,6 +17,7 @@ local ElonaItem = require("mod.elona.api.ElonaItem")
 local Ui = require("api.Ui")
 local World = require("api.World")
 local Hunger = require("mod.elona.api.Hunger")
+local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 
 local Itemname = {}
 
@@ -455,7 +456,7 @@ function itemname.en(item, amount, no_article)
       end
 
       if identify > IdentifyState.None and s2 == "" then
-         if (item:calc("cargo_weight") or 0) > 0 then
+         if item:get_aspect(IItemCargo) then
             s2 = "cargo"
          end
          if item:has_category("elona.equip_wrist") or item:has_category("elona.equip_leg") then

@@ -63,8 +63,6 @@ local SANDBOX_GLOBALS = {
    -- misc. globals
    "inspect",
    "fun",
-   "help",
-   "pause",
 }
 
 local UNSAFE_HOTLOAD_PATHS = {
@@ -325,6 +323,8 @@ end
 local function get_load_type(path)
    if string.match(path, "^api%.") or string.match(path, "^thirdparty%.") then
       return "api"
+   elseif string.match(path, "^test%.") then
+      return "test"
    elseif path_is_in_mod(path) then
       return "mod"
    elseif LOVE2D_REQUIRES[path] then
@@ -372,7 +372,7 @@ end
 local function safe_load_chunk(path)
    local load_type = get_load_type(path)
 
-   if load_type == "api" or load_type == "thirdparty" then
+   if load_type == "api" or load_type == "thirdparty" or load_type == "test" then
       Log.debug("Loading chunk %s with global env.", path)
       return env_dofile(path)
    elseif load_type == "mod" then
@@ -478,7 +478,7 @@ local function gen_require(chunk_loader, can_load_path)
             Log.warn("Table has overridden 'on_hotload' function. Using it instead of default.")
             result.on_hotload(package.loaded[req_path], result)
          else
-            if class.is_class_or_interface(result) then
+            if class.is_class(result) or class.is_interface(result) then
                class.hotload(package.loaded[req_path], result)
             else
                table.replace_with(package.loaded[req_path], result)
@@ -690,6 +690,7 @@ function env.generate_sandbox(mod_name, is_strict)
    sandbox["data"] = require("internal.data")
    sandbox["config"] = require("internal.config")
    sandbox["schema"] = require("thirdparty.schema")
+   sandbox["pause"] = function(...) return _G.pause(...) end
    sandbox["_G"] = sandbox
 
    sandbox["save"] = require("internal.global.save")

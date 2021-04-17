@@ -2,6 +2,7 @@ local IEventEmitter = require("api.IEventEmitter")
 local IMapObject = require("api.IMapObject")
 local IModdable = require("api.IModdable")
 local Mef = require("api.Mef")
+local IObject = require("api.IObject")
 
 -- A mef, short for map effect, is an obstacle that can occupy a tile. There can
 -- only be a single mef on a tile at a time.
@@ -13,7 +14,8 @@ function IMef:pre_build()
    IEventEmitter.init(self)
 end
 
-function IMef:normal_build()
+function IMef:normal_build(params)
+   IObject.normal_build(self, params)
 end
 
 function IMef:build()
@@ -27,7 +29,6 @@ end
 
 function IMef:refresh()
    IMapObject.on_refresh(self)
-   IModdable.on_refresh(self)
    if self.on_refresh then
       self:on_refresh()
    end

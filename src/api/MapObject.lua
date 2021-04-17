@@ -121,7 +121,7 @@ end
 local function cycle_aware_copy(t, uids, cache, uid_mapping, first, opts)
    if type(t) ~= 'table' then return t end
    if cache[t] then return cache[t] end
-   if class.is_class_or_interface(t) then
+   if class.is_class(t) or class.is_interface(t) then
       cache[t] = t
       return t
    end
@@ -158,7 +158,7 @@ local function cycle_aware_copy(t, uids, cache, uid_mapping, first, opts)
          end
       end
    end
-   if t.__class and class.is_class_or_interface(mt) then
+   if t.__class and (class.is_class(mt) or class.is_interface(mt)) then
       res.__class = mt
    end
    if mt then

@@ -3,6 +3,7 @@
 local IEventEmitter = require("api.IEventEmitter")
 local IModDataHolder = require("api.IModDataHolder")
 local IModdable = require("api.IModdable")
+local IAspectHolder = require("api.IAspectHolder")
 local data = require("internal.data")
 
 -- An object instance backed by a data prototype.
@@ -17,13 +18,14 @@ local IObject = class.interface("IObject",
                              refresh = "function",
                              finalize = "function",
                           },
-                          { IModdable, IModDataHolder }
+                          { IModdable, IModDataHolder, IAspectHolder }
 )
 
 function IObject:pre_build()
 end
 
-function IObject:normal_build()
+function IObject:normal_build(build_params)
+   IAspectHolder.normal_build(self, build_params)
 end
 
 function IObject:build()
@@ -37,10 +39,12 @@ end
 function IObject:init()
    IModdable.init(self)
    IModDataHolder.init(self)
+   IAspectHolder.init(self)
 end
 
 function IObject:on_refresh()
    IModdable.on_refresh(self)
+   IAspectHolder.on_refresh(self)
 end
 
 function IObject:finalize(build_params)

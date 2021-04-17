@@ -18,6 +18,7 @@ local TestUtil = require("api.test.TestUtil")
 local Advice = require("api.Advice")
 local main_state = require("internal.global.main_state")
 local Env = require("api.Env")
+local aspect_state = require("internal.global.aspect_state")
 
 local function reset_all_globals()
    Log.debug("Resetting global state.")
@@ -107,6 +108,7 @@ local function cleanup_globals()
    fs.remove(SaveFs.save_path("", "global"))
    field:init_global_data()
    Advice.remove_by_mod(TestUtil.TEST_MOD_ID)
+   table.replace_with(aspect_state.default_impls, {})
    Env.clear_ui_results()
 
    config_store.proxy().base.autosave = false

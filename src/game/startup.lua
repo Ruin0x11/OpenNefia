@@ -107,7 +107,6 @@ function startup.run(mods)
    progress("Loading early modules...")
 
    -- Wrap these functions to allow hotloading via table access.
-   rawset(_G, "help", function(...) return Doc.help(...) end)
    rawset(_G, "pause", function(...) return Repl.pause(...) end)
 
    draw.add_global_widget(UiFpsCounter:new(), "fps_counter")

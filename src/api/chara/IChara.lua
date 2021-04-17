@@ -31,6 +31,8 @@ local IEventEmitter = require("api.IEventEmitter")
 local save = require("internal.global.save")
 local PriorityMap = require("api.PriorityMap")
 local CharaMake = require("api.CharaMake")
+local IObject = require("api.IObject")
+local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 
 -- TODO: move out of api
 local IChara = class.interface("IChara",
@@ -98,8 +100,10 @@ end
 --- the parameters to Chara.create(), but it becomes the caller's
 --- responsibility to ensure that IChara:build() is also called at
 --- some later point.
-function IChara:normal_build()
+function IChara:normal_build(params)
    self:emit("base.on_chara_normal_build")
+
+   IObject.normal_build(self, params)
 end
 
 --- Finishes initializing this character. All characters must run this
@@ -144,7 +148,6 @@ end
 ---
 --- @overrides IMapObject.refresh
 function IChara:refresh()
-   IModdable.on_refresh(self)
    IMapObject.on_refresh(self)
    ICharaEquip.on_refresh(self)
    ICharaSkills.on_refresh(self)
@@ -261,17 +264,19 @@ function IChara:produce_locale_data()
 end
 
 function IChara:refresh_weight()
+   -- >>>>>>>> shade2/item_func.hsp:288 #defcfunc inv_weight int a ...
    local weight = 0
    local cargo_weight = 0
    for _, i in self:iter_items() do
-      weight = weight + i:calc("weight")
-      cargo_weight = cargo_weight + i:calc("cargo_weight")
+      weight = weight + i:calc("weight") * i.amount
+      cargo_weight = cargo_weight + (i:calc_aspect(IItemCargo, "cargo_weight") or 0) * i.amount
    end
    self:reset("inventory_weight", weight)
    self:reset("cargo_weight", cargo_weight)
    self.max_inventory_weight = 45000
    self.inventory_weight_type = Enum.Burden.None
    self:emit("base.on_refresh_weight")
+   -- <<<<<<<< shade2/item_func.hsp:299 	return p ..
 end
 
 --- Sets this character's position. Use this function instead of updating x and y manually.
