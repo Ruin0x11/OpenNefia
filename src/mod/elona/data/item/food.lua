@@ -167,7 +167,8 @@ data:add {
    }
 }
 
-{
+data:add {
+_type = "base.item",
    _type = "base.item",
    _id = "ration",
    elona_id = 233,
@@ -1304,7 +1305,8 @@ data:add {
 -- Seed
 --
 
-{
+data:add {
+_type = "base.item",
    _type = "base.item",
    _id = "vegetable_seed",
    elona_id = 417,
@@ -1470,7 +1472,7 @@ data:add {
 -- Herb
 --
 
-{
+data:add {
    _type = "base.item",
    _id = "morgia",
    elona_id = 422,

@@ -6,6 +6,7 @@ local Rand = require("api.Rand")
 local Chara = require("api.Chara")
 local Effect = require("mod.elona.api.Effect")
 local Skill = require("mod.elona_sys.api.Skill")
+local light = require("mod.elona.data.item.light")
 
 --
 -- Potion

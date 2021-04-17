@@ -79,7 +79,8 @@ data:add {
    }
 }
 
-{
+data:add {
+_type = "base.item",
    _id = "tight_rope",
    elona_id = 219,
    image = "elona.item_rope",
@@ -1188,7 +1189,8 @@ data:add {
    end
 }
 
-{
+data:add {
+   _type = "base.item",
    _id = "deck",
    elona_id = 701,
    image = "elona.item_deck",
