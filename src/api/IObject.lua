@@ -44,6 +44,7 @@ end
 
 function IObject:on_refresh()
    IModdable.on_refresh(self)
+   IAspectHolder.on_refresh(self)
 end
 
 function IObject:finalize(build_params)

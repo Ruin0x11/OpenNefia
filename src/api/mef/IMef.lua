@@ -29,7 +29,6 @@ end
 
 function IMef:refresh()
    IMapObject.on_refresh(self)
-   IModdable.on_refresh(self)
    if self.on_refresh then
       self:on_refresh()
    end

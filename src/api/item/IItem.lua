@@ -82,7 +82,6 @@ local function is_ammo(item)
 end
 
 function IItem:refresh()
-   IModdable.on_refresh(self)
    IMapObject.on_refresh(self)
    IItemEnchantments.on_refresh(self)
 

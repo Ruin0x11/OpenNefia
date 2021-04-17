@@ -147,7 +147,6 @@ end
 ---
 --- @overrides IMapObject.refresh
 function IChara:refresh()
-   IModdable.on_refresh(self)
    IMapObject.on_refresh(self)
    ICharaEquip.on_refresh(self)
    ICharaSkills.on_refresh(self)

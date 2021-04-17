@@ -11,12 +11,12 @@ function IModdable:on_refresh()
    self.temp = {}
 end
 
---- Obtains a property or calls a function to compute something. Using
---- this function instead of plain access (obj.prop) means the
---- property will support the value refresh system.
+--- Obtains a property to compute something. Using this function instead of
+--- plain access (obj.prop) means the property will support the value refresh
+--- system.
 --- @tparam string key
 --- @param ...
-function IModdable:calc(key, ...)
+function IModdable:calc(key)
    if self.temp[key] ~= nil then
       return self.temp[key]
    end

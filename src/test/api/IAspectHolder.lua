@@ -1,6 +1,7 @@
 local data = require("internal.data")
-local AspectHolder_TestAspect = require("test.api.AspectHolder_TestAspect")
 local AspectHolder_ITestAspect = require("test.api.AspectHolder_ITestAspect")
+local AspectHolder_TestAspect = require("test.api.AspectHolder_TestAspect")
+local AspectHolder_TestAspectModdable = require("test.api.AspectHolder_TestAspectModdable")
 local Item = require("api.Item")
 local Assert = require("api.test.Assert")
 local IAspectHolder = require("api.IAspectHolder")
@@ -43,4 +44,44 @@ function test_IAspectHolder_normal_build__params()
    local aspect = IAspectHolder.get_aspect(item, AspectHolder_ITestAspect)
    Assert.eq(true, class.is_an(AspectHolder_TestAspect, aspect))
    Assert.eq(42, aspect.foo)
+end
+
+function test_IAspectHolder_calc()
+   local item = Item.create("@test@.aspected_with_params", nil, nil, {ownerless = true})
+
+   local aspect = IAspectHolder.get_aspect(item, AspectHolder_ITestAspect)
+
+   Assert.eq(42, aspect.foo)
+   Assert.eq(42, aspect:calc(item, "foo"))
+
+   aspect:mod(item, "foo", 10, "add")
+
+   Assert.eq(42, aspect.foo)
+   Assert.eq(52, aspect:calc(item, "foo"))
+
+   item:refresh()
+
+   Assert.eq(42, aspect.foo)
+   Assert.eq(42, aspect:calc(item, "foo"))
+end
+
+function test_IAspectHolder_calc__custom_moddable_impl()
+   local item = Item.create("@test@.aspected_with_params", nil, nil, {ownerless = true})
+
+   local aspect = AspectHolder_TestAspectModdable:new(item, { my_foo = 42 })
+   item:set_aspect(AspectHolder_ITestAspect, aspect)
+
+   Assert.eq(42, aspect.foo)
+   Assert.eq(4200, aspect:calc(item, "foo"))
+
+   aspect:mod(item, "foo", 10, "add")
+
+   Assert.eq(42, aspect.foo)
+   Assert.eq(94, aspect.temp["foo"])
+   Assert.eq(9400, aspect:calc(item, "foo"))
+
+   item:refresh()
+
+   Assert.eq(42, aspect.foo)
+   Assert.eq(4200, aspect:calc(item, "foo"))
 end
