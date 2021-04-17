@@ -91,8 +91,9 @@ function ICharaTraits:increment_trait(trait_id, no_message)
       self.traits[trait_id].level = self.traits[trait_id].level + 1
 
       if not no_message then
-         if I18N.get_optional("trait." .. trait_id .. ".on_gain_level") then
-            Gui.mes_c("trait." .. trait_id .. ".on_gain_level", "Green")
+         local mes = I18N.localize_optional("base.trait", trait_id, "on_gain_level")
+         if mes then
+            Gui.mes_c(mes, "Green")
          else
             Log.warn("No trait gain level message for '%s'", trait_id)
          end
@@ -118,8 +119,9 @@ function ICharaTraits:decrement_trait(trait_id, no_message)
    self.traits[trait_id].level = self.traits[trait_id].level - 1
 
    if not no_message then
-      if I18N.get_optional("trait." .. trait_id .. ".on_lose_level") then
-         Gui.mes_c("trait." .. trait_id .. ".on_lose_level", "Red")
+      local mes = I18N.localize_optional("base.trait", trait_id, "on_lose_level")
+      if mes then
+         Gui.mes_c(mes, "Red")
       else
          Log.warn("No trait lose level message for '%s'", trait_id)
       end
