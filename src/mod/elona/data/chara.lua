@@ -10,6 +10,7 @@ local Calc = require("mod.elona.api.Calc")
 local Itemgen = require("mod.elona.api.Itemgen")
 local Event = require("api.Event")
 local ElonaChara = require("mod.elona.api.ElonaChara")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 local eating_effect = require("mod.elona.data.chara.eating_effect")
 
@@ -587,8 +588,7 @@ local chara = {
             if item then
                item.amount = item.amount + Rand.rnd(4)
                if Rand.one_in(2) then
-                  item.spoilage_date = -1
-                  item.image = "elona.item_rotten_food"
+                  item:get_aspect(IItemFood):rot(item)
                end
             end
          end
@@ -603,8 +603,7 @@ local chara = {
                no_stack = true,
                on_create = function(item)
                   if Rand.one_in(2) then
-                     item.spoilage_date = -1
-                     item.image = "elona.item_rotten_food"
+                     item:get_aspect(IItemFood):rot(item)
                   end
                end
             }
@@ -637,8 +636,7 @@ local chara = {
             if item then
                item.amount = item.amount + Rand.rnd(4)
                if Rand.one_in(2) then
-                  item.spoilage_date = -1
-                  item.image = "elona.item_rotten_food"
+                  item:get_aspect(IItemFood):rot(item)
                end
             end
          end
@@ -653,8 +651,7 @@ local chara = {
                no_stack = true,
                on_create = function(item)
                   if Rand.one_in(2) then
-                     item.spoilage_date = -1
-                     item.image = "elona.item_rotten_food"
+                     item:get_aspect(IItemFood):rot(item)
                   end
                end
             }

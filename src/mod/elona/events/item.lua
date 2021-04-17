@@ -11,6 +11,7 @@ local Enum = require("api.Enum")
 local Skill = require("mod.elona_sys.api.Skill")
 local Const = require("api.Const")
 local Weather = require("mod.elona.api.Weather")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 local function proc_sandbag(chara)
    -- >>>>>>>> shade2/chara_func.hsp:1499 		if cBit(cSandBag,tc):cHp(tc)=cMhp(tc) ..
@@ -200,11 +201,12 @@ local function turn_to_jerky(item, params, result)
 
    if Weather.is("elona.sunny") then
       Gui.mes("misc.corpse_is_dried_up", item:build_name(), item.amount)
-      item.spoilage_date = World.date_hours() + 2160
+      local food = item:get_aspect_or_default(IItemFood)
       item.image = "elona.item_jerky"
       item:change_prototype("elona.jerky")
-      item.params.food_type = nil
-      item.params.food_quality = 5
+      food.spoilage_date = World.date_hours() + 2160
+      food.food_type = nil
+      food.food_quality = 5
       item:refresh_cell_on_map()
    end
 
@@ -219,8 +221,8 @@ local function default_item_rot(item, params)
       end
    end
 
-   item.image = "elona.item_rotten_food"
-   item.spoilage_date = -1
+   local food = item:get_aspect(IItemFood)
+   food:rot(item)
 
    if params.owning_map then
       item:refresh_cell_on_map()

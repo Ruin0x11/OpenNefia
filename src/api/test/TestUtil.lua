@@ -51,15 +51,14 @@ function TestUtil.stripped_chara(id, map, x, y)
    return chara
 end
 
-function TestUtil.stripped_item(id, map, x, y, amount)
+function TestUtil.stripped_item(id, map, x, y, amount, aspects)
    local item
    if map == nil then
-      item = Item.create(id, x, y, {ownerless=true,amount=amount or 1})
+      item = Item.create(id, x, y, {ownerless=true,amount=amount or 1,aspects=aspects})
    else
-      item = Item.create(id, x, y, {amount=amount or 1}, map)
+      item = Item.create(id, x, y, {amount=amount or 1,aspects=aspects}, map)
    end
    item.curse_state = Enum.CurseState.Normal
-   item.spoilage_date = nil
    return item
 end
 

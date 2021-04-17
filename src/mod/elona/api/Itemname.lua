@@ -18,6 +18,8 @@ local Ui = require("api.Ui")
 local World = require("api.World")
 local Hunger = require("mod.elona.api.Hunger")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 
 local Itemname = {}
 
@@ -122,18 +124,24 @@ local function item_name_sub(s, item, jp)
       s = s .. I18N.get("item.altar_god_name", god_name)
    end
 
-   if item:has_category("elona.food") then
-      local is_cooked_dish =
-         item:has_category("elona.food") and item.params.food_type and (item.params.food_quality or 0) > 0
+   local food = item:get_aspect(IItemFood)
+   if food then
+      local is_cooked_dish = food:can_cook(item) and food:is_cooked(item)
       if is_cooked_dish then
+         local food_type = food:calc(item, "food_type")
+         local food_quality = food:calc(item, "food_quality")
          skip = true
          if _id == "elona.fish" then
             local fish_name = "fish._." .. item.params.fish_id .. ".name"
-            s = s .. Hunger.food_name(item.params.food_type, fish_name, item.params.food_quality)
+            s = s .. Hunger.food_name(food_type, fish_name, food_quality)
          else
             local original_name = I18N.localize("base.item", _id, "name")
-            local chara_id = item.params.chara_id or nil
-            s = s .. Hunger.food_name(item.params.food_type, original_name, item.params.food_quality, chara_id)
+            local chara_id = nil
+            local from_chara = food:get_aspect(IItemFromChara)
+            if from_chara then
+               chara_id = from_chara:calc(food, "chara_id")
+            end
+            s = s .. Hunger.food_name(food_type, original_name, food_quality, chara_id)
          end
          return s, skip
       end
@@ -199,9 +207,6 @@ function itemname.jp(item, amount, no_article)
    local curse = item:calc("curse_state")
    local name = I18N.localize("base.item", _id, "name")
 
-   local is_cooked_dish =
-      item:has_category("elona.food") and item.params.food_type and (item.params.food_quality or 0) > 0
-
    local s = ""
    local s2 = ""
 
@@ -248,8 +253,8 @@ function itemname.jp(item, amount, no_article)
 
    -- >>>>>>>> shade2/item_func.hsp:523 	if iMaterial(id)=mtFresh{ ..
    if item.material == "elona.fresh" then
-      local spoilage_date = item.spoilage_date or 0
-      if spoilage_date < 0 then
+      local food = item:get_aspect(IItemFood)
+      if food and food:is_rotten(item) then
          s = s .. "腐った"
       end
    end
@@ -379,8 +384,12 @@ function itemname.jp(item, amount, no_article)
       end
    end
 
-   if item:has_category("elona.cargo") and item.params.cargo_buying_price then
-      s = s .. I18N.get("item.cargo_buying_price", item.params.cargo_buying_price)
+   local cargo = item:get_aspect(IItemCargo)
+   if cargo then
+      local buying_price = cargo:calc(item, "buying_price")
+      if buying_price then
+         s = s .. I18N.get("item.cargo_buying_price", buying_price)
+      end
    end
 
    if item:calc("is_spiked_with_love_potion") then
@@ -426,8 +435,8 @@ function itemname.en(item, amount, no_article)
    local curse = item:calc("curse_state")
    local name = I18N.localize("base.item", _id, "name")
 
-   local is_cooked_dish =
-      item:has_category("elona.food") and item.params.food_type and (item.params.food_quality or 0) > 0
+   local food = item:get_aspect(IItemFood)
+   local is_cooked_dish = food and food:can_cook(item) and food:is_cooked(item)
 
    local s = ""
 
@@ -485,8 +494,8 @@ function itemname.en(item, amount, no_article)
    end
 
    if item.material == "elona.fresh" then
-      local spoilage_date = item.spoilage_date or 0
-      if spoilage_date < 0 then
+      local food = item:get_aspect(IItemFood)
+      if food and food:is_rotten(item) then
          s = s .. "rotten "
       end
    end
@@ -643,8 +652,12 @@ function itemname.en(item, amount, no_article)
       end
    end
 
-   if item:has_category("elona.cargo") and item.params.cargo_buying_price then
-      s = s .. I18N.get("item.cargo_buying_price", item.params.cargo_buying_price)
+   local cargo = item:get_aspect(IItemCargo)
+   if cargo then
+      local buying_price = cargo:calc(item, "buying_price")
+      if buying_price then
+         s = s .. I18N.get("item.cargo_buying_price", buying_price)
+      end
    end
 
    if item:calc("is_spiked_with_love_potion") then

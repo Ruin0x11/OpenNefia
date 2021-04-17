@@ -9,6 +9,7 @@ local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local StayingCharas = require("api.StayingCharas")
 local Chara = require("api.Chara")
 local Log = require("api.Log")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 -- TODO implement gods as capability (god ID, piety, prayer charge, god rank in one struct)
 local God = {}
@@ -330,7 +331,8 @@ function God.calc_item_piety_value(item)
    local points
    if item._id == "elona.corpse" then
       points = math.clamp(item:calc("weight") / 200, 1, 50)
-      if (item.spoilage_date or 0) < 0 then
+      local food = item:get_aspect(IItemFood)
+      if food and food:is_rotten(item) then
          points = 0
       end
    else

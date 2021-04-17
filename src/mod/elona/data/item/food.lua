@@ -1413,7 +1413,8 @@ data:add {
          if map:is_in_fov(params.x, params.y) then
             Gui.mes_c("action.throw.tomato", "Blue")
          end
-         if self.spoilage_date < 0 then
+         local food = self:get_aspect(IItemFood)
+         if food and food:is_rotten(self) then
             Gui.mes_c_visible("damage.is_engulfed_in_fury", target, "Blue")
             target:add_effect_turns("elona.fury", Rand.rnd(10) + 5)
          end

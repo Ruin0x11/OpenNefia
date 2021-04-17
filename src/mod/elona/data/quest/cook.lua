@@ -8,6 +8,7 @@ local Event = require("api.Event")
 local Itemname = require("mod.elona.api.Itemname")
 local ElonaItem = require("mod.elona.api.ElonaItem")
 local Log = require("api.Log")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 local cook = {
    _id = "cook",
@@ -75,7 +76,7 @@ end
 
 local function find_item(chara, food_type, food_quality)
    local pred = function(item)
-      return item.params.food_type == food_type and item.params.food_quality == food_quality
+      return item:calc_aspect(IItemFood, "food_type") == food_type and item:calc_aspect(IItemFood, "food_quality") == food_quality
    end
    return chara:iter_inventory():filter(pred):nth(1)
 end

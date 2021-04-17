@@ -9,6 +9,7 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Hunger = require("mod.elona.api.Hunger")
 local Enum = require("api.Enum")
 local Pos = require("api.Pos")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 data:add {
    _id = "performer",
@@ -91,8 +92,10 @@ local function cook(chara, item, cooking_tool)
    Hunger.make_dish(item, food_quality)
 
    Gui.mes("food.cook", name, cooking_tool:build_name(1), item:build_name(1))
-   if item.params.food_quality > 2 then
-      Skill.gain_skill_exp(chara, "elona.cooking", 30 + item.params.food_quality * 5)
+
+   local quality = item:calc_aspect(IItemFood, "food_quality")
+   if quality > 2 then
+      Skill.gain_skill_exp(chara, "elona.cooking", 30 + quality * 5)
    end
    chara:refresh_weight()
 end

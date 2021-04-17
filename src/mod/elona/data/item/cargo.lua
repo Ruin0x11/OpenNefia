@@ -1,5 +1,6 @@
 local light = require("mod.elona.data.item.light")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 --
 -- Cargo
@@ -218,7 +219,6 @@ data:add {
    elona_id = 409,
    image = "elona.item_inner_tube",
    value = 340,
-   is_cargo = true,
    rarity = 1500000,
    coefficient = 100,
 
@@ -241,7 +241,6 @@ data:add {
    image = "elona.item_christmas_tree",
    value = 3500,
    is_cargo = true,
-   rarity = 600000,
    coefficient = 100,
 
    categories = {
@@ -334,13 +333,14 @@ data:add {
    value = 40,
    coefficient = 100,
 
-   params = { food_quality = 3 },
-
    categories = {
       "elona.cargo_food"
    },
 
    _ext = {
+      [IItemFood] = {
+         food_quality = 3
+      },
       [IItemCargo] = {
          cargo_quality = 0,
          cargo_weight = 2000

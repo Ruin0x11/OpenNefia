@@ -3,6 +3,7 @@ local Chara = require("api.Chara")
 local Pos = require("api.Pos")
 local Itemgen = require("mod.elona.api.Itemgen")
 local Rand = require("api.Rand")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 local ai = {
    _id = "ai"
@@ -34,8 +35,11 @@ function ai.on_generate_map(area, floor)
 
    for _, x, y in Pos.iter_rect(7, 2, 13, 8) do
       local i = Itemgen.create(x, y, { categories = "elona.food" }, map)
-      if i and i.params.food_quality then
-         i.params.food_quality = Rand.rnd(7) + 1
+      if i then
+         local food = i:get_aspect(IItemFood)
+         if food then
+            food.food_quality = Rand.rnd(7) + 1
+         end
       end
    end
 

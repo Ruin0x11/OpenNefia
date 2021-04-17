@@ -9,6 +9,7 @@ local Skill = require("mod.elona_sys.api.Skill")
 local FigureDrawable = require("mod.elona.api.gui.FigureDrawable")
 local CardDrawable = require("mod.elona.api.gui.CardDrawable")
 local Equipment = require("mod.elona.api.Equipment")
+local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 
 local LootDrops = {}
 
@@ -47,7 +48,7 @@ function LootDrops.should_drop_player_item(item, player, map)
       return false
    end
 
-   if item:calc("is_cargo") then
+   if item:get_aspect(IItemCargo) then
       if not can_use_cargo_items(map) then
          return false
       elseif Rand.one_in(2) then

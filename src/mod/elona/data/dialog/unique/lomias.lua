@@ -7,6 +7,7 @@ local Itemgen = require("mod.elona.api.Itemgen")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local Enum = require("api.Enum")
 local Home = require("mod.elona.api.Home")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 
 local common = require("mod.elona.data.dialog.common")
 
@@ -285,8 +286,9 @@ data:add {
             {"__start", "ui.more"}
          },
          on_finish = function()
-            local corpse = Item.create("elona.corpse", Chara.player().x, Chara.player().y)
-            corpse.params = { chara_id = "elona.beggar" }
+            local player = Chara.player()
+            local aspects = {[IItemFromChara]={chara_id="elona.beggar"}}
+            local corpse = Item.create("elona.corpse", player.x, player.y, {aspects=aspects}, player:current_map())
             corpse.identify_state = Enum.IdentifyState.Full
             Gui.mes("common.something_is_put_on_the_ground")
             Sidequest.set_progress("elona.tutorial", 1)

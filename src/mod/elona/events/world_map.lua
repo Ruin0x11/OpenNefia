@@ -8,13 +8,16 @@ local Rand = require("api.Rand")
 local Magic = require("mod.elona_sys.api.Magic")
 local Hunger = require("mod.elona.api.Hunger")
 local Home = require("mod.elona.api.Home")
+local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 local function proc_auto_eat_cargo_food(chara)
    -- >>>>>>>> shade2/proc.hsp:795 	if cHunger(pc)<=hungerNormal{ ...
    if chara.nutrition <= Const.HUNGER_THRESHOLD_NORMAL then
       local is_cargo_food = function(item)
          return Item.is_alive(item)
-            and item:has_category("elona.cargo_food")
+            and item:get_aspect(IItemCargo)
+            and item:get_aspect(IItemFood)
       end
 
       local cargo_food = chara:iter_inventory():filter(is_cargo_food):nth(1)

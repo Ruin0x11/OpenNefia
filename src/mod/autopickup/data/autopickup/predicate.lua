@@ -1,4 +1,5 @@
 local Enum = require("api.Enum")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 data:add_type {
    name = "predicate"
@@ -63,7 +64,8 @@ data:add {
    _id = "rotten",
 
    match = function(item)
-      return (item.spoilage_date or 0) < 0
+      local food = item:get_aspect(IItemFood)
+      return food and food:is_rotten(item)
    end
 }
 

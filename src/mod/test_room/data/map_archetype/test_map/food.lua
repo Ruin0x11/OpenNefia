@@ -6,6 +6,8 @@ local Rand = require("api.Rand")
 local MapgenUtils = require("mod.elona.api.MapgenUtils")
 local Map = require("api.Map")
 local Enum = require("api.Enum")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 local food = {
    _id = "food"
@@ -15,9 +17,10 @@ local function create_dishes(x, y, map)
    local j = 0
    for _, _id in data["elona.food_type"]:iter():extract("_id") do
       local filter = function(i)
-         return i.params
-            and i.params.food_type == _id
-            and i.params.food_quality == nil
+         return i.ext
+            and i.ext[IItemFood]
+            and i.ext[IItemFood].food_type == _id
+            and i.ext[IItemFood].food_quality == nil
       end
       local item_proto = data["base.item"]:iter():filter(filter):nth(1)
       if item_proto then
@@ -116,16 +119,17 @@ function food.on_generate_map(area, floor)
 
    x, y = create_dishes(x, y, map)
 
-   local putitoro = Item.create("elona.putitoro", x, y, {amount=3}, map)
-   if putitoro then
-      putitoro.spoilage_date = -1
-   end
+   Item.create("elona.putitoro", x, y, {amount=3, aspects={[IItemFood]={spoilage_date=-1}}}, map)
 
-   local corpse1 = Item.create("elona.corpse", x + 1, y, {amount=3}, map)
-   if corpse1 then
-      corpse1.params.chara_id = "elona.little_sister"
-      corpse1.params.food_quality = 8
-   end
+   local params = {
+      [IItemFromChara] = {
+         chara_id = "elona.little_sister"
+      },
+      [IItemFood] = {
+         food_quality = 8
+      }
+   }
+   Item.create("elona.corpse", x + 1, y, {amount=3, aspects = params}, map)
 
    y = y + 2
    x, y = create_corpses(x, y, 20 - 4, map)

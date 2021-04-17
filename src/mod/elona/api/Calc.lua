@@ -10,6 +10,7 @@ local Filters = require("mod.elona.api.Filters")
 local Itemgen = require("mod.elona.api.Itemgen")
 local Item = require("api.Item")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 local Calc = {}
 
@@ -155,24 +156,27 @@ function Calc.calc_item_value(item, mode, is_shop)
       end
    end
 
-   if item:has_category("elona.food") then
-      if (item.params.food_quality or 0) > 0 then
-         value = value * item.params.food_quality * item.params.food_quality / 10
-      end
-   end
-   if item:has_category("elona.cargo_food") and mode == "buy" then
-      local fame = player:calc("fame")
-      value = value + math.clamp(fame / 40 + value * (fame / 80) / 100, 0, 800)
-   end
 
-   if item:get_aspect(IItemCargo) and is_shop then
-      -- TODO cargo rate fluctuation
-      local trade_rate = 1
-      value = value * trade_rate / 100
-      if mode == "sell" then
-         return math.floor(value * 65 / 100)
-      else
-         return math.floor(value)
+   if (item:get_aspect(IItemCargo) and item:get_aspect(IItemFood)) then
+      if mode == "buy" then
+         local fame = player:calc("fame")
+         value = value + math.clamp(fame / 40 + value * (fame / 80) / 100, 0, 800)
+      end
+   elseif item:get_aspect(IItemFood) then
+      local quality = item:calc_aspect(IItemFood, "food_quality")
+      if quality > 0 then
+         value = value * quality * quality / 10
+      end
+   elseif item:get_aspect(IItemCargo) then
+      if is_shop then
+         -- TODO cargo rate fluctuation
+         local trade_rate = 1
+         value = value * trade_rate / 100
+         if mode == "sell" then
+            return math.floor(value * 65 / 100)
+         else
+            return math.floor(value)
+         end
       end
    end
 

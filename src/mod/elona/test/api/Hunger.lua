@@ -6,6 +6,9 @@ local Hunger = require("mod.elona.api.Hunger")
 local IOwned = require("api.IOwned")
 local TestUtil = require("api.test.TestUtil")
 local IItem = require("api.item.IItem")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
+local ItemFoodAspect = require("mod.elona.api.aspect.ItemFoodAspect")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 
 function test_Hunger_apply_general_eating_effect__sustain_attribute()
    local map = InstancedMap:new(10, 10)
@@ -90,11 +93,11 @@ function test_Hunger_apply_general_eating_effect__food_type()
    local chara = TestUtil.stripped_chara("elona.putit", map)
    local food = TestUtil.stripped_item("elona.raw_noodle", map)
 
-   food.params.food_quality = 0
+   food:get_aspect(IItemFood).food_quality = 0
    chara.nutrition = 0
    chara:mod_base_skill_level("elona.stat_constitution", 10, "set")
    chara:mod_skill_potential("elona.stat_constitution", 100, "set")
-   Assert.eq("elona.pasta", food.params.food_type)
+   Assert.eq("elona.pasta", food:get_aspect(IItemFood).food_type)
    Assert.eq(10, chara:base_skill_level("elona.stat_constitution"))
    Assert.eq(0, chara:skill_experience("elona.stat_constitution"))
    Assert.eq(0, chara.nutrition)
@@ -113,10 +116,10 @@ function test_Hunger_apply_general_eating_effect__food_type_cooked()
    local chara = TestUtil.stripped_chara("elona.putit", map)
    local food = TestUtil.stripped_item("elona.raw_noodle", map)
 
-   food.params.food_quality = 9
+   food:get_aspect(IItemFood).food_quality = 9
    chara.nutrition = 0
    chara:mod_base_skill_level("elona.stat_constitution", 10, "set")
-   Assert.eq("elona.pasta", food.params.food_type)
+   Assert.eq("elona.pasta", food:get_aspect(IItemFood).food_type)
    Assert.eq(10, chara:base_skill_level("elona.stat_constitution"))
    Assert.eq(0, chara:skill_experience("elona.stat_constitution"))
    Assert.eq(0, chara.nutrition)
@@ -136,7 +139,7 @@ function test_Hunger_apply_general_eating_effect___player_eats_rotten()
    local food = TestUtil.stripped_item("elona.corpse", map)
 
    Chara.set_player(chara)
-   food.spoilage_date = -1
+   food:get_aspect(IItemFood).spoilage_date = -1
    chara.nutrition = 5000
    chara:mod_base_skill_level("elona.stat_constitution", 10, "set")
    chara:mod_skill_experience("elona.stat_constitution", 500, "set")
@@ -159,7 +162,7 @@ function test_Hunger_apply_general_eating_effect___nonplayer_eats_rotten()
    local chara = TestUtil.stripped_chara("elona.putit", map)
    local food = TestUtil.stripped_item("elona.corpse", map)
 
-   food.spoilage_date = -1
+   food:get_aspect(IItemFood).spoilage_date = -1
    chara.nutrition = 5000
    chara:mod_base_skill_level("elona.stat_constitution", 10, "set")
    chara:mod_skill_experience("elona.stat_constitution", 500, "set")
@@ -184,7 +187,6 @@ function test_Hunger_apply_general_eating_effect__corpse_effects()
    do
       local food = TestUtil.stripped_item("elona.corpse", map)
 
-      food.params.chara_id = nil
       chara.nutrition = 5000
       chara:mod_base_skill_level("elona.healing", 10, "set")
       chara:mod_skill_experience("elona.healing", 500, "set")
@@ -200,9 +202,8 @@ function test_Hunger_apply_general_eating_effect__corpse_effects()
    end
 
    do
-      local food = TestUtil.stripped_item("elona.corpse", map)
+      local food = TestUtil.stripped_item("elona.corpse", map, nil, nil, nil, {[IItemFromChara]={chara_id="elona.troll"}})
 
-      food.params.chara_id = "elona.troll"
       chara.nutrition = 5000
       chara:mod_base_skill_level("elona.healing", 10, "set")
       chara:mod_skill_experience("elona.healing", 500, "set")
@@ -216,4 +217,7 @@ function test_Hunger_apply_general_eating_effect__corpse_effects()
       Assert.eq(556, chara:skill_experience("elona.healing"))
       Assert.eq(8500, chara.nutrition)
    end
+end
+
+function test_Hunger_is_human_flesh()
 end
