@@ -4,6 +4,7 @@ local race =
          _id = "kobold",
          is_extra = true,
          ordering = 20010,
+         elona_id = 1,
 
          properties = {
             breed_power = 250,
@@ -41,7 +42,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -51,6 +52,7 @@ local race =
          _id = "orc",
          is_extra = true,
          ordering = 20020,
+         elona_id = 2,
 
          properties = {
             breed_power = 300,
@@ -87,7 +89,7 @@ local race =
             "elona.hand",
             "elona.hand",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -97,6 +99,7 @@ local race =
          _id = "troll",
          is_extra = true,
          ordering = 20030,
+         elona_id = 3,
 
          properties = {
             breed_power = 250,
@@ -131,7 +134,7 @@ local race =
             "elona.back",
             "elona.hand",
             "elona.hand",
-            "elona.ring",
+            "elona.arm",
             "elona.waist"
          },
       },
@@ -140,6 +143,7 @@ local race =
          _id = "lizardman",
          is_extra = true,
          ordering = 20040,
+         elona_id = 4,
 
          properties = {
             breed_power = 300,
@@ -177,7 +181,7 @@ local race =
             "elona.hand",
             "elona.hand",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -187,6 +191,7 @@ local race =
          _id = "minotaur",
          is_extra = true,
          ordering = 20050,
+         elona_id = 5,
 
          properties = {
             breed_power = 300,
@@ -230,6 +235,7 @@ local race =
          _id = "yerles",
          is_extra = false,
          ordering = 10010,
+         elona_id = 6,
 
          properties = {
             breed_power = 220,
@@ -274,7 +280,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -284,6 +290,7 @@ local race =
          _id = "norland",
          is_extra = true,
          ordering = 20060,
+         elona_id = 7,
 
          properties = {
             breed_power = 220,
@@ -324,7 +331,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -334,6 +341,7 @@ local race =
          _id = "eulderna",
          is_extra = false,
          ordering = 10020,
+         elona_id = 8,
 
          properties = {
             breed_power = 180,
@@ -377,7 +385,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -387,6 +395,7 @@ local race =
          _id = "fairy",
          is_extra = false,
          ordering = 10030,
+         elona_id = 9,
 
          properties = {
             breed_power = 180,
@@ -431,6 +440,7 @@ local race =
             ["elona.sound"] = 200,
             ["elona.chaos"] = 200,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -440,7 +450,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -449,6 +459,7 @@ local race =
          _id = "asura",
          is_extra = true,
          ordering = 20070,
+         elona_id = 10,
 
          properties = {
             breed_power = 100,
@@ -478,6 +489,7 @@ local race =
             ["elona.greater_evasion"] = 6,
             ["elona.anatomy"] = 4,
          },
+
          body_parts = {
             "elona.hand",
             "elona.hand",
@@ -490,6 +502,7 @@ local race =
          _id = "slime",
          is_extra = true,
          ordering = 20080,
+         elona_id = 11,
 
          properties = {
             breed_power = 700,
@@ -518,6 +531,7 @@ local race =
             ["elona.evasion"] = 2,
             ["elona.performer"] = 3,
          },
+
          body_parts = {
             "elona.head"
          },
@@ -526,6 +540,7 @@ local race =
          _id = "wolf",
          is_extra = true,
          ordering = 20090,
+         elona_id = 12,
 
          properties = {
             breed_power = 800,
@@ -554,12 +569,13 @@ local race =
             ["elona.evasion"] = 2,
             ["elona.greater_evasion"] = 2,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
             "elona.body",
             "elona.back",
-            "elona.ring",
+            "elona.arm",
             "elona.leg"
          },
       },
@@ -567,6 +583,7 @@ local race =
          _id = "dwarf",
          is_extra = false,
          ordering = 10040,
+         elona_id = 13,
 
          properties = {
             breed_power = 150,
@@ -600,6 +617,7 @@ local race =
             ["elona.jeweler"] = 3,
             ["elona.mining"] = 4,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -609,7 +627,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -618,6 +636,7 @@ local race =
          _id = "juere",
          is_extra = false,
          ordering = 10050,
+         elona_id = 14,
 
          properties = {
             breed_power = 210,
@@ -653,6 +672,7 @@ local race =
             ["elona.negotiation"] = 2,
             ["elona.throwing"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -662,7 +682,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -671,6 +691,7 @@ local race =
          _id = "zombie",
          is_extra = true,
          ordering = 20100,
+         elona_id = 15,
 
          properties = {
             breed_power = 100,
@@ -704,6 +725,7 @@ local race =
             ["elona.nether"] = 500,
             ["elona.fire"] = 80,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -711,7 +733,7 @@ local race =
             "elona.back",
             "elona.hand",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist"
          },
       },
@@ -719,6 +741,7 @@ local race =
          _id = "elea",
          is_extra = false,
          ordering = 10060,
+         elona_id = 16,
 
          properties = {
             breed_power = 120,
@@ -753,6 +776,7 @@ local race =
             ["elona.casting"] = 2,
             ["elona.memorization"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -762,7 +786,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -771,6 +795,7 @@ local race =
          _id = "rabbit",
          is_extra = true,
          ordering = 20110,
+         elona_id = 17,
 
          properties = {
             breed_power = 800,
@@ -797,18 +822,20 @@ local race =
             ["elona.martial_arts"] = 1,
             ["elona.riding"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
             "elona.body",
             "elona.back",
-            "elona.ring"
+            "elona.arm"
          },
       },
       {
          _id = "sheep",
          is_extra = true,
          ordering = 20120,
+         elona_id = 18,
 
          properties = {
             breed_power = 1000,
@@ -836,12 +863,13 @@ local race =
             ["elona.healing"] = 3,
             ["elona.anatomy"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
             "elona.body",
             "elona.back",
-            "elona.ring",
+            "elona.arm",
             "elona.leg"
          },
       },
@@ -849,6 +877,7 @@ local race =
          _id = "frog",
          is_extra = true,
          ordering = 20130,
+         elona_id = 19,
 
          properties = {
             breed_power = 600,
@@ -885,6 +914,7 @@ local race =
          _id = "centipede",
          is_extra = true,
          ordering = 20140,
+         elona_id = 20,
 
          properties = {
             breed_power = 400,
@@ -911,6 +941,7 @@ local race =
             ["elona.martial_arts"] = 1,
             ["elona.eye_of_mind"] = 3,
          },
+
          body_parts = {
             "elona.back",
             "elona.ring",
@@ -921,6 +952,7 @@ local race =
          _id = "snail",
          is_extra = false,
          ordering = 10070,
+         elona_id = 21,
 
          properties = {
             breed_power = 500,
@@ -947,6 +979,7 @@ local race =
             ["elona.martial_arts"] = 1,
             ["elona.throwing"] = 5,
          },
+
          body_parts = {
             "elona.back"
          },
@@ -955,6 +988,7 @@ local race =
          _id = "mandrake",
          is_extra = true,
          ordering = 20150,
+         elona_id = 22,
 
          properties = {
             breed_power = 80,
@@ -983,6 +1017,7 @@ local race =
             ["elona.literacy"] = 2,
             ["elona.magic_capacity"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.back"
@@ -992,6 +1027,7 @@ local race =
          _id = "beetle",
          is_extra = true,
          ordering = 20160,
+         elona_id = 23,
 
          properties = {
             breed_power = 750,
@@ -1020,6 +1056,7 @@ local race =
             ["elona.detection"] = 3,
             ["elona.stealth"] = 3,
          },
+
          body_parts = {
             "elona.neck"
          },
@@ -1028,6 +1065,7 @@ local race =
          _id = "mushroom",
          is_extra = true,
          ordering = 20170,
+         elona_id = 24,
 
          properties = {
             breed_power = 440,
@@ -1057,6 +1095,7 @@ local race =
             ["elona.tailoring"] = 3,
             ["elona.alchemy"] = 2,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck"
@@ -1066,6 +1105,7 @@ local race =
          _id = "bat",
          is_extra = true,
          ordering = 20180,
+         elona_id = 25,
 
          properties = {
             breed_power = 350,
@@ -1094,6 +1134,7 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.greater_evasion"] = 3,
          },
+
          body_parts = {
             "elona.head"
          },
@@ -1102,6 +1143,7 @@ local race =
          _id = "ent",
          is_extra = true,
          ordering = 20190,
+         elona_id = 26,
 
          properties = {
             breed_power = 35,
@@ -1129,11 +1171,12 @@ local race =
             ["elona.healing"] = 2,
             ["elona.carpentry"] = 4,
          },
+
          body_parts = {
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.leg"
          },
       },
@@ -1141,6 +1184,7 @@ local race =
          _id = "lich",
          is_extra = false,
          ordering = 10080,
+         elona_id = 27,
 
          properties = {
             breed_power = 25,
@@ -1183,6 +1227,7 @@ local race =
             ["elona.nether"] = 500,
             ["elona.fire"] = 80,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -1192,7 +1237,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -1201,6 +1246,7 @@ local race =
          _id = "hound",
          is_extra = true,
          ordering = 20200,
+         elona_id = 28,
 
          properties = {
             breed_power = 540,
@@ -1230,6 +1276,7 @@ local race =
             ["elona.detection"] = 4,
             ["elona.performer"] = 2,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -1242,6 +1289,7 @@ local race =
          _id = "ghost",
          is_extra = true,
          ordering = 20210,
+         elona_id = 29,
 
          properties = {
             breed_power = 30,
@@ -1277,6 +1325,7 @@ local race =
             ["elona.nether"] = 500,
             ["elona.fire"] = 80,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -1292,6 +1341,7 @@ local race =
          _id = "spirit",
          is_extra = true,
          ordering = 20220,
+         elona_id = 30,
 
          properties = {
             breed_power = 25,
@@ -1319,6 +1369,7 @@ local race =
             ["elona.casting"] = 3,
             ["elona.control_magic"] = 2,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -1334,6 +1385,7 @@ local race =
          _id = "eye",
          is_extra = true,
          ordering = 20230,
+         elona_id = 31,
 
          properties = {
             breed_power = 50,
@@ -1362,6 +1414,7 @@ local race =
             ["elona.detection"] = 3,
             ["elona.anatomy"] = 3,
          },
+
          body_parts = {
             "elona.head"
          },
@@ -1370,6 +1423,7 @@ local race =
          _id = "wyvern",
          is_extra = true,
          ordering = 20240,
+         elona_id = 32,
 
          properties = {
             breed_power = 100,
@@ -1398,6 +1452,7 @@ local race =
             ["elona.literacy"] = 3,
             ["elona.traveling"] = 3,
          },
+
          body_parts = {
             "elona.neck",
             "elona.body",
@@ -1409,6 +1464,7 @@ local race =
          _id = "wasp",
          is_extra = true,
          ordering = 20250,
+         elona_id = 33,
 
          properties = {
             breed_power = 580,
@@ -1437,6 +1493,7 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.greater_evasion"] = 2,
          },
+
          body_parts = {
             "elona.head"
          },
@@ -1445,6 +1502,7 @@ local race =
          _id = "giant",
          is_extra = true,
          ordering = 20260,
+         elona_id = 34,
 
          properties = {
             breed_power = 60,
@@ -1473,12 +1531,13 @@ local race =
             ["elona.magic_device"] = 2,
             ["elona.carpentry"] = 3,
          },
+
          body_parts = {
             "elona.body",
             "elona.back",
             "elona.hand",
             "elona.hand",
-            "elona.ring",
+            "elona.arm",
             "elona.leg"
          },
       },
@@ -1486,6 +1545,7 @@ local race =
          _id = "imp",
          is_extra = true,
          ordering = 20270,
+         elona_id = 35,
 
          properties = {
             breed_power = 240,
@@ -1515,6 +1575,7 @@ local race =
             ["elona.memorization"] = 3,
             ["elona.control_magic"] = 3,
          },
+
          body_parts = {
             "elona.neck",
             "elona.body",
@@ -1529,6 +1590,7 @@ local race =
          _id = "hand",
          is_extra = true,
          ordering = 20280,
+         elona_id = 36,
 
          properties = {
             breed_power = 160,
@@ -1555,18 +1617,20 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.eye_of_mind"] = 4,
          },
+
          body_parts = {
             "elona.hand",
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring"
+            "elona.arm"
          },
       },
       {
          _id = "snake",
          is_extra = true,
          ordering = 20290,
+         elona_id = 37,
 
          properties = {
             breed_power = 430,
@@ -1598,14 +1662,12 @@ local race =
          body_parts = {
             "elona.body"
          },
-
-
-
       },
       {
          _id = "drake",
          is_extra = true,
          ordering = 20300,
+         elona_id = 38,
 
          properties = {
             breed_power = 120,
@@ -1635,6 +1697,7 @@ local race =
             ["elona.traveling"] = 3,
             ["elona.fishing"] = 2,
          },
+
          body_parts = {
             "elona.neck",
             "elona.body",
@@ -1646,6 +1709,7 @@ local race =
          _id = "goblin",
          is_extra = false,
          ordering = 10090,
+         elona_id = 39,
 
          properties = {
             breed_power = 290,
@@ -1680,6 +1744,7 @@ local race =
             ["elona.mining"] = 2,
             ["elona.eye_of_mind"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -1689,7 +1754,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -1698,6 +1763,7 @@ local race =
          _id = "bear",
          is_extra = true,
          ordering = 20310,
+         elona_id = 40,
 
          properties = {
             breed_power = 350,
@@ -1727,12 +1793,13 @@ local race =
             ["elona.performer"] = 2,
             ["elona.eye_of_mind"] = 3,
          },
+
          body_parts = {
             "elona.hand",
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -1741,6 +1808,7 @@ local race =
          _id = "armor",
          is_extra = true,
          ordering = 20320,
+         elona_id = 41,
 
          properties = {
             breed_power = 40,
@@ -1770,6 +1838,7 @@ local race =
             ["elona.lock_picking"] = 3,
             ["elona.magic_device"] = 2,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -1777,7 +1846,7 @@ local race =
             "elona.back",
             "elona.hand",
             "elona.hand",
-            "elona.ring",
+            "elona.arm",
             "elona.waist"
          },
       },
@@ -1785,6 +1854,7 @@ local race =
          _id = "medusa",
          is_extra = true,
          ordering = 20330,
+         elona_id = 42,
 
          properties = {
             breed_power = 180,
@@ -1813,13 +1883,14 @@ local race =
             ["elona.magic_capacity"] = 3,
             ["elona.control_magic"] = 3,
          },
+
          body_parts = {
             "elona.body",
             "elona.hand",
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.leg"
          },
       },
@@ -1827,6 +1898,7 @@ local race =
          _id = "cupid",
          is_extra = true,
          ordering = 20340,
+         elona_id = 43,
 
          properties = {
             breed_power = 350,
@@ -1855,6 +1927,7 @@ local race =
             ["elona.literacy"] = 4,
             ["elona.control_magic"] = 3,
          },
+
          body_parts = {
             "elona.neck",
             "elona.body",
@@ -1862,13 +1935,14 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring"
+            "elona.arm"
          },
       },
       {
          _id = "phantom",
          is_extra = true,
          ordering = 20350,
+         elona_id = 44,
          properties = {
             breed_power = 35,
             image = "elona.chara_phantom",
@@ -1903,6 +1977,7 @@ local race =
             ["elona.nether"] = 500,
             ["elona.fire"] = 80,
          },
+
          body_parts = {
             "elona.neck",
             "elona.body",
@@ -1910,13 +1985,14 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring"
+            "elona.arm"
          },
       },
       {
          _id = "harpy",
          is_extra = true,
          ordering = 20360,
+         elona_id = 45,
          properties = {
             breed_power = 420,
             image = "elona.chara_harpy",
@@ -1944,13 +2020,14 @@ local race =
             ["elona.magic_capacity"] = 3,
             ["elona.magic_device"] = 2,
          },
+
          body_parts = {
             "elona.neck",
             "elona.hand",
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.leg",
             "elona.leg"
          },
@@ -1959,6 +2036,7 @@ local race =
          _id = "dragon",
          is_extra = true,
          ordering = 20370,
+         elona_id = 46,
 
          properties = {
             breed_power = 20,
@@ -1988,6 +2066,7 @@ local race =
             ["elona.traveling"] = 3,
             ["elona.jeweler"] = 3,
          },
+
          body_parts = {
             "elona.neck",
             "elona.body",
@@ -1999,6 +2078,7 @@ local race =
          _id = "dinosaur",
          is_extra = true,
          ordering = 20380,
+         elona_id = 47,
 
          properties = {
             breed_power = 100,
@@ -2028,6 +2108,7 @@ local race =
             ["elona.traveling"] = 3,
             ["elona.greater_evasion"] = 2,
          },
+
          body_parts = {
             "elona.neck",
             "elona.body",
@@ -2039,6 +2120,7 @@ local race =
          _id = "cerberus",
          is_extra = true,
          ordering = 20390,
+         elona_id = 48,
 
          properties = {
             breed_power = 80,
@@ -2067,12 +2149,13 @@ local race =
             ["elona.detection"] = 3,
             ["elona.tailoring"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
             "elona.body",
             "elona.back",
-            "elona.ring",
+            "elona.arm",
             "elona.leg",
             "elona.leg"
          },
@@ -2081,6 +2164,7 @@ local race =
          _id = "spider",
          is_extra = true,
          ordering = 20400,
+         elona_id = 49,
 
          properties = {
             breed_power = 560,
@@ -2113,6 +2197,7 @@ local race =
             ["elona.stealth"] = 3,
             ["elona.anatomy"] = 5,
          },
+
          body_parts = {
             "elona.ring",
             "elona.ring"
@@ -2122,6 +2207,7 @@ local race =
          _id = "golem",
          is_extra = false,
          ordering = 10100,
+         elona_id = 50,
 
          properties = {
             breed_power = 40,
@@ -2156,6 +2242,7 @@ local race =
             ["elona.weight_lifting"] = 5,
             ["elona.mining"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -2165,10 +2252,11 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
+
 
          -- >>>>>>>> shade2/chara_func.hsp:934 		if cnRace(tc)="golem":f=false ...
          effect_immunities = {
@@ -2180,6 +2268,7 @@ local race =
          _id = "rock",
          is_extra = true,
          ordering = 20410,
+         elona_id = 51,
 
          properties = {
             breed_power = 200,
@@ -2209,6 +2298,7 @@ local race =
             ["elona.weight_lifting"] = 3,
             ["elona.mining"] = 3,
          },
+
          body_parts = {
             "elona.head"
          },
@@ -2217,6 +2307,7 @@ local race =
          _id = "crab",
          is_extra = true,
          ordering = 20420,
+         elona_id = 52,
 
          properties = {
             breed_power = 420,
@@ -2246,6 +2337,7 @@ local race =
             ["elona.disarm_trap"] = 2,
             ["elona.shield"] = 3,
          },
+
          body_parts = {
             "elona.back",
             "elona.hand",
@@ -2259,6 +2351,7 @@ local race =
          _id = "skeleton",
          is_extra = true,
          ordering = 20430,
+         elona_id = 53,
 
          properties = {
             breed_power = 30,
@@ -2294,6 +2387,7 @@ local race =
             ["elona.nether"] = 500,
             ["elona.fire"] = 80,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -2303,7 +2397,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -2312,6 +2406,7 @@ local race =
          _id = "piece",
          is_extra = true,
          ordering = 20440,
+         elona_id = 54,
 
          properties = {
             breed_power = 25,
@@ -2341,6 +2436,7 @@ local race =
             ["elona.magic_capacity"] = 2,
             ["elona.literacy"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -2350,7 +2446,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist"
          },
       },
@@ -2358,6 +2454,7 @@ local race =
          _id = "cat",
          is_extra = true,
          ordering = 20450,
+         elona_id = 55,
 
          properties = {
             breed_power = 950,
@@ -2388,6 +2485,7 @@ local race =
             ["elona.greater_evasion"] = 3,
             ["elona.evasion"] = 2,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -2402,6 +2500,7 @@ local race =
          _id = "dog",
          is_extra = true,
          ordering = 20460,
+         elona_id = 56,
 
          properties = {
             breed_power = 920,
@@ -2431,6 +2530,7 @@ local race =
             ["elona.performer"] = 2,
             ["elona.detection"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -2445,6 +2545,7 @@ local race =
          _id = "roran",
          is_extra = true,
          ordering = 20470,
+         elona_id = 57,
 
          properties = {
             breed_power = 220,
@@ -2474,6 +2575,7 @@ local race =
             ["elona.literacy"] = 4,
             ["elona.investing"] = 2,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -2483,7 +2585,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -2492,6 +2594,7 @@ local race =
          _id = "rat",
          is_extra = true,
          ordering = 20480,
+         elona_id = 58,
 
          properties = {
             breed_power = 1100,
@@ -2520,9 +2623,10 @@ local race =
             ["elona.stealth"] = 3,
             ["elona.anatomy"] = 2,
          },
+
          body_parts = {
             "elona.back",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -2531,6 +2635,7 @@ local race =
          _id = "shell",
          is_extra = true,
          ordering = 20490,
+         elona_id = 59,
 
          properties = {
             breed_power = 450,
@@ -2560,6 +2665,7 @@ local race =
             ["elona.meditation"] = 3,
             ["elona.sense_quality"] = 3,
          },
+
          body_parts = {
             "elona.leg"
          },
@@ -2568,6 +2674,7 @@ local race =
          _id = "catgod",
          is_extra = true,
          ordering = 20500,
+         elona_id = 60,
 
          properties = {
             breed_power = 5,
@@ -2598,13 +2705,14 @@ local race =
             ["elona.greater_evasion"] = 3,
             ["elona.eye_of_mind"] = 2,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
             "elona.body",
             "elona.hand",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.leg"
          },
       },
@@ -2612,6 +2720,7 @@ local race =
          _id = "machinegod",
          is_extra = true,
          ordering = 20510,
+         elona_id = 61,
 
          properties = {
             breed_power = 5,
@@ -2640,13 +2749,14 @@ local race =
             ["elona.martial_arts"] = 5,
             ["elona.firearm"] = 30,
          },
+
          body_parts = {
             "elona.head",
             "elona.body",
             "elona.back",
             "elona.hand",
             "elona.hand",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -2655,6 +2765,7 @@ local race =
          _id = "undeadgod",
          is_extra = true,
          ordering = 20520,
+         elona_id = 62,
 
          properties = {
             breed_power = 5,
@@ -2682,6 +2793,7 @@ local race =
             ["elona.control_magic"] = 3,
             ["elona.magic_capacity"] = 5,
          },
+
          body_parts = {
             "elona.neck",
             "elona.body",
@@ -2696,6 +2808,7 @@ local race =
          _id = "machine",
          is_extra = true,
          ordering = 20530,
+         elona_id = 63,
 
          properties = {
             breed_power = 15,
@@ -2726,6 +2839,7 @@ local race =
             ["elona.lock_picking"] = 3,
             ["elona.disarm_trap"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -2735,7 +2849,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -2744,6 +2858,7 @@ local race =
          _id = "wisp",
          is_extra = true,
          ordering = 20540,
+         elona_id = 64,
 
          properties = {
             breed_power = 25,
@@ -2772,6 +2887,7 @@ local race =
             ["elona.control_magic"] = 3,
             ["elona.magic_capacity"] = 5,
          },
+
          body_parts = {
             "elona.head"
          },
@@ -2780,6 +2896,7 @@ local race =
          _id = "chicken",
          is_extra = true,
          ordering = 20550,
+         elona_id = 65,
 
          properties = {
             breed_power = 1000,
@@ -2808,6 +2925,7 @@ local race =
             ["elona.anatomy"] = 3,
             ["elona.meditation"] = 3,
          },
+
          body_parts = {
             "elona.head"
          },
@@ -2816,6 +2934,7 @@ local race =
          _id = "stalker",
          is_extra = true,
          ordering = 20560,
+         elona_id = 66,
 
          properties = {
             breed_power = 25,
@@ -2851,19 +2970,21 @@ local race =
             ["elona.nether"] = 500,
             ["elona.fire"] = 80,
          },
+
          body_parts = {
             "elona.neck",
             "elona.hand",
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring"
+            "elona.arm"
          },
       },
       {
          _id = "catsister",
          is_extra = true,
          ordering = 20570,
+         elona_id = 67,
 
          properties = {
             breed_power = 5,
@@ -2892,6 +3013,7 @@ local race =
             ["elona.two_hand"] = 6,
             ["elona.tactics"] = 4,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -2901,7 +3023,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -2910,6 +3032,7 @@ local race =
          _id = "mutant",
          is_extra = false,
          ordering = 10110,
+         elona_id = 68,
 
          properties = {
             breed_power = 50,
@@ -2941,6 +3064,7 @@ local race =
             ["elona.magic_capacity"] = 3,
             ["elona.healing"] = 4,
          },
+
          body_parts = {
             "elona.body",
             "elona.hand"
@@ -2950,6 +3074,7 @@ local race =
          _id = "yeek",
          is_extra = true,
          ordering = 20580,
+         elona_id = 69,
 
          properties = {
             breed_power = 500,
@@ -2977,6 +3102,7 @@ local race =
             ["elona.meditation"] = 3,
             ["elona.negotiation"] = 4,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -2986,7 +3112,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -2995,6 +3121,7 @@ local race =
          _id = "yith",
          is_extra = true,
          ordering = 20590,
+         elona_id = 70,
 
          properties = {
             breed_power = 25,
@@ -3025,6 +3152,7 @@ local race =
             ["elona.meditation"] = 3,
             ["elona.faith"] = 4,
          },
+
          body_parts = {
             "elona.hand",
             "elona.hand",
@@ -3040,6 +3168,7 @@ local race =
          _id = "servant",
          is_extra = true,
          ordering = 20600,
+         elona_id = 71,
 
          properties = {
             breed_power = 5,
@@ -3072,6 +3201,7 @@ local race =
             ["elona.firearm"] = 4,
             ["elona.two_hand"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -3081,7 +3211,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.waist",
             "elona.leg"
          },
@@ -3090,6 +3220,7 @@ local race =
          _id = "horse",
          is_extra = true,
          ordering = 20610,
+         elona_id = 72,
 
          properties = {
             breed_power = 1000,
@@ -3117,6 +3248,7 @@ local race =
             ["elona.martial_arts"] = 1,
             ["elona.healing"] = 4,
          },
+
          body_parts = {
             "elona.body",
             "elona.leg",
@@ -3127,6 +3259,7 @@ local race =
          _id = "god",
          is_extra = true,
          ordering = 20620,
+         elona_id = 73,
 
          properties = {
             breed_power = 1,
@@ -3162,6 +3295,7 @@ local race =
             ["elona.two_hand"] = 5,
             ["elona.tactics"] = 7,
          },
+
          body_parts = {
             "elona.hand",
             "elona.hand"
@@ -3171,6 +3305,7 @@ local race =
          _id = "quickling",
          is_extra = true,
          ordering = 20630,
+         elona_id = 74,
 
          properties = {
             breed_power = 1,
@@ -3203,6 +3338,7 @@ local race =
          resistances = {
             ["elona.magic"] = 500,
          },
+
          body_parts = {
             "elona.head",
             "elona.body",
@@ -3211,7 +3347,7 @@ local race =
             "elona.hand",
             "elona.ring",
             "elona.ring",
-            "elona.ring",
+            "elona.arm",
             "elona.leg"
          },
       },
@@ -3219,6 +3355,7 @@ local race =
          _id = "metal",
          is_extra = true,
          ordering = 20640,
+         elona_id = 75,
 
          properties = {
             breed_power = 1,
@@ -3252,6 +3389,7 @@ local race =
          resistances = {
             ["elona.magic"] = 500,
          },
+
          body_parts = {
             "elona.head",
             "elona.body",
@@ -3262,6 +3400,7 @@ local race =
          _id = "bike",
          is_extra = true,
          ordering = 20650,
+         elona_id = 76,
 
          properties = {
             breed_power = 15,
@@ -3293,6 +3432,7 @@ local race =
             ["elona.lock_picking"] = 3,
             ["elona.disarm_trap"] = 3,
          },
+
          body_parts = {
             "elona.head",
             "elona.body",
@@ -3328,6 +3468,7 @@ local race =
             ["elona.stat_speed"] = 500,
             ["elona.mining"] = 100,
          },
+
          body_parts = {
             "elona.head",
             "elona.neck",
@@ -3341,7 +3482,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
       },
    }
 
