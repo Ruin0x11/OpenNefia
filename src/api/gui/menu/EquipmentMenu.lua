@@ -277,7 +277,7 @@ function EquipmentMenu:update(dt)
       else
          local result, query_canceled = Input.query_item(self.chara, "elona.inv_equip", { params = {body_part_id = entry.body_part._id} })
          if not query_canceled then
-            local selected_item = result.result
+            local selected_item = result.result:separate()
             assert(Action.equip(self.chara, selected_item, slot))
             -- >>>>>>>> shade2/command.hsp:3743 			snd seEquip ..
             Gui.play_sound("base.equip1")

@@ -28,10 +28,8 @@ local function apply_item_stats(chara, item)
    chara:mod("equipment_weight", item:calc("weight"), "add")
 
    local equip = assert(item:get_aspect(IItemEquipment))
-   if equip then
-      chara:mod("dv", equip:calc(item, "dv"), "add")
-      chara:mod("pv", equip:calc(item, "pv"), "add")
-   end
+   chara:mod("dv", equip:calc(item, "dv"), "add")
+   chara:mod("pv", equip:calc(item, "pv"), "add")
 
    if item:calc("is_melee_weapon") then
       chara:mod("number_of_weapons", 1, "add")
