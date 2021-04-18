@@ -41,17 +41,17 @@ function hotload.hotload(path_or_class, also_deps)
       path_or_class = path
    end
 
-   local ok, result, err
+   local ok, result, hotload_result, err
    ok, result = pcall(Event.trigger, "base.on_hotload_begin", {path_or_class=path_or_class,also_deps=also_deps})
    if not ok then
       Log.error("Error on on_hotload_begin: %s", result)
       err = result
    end
 
-   ok, result = xpcall(env.hotload_path, debug.traceback, path_or_class, also_deps)
+   ok, hotload_result = xpcall(env.hotload_path, debug.traceback, path_or_class, also_deps)
    if not ok then
       Log.error("Error on hotload_path: %s", result)
-      err = result
+      err = hotload_result
    end
 
    ok, result = xpcall(Event.trigger, debug.traceback,
@@ -61,7 +61,7 @@ function hotload.hotload(path_or_class, also_deps)
                          path_or_class=path_or_class,
                          also_deps=also_deps,
                          ok=ok,
-                         result=result
+                         result=hotload_result
    })
 
    if not ok then
@@ -73,7 +73,7 @@ function hotload.hotload(path_or_class, also_deps)
       error(err)
    end
 
-   return result
+   return hotload_result
 end
 
 Event.register("base.on_hotload_end", "Hotload field renderer",

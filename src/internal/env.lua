@@ -46,6 +46,8 @@ local SANDBOX_GLOBALS = {
    "unpack",
    "xpcall",
    "collectgarbage",
+   "getmetatable",
+   "setmetatable",
 
    -- Lua stdlib
    "table",
@@ -95,6 +97,10 @@ local paths_loaded_by_hooked_require = {}
 
 -- This table supports retrieving a module/class table given a function object.
 local fn_to_module = setmetatable({}, { __mode = "k" })
+
+-- Paths with in-memory Lua code strings. Used for testing.
+-- Looks like {{ mod_id = "@test@", code = "require()..." }}
+local transient_paths = {}
 
 -- This flag is used for e.g. relayouting all UI layers on hotload so
 -- the changes are visible immediately and on_hotload() can be called.
@@ -197,6 +203,10 @@ local function can_load_native_libs(mod_env)
 end
 
 local function get_require_path(path, mod_env)
+   if transient_paths[path] then
+      return path
+   end
+
    local resolved = package.searchpath(path, package.path)
 
    if resolved == nil and can_load_native_libs(mod_env) then
@@ -291,7 +301,12 @@ local function env_dofile(path, mod_env)
       rawset(_G, "_ENV", nil)
       chunk, err = loadstring(str)
    else
-      chunk, err = loadfile(resolved)
+      local transient = transient_paths[path]
+      if transient then
+         chunk, err = loadstring(transient.code)
+      else
+         chunk, err = loadfile(resolved)
+      end
    end
 
    if chunk == nil then
@@ -312,6 +327,11 @@ end
 
 function env.load_sandboxed_chunk(path, mod_name)
    mod_name = mod_name or env.find_calling_mod()
+
+   local transient = transient_paths[path]
+   if transient then
+      mod_name = transient.mod_id
+   end
 
    -- TODO: cache this somewhere.
    local mod_env = env.generate_sandbox(mod_name, true)
@@ -337,6 +357,10 @@ local function get_load_type(path)
 end
 
 local function can_hotload(path)
+   if transient_paths[path] then
+      return true
+   end
+
    if get_require_path(path) == nil then
       return false
    end
@@ -606,7 +630,12 @@ function env.hotload_path(path, also_deps)
    local loaded = package.loaded[path]
    if not loaded then
       Log.warn("Tried to hotload '%s', but path was not yet loaded. Requiring normally.", path)
-      return env.safe_require(path, false)
+
+      local result = env.safe_require(path, false)
+      return {
+         require_path = path,
+         module = result
+      }
    end
 
    if also_deps then
@@ -619,7 +648,7 @@ function env.hotload_path(path, also_deps)
    HOTLOADING_PATH = path
    local result = env.require(path, true)
    HOTLOADING_PATH = false
-   Log.trace("End hotload: %s %s", path, inspect(result))
+   Log.trace("End hotload: %s %s", path, result)
 
    if also_deps then
       HOTLOAD_DEPS = false
@@ -628,9 +657,8 @@ function env.hotload_path(path, also_deps)
    hotloaded_this_frame = true
 
    return {
-      result = result,
       require_path = path,
-      module = package.loaded[path]
+      module = result
    }
 end
 
@@ -640,16 +668,6 @@ function env.hotload_all()
          env.hotload_path(path)
       end
    end
-end
-
--- Redefines a single function on an API table by loading its chunk
--- and copying only it to the currently loaded table.
--- NOTE: The function cannot reference any chunk-local upvalues, or
--- the behavior will not work as expected if used along with the other
--- values in the table, since they may reference the same-named
--- upvalue but in the original chunk.
-function env.redefine(path, name)
-   -- TODO
 end
 
 --- Returns the currently hotloading path if hotloading is ongoing.
@@ -754,6 +772,26 @@ function env.is_loaded(path)
    return package.loaded[path] ~= nil
 end
 
+function env.unload_path(path)
+   paths_loaded_by_hooked_require[path] = nil
+   require_path_cache[path] = nil
+   transient_paths[path] = nil
+   package.loaded[path] = nil
+end
+
+function env.load_transient_path(path, mod_id, code)
+   assert(type(mod_id) == "string")
+   assert(type(code) == "string")
+   transient_paths[path] = { mod_id = mod_id, code = code }
+end
+
+function env.unload_transient_paths()
+   for path, _ in pairs(transient_paths) do
+      env.unload_path(path)
+   end
+   transient_paths = {}
+end
+
 function env.restart_debug_server()
    Log.warn("Restarting debug server...")
    env.server_needs_restart = true
@@ -794,6 +832,7 @@ function env.reset()
    paths_loaded_by_hooked_require = {}
    require_path_cache = setmetatable({}, { __mode = "k" })
    fn_to_module = setmetatable({}, { __mode = "k" })
+   transient_paths = {}
    hotloaded_this_frame = false
 
    Log = require("api.Log")

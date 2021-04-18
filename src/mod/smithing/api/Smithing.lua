@@ -15,6 +15,7 @@ local IItemEnchantments = require("api.item.IItemEnchantments")
 local Env = require("api.Env")
 local global = require("mod.smithing.internal.global")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
+local IItemBlacksmithHammer = require("mod.smithing.api.aspect.IItemBlacksmithHammer")
 
 local Smithing = {}
 
@@ -82,7 +83,7 @@ function Smithing.can_smith_item(item, hammer, selected_items)
    elseif item._id == "elona.remains_skin" then
       return true
    elseif item._id == "smithing.blacksmith_hammer" then
-      if hammer.params.hammer_level >= Smithing.calc_required_hammer_levels_to_next_bonus(item.bonus) and hammer.uid == item.uid then
+      if hammer:get_aspect(IItemBlacksmithHammer):can_upgrade(hammer) and hammer.uid == item.uid then
          return true
       end
    elseif item:has_category("elona.furniture") and not item.is_no_drop then
@@ -210,7 +211,7 @@ function Smithing.on_use_blacksmith_hammer(hammer, chara)
       return true
    elseif item._id == "smithing.blacksmith_hammer" then
       -- >>>>>>>> oomSEST/src/southtyris.hsp:98447                     notfound = 1 ..
-      if item.params.hammer_level < Smithing.calc_required_hammer_levels_to_next_bonus(item) then
+      if not item:get_aspect(IItemBlacksmithHammer):can_upgrade(item) then
          Gui.mes("smithing.blacksmith_hammer.upgrade_hammer.is_not_upgradeable")
          return false
       end
@@ -228,14 +229,11 @@ function Smithing.on_use_blacksmith_hammer(hammer, chara)
             return false
          end
 
-         power = math.min(math.floor(hammer.params.hammer_level * 9 / 20), 900)
-         if hammer.params.hammer_level >= 2000 then
-            power = power + 50
-         end
-         if hammer.bonus > 0 then
-            power = power + 50
-         end
-         if not (hammer.params.hammer_level >= 21 and item.bonus < power) then
+         local aspect = hammer:get_aspect(IItemBlacksmithHammer)
+         power = aspect:calc_equipment_upgrade_power(hammer, item)
+         local hammer_level = aspect:calc(hammer, "hammer_level")
+
+         if not (hammer_level >= 21 and item.bonus < power) then
             Gui.mes("smithing.blacksmith_hammer.repair_equipment.no_repairs_are_necessary")
             return false
          end
@@ -254,20 +252,21 @@ function Smithing.calc_smith_extend_chance(hammer, extend)
    -- <<<<<<<< oomSEST/src/southtyris.hsp:98541 			if (rnd(limitmin(200 + extend * 50 - iEnhanceme ..
 end
 
-function Smithing.calc_hammer_required_exp(hammer)
-   return Calc.calc_living_weapon_required_exp(hammer.params.hammer_level)
+function Smithing.calc_hammer_required_exp(hammer_level)
+   return Calc.calc_living_weapon_required_exp(hammer_level)
 end
 
 -- >>>>>>>> oomSEST/src/southtyris.hsp:104907 #deffunc modexpsmith int __fff, int __ggg ..
 function Smithing.gain_hammer_experience(hammer, amount)
    amount = math.floor(amount)
 
-   local level = hammer.params.hammer_level
-   local cur_exp = hammer.params.hammer_experience
-   local req_exp = Smithing.calc_hammer_required_exp(hammer)
+   local aspect = hammer:get_aspect(IItemBlacksmithHammer)
+   local level = aspect.hammer_level
+   local cur_exp = aspect.hammer_experience
+   local req_exp = aspect:calc_required_exp(hammer)
 
-   if level >= Smithing.calc_required_hammer_levels_to_next_bonus(hammer) then
-      hammer.params.hammer_experience = (cur_exp + amount) % req_exp
+   if aspect:can_upgrade(hammer) then
+      aspect.hammer_experience = (cur_exp + amount) % req_exp
       return false
    end
 
@@ -277,20 +276,18 @@ function Smithing.gain_hammer_experience(hammer, amount)
 
    if cur_exp < req_exp then
       cur_exp = math.max(cur_exp, 0)
-      hammer.params.hammer_experience = cur_exp + amount
+      aspect.hammer_experience = cur_exp + amount
    end
 
-   if hammer.params.hammer_experience >= req_exp then
-      hammer.params.hammer_level = level + 1
-      hammer.params.hammer_experience = 0
-      hammer.params.hammer_total_uses = 0
+   if aspect.hammer_experience >= req_exp then
+      aspect:gain_level(hammer)
       Gui.play_sound("base.ding3")
       Gui.mes_c("smithing.blacksmith_hammer.skill_increases", "Green")
    end
 
-   local exp_perc = (hammer.params.hammer_experience * 100.0) / Smithing.calc_hammer_required_exp(hammer)
+   local exp_perc = aspect:exp_percent(hammer)
    exp_perc = ("%3.6f"):format(exp_perc):sub(1, 6)
-   Gui.mes(("%s(Lv: %d Exp:%s%%)"):format(I18N.space(), hammer.params.hammer_level, string.right_pad(tostring(exp_perc), 6)))
+   Gui.mes(("%s(Lv: %d Exp:%s%%)"):format(I18N.space(), aspect.hammer_level, string.right_pad(tostring(exp_perc), 6)))
 
    return true
 end
@@ -342,22 +339,24 @@ function Smithing.random_item_filter_and_material(hammer, material, categories, 
    local map = assert(hammer:containing_map())
    local item_material = "elona.sand"
    local item_quality = Calc.calc_object_quality(Enum.Quality.Normal, map)
+   local aspect = hammer:get_aspect(IItemBlacksmithHammer)
+   local hammer_level = aspect:calc(hammer, "hammer_level")
 
    if material._id == "elona.vanilla_rock" then
       item_material = "elona.adamantium"
-      local quality_base = math.clamp(hammer.params.hammer_level * 2 / 25, Enum.Quality.Normal, Enum.Quality.Great)
+      local quality_base = math.clamp(hammer_level * 2 / 25, Enum.Quality.Normal, Enum.Quality.Great)
       item_quality = Calc.calc_object_quality(quality_base, map)
    elseif material:has_category("elona.ore_valuable") then
       item_material = Smithing.material_for_ore(material._id)
 
-      local quality_base = quality / (material.value * (11 ^ 2) / math.max(hammer.params.hammer_level * 2 / 25, 1))
+      local quality_base = quality / (material.value * (11 ^ 2) / math.max(hammer_level * 2 / 25, 1))
 
       item_quality = Calc.calc_object_quality(math.clamp(quality_base, Enum.Quality.Normal, Enum.Quality.Great), map)
    elseif material._id == "elona.remains_skin" then
       local chara_id = material:calc_aspect(IItemFromChara, "chara_id")
       item_material = Smithing.material_for_chara(chara_id)
 
-      local quality_base = quality / math.max(material.value * 20 / math.max(hammer.params.hammer_level * 2 / 25, 1))
+      local quality_base = quality / math.max(material.value * 20 / math.max(hammer_level * 2 / 25, 1))
 
       item_quality = Calc.calc_object_quality(math.clamp(quality_base, Enum.Quality.Normal, Enum.Quality.Great), map)
    end
@@ -371,7 +370,7 @@ function Smithing.random_item_filter_and_material(hammer, material, categories, 
    item_quality = math.min(item_quality, max_quality)
 
    local filter = {
-      level = hammer.params.hammer_level,
+      level = hammer_level,
       quality = item_quality,
       categories = categories,
       no_stack = true
@@ -388,6 +387,11 @@ function Smithing.extendable_enchantment(item)
    return fun.iter(merged_encs):filter(function(merged_enc) return merged_enc.total_power > 0 end):nth(1)
 end
 
+function Smithing.calc_item_generation_seed(hammer)
+   local aspect = hammer:get_aspect(IItemBlacksmithHammer)
+   return aspect.hammer_level * 1000000 + aspect.hammer_experience
+end
+
 function Smithing.create_equipment(hammer, chara, target_item, material, categories, extend)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:98549 		quality = 0 ..
    local quality = 0
@@ -402,20 +406,24 @@ function Smithing.create_equipment(hammer, chara, target_item, material, categor
       material = target_item
    end
 
-   Rand.set_seed(hammer.params.hammer_level * 1000000 + hammer.params.hammer_experience)
+   local aspect = hammer:get_aspect(IItemBlacksmithHammer)
+   local seed = aspect:calc_item_generation_seed(hammer)
+   Rand.set_seed(seed)
 
-   if hammer.params.hammer_level ^ 3 + chara:skill_level("elona.stat_constitution") * 5 < Rand.rnd(quality) then
+   local hammer_level = aspect:calc(hammer, "hammer_level")
+
+   if hammer_level ^ 3 + chara:skill_level("elona.stat_constitution") * 5 < Rand.rnd(quality) then
       Gui.mes_c("smithing.blacksmith_hammer.create.failed", "Red")
 
       local exp
       if hammer.bonus > 0 then
-         exp = 1 + Rand.rnd(math.max(10 / hammer.params.hammer_level), 1)
+         exp = 1 + Rand.rnd(math.max(10 / hammer_level), 1)
       else
-         exp = 1 + Rand.rnd(math.max(10 / hammer.params.hammer_level), 1) + math.min(hammer.params.hammer_total_uses, quality / 1000)
+         exp = 1 + Rand.rnd(math.max(10 / hammer_level), 1) + math.min(aspect.total_uses, quality / 1000)
       end
       Smithing.gain_hammer_experience(hammer, exp)
 
-      hammer.params.hammer_total_uses = hammer.params.hammer_total_uses + 1
+      aspect.total_uses = aspect.total_uses + 1
       Skill.gain_skill_exp(chara, "elona.stat_constitution", 10)
       Rand.set_seed()
       return nil
@@ -469,14 +477,14 @@ function Smithing.create_equipment(hammer, chara, target_item, material, categor
 
    local hammer_exp
    if hammer.bonus > 0 then
-      hammer_exp = math.min(hammer.params.hammer_total_uses, quality / 1000) + 1
+      hammer_exp = math.min(aspect.total_uses, quality / 1000) + 1
    else
-      hammer_exp = Rand.rnd(math.clamp(quality - hammer.params.hammer_level ^ 3, 1, 0x7FFFFFFF))
-         + math.min(hammer.params.hammer_total_uses, quality / 1000)
+      hammer_exp = Rand.rnd(math.clamp(quality - hammer_level ^ 3, 1, 0x7FFFFFFF))
+         + math.min(aspect.total_uses, quality / 1000)
    end
 
    Smithing.gain_hammer_experience(hammer, hammer_exp)
-   hammer.params.hammer_total_uses = hammer.params.hammer_total_uses + 1
+   aspect.total_uses = aspect.total_uses + 1
    Skill.gain_skill_exp(chara, "elona.stat_constitution", 50)
 
    local display = config.smithing.display_hammer_level
@@ -535,10 +543,7 @@ function Smithing.upgrade_hammer(hammer, chara)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:98787             ci = craftref(0) ..
    Gui.mes_c("smithing.blacksmith_hammer.upgrade_hammer.finished", "Green", hammer)
    Gui.play_sound("base.build1", chara.x, chara.y)
-   hammer.bonus = hammer.bonus + 1
-   hammer.params.hammer_level = 1
-   hammer.params.hammer_experience = 0
-   hammer.params.hammer_total_uses = 0
+   hammer:get_aspect(IItemBlacksmithHammer):upgrade(hammer)
    Skill.gain_skill_exp(chara, "elona.stat_constitution", 500)
    chara:refresh()
    -- <<<<<<<< oomSEST/src/southtyris.hsp:98798         gosub *chara_refresh ..
@@ -557,7 +562,7 @@ function Smithing.repair_equipment(hammer, chara, item, power)
       item.bonus = item.bonus + 1
    end
 
-   local exp_gain = 1 + Rand.rnd(math.max(10 / hammer.params.hammer_level, 1))
+   local exp_gain = 1 + Rand.rnd(math.max(10 / hammer:calc_aspect(IItemBlacksmithHammer, "hammer_level"), 1))
    Smithing.gain_hammer_experience(hammer, exp_gain)
    Skill.gain_skill_exp(chara, "elona.stat_constitution", 50)
    chara:refresh()
