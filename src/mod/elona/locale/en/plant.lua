@@ -28,7 +28,7 @@ return {
          vegetable = {
             name = "vegetable",
             plant_name = "vegetable"
-         },
+         }
       }
    }
 }

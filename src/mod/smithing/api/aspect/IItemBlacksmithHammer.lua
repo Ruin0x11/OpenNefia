@@ -1,4 +1,5 @@
 local IAspect = require("api.IAspect")
+local IItemUseable = require("mod.elona.api.aspect.IItemUseable")
 
 local IItemBlacksmithHammer = class.interface("IItemBlacksmithHammer",
                                   {
@@ -6,7 +7,7 @@ local IItemBlacksmithHammer = class.interface("IItemBlacksmithHammer",
                                      hammer_experience = "number",
                                      total_uses = "number",
                                   },
-                                  { IAspect })
+                                  { IAspect, IItemUseable })
 
 IItemBlacksmithHammer.default_impl = "mod.smithing.api.aspect.ItemBlacksmithHammerAspect"
 
@@ -31,6 +32,11 @@ end
 
 function IItemBlacksmithHammer:calc_equipment_upgrade_power(item, target)
    return 0
+end
+
+
+function IItemBlacksmithHammer:localize_action()
+   return "base:aspect._.elona.IItemBlacksmithHammer.action_name"
 end
 
 return IItemBlacksmithHammer

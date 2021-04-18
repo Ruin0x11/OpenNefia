@@ -1,9 +1,9 @@
 local IItemBlacksmithHammer = require("mod.smithing.api.aspect.IItemBlacksmithHammer")
-local IItemUseable = require("mod.elona.api.aspect.IItemUseable")
 local IEvented = require("mod.elona.api.aspect.IEvented")
 local Enum = require("api.Enum")
 local Smithing = require("mod.smithing.api.Smithing")
 local Gui = require("api.Gui")
+local IItemUseable = require("mod.elona.api.aspect.IItemUseable")
 
 local ItemBlacksmithHammerAspect = class.class("ItemBlacksmithHammerAspect", { IItemBlacksmithHammer, IItemUseable, IEvented })
 
