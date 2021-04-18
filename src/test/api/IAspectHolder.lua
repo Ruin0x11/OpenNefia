@@ -123,3 +123,18 @@ function test_IAspectHolder_calc_aspect()
 
    Assert.eq(42, item:calc_aspect(AspectHolder_ITestAspect, "foo"))
 end
+
+function test_IAspectHolder_get_aspect_proto()
+   local item = Item.create("@test@.aspected", nil, nil, {ownerless = true})
+
+   local proto = item:get_aspect_proto(AspectHolder_ITestAspect)
+   Assert.same({}, proto)
+end
+
+function test_IAspectHolder_get_aspect_proto__params()
+   local item = Item.create("@test@.aspected_with_params", nil, nil, {ownerless = true})
+
+   local proto = item:get_aspect_proto(AspectHolder_ITestAspect)
+   Assert.is_truthy(proto)
+   Assert.eq(42, proto.my_foo)
+end

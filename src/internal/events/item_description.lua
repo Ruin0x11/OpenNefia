@@ -3,6 +3,7 @@ local Const = require("api.Const")
 local Enum = require("api.Enum")
 local I18N = require("api.I18N")
 local Event = require("api.Event")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 
 -- >>>>>>>> shade2/command.hsp:4108 		if iMaterial(ci)!0		:list(0,p)=7:listN(0,p)=lang ..
@@ -117,21 +118,25 @@ local quality_info = {
    },
    {
       pred = function(i)
+         local equip = i:get_aspect(IItemEquipment)
          return i:calc("identify_state") >= Enum.IdentifyState.Full
-            and (i:calc("hit_bonus") > 0 or i:calc("damage_bonus") > 0)
+            and equip and (equip:calc(i, "hit_bonus") > 0 or equip:calc(i, "damage_bonus") > 0)
       end,
       desc = function(i)
-         return I18N.get("item.desc.bonus", i:calc("hit_bonus"), i:calc("damage_bonus"))
+         local equip = i:get_aspect(IItemEquipment)
+         return I18N.get("item.desc.bonus", equip:calc(i, "hit_bonus"), equip:calc(i, "damage_bonus"))
       end,
       icon = 5
    },
    {
       pred = function(i)
+         local equip = i:get_aspect(IItemEquipment)
          return i:calc("identify_state") >= Enum.IdentifyState.Full
-            and (i:calc("dv") > 0 or i:calc("pv") > 0)
+            and equip and (equip:calc(i, "dv") > 0 or equip:calc(i, "pv") > 0)
       end,
       desc = function(i)
-         return I18N.get("item.desc.dv_pv", i:calc("dv"), i:calc("pv"))
+         local equip = i:get_aspect(IItemEquipment)
+         return I18N.get("item.desc.dv_pv", equip:calc(i, "dv"), equip:calc(i, "pv"))
       end,
       icon = 6
    },

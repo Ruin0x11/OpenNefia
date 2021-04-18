@@ -1,5 +1,6 @@
 local Enum = require("api.Enum")
 local light = require("mod.elona.data.item.light")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 --
 -- Small Shield
@@ -12,13 +13,8 @@ data:add {
    image = "elona.item_knight_shield",
    value = 4800,
    weight = 2200,
-   pv = 8,
-   dv = -2,
    material = "elona.metal",
    level = 30,
-   category = 14000,
-   equip_slots = { "elona.hand" },
-   subcategory = 14003,
    coefficient = 100,
 
    skill = "elona.shield",
@@ -26,6 +22,14 @@ data:add {
    categories = {
       "elona.equip_shield_shield",
       "elona.equip_shield"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         pv = 8,
+         dv = -2,
+      }
    }
 }
 
@@ -36,12 +40,7 @@ data:add {
    image = "elona.item_small_shield",
    value = 500,
    weight = 1200,
-   pv = 4,
-   dv = 3,
    material = "elona.metal",
-   category = 14000,
-   equip_slots = { "elona.hand" },
-   subcategory = 14003,
    coefficient = 100,
 
    skill = "elona.shield",
@@ -49,6 +48,14 @@ data:add {
    categories = {
       "elona.equip_shield_shield",
       "elona.equip_shield"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         pv = 4,
+         dv = 3,
+      }
    }
 }
 
@@ -59,13 +66,8 @@ data:add {
    image = "elona.item_round_shield",
    value = 1200,
    weight = 1500,
-   pv = 5,
-   dv = 4,
    material = "elona.metal",
    level = 10,
-   category = 14000,
-   equip_slots = { "elona.hand" },
-   subcategory = 14003,
    coefficient = 100,
 
    skill = "elona.shield",
@@ -73,6 +75,14 @@ data:add {
    categories = {
       "elona.equip_shield_shield",
       "elona.equip_shield"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         pv = 5,
+         dv = 4,
+      }
    }
 }
 
@@ -83,13 +93,8 @@ data:add {
    image = "elona.item_shield",
    value = 2500,
    weight = 1000,
-   pv = 6,
-   dv = 3,
    material = "elona.metal",
    level = 20,
-   category = 14000,
-   equip_slots = { "elona.hand" },
-   subcategory = 14003,
    coefficient = 100,
 
    skill = "elona.shield",
@@ -97,6 +102,14 @@ data:add {
    categories = {
       "elona.equip_shield_shield",
       "elona.equip_shield"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         pv = 6,
+         dv = 3,
+      }
    }
 }
 
@@ -107,13 +120,8 @@ data:add {
    image = "elona.item_large_shield",
    value = 7500,
    weight = 1400,
-   pv = 8,
-   dv = 2,
    material = "elona.metal",
    level = 40,
-   category = 14000,
-   equip_slots = { "elona.hand" },
-   subcategory = 14003,
    coefficient = 100,
 
    skill = "elona.shield",
@@ -121,6 +129,14 @@ data:add {
    categories = {
       "elona.equip_shield_shield",
       "elona.equip_shield"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         pv = 8,
+         dv = 2,
+      }
    }
 }
 
@@ -131,13 +147,8 @@ data:add {
    image = "elona.item_kite_shield",
    value = 10000,
    weight = 3500,
-   pv = 13,
-   dv = -3,
    material = "elona.metal",
    level = 50,
-   category = 14000,
-   equip_slots = { "elona.hand" },
-   subcategory = 14003,
    coefficient = 100,
 
    skill = "elona.shield",
@@ -145,6 +156,14 @@ data:add {
    categories = {
       "elona.equip_shield_shield",
       "elona.equip_shield"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         pv = 13,
+         dv = -3,
+      }
    }
 }
 
@@ -155,13 +174,8 @@ data:add {
    image = "elona.item_tower_shield",
    value = 18000,
    weight = 2400,
-   pv = 10,
-   dv = -1,
    material = "elona.metal",
    level = 60,
-   category = 14000,
-   equip_slots = { "elona.hand" },
-   subcategory = 14003,
    coefficient = 100,
 
    skill = "elona.shield",
@@ -169,6 +183,14 @@ data:add {
    categories = {
       "elona.equip_shield_shield",
       "elona.equip_shield"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         pv = 10,
+         dv = -1,
+      }
    }
 }
 
@@ -179,14 +201,9 @@ data:add {
    image = "elona.item_alud",
    value = 7500,
    weight = 2850,
-   pv = 35,
-   dv = -1,
    material = "elona.wood",
    level = 15,
    fltselect = 3,
-   category = 14000,
-   equip_slots = { "elona.hand" },
-   subcategory = 14003,
    coefficient = 100,
 
    skill = "elona.shield",
@@ -209,6 +226,14 @@ data:add {
       { _id = "elona.modify_skill", power = -450, params = { skill_id = "elona.performer" } },
       { _id = "elona.damage_resistance", power = 400 },
       { _id = "elona.damage_immunity", power = 400 },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         pv = 35,
+         dv = -1,
+      }
    }
 }
 
@@ -219,14 +244,9 @@ data:add {
    image = "elona.item_small_shield",
    value = 17500,
    weight = 950,
-   damage_bonus = 14,
-   pv = 1,
    material = "elona.coral",
    level = 15,
    fltselect = 2,
-   category = 14000,
-   equip_slots = { "elona.hand" },
-   subcategory = 14003,
    coefficient = 100,
 
    skill = "elona.shield",
@@ -248,5 +268,13 @@ data:add {
    enchantments = {
       { _id = "elona.damage_reflection", power = 1000 },
       { _id = "elona.modify_resistance", power = 450, params = { element_id = "elona.nerve" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         damage_bonus = 14,
+         pv = 1,
+      }
    }
 }

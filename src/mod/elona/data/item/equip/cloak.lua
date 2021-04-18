@@ -1,5 +1,6 @@
 local Calc = require("mod.elona.api.Calc")
 local Enum = require("api.Enum")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 --
 -- Cloak
@@ -12,17 +13,19 @@ data:add {
    image = "elona.item_light_cloak",
    value = 250,
    weight = 700,
-   pv = 3,
-   dv = 4,
    material = "elona.soft",
-   appearance = 1,
-   category = 20000,
-   equip_slots = { "elona.back" },
-   subcategory = 20001,
    coefficient = 100,
    categories = {
       "elona.equip_back",
       "elona.equip_back_cloak"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.back" },
+         dv = 4,
+         pv = 3,
+         pcc_part = 1,
+      }
    }
 }
 
@@ -33,18 +36,20 @@ data:add {
    image = "elona.item_armored_cloak",
    value = 1400,
    weight = 1800,
-   pv = 4,
-   dv = 5,
    material = "elona.soft",
-   appearance = 2,
    level = 15,
-   category = 20000,
-   equip_slots = { "elona.back" },
-   subcategory = 20001,
    coefficient = 100,
    categories = {
       "elona.equip_back",
       "elona.equip_back_cloak"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.back" },
+         dv = 5,
+         pv = 4,
+         pcc_part = 2,
+      }
    }
 }
 
@@ -55,18 +60,20 @@ data:add {
    image = "elona.item_cloak",
    value = 3500,
    weight = 1500,
-   pv = 3,
-   dv = 7,
    material = "elona.soft",
-   appearance = 1,
    level = 30,
-   category = 20000,
-   equip_slots = { "elona.back" },
-   subcategory = 20001,
    coefficient = 100,
    categories = {
       "elona.equip_back",
       "elona.equip_back_cloak"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.back" },
+         dv = 7,
+         pv = 3,
+         pcc_part = 1,
+      }
    }
 }
 
@@ -77,13 +84,8 @@ data:add {
    image = "elona.item_wing",
    value = 4500,
    weight = 500,
-   dv = 9,
    material = "elona.soft",
-   appearance = 3,
    level = 10,
-   category = 20000,
-   equip_slots = { "elona.back" },
-   subcategory = 20001,
    rarity = 500000,
    coefficient = 100,
 
@@ -94,6 +96,14 @@ data:add {
 
    enchantments = {
       { _id = "elona.float", power = 100 },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.back" },
+         dv = 9,
+         pcc_part = 3,
+      }
    }
 }
 
@@ -104,14 +114,8 @@ data:add {
    image = "elona.item_feather",
    value = 18000,
    weight = 500,
-   pv = 6,
-   dv = 4,
    material = "elona.metal",
-   appearance = 4,
    level = 25,
-   category = 20000,
-   equip_slots = { "elona.back" },
-   subcategory = 20001,
    rarity = 100000,
    coefficient = 100,
 
@@ -122,6 +126,15 @@ data:add {
 
    enchantments = {
       { _id = "elona.float", power = 100 },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.back" },
+         dv = 4,
+         pv = 6,
+         pcc_part = 4,
+      }
    }
 }
 
@@ -132,14 +145,8 @@ data:add {
    image = "elona.item_light_cloak",
    value = 18000,
    weight = 400,
-   pv = 3,
-   dv = 7,
    material = "elona.soft",
-   appearance = 1,
    level = 25,
-   category = 20000,
-   equip_slots = { "elona.back" },
-   subcategory = 20001,
    rarity = 10000,
    coefficient = 100,
 
@@ -157,5 +164,14 @@ data:add {
 
    enchantments = {
       { _id = "elona.res_etherwind", power = 100 },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.back" },
+         dv = 7,
+         pv = 3,
+         pcc_part = 1,
+      }
    }
 }

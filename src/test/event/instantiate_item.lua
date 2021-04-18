@@ -4,6 +4,7 @@ local TestUtil = require("api.test.TestUtil")
 local Item = require("api.Item")
 local Assert = require("api.test.Assert")
 local data = require("internal.data")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 data:add {
    _type = "base.item",
@@ -11,10 +12,7 @@ data:add {
 
    dice_x = 2,
    dice_y = 7,
-   hit_bonus = 4,
-   damage_bonus = 8,
    material = "elona.metal",
-   equip_slots = { "elona.ranged" },
    coefficient = 100,
 
    skill = "elona.bow",
@@ -24,7 +22,15 @@ data:add {
       "elona.equip_ranged"
    },
 
-   on_use = nil
+   on_use = nil,
+
+   _ext = {
+      [IItemEquipment] = {
+         hit_bonus = 4,
+         damage_bonus = 8,
+         equip_slots = { "elona.ranged" },
+      }
+   }
 }
 
 data:add {
@@ -33,10 +39,7 @@ data:add {
 
    dice_x = 2,
    dice_y = 7,
-   hit_bonus = 4,
-   damage_bonus = 8,
    material = "elona.metal",
-   equip_slots = { "elona.ranged" },
    coefficient = 100,
 
    skill = "elona.bow",
@@ -46,7 +49,15 @@ data:add {
       "elona.equip_ranged"
    },
 
-   on_use = function() end
+   on_use = function() end,
+
+   _ext = {
+      [IItemEquipment] = {
+         hit_bonus = 4,
+         damage_bonus = 8,
+         equip_slots = { "elona.ranged" },
+      }
+   }
 }
 
 function test_item_event_emitter_callbacks_restored()

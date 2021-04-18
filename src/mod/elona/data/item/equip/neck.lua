@@ -2,6 +2,7 @@ local Gui = require("api.Gui")
 local Skill = require("mod.elona_sys.api.Skill")
 local Enum = require("api.Enum")
 local light = require("mod.elona.data.item.light")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 --
 -- Small Amulet
@@ -16,14 +17,16 @@ data:add {
    value = 200,
    weight = 50,
    material = "elona.soft",
-   category = 34000,
-   equip_slots = { "elona.neck" },
-   subcategory = 34001,
    coefficient = 100,
    has_random_name = true,
    categories = {
       "elona.equip_neck_armor",
       "elona.equip_neck"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.neck" },
+      }
    }
 }
 
@@ -35,17 +38,19 @@ data:add {
    image = "elona.item_peridot",
    value = 4400,
    weight = 50,
-   hit_bonus = 4,
    material = "elona.metal",
    level = 30,
-   category = 34000,
-   equip_slots = { "elona.neck" },
-   subcategory = 34001,
    coefficient = 100,
    has_random_name = "ring",
    categories = {
       "elona.equip_neck_armor",
       "elona.equip_neck"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.neck" },
+         hit_bonus = 4,
+      }
    }
 }
 
@@ -57,17 +62,19 @@ data:add {
    image = "elona.item_talisman",
    value = 4400,
    weight = 50,
-   dv = 4,
    material = "elona.soft",
    level = 30,
-   category = 34000,
-   equip_slots = { "elona.neck" },
-   subcategory = 34001,
    coefficient = 100,
    has_random_name = "ring",
    categories = {
       "elona.equip_neck_armor",
       "elona.equip_neck"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.neck" },
+         dv = 4,
+      }
    }
 }
 
@@ -79,17 +86,19 @@ data:add {
    image = "elona.item_neck_guard",
    value = 2200,
    weight = 50,
-   pv = 3,
    material = "elona.metal",
    level = 10,
-   category = 34000,
-   equip_slots = { "elona.neck" },
-   subcategory = 34001,
    coefficient = 100,
    has_random_name = "ring",
    categories = {
       "elona.equip_neck_armor",
       "elona.equip_neck"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.neck" },
+         pv = 3,
+      }
    }
 }
 
@@ -101,12 +110,8 @@ data:add {
    image = "elona.item_charm",
    value = 2000,
    weight = 50,
-   damage_bonus = 3,
    material = "elona.soft",
    level = 10,
-   category = 34000,
-   equip_slots = { "elona.neck" },
-   subcategory = 34001,
    coefficient = 100,
    has_random_name = "ring",
    tags = { "fest" },
@@ -114,6 +119,12 @@ data:add {
       "elona.equip_neck_armor",
       "elona.tag_fest",
       "elona.equip_neck"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.neck" },
+         damage_bonus = 3,
+      }
    }
 }
 
@@ -127,14 +138,16 @@ data:add {
    weight = 50,
    material = "elona.metal",
    level = 5,
-   category = 34000,
-   equip_slots = { "elona.neck" },
-   subcategory = 34001,
    coefficient = 100,
    has_random_name = "ring",
    categories = {
       "elona.equip_neck_armor",
       "elona.equip_neck"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.neck" },
+      }
    }
 }
 
@@ -147,15 +160,18 @@ data:add {
    value = 5000,
    weight = 50,
    material = "elona.metal",
-   category = 34000,
-   equip_slots = { "elona.neck" },
-   subcategory = 34001,
    rarity = 800000,
    coefficient = 100,
    has_random_name = "ring",
    categories = {
       "elona.equip_neck_armor",
       "elona.equip_neck"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.neck" },
+      }
    },
 
    events = {
@@ -200,13 +216,9 @@ data:add {
    image = "elona.item_neck_guard",
    value = 50,
    weight = 250,
-   dv = 8,
    material = "elona.iron",
    level = 15,
    fltselect = 3,
-   category = 34000,
-   equip_slots = { "elona.neck" },
-   subcategory = 34001,
    coefficient = 100,
 
    is_precious = true,
@@ -224,7 +236,14 @@ data:add {
       { _id = "elona.res_pregnancy", power = 100 },
       { _id = "elona.modify_attribute", power = 450, params = { skill_id = "elona.stat_charisma" } },
       { _id = "elona.res_steal", power = 100 },
-   }
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.neck" },
+         dv = 8,
+      }
+   },
 }
 
 data:add {
@@ -234,13 +253,9 @@ data:add {
    image = "elona.item_neck_guard",
    value = 9500,
    weight = 400,
-   hit_bonus = 12,
    material = "elona.coral",
    level = 25,
    fltselect = 3,
-   category = 34000,
-   equip_slots = { "elona.neck" },
-   subcategory = 34001,
    coefficient = 100,
 
    is_precious = true,
@@ -260,7 +275,14 @@ data:add {
    enchantments = {
       { _id = "elona.extra_shoot", power = 600 },
       { _id = "elona.modify_skill", power = 700, params = { skill_id = "elona.crossbow" } },
-   }
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.neck" },
+         hit_bonus = 12,
+      }
+   },
 }
 
 data:add {
@@ -270,13 +292,9 @@ data:add {
    image = "elona.item_neck_guard",
    value = 9500,
    weight = 400,
-   damage_bonus = 4,
    material = "elona.mica",
    level = 25,
    fltselect = 3,
-   category = 34000,
-   equip_slots = { "elona.neck" },
-   subcategory = 34001,
    coefficient = 100,
 
    is_precious = true,
@@ -296,6 +314,13 @@ data:add {
    enchantments = {
       { _id = "elona.extra_melee", power = 600 },
       { _id = "elona.modify_skill", power = 650, params = { skill_id = "elona.dual_wield" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.neck" },
+         damage_bonus = 4,
+      }
    }
 }
 
@@ -306,14 +331,9 @@ data:add {
    image = "elona.item_peridot",
    value = 1200,
    weight = 150,
-   pv = 14,
-   dv = 2,
    material = "elona.mica",
    level = 5,
    fltselect = 3,
-   category = 34000,
-   equip_slots = { "elona.neck" },
-   subcategory = 34001,
    coefficient = 100,
 
    is_precious = true,
@@ -334,5 +354,13 @@ data:add {
       { _id = "elona.god_talk", power = 100 },
       { _id = "elona.modify_skill", power = 550, params = { skill_id = "elona.faith" } },
       { _id = "elona.modify_resistance", power = 400, params = { element_id = "elona.sound" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.neck" },
+         pv = 14,
+         dv = 2,
+      }
    }
 }

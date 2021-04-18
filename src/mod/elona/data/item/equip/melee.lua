@@ -1,5 +1,6 @@
 local Enum = require("api.Enum")
 local light = require("mod.elona.data.item.light")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 --
 -- Broadsword
@@ -14,12 +15,7 @@ data:add {
    weight = 4000,
    dice_x = 3,
    dice_y = 7,
-   hit_bonus = 1,
-   damage_bonus = 8,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10001,
    coefficient = 100,
 
    skill = "elona.long_sword",
@@ -27,6 +23,14 @@ data:add {
    categories = {
       "elona.equip_melee_broadsword",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 1,
+         damage_bonus = 8,
+      }
    }
 }
 
@@ -39,14 +43,9 @@ data:add {
    weight = 6500,
    dice_x = 3,
    dice_y = 14,
-   hit_bonus = 1,
-   damage_bonus = 16,
    material = "elona.silver",
    level = 45,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10001,
    coefficient = 100,
 
    skill = "elona.long_sword",
@@ -66,6 +65,14 @@ data:add {
       { _id = "elona.crit", power = 250 },
       { _id = "elona.pierce", power = 200 },
       { _id = "elona.res_mutation", power = 100 },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 1,
+         damage_bonus = 16,
+      }
    }
 }
 
@@ -78,16 +85,9 @@ data:add {
    weight = 22500,
    dice_x = 3,
    dice_y = 14,
-   hit_bonus = -25,
-   damage_bonus = 20,
-   pv = 30,
-   dv = -42,
    material = "elona.iron",
    level = 55,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10001,
    coefficient = 100,
 
    skill = "elona.long_sword",
@@ -105,6 +105,16 @@ data:add {
    enchantments = {
       { _id = "elona.dragon_bane", power = 300 },
       { _id = "elona.god_bane", power = 200 },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = -25,
+         damage_bonus = 20,
+         pv = 30,
+         dv = -42,
+      }
    }
 }
 
@@ -121,12 +131,7 @@ data:add {
    weight = 1500,
    dice_x = 2,
    dice_y = 8,
-   hit_bonus = 5,
-   damage_bonus = 4,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10002,
    coefficient = 100,
 
    skill = "elona.long_sword",
@@ -134,6 +139,14 @@ data:add {
    categories = {
       "elona.equip_melee_long_sword",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 5,
+         damage_bonus = 4,
+      }
    }
 }
 
@@ -146,16 +159,9 @@ data:add {
    weight = 2200,
    dice_x = 4,
    dice_y = 8,
-   hit_bonus = 2,
-   damage_bonus = 8,
-   pv = 2,
-   dv = -3,
    material = "elona.steel",
    level = 40,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10002,
    coefficient = 100,
 
    skill = "elona.long_sword",
@@ -180,6 +186,16 @@ data:add {
       { _id = "elona.elemental_damage", power = 400, params = { element_id = "elona.nerve" } },
       { _id = "elona.modify_attribute", power = 300, params = { skill_id = "elona.stat_speed" } },
       { _id = "elona.res_paralyze", power = 100 },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 2,
+         damage_bonus = 8,
+         dv = -3,
+         pv = 2,
+      }
    }
 }
 
@@ -192,13 +208,9 @@ data:add {
    weight = 1400,
    dice_x = 7,
    dice_y = 7,
-   hit_bonus = 4,
    material = "elona.silver",
    level = 30,
    fltselect = 2,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10002,
    coefficient = 100,
 
    skill = "elona.long_sword",
@@ -222,6 +234,13 @@ data:add {
       { _id = "elona.res_confuse", power = 100 },
       { _id = "elona.modify_attribute", power = 300, params = { skill_id = "elona.stat_strength" } },
       { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.nerve" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 4,
+      }
    }
 }
 
@@ -234,16 +253,9 @@ data:add {
    weight = 4000,
    dice_x = 3,
    dice_y = 13,
-   hit_bonus = 8,
-   damage_bonus = 5,
-   pv = 4,
-   dv = -4,
    material = "elona.obsidian",
    level = 50,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10002,
    coefficient = 100,
 
    skill = "elona.long_sword",
@@ -269,6 +281,16 @@ data:add {
       { _id = "elona.modify_skill", power = 300, params = { skill_id = "elona.dual_wield" } },
       { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.chaos" } },
       { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.nether" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 8,
+         damage_bonus = 5,
+         dv = -4,
+         pv = 4,
+      }
    }
 }
 
@@ -281,16 +303,9 @@ data:add {
    weight = 4200,
    dice_x = 2,
    dice_y = 18,
-   hit_bonus = 4,
-   damage_bonus = 3,
-   pv = 1,
-   dv = -1,
    material = "elona.obsidian",
    level = 30,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10002,
    coefficient = 100,
 
    skill = "elona.long_sword",
@@ -310,6 +325,16 @@ data:add {
 
    enchantments = {
       { _id = "elona.ragnarok", power = 100 },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 4,
+         damage_bonus = 3,
+         dv = -1,
+         pv = 1,
+      }
    }
 }
 
@@ -322,11 +347,7 @@ data:add {
    weight = 1200,
    dice_x = 4,
    dice_y = 4,
-   damage_bonus = 6,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10002,
    coefficient = 100,
 
    skill = "elona.long_sword",
@@ -334,6 +355,13 @@ data:add {
    categories = {
       "elona.equip_melee_long_sword",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         damage_bonus = 6,
+      }
    }
 }
 
@@ -346,14 +374,9 @@ data:add {
    weight = 2500,
    dice_x = 6,
    dice_y = 6,
-   hit_bonus = 3,
-   damage_bonus = 2,
    material = "elona.obsidian",
    level = 25,
    fltselect = 2,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10002,
    coefficient = 100,
 
    skill = "elona.long_sword",
@@ -377,6 +400,14 @@ data:add {
       { _id = "elona.elemental_damage", power = 400, params = { element_id = "elona.lightning" } },
       { _id = "elona.dragon_bane", power = 1150 },
       { _id = "elona.modify_attribute", power = 720, params = { skill_id = "elona.stat_constitution" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 3,
+         damage_bonus = 2,
+      }
    }
 }
 
@@ -390,9 +421,6 @@ data:add {
    dice_x = 2,
    dice_y = 5,
    material = "elona.ether",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10002,
    rarity = 2000,
    coefficient = 100,
    random_color = "Furniture",
@@ -403,7 +431,13 @@ data:add {
       "elona.equip_melee_long_sword",
       "elona.equip_melee"
    },
-   light = light.item
+   light = light.item,
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+      }
+   }
 }
 
 --
@@ -419,13 +453,7 @@ data:add {
    weight = 600,
    dice_x = 2,
    dice_y = 5,
-   hit_bonus = 9,
-   damage_bonus = 4,
-   dv = 4,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10003,
    coefficient = 100,
 
    skill = "elona.short_sword",
@@ -433,6 +461,15 @@ data:add {
    categories = {
       "elona.equip_melee_short_sword",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 9,
+         damage_bonus = 4,
+         dv = 4,
+      }
    }
 }
 
@@ -445,16 +482,9 @@ data:add {
    weight = 600,
    dice_x = 5,
    dice_y = 5,
-   hit_bonus = 16,
-   damage_bonus = 8,
-   pv = 6,
-   dv = 4,
    material = "elona.ether",
    level = 40,
    fltselect = 2,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10003,
    coefficient = 100,
 
    skill = "elona.short_sword",
@@ -477,6 +507,16 @@ data:add {
       { _id = "elona.elemental_damage", power = 300, params = { element_id = "elona.lightning" } },
       { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.lightning" } },
       { _id = "elona.modify_skill", power = 350, params = { skill_id = "elona.casting" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 16,
+         damage_bonus = 8,
+         dv = 4,
+         pv = 6,
+      }
    }
 }
 
@@ -489,13 +529,7 @@ data:add {
    weight = 900,
    dice_x = 3,
    dice_y = 4,
-   hit_bonus = 7,
-   damage_bonus = 3,
-   dv = 2,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10003,
    coefficient = 100,
 
    skill = "elona.short_sword",
@@ -503,6 +537,15 @@ data:add {
    categories = {
       "elona.equip_melee_short_sword",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 7,
+         damage_bonus = 3,
+         dv = 2,
+      }
    }
 }
 
@@ -515,13 +558,7 @@ data:add {
    weight = 700,
    dice_x = 4,
    dice_y = 4,
-   hit_bonus = 6,
-   damage_bonus = 5,
-   dv = 1,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10003,
    coefficient = 100,
 
    skill = "elona.short_sword",
@@ -529,6 +566,15 @@ data:add {
    categories = {
       "elona.equip_melee_short_sword",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 6,
+         damage_bonus = 5,
+         dv = 1,
+      }
    }
 }
 
@@ -541,16 +587,9 @@ data:add {
    weight = 400,
    dice_x = 4,
    dice_y = 6,
-   hit_bonus = 13,
-   damage_bonus = 18,
-   pv = 13,
-   dv = 18,
    material = "elona.mica",
    level = 60,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10003,
    coefficient = 100,
 
    skill = "elona.short_sword",
@@ -575,6 +614,16 @@ data:add {
       { _id = "elona.modify_attribute", power = 1500, params = { skill_id = "elona.stat_luck" } },
       { _id = "elona.absorb_stamina", power = 400 },
       { _id = "elona.modify_skill", power = 600, params = { skill_id = "elona.fishing" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         dv = 18,
+         pv = 13,
+         hit_bonus = 13,
+         damage_bonus = 18,
+      }
    }
 }
 
@@ -587,12 +636,7 @@ data:add {
    weight = 400,
    dice_x = 1,
    dice_y = 14,
-   hit_bonus = 5,
-   damage_bonus = 1,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10003,
    rarity = 50000,
    coefficient = 100,
 
@@ -601,6 +645,14 @@ data:add {
    categories = {
       "elona.equip_melee_short_sword",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 5,
+         damage_bonus = 1,
+      }
    }
 }
 
@@ -617,12 +669,7 @@ data:add {
    weight = 1000,
    dice_x = 3,
    dice_y = 4,
-   hit_bonus = 4,
-   damage_bonus = 7,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10004,
    coefficient = 100,
 
    skill = "elona.blunt",
@@ -630,6 +677,14 @@ data:add {
    categories = {
       "elona.equip_melee_club",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 4,
+         damage_bonus = 7,
+      }
    }
 }
 
@@ -642,14 +697,9 @@ data:add {
    weight = 1800,
    dice_x = 3,
    dice_y = 5,
-   hit_bonus = 8,
-   damage_bonus = 22,
    material = "elona.iron",
    level = 30,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10004,
    coefficient = 100,
 
    skill = "elona.blunt",
@@ -675,6 +725,14 @@ data:add {
       { _id = "elona.elemental_damage", power = 350, params = { element_id = "elona.fire" } },
       { _id = "elona.res_confuse", power = 100 },
       { _id = "elona.res_fear", power = 100 },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 8,
+         damage_bonus = 22,
+      }
    }
 }
 
@@ -691,12 +749,7 @@ data:add {
    weight = 4200,
    dice_x = 2,
    dice_y = 13,
-   hit_bonus = -3,
-   damage_bonus = 4,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10005,
    coefficient = 100,
 
    skill = "elona.blunt",
@@ -704,6 +757,14 @@ data:add {
    categories = {
       "elona.equip_melee_hammer",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = -3,
+         damage_bonus = 4,
+      }
    }
 }
 
@@ -716,14 +777,9 @@ data:add {
    weight = 6500,
    dice_x = 2,
    dice_y = 30,
-   hit_bonus = -3,
-   damage_bonus = 2,
    material = "elona.adamantium",
    level = 60,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10005,
    coefficient = 100,
 
    skill = "elona.blunt",
@@ -748,6 +804,14 @@ data:add {
       { _id = "elona.modify_attribute", power = 600, params = { skill_id = "elona.stat_strength" } },
       { _id = "elona.modify_skill", power = 450, params = { skill_id = "elona.two_hand" } },
       { _id = "elona.modify_resistance", power = 400, params = { element_id = "elona.mind" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         damage_bonus = 2,
+         hit_bonus = -3,
+      }
    }
 }
 
@@ -764,13 +828,7 @@ data:add {
    weight = 900,
    dice_x = 1,
    dice_y = 8,
-   hit_bonus = 4,
-   damage_bonus = 3,
-   dv = 4,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10006,
    coefficient = 100,
 
    skill = "elona.stave",
@@ -778,6 +836,15 @@ data:add {
    categories = {
       "elona.equip_melee_staff",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 4,
+         damage_bonus = 3,
+         dv = 4,
+      }
    }
 }
 
@@ -790,13 +857,7 @@ data:add {
    weight = 800,
    dice_x = 2,
    dice_y = 5,
-   hit_bonus = 3,
-   damage_bonus = 4,
-   dv = 4,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10006,
    coefficient = 100,
 
    skill = "elona.stave",
@@ -804,6 +865,15 @@ data:add {
    categories = {
       "elona.equip_melee_staff",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 3,
+         damage_bonus = 4,
+         dv = 4,
+      }
    }
 }
 
@@ -816,16 +886,9 @@ data:add {
    weight = 2500,
    dice_x = 1,
    dice_y = 8,
-   hit_bonus = -5,
-   damage_bonus = 2,
-   pv = 3,
-   dv = 15,
    material = "elona.obsidian",
    level = 35,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10006,
    coefficient = 100,
 
    skill = "elona.stave",
@@ -847,6 +910,16 @@ data:add {
       { _id = "elona.modify_attribute", power = 450, params = { skill_id = "elona.stat_magic" } },
       { _id = "elona.power_magic", power = 350 },
       { _id = "elona.modify_skill", power = 420, params = { skill_id = "elona.casting" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         dv = 15,
+         pv = 3,
+         hit_bonus = -5,
+         damage_bonus = 2,
+      }
    }
 }
 
@@ -859,16 +932,9 @@ data:add {
    weight = 900,
    dice_x = 1,
    dice_y = 14,
-   hit_bonus = 6,
-   damage_bonus = 2,
-   pv = 4,
-   dv = 11,
    material = "elona.obsidian",
    level = 60,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10006,
    coefficient = 100,
 
    skill = "elona.stave",
@@ -895,6 +961,16 @@ data:add {
       { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.fire" } },
       { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.cold" } },
       { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.lightning" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         dv = 11,
+         pv = 4,
+         hit_bonus = 6,
+         damage_bonus = 2,
+      }
    }
 }
 
@@ -911,13 +987,7 @@ data:add {
    weight = 2500,
    dice_x = 3,
    dice_y = 5,
-   hit_bonus = 2,
-   damage_bonus = 4,
-   dv = 3,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10007,
    coefficient = 100,
 
    skill = "elona.polearm",
@@ -925,6 +995,15 @@ data:add {
    categories = {
       "elona.equip_melee_lance",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 2,
+         damage_bonus = 4,
+         dv = 3,
+      }
    }
 }
 
@@ -937,13 +1016,7 @@ data:add {
    weight = 1800,
    dice_x = 4,
    dice_y = 4,
-   hit_bonus = 1,
-   damage_bonus = 3,
-   dv = 3,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10007,
    coefficient = 100,
 
    skill = "elona.polearm",
@@ -951,6 +1024,15 @@ data:add {
    categories = {
       "elona.equip_melee_lance",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 1,
+         damage_bonus = 3,
+         dv = 3,
+      }
    }
 }
 
@@ -963,15 +1045,9 @@ data:add {
    weight = 2000,
    dice_x = 8,
    dice_y = 4,
-   hit_bonus = 2,
-   damage_bonus = 11,
-   dv = 6,
    material = "elona.iron",
    level = 35,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10007,
    coefficient = 100,
 
    skill = "elona.polearm",
@@ -995,6 +1071,15 @@ data:add {
       { _id = "elona.elemental_damage", power = 400, params = { element_id = "elona.nether" } },
       { _id = "elona.modify_resistance", power = 300, params = { element_id = "elona.nether" } },
       { _id = "elona.res_fear", power = 100 },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 2,
+         damage_bonus = 11,
+         dv = 6,
+      }
    }
 }
 
@@ -1007,15 +1092,9 @@ data:add {
    weight = 4400,
    dice_x = 7,
    dice_y = 5,
-   hit_bonus = 12,
-   damage_bonus = 11,
-   dv = 4,
    material = "elona.silver",
    level = 60,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10007,
    coefficient = 100,
 
    skill = "elona.polearm",
@@ -1038,6 +1117,15 @@ data:add {
       { _id = "elona.modify_attribute", power = 650, params = { skill_id = "elona.stat_will" } },
       { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.darkness" } },
       { _id = "elona.modify_resistance", power = 150, params = { element_id = "elona.nether" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 12,
+         damage_bonus = 11,
+         dv = 4,
+      }
    }
 }
 
@@ -1054,12 +1142,7 @@ data:add {
    weight = 3800,
    dice_x = 2,
    dice_y = 10,
-   hit_bonus = -2,
-   damage_bonus = 1,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10008,
    coefficient = 100,
 
    skill = "elona.polearm",
@@ -1067,6 +1150,14 @@ data:add {
    categories = {
       "elona.equip_melee_halberd",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = -2,
+         damage_bonus = 1,
+      }
    }
 }
 
@@ -1083,12 +1174,7 @@ data:add {
    weight = 900,
    dice_x = 2,
    dice_y = 9,
-   hit_bonus = 4,
-   damage_bonus = 5,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10009,
    coefficient = 100,
 
    skill = "elona.axe",
@@ -1096,6 +1182,14 @@ data:add {
    categories = {
       "elona.equip_melee_hand_axe",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 4,
+         damage_bonus = 5,
+      }
    }
 }
 
@@ -1112,12 +1206,7 @@ data:add {
    weight = 3700,
    dice_x = 1,
    dice_y = 18,
-   hit_bonus = -1,
-   damage_bonus = 3,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10010,
    coefficient = 100,
 
    skill = "elona.axe",
@@ -1125,6 +1214,14 @@ data:add {
    categories = {
       "elona.equip_melee_axe",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = -1,
+         damage_bonus = 3,
+      }
    }
 }
 
@@ -1137,12 +1234,7 @@ data:add {
    weight = 3500,
    dice_x = 1,
    dice_y = 20,
-   hit_bonus = -1,
-   damage_bonus = 5,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10010,
    coefficient = 100,
 
    skill = "elona.axe",
@@ -1150,6 +1242,14 @@ data:add {
    categories = {
       "elona.equip_melee_axe",
       "elona.equip_melee"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = -1,
+         damage_bonus = 5,
+      }
    }
 }
 
@@ -1162,13 +1262,9 @@ data:add {
    weight = 14000,
    dice_x = 1,
    dice_y = 70,
-   hit_bonus = -35,
    material = "elona.rubynus",
    level = 30,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10010,
    coefficient = 100,
 
    skill = "elona.axe",
@@ -1189,6 +1285,13 @@ data:add {
 
    enchantments = {
       { _id = "elona.crit", power = 750 },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = -35,
+      }
    }
 }
 
@@ -1205,13 +1308,9 @@ data:add {
    weight = 9000,
    dice_x = 1,
    dice_y = 44,
-   damage_bonus = 4,
    material = "elona.iron",
    level = 35,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10011,
    coefficient = 100,
 
    skill = "elona.scythe",
@@ -1236,6 +1335,13 @@ data:add {
       { _id = "elona.power_magic", power = 450 },
       { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.magic" } },
       { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.decapitation" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         damage_bonus = 4,
+      }
    }
 }
 
@@ -1248,12 +1354,7 @@ data:add {
    weight = 1400,
    dice_x = 2,
    dice_y = 5,
-   hit_bonus = 2,
-   damage_bonus = 10,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10011,
    coefficient = 100,
 
    skill = "elona.scythe",
@@ -1266,6 +1367,14 @@ data:add {
 
    enchantments = {
       { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.decapitation" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 2,
+         damage_bonus = 10,
+      }
    }
 }
 
@@ -1278,14 +1387,9 @@ data:add {
    weight = 850,
    dice_x = 1,
    dice_y = 38,
-   hit_bonus = 5,
-   damage_bonus = 2,
    material = "elona.spirit_cloth",
    level = 60,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10011,
    coefficient = 100,
 
    skill = "elona.scythe",
@@ -1312,6 +1416,14 @@ data:add {
       { _id = "elona.modify_attribute", power = 550, params = { skill_id = "elona.stat_strength" } },
       { _id = "elona.modify_resistance", power = 400, params = { element_id = "elona.chaos" } },
       { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.decapitation" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 5,
+         damage_bonus = 2,
+      }
    }
 }
 
@@ -1324,12 +1436,7 @@ data:add {
    weight = 4000,
    dice_x = 1,
    dice_y = 17,
-   hit_bonus = 3,
-   damage_bonus = 4,
    material = "elona.metal",
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10011,
    coefficient = 100,
 
    skill = "elona.scythe",
@@ -1341,6 +1448,14 @@ data:add {
 
    enchantments = {
       { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.decapitation" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = 3,
+         damage_bonus = 4,
+      }
    }
 }
 
@@ -1353,14 +1468,9 @@ data:add {
    weight = 376500,
    dice_x = 25,
    dice_y = 16,
-   hit_bonus = -460,
-   damage_bonus = 32,
    material = "elona.ether",
    level = 99,
    fltselect = 3,
-   category = 10000,
-   equip_slots = { "elona.hand" },
-   subcategory = 10011,
    coefficient = 100,
 
    skill = "elona.scythe",
@@ -1383,5 +1493,13 @@ data:add {
       { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.decapitation" } },
       { _id = "elona.ragnarok", power = 100 },
       { _id = "elona.invoke_skill", power = 350, params = { enchantment_skill_id = "elona.raging_roar" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.hand" },
+         hit_bonus = -460,
+         damage_bonus = 32,
+      }
    }
 }

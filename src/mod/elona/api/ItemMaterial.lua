@@ -1,6 +1,7 @@
 local Rand = require("api.Rand")
 local Enum = require("api.Enum")
 local CharaMake = require("api.CharaMake")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 local ItemMaterial = {}
 
@@ -14,11 +15,11 @@ local ItemMaterial = {}
 
 -- >>>>>>>> shade2/item_data.hsp:1122 	mtListMetal(0,0)	=mtBronze	,mtLead		,mtMica		,mtC ..
 ItemMaterial.MATERIALS_METAL = {
-    {"elona.bronze",    "elona.lead",      "elona.mica",     "elona.coral"},
-    {"elona.iron",      "elona.silver",    "elona.glass",    "elona.obsidian"},
-    {"elona.steel",     "elona.platinum",  "elona.pearl",    "elona.mithril"},
-    {"elona.chrome",    "elona.crystal",   "elona.emerald",  "elona.adamantium"},
-    {"elona.titanium",  "elona.diamond",   "elona.rubynus",  "elona.ether"}
+   {"elona.bronze",    "elona.lead",      "elona.mica",     "elona.coral"},
+   {"elona.iron",      "elona.silver",    "elona.glass",    "elona.obsidian"},
+   {"elona.steel",     "elona.platinum",  "elona.pearl",    "elona.mithril"},
+   {"elona.chrome",    "elona.crystal",   "elona.emerald",  "elona.adamantium"},
+   {"elona.titanium",  "elona.diamond",   "elona.rubynus",  "elona.ether"}
 }
 -- <<<<<<<< shade2/item_data.hsp:1127  ..
 
@@ -140,16 +141,23 @@ function ItemMaterial.change_item_material(item, new_material)
       local cur_material = data["elona.item_material"]:ensure(item.material)
       local proto = item.proto
       item.weight = proto.weight or 0
-      item.hit_bonus = proto.hit_bonus or 0
-      item.damage_bonus = proto.damage_bonus or 0
-      item.dv = proto.dv or 0
-      item.pv = proto.pv or 0
+      local equip_proto = item:get_aspect_proto(IItemEquipment)
+      local equip = item:get_aspect_or_default(IItemEquipment, true)
+      if equip_proto then
+         equip.hit_bonus = equip_proto.hit_bonus or 0
+         equip.damage_bonus = equip_proto.damage_bonus or 0
+         equip.dv = equip_proto.dv or 0
+         equip.pv = equip_proto.pv or 0
+      else
+         equip.hit_bonus = 0
+         equip.damage_bonus = 0
+         equip.dv = 0
+         equip.pv = 0
+      end
       item.dice_y = proto.dice_y or 0
       item.color = proto.color or nil
       item.value = math.floor(item.value * 100 / cur_material.value)
    end
-
-   new_material = new_material or ItemMaterial.choose_random_material(item)
 
    ItemMaterial.apply_item_material(item, new_material)
    -- <<<<<<<< shade2/item_data.hsp:1187 	gosub *apply_material ..
@@ -165,42 +173,47 @@ function ItemMaterial.apply_item_material(item, material)
 
    item.material = material
 
-   local mat_data = data["elona.item_material"]:ensure(material)
-   item.weight = math.floor(item.weight * mat_data.weight / 100)
-   if item:has_category("elona.furniture") then
-      item.value = item.value + mat_data.value * 2
-   else
-      item.value = math.floor(item.value * mat_data.value / 100)
-   end
+   if material ~= nil then
+      local mat_data = data["elona.item_material"]:ensure(material)
+      item.weight = math.floor(item.weight * mat_data.weight / 100)
+      if item:has_category("elona.furniture") then
+         item.value = item.value + mat_data.value * 2
+      else
+         item.value = math.floor(item.value * mat_data.value / 100)
+      end
 
-   item.color = item.color or mat_data.color
+      item.color = item.color or mat_data.color
 
-   local coeff = 120
-   if item.quality == Enum.Quality.Bad then
-      coeff = 150
-   elseif item.quality == Enum.Quality.Normal then
-      coeff = 100
-   elseif item.quality >= Enum.Quality.Good then
-      coeff = 80
-   end
+      local coeff = 120
+      if item.quality == Enum.Quality.Bad then
+         coeff = 150
+      elseif item.quality == Enum.Quality.Normal then
+         coeff = 100
+      elseif item.quality >= Enum.Quality.Good then
+         coeff = 80
+      end
 
-   if item.hit_bonus > 0 then
-      item.hit_bonus = math.floor(mat_data.hit_bonus * item.hit_bonus * 9 / (coeff - Rand.rnd(30)))
-   end
-   if item.damage_bonus > 0 then
-      item.damage_bonus = math.floor(mat_data.damage_bonus * item.damage_bonus * 5 / (coeff - Rand.rnd(30)))
-   end
-   if item.dv > 0 then
-      item.dv = math.floor(mat_data.dv * item.dv * 7 / (coeff - Rand.rnd(30)))
-   end
-   if item.pv > 0 then
-      item.pv = math.floor(mat_data.pv * item.pv * 9 / (coeff - Rand.rnd(30)))
-   end
-   if item.dice_y > 0 then
-      item.dice_y = math.floor(mat_data.dice_y * item.dice_y / (coeff + Rand.rnd(25)))
-   end
+      local equip = item:get_aspect(IItemEquipment)
+      if equip then
+         if equip.hit_bonus > 0 then
+            equip.hit_bonus = math.floor(mat_data.hit_bonus * equip.hit_bonus * 9 / (coeff - Rand.rnd(30)))
+         end
+         if equip.damage_bonus > 0 then
+            equip.damage_bonus = math.floor(mat_data.damage_bonus * equip.damage_bonus * 5 / (coeff - Rand.rnd(30)))
+         end
+         if equip.dv > 0 then
+            equip.dv = math.floor(mat_data.dv * equip.dv * 7 / (coeff - Rand.rnd(30)))
+         end
+         if equip.pv > 0 then
+            equip.pv = math.floor(mat_data.pv * equip.pv * 9 / (coeff - Rand.rnd(30)))
+         end
+      end
+      if item.dice_y > 0 then
+         item.dice_y = math.floor(mat_data.dice_y * item.dice_y / (coeff + Rand.rnd(25)))
+      end
 
-   ItemMaterial.apply_material_enchantments(item, material)
+      ItemMaterial.apply_material_enchantments(item, material)
+   end
    -- <<<<<<<< shade2/item_data.hsp:1224 	return ..
 
    -- >>>>>>>> shade2/item_data.hsp:1189 	gosub *item_value ..

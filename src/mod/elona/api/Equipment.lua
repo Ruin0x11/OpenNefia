@@ -10,6 +10,7 @@ local Log = require("api.Log")
 local News = require("mod.elona.api.News")
 local text = require("thirdparty.pl.text")
 local I18N = require("api.I18N")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 local Equipment = {}
 
@@ -26,11 +27,14 @@ end
 
 function Equipment.equip_optimally(chara, item)
    -- >>>>>>>> shade2/adv.hsp:176 *chara_equip ...
-   if item.equip_slots == nil then
+   local equip = item:get_aspect(IItemEquipment)
+   if equip == nil then
       return
    end
 
-   for _, body_part in ipairs(item.equip_slots) do
+   local equip_slots = equip:calc(item, "equip_slots") or {}
+
+   for _, body_part in ipairs(equip_slots) do
       local slot = chara:find_equip_slot_for(item, body_part)
       if slot then
          assert(chara:equip_item(item))
@@ -279,7 +283,7 @@ body_to_specs["elona.back"] = { "elona.cloak" }
 body_to_specs["elona.waist"] = { "elona.girdle" }
 body_to_specs["elona.head"] = { "elona.helmet" }
 body_to_specs["elona.body"] = { "elona.armor" }
-body_to_specs["elona.wrist"] = { "elona.gloves" }
+body_to_specs["elona.arm"] = { "elona.gloves" }
 body_to_specs["elona.leg"] = { "elona.boots" }
 body_to_specs["elona.hand"] = {
    "elona.multi_weapon",

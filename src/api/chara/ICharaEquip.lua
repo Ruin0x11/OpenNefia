@@ -3,6 +3,7 @@ local EquipSlots = require("api.EquipSlots")
 local ICharaInventory = require("api.chara.ICharaInventory")
 local data = require("internal.data")
 local Enum = require("api.Enum")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 local ICharaEquip = class.interface("ICharaEquip", {}, ICharaInventory)
 
@@ -25,14 +26,18 @@ end
 local function apply_item_stats(chara, item)
    -- >>>>>>>> shade2/calculation.hsp:434 	cEqWeight(r1)+=iWeight(rp) ..
    chara:mod("equipment_weight", item:calc("weight"), "add")
-   chara:mod("dv", item:calc("dv"), "add")
-   chara:mod("pv", item:calc("pv"), "add")
-   chara:mod("hit_bonus", item:calc("hit_bonus"), "add")
-   chara:mod("damage_bonus", item:calc("damage_bonus"), "add")
+
+   local equip = assert(item:get_aspect(IItemEquipment))
+   if equip then
+      chara:mod("dv", equip:calc(item, "dv"), "add")
+      chara:mod("pv", equip:calc(item, "pv"), "add")
+   end
 
    if item:calc("is_melee_weapon") then
       chara:mod("number_of_weapons", 1, "add")
    elseif item:calc("is_armor") then
+      chara:mod("hit_bonus", equip:calc(item, "hit_bonus"), "add")
+      chara:mod("damage_bonus", equip:calc(item, "damage_bonus"), "add")
       local bonus = 0
       if item:is_blessed() then
          bonus = 2

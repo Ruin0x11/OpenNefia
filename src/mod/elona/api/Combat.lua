@@ -3,6 +3,7 @@ local Const = require("api.Const")
 local Event = require("api.Event")
 local Rand = require("api.Rand")
 local Pos = require("api.Pos")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 local Combat = {}
 
@@ -14,15 +15,16 @@ local function calc_accuracy_default(chara, weapon, attack_skill, ammo, params)
    local accuracy
 
    if weapon then
+      local equip = assert(weapon:get_aspect(IItemEquipment))
       accuracy = chara:skill_level("elona.stat_dexterity") / 4
          + chara:skill_level(weapon:calc("skill") or "elona.martial_arts") / 3
          + chara:skill_level(attack_skill)
          + 50
          + chara:calc("hit_bonus")
-         + weapon:calc("hit_bonus")
+         + equip:calc(weapon, "hit_bonus")
 
       if ammo then
-         accuracy = accuracy + ammo:calc("hit_bonus")
+         accuracy = accuracy + ammo:calc_aspect(IItemEquipment, "hit_bonus")
       end
    else
       accuracy = chara:skill_level("elona.stat_dexterity") / 5
@@ -314,7 +316,7 @@ end
 
 local function calc_damage_params_default(chara, weapon, target, attack_skill, ammo)
    -- >>>>>>>> shade2/calculation.hsp:256 		dmgFix	= cDmg(cc) + iDmg(cw) +iLevel(cw)+(iStatu ..
-   local dmgfix = chara:calc("damage_bonus") + weapon:calc("damage_bonus") + weapon:calc("bonus")
+   local dmgfix = chara:calc("damage_bonus") + weapon:calc_aspect(IItemEquipment, "damage_bonus") + weapon:calc("bonus")
    if weapon:is_blessed() then
       dmgfix = dmgfix + 1
    end
@@ -323,7 +325,7 @@ local function calc_damage_params_default(chara, weapon, target, attack_skill, a
 
    local multiplier
    if ammo then
-      dmgfix = dmgfix + ammo:calc("damage_bonus") + ammo:calc("dice_x") * ammo:calc("dice_y") / 2
+      dmgfix = dmgfix + ammo:calc_aspect(IItemEquipment, "damage_bonus") + ammo:calc("dice_x") * ammo:calc("dice_y") / 2
       multiplier = 0.5
          + (chara:skill_level("elona.stat_perception")
                + chara:skill_level(weapon:calc("skill") or "elona.throwing") / 5
