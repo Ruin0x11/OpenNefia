@@ -4,6 +4,7 @@ local Pos = require("api.Pos")
 local I18N = require("api.I18N")
 local Chara = require("api.Chara")
 local utils = require("mod.visual_ai.internal.utils")
+local ICharaVisualAI = require("mod.visual_ai.api.aspect.ICharaVisualAI")
 
 local order = UidTracker:new(20000)
 
@@ -233,7 +234,7 @@ data:add {
    target_source = "any",
 
    target_filter = function(self, chara, candidate, ty)
-      local target = chara:get_mod_data("visual_ai").stored_target
+      local target = chara:get_aspect(ICharaVisualAI).stored_target
       return Chara.is_alive(target) and candidate == target
    end
 }

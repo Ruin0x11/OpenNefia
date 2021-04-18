@@ -52,7 +52,7 @@ end
 
 function IAspectHolder:on_refresh()
    for _, aspect in self:iter_aspects() do
-      IAspectModdable.on_refresh(aspect)
+      aspect:on_refresh()
    end
 end
 

@@ -11,6 +11,7 @@ local Itemgen = require("mod.elona.api.Itemgen")
 local Rand = require("api.Rand")
 local Filters = require("mod.elona.api.Filters")
 local Item = require("api.Item")
+local ICharaVisualAI = require("mod.visual_ai.api.aspect.ICharaVisualAI")
 
 local order = UidTracker:new(30000)
 
@@ -458,7 +459,7 @@ data:add {
    applies_to = "map_object",
 
    action = function(self, chara, target)
-      local ext = chara:get_mod_data("visual_ai")
+      local ext = chara:get_aspect(ICharaVisualAI)
       ext.stored_target = target
 
       return true
