@@ -10,6 +10,7 @@ local Chara = require("api.Chara")
 local Save = require("api.Save")
 local Weather = require("mod.elona.api.Weather")
 local IItemSeed = require("mod.elona.api.aspect.IItemSeed")
+local Itemgen = require("mod.elona.api.Itemgen")
 
 local Gardening = {}
 
@@ -211,6 +212,24 @@ function Gardening.harvest_plant(plant, chara)
    plant:emit("elona.on_harvest_plant", {chara=chara})
    plant:remove_ownership()
    -- <<<<<<<< elona122/shade2/action.hsp:2351 	return ..
+end
+
+function Gardening.generate_item(cb)
+   if type(cb) == "table" then
+      local filter = cb
+      cb = function() return table.deepcopy(filter) end
+   end
+   return function(plant, params)
+      local filter = cb(plant, params)
+
+      filter.level = filter.level or params.chara:skill_level("elona.gardening") / 2 + 15
+      filter.quality = filter.quality or Enum.Quality.Normal
+      filter.no_stack = true
+
+      local item = Itemgen.create(plant.x, plant.y, filter, params.chara)
+      Gui.mes("action.plant.harvest", item:build_name())
+      item:stack(true)
+   end
 end
 
 return Gardening

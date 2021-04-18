@@ -1,6 +1,11 @@
 local Item = require("api.Item")
 local global = require("mod.smithing.internal.global")
 local Smithing = require("mod.smithing.api.Smithing")
+local IItemBlacksmithHammer = require("mod.smithing.api.aspect.IItemBlacksmithHammer")
+
+local function find_hammer(chara)
+   return chara:iter_inventory():filter(function(i) return i:get_aspect(IItemBlacksmithHammer) ~= nil end):nth(1)
+end
 
 data:add {
    _type = "simple_indicators.indicator",
@@ -17,15 +22,14 @@ data:add {
       end
 
       if global.tracked_hammer == nil then
-         global.tracked_hammer = player:find_item("smithing.blacksmith_hammer")
+         global.tracked_hammer = find_hammer(player)
       end
 
       if Item.is_alive(global.tracked_hammer) then
          local hammer = global.tracked_hammer
-         local level = hammer.params.hammer_level
-         local exp = hammer.params.hammer_experience
-         local req_exp = Smithing.calc_hammer_required_exp(hammer)
-         local exp_perc = (exp * 100.0) / req_exp
+         local aspect = hammer:get_aspect(IItemBlacksmithHammer)
+         local level = aspect:calc(hammer, "hammer_level")
+         local exp_perc = aspect:exp_percent(hammer)
          return ("HLv:%d/%3.3f%%"):format(level, exp_perc)
       end
       -- <<<<<<<< oomSEST/src/net.hsp:911 			} ..

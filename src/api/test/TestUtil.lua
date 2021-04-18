@@ -7,6 +7,8 @@ local field = require("game.field")
 local Item = require("api.Item")
 local Enum = require("api.Enum")
 local IItem = require("api.item.IItem")
+local env = require("internal.env")
+local hotload = require("internal.hotload")
 
 local TestUtil = {}
 
@@ -60,6 +62,13 @@ function TestUtil.stripped_item(id, map, x, y, amount, aspects)
    end
    item.curse_state = Enum.CurseState.Normal
    return item
+end
+
+local transient_paths = table.set {}
+
+function TestUtil.hotload_code(path, mod_id, code)
+   env.load_transient_path(path, mod_id, code)
+   return hotload.hotload(path, false)
 end
 
 return TestUtil

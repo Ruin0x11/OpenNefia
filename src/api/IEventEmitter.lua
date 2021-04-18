@@ -24,7 +24,7 @@ function IEventEmitter:on_reload_prototype(old_id)
 
    local events = self.proto and self.proto.events
    if events then
-      Log.debug("Loading %d events of %s:%s for object %d", #events, self._type, self._id, self.uid)
+      Log.debug("Loading %d events of %s:%s for object %s", #events, self._type, self._id, self)
       self:connect_self_multiple(events, true)
    end
 end

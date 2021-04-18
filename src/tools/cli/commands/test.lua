@@ -110,6 +110,7 @@ local function cleanup_globals()
    Advice.remove_by_mod(TestUtil.TEST_MOD_ID)
    table.replace_with(aspect_state.default_impls, {})
    Env.clear_ui_results()
+   env.unload_transient_paths()
 
    config_store.proxy().base.autosave = false
 end
