@@ -58,21 +58,23 @@ function ItemBlacksmithHammerAspect:on_use(item, params)
    Smithing.on_use_blacksmith_hammer(item, params.chara)
 end
 
-ItemBlacksmithHammerAspect.events = {
-   {
-      id = "base.on_item_build_description",
-      name = "Add hammer information",
+function ItemBlacksmithHammerAspect:get_events(obj)
+   return {
+      {
+         id = "base.on_item_build_description",
+         name = "Add hammer information",
 
-      callback = function(item, params, result)
-         if item:calc("identify_state") >= Enum.IdentifyState.Quality then
-            local aspect = item:get_aspect(IItemBlacksmithHammer)
-            local exp_perc = aspect:exp_percent(item)
-            exp_perc = ("%3.6f"):format(exp_perc):sub(1, 6)
-            local text = ("[Lv: %d Exp: %s%%]"):format(aspect:calc(item, "hammer_level"), string.right_pad(tostring(exp_perc), 6))
-            table.insert(result, { text = text, icon = 7 })
+         callback = function(item, params, result)
+            if item:calc("identify_state") >= Enum.IdentifyState.Quality then
+               local aspect = item:get_aspect(IItemBlacksmithHammer)
+               local exp_perc = aspect:exp_percent(item)
+               exp_perc = ("%3.6f"):format(exp_perc):sub(1, 6)
+               local text = ("[Lv: %d Exp: %s%%]"):format(aspect:calc(item, "hammer_level"), string.right_pad(tostring(exp_perc), 6))
+               table.insert(result, { text = text, icon = 7 })
+            end
          end
-      end
+      }
    }
-}
+end
 
 return ItemBlacksmithHammerAspect

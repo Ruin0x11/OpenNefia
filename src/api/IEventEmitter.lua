@@ -13,11 +13,18 @@ function IEventEmitter:init(events)
 end
 
 function IEventEmitter:on_reload_prototype(old_id)
-   -- XXX: removing old events is broken since can't compare the previous
-   -- instance before hotloading
+   if old_id then
+      local old_proto = data[self._type][old_id]
+      local old_events = old_proto and old_proto.events
+      if old_events then
+         Log.debug("Removing %d events from %s:%s for object %d", #old_events, self._type, old_id, self.uid)
+         self:disconnect_self_multiple(old_events)
+      end
+   end
+
    local events = self.proto and self.proto.events
    if events then
-      Log.debug("Loading %d events of %s:%s for object %d", #events, self._type, self._id, self.uid)
+      Log.debug("Loading %d events of %s:%s for object %s", #events, self._type, self._id, self)
       self:connect_self_multiple(events, true)
    end
 end

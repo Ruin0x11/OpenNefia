@@ -1,6 +1,6 @@
 local IEvented = class.interface("IEvented",
                                    {
-                                      events = "table"
+                                      get_events = "function"
                                    })
 
 return IEvented
