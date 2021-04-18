@@ -8,6 +8,9 @@ local Gui = require("api.Gui")
 local Item = require("api.Item")
 local Rand = require("api.Rand")
 local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
+local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
+local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
+local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
 
 data:add {
    _type = "elona.plant",
@@ -52,10 +55,10 @@ data:add {
       [IItemFromChara] = {
          chara_id = "elona.gwen"
       },
-      [IItemCargo] = {
-         cargo_weight = 1000,
-         cargo_quality = 10
-      },
+      -- [IItemCargo] = {
+      --    cargo_weight = 1000,
+      --    cargo_quality = 10
+      -- },
       [IItemMuseumValued] = {
          museum_value = 100
       },
@@ -65,8 +68,26 @@ data:add {
          pv = 10,
          hit_bonus = 10,
          damage_bonus = 10,
-         equip_slots = { "elona.hand", "elona.arm", "elona.back" },
+         equip_slots = { "elona.hand", "elona.arm", "elona.back", "elona.ranged", "elona.ammo" },
          pcc_part = 1
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.long_sword",
+         dice_x = 20,
+         dice_y = 20,
+         pierce_rate = 50,
+      },
+      [IItemRangedWeapon] = {
+         skill = "elona.firearm",
+         dice_x = 10,
+         dice_y = 10,
+         effective_range = { 50, 90, 100, 90, 80, 80, 70, 60, 50, 20 },
+         pierce_rate = 20,
+      },
+      [IItemAmmo] = {
+         skill = "elona.firearm",
+         dice_x = 10,
+         dice_y = 10,
       }
    }
 }

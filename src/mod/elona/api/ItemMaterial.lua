@@ -142,7 +142,7 @@ local function reset_dice(item)
    -- HACK need a way to get the aspect interface(s) that a concrete impl
    -- satisfies
    local function reset(iface)
-      local aspect = item:get_aspect_or_default(iface, true)
+      local aspect = item:get_aspect(iface)
       if aspect then
          local proto = item:get_aspect_proto(iface)
          if proto then
@@ -236,7 +236,7 @@ function ItemMaterial.apply_item_material(item, material)
          -- HACK need a way to get the aspect interface(s) that a concrete impl
          -- satisfies
          local function set_dice(iface)
-            local aspect = item:get_aspect_or_default(iface, true)
+            local aspect = item:get_aspect(iface)
             if aspect and aspect.dice_y > 0 then
                aspect.dice_y = math.floor(mat_data.dice_y * aspect.dice_y / (coeff + Rand.rnd(25)))
             end

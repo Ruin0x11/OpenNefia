@@ -18,7 +18,6 @@ local EquipRules = require("api.chara.EquipRules")
 local ICharaEquipStyle = require("api.chara.aspect.ICharaEquipStyle")
 local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
 local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
-local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
 
 local ElonaAction = {}
 
