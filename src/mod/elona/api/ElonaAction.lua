@@ -166,30 +166,16 @@ local function show_evade_text(chara, target, extra_attacks)
 end
 
 function ElonaAction.play_ranged_animation(chara, start_x, start_y, end_x, end_y, attack_skill, weapon)
-   local chip, sound
+   local chip, sound, color
 
-   local color = weapon:calc("color") or {255, 255, 255}
-
-   -- >>>>>>>> shade2/screen.hsp:654 	preparePicItem 6,aniCol ...
-   if attack_skill == "elona.bow" then
-      chip = "elona.item_projectile_arrow"
-      sound = "base.bow1"
-   elseif attack_skill == "elona.crossbow" then
-      chip = "elona.item_projectile_bolt"
-      sound = "base.bow1"
-   elseif attack_skill == "elona.firearm" then
-      if weapon:has_category("elona.equip_ranged_laser_gun") then
-         chip = "elona.item_projectile_laser"
-         sound = "base.laser1"
-      else
-         chip = "elona.item_projectile_bullet"
-         sound = "base.gun1"
-      end
+   local ranged = weapon:get_aspect(IItemRangedWeapon)
+   if ranged then
+      chip, color, sound = ranged:calc_anim_chip_and_sound(weapon)
    else
       chip = weapon:calc("image")
+      color = weapon:calc("color") or {255, 255, 255}
       sound = "base.throw1"
    end
-   -- <<<<<<<< shade2/screen.hsp:665 	if animeId=aniArrow	:snd seArrow1 ...
 
    if chara:is_in_fov() then
       local cb = Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, nil)

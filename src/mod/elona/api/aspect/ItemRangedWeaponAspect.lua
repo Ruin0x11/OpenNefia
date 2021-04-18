@@ -31,15 +31,41 @@ function ItemRangedWeaponAspect:calc_effective_range(item, dist)
    local result
    local effective_range = self:calc(item, "effective_range")
    if type(effective_range) == "table" then
+      dist = math.clamp(dist, 1, #effective_range)
       result = effective_range[dist]
-      if not result then
-         -- vanilla compat
-         result = effective_range[math.min(dist, 9)]
-      end
    elseif type(effective_range) == "number" then
       result = effective_range
    end
    return result or 100
+end
+
+function ItemRangedWeaponAspect:calc_anim_chip_and_sound(weapon)
+   local chip, color, sound
+   local attack_skill = self:calc(weapon, "skill")
+   color = weapon:calc("color") or nil
+
+   -- >>>>>>>> shade2/screen.hsp:654 	preparePicItem 6,aniCol ...
+   if attack_skill == "elona.bow" then
+      chip = "elona.item_projectile_arrow"
+      sound = "base.bow1"
+   elseif attack_skill == "elona.crossbow" then
+      chip = "elona.item_projectile_bolt"
+      sound = "base.bow1"
+   elseif attack_skill == "elona.firearm" then
+      if weapon:has_category("elona.equip_ranged_laser_gun") then
+         chip = "elona.item_projectile_laser"
+         sound = "base.laser1"
+      else
+         chip = "elona.item_projectile_bullet"
+         sound = "base.gun1"
+      end
+   else
+      chip = weapon:calc("image")
+      sound = "base.throw1"
+   end
+   -- <<<<<<<< shade2/screen.hsp:665 	if animeId=aniArrow	:snd seArrow1 ...
+
+   return chip, color, sound
 end
 
 return ItemRangedWeaponAspect
