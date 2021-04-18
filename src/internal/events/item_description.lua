@@ -4,6 +4,7 @@ local Enum = require("api.Enum")
 local I18N = require("api.I18N")
 local Event = require("api.Event")
 local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
+local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
 
 
 -- >>>>>>>> shade2/command.hsp:4108 		if iMaterial(ci)!0		:list(0,p)=7:listN(0,p)=lang ..
@@ -89,12 +90,13 @@ local quality_info = {
    },
    {
       pred = function(i)
-         return i:calc("dice_x") > 0
+         return i:get_aspect(IItemMeleeWeapon)
       end,
       desc = function(i)
-         local dice_x = i:calc("dice_x")
-         local dice_y = i:calc("dice_y")
-         local pierce_rate = i:calc("pierce_rate")
+         local melee = i:get_aspect(IItemMeleeWeapon)
+         local dice_x = melee:calc(i, "dice_x")
+         local dice_y = melee:calc(i, "dice_y")
+         local pierce_rate = melee:calc(i, "pierce_rate")
          local s = I18N.get("item.desc.weapon.it_can_be_wielded")
          if i:calc("identify_state") >= Enum.IdentifyState.Full then
             s = s .. I18N.get("item.desc.weapon.dice", dice_x, dice_y, pierce_rate)
@@ -104,14 +106,14 @@ local quality_info = {
    },
    {
       pred = function(i)
-         return i:calc("dice_x") > 0 and i:calc("weight") <= Const.WEAPON_WEIGHT_LIGHT
+         return i:get_aspect(IItemMeleeWeapon) and i:calc("weight") <= Const.WEAPON_WEIGHT_LIGHT
       end,
       desc = "item.desc.weapon.light",
       icon = 5
    },
    {
       pred = function(i)
-         return i:calc("dice_x") > 0 and i:calc("weight") >= Const.WEAPON_WEIGHT_HEAVY
+         return i:get_aspect(IItemMeleeWeapon) and i:calc("weight") >= Const.WEAPON_WEIGHT_HEAVY
       end,
       desc = "item.desc.weapon.heavy",
       icon = 5

@@ -388,6 +388,7 @@ function IChara:damage_hp(amount, source, params)
       no_attack_text = params.no_attack_text,
       extra_attacks = params.extra_attacks or 0,
       weapon = params.weapon or nil,
+      attack_skill = params.attack_skill or nil
    }
 
    if not Chara.is_alive(victim) then

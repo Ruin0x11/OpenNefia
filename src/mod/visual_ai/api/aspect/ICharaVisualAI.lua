@@ -1,7 +1,6 @@
 local IAspect = require("api.IAspect")
-local World = require("api.World")
 
-local ICharaVisualAI = class.interface("IItemFood",
+local ICharaVisualAI = class.interface("ICharaVisualAI",
                                   {
                                      plan = { type = "table", optional = true },
                                      enabled = "boolean",

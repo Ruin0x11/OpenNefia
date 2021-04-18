@@ -2,6 +2,7 @@ local AspectHolder = require("api.AspectHolder")
 local IAspect = require("api.IAspect")
 local Aspect = require("api.Aspect")
 local IAspectModdable = require("api.IAspectModdable")
+local Log = require("api.Log")
 
 local IAspectHolder = class.interface("IAspectHolder")
 
@@ -22,6 +23,7 @@ local function default_aspect(obj, iface, params)
    else
       klass = Aspect.get_default_impl(iface)
    end
+   Log.debug("Default iface for aspect %s: %s", iface, klass)
    local aspect = klass:new(obj, params)
    IAspectModdable.init(aspect)
    obj:set_aspect(iface, aspect)

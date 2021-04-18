@@ -14,6 +14,7 @@ local data = require("internal.data")
 local Enum = require("api.Enum")
 local IComparable = require("api.IComparable")
 local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
+local IItemDice = require("mod.elona.api.aspect.IItemDice")
 
 local IItem = class.interface("IItem",
                          {},
@@ -67,21 +68,6 @@ function IItem:build_name(amount, no_article)
    return Itemname.build_name(self, amount, no_article)
 end
 
-local function is_melee_weapon(item)
-   return item:is_equipped()
-      and not item:is_equipped_at("elona.ranged")
-      and not item:is_equipped_at("elona.ammo")
-      and item:calc("dice_x") > 0
-end
-
-local function is_ranged_weapon(item)
-   return item:is_equipped_at("elona.ranged")
-end
-
-local function is_ammo(item)
-   return item:is_equipped_at("elona.ammo")
-end
-
 function IItem:refresh()
    IMapObject.on_refresh(self)
    IItemEnchantments.on_refresh(self)
@@ -93,11 +79,6 @@ function IItem:refresh()
          material_data.on_refresh(self)
       end
    end
-
-   self:mod("is_melee_weapon", is_melee_weapon(self))
-   self:mod("is_ranged_weapon", is_ranged_weapon(self))
-   self:mod("is_ammo", is_ammo(self))
-   self:mod("is_armor", self:calc("dice_x") == 0)
 
    self:emit("base.on_item_refresh")
 end
@@ -325,25 +306,6 @@ function IItem:can_stack_with(other)
    end
 
    return true
-end
-
-function IItem:calc_effective_range(dist)
-   dist = math.max(math.floor(dist), 0)
-   local result
-   local effective_range = self:calc("effective_range")
-   if type(effective_range) == "function" then
-      result = effective_range(self, dist)
-      assert(type(result) == "number", "effective_range must return a number")
-   elseif type(effective_range) == "table" then
-      result = effective_range[dist]
-      if not result then
-         -- vanilla compat
-         result = effective_range[math.min(dist, 9)]
-      end
-   elseif type(effective_range) == "number" then
-      result = effective_range
-   end
-   return result or 100
 end
 
 function IItem:calc_ui_color()

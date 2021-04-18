@@ -1,6 +1,8 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local Ui = require("api.Ui")
+local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
+local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
 
 local ChangeAppearanceMenu = require("api.gui.menu.ChangeAppearanceMenu")
 local IInput = require("api.gui.IInput")
@@ -375,10 +377,10 @@ local function format_damage_info(name, damage, hit)
    }
 end
 
-local function calc_skill_damage(chara, weapon, attack_number)
+local function calc_melee_skill_damage(chara, weapon, attack_number)
    local Combat = require("mod.elona.api.Combat")
 
-   local skill = weapon:calc("skill")
+   local skill = weapon:calc_aspect(IItemMeleeWeapon, "skill")
    local hit = Combat.calc_accuracy(chara, weapon, nil, skill, attack_number, false, false)
    local damage = Combat.calc_attack_raw_damage(chara, weapon, nil, skill, false, nil)
    local name = I18N.get("ui.chara_sheet.damage.melee") .. attack_number
@@ -400,7 +402,7 @@ local function calc_damage_info(chara)
    for _, weapon in ElonaAction.get_melee_weapons(chara) do
       found = true
       attack_number = attack_number + 1
-      info[#info+1] = calc_skill_damage(chara, weapon, attack_number)
+      info[#info+1] = calc_melee_skill_damage(chara, weapon, attack_number)
    end
 
    -- Unarmed
@@ -416,7 +418,7 @@ local function calc_damage_info(chara)
    -- Ranged weapon
    local ranged, ammo = ElonaAction.get_ranged_weapon_and_ammo(chara)
    if ranged then
-      local skill = ranged:calc("skill")
+      local skill = ranged:calc_aspect(IItemRangedWeapon, "skill")
       local hit = Combat.calc_accuracy(chara, ranged, nil, skill, 0, true, false)
       local damage = Combat.calc_attack_raw_damage(chara, ranged, nil, skill, true, ammo)
 

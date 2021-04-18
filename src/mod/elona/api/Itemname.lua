@@ -21,6 +21,7 @@ local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
+local IItemDice = require("mod.elona.api.aspect.IItemDice")
 
 local Itemname = {}
 
@@ -30,6 +31,16 @@ local function number_string(i)
    end
 
    return tostring(i)
+end
+
+local function get_dice(item)
+   local aspect = item:iter_aspects(IItemDice):nth(1)
+   if aspect == nil then
+      return 0, 0
+   end
+   local dice_x = aspect:calc(item, "dice_x") or 0
+   local dice_y = aspect:calc(item, "dice_y") or 0
+   return dice_x, dice_y
 end
 
 -- >>>>>>>> shade2/item_func.hsp:616 	if iKnown(id)>=knownFull{ ..
@@ -46,8 +57,7 @@ local function item_known_info(item)
 
    local equip = item:get_aspect(IItemEquipment)
 
-   local dice_x = item:calc("dice_x") or 0
-   local dice_y = item:calc("dice_y") or 0
+   local dice_x, dice_y = get_dice(item)
    local hit_bonus = (equip and equip:calc(item, "hit_bonus")) or 0
    local damage_bonus = (equip and equip:calc(item, "damage_bonus")) or 0
 

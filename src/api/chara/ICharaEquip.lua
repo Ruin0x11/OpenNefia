@@ -4,6 +4,8 @@ local ICharaInventory = require("api.chara.ICharaInventory")
 local data = require("internal.data")
 local Enum = require("api.Enum")
 local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
+local EquipRules = require("api.chara.EquipRules")
+local ICharaEquipStyle = require("api.chara.aspect.ICharaEquipStyle")
 
 local ICharaEquip = class.interface("ICharaEquip", {}, ICharaInventory)
 
@@ -11,6 +13,8 @@ function ICharaEquip:init()
    self.body_parts = self.body_parts or {}
    self.equip = EquipSlots:new(self.body_parts, self)
    self.equipment_weight = 0
+
+   self:get_aspect_or_default(ICharaEquipStyle, true)
 end
 
 local function apply_item_enchantments(chara, item)
@@ -31,9 +35,11 @@ local function apply_item_stats(chara, item)
    chara:mod("dv", equip:calc(item, "dv"), "add")
    chara:mod("pv", equip:calc(item, "pv"), "add")
 
-   if item:calc("is_melee_weapon") then
-      chara:mod("number_of_weapons", 1, "add")
-   elseif item:calc("is_armor") then
+   if EquipRules.is_melee_weapon(item) then
+      -- chara:mod("number_of_weapons", 1, "add")
+   end
+
+   if EquipRules.is_armor(item) then
       chara:mod("hit_bonus", equip:calc(item, "hit_bonus"), "add")
       chara:mod("damage_bonus", equip:calc(item, "damage_bonus"), "add")
       local bonus = 0
@@ -85,35 +91,14 @@ function ICharaEquip:enchantment_power(_id, params, source)
 end
 
 function ICharaEquip:on_refresh()
-   local attack_count = 0
    for _, part in self:iter_equipped_body_parts() do
       local item = assert(part.equipped)
       item:refresh()
 
       apply_item_stats(self, item)
-
-      if part.body_part._id == "elona.hand" then
-         attack_count = attack_count + 1
-      end
-      if item:has_category("elona.equip_shield") then
-         self:mod("is_wielding_shield", true)
-      end
    end
 
-   -- >>>>>>>> shade2/calculation.hsp:530 	if cAttackStyle(r1)&styleShield{ ..
-   if self:calc("is_wielding_shield") then
-      local pv = self:calc("pv")
-      if pv > 0 then
-         self:mod("pv", pv * math.floor( 120 + math.sqrt(self:skill_level("elona.shield")) * 2 ) / 100)
-      end
-   else
-      if attack_count == 1 then
-         self:mod("is_wielding_two_handed", true)
-      elseif attack_count > 0 then
-         self:mod("is_dual_wielding", true)
-      end
-   end
-   -- <<<<<<<< shade2/calculation.hsp:534 		} ..
+   self:get_aspect(ICharaEquipStyle):refresh_melee_equip_style(self)
 end
 
 function ICharaEquip:equip_item(item, force, slot)

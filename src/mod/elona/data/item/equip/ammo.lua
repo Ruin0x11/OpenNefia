@@ -1,4 +1,5 @@
 local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
+local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
 
 --
 -- Arrow
@@ -11,12 +12,8 @@ data:add {
    image = "elona.item_bolt",
    value = 150,
    weight = 1200,
-   dice_x = 1,
-   dice_y = 8,
    material = "elona.metal",
    coefficient = 100,
-
-   skill = "elona.bow",
 
    categories = {
       "elona.equip_ammo",
@@ -28,6 +25,11 @@ data:add {
          equip_slots = { "elona.ammo" },
          hit_bonus = 2,
          damage_bonus = 1,
+      },
+      [IItemAmmo] = {
+         skill = "elona.bow",
+         dice_x = 1,
+         dice_y = 8,
       }
    }
 }
@@ -43,12 +45,8 @@ data:add {
    image = "elona.item_bolt",
    value = 150,
    weight = 3500,
-   dice_x = 1,
-   dice_y = 8,
    material = "elona.metal",
    coefficient = 100,
-
-   skill = "elona.crossbow",
 
    categories = {
       "elona.equip_ammo",
@@ -60,6 +58,11 @@ data:add {
          equip_slots = { "elona.ammo" },
          hit_bonus = 2,
          damage_bonus = 1,
+      },
+      [IItemAmmo] = {
+         skill = "elona.crossbow",
+         dice_x = 1,
+         dice_y = 8,
       }
    }
 }
@@ -75,12 +78,8 @@ data:add {
    image = "elona.item_bullet",
    value = 150,
    weight = 2400,
-   dice_x = 2,
-   dice_y = 2,
    material = "elona.metal",
    coefficient = 100,
-
-   skill = "elona.firearm",
 
    tags = { "sf" },
 
@@ -95,6 +94,11 @@ data:add {
          equip_slots = { "elona.ammo" },
          hit_bonus = 4,
          damage_bonus = 1,
+      },
+      [IItemAmmo] = {
+         skill = "elona.firearm",
+         dice_x = 2,
+         dice_y = 2,
       }
    }
 }
@@ -110,12 +114,8 @@ data:add {
    image = "elona.item_energy_cell",
    value = 150,
    weight = 800,
-   dice_x = 2,
-   dice_y = 3,
    material = "elona.metal",
    coefficient = 100,
-
-   skill = "elona.firearm",
 
    tags = { "sf" },
 
@@ -129,6 +129,11 @@ data:add {
       [IItemEquipment] = {
          equip_slots = { "elona.ammo" },
          damage_bonus = 1,
+      },
+      [IItemAmmo] = {
+         skill = "elona.firearm",
+         dice_x = 2,
+         dice_y = 3,
       }
    }
 }

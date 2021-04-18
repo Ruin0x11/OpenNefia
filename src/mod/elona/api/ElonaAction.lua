@@ -14,6 +14,11 @@ local Action = require("api.Action")
 local Effect = require("mod.elona.api.Effect")
 local Pos = require("api.Pos")
 local I18N = require("api.I18N")
+local EquipRules = require("api.chara.EquipRules")
+local ICharaEquipStyle = require("api.chara.aspect.ICharaEquipStyle")
+local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
+local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
+local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
 
 local ElonaAction = {}
 
@@ -31,26 +36,26 @@ local function proc_shield_bash(chara, target)
 end
 
 -- >>>>>>>> shade2/action.hsp:1219     repeat sizeBody ..
-local function body_part_where_equipped(flag)
-   return function(entry) return entry.equipped:calc(flag) end
+local function body_part_where_equipped(cb)
+   return function(entry) return cb(entry.equipped) end
 end
 
 function ElonaAction.get_melee_weapons(chara)
-   local pred = body_part_where_equipped "is_melee_weapon"
+   local pred = body_part_where_equipped(EquipRules.is_melee_weapon)
    return chara:iter_equipped_body_parts():filter(pred):extract("equipped")
 end
 -- <<<<<<<< shade2/action.hsp:1229     return ..
 
 function ElonaAction.melee_attack(chara, target)
    -- >>>>>>>> shade2/action.hsp:1197 *act_melee ..
-   if chara:calc("is_wielding_shield") then
+   if chara:calc_aspect(ICharaEquipStyle, "is_wielding_shield") then
       proc_shield_bash(chara, target)
    end
 
    local attack_number = 0
 
    for _, weapon in ElonaAction.get_melee_weapons(chara) do
-      local skill = weapon:calc("skill")
+      local skill = weapon:calc_aspect(IItemMeleeWeapon, "skill")
       attack_number = attack_number + 1
       ElonaAction.physical_attack(chara, weapon, target, skill, 0, attack_number)
    end
@@ -63,22 +68,22 @@ end
 
 function ElonaAction.get_ranged_weapon_and_ammo(chara)
    -- >>>>>>>> shade2/command.hsp:4290 *FindRangeWeapon ...
-   local pred = body_part_where_equipped "is_ranged_weapon"
+   local pred = body_part_where_equipped(EquipRules.is_ranged_weapon)
    local ranged = chara:iter_equipped_body_parts():filter(pred):extract("equipped"):nth(1)
 
-   pred = body_part_where_equipped "is_ammo"
+   pred = body_part_where_equipped(EquipRules.is_ammo)
    local ammo = chara:iter_equipped_body_parts():filter(pred):extract("equipped"):nth(1)
 
    if ranged == nil then
       return nil, "no_ranged_weapon"
    end
 
-   local skill = ranged:calc("skill")
-   if not ammo and skill ~= "elona.throwing" then
+   local aspect = ranged:get_aspect(IItemRangedWeapon)
+   if not ammo and not aspect:can_use_without_ammo(ranged) then
       return nil, "no_ammo"
    end
 
-   if ammo and ammo:calc("skill") ~= skill then
+   if ammo and not aspect:can_use_with_ammo(ranged, ammo) then
       return nil, "wrong_ammo"
    end
 
@@ -115,7 +120,7 @@ function ElonaAction.ranged_attack(chara, target, weapon, ammo)
       end
    end
 
-   local skill = weapon:calc("skill")
+   local skill = weapon:calc_aspect(IItemRangedWeapon, "skill")
 
    if ammo_enchantment_data and ammo_enchantment_data.on_ranged_attack then
       ammo_enchantment_data.on_ranged_attack(chara, weapon, target, skill, ammo, ammo_enchantment_id)
@@ -290,7 +295,7 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
          tense = "ally"
       end
 
-      local killed, base_damage, actual_damage = target:damage_hp(damage, chara, {element=element,element_power=element_power,extra_attacks=extra_attacks,weapon=weapon,message_tense=tense})
+      local killed, base_damage, actual_damage = target:damage_hp(damage, chara, {element=element,element_power=element_power,extra_attacks=extra_attacks,weapon=weapon,message_tense=tense,attack_skill=attack_skill})
       -- <<<<<<<< shade2/action.hsp:1292  ..
 
       chara:emit("elona.on_physical_attack_hit", {weapon=weapon,target=target,hit=hit,damage=damage,base_damage=base_damage,actual_damage=actual_damage,original_damage=original_damage,is_ranged=is_ranged,attack_skill=attack_skill,killed=killed,ammo=ammo,ammo_enchantment=ammo_enc})

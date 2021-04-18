@@ -8,6 +8,7 @@ local Gui = require("api.Gui")
 local Anim = require("mod.elona_sys.api.Anim")
 local ICharaEquip = require("api.chara.ICharaEquip")
 local Enum = require("api.Enum")
+local ICharaEquipStyle = require("api.chara.aspect.ICharaEquipStyle")
 
 local Skill = {}
 
@@ -667,11 +668,13 @@ function Skill.calc_spell_success_chance(skill_id, chara)
       chance = math.min(chance, 100)
    end
 
-   if chara:calc("is_dual_wielding") then
+   local style = chara:get_aspect_or_default(ICharaEquipStyle, true)
+
+   if style:calc(chara, "is_dual_wielding") then
       chance = chance - 6
    end
 
-   if chara:calc("is_wielding_shield") then
+   if style:calc(chara, "is_wielding_shield") then
       chance = chance - 12
    end
 

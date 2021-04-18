@@ -168,7 +168,7 @@ end
 
 local function show_damage_text(chara, weapon, target, damage_level, was_killed,
                                 tense, no_attack_text, element, extra_attacks,
-                                is_third_person)
+                                is_third_person, attack_skill)
    local map = target:current_map()
    if not map:is_in_fov(target.x, target.y) then
       return
@@ -180,11 +180,7 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
       Gui.mes_continue_sentence()
    end
 
-   local skill = "elona.martial_arts" -- TODO
-
-   if weapon then
-      skill = weapon:calc("skill")
-   end
+   local skill = attack_skill or "elona.martial_arts"
    -- <<<<<<<< shade2/action.hsp:1291 			} ...
 
    local source = chara
@@ -293,7 +289,7 @@ Event.register("base.on_damage_chara", "Damage text and blood", function(chara, 
 
                   show_damage_text(params.attacker, params.weapon, chara, damage_level, false,
                                    params.message_tense, params.no_attack_text, params.element, params.extra_attacks,
-                                   params.is_third_person)
+                                   params.is_third_person, params.attack_skill)
 
                   -- >>>>>>>> shade2/chara_func.hsp:1534 		rowAct_Check tc ...
                   chara:interrupt_activity()
@@ -314,7 +310,7 @@ Event.register("base.on_kill_chara", "Damage text and kill handling", function(c
                   local damage_level = get_damage_level(params.base_damage, params.damage, chara)
                   show_damage_text(params.attacker, params.weapon, chara, damage_level, true,
                                    params.message_tense, params.no_attack_text, params.element, params.extra_attacks,
-                                   params.is_third_person)
+                                   params.is_third_person, params.attack_skill)
 
                   if params.element and params.element._id == "elona.nether" and params.attacker and params.damage > 0 then
                      params.attacker:heal_hp(Rand.rnd(params.damage * (200 + params.element_power) / 1000 + 5))

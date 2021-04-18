@@ -1,6 +1,7 @@
 local Enum = require("api.Enum")
 local light = require("mod.elona.data.item.light")
 local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
+local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
 
 --
 -- Broadsword
@@ -13,12 +14,8 @@ data:add {
    image = "elona.item_claymore",
    value = 500,
    weight = 4000,
-   dice_x = 3,
-   dice_y = 7,
    material = "elona.metal",
    coefficient = 100,
-
-   skill = "elona.long_sword",
 
    categories = {
       "elona.equip_melee_broadsword",
@@ -30,6 +27,11 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = 1,
          damage_bonus = 8,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.long_sword",
+         dice_x = 3,
+         dice_y = 7,
       }
    }
 }
@@ -41,14 +43,10 @@ data:add {
    image = "elona.item_claymore_unique",
    value = 45000,
    weight = 6500,
-   dice_x = 3,
-   dice_y = 14,
    material = "elona.silver",
    level = 45,
    fltselect = 3,
    coefficient = 100,
-
-   skill = "elona.long_sword",
 
    is_precious = true,
    identify_difficulty = 500,
@@ -72,6 +70,11 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = 1,
          damage_bonus = 16,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.long_sword",
+         dice_x = 3,
+         dice_y = 14,
       }
    }
 }
@@ -83,14 +86,10 @@ data:add {
    image = "elona.item_dragon_slayer",
    value = 72000,
    weight = 22500,
-   dice_x = 3,
-   dice_y = 14,
    material = "elona.iron",
    level = 55,
    fltselect = 3,
    coefficient = 100,
-
-   skill = "elona.long_sword",
 
    is_precious = true,
    identify_difficulty = 500,
@@ -114,6 +113,11 @@ data:add {
          damage_bonus = 20,
          pv = 30,
          dv = -42,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.long_sword",
+         dice_x = 3,
+         dice_y = 14,
       }
    }
 }
@@ -129,13 +133,9 @@ data:add {
    image = "elona.item_long_sword",
    value = 500,
    weight = 1500,
-   dice_x = 2,
-   dice_y = 8,
    material = "elona.metal",
    coefficient = 100,
 
-   skill = "elona.long_sword",
-   pierce_rate = 5,
    categories = {
       "elona.equip_melee_long_sword",
       "elona.equip_melee"
@@ -146,6 +146,12 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = 5,
          damage_bonus = 4,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.long_sword",
+         dice_x = 2,
+         dice_y = 8,
+         pierce_rate = 5,
       }
    }
 }
@@ -157,21 +163,16 @@ data:add {
    image = "elona.item_long_sword",
    value = 40000,
    weight = 2200,
-   dice_x = 4,
-   dice_y = 8,
    material = "elona.steel",
    level = 40,
    fltselect = 3,
    coefficient = 100,
-
-   skill = "elona.long_sword",
 
    is_precious = true,
    identify_difficulty = 500,
    quality = Enum.Quality.Unique,
 
    color = { 155, 154, 153 },
-   pierce_rate = 10,
 
    medal_value = 65,
    categories = {
@@ -195,6 +196,12 @@ data:add {
          damage_bonus = 8,
          dv = -3,
          pv = 2,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.long_sword",
+         dice_x = 4,
+         dice_y = 8,
+         pierce_rate = 10,
       }
    }
 }
@@ -206,21 +213,16 @@ data:add {
    image = "elona.item_zantetsu",
    value = 40000,
    weight = 1400,
-   dice_x = 7,
-   dice_y = 7,
    material = "elona.silver",
    level = 30,
    fltselect = 2,
    coefficient = 100,
-
-   skill = "elona.long_sword",
 
    is_precious = true,
    identify_difficulty = 500,
    quality = Enum.Quality.Unique,
 
    color = { 175, 175, 255 },
-   pierce_rate = 25,
 
    categories = {
       "elona.equip_melee_long_sword",
@@ -240,6 +242,12 @@ data:add {
       [IItemEquipment] = {
          equip_slots = { "elona.hand" },
          hit_bonus = 4,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.long_sword",
+         dice_x = 7,
+         dice_y = 7,
+         pierce_rate = 25,
       }
    }
 }
@@ -251,21 +259,16 @@ data:add {
    image = "elona.item_long_sword",
    value = 60000,
    weight = 4000,
-   dice_x = 3,
-   dice_y = 13,
    material = "elona.obsidian",
    level = 50,
    fltselect = 3,
    coefficient = 100,
-
-   skill = "elona.long_sword",
 
    is_precious = true,
    identify_difficulty = 500,
    quality = Enum.Quality.Unique,
 
    color = { 175, 175, 255 },
-   pierce_rate = 15,
 
    categories = {
       "elona.equip_melee_long_sword",
@@ -290,6 +293,12 @@ data:add {
          damage_bonus = 5,
          dv = -4,
          pv = 4,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.long_sword",
+         dice_x = 3,
+         dice_y = 13,
+         pierce_rate = 15,
       }
    }
 }
@@ -301,21 +310,16 @@ data:add {
    image = "elona.item_long_sword",
    value = 20000,
    weight = 4200,
-   dice_x = 2,
-   dice_y = 18,
    material = "elona.obsidian",
    level = 30,
    fltselect = 3,
    coefficient = 100,
-
-   skill = "elona.long_sword",
 
    is_precious = true,
    identify_difficulty = 500,
    quality = Enum.Quality.Unique,
 
    color = { 155, 154, 153 },
-   pierce_rate = 20,
    categories = {
       "elona.equip_melee_long_sword",
       "elona.unique_item",
@@ -334,6 +338,12 @@ data:add {
          damage_bonus = 3,
          dv = -1,
          pv = 1,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.long_sword",
+         dice_x = 2,
+         dice_y = 18,
+         pierce_rate = 20,
       }
    }
 }
@@ -345,13 +355,9 @@ data:add {
    image = "elona.item_katana",
    value = 500,
    weight = 1200,
-   dice_x = 4,
-   dice_y = 4,
    material = "elona.metal",
    coefficient = 100,
 
-   skill = "elona.long_sword",
-   pierce_rate = 20,
    categories = {
       "elona.equip_melee_long_sword",
       "elona.equip_melee"
@@ -361,6 +367,12 @@ data:add {
       [IItemEquipment] = {
          equip_slots = { "elona.hand" },
          damage_bonus = 6,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.long_sword",
+         dice_x = 4,
+         dice_y = 4,
+         pierce_rate = 20,
       }
    }
 }
@@ -372,21 +384,16 @@ data:add {
    image = "elona.item_zantetsu",
    value = 40000,
    weight = 2500,
-   dice_x = 6,
-   dice_y = 6,
    material = "elona.obsidian",
    level = 25,
    fltselect = 2,
    coefficient = 100,
-
-   skill = "elona.long_sword",
 
    is_precious = true,
    identify_difficulty = 500,
    quality = Enum.Quality.Unique,
 
    color = { 255, 155, 155 },
-   pierce_rate = 20,
 
    categories = {
       "elona.equip_melee_long_sword",
@@ -407,6 +414,12 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = 3,
          damage_bonus = 2,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.long_sword",
+         dice_x = 6,
+         dice_y = 6,
+         pierce_rate = 20,
       }
    }
 }
@@ -418,15 +431,11 @@ data:add {
    image = "elona.item_lightsabre",
    value = 4800,
    weight = 600,
-   dice_x = 2,
-   dice_y = 5,
    material = "elona.ether",
    rarity = 2000,
    coefficient = 100,
    random_color = "Furniture",
 
-   skill = "elona.long_sword",
-   pierce_rate = 100,
    categories = {
       "elona.equip_melee_long_sword",
       "elona.equip_melee"
@@ -436,6 +445,12 @@ data:add {
    _ext = {
       [IItemEquipment] = {
          equip_slots = { "elona.hand" },
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.long_sword",
+         dice_x = 2,
+         dice_y = 5,
+         pierce_rate = 100,
       }
    }
 }
@@ -451,13 +466,9 @@ data:add {
    image = "elona.item_dagger",
    value = 500,
    weight = 600,
-   dice_x = 2,
-   dice_y = 5,
    material = "elona.metal",
    coefficient = 100,
 
-   skill = "elona.short_sword",
-   pierce_rate = 10,
    categories = {
       "elona.equip_melee_short_sword",
       "elona.equip_melee"
@@ -469,6 +480,12 @@ data:add {
          hit_bonus = 9,
          damage_bonus = 4,
          dv = 4,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.short_sword",
+         dice_x = 2,
+         dice_y = 5,
+         pierce_rate = 10,
       }
    }
 }
@@ -480,21 +497,16 @@ data:add {
    image = "elona.item_dagger",
    value = 60000,
    weight = 600,
-   dice_x = 5,
-   dice_y = 5,
    material = "elona.ether",
    level = 40,
    fltselect = 2,
    coefficient = 100,
-
-   skill = "elona.short_sword",
 
    is_precious = true,
    identify_difficulty = 500,
    quality = Enum.Quality.Unique,
 
    color = { 175, 175, 255 },
-   pierce_rate = 20,
    categories = {
       "elona.equip_melee_short_sword",
       "elona.unique_weapon",
@@ -516,6 +528,12 @@ data:add {
          damage_bonus = 8,
          dv = 4,
          pv = 6,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.short_sword",
+         dice_x = 5,
+         dice_y = 5,
+         pierce_rate = 20,
       }
    }
 }
@@ -527,13 +545,9 @@ data:add {
    image = "elona.item_scimitar",
    value = 500,
    weight = 900,
-   dice_x = 3,
-   dice_y = 4,
    material = "elona.metal",
    coefficient = 100,
 
-   skill = "elona.short_sword",
-   pierce_rate = 10,
    categories = {
       "elona.equip_melee_short_sword",
       "elona.equip_melee"
@@ -545,6 +559,12 @@ data:add {
          hit_bonus = 7,
          damage_bonus = 3,
          dv = 2,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.short_sword",
+         dice_x = 3,
+         dice_y = 4,
+         pierce_rate = 10,
       }
    }
 }
@@ -556,13 +576,9 @@ data:add {
    image = "elona.item_wakizashi",
    value = 500,
    weight = 700,
-   dice_x = 4,
-   dice_y = 4,
    material = "elona.metal",
    coefficient = 100,
 
-   skill = "elona.short_sword",
-   pierce_rate = 5,
    categories = {
       "elona.equip_melee_short_sword",
       "elona.equip_melee"
@@ -574,6 +590,12 @@ data:add {
          hit_bonus = 6,
          damage_bonus = 5,
          dv = 1,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.short_sword",
+         dice_x = 4,
+         dice_y = 4,
+         pierce_rate = 5,
       }
    }
 }
@@ -585,21 +607,16 @@ data:add {
    image = "elona.item_dagger",
    value = 35000,
    weight = 400,
-   dice_x = 4,
-   dice_y = 6,
    material = "elona.mica",
    level = 60,
    fltselect = 3,
    coefficient = 100,
-
-   skill = "elona.short_sword",
 
    is_precious = true,
    identify_difficulty = 500,
    quality = Enum.Quality.Unique,
 
    color = { 255, 215, 175 },
-   pierce_rate = 10,
 
    categories = {
       "elona.equip_melee_short_sword",
@@ -623,6 +640,12 @@ data:add {
          pv = 13,
          hit_bonus = 13,
          damage_bonus = 18,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.short_sword",
+         dice_x = 4,
+         dice_y = 6,
+         pierce_rate = 10,
       }
    }
 }
@@ -634,14 +657,10 @@ data:add {
    image = "elona.item_kitchen_knife",
    value = 2400,
    weight = 400,
-   dice_x = 1,
-   dice_y = 14,
    material = "elona.metal",
    rarity = 50000,
    coefficient = 100,
 
-   skill = "elona.short_sword",
-   pierce_rate = 40,
    categories = {
       "elona.equip_melee_short_sword",
       "elona.equip_melee"
@@ -652,6 +671,12 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = 5,
          damage_bonus = 1,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.short_sword",
+         dice_x = 1,
+         dice_y = 14,
+         pierce_rate = 40,
       }
    }
 }
@@ -667,12 +692,8 @@ data:add {
    image = "elona.item_club",
    value = 500,
    weight = 1000,
-   dice_x = 3,
-   dice_y = 4,
    material = "elona.metal",
    coefficient = 100,
-
-   skill = "elona.blunt",
 
    categories = {
       "elona.equip_melee_club",
@@ -684,6 +705,11 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = 4,
          damage_bonus = 7,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.blunt",
+         dice_x = 3,
+         dice_y = 4,
       }
    }
 }
@@ -695,14 +721,10 @@ data:add {
    image = "elona.item_club",
    value = 30000,
    weight = 1800,
-   dice_x = 3,
-   dice_y = 5,
    material = "elona.iron",
    level = 30,
    fltselect = 3,
    coefficient = 100,
-
-   skill = "elona.blunt",
 
    is_precious = true,
    identify_difficulty = 500,
@@ -732,6 +754,11 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = 8,
          damage_bonus = 22,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.blunt",
+         dice_x = 3,
+         dice_y = 5,
       }
    }
 }
@@ -747,12 +774,8 @@ data:add {
    image = "elona.item_hammer",
    value = 500,
    weight = 4200,
-   dice_x = 2,
-   dice_y = 13,
    material = "elona.metal",
    coefficient = 100,
-
-   skill = "elona.blunt",
 
    categories = {
       "elona.equip_melee_hammer",
@@ -764,6 +787,11 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = -3,
          damage_bonus = 4,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.blunt",
+         dice_x = 2,
+         dice_y = 13,
       }
    }
 }
@@ -775,14 +803,10 @@ data:add {
    image = "elona.item_hammer",
    value = 35000,
    weight = 6500,
-   dice_x = 2,
-   dice_y = 30,
    material = "elona.adamantium",
    level = 60,
    fltselect = 3,
    coefficient = 100,
-
-   skill = "elona.blunt",
 
    is_precious = true,
    identify_difficulty = 500,
@@ -811,6 +835,11 @@ data:add {
          equip_slots = { "elona.hand" },
          damage_bonus = 2,
          hit_bonus = -3,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.blunt",
+         dice_x = 2,
+         dice_y = 30,
       }
    }
 }
@@ -826,12 +855,8 @@ data:add {
    image = "elona.item_staff",
    value = 500,
    weight = 900,
-   dice_x = 1,
-   dice_y = 8,
    material = "elona.metal",
    coefficient = 100,
-
-   skill = "elona.stave",
 
    categories = {
       "elona.equip_melee_staff",
@@ -844,6 +869,11 @@ data:add {
          hit_bonus = 4,
          damage_bonus = 3,
          dv = 4,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.stave",
+         dice_x = 1,
+         dice_y = 8,
       }
    }
 }
@@ -855,12 +885,8 @@ data:add {
    image = "elona.item_long_staff",
    value = 500,
    weight = 800,
-   dice_x = 2,
-   dice_y = 5,
    material = "elona.metal",
    coefficient = 100,
-
-   skill = "elona.stave",
 
    categories = {
       "elona.equip_melee_staff",
@@ -873,6 +899,11 @@ data:add {
          hit_bonus = 3,
          damage_bonus = 4,
          dv = 4,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.stave",
+         dice_x = 2,
+         dice_y = 5,
       }
    }
 }
@@ -884,14 +915,10 @@ data:add {
    image = "elona.item_staff",
    value = 30000,
    weight = 2500,
-   dice_x = 1,
-   dice_y = 8,
    material = "elona.obsidian",
    level = 35,
    fltselect = 3,
    coefficient = 100,
-
-   skill = "elona.stave",
 
    is_precious = true,
    identify_difficulty = 500,
@@ -919,6 +946,11 @@ data:add {
          pv = 3,
          hit_bonus = -5,
          damage_bonus = 2,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.stave",
+         dice_x = 1,
+         dice_y = 8,
       }
    }
 }
@@ -930,14 +962,10 @@ data:add {
    image = "elona.item_staff",
    value = 35000,
    weight = 900,
-   dice_x = 1,
-   dice_y = 14,
    material = "elona.obsidian",
    level = 60,
    fltselect = 3,
    coefficient = 100,
-
-   skill = "elona.stave",
 
    is_precious = true,
    identify_difficulty = 500,
@@ -970,6 +998,11 @@ data:add {
          pv = 4,
          hit_bonus = 6,
          damage_bonus = 2,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.stave",
+         dice_x = 1,
+         dice_y = 14,
       }
    }
 }
@@ -985,13 +1018,9 @@ data:add {
    image = "elona.item_spear",
    value = 500,
    weight = 2500,
-   dice_x = 3,
-   dice_y = 5,
    material = "elona.metal",
    coefficient = 100,
 
-   skill = "elona.polearm",
-   pierce_rate = 25,
    categories = {
       "elona.equip_melee_lance",
       "elona.equip_melee"
@@ -1003,6 +1032,12 @@ data:add {
          hit_bonus = 2,
          damage_bonus = 4,
          dv = 3,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.polearm",
+         dice_x = 3,
+         dice_y = 5,
+         pierce_rate = 25,
       }
    }
 }
@@ -1014,13 +1049,9 @@ data:add {
    image = "elona.item_trident",
    value = 500,
    weight = 1800,
-   dice_x = 4,
-   dice_y = 4,
    material = "elona.metal",
    coefficient = 100,
 
-   skill = "elona.polearm",
-   pierce_rate = 25,
    categories = {
       "elona.equip_melee_lance",
       "elona.equip_melee"
@@ -1032,6 +1063,12 @@ data:add {
          hit_bonus = 1,
          damage_bonus = 3,
          dv = 3,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.polearm",
+         dice_x = 4,
+         dice_y = 4,
+         pierce_rate = 25,
       }
    }
 }
@@ -1043,21 +1080,16 @@ data:add {
    image = "elona.item_halberd",
    value = 30000,
    weight = 2000,
-   dice_x = 8,
-   dice_y = 4,
    material = "elona.iron",
    level = 35,
    fltselect = 3,
    coefficient = 100,
-
-   skill = "elona.polearm",
 
    is_precious = true,
    identify_difficulty = 500,
    quality = Enum.Quality.Unique,
 
    color = { 255, 155, 155 },
-   pierce_rate = 40,
 
    categories = {
       "elona.equip_melee_lance",
@@ -1079,6 +1111,12 @@ data:add {
          hit_bonus = 2,
          damage_bonus = 11,
          dv = 6,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.polearm",
+         dice_x = 8,
+         dice_y = 4,
+         pierce_rate = 40,
       }
    }
 }
@@ -1090,19 +1128,14 @@ data:add {
    image = "elona.item_holy_lance",
    value = 35000,
    weight = 4400,
-   dice_x = 7,
-   dice_y = 5,
    material = "elona.silver",
    level = 60,
    fltselect = 3,
    coefficient = 100,
 
-   skill = "elona.polearm",
-
    is_precious = true,
    identify_difficulty = 500,
    quality = Enum.Quality.Unique,
-   pierce_rate = 30,
 
    categories = {
       "elona.equip_melee_lance",
@@ -1125,6 +1158,12 @@ data:add {
          hit_bonus = 12,
          damage_bonus = 11,
          dv = 4,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.polearm",
+         dice_x = 7,
+         dice_y = 5,
+         pierce_rate = 30,
       }
    }
 }
@@ -1140,13 +1179,9 @@ data:add {
    image = "elona.item_halberd",
    value = 500,
    weight = 3800,
-   dice_x = 2,
-   dice_y = 10,
    material = "elona.metal",
    coefficient = 100,
 
-   skill = "elona.polearm",
-   pierce_rate = 30,
    categories = {
       "elona.equip_melee_halberd",
       "elona.equip_melee"
@@ -1157,6 +1192,12 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = -2,
          damage_bonus = 1,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.polearm",
+         dice_x = 2,
+         dice_y = 10,
+         pierce_rate = 30,
       }
    }
 }
@@ -1172,12 +1213,8 @@ data:add {
    image = "elona.item_hand_axe",
    value = 500,
    weight = 900,
-   dice_x = 2,
-   dice_y = 9,
    material = "elona.metal",
    coefficient = 100,
-
-   skill = "elona.axe",
 
    categories = {
       "elona.equip_melee_hand_axe",
@@ -1189,6 +1226,11 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = 4,
          damage_bonus = 5,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.axe",
+         dice_x = 2,
+         dice_y = 9,
       }
    }
 }
@@ -1204,12 +1246,8 @@ data:add {
    image = "elona.item_battle_axe",
    value = 500,
    weight = 3700,
-   dice_x = 1,
-   dice_y = 18,
    material = "elona.metal",
    coefficient = 100,
-
-   skill = "elona.axe",
 
    categories = {
       "elona.equip_melee_axe",
@@ -1221,6 +1259,11 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = -1,
          damage_bonus = 3,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.axe",
+         dice_x = 1,
+         dice_y = 18,
       }
    }
 }
@@ -1232,12 +1275,8 @@ data:add {
    image = "elona.item_bardiche",
    value = 500,
    weight = 3500,
-   dice_x = 1,
-   dice_y = 20,
    material = "elona.metal",
    coefficient = 100,
-
-   skill = "elona.axe",
 
    categories = {
       "elona.equip_melee_axe",
@@ -1249,6 +1288,11 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = -1,
          damage_bonus = 5,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.axe",
+         dice_x = 1,
+         dice_y = 20,
       }
    }
 }
@@ -1260,14 +1304,10 @@ data:add {
    image = "elona.item_bardiche",
    value = 50000,
    weight = 14000,
-   dice_x = 1,
-   dice_y = 70,
    material = "elona.rubynus",
    level = 30,
    fltselect = 3,
    coefficient = 100,
-
-   skill = "elona.axe",
 
    is_precious = true,
    identify_difficulty = 500,
@@ -1291,6 +1331,11 @@ data:add {
       [IItemEquipment] = {
          equip_slots = { "elona.hand" },
          hit_bonus = -35,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.axe",
+         dice_x = 1,
+         dice_y = 70,
       }
    }
 }
@@ -1306,21 +1351,16 @@ data:add {
    image = "elona.item_scythe",
    value = 50000,
    weight = 9000,
-   dice_x = 1,
-   dice_y = 44,
    material = "elona.iron",
    level = 35,
    fltselect = 3,
    coefficient = 100,
-
-   skill = "elona.scythe",
 
    is_precious = true,
    identify_difficulty = 500,
    quality = Enum.Quality.Unique,
 
    color = { 255, 155, 155 },
-   pierce_rate = 15,
 
    categories = {
       "elona.equip_melee_scythe",
@@ -1341,6 +1381,12 @@ data:add {
       [IItemEquipment] = {
          equip_slots = { "elona.hand" },
          damage_bonus = 4,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.scythe",
+         dice_x = 1,
+         dice_y = 44,
+         pierce_rate = 15,
       }
    }
 }
@@ -1352,14 +1398,9 @@ data:add {
    image = "elona.item_scythe",
    value = 500,
    weight = 1400,
-   dice_x = 2,
-   dice_y = 5,
    material = "elona.metal",
    coefficient = 100,
 
-   skill = "elona.scythe",
-
-   pierce_rate = 5,
    categories = {
       "elona.equip_melee_scythe",
       "elona.equip_melee"
@@ -1374,6 +1415,12 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = 2,
          damage_bonus = 10,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.scythe",
+         dice_x = 2,
+         dice_y = 5,
+         pierce_rate = 5,
       }
    }
 }
@@ -1385,21 +1432,16 @@ data:add {
    image = "elona.item_scythe",
    value = 35000,
    weight = 850,
-   dice_x = 1,
-   dice_y = 38,
    material = "elona.spirit_cloth",
    level = 60,
    fltselect = 3,
    coefficient = 100,
-
-   skill = "elona.scythe",
 
    is_precious = true,
    identify_difficulty = 500,
    quality = Enum.Quality.Unique,
 
    color = { 175, 255, 175 },
-   pierce_rate = 15,
 
    categories = {
       "elona.equip_melee_scythe",
@@ -1423,6 +1465,12 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = 5,
          damage_bonus = 2,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.scythe",
+         dice_x = 1,
+         dice_y = 38,
+         pierce_rate = 15,
       }
    }
 }
@@ -1434,13 +1482,9 @@ data:add {
    image = "elona.item_scythe",
    value = 500,
    weight = 4000,
-   dice_x = 1,
-   dice_y = 17,
    material = "elona.metal",
    coefficient = 100,
 
-   skill = "elona.scythe",
-   pierce_rate = 5,
    categories = {
       "elona.equip_melee_scythe",
       "elona.equip_melee"
@@ -1455,6 +1499,12 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = 3,
          damage_bonus = 4,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.scythe",
+         dice_x = 1,
+         dice_y = 17,
+         pierce_rate = 5,
       }
    }
 }
@@ -1466,19 +1516,14 @@ data:add {
    image = "elona.item_staff",
    value = 30000,
    weight = 376500,
-   dice_x = 25,
-   dice_y = 16,
    material = "elona.ether",
    level = 99,
    fltselect = 3,
    coefficient = 100,
 
-   skill = "elona.scythe",
-
    is_precious = true,
    identify_difficulty = 500,
    quality = Enum.Quality.Unique,
-   pierce_rate = 65,
    categories = {
       "elona.equip_melee_scythe",
       "elona.unique_item",
@@ -1500,6 +1545,12 @@ data:add {
          equip_slots = { "elona.hand" },
          hit_bonus = -460,
          damage_bonus = 32,
+      },
+      [IItemMeleeWeapon] = {
+         skill = "elona.scythe",
+         dice_x = 25,
+         dice_y = 16,
+         pierce_rate = 65,
       }
    }
 }

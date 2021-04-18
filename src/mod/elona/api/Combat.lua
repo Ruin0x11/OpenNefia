@@ -4,6 +4,10 @@ local Event = require("api.Event")
 local Rand = require("api.Rand")
 local Pos = require("api.Pos")
 local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
+local ICharaEquipStyle = require("api.chara.aspect.ICharaEquipStyle")
+local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
+local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
+local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
 
 local Combat = {}
 
@@ -14,10 +18,18 @@ local Combat = {}
 local function calc_accuracy_default(chara, weapon, attack_skill, ammo, params)
    local accuracy
 
+   local style = chara:get_aspect(ICharaEquipStyle)
+
    if weapon then
+      -- XXX: I believe that attack_skill always gets set to the weapon's skill
+      -- in vanilla. (attackSkill=iSkillRef(cw) in HSP.) With weapons now being
+      -- able to act as both a melee and ranged weapon, it's difficult to tell
+      -- which weapon skill should be used for calculating accuracy.
+      local weapon_skill = attack_skill or "elona.martial_arts"
+
       local equip = assert(weapon:get_aspect(IItemEquipment))
       accuracy = chara:skill_level("elona.stat_dexterity") / 4
-         + chara:skill_level(weapon:calc("skill") or "elona.martial_arts") / 3
+         + chara:skill_level(weapon_skill) / 3
          + chara:skill_level(attack_skill)
          + 50
          + chara:calc("hit_bonus")
@@ -32,7 +44,7 @@ local function calc_accuracy_default(chara, weapon, attack_skill, ammo, params)
          + chara:skill_level(attack_skill)
          + 50
 
-      if chara:calc("is_wielding_shield") then
+      if style:calc(chara, "is_wielding_shield") then
          accuracy = accuracy * 100 / 130
       end
 
@@ -53,16 +65,17 @@ local function mod_accuracy_for_equip_type(accuracy, chara, weapon, params)
    if params.is_ranged then
       if params.consider_distance and params.target then
          local dist = Pos.dist(chara.x, chara.y, params.target.x, params.target.y)
-         local effective_range = weapon:calc_effective_range(dist)
+         local effective_range = weapon:get_aspect(IItemRangedWeapon):calc_effective_range(weapon, dist)
          accuracy = accuracy * effective_range / 100
       end
    else
-      if chara:calc("is_wielding_two_handed") then
+      local style = chara:get_aspect(ICharaEquipStyle)
+      if style:calc(chara, "is_wielding_two_handed") then
          accuracy = accuracy + 25
          if weapon:calc("weight") >= Const.WEAPON_WEIGHT_HEAVY then
             accuracy = accuracy + chara:skill_level("elona.two_hand")
          end
-      elseif chara:calc("is_dual_wielding") then
+      elseif style:calc(chara, "is_dual_wielding") then
          if params.attack_count == 1 then
             if weapon:calc("weight") >= Const.WEAPON_WEIGHT_HEAVY then
                accuracy = accuracy - (weapon:calc("weight") - Const.WEAPON_WEIGHT_HEAVY + 400) / (10 + chara:skill_level("elona.dual_wield") / 5)
@@ -314,34 +327,44 @@ function Combat.calc_attack_hit(chara, weapon, target, attack_skill, attack_coun
    return "miss"
 end
 
-local function calc_damage_params_default(chara, weapon, target, attack_skill, ammo)
+local function calc_damage_params_default(chara, weapon, target, is_ranged, attack_skill, ammo)
    -- >>>>>>>> shade2/calculation.hsp:256 		dmgFix	= cDmg(cc) + iDmg(cw) +iLevel(cw)+(iStatu ..
    local dmgfix = chara:calc("damage_bonus") + weapon:calc_aspect(IItemEquipment, "damage_bonus") + weapon:calc("bonus")
    if weapon:is_blessed() then
       dmgfix = dmgfix + 1
    end
-   local dice_x = weapon:calc("dice_x")
-   local dice_y = weapon:calc("dice_y")
+
+   local aspect
+   if is_ranged then
+      aspect = weapon:get_aspect(IItemRangedWeapon)
+   else
+      aspect = weapon:get_aspect(IItemMeleeWeapon)
+   end
+
+   local dice_x = aspect:calc(weapon, "dice_x")
+   local dice_y = aspect:calc(weapon, "dice_y")
+   local pierce_rate = aspect:calc(weapon, "pierce_rate")
+   local weapon_skill = aspect:calc(weapon, "skill")
 
    local multiplier
    if ammo then
-      dmgfix = dmgfix + ammo:calc_aspect(IItemEquipment, "damage_bonus") + ammo:calc("dice_x") * ammo:calc("dice_y") / 2
+      local ammo_asp = ammo:get_aspect(IItemAmmo)
+      dmgfix = dmgfix + ammo:calc_aspect(IItemEquipment, "damage_bonus")
+         + ammo_asp:calc(ammo, "dice_x") * ammo_asp:calc(ammo, "dice_y") / 2
       multiplier = 0.5
          + (chara:skill_level("elona.stat_perception")
-               + chara:skill_level(weapon:calc("skill") or "elona.throwing") / 5
+               + chara:skill_level(weapon_skill) / 5
                + chara:skill_level(attack_skill) / 5
                + chara:skill_level("elona.marksman") * 3 / 2)
          / 40
    else
       multiplier = 0.6
          + (chara:skill_level("elona.stat_strength")
-               + chara:skill_level(weapon:calc("skill") or "elona.throwing") / 5
+               + chara:skill_level(weapon_skill) / 5
                + chara:skill_level(attack_skill) / 5
                + chara:skill_level("elona.tactics") * 2)
          / 40
    end
-
-   local pierce_rate = weapon:calc("pierce_rate")
 
    return {
       dmgfix = dmgfix,
@@ -357,10 +380,10 @@ local function calc_raw_damage_for_skills(result, chara, weapon, target, is_rang
    if is_ranged then
       if target then
          local dist = Pos.dist(chara.x, chara.y, target.x, target.y)
-         local effective_range = weapon:calc_effective_range(dist)
+         local effective_range = weapon:get_aspect(IItemRangedWeapon):calc_effective_range(weapon, dist)
          result.multiplier = result.multiplier * effective_range / 100
       end
-   elseif chara:calc("is_wielding_two_handed") then
+   elseif chara:calc_aspect(ICharaEquipStyle, "is_wielding_two_handed") then
       if weapon:calc("weight") >= 4000 then
          result.multiplier = result.multiplier * 1.5
       else
@@ -403,7 +426,7 @@ function Combat.calc_attack_raw_damage(chara, weapon, target, attack_skill, is_r
    if skill and skill.calc_damage_params then
       damage_params = skill:calc_damage_params(chara, weapon, target, is_ranged, ammo)
    else
-      damage_params = calc_damage_params_default(chara, weapon, target, attack_skill, ammo)
+      damage_params = calc_damage_params_default(chara, weapon, target, is_ranged, attack_skill, ammo)
    end
 
    return hook_calc_raw_damage({
