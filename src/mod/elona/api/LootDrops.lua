@@ -9,6 +9,10 @@ local Skill = require("mod.elona_sys.api.Skill")
 local FigureDrawable = require("mod.elona.api.gui.FigureDrawable")
 local CardDrawable = require("mod.elona.api.gui.CardDrawable")
 local Equipment = require("mod.elona.api.Equipment")
+local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
+local ItemFromCharaAspect = require("mod.elona.api.aspect.ItemFromCharaAspect")
+local Aspect = require("api.Aspect")
 
 local LootDrops = {}
 
@@ -47,7 +51,7 @@ function LootDrops.should_drop_player_item(item, player, map)
       return false
    end
 
-   if item:calc("is_cargo") then
+   if item:get_aspect(IItemCargo) then
       if not can_use_cargo_items(map) then
          return false
       elseif Rand.one_in(2) then
@@ -246,7 +250,7 @@ end
 
 function LootDrops.make_remains(item, chara)
    -- >>>>>>>> shade2/item_func.hsp:689 #module ...
-   item.params.chara_id = chara._id
+   item:set_aspect(IItemFromChara, Aspect.new_default(IItemFromChara, item, { chara = chara }))
    item.color = chara.color
    item.weight = chara.weight
    if item._id == "elona.corpse" then
@@ -333,23 +337,22 @@ function LootDrops.calc_loot_drops(chara, map, attacker)
    -- TODO arena
    local is_arena = false
    if not is_arena and not chara:find_role("elona.custom_chara") then
-      local chara_id = chara._id
       local chara_color = chara.color
 
       local function set_collectable_params(tag, drawable_klass)
          return function(item)
-            item.params.chara_id = chara_id
+            item:set_aspect(IItemFromChara, Aspect.new_default(IItemFromChara, item, { chara = chara }))
 
             -- special case for card/figure. the color of the chara chip displayed
             -- is changed, not the figure/card itself. (so not item.color)
-            item.params.chara_color = table.deepcopy(chara_color)
+            local chara_color = table.deepcopy(chara_color)
 
             -- TODO api to get the default image for a character (including class)
             -- :calc("image") probably shouldn't be used here
-            item.params.chara_image = chara.proto.image or chara:calc("image") or nil
+            local chara_image = chara.proto.image or chara:calc("image") or nil
 
-            if item._id == "elona.figurine" and item.params.chara_image then
-               local chip = data["base.chip"]:ensure(item.params.chara_image)
+            if item._id == "elona.figurine" and chara_image then
+               local chip = data["base.chip"]:ensure(chara_image)
                if chip.is_tall then
                   item.image = "elona.item_figurine_tall"
                end
@@ -357,7 +360,7 @@ function LootDrops.calc_loot_drops(chara, map, attacker)
 
             -- TODO preinit item.params before on_init_params, so this can get
             -- moved into the on_init_params() callback
-            item:set_drawable(tag, drawable_klass:new(item.params.chara_image, item.params.chara_color), "above", 10000)
+            item:set_drawable(tag, drawable_klass:new(chara_image, chara_color), "above", 10000)
 
             item:refresh_cell_on_map()
          end

@@ -14,6 +14,7 @@ local Enum = require("api.Enum")
 local Itemgen = require("mod.elona.api.Itemgen")
 local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local Itemname = require("mod.elona.api.Itemname")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 
 data:add_type {
    name = "wish_handler",
@@ -372,18 +373,18 @@ Event.register("elona.on_item_created_from_wish", "Adjust potion/scroll amount",
 
 local function card(wish, chara)
    local chara_id = extract_chara_id(wish)
-   -- TODO item params
-   local card = Item.create("elona.card", chara.x, chara.y, {}, chara:current_map())
-   card.params.chara_id = chara_id
+   local card = Item.create("elona.card", chara.x, chara.y,
+                            {aspects={[IItemFromChara]={chara_id=chara_id}}},
+                            chara:current_map())
    Gui.mes("wish.something_appears_from_nowhere", card)
    return true
 end
 
 local function figure(wish, chara)
    local chara_id = extract_chara_id(wish)
-   -- TODO item params
-   local figure = Item.create("elona.figurine", chara.x, chara.y, {}, chara:current_map())
-   figure.params.chara_id = chara_id
+   local figure = Item.create("elona.figurine", chara.x, chara.y,
+                              {aspects={[IItemFromChara]={chara_id=chara_id}}},
+                              chara:current_map())
    Gui.mes("wish.something_appears_from_nowhere", figure)
    return true
 end

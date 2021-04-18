@@ -1,6 +1,7 @@
 local Item = require("api.Item")
 local Shortcut = require("mod.elona.api.Shortcut")
 local Gui = require("api.Gui")
+local IItemSeed = require("mod.elona.api.aspect.IItemSeed")
 
 local Autoplant = {}
 
@@ -30,7 +31,7 @@ function Autoplant.is_autoplantable(item)
       return false
    end
 
-   if not item:has_category("elona.crop_seed") then
+   if not item:get_aspect(IItemSeed) then
       return false
    end
 

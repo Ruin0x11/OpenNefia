@@ -2,6 +2,7 @@ local global = require("mod.elona.internal.global")
 local Chara = require("api.Chara")
 local Gui = require("api.Gui")
 local ElonaQuest = require("mod.elona.api.ElonaQuest")
+local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 
 -- >>>>>>>> shade2/chat.hsp:1973 		snd sePayGold ...
 local function surrender_cost()
@@ -14,7 +15,7 @@ local function surrender()
    player.gold = player.gold - surrender_cost()
 
    for _, item in player:iter_inventory() do
-      if item.amount > 0 and item:calc("is_cargo") then
+      if item.amount > 0 and item:get_aspect(IItemCargo) then
          Gui.mes("talk.npc.common.hand_over", item)
          item:remove_ownership()
       end

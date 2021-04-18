@@ -197,10 +197,6 @@ function class.is_an(interface, obj)
    if _classes[interface] then
       local result = obj.__class == interface
       if not result then
-         local name = obj.__class
-         if type(name) == "table" then
-            name = tostring(obj.__class)
-         end
          return false
       end
 
@@ -238,6 +234,41 @@ function class.assert_is_an(interface, obj)
 
       error(string.format("%s (%s) is not an instance of %s: %s", obj, type(obj), interface, err))
    end
+end
+
+function class.implements(iface, klass_or_iface)
+   if type(iface) == "string" then
+      iface = require(iface)
+   end
+
+   if not class.is_interface(iface) then
+      return false
+   end
+
+   if class.is_class(klass_or_iface) then
+      for _, child_iface in ipairs(klass_or_iface.__interfaces) do
+         if class.implements(iface, child_iface) then
+            return true
+         end
+      end
+   end
+
+   if class.is_interface(klass_or_iface) then
+      if iface == klass_or_iface then
+         return true
+      end
+      for _, child_iface in ipairs(klass_or_iface.__parents) do
+         if class.implements(iface, child_iface) then
+            return true
+         end
+      end
+   end
+
+   return false
+end
+
+function class.assert_implements(iface, klass_or_iface)
+   assert(class.implements(iface, klass_or_iface), ("%s does not implement %s"):format(klass_or_iface, iface))
 end
 
 local function copy_all_interface_methods_to_class(klass)

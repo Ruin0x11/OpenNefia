@@ -19,6 +19,8 @@ local Input = require("api.Input")
 local Save = require("api.Save")
 local Item = require("api.Item")
 local Hunger = require("mod.elona.api.Hunger")
+local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 local ElonaItem = {}
 
@@ -224,22 +226,22 @@ end
 
 -- >>>>>>>> shade2/item.hsp:697 	if refType=fltFood : if iParam1(ci)!0{ ..
 local function init_food(item, params)
-   item.params.food_quality = item.params.food_quality or 0
+   local food = assert(item:get_aspect(IItemFood))
 
    if params.is_shop then
       if Rand.one_in(2) then
-         item.params.food_quality = 0
+         food.food_quality = 0
       else
-         item.params.food_quality = 3 + Rand.rnd(3)
+         food.food_quality = 3 + Rand.rnd(3)
       end
    end
 
-   if item.params.food_type and item.params.food_quality ~= 0 then
-      item.image = Hunger.get_food_image(item.params.food_type, item.params.food_quality)
+   if food:is_cooked_dish(item) then
+      item.image = Hunger.get_food_image(food:calc(item, "food_type"), food:calc(item, "food_quality"))
    end
 
    if item.material == "elona.fresh" then
-      item.spoilage_date = item.spoilage_hours + World.date_hours()
+      food.spoilage_date = food.spoilage_hours + World.date_hours()
    end
 end
 -- <<<<<<<< shade2/item.hsp:701 	} ..
@@ -276,8 +278,9 @@ function ElonaItem.random_furniture_color()
 end
 
 function ElonaItem.default_item_image(item)
-   if item.params.food_type and item.params.food_quality ~= 0 then
-      return Hunger.get_food_image(item.params.food_type, item.params.food_quality)
+   local food = item:get_aspect(IItemFood)
+   if food and food:is_cooked_dish(item) then
+      return Hunger.get_food_image(food:calc(item, "food_type"), food:calc(item, "food_quality"))
    else
       return item.proto.image
    end
@@ -332,7 +335,7 @@ function ElonaItem.fix_item(item, params)
       init_container(item, params, ev_params.map)
    end
 
-   if item:has_category("elona.food") then
+   if item:get_aspect(IItemFood) then
       init_food(item, params)
    end
 
@@ -355,7 +358,7 @@ function ElonaItem.fix_item(item, params)
       item.curse_state = Enum.CurseState.Normal
    end
 
-   if item:has_category("elona.cargo") then
+   if item:get_aspect(IItemCargo) then
       item.identify_state = Enum.IdentifyState.Full
       item.curse_state = Enum.CurseState.Normal
       ItemMemory.set_known(item._id, true)

@@ -20,6 +20,8 @@ local Pos = require("api.Pos")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Log = require("api.Log")
 local Weather = require("mod.elona.api.Weather")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 
 local Effect = {}
 
@@ -504,7 +506,8 @@ function Effect.damage_item_fire(item, fireproof_blanket)
       return false
    end
 
-   if item:has_category("elona.food") and item.params.food_quality == 0 then
+   local food = item:get_aspect(IItemFood)
+   if food and not food:is_cooked(item) then
       if owner then
          Gui.mes_c_visible("item.someones_item.gets_broiled", owner, "Orange", item, owner)
       else
@@ -1110,19 +1113,22 @@ function Effect.love_miracle(chara)
       return
    end
    Gui.mes_c("misc.love_miracle.uh", "SkyBlue")
+   local params = {
+      aspects = {
+         [IItemFromChara] = {
+            chara = chara
+         }
+      }
+   }
    if Rand.one_in(2) then
-      local item = Item.create("elona.egg", chara.x, chara.y, {}, chara:current_map())
+      local item = Item.create("elona.egg", chara.x, chara.y, params, chara:current_map())
       if item then
-         item.params.chara_id = chara._id
          local weight = chara:calc("weight")
          item.weight = weight * 10 + 250
          item.value = math.clamp(math.floor(weight * weight / 10000), 200, 40000)
       end
    else
-      local item = Item.create("elona.bottle_of_milk", chara.x, chara.y, {}, chara:current_map())
-      if item then
-         item.params.chara_id = chara._id
-      end
+      local item = Item.create("elona.bottle_of_milk", chara.x, chara.y, params, chara:current_map())
    end
 
    Gui.play_sound("base.atk_elec")
@@ -1136,11 +1142,11 @@ end
 
 function Effect.is_item_about_to_spoil(item)
    -- TODO remove alive filter, as it's redundant
+   local food = item:get_aspect(IItemFood)
    return Item.is_alive(item)
       and item:calc("material") == "elona.fresh"
-      and (item.spoilage_date or 0) > 0
-      and item.spoilage_date < World.date_hours()
       and item:calc("own_state") <= Enum.OwnState.None
+      and food and food:is_about_to_rot(item)
 end
 
 function Effect.spoil_items(map)

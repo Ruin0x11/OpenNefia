@@ -16,6 +16,8 @@ local Charagen = require("mod.elona.api.Charagen")
 local Building = require("mod.elona.api.Building")
 local Inventory = require("api.Inventory")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
+local IItemMuseumValued = require("mod.elona.api.aspect.IItemMuseumValued")
 
 local ElonaBuilding = {}
 
@@ -216,9 +218,11 @@ function ElonaBuilding.update_shop_map(map)
 end
 -- <<<<<<<< shade2/map_user.hsp:616 	return ..
 
--- >>>>>>>> shade2/map_user.hsp:639 *museum_value ..
-function ElonaBuilding.calc_museum_item_value(item, seen)
-   local chara_entry = data["base.chara"]:ensure(item.params.chara_id)
+function ElonaBuilding.calc_default_museum_item_value(item, seen)
+   local chara_entry = item:get_aspect(IItemFromChara):chara_data(item)
+   if chara_entry == nil then
+      return 0
+   end
 
    local value
    if chara_entry.quality == Enum.Quality.Unique then
@@ -237,22 +241,32 @@ function ElonaBuilding.calc_museum_item_value(item, seen)
       end
    end
 
-   if seen[chara_entry._id] then
+   local chara_id = item:calc_aspect(IItemFromChara, "chara_id")
+   if chara_id and seen[chara_id] then
       value = math.min(value / 3, 15)
    end
 
-   if item._id == "elona.card" then
-      value = value / 2
+   return value
+end
+
+-- >>>>>>>> shade2/map_user.hsp:639 *museum_value ..
+function ElonaBuilding.calc_museum_item_value(item, seen)
+   local museum_valued = item:get_aspect(IItemMuseumValued)
+   local value
+   if museum_valued then
+      value = museum_valued:calc(item, "museum_value")
+      if value == nil then
+         value = museum_valued:calc_value(item, seen)
+      end
    end
 
-   return math.floor(value)
+   return math.floor(value or 0)
 end
 -- <<<<<<<< shade2/map_user.hsp:653 	return ..
 
 function ElonaBuilding.calc_museum_rank(map)
    local filter = function(item)
-      return (item._id == "elona.card" or item._id == "elona.figurine")
-         and data["base.chara"][item.params.chara_id] ~= nil
+      return item:get_aspect(IItemMuseumValued) ~= nil
    end
    local new_rank = 0
    local seen = table.set {}
@@ -260,7 +274,10 @@ function ElonaBuilding.calc_museum_rank(map)
    for _, item in Item.iter(map):filter(filter) do
       local value = ElonaBuilding.calc_museum_item_value(item, seen)
       new_rank = new_rank + value
-      seen[item.params.chara_id] = true
+      local chara_id = item:calc_aspect(IItemFromChara, "chara_id")
+      if chara_id then
+         seen[chara_id] = true
+      end
    end
    new_rank = math.max(10000 - math.sqrt(new_rank) * 100, 100)
    return math.floor(new_rank)
@@ -295,7 +312,12 @@ end
 function ElonaBuilding.ranch_generate_item(map, chara, x, y)
    local filter = {
       level = Calc.calc_object_level(chara:calc("level"), map),
-      quality = Enum.Quality.Normal
+      quality = Enum.Quality.Normal,
+      aspects = {
+         [IItemFromChara] = {
+            chara = chara
+         }
+      }
    }
 
    local item
@@ -311,7 +333,6 @@ function ElonaBuilding.ranch_generate_item(map, chara, x, y)
          total_generated = total_generated + 1
          item = Item.create("elona.egg", x, y, filter, map)
          if item then
-            item.params.chara_id = chara._id
             item.weight = chara:calc("weight") * 10 + 250
             item.value = math.floor(math.clamp(item.weight * item.weight / 10000, 200, 40000))
          end
@@ -324,16 +345,12 @@ function ElonaBuilding.ranch_generate_item(map, chara, x, y)
       if success then
          total_generated = total_generated + 1
          item = Item.create("elona.bottle_of_milk", x, y, filter, map)
-         if item then
-            item.params.chara_id = chara._id
-         end
       end
    elseif option == "shit" then
       local success = Rand.one_in(80)
       if success then
          item = Item.create("elona.shit", x, y, filter, map)
          if item then
-            item.params.chara_id = chara._id
             item.weight = chara:calc("weight") * 40 + 300
             item.value = math.floor(math.clamp(item.weight * item.weight / 5000, 1, 20000))
          end

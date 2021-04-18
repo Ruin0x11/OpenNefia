@@ -20,6 +20,7 @@ local World = require("api.World")
 local Item = require("api.Item")
 local God = require("mod.elona.api.God")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
@@ -434,10 +435,14 @@ local inv_buy = {
       ctxt.chara.gold = math.floor(ctxt.chara.gold - cost)
       ctxt.target.gold = math.floor(ctxt.target.gold + cost)
 
-      if item.spoilage_hours then
-         item.spoilage_date = World.date_hours() + item.spoilage_hours
-         if item.params.food_quality > 0 then
-            item.spoilage_date = item.spoilage_date + 72
+      local food = item:get_aspect(IItemFood)
+      if food then
+         local spoilage_hours = food:calc(item, "spoilage_hours")
+         if spoilage_hours then
+            food.spoilage_date = World.date_hours() + spoilage_hours
+            if food:is_cooked(item) then
+               food.spoilage_date = food.spoilage_date + 72
+            end
          end
       end
 
@@ -481,7 +486,8 @@ local inv_sell = {
          return false
       end
 
-      if (item.spoilage_date or 0) < 0 then
+      local food = item:get_aspect(IItemFood)
+      if food and food:is_rotten(item) then
          return false
       end
 
@@ -596,12 +602,12 @@ local inv_cook = {
    window_title = "ui.inventory_command.cook",
    query_text = "ui.inv.title.cook",
    filter = function(ctxt, item)
-      if not item:has_category("elona.food") then
+      local food = item:get_aspect(IItemFood)
+      if not food then
          return false
       end
 
-      if (item.params.food_quality or 0) > 0  then
-         -- Item is already cooked.
+      if food:is_cooked(item) then
          return false
       end
 
@@ -963,10 +969,6 @@ local inv_put_food_container = {
 
       local result = Action.put_in_container(ctxt.container, item, amount, ctxt.params.container_item)
 
-      if item.spoilage_date and item.spoilage_date >= 0 and item.spoilage_hours then
-         item.spoilage_date = 0
-      end
-
       return "inventory_continue"
    end
 }
@@ -1162,7 +1164,7 @@ local inv_put_four_dimensional_pocket = {
          return "inventory_continue"
       end
 
-      if item.is_cargo then
+      if item:get_aspect(IItemCargo) then
          Gui.play_sound("base.fail1")
          Gui.mes("ui.inv.put.container.cannot_hold_cargo")
          return "inventory_continue"

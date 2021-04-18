@@ -1,6 +1,10 @@
 --
 -- Remains
 --
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
+local IItemMuseumValued = require("mod.elona.api.aspect.IItemMuseumValued")
+local ItemMuseumValuedFigureAspect = require("mod.elona.api.aspect.ItemMuseumValuedFigureAspect")
+local ItemMuseumValuedCardAspect = require("mod.elona.api.aspect.ItemMuseumValuedCardAspect")
 
 data:add {
    _type = "base.item",
@@ -9,11 +13,12 @@ data:add {
    image = "elona.item_rabbits_tail",
    value = 100,
    weight = 1500,
-   category = 62000,
    coefficient = 100,
-   params = { chara_id = nil },
    categories = {
       "elona.remains"
+   },
+   _ext = {
+      IItemFromChara
    }
 }
 
@@ -24,12 +29,13 @@ data:add {
    image = "elona.item_remains_blood",
    value = 100,
    weight = 1500,
-   category = 62000,
    rarity = 200000,
    coefficient = 100,
-   params = { chara_id = nil },
    categories = {
       "elona.remains"
+   },
+   _ext = {
+      IItemFromChara
    }
 }
 
@@ -40,12 +46,13 @@ data:add {
    image = "elona.item_remains_eye",
    value = 100,
    weight = 1500,
-   category = 62000,
    rarity = 400000,
    coefficient = 100,
-   params = { chara_id = nil },
    categories = {
       "elona.remains"
+   },
+   _ext = {
+      IItemFromChara
    }
 }
 
@@ -56,12 +63,13 @@ data:add {
    image = "elona.item_remains_heart",
    value = 100,
    weight = 1500,
-   category = 62000,
    rarity = 100000,
    coefficient = 100,
-   params = { chara_id = nil },
    categories = {
       "elona.remains"
+   },
+   _ext = {
+      IItemFromChara
    }
 }
 
@@ -72,11 +80,12 @@ data:add {
    image = "elona.item_remains_bone",
    value = 100,
    weight = 1500,
-   category = 62000,
    coefficient = 100,
-   params = { chara_id = nil },
    categories = {
       "elona.remains"
+   },
+   _ext = {
+      IItemFromChara
    }
 }
 
@@ -92,14 +101,18 @@ data:add {
    value = 1000,
    weight = 2500,
    fltselect = 1,
-   category = 62000,
    rarity = 100000,
    coefficient = 100,
-   params = { chara_id = nil },
    categories = {
       "elona.remains",
       "elona.no_generate"
    },
+   _ext = {
+      IItemFromChara,
+      [IItemMuseumValued] = {
+         _impl = ItemMuseumValuedFigureAspect
+      }
+   }
 }
 
 data:add {
@@ -110,12 +123,16 @@ data:add {
    value = 500,
    weight = 200,
    fltselect = 1,
-   category = 62000,
    rarity = 100000,
    coefficient = 100,
-   params = { chara_id = nil },
    categories = {
       "elona.remains",
       "elona.no_generate"
+   },
+   _ext = {
+      IItemFromChara,
+      [IItemMuseumValued] = {
+         _impl = ItemMuseumValuedCardAspect
+      }
    }
 }

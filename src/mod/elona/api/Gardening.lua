@@ -9,6 +9,7 @@ local I18N = require("api.I18N")
 local Chara = require("api.Chara")
 local Save = require("api.Save")
 local Weather = require("mod.elona.api.Weather")
+local IItemSeed = require("mod.elona.api.aspect.IItemSeed")
 
 local Gardening = {}
 
@@ -31,7 +32,13 @@ function Gardening.plant_seed(seed, chara, x, y)
    end
 
    local is_crop_tile = map:tile(x, y).role == Enum.TileRole.Crop
-   local plant_id = seed.params.seed_plant_id
+
+   local seed_aspect = seed:get_aspect(IItemSeed)
+   if not seed_aspect then
+      Gui.mes("action.plant.cannot_plant_it_here")
+      return false
+   end
+   local plant_id = seed_aspect:calc(seed, "plant_id")
    data["elona.plant"]:ensure(plant_id)
 
    local plant = assert(Feat.create("elona.plant", x, y, { force = true }, map))

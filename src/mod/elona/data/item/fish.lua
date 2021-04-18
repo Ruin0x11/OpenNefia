@@ -1,3 +1,5 @@
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
+
 --
 -- Edible Fish
 --
@@ -11,16 +13,19 @@ data:add {
    weight = 350,
    material = "elona.fresh",
    level = 3,
-   category = 57000,
    rarity = 5000000,
    coefficient = 100,
-
-   params = { food_type = "elona.fish" },
-   spoilage_hours = 6,
 
    categories = {
       "elona.food",
       "elona.offering_fish"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fish",
+         spoilage_hours = 6
+      }
    }
 }
 
@@ -33,12 +38,8 @@ data:add {
    weight = 800,
    material = "elona.fresh",
    level = 12,
-   category = 57000,
    rarity = 500000,
    coefficient = 100,
-
-   params = { food_type = "elona.fish" },
-   spoilage_hours = 4,
 
    tags = { "fish" },
    rftags = { "fish" },
@@ -46,6 +47,13 @@ data:add {
       "elona.tag_fish",
       "elona.food",
       "elona.offering_fish",
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fish",
+         spoilage_hours = 4
+      }
    }
 }
 
@@ -58,12 +66,8 @@ data:add {
    weight = 1250,
    material = "elona.fresh",
    level = 15,
-   category = 57000,
    rarity = 300000,
    coefficient = 100,
-
-   params = { food_type = "elona.fish" },
-   spoilage_hours = 4,
 
    tags = { "fish" },
    rftags = { "fish" },
@@ -71,6 +75,13 @@ data:add {
       "elona.tag_fish",
       "elona.food",
       "elona.offering_fish",
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fish",
+         spoilage_hours = 4
+      }
    }
 }
 
@@ -83,12 +94,8 @@ data:add {
    weight = 900,
    material = "elona.fresh",
    level = 10,
-   category = 57000,
    rarity = 400000,
    coefficient = 100,
-
-   params = { food_type = "elona.fish" },
-   spoilage_hours = 4,
 
    tags = { "fish" },
    rftags = { "fish" },
@@ -96,6 +103,13 @@ data:add {
       "elona.tag_fish",
       "elona.food",
       "elona.offering_fish",
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fish",
+         spoilage_hours = 4
+      }
    }
 }
 
@@ -108,12 +122,8 @@ data:add {
    weight = 2400,
    material = "elona.fresh",
    level = 17,
-   category = 57000,
    rarity = 200000,
    coefficient = 100,
-
-   params = { food_type = "elona.fish" },
-   spoilage_hours = 4,
 
    tags = { "fish" },
    rftags = { "fish" },
@@ -121,6 +131,13 @@ data:add {
       "elona.tag_fish",
       "elona.food",
       "elona.offering_fish",
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fish",
+         spoilage_hours = 4
+      }
    }
 }
 
@@ -133,11 +150,7 @@ data:add {
    weight = 800,
    material = "elona.fresh",
    level = 3,
-   category = 57000,
    coefficient = 100,
-
-   params = { food_type = "elona.fish" },
-   spoilage_hours = 4,
 
    tags = { "fish" },
    rftags = { "fish" },
@@ -145,6 +158,13 @@ data:add {
       "elona.tag_fish",
       "elona.food",
       "elona.offering_fish",
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fish",
+         spoilage_hours = 4
+      }
    }
 }
 
@@ -157,11 +177,7 @@ data:add {
    weight = 600,
    material = "elona.fresh",
    level = 3,
-   category = 57000,
    coefficient = 100,
-
-   params = { food_type = "elona.fish" },
-   spoilage_hours = 4,
 
    tags = { "fish" },
    rftags = { "fish" },
@@ -169,6 +185,13 @@ data:add {
       "elona.tag_fish",
       "elona.food",
       "elona.offering_fish",
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fish",
+         spoilage_hours = 4
+      }
    }
 }
 
@@ -181,12 +204,8 @@ data:add {
    weight = 550,
    material = "elona.fresh",
    level = 5,
-   category = 57000,
    rarity = 600000,
    coefficient = 100,
-
-   params = { food_type = "elona.fish" },
-   spoilage_hours = 4,
 
    tags = { "fish" },
    rftags = { "fish" },
@@ -194,6 +213,13 @@ data:add {
       "elona.tag_fish",
       "elona.food",
       "elona.offering_fish",
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fish",
+         spoilage_hours = 4
+      }
    }
 }
 
@@ -206,12 +232,8 @@ data:add {
    weight = 700,
    material = "elona.fresh",
    level = 7,
-   category = 57000,
    rarity = 500000,
    coefficient = 100,
-
-   params = { food_type = "elona.fish" },
-   spoilage_hours = 4,
 
    tags = { "fish" },
    rftags = { "fish" },
@@ -219,6 +241,13 @@ data:add {
       "elona.tag_fish",
       "elona.food",
       "elona.offering_fish",
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fish",
+         spoilage_hours = 4
+      }
    }
 }
 
@@ -231,12 +260,8 @@ data:add {
    weight = 600,
    material = "elona.fresh",
    level = 7,
-   category = 57000,
    rarity = 500000,
    coefficient = 100,
-
-   params = { food_type = "elona.fish" },
-   spoilage_hours = 4,
 
    tags = { "fish" },
    rftags = { "fish" },
@@ -244,6 +269,13 @@ data:add {
       "elona.tag_fish",
       "elona.food",
       "elona.offering_fish",
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fish",
+         spoilage_hours = 4
+      }
    }
 }
 
@@ -256,12 +288,8 @@ data:add {
    weight = 450,
    material = "elona.fresh",
    level = 5,
-   category = 57000,
    rarity = 600000,
    coefficient = 100,
-
-   params = { food_type = "elona.fish" },
-   spoilage_hours = 4,
 
    tags = { "fish" },
    rftags = { "fish" },
@@ -269,6 +297,13 @@ data:add {
       "elona.tag_fish",
       "elona.food",
       "elona.offering_fish",
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fish",
+         spoilage_hours = 4
+      }
    }
 }
 
@@ -282,12 +317,8 @@ data:add {
    material = "elona.fresh",
    level = 15,
    fltselect = 1,
-   category = 57000,
    rarity = 300000,
    coefficient = 100,
-
-   params = { food_type = "elona.fish", fish_id = "elona.bug" },
-   spoilage_hours = 4,
 
    rftags = { "fish" },
 
@@ -295,6 +326,13 @@ data:add {
       "elona.no_generate",
       "elona.food",
       "elona.offering_fish",
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fish",
+         spoilage_hours = 4
+      }
    }
 }
 
@@ -309,8 +347,6 @@ data:add {
    image = "elona.item_wood_piece",
    value = 10,
    weight = 120,
-   category = 64000,
-   subcategory = 64000,
    coefficient = 100,
    tags = { "fish" },
    categories = {
@@ -327,8 +363,6 @@ data:add {
    image = "elona.item_garbage",
    value = 8,
    weight = 80,
-   category = 64000,
-   subcategory = 64000,
    coefficient = 100,
    tags = { "fish" },
    categories = {
@@ -345,8 +379,6 @@ data:add {
    image = "elona.item_bomb_fish",
    value = 4,
    weight = 50,
-   category = 64000,
-   subcategory = 64000,
    coefficient = 100,
    tags = { "fish" },
    categories = {
@@ -365,7 +397,6 @@ data:add {
    weight = 1250,
    level = 15,
    fltselect = 1,
-   category = 64000,
    rarity = 300000,
    coefficient = 100,
    categories = {

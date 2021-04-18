@@ -8,6 +8,7 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Action = require("api.Action")
 local Enum = require("api.Enum")
 local God = require("mod.elona.api.God")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 function test_god_bless_water_on_altar()
    local map = InstancedMap:new(10, 10)
@@ -68,12 +69,12 @@ function test_god_kumiromi_harvest_seeds()
    player.god = "elona.kumiromi"
 
    local corpse = Item.create("elona.corpse", 5, 5, {amount=5}, player)
+   corpse:get_aspect(IItemFood).spoilage_date = 1
 
    local items = player:iter_inventory()
    Assert.eq(1, items:length())
 
    Rand.set_seed(8)
-   corpse.spoilage_date = 1
    Effect.spoil_items(map)
 
    items = player:iter_inventory()

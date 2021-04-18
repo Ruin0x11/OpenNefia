@@ -29,6 +29,8 @@ local Hunger = require("mod.elona.api.Hunger")
 local Home = require("mod.elona.api.Home")
 local IMef = require("api.mef.IMef")
 local Shortcut = require("mod.elona.api.Shortcut")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 
 local Tools = {}
 
@@ -620,7 +622,7 @@ function Tools.player_pos()
 end
 
 function Tools.make_foods(x, y)
-   local foods = data["base.item"]:iter():filter(function(i) return i.params and i.params.food_type end):extract("_id")
+   local foods = data["base.item"]:iter():filter(function(i) return i._ext and i._ext[IItemFood] end):extract("_id")
 
    for _, i, _id in foods:enumerate() do
       for quality=0, 9 do
@@ -657,7 +659,7 @@ function Tools.apply_all_buffs(type, chara, power)
 end
 
 function Tools.identify_all()
-   Item.iter():each(function(i) Effect.identify_item(i, Enum.IdentifyState.Full) end)
+   Item.iter_in_everything(Map.current()):each(function(i) Effect.identify_item(i, Enum.IdentifyState.Full) end)
 end
 
 function Tools.goto_area(area_archetype_id, floor)
@@ -953,11 +955,10 @@ end
 function Tools.museum_items()
    for _ = 1, 50 do
       local id = Rand.choice({"elona.card", "elona.figurine"})
-      local item = Item.create(id)
+      local item = Item.create(id, nil, nil, {aspects={[IItemFromChara]={chara_id=Charagen.random_chara_id_raw(100)}}})
       if not item then
          break
       end
-      item.params.chara_id = Charagen.random_chara_id_raw(100)
    end
 end
 

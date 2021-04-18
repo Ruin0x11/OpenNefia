@@ -16,6 +16,7 @@ local Filters = require("mod.elona.api.Filters")
 local light = require("mod.elona.data.item.light")
 local Inventory = require("api.Inventory")
 local World = require("api.World")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 --
 -- Chest
@@ -651,8 +652,9 @@ data:add {
 
          callback = function(self, params)
             local item = params.item
-            if item.spoilage_date and item.spoilage_date >= 0 and item.spoilage_hours then
-               item.spoilage_date = 0
+            local food = item:get_aspect(IItemFood)
+            if food and not food:is_rotten(item) and food:calc(item, "spoilage_hours") then
+               food.spoilage_date = 0
             end
          end
       },
@@ -662,8 +664,12 @@ data:add {
 
          callback = function(self, params)
             local item = params.item
-            if (item.spoilage_date or 0) >= 0 and item.spoilage_hours then
-               item.spoilage_date = World.date_hours() + item.spoilage_hours
+            local food = item:get_aspect(IItemFood)
+            if food and not food:is_rotten(item) then
+               local spoilage_hours = food:calc(item, "spoilage_hours")
+               if spoilage_hours then
+                  food.spoilage_date = World.date_hours() + food:calc(item, "spoilage_hours")
+               end
             end
          end
       },
@@ -742,8 +748,9 @@ data:add {
 
          callback = function(self, params)
             local item = params.item
-            if item.spoilage_date and item.spoilage_date >= 0 and item.spoilage_hours then
-               item.spoilage_date = 0
+            local food = item:get_aspect(IItemFood)
+            if food and not food:is_rotten(item) and food:calc(item, "spoilage_hours") then
+               food.spoilage_date = 0
             end
          end
       },
@@ -753,11 +760,15 @@ data:add {
 
          callback = function(self, params)
             local item = params.item
-            if (item.spoilage_date or 0) >= 0 and item.spoilage_hours then
-               item.spoilage_date = World.date_hours() + item.spoilage_hours
+            local food = item:get_aspect(IItemFood)
+            if food and not food:is_rotten(item) then
+               local spoilage_hours = food:calc(item, "spoilage_hours")
+               if spoilage_hours then
+                  food.spoilage_date = World.date_hours() + food:calc(item, "spoilage_hours")
+               end
             end
          end
-      },
+      }
    }
 }
 

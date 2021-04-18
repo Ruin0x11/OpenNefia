@@ -5,6 +5,9 @@ local Hunger = require("mod.elona.api.Hunger")
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
 local Chara = require("api.Chara")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
+local IItemSeed = require("mod.elona.api.aspect.IItemSeed")
 
 --
 -- Food
@@ -18,17 +21,19 @@ data:add {
    value = 60,
    weight = 100,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 64000,
    coefficient = 100,
-
-   params = { food_type = "elona.vegetable" },
-   spoilage_hours = 48,
 
    categories = {
       "elona.junk_in_field",
       "elona.food",
       "elona.offering_vegetable",
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.vegetable",
+         spoilage_hours = 48
+      }
    }
 }
 
@@ -39,15 +44,17 @@ data:add {
    image = "elona.item_api_nut",
    value = 80,
    weight = 40,
-   category = 57000,
-   subcategory = 64000,
    coefficient = 100,
-
-   params = { food_type = "elona.sweet" },
 
    categories = {
       "elona.junk_in_field",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.sweet",
+      }
    }
 }
 
@@ -58,16 +65,18 @@ data:add {
    image = "elona.item_healthy_leaf",
    value = 240,
    weight = 90,
-   category = 57000,
-   subcategory = 64000,
    coefficient = 100,
-
-   params = { food_type = "elona.vegetable" },
 
    categories = {
       "elona.junk_in_field",
       "elona.food",
       "elona.offering_vegetable",
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.vegetable",
+      }
    }
 }
 
@@ -79,19 +88,28 @@ data:add {
    value = 80,
    weight = 2000,
    material = "elona.fresh",
-   category = 57000,
    coefficient = 100,
 
-   params = { food_type = "elona.meat", chara_id = nil },
-   spoilage_hours = 4,
    gods = {
       any = true
+   },
+
+   categories = {
+      "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.meat",
+         spoilage_hours = 4
+      },
+      IItemFromChara
    },
 
    on_eat = function(self, params)
       -- >>>>>>>> shade2/item.hsp:1097 	if iId(ci)=204:if iSubName(ci)=319{ ...
       local chara = params.chara
-      if self.params.chara_id == "elona.little_sister" then
+      if self:calc_aspect(IItemFromChara, "chara_id") == "elona.little_sister" then
          Gui.mes_c("food.effect.little_sister", "Green")
          if Rand.rnd(chara:base_skill_level("elona.stat_life") ^ 2 + 1) < 2000 then
             Skill.gain_fixed_skill_exp(chara, "elona.stat_life", 1000)
@@ -116,7 +134,7 @@ data:add {
 
          callback = function(self, params, result)
             -- >>>>>>>> shade2/item.hsp:1042 	if iId(ci)=idCorpse{ ...
-            local corpse_chara_id = self.params.chara_id
+            local corpse_chara_id = self:calc_aspect(IItemFromChara, "chara_id")
             if not corpse_chara_id then
                return
             end
@@ -155,20 +173,15 @@ data:add {
          name = "itadaki-mammoth",
 
          callback = function(self)
-            if self.params.chara_id == "elona.mammoth" then
+            if self:calc_aspect(IItemFromChara, "chara_id") == "elona.mammoth" then
                Gui.mes("activity.eat.start.mammoth")
             end
          end
       }
-   },
-
-   categories = {
-      "elona.food"
    }
 }
 
 data:add {
-_type = "base.item",
    _type = "base.item",
    _id = "ration",
    elona_id = 233,
@@ -176,13 +189,16 @@ _type = "base.item",
    value = 280,
    weight = 400,
    level = 3,
-   category = 57000,
    coefficient = 100,
-
-   params = { food_quality = 3 },
 
    categories = {
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 3
+      }
    }
 }
 
@@ -194,13 +210,16 @@ data:add {
    value = 280,
    weight = 350,
    level = 3,
-   category = 57000,
    coefficient = 100,
-
-   params = { food_quality = 3 },
 
    categories = {
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 3
+      }
    }
 }
 
@@ -212,11 +231,8 @@ data:add {
    value = 440,
    weight = 200,
    level = 3,
-   category = 57000,
    rarity = 250000,
    coefficient = 100,
-
-   params = { food_quality = 5 },
 
    tags = { "sf", "fest" },
 
@@ -224,6 +240,12 @@ data:add {
       "elona.tag_sf",
       "elona.tag_fest",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 5
+      }
    }
 }
 
@@ -235,11 +257,8 @@ data:add {
    value = 350,
    weight = 180,
    level = 3,
-   category = 57000,
    rarity = 250000,
    coefficient = 100,
-
-   params = { food_quality = 6 },
 
    tags = { "sf", "fest" },
 
@@ -247,6 +266,12 @@ data:add {
       "elona.tag_sf",
       "elona.tag_fest",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 6
+      }
    }
 }
 
@@ -258,11 +283,8 @@ data:add {
    value = 750,
    weight = 500,
    level = 3,
-   category = 57000,
    rarity = 250000,
    coefficient = 100,
-
-   params = { food_quality = 7 },
 
    tags = { "sf", "fest" },
 
@@ -270,6 +292,12 @@ data:add {
       "elona.tag_sf",
       "elona.tag_fest",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 7
+      }
    }
 }
 
@@ -281,11 +309,19 @@ data:add {
    value = 640,
    weight = 450,
    level = 3,
-   category = 57000,
    rarity = 200000,
    coefficient = 100,
 
-   params = { food_quality = 5 },
+   _ext = {
+      [IItemFood] = {
+         food_quality = 5
+      },
+      IItemFromChara
+   },
+
+   categories = {
+      "elona.food"
+   },
 
    events = {
       {
@@ -294,7 +330,7 @@ data:add {
 
          callback = function(self, params, result)
             -- >>>>>>>> shade2/item.hsp:1064 	if (iId(ci)=idCorpse)or( ((iId(ci)=idJerky)or(iId ...
-            local chara = self.params.chara_id
+            local chara = self:calc_aspect(IItemFromChara, "chara_id")
             if not chara then
                return
             end
@@ -309,10 +345,6 @@ data:add {
             -- <<<<<<<< shade2/item.hsp:1066 		} ..
          end
       },
-   },
-
-   categories = {
-      "elona.food"
    }
 }
 
@@ -323,12 +355,20 @@ data:add {
    image = "elona.item_egg",
    value = 500,
    weight = 300,
-   category = 57000,
    rarity = 300000,
    coefficient = 100,
 
-   params = { food_type = "elona.egg", chara_id = nil },
-   spoilage_hours = 240,
+   categories = {
+      "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona_egg",
+         spoilage_hours = 240
+      },
+      IItemFromChara
+   },
 
    events = {
       {
@@ -337,7 +377,7 @@ data:add {
 
          callback = function(self, params, result)
             -- >>>>>>>> shade2/item.hsp:1064 	if (iId(ci)=idCorpse)or( ((iId(ci)=idJerky)or(iId ...
-            local chara = self.params.chara_id
+            local chara = self:calc_aspect(IItemFromChara, "chara_id")
             if not chara then
                return
             end
@@ -353,10 +393,6 @@ data:add {
          end
       },
    },
-
-   categories = {
-      "elona.food"
-   }
 }
 
 data:add {
@@ -367,11 +403,9 @@ data:add {
    value = 100000,
    weight = 500,
    fltselect = 3,
-   category = 57000,
    coefficient = 100,
 
    is_precious = true,
-   params = { food_quality = 7 },
    quality = Enum.Quality.Unique,
 
    color = { 175, 175, 255 },
@@ -379,6 +413,12 @@ data:add {
    categories = {
       "elona.unique_item",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 7
+      }
    },
 
    on_eat = function(self, params)
@@ -397,7 +437,6 @@ data:add {
    weight = 500,
    level = 3,
    fltselect = 1,
-   category = 57000,
    rarity = 250000,
    coefficient = 100,
 
@@ -405,7 +444,16 @@ data:add {
    is_handmade = true,
    -- <<<<<<<< shade2/item.hsp:678 	} ..
 
-   params = { food_quality = 7 },
+   categories = {
+      "elona.no_generate",
+      "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 7
+      }
+   },
 
    on_eat = function(self, params)
       -- >>>>>>>> shade2/item.hsp:1135 	if iId(ci)=idSisterLunch{ ...
@@ -413,12 +461,7 @@ data:add {
       Gui.mes("food.effect.sisters_love_fueled_lunch", chara)
       Effect.heal_insanity(chara, 30)
       -- <<<<<<<< shade2/item.hsp:1138 		} ..
-   end,
-
-   categories = {
-      "elona.no_generate",
-      "elona.food"
-   }
+   end
 }
 
 data:add {
@@ -429,11 +472,9 @@ data:add {
    value = 10000,
    weight = 150,
    fltselect = 3,
-   category = 57000,
    coefficient = 100,
 
    is_precious = true,
-   params = { food_quality = 4 },
    quality = Enum.Quality.Unique,
 
    color = { 255, 155, 155 },
@@ -441,6 +482,12 @@ data:add {
    categories = {
       "elona.unique_item",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 4
+      }
    },
 
    on_eat = function(self, params)
@@ -457,19 +504,21 @@ data:add {
    image = "elona.item_fortune_cookie",
    value = 250,
    weight = 50,
-   category = 57000,
    rarity = 400000,
    coefficient = 0,
-
-   params = { food_quality = 6 },
-
-   nutrition = 750,
 
    tags = { "fest" },
 
    categories = {
       "elona.tag_fest",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 6,
+         nutrition = 750
+      }
    },
 
    on_eat = function(self, params)
@@ -495,11 +544,19 @@ data:add {
    value = 2500,
    weight = 800,
    fltselect = 1,
-   category = 57000,
    rarity = 400000,
    coefficient = 0,
 
-   params = { food_quality = 6 },
+   categories = {
+      "elona.no_generate",
+      "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 6,
+      }
+   },
 
    on_eat = function(self, params)
       -- >>>>>>>> shade2/item.hsp:1107 	if iId(ci)=idKagamiMochi{ ...
@@ -529,11 +586,6 @@ data:add {
          end
       }
    },
-
-   categories = {
-      "elona.no_generate",
-      "elona.food"
-   }
 }
 
 data:add {
@@ -543,13 +595,21 @@ data:add {
    image = "elona.item_mochi",
    value = 800,
    weight = 350,
-   category = 57000,
    rarity = 150000,
    coefficient = 0,
 
-   params = { food_quality = 7 },
-
    tags = { "fest" },
+
+   categories = {
+      "elona.tag_fest",
+      "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 7,
+      }
+   },
 
    events = {
       {
@@ -572,11 +632,6 @@ data:add {
          end
       }
    },
-
-   categories = {
-      "elona.tag_fest",
-      "elona.food"
-   }
 }
 
 data:add {
@@ -587,15 +642,19 @@ data:add {
    value = 160,
    weight = 250,
    level = 3,
-   category = 57000,
    rarity = 50000,
    coefficient = 100,
 
    is_precious = true,
-   params = { food_quality = 8 },
    categories = {
       "elona.food"
-   }
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 8,
+      }
+   },
 }
 
 data:add {
@@ -605,18 +664,21 @@ data:add {
    image = "elona.item_bottle_of_salt",
    value = 80,
    weight = 80,
-   category = 57000,
    rarity = 100000,
    coefficient = 0,
    originalnameref2 = "bottle",
-
-   params = { food_quality = 1 },
 
    rftags = { "flavor" },
 
    categories = {
       "elona.food"
-   }
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 1,
+      }
+   },
 }
 
 data:add {
@@ -626,18 +688,21 @@ data:add {
    image = "elona.item_sack_of_sugar",
    value = 50,
    weight = 120,
-   category = 57000,
    rarity = 100000,
    coefficient = 0,
    originalnameref2 = "sack",
-
-   params = { food_quality = 4 },
 
    rftags = { "flavor" },
 
    categories = {
       "elona.food"
-   }
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 4,
+      }
+   },
 }
 
 data:add {
@@ -648,16 +713,19 @@ data:add {
    value = 350,
    weight = 350,
    level = 3,
-   category = 57000,
    rarity = 100000,
    coefficient = 100,
 
-   params = { food_quality = 5 },
-   spoilage_hours = 720,
-
    categories = {
       "elona.food"
-   }
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 5,
+         spoilage_hours = 720
+      }
+   },
 }
 
 data:add {
@@ -668,16 +736,19 @@ data:add {
    value = 2000,
    weight = 200,
    fltselect = 1,
-   category = 57000,
    rarity = 150000,
    coefficient = 0,
-
-   params = { food_quality = 8 },
 
    categories = {
       "elona.no_generate",
       "elona.food"
-   }
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 8,
+      }
+   },
 }
 
 --
@@ -692,19 +763,21 @@ data:add {
    value = 280,
    weight = 800,
    level = 3,
-   category = 57000,
-   subcategory = 57001,
    rarity = 5000000,
    coefficient = 100,
    originalnameref2 = "sack",
 
-   params = { food_type = "elona.bread" },
-   spoilage_hours = 240,
-
    categories = {
       "elona.food_flour",
       "elona.food"
-   }
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.bread",
+         spoilage_hours = 240
+      }
+   },
 }
 
 --
@@ -720,17 +793,19 @@ data:add {
    weight = 400,
    material = "elona.fresh",
    level = 3,
-   category = 57000,
-   subcategory = 57002,
    rarity = 5000000,
    coefficient = 100,
-
-   params = { food_type = "elona.pasta" },
-   spoilage_hours = 24,
 
    categories = {
       "elona.food_noodle",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.pasta",
+         spoilage_hours = 24
+      }
    }
 }
 
@@ -746,16 +821,18 @@ data:add {
    value = 80,
    weight = 160,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57003,
    coefficient = 100,
-
-   params = { food_type = "elona.fruit" },
-   spoilage_hours = 72,
 
    categories = {
       "elona.food_vegetable",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fruit",
+         spoilage_hours = 72
+      }
    }
 }
 
@@ -767,16 +844,18 @@ data:add {
    value = 70,
    weight = 170,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57003,
    coefficient = 100,
-
-   params = { food_type = "elona.fruit" },
-   spoilage_hours = 72,
 
    categories = {
       "elona.food_vegetable",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fruit",
+         spoilage_hours = 72
+      }
    }
 }
 
@@ -788,16 +867,18 @@ data:add {
    value = 80,
    weight = 620,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57003,
    coefficient = 100,
-
-   params = { food_type = "elona.fruit" },
-   spoilage_hours = 8,
 
    categories = {
       "elona.food_vegetable",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fruit",
+         spoilage_hours = 8
+      }
    }
 }
 
@@ -809,17 +890,19 @@ data:add {
    value = 40,
    weight = 420,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57003,
    coefficient = 100,
-
-   params = { food_type = "elona.vegetable" },
-   spoilage_hours = 72,
 
    categories = {
       "elona.food_vegetable",
       "elona.food",
       "elona.offering_vegetable"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.vegetable",
+         spoilage_hours = 72
+      }
    }
 }
 
@@ -831,17 +914,19 @@ data:add {
    value = 50,
    weight = 950,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57003,
    coefficient = 100,
-
-   params = { food_type = "elona.vegetable" },
-   spoilage_hours = 72,
 
    categories = {
       "elona.food_vegetable",
       "elona.food",
       "elona.offering_vegetable"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.vegetable",
+         spoilage_hours = 72
+      }
    }
 }
 
@@ -852,11 +937,7 @@ data:add {
    image = "elona.item_sweet_potato",
    value = 40,
    weight = 790,
-   category = 57000,
-   subcategory = 57003,
    coefficient = 100,
-
-   params = { food_type = "elona.vegetable" },
 
    tags = { "fest" },
 
@@ -865,6 +946,12 @@ data:add {
       "elona.tag_fest",
       "elona.food",
       "elona.offering_vegetable"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.vegetable",
+      }
    }
 }
 
@@ -876,17 +963,19 @@ data:add {
    value = 50,
    weight = 650,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57003,
    coefficient = 100,
-
-   params = { food_type = "elona.vegetable" },
-   spoilage_hours = 72,
 
    categories = {
       "elona.food_vegetable",
       "elona.food",
       "elona.offering_vegetable"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.vegetable",
+         spoilage_hours = 72
+      }
    }
 }
 
@@ -897,16 +986,18 @@ data:add {
    image = "elona.item_imo",
    value = 70,
    weight = 650,
-   category = 57000,
-   subcategory = 57003,
    coefficient = 100,
-
-   params = { food_type = "elona.vegetable" },
 
    categories = {
       "elona.food_vegetable",
       "elona.food",
       "elona.offering_vegetable"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.vegetable",
+      }
    }
 }
 
@@ -918,17 +1009,19 @@ data:add {
    value = 260,
    weight = 360,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57003,
    coefficient = 100,
-
-   params = { food_type = "elona.vegetable" },
-   spoilage_hours = 72,
 
    categories = {
       "elona.food_vegetable",
       "elona.food",
       "elona.offering_vegetable"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.vegetable",
+         spoilage_hours = 72
+      }
    }
 }
 
@@ -940,17 +1033,19 @@ data:add {
    value = 80,
    weight = 970,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57003,
    coefficient = 100,
-
-   params = { food_type = "elona.vegetable" },
-   spoilage_hours = 72,
 
    categories = {
       "elona.food_vegetable",
       "elona.food",
       "elona.offering_vegetable"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.vegetable",
+         spoilage_hours = 72
+      }
    }
 }
 
@@ -962,17 +1057,19 @@ data:add {
    value = 30,
    weight = 840,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57003,
    coefficient = 100,
-
-   params = { food_type = "elona.vegetable" },
-   spoilage_hours = 72,
 
    categories = {
       "elona.food_vegetable",
       "elona.food",
       "elona.offering_vegetable"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.vegetable",
+         spoilage_hours = 72
+      }
    }
 }
 
@@ -984,17 +1081,19 @@ data:add {
    value = 70,
    weight = 550,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57003,
    coefficient = 100,
-
-   params = { food_type = "elona.vegetable" },
-   spoilage_hours = 2,
 
    categories = {
       "elona.food_vegetable",
       "elona.food",
       "elona.offering_vegetable"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.vegetable",
+         spoilage_hours = 2
+      }
    }
 }
 
@@ -1010,15 +1109,18 @@ data:add {
    value = 180,
    weight = 720,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57004,
    coefficient = 100,
 
-   params = { food_type = "elona.fruit" },
-   spoilage_hours = 16,
    categories = {
       "elona.food_fruit",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fruit",
+         spoilage_hours = 16
+      }
    }
 }
 
@@ -1030,15 +1132,18 @@ data:add {
    value = 220,
    weight = 510,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57004,
    coefficient = 100,
 
-   params = { food_type = "elona.fruit" },
-   spoilage_hours = 16,
    categories = {
       "elona.food_fruit",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fruit",
+         spoilage_hours = 16
+      }
    }
 }
 
@@ -1050,15 +1155,18 @@ data:add {
    value = 190,
    weight = 440,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57004,
    coefficient = 100,
 
-   params = { food_type = "elona.fruit" },
-   spoilage_hours = 12,
    categories = {
       "elona.food_fruit",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fruit",
+         spoilage_hours = 12
+      }
    }
 }
 
@@ -1070,15 +1178,18 @@ data:add {
    value = 170,
    weight = 220,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57004,
    coefficient = 100,
 
-   params = { food_type = "elona.fruit" },
-   spoilage_hours = 16,
    categories = {
       "elona.food_fruit",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fruit",
+         spoilage_hours = 16
+      }
    }
 }
 
@@ -1090,16 +1201,18 @@ data:add {
    value = 260,
    weight = 720,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57004,
    coefficient = 100,
-
-   params = { food_type = "elona.fruit" },
-   spoilage_hours = 16,
 
    categories = {
       "elona.food_fruit",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fruit",
+         spoilage_hours = 16
+      }
    }
 }
 
@@ -1111,16 +1224,18 @@ data:add {
    value = 220,
    weight = 1070,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57004,
    coefficient = 100,
-
-   params = { food_type = "elona.fruit" },
-   spoilage_hours = 8,
 
    categories = {
       "elona.food_fruit",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fruit",
+         spoilage_hours = 8
+      }
    }
 }
 
@@ -1132,16 +1247,18 @@ data:add {
    value = 100,
    weight = 560,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57004,
    coefficient = 100,
-
-   params = { food_type = "elona.fruit" },
-   spoilage_hours = 12,
 
    categories = {
       "elona.food_fruit",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fruit",
+         spoilage_hours = 12
+      }
    }
 }
 
@@ -1153,16 +1270,18 @@ data:add {
    value = 130,
    weight = 880,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57004,
    coefficient = 100,
-
-   params = { food_type = "elona.fruit" },
-   spoilage_hours = 8,
 
    categories = {
       "elona.food_fruit",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fruit",
+         spoilage_hours = 8
+      }
    }
 }
 
@@ -1174,16 +1293,18 @@ data:add {
    value = 240,
    weight = 440,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57004,
    coefficient = 100,
-
-   params = { food_type = "elona.fruit" },
-   spoilage_hours = 12,
 
    categories = {
       "elona.food_fruit",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.fruit",
+         spoilage_hours = 12
+      }
    }
 }
 
@@ -1195,12 +1316,9 @@ data:add {
    value = 100000,
    weight = 720,
    fltselect = 3,
-   category = 57000,
-   subcategory = 57004,
    coefficient = 100,
 
    is_precious = true,
-   params = { food_quality = 7 },
    quality = Enum.Quality.Unique,
 
    color = { 225, 225, 255 },
@@ -1209,6 +1327,12 @@ data:add {
       "elona.food_fruit",
       "elona.unique_item",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 7
+      }
    },
 
    on_eat = function(self, params)
@@ -1226,12 +1350,9 @@ data:add {
    value = 100000,
    weight = 440,
    fltselect = 3,
-   category = 57000,
-   subcategory = 57004,
    coefficient = 100,
 
    is_precious = true,
-   params = { food_quality = 7 },
    quality = Enum.Quality.Unique,
 
    color = { 255, 155, 155 },
@@ -1240,6 +1361,12 @@ data:add {
       "elona.food_fruit",
       "elona.unique_item",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 7
+      }
    },
 
    on_eat = function(self, params)
@@ -1257,12 +1384,19 @@ data:add {
    value = 90,
    weight = 330,
    material = "elona.fresh",
-   category = 57000,
-   subcategory = 57004,
    coefficient = 100,
 
-   params = { food_type = "elona.vegetable" },
-   spoilage_hours = 32,
+   categories = {
+      "elona.food_fruit",
+      "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_type = "elona.vegetable",
+         spoilage_hours = 32
+      }
+   },
 
    on_throw = function(self, params)
       -- >>>>>>>> shade2/action.hsp:57 		if sync(tlocX,tlocY) : if iId(ci)=idSnow{ ...
@@ -1279,7 +1413,8 @@ data:add {
          if map:is_in_fov(params.x, params.y) then
             Gui.mes_c("action.throw.tomato", "Blue")
          end
-         if self.spoilage_date < 0 then
+         local food = self:get_aspect(IItemFood)
+         if food and food:is_rotten(self) then
             Gui.mes_c_visible("damage.is_engulfed_in_fury", target, "Blue")
             target:add_effect_turns("elona.fury", Rand.rnd(10) + 5)
          end
@@ -1294,11 +1429,6 @@ data:add {
       return "turn_end"
       -- <<<<<<<< shade2/action.hsp:109 		} ...            return "turn_end"
    end,
-
-   categories = {
-      "elona.food_fruit",
-      "elona.food"
-   }
 }
 
 --
@@ -1306,26 +1436,29 @@ data:add {
 --
 
 data:add {
-_type = "base.item",
    _type = "base.item",
    _id = "vegetable_seed",
    elona_id = 417,
    image = "elona.item_seed",
    value = 240,
    weight = 40,
-   on_use = function() end,
-   category = 57000,
-   subcategory = 58500,
    coefficient = 100,
-
-   params = { food_quality = 1, seed_plant_id = "elona.vegetable" },
 
    color = { 175, 255, 175 },
 
    categories = {
       "elona.crop_seed",
       "elona.food"
-   }
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 1
+      },
+      [IItemSeed] = {
+         plant_id = "elona.vegetable"
+      }
+   },
 }
 
 data:add {
@@ -1335,20 +1468,24 @@ data:add {
    image = "elona.item_seed",
    value = 280,
    weight = 40,
-   on_use = function() end,
-   category = 57000,
-   subcategory = 58500,
    rarity = 800000,
    coefficient = 100,
-
-   params = { food_quality = 1, seed_plant_id = "elona.fruit" },
 
    color = { 255, 255, 175 },
 
    categories = {
       "elona.crop_seed",
       "elona.food"
-   }
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 1
+      },
+      [IItemSeed] = {
+         plant_id = "elona.fruit"
+      }
+   },
 }
 
 data:add {
@@ -1358,20 +1495,24 @@ data:add {
    image = "elona.item_seed",
    value = 1800,
    weight = 40,
-   on_use = function() end,
-   category = 57000,
-   subcategory = 58500,
    rarity = 100000,
    coefficient = 100,
-
-   params = { food_quality = 1, seed_plant_id = "elona.herb" },
 
    color = { 175, 175, 255 },
 
    categories = {
       "elona.crop_seed",
       "elona.food"
-   }
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 1
+      },
+      [IItemSeed] = {
+         plant_id = "elona.herb"
+      }
+   },
 }
 
 data:add {
@@ -1381,19 +1522,23 @@ data:add {
    image = "elona.item_seed",
    value = 2500,
    weight = 40,
-   on_use = function() end,
-   category = 57000,
-   subcategory = 58500,
    rarity = 250000,
    coefficient = 100,
    random_color = "Furniture",
 
-   params = { food_quality = 1, seed_plant_id = "elona.unknown_plant" },
-
    categories = {
       "elona.crop_seed",
       "elona.food"
-   }
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 1
+      },
+      [IItemSeed] = {
+         plant_id = "elona.unknown_plant"
+      }
+   },
 }
 
 data:add {
@@ -1403,13 +1548,8 @@ data:add {
    image = "elona.item_seed",
    value = 120000,
    weight = 40,
-   on_use = function() end,
-   category = 57000,
-   subcategory = 58500,
    rarity = 20000,
    coefficient = 100,
-
-   params = { food_quality = 1, seed_plant_id = "elona.artifact" },
 
    tags = { "noshop", "spshop" },
    color = { 255, 215, 175 },
@@ -1419,6 +1559,15 @@ data:add {
       "elona.tag_noshop",
       "elona.tag_spshop",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 1
+      },
+      [IItemSeed] = {
+         plant_id = "elona.artifact"
+      }
    }
 }
 
@@ -1429,19 +1578,23 @@ data:add {
    image = "elona.item_seed",
    value = 4500,
    weight = 40,
-   on_use = function() end,
-   category = 57000,
-   subcategory = 58500,
    rarity = 250000,
    coefficient = 100,
-
-   params = { food_quality = 1, seed_plant_id = "elona.gem" },
 
    color = { 185, 155, 215 },
 
    categories = {
       "elona.crop_seed",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 1
+      },
+      [IItemSeed] = {
+         plant_id = "elona.gem"
+      }
    }
 }
 
@@ -1452,19 +1605,23 @@ data:add {
    image = "elona.item_seed",
    value = 3500,
    weight = 40,
-   on_use = function() end,
-   category = 57000,
-   subcategory = 58500,
    rarity = 250000,
    coefficient = 100,
-
-   params = { food_quality = 1, seed_plant_id = "elona.magical_plant" },
 
    color = { 155, 205, 205 },
 
    categories = {
       "elona.crop_seed",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 1
+      },
+      [IItemSeed] = {
+         plant_id = "elona.magical_plant"
+      }
    }
 }
 
@@ -1479,23 +1636,29 @@ data:add {
    image = "elona.item_stomafillia",
    value = 1050,
    weight = 250,
-   category = 57000,
-   subcategory = 58005,
    rarity = 80000,
    coefficient = 100,
 
-   params = { food_quality = 1 },
+   categories = {
+      "elona.crop_herb",
+      "elona.food"
+   },
 
-   nutrition = 500,
-   food_exp_gains = {
-      { _id = "elona.stat_strength", amount = 900 },
-      { _id = "elona.stat_constitution", amount = 700 },
-      { _id = "elona.stat_charisma", amount = 10 },
-      { _id = "elona.stat_magic", amount = 10 },
-      { _id = "elona.stat_dexterity", amount = 10 },
-      { _id = "elona.stat_perception", amount = 10 },
-      { _id = "elona.stat_learning", amount = 10 },
-      { _id = "elona.stat_will", amount = 10 },
+   _ext = {
+      [IItemFood] = {
+         food_quality = 1,
+         nutrition = 500,
+         exp_gains = {
+            { _id = "elona.stat_strength", amount = 900 },
+            { _id = "elona.stat_constitution", amount = 700 },
+            { _id = "elona.stat_charisma", amount = 10 },
+            { _id = "elona.stat_magic", amount = 10 },
+            { _id = "elona.stat_dexterity", amount = 10 },
+            { _id = "elona.stat_perception", amount = 10 },
+            { _id = "elona.stat_learning", amount = 10 },
+            { _id = "elona.stat_will", amount = 10 },
+         },
+      }
    },
 
    events = {
@@ -1512,11 +1675,6 @@ data:add {
          end
       }
    },
-
-   categories = {
-      "elona.crop_herb",
-      "elona.food"
-   }
 }
 
 data:add {
@@ -1526,23 +1684,24 @@ data:add {
    image = "elona.item_stomafillia",
    value = 800,
    weight = 210,
-   category = 57000,
-   subcategory = 58005,
    rarity = 80000,
    coefficient = 100,
 
-   params = { food_quality = 4 },
-
-   nutrition = 500,
-   food_exp_gains = {
-      { _id = "elona.stat_strength", amount = 10 },
-      { _id = "elona.stat_constitution", amount = 10 },
-      { _id = "elona.stat_charisma", amount = 10 },
-      { _id = "elona.stat_magic", amount = 800 },
-      { _id = "elona.stat_dexterity", amount = 10 },
-      { _id = "elona.stat_perception", amount = 10 },
-      { _id = "elona.stat_learning", amount = 10 },
-      { _id = "elona.stat_will", amount = 800 },
+   _ext = {
+      [IItemFood] = {
+         food_quality = 4,
+         nutrition = 500,
+         exp_gains = {
+            { _id = "elona.stat_strength", amount = 10 },
+            { _id = "elona.stat_constitution", amount = 10 },
+            { _id = "elona.stat_charisma", amount = 10 },
+            { _id = "elona.stat_magic", amount = 800 },
+            { _id = "elona.stat_dexterity", amount = 10 },
+            { _id = "elona.stat_perception", amount = 10 },
+            { _id = "elona.stat_learning", amount = 10 },
+            { _id = "elona.stat_will", amount = 800 },
+         },
+      }
    },
 
    events = {
@@ -1573,23 +1732,29 @@ data:add {
    image = "elona.item_stomafillia",
    value = 900,
    weight = 220,
-   category = 57000,
-   subcategory = 58005,
    rarity = 80000,
    coefficient = 100,
 
-   params = { food_quality = 3 },
+   categories = {
+      "elona.crop_herb",
+      "elona.food"
+   },
 
-   nutrition = 500,
-   food_exp_gains = {
-      { _id = "elona.stat_strength", amount = 10 },
-      { _id = "elona.stat_constitution", amount = 10 },
-      { _id = "elona.stat_charisma", amount = 10 },
-      { _id = "elona.stat_magic", amount = 10 },
-      { _id = "elona.stat_dexterity", amount = 750 },
-      { _id = "elona.stat_perception", amount = 800 },
-      { _id = "elona.stat_learning", amount = 10 },
-      { _id = "elona.stat_will", amount = 10 },
+   _ext = {
+      [IItemFood] = {
+         food_quality = 3,
+         nutrition = 500,
+         exp_gains = {
+            { _id = "elona.stat_strength", amount = 10 },
+            { _id = "elona.stat_constitution", amount = 10 },
+            { _id = "elona.stat_charisma", amount = 10 },
+            { _id = "elona.stat_magic", amount = 10 },
+            { _id = "elona.stat_dexterity", amount = 750 },
+            { _id = "elona.stat_perception", amount = 800 },
+            { _id = "elona.stat_learning", amount = 10 },
+            { _id = "elona.stat_will", amount = 10 },
+         },
+      }
    },
 
    events = {
@@ -1606,11 +1771,6 @@ data:add {
          end
       }
    },
-
-   categories = {
-      "elona.crop_herb",
-      "elona.food"
-   }
 }
 
 data:add {
@@ -1620,22 +1780,23 @@ data:add {
    image = "elona.item_stomafillia",
    value = 680,
    weight = 260,
-   category = 57000,
-   subcategory = 58005,
    coefficient = 100,
 
-   params = { food_quality = 6 },
-
-   nutrition = 2500,
-   food_exp_gains = {
-      { _id = "elona.stat_strength", amount = 100 },
-      { _id = "elona.stat_constitution", amount = 100 },
-      { _id = "elona.stat_charisma", amount = 100 },
-      { _id = "elona.stat_magic", amount = 100 },
-      { _id = "elona.stat_dexterity", amount = 100 },
-      { _id = "elona.stat_perception", amount = 100 },
-      { _id = "elona.stat_learning", amount = 100 },
-      { _id = "elona.stat_will", amount = 100 },
+   _ext = {
+      [IItemFood] = {
+         food_quality = 6,
+         nutrition = 2500,
+         exp_gains = {
+            { _id = "elona.stat_strength", amount = 100 },
+            { _id = "elona.stat_constitution", amount = 100 },
+            { _id = "elona.stat_charisma", amount = 100 },
+            { _id = "elona.stat_magic", amount = 100 },
+            { _id = "elona.stat_dexterity", amount = 100 },
+            { _id = "elona.stat_perception", amount = 100 },
+            { _id = "elona.stat_learning", amount = 100 },
+            { _id = "elona.stat_will", amount = 100 },
+         },
+      }
    },
 
    events = {
@@ -1664,24 +1825,31 @@ data:add {
    image = "elona.item_stomafillia",
    value = 1200,
    weight = 120,
-   category = 57000,
-   subcategory = 58005,
    rarity = 80000,
    coefficient = 100,
 
-   params = { food_quality = 3 },
-
-   nutrition = 500,
-   food_exp_gains = {
-      { _id = "elona.stat_strength", amount = 10 },
-      { _id = "elona.stat_constitution", amount = 10 },
-      { _id = "elona.stat_charisma", amount = 850 },
-      { _id = "elona.stat_magic", amount = 10 },
-      { _id = "elona.stat_dexterity", amount = 10 },
-      { _id = "elona.stat_perception", amount = 10 },
-      { _id = "elona.stat_learning", amount = 700 },
-      { _id = "elona.stat_will", amount = 10 },
+   categories = {
+      "elona.crop_herb",
+      "elona.food"
    },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 3,
+         nutrition = 500,
+         exp_gains = {
+            { _id = "elona.stat_strength", amount = 10 },
+            { _id = "elona.stat_constitution", amount = 10 },
+            { _id = "elona.stat_charisma", amount = 850 },
+            { _id = "elona.stat_magic", amount = 10 },
+            { _id = "elona.stat_dexterity", amount = 10 },
+            { _id = "elona.stat_perception", amount = 10 },
+            { _id = "elona.stat_learning", amount = 700 },
+            { _id = "elona.stat_will", amount = 10 },
+         },
+      }
+   },
+
    events = {
       {
          id = "elona_sys.before_item_eat",
@@ -1696,10 +1864,6 @@ data:add {
          end
       }
    },
-   categories = {
-      "elona.crop_herb",
-      "elona.food"
-   }
 }
 
 data:add {
@@ -1709,25 +1873,27 @@ data:add {
    image = "elona.item_stomafillia",
    value = 800,
    weight = 480,
-   category = 57000,
-   subcategory = 58005,
    coefficient = 100,
 
-   params = { food_quality = 7 },
-
-   nutrition = 20000,
-   food_exp_gains = {
-      { _id = "elona.stat_strength", amount = 50 },
-      { _id = "elona.stat_constitution", amount = 50 },
-      { _id = "elona.stat_charisma", amount = 50 },
-      { _id = "elona.stat_magic", amount = 50 },
-      { _id = "elona.stat_dexterity", amount = 50 },
-      { _id = "elona.stat_perception", amount = 50 },
-      { _id = "elona.stat_learning", amount = 50 },
-      { _id = "elona.stat_will", amount = 50 },
-   },
    categories = {
       "elona.crop_herb",
       "elona.food"
+   },
+
+   _ext = {
+      [IItemFood] = {
+         food_quality = 7,
+         nutrition = 20000,
+         exp_gains = {
+            { _id = "elona.stat_strength", amount = 50 },
+            { _id = "elona.stat_constitution", amount = 50 },
+            { _id = "elona.stat_charisma", amount = 50 },
+            { _id = "elona.stat_magic", amount = 50 },
+            { _id = "elona.stat_dexterity", amount = 50 },
+            { _id = "elona.stat_perception", amount = 50 },
+            { _id = "elona.stat_learning", amount = 50 },
+            { _id = "elona.stat_will", amount = 50 },
+         },
+      }
    }
 }

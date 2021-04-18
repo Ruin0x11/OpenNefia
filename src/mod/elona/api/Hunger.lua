@@ -9,6 +9,9 @@ local Log = require("api.Log")
 local World = require("api.World")
 local I18N = require("api.I18N")
 local Const = require("api.Const")
+local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 
 local Hunger = {}
 
@@ -50,7 +53,13 @@ end
 
 function Hunger.make_dish(item, quality)
    -- >>>>>>>> shade2/item_func.hsp:705 #deffunc make_dish int ci,int p ..
-   local food_type = item.params and item.params.food_type
+   local aspect = item:get_aspect(IItemFood)
+   if not aspect then
+      Log.warn("'%s' is not a food.", item._id)
+      return nil
+   end
+
+   local food_type = aspect:calc(item, "food_type")
    if not food_type then
       Log.warn("'%s' isn't a cookable food.", item._id)
       return nil
@@ -58,10 +67,10 @@ function Hunger.make_dish(item, quality)
 
    item.image = Hunger.get_food_image(food_type, quality)
    item.weight = 500
-   if item.spoilage_date and item.spoilage_date >= 0 then
-      item.spoilage_date = 72 + World.date_hours()
+   if aspect:can_rot(item) and not aspect:is_rotten(item) then
+      aspect.spoilage_date = 72 + World.date_hours()
    end
-   item.params.food_quality = quality
+   aspect.food_quality = quality
 
    return item
    -- <<<<<<<< shade2/item_func.hsp:709 	return ..
@@ -191,10 +200,11 @@ function Hunger.vomit(chara)
          end
       end
       if chara:is_player() or Rand.one_in(chance ^ 3) then
-         local vomit = Item.create("elona.vomit", chara.x, chara.y)
-         if vomit and not chara:is_player() then
-            vomit.params.chara_id = chara._id
+         local aspects = {}
+         if not chara:is_player() then
+            aspects[IItemFromChara] = { chara = chara }
          end
+         Item.create("elona.vomit", chara.x, chara.y, {aspects=aspects})
       end
    end
 
@@ -259,19 +269,32 @@ function Hunger.add_rotten_food_exp_losses(chara, exp_gains, nutrition)
 end
 
 function Hunger.is_human_flesh(food)
-   if food._id == "elona.corpse" and food.params.chara_id then
-      local chara_proto = data["base.chara"]:ensure(food.params.chara_id)
+   local aspect = food:get_aspect(IItemFromChara)
+   if not aspect then
+      return false
+   end
+
+   local chara_id = aspect:calc(food, "chara_id")
+
+   if food._id == "elona.corpse" and chara_id then
+      local chara_proto = data["base.chara"]:ensure(chara_id)
       if table.index_of(chara_proto.tags, "man") then
          return true
       end
    end
+
    return false
 end
 
 local function show_player_eating_message(player, food)
    -- >>>>>>>> shade2/item.hsp:919 		p=iParam1(ci)/extFood ...
-   local food_quality = food.params.food_quality or 0
-   local is_rotten = food.spoilage_date and food.spoilage_date < 0
+   local aspect = food:get_aspect(IItemFood)
+   if not aspect then
+      return
+   end
+
+   local food_quality = aspect:calc(food, "food_quality")
+   local is_rotten = aspect:is_rotten(food)
 
    if player:has_trait("elona.eat_human") then
       if Hunger.is_human_flesh(food) then
@@ -285,7 +308,7 @@ local function show_player_eating_message(player, food)
    end
 
    if food_quality <= 0 then
-      local food_type = food.params.food_type
+      local food_type = aspect:calc(food, "food_type")
       if food_type then
          local message = I18N.get_optional("food.names." .. food_type .. ".uncooked_message")
          if message then
@@ -326,13 +349,14 @@ Hunger.MAX_FOOD_EATING_EFFECTS = 10
 function Hunger.apply_general_eating_effect(chara, food)
    -- >>>>>>>> shade2/item.hsp:833 *eatEffect ...
    local nutrition = 2500
-   if food:calc("is_cargo") then
+   if food:get_aspect(IItemCargo) then
       nutrition = nutrition + 2500
    end
 
    local exp_gains = {}
 
-   local food_type = food.params.food_type
+   local aspect = food:get_aspect_or_default(IItemFood)
+   local food_type = aspect:calc(food, "food_type")
    if food_type then
       local proto = data["elona.food_type"]:ensure(food_type)
 
@@ -350,7 +374,7 @@ function Hunger.apply_general_eating_effect(chara, food)
       end
    end
 
-   local food_quality = food.params.food_quality or 0
+   local food_quality = aspect:calc(food, "food_quality")
 
    nutrition = nutrition * (100 + food_quality * 15) / 100
 
@@ -370,7 +394,7 @@ function Hunger.apply_general_eating_effect(chara, food)
       end
    end
 
-   local is_rotten = food.spoilage_date and food.spoilage_date < World.date_hours()
+   local is_rotten = aspect:is_rotten(food)
 
    if chara:is_player() then
       show_player_eating_message(chara, food)
@@ -380,17 +404,16 @@ function Hunger.apply_general_eating_effect(chara, food)
       end
    end
 
-   if food.food_exp_gains then
-      for _, gain in ipairs(food.food_exp_gains) do
+   if aspect.exp_gains then
+      for _, gain in ipairs(aspect.exp_gains) do
          exp_gains[#exp_gains+1] = {
             _id = gain._id,
             amount = gain.amount
          }
       end
-      if food.nutrition then
-         nutrition = food.nutrition
-      end
    end
+
+   nutrition = aspect:calc(food, "nutrition") or nutrition
 
    if chara:is_player() and is_rotten then
       exp_gains, nutrition = Hunger.add_rotten_food_exp_losses(chara, exp_gains, nutrition)
@@ -513,7 +536,8 @@ function Hunger.eat_food(chara, food)
 
       if is_eating_traded_item then
          chara.was_passed_quest_item = false
-         if food.spoilage_date and food.spoilage_date < 0 then
+         local aspect = food:get_aspect(IItemFood)
+         if aspect and aspect:is_rotten(food) then
             Gui.mes_c("food.passed_rotten", "SkyBlue")
             chara:damage_hp(999, "elona.rotten_food")
             local player = Chara.player()

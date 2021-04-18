@@ -13,11 +13,13 @@ function IAspectModdable:on_refresh()
    self.temp = {}
 end
 
-function IAspectModdable:calc(target, key)
+function IAspectModdable:calc(target, key, base_value)
    self.temp = self.temp or {}
 
-   if self.temp[key] ~= nil then
-      return self.temp[key]
+   if not base_value then
+      if self.temp[key] ~= nil then
+         return self.temp[key]
+      end
    end
 
    return self[key]

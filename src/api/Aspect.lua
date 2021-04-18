@@ -8,7 +8,7 @@ function Aspect.get_default_impl(iface)
    if type(iface) == "string" then
       iface = env.safe_require(iface)
    end
-   class.assert_is_an(IAspect, iface)
+   class.assert_implements(IAspect, iface)
    assert(class.is_interface(iface))
 
    local impl = aspect_state.default_impls[iface.__name]
@@ -23,16 +23,20 @@ function Aspect.set_default_impl(iface, impl)
    if type(iface) == "string" then
       iface = env.safe_require(iface)
    end
-   class.assert_is_an(IAspect, iface)
+   class.assert_implements(IAspect, iface)
    assert(class.is_interface(iface))
 
    if type(impl) == "string" then
       impl = env.safe_require(impl)
    end
-   class.assert_is_an(IAspect, impl)
+   class.assert_implements(iface, impl)
    assert(class.is_class(impl))
 
    aspect_state.default_impls[iface.__name] = impl
+end
+
+function Aspect.new_default(iface, obj, params)
+   return Aspect.get_default_impl(iface):new(obj, params)
 end
 
 return Aspect
