@@ -71,9 +71,20 @@ end
 function IAspectHolder:get_aspect_proto(iface)
    local _ext = self.proto._ext
    if not _ext then
-      return
+      return nil
    end
-   return _ext[iface]
+   if _ext[iface] then
+      return _ext[iface]
+   end
+
+   -- iterate list part of table
+   for _, item in ipairs(_ext) do
+      if item == iface then
+         return {}
+      end
+   end
+
+   return nil
 end
 
 function IAspectHolder:iter_aspects(iface)
