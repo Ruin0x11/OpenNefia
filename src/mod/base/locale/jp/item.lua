@@ -84,9 +84,13 @@ return {
          no_information = "特に情報はない",
          speeds_up_ether_disease = "それは装備している間、エーテルの病の進行を早める",
          weapon = {
-            heavy = "それは両手持ちに適している",
-            it_can_be_wielded = "それは武器として扱うことができる",
+            it_can_be_wielded = {
+               melee = "それは武器として扱うことができる",
+               ranged = "それは遠隔武器として扱うことができる",
+               ammo = "それは矢弾として装備できる",
+            },
             light = "それは片手でも扱いやすい",
+            heavy = "それは両手持ちに適している",
             dice = function(dice_x, dice_y, pierce)
                return ("(%dd%d 貫通 %d%%)")
                   :format(dice_x, dice_y, pierce)

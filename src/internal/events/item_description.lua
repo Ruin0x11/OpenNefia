@@ -5,6 +5,8 @@ local I18N = require("api.I18N")
 local Event = require("api.Event")
 local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
+local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
+local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
 
 
 -- >>>>>>>> shade2/command.hsp:4108 		if iMaterial(ci)!0		:list(0,p)=7:listN(0,p)=lang ..
@@ -97,7 +99,39 @@ local quality_info = {
          local dice_x = melee:calc(i, "dice_x")
          local dice_y = melee:calc(i, "dice_y")
          local pierce_rate = melee:calc(i, "pierce_rate")
-         local s = I18N.get("item.desc.weapon.it_can_be_wielded")
+         local s = I18N.get("item.desc.weapon.it_can_be_wielded.melee")
+         if i:calc("identify_state") >= Enum.IdentifyState.Full then
+            s = s .. I18N.get("item.desc.weapon.dice", dice_x, dice_y, pierce_rate)
+         end
+         return s
+      end
+   },
+   {
+      pred = function(i)
+         return i:get_aspect(IItemRangedWeapon)
+      end,
+      desc = function(i)
+         local ranged = i:get_aspect(IItemRangedWeapon)
+         local dice_x = ranged:calc(i, "dice_x")
+         local dice_y = ranged:calc(i, "dice_y")
+         local pierce_rate = ranged:calc(i, "pierce_rate")
+         local s = I18N.get("item.desc.weapon.it_can_be_wielded.ranged")
+         if i:calc("identify_state") >= Enum.IdentifyState.Full then
+            s = s .. I18N.get("item.desc.weapon.dice", dice_x, dice_y, pierce_rate)
+         end
+         return s
+      end
+   },
+   {
+      pred = function(i)
+         return i:get_aspect(IItemAmmo)
+      end,
+      desc = function(i)
+         local ammo = i:get_aspect(IItemAmmo)
+         local dice_x = ammo:calc(i, "dice_x")
+         local dice_y = ammo:calc(i, "dice_y")
+         local pierce_rate = 0 -- ammo:calc(i, "pierce_rate")
+         local s = I18N.get("item.desc.weapon.it_can_be_wielded.ammo")
          if i:calc("identify_state") >= Enum.IdentifyState.Full then
             s = s .. I18N.get("item.desc.weapon.dice", dice_x, dice_y, pierce_rate)
          end

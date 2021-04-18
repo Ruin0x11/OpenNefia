@@ -24,7 +24,9 @@ function IItemRangedWeapon:calc_effective_range(item, dist)
 end
 
 function IItemRangedWeapon:calc_anim_chip_and_sound(weapon)
-   return weapon:calc("image"), nil, "base.throw1"
+   return weapon:calc("image"),
+          weapon:calc("color") or {255, 255, 255},
+          "base.throw1"
 end
 
 return IItemRangedWeapon

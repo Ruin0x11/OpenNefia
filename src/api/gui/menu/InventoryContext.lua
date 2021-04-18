@@ -2,12 +2,11 @@ local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Log = require("api.Log")
 local InputHandler = require("api.gui.InputHandler")
-local Ui = require("api.Ui")
 local ILocation = require("api.ILocation")
 local Map = require("api.Map")
 local Event = require("api.Event")
 local Chara = require("api.Chara")
-local Calc = require("mod.elona.api.Calc")
+local data = require("internal.data")
 
 --- The underlying behavior of an inventory screen. Separating it like
 --- this allows trivial creation of item shortcuts, since all that is
@@ -241,8 +240,28 @@ function InventoryContext:can_select(item)
    return true
 end
 
+local function category_order(item)
+   local order = function(cat)
+      return data["base.item_type"]:ensure(cat).ordering or 0
+   end
+
+   local major = item:major_categories()
+   if #major == 0 then
+      return 0
+   end
+
+   return fun.iter(major):map(order):min()
+end
+
 local function default_sort(a, b)
-   return a.item._id > b.item._id
+   local a_sort = category_order(a.item)
+   local b_sort = category_order(b.item)
+
+   if a_sort == b_sort then
+      return a.item._id < b.item._id
+   end
+
+   return a_sort < b_sort
 end
 
 function InventoryContext:gen_sort(a, b)

@@ -52,7 +52,7 @@ local UiListExt = function(equipment_menu)
       local subtext = entry.subtext
 
       if entry.equipped then
-         equipment_menu.map_object_batch:add(entry.equipped, x + 12, y + 10, nil, nil, {255, 255, 255}, true)
+         equipment_menu.map_object_batch:add(entry.equipped, x + 12, y + 10, nil, nil, nil, true)
 
          if equipment_menu.layout then
             item_name, subtext = equipment_menu.layout:draw_row(entry.equipped, item_name, subtext, x, y)

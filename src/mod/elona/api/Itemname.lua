@@ -14,14 +14,17 @@ local CurseState = Enum.CurseState
 local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local Effect = require("mod.elona.api.Effect")
 local ElonaItem = require("mod.elona.api.ElonaItem")
-local Ui = require("api.Ui")
 local World = require("api.World")
 local Hunger = require("mod.elona.api.Hunger")
+local EquipRules = require("api.chara.EquipRules")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 local IItemDice = require("mod.elona.api.aspect.IItemDice")
+local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
+local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
+local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
 
 local Itemname = {}
 
@@ -34,7 +37,16 @@ local function number_string(i)
 end
 
 local function get_dice(item)
-   local aspect = item:iter_aspects(IItemDice):nth(1)
+   local aspect
+   if EquipRules.is_melee_weapon(item) then
+      aspect = item:get_aspect(IItemMeleeWeapon)
+   elseif EquipRules.is_ranged_weapon(item) then
+      aspect = item:get_aspect(IItemRangedWeapon)
+   elseif EquipRules.is_ammo(item) then
+      aspect = item:get_aspect(IItemAmmo)
+   else
+      aspect = item:iter_aspects(IItemDice):nth(1)
+   end
    if aspect == nil then
       return 0, 0
    end
