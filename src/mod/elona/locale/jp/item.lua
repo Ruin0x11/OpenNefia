@@ -5259,11 +5259,7 @@ local item = {
         text = "モンスターを捕獲できる玉。投げることができる。"
       }
     },
-    name = "モンスターボール",
-
-    level = function(lv)
-       return (" Lv %s (空)"):format(lv)
-    end
+    name = "モンスターボール"
   },
   monster_heart = {
     desc = {

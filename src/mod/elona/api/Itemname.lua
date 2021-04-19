@@ -380,14 +380,6 @@ function itemname.jp(item, amount, no_article)
       if item.params.bait_amount > 0 then
          s = s .. I18N.localize("base.item", _id, "remaining", "bait._." .. item.params.bait_type .. ".name", item.params.bait_amount)
       end
-   elseif _id == "elona.monster_ball" then
-      local chara_id = item.params.monster_ball_captured_chara_id
-      if chara_id then
-         local chara_name = I18N.localize("base.chara", chara_id, "name")
-         s = s .. ("(%s)"):format(chara_name)
-      else
-         s = s .. I18N.localize("base.item", _id, "level", item.params.monster_ball_max_level)
-      end
    elseif _id == "elona.small_gamble_chest" then
       s = s .. I18N.localize("base.item", _id, "level", item.params.chest_lockpick_difficulty)
    end
@@ -440,7 +432,10 @@ function itemname.jp(item, amount, no_article)
    end
 
    for _, aspect in item:iter_aspects(IItemLocalizableExtra) do
-      s = s .. " " .. aspect:localize_extra(item)
+      local extra = aspect:localize_extra(item)
+      if extra then
+         s = s .. " " .. extra
+      end
    end
 
    return s
@@ -705,7 +700,10 @@ function itemname.en(item, amount, no_article)
    end
 
    for _, aspect in item:iter_aspects(IItemLocalizableExtra) do
-      s = s .. " " .. aspect:localize_extra(item)
+      local extra = aspect:localize_extra(item)
+      if extra then
+         s = s .. extra
+      end
    end
 
    return s

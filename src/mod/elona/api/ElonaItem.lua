@@ -21,6 +21,7 @@ local Item = require("api.Item")
 local Hunger = require("mod.elona.api.Hunger")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
+local IItemInittable = require("mod.elona.api.aspect.IItemInittable")
 
 local ElonaItem = {}
 
@@ -392,8 +393,8 @@ end
 Event.register("base.on_build_item", "Apply Item.fix_item", item_fix_on_build)
 
 local function apply_item_on_init_params(item, params)
-   if item.proto.on_init_params then
-      item.proto.on_init_params(item, params)
+   for _, aspect in item:iter_aspects(IItemInittable) do
+      aspect:on_init_params(item, params)
    end
 end
 Event.register("base.on_item_init_params", "Default item on_init_params callback", apply_item_on_init_params)

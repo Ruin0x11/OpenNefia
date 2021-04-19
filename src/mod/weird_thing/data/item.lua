@@ -11,6 +11,7 @@ local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
 local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
 local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
+local IItemMonsterBall = require("mod.elona.api.aspect.IItemMonsterBall")
 
 data:add {
    _type = "elona.plant",
@@ -88,6 +89,7 @@ data:add {
          skill = "elona.firearm",
          dice_x = 10,
          dice_y = 10,
-      }
+      },
+      IItemMonsterBall
    }
 }

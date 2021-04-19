@@ -10,6 +10,13 @@ return {
             },
             IItemMusicDisc = {
                action_name = "ディスク"
+            },
+            IItemMonsterBall = {
+               action_name = "モンスターボール",
+
+               level = function(lv)
+                  return (" Lv %s (空)"):format(lv)
+               end
             }
          }
       }

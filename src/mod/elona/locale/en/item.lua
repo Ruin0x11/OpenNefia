@@ -2858,10 +2858,6 @@ local item = {
       }
     },
     name = "monster ball",
-
-    level = function(lv)
-       return (" Level %s(Empty)"):format(lv)
-    end
   },
   monster_heart = {
     desc = {
