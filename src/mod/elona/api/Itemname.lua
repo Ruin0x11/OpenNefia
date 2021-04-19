@@ -20,6 +20,7 @@ local Hunger = require("mod.elona.api.Hunger")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 local Itemname = {}
 
@@ -43,13 +44,14 @@ local function item_known_info(item)
       s = s .. I18N.get("item.charges", item.charges)
    end
 
+   local equip = item:get_aspect(IItemEquipment)
+
    local dice_x = item:calc("dice_x") or 0
    local dice_y = item:calc("dice_y") or 0
-   local damage_bonus = item:calc("damage_bonus") or 0
+   local hit_bonus = (equip and equip:calc(item, "hit_bonus")) or 0
+   local damage_bonus = (equip and equip:calc(item, "damage_bonus")) or 0
 
-   if dice_x ~= 0 or item.hit_bonus ~= 0 or damage_bonus ~= 0 then
-      local hit_bonus = item:calc("hit_bonus") or 0
-
+   if dice_x ~= 0 or hit_bonus ~= 0 or damage_bonus ~= 0 then
       s = s .. " ("
       if dice_x ~= 0 then
          s = s .. tostring(dice_x) .. "d" .. tostring(dice_y)
@@ -71,10 +73,12 @@ local function item_known_info(item)
       end
    end
 
-   local pv = item:calc("pv") or 0
-   local dv = item:calc("dv") or 0
-   if dv ~= 0 or pv ~= 0 then
-      s = s .. " [" .. dv .. "," .. pv .. "]"
+   if equip then
+      local pv = equip:calc(item, "pv") or 0
+      local dv = equip:calc(item, "dv") or 0
+      if dv ~= 0 or pv ~= 0 then
+         s = s .. " [" .. dv .. "," .. pv .. "]"
+      end
    end
 
    return s

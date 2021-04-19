@@ -1,5 +1,6 @@
 local Enum = require("api.Enum")
 local light = require("mod.elona.data.item.light")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 --
 -- Girdle
@@ -12,17 +13,19 @@ data:add {
    image = "elona.item_girdle",
    value = 300,
    weight = 900,
-   pv = 3,
-   dv = 3,
    material = "elona.soft",
-   appearance = 1,
-   category = 19000,
-   equip_slots = { "elona.waist" },
-   subcategory = 19001,
    coefficient = 100,
    categories = {
       "elona.equip_back_girdle",
       "elona.equip_cloak"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.waist" },
+         dv = 3,
+         pv = 3,
+         pcc_part = 1,
+      }
    }
 }
 
@@ -33,18 +36,20 @@ data:add {
    image = "elona.item_composite_girdle",
    value = 2400,
    weight = 650,
-   pv = 3,
-   dv = 5,
    material = "elona.metal",
-   appearance = 3,
    level = 15,
-   category = 19000,
-   equip_slots = { "elona.waist" },
-   subcategory = 19001,
    coefficient = 100,
    categories = {
       "elona.equip_back_girdle",
       "elona.equip_cloak"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.waist" },
+         dv = 5,
+         pv = 3,
+         pcc_part = 3,
+      }
    }
 }
 
@@ -55,18 +60,20 @@ data:add {
    image = "elona.item_composite_girdle",
    value = 3900,
    weight = 1400,
-   pv = 6,
-   dv = 3,
    material = "elona.metal",
-   appearance = 2,
    level = 30,
-   category = 19000,
-   equip_slots = { "elona.waist" },
-   subcategory = 19001,
    coefficient = 100,
    categories = {
       "elona.equip_back_girdle",
       "elona.equip_cloak"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.waist" },
+         dv = 3,
+         pv = 6,
+         pcc_part = 2,
+      }
    }
 }
 
@@ -77,15 +84,9 @@ data:add {
    image = "elona.item_composite_girdle",
    value = 15000,
    weight = 1250,
-   pv = 15,
-   dv = 2,
    material = "elona.mithril",
-   appearance = 2,
    level = 13,
    fltselect = 3,
-   category = 19000,
-   equip_slots = { "elona.waist" },
-   subcategory = 19001,
    coefficient = 100,
 
    is_precious = true,
@@ -106,5 +107,14 @@ data:add {
       { _id = "elona.cure_bleeding", power = 100 },
       { _id = "elona.modify_resistance", power = 450, params = { element_id = "elona.nether" } },
       { _id = "elona.modify_resistance", power = 350, params = { element_id = "elona.fire" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.waist" },
+         dv = 2,
+         pv = 15,
+         pcc_part = 2,
+      }
    }
 }

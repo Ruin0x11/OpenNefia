@@ -7,6 +7,7 @@ local IItemBlacksmithHammer = require("mod.smithing.api.aspect.IItemBlacksmithHa
 local Gui = require("api.Gui")
 local Item = require("api.Item")
 local Rand = require("api.Rand")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 data:add {
    _type = "elona.plant",
@@ -58,6 +59,14 @@ data:add {
       [IItemMuseumValued] = {
          museum_value = 100
       },
-      [IItemBlacksmithHammer] = {}
+      [IItemBlacksmithHammer] = {},
+      [IItemEquipment] = {
+         dv = 10,
+         pv = 10,
+         hit_bonus = 10,
+         damage_bonus = 10,
+         equip_slots = { "elona.hand", "elona.arm", "elona.back" },
+         pcc_part = 1
+      }
    }
 }

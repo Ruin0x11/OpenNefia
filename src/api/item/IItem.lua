@@ -13,6 +13,7 @@ local Gui = require("api.Gui")
 local data = require("internal.data")
 local Enum = require("api.Enum")
 local IComparable = require("api.IComparable")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 local IItem = class.interface("IItem",
                          {},
@@ -186,11 +187,12 @@ end
 --- @tparam id:base.body_part body_part_type
 --- @treturn bool
 function IItem:can_equip_at(body_part_type)
-   local equip_slots = self:calc("equip_slots") or {}
-   if #equip_slots == 0 then
-      return nil
+   local equip = self:get_aspect(IItemEquipment)
+   if equip == nil then
+      return false
    end
 
+   local equip_slots = equip:calc(self, "equip_slots") or {}
    local can_equip = table.set(equip_slots)
 
    return can_equip[body_part_type] == true

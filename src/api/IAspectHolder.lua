@@ -68,6 +68,25 @@ function IAspectHolder:set_aspect(iface, aspect)
    self._aspects:set_aspect(self, iface, aspect)
 end
 
+function IAspectHolder:get_aspect_proto(iface)
+   local _ext = self.proto._ext
+   if not _ext then
+      return nil
+   end
+   if _ext[iface] then
+      return _ext[iface]
+   end
+
+   -- iterate list part of table
+   for _, item in ipairs(_ext) do
+      if item == iface then
+         return {}
+      end
+   end
+
+   return nil
+end
+
 function IAspectHolder:iter_aspects(iface)
    if iface then
       return self:iter_aspects():filter(function(a) return class.is_an(iface, a) end)

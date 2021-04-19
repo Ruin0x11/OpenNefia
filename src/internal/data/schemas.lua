@@ -532,12 +532,6 @@ dungeons.
             template = true
          },
          {
-            name = "equip_slots",
-            default = {},
-            type = "table",
-            template = true
-         },
-         {
             name = "on_read",
             default = nil,
             type = "function(IItem,IChara)?"

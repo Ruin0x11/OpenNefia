@@ -4,6 +4,7 @@ local Gui = require("api.Gui")
 local Skill = require("mod.elona_sys.api.Skill")
 local Calc = require("mod.elona.api.Calc")
 local Rand = require("api.Rand")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 --
 -- Small Ring
@@ -18,14 +19,16 @@ data:add {
    value = 450,
    weight = 50,
    material = "elona.soft",
-   category = 32000,
-   equip_slots = { "elona.ring" },
-   subcategory = 32001,
    coefficient = 100,
    has_random_name = true,
    categories = {
       "elona.equip_ring_ring",
       "elona.equip_ring"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.ring" },
+      }
    }
 }
 
@@ -36,13 +39,9 @@ data:add {
    image = "elona.item_decorative_ring",
    value = 30000,
    weight = 1200,
-   pv = 50,
    material = "elona.mithril",
    level = 30,
    fltselect = 3,
-   category = 32000,
-   equip_slots = { "elona.ring" },
-   subcategory = 32001,
    coefficient = 100,
 
    is_precious = true,
@@ -64,6 +63,13 @@ data:add {
       { _id = "elona.modify_attribute", power = -1400, params = { skill_id = "elona.stat_speed", } },
       { _id = "elona.res_fear", power = 100 },
       { _id = "elona.res_paralyze", power = 100 },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.ring" },
+         pv = 50,
+      }
    }
 }
 
@@ -74,14 +80,9 @@ data:add {
    image = "elona.item_decorative_ring",
    value = 30000,
    weight = 500,
-   pv = 5,
-   dv = 15,
    material = "elona.mithril",
    level = 30,
    fltselect = 3,
-   category = 32000,
-   equip_slots = { "elona.ring" },
-   subcategory = 32001,
    coefficient = 100,
 
    is_precious = true,
@@ -102,6 +103,14 @@ data:add {
       { _id = "elona.modify_attribute", power = 550, params = { skill_id = "elona.stat_charisma" } },
       { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.darkness" } },
       { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.chaos" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.ring" },
+         pv = 5,
+         dv = 15,
+      }
    }
 }
 
@@ -113,17 +122,20 @@ data:add {
    image = "elona.item_composite_ring",
    value = 450,
    weight = 50,
-   damage_bonus = 2,
    material = "elona.metal",
    level = 15,
-   category = 32000,
-   equip_slots = { "elona.ring" },
-   subcategory = 32001,
    coefficient = 100,
    has_random_name = true,
    categories = {
       "elona.equip_ring_ring",
       "elona.equip_ring"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.ring" },
+         damage_bonus = 2,
+      }
    }
 }
 
@@ -135,17 +147,19 @@ data:add {
    image = "elona.item_armored_ring",
    value = 450,
    weight = 50,
-   pv = 2,
    material = "elona.metal",
    level = 15,
-   category = 32000,
-   equip_slots = { "elona.ring" },
-   subcategory = 32001,
    coefficient = 100,
    has_random_name = true,
    categories = {
       "elona.equip_ring_ring",
       "elona.equip_ring"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.ring" },
+         pv = 2,
+      }
    }
 }
 
@@ -159,14 +173,16 @@ data:add {
    weight = 50,
    material = "elona.metal",
    level = 10,
-   category = 32000,
-   equip_slots = { "elona.ring" },
-   subcategory = 32001,
    coefficient = 100,
    has_random_name = true,
    categories = {
       "elona.equip_ring_ring",
       "elona.equip_ring"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.ring" },
+      }
    }
 }
 
@@ -179,15 +195,18 @@ data:add {
    value = 5200,
    weight = 50,
    material = "elona.metal",
-   category = 32000,
-   equip_slots = { "elona.ring" },
-   subcategory = 32001,
    rarity = 700000,
    coefficient = 100,
    has_random_name = true,
    categories = {
       "elona.equip_ring_ring",
       "elona.equip_ring"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.ring" },
+      }
    },
 
    events = {
@@ -234,13 +253,8 @@ data:add {
    image = "elona.item_engagement_ring",
    value = 17000,
    weight = 50,
-   pv = 2,
-   dv = 2,
    material = "elona.metal",
    level = 15,
-   category = 32000,
-   equip_slots = { "elona.ring" },
-   subcategory = 32001,
    rarity = 25000,
    coefficient = 100,
    has_random_name = true,
@@ -260,6 +274,14 @@ data:add {
    enchantments = {
       { _id = "elona.res_weather", power = 100 },
       { _id = "elona.modify_resistance", power = 100, params = { element_id = "elona.sound" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.ring" },
+         pv = 2,
+         dv = 2,
+      }
    }
 }
 
@@ -273,9 +295,6 @@ data:add {
    weight = 50,
    material = "elona.metal",
    level = 15,
-   category = 32000,
-   equip_slots = { "elona.ring" },
-   subcategory = 32001,
    rarity = 30000,
    coefficient = 100,
    has_random_name = true,
@@ -296,4 +315,10 @@ data:add {
       "elona.equip_ring_ring",
       "elona.equip_ring"
    },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.ring" },
+      }
+   }
 }

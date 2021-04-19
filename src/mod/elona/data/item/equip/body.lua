@@ -1,3 +1,5 @@
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
+
 --
 -- Heavy Armor
 --
@@ -9,17 +11,19 @@ data:add {
    image = "elona.item_breastplate",
    value = 600,
    weight = 4500,
-   pv = 10,
-   dv = 6,
    material = "elona.metal",
-   appearance = 1,
-   category = 16000,
-   equip_slots = { "elona.body" },
-   subcategory = 16001,
    coefficient = 100,
    categories = {
       "elona.equip_body_mail",
       "elona.equip_body"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.body" },
+         dv = 6,
+         pv = 10,
+         pcc_part = 1,
+      }
    }
 }
 
@@ -30,18 +34,20 @@ data:add {
    image = "elona.item_banded_mail",
    value = 1500,
    weight = 6500,
-   pv = 12,
-   dv = 5,
    material = "elona.metal",
-   appearance = 2,
    level = 10,
-   category = 16000,
-   equip_slots = { "elona.body" },
-   subcategory = 16001,
    coefficient = 100,
    categories = {
       "elona.equip_body_mail",
       "elona.equip_body"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.body" },
+         dv = 5,
+         pv = 12,
+         pcc_part = 2,
+      }
    }
 }
 
@@ -52,18 +58,20 @@ data:add {
    image = "elona.item_plate_mail",
    value = 12500,
    weight = 7500,
-   pv = 21,
-   dv = 6,
    material = "elona.metal",
-   appearance = 7,
    level = 50,
-   category = 16000,
-   equip_slots = { "elona.body" },
-   subcategory = 16001,
    coefficient = 100,
    categories = {
       "elona.equip_body_mail",
       "elona.equip_body"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.body" },
+         dv = 6,
+         pv = 21,
+         pcc_part = 7,
+      }
    }
 }
 
@@ -74,18 +82,20 @@ data:add {
    image = "elona.item_ring_mail",
    value = 2400,
    weight = 5000,
-   pv = 14,
-   dv = 6,
    material = "elona.metal",
-   appearance = 2,
    level = 20,
-   category = 16000,
-   equip_slots = { "elona.body" },
-   subcategory = 16001,
    coefficient = 100,
    categories = {
       "elona.equip_body_mail",
       "elona.equip_body"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.body" },
+         dv = 6,
+         pv = 14,
+         pcc_part = 2,
+      }
    }
 }
 
@@ -96,18 +106,20 @@ data:add {
    image = "elona.item_composite_mail",
    value = 4500,
    weight = 5500,
-   pv = 17,
-   dv = 7,
    material = "elona.metal",
-   appearance = 6,
    level = 30,
-   category = 16000,
-   equip_slots = { "elona.body" },
-   subcategory = 16001,
    coefficient = 100,
    categories = {
       "elona.equip_body_mail",
       "elona.equip_body"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.body" },
+         dv = 7,
+         pv = 17,
+         pcc_part = 6,
+      }
    }
 }
 
@@ -118,18 +130,20 @@ data:add {
    image = "elona.item_chain_mail",
    value = 8000,
    weight = 5200,
-   pv = 19,
-   dv = 7,
    material = "elona.metal",
-   appearance = 6,
    level = 40,
-   category = 16000,
-   equip_slots = { "elona.body" },
-   subcategory = 16001,
    coefficient = 100,
    categories = {
       "elona.equip_body_mail",
       "elona.equip_body"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.body" },
+         dv = 7,
+         pv = 19,
+         pcc_part = 6,
+      }
    }
 }
 
@@ -144,17 +158,19 @@ data:add {
    image = "elona.item_robe",
    value = 450,
    weight = 800,
-   pv = 3,
-   dv = 11,
    material = "elona.soft",
-   appearance = 3,
-   category = 16000,
-   equip_slots = { "elona.body" },
-   subcategory = 16003,
    coefficient = 100,
    categories = {
       "elona.equip_body_robe",
       "elona.equip_body"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.body" },
+         dv = 11,
+         pv = 3,
+         pcc_part = 3,
+      }
    }
 }
 
@@ -165,18 +181,20 @@ data:add {
    image = "elona.item_pope_robe",
    value = 9500,
    weight = 1200,
-   pv = 8,
-   dv = 18,
    material = "elona.soft",
-   appearance = 4,
    level = 45,
-   category = 16000,
-   equip_slots = { "elona.body" },
-   subcategory = 16003,
    coefficient = 100,
    categories = {
       "elona.equip_body_robe",
       "elona.equip_body"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.body" },
+         dv = 18,
+         pv = 8,
+         pcc_part = 4,
+      }
    }
 }
 
@@ -187,18 +205,20 @@ data:add {
    image = "elona.item_light_mail",
    value = 1200,
    weight = 1800,
-   pv = 8,
-   dv = 10,
    material = "elona.soft",
-   appearance = 2,
    level = 10,
-   category = 16000,
-   equip_slots = { "elona.body" },
-   subcategory = 16003,
    coefficient = 100,
    categories = {
       "elona.equip_body_robe",
       "elona.equip_body"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.body" },
+         dv = 10,
+         pv = 8,
+         pcc_part = 2,
+      }
    }
 }
 
@@ -209,18 +229,20 @@ data:add {
    image = "elona.item_coat",
    value = 2000,
    weight = 1500,
-   pv = 9,
-   dv = 13,
    material = "elona.soft",
-   appearance = 5,
    level = 20,
-   category = 16000,
-   equip_slots = { "elona.body" },
-   subcategory = 16003,
    coefficient = 100,
    categories = {
       "elona.equip_body_robe",
       "elona.equip_body"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.body" },
+         dv = 13,
+         pv = 9,
+         pcc_part = 5,
+      }
    }
 }
 
@@ -231,18 +253,20 @@ data:add {
    image = "elona.item_breast_plate",
    value = 5500,
    weight = 2800,
-   pv = 11,
-   dv = 15,
    material = "elona.soft",
-   appearance = 2,
    level = 25,
-   category = 16000,
-   equip_slots = { "elona.body" },
-   subcategory = 16003,
    coefficient = 100,
    categories = {
       "elona.equip_body_robe",
       "elona.equip_body"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.body" },
+         dv = 15,
+         pv = 11,
+         pcc_part = 2,
+      }
    }
 }
 
@@ -253,17 +277,19 @@ data:add {
    image = "elona.item_bulletproof_jacket",
    value = 7200,
    weight = 1600,
-   pv = 15,
-   dv = 14,
    material = "elona.soft",
-   appearance = 5,
    level = 35,
-   category = 16000,
-   equip_slots = { "elona.body" },
-   subcategory = 16003,
    coefficient = 100,
    categories = {
       "elona.equip_body_robe",
       "elona.equip_body"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.body" },
+         dv = 14,
+         pv = 15,
+         pcc_part = 5,
+      }
    }
 }

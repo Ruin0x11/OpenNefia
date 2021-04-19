@@ -1,6 +1,7 @@
 local Calc = require("mod.elona.api.Calc")
 local Enum = require("api.Enum")
 local light = require("mod.elona.data.item.light")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 --
 -- Heavy Boots
@@ -13,17 +14,20 @@ data:add {
    image = "elona.item_heavy_boots",
    value = 480,
    weight = 950,
-   pv = 3,
-   dv = 1,
    material = "elona.metal",
-   appearance = 3,
-   category = 18000,
-   equip_slots = { "elona.leg" },
-   subcategory = 18001,
    coefficient = 100,
    categories = {
       "elona.equip_leg_heavy_boots",
       "elona.equip_leg"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.leg" },
+         dv = 1,
+         pv = 3,
+         pcc_part = 3,
+      }
    }
 }
 
@@ -34,18 +38,21 @@ data:add {
    image = "elona.item_composite_boots",
    value = 2200,
    weight = 720,
-   pv = 5,
-   dv = 1,
    material = "elona.metal",
-   appearance = 4,
    level = 15,
-   category = 18000,
-   equip_slots = { "elona.leg" },
-   subcategory = 18001,
    coefficient = 100,
    categories = {
       "elona.equip_leg_heavy_boots",
       "elona.equip_leg"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.leg" },
+         dv = 1,
+         pv = 5,
+         pcc_part = 4,
+      }
    }
 }
 
@@ -56,17 +63,19 @@ data:add {
    image = "elona.item_armored_boots",
    value = 4800,
    weight = 1400,
-   pv = 6,
    material = "elona.metal",
-   appearance = 4,
    level = 30,
-   category = 18000,
-   equip_slots = { "elona.leg" },
-   subcategory = 18001,
    coefficient = 100,
    categories = {
       "elona.equip_leg_heavy_boots",
       "elona.equip_leg"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.leg" },
+         pv = 6,
+         pcc_part = 4,
+      }
    }
 }
 
@@ -81,17 +90,19 @@ data:add {
    image = "elona.item_boots",
    value = 260,
    weight = 250,
-   pv = 1,
-   dv = 3,
    material = "elona.soft",
-   appearance = 5,
-   category = 18000,
-   equip_slots = { "elona.leg" },
-   subcategory = 18002,
    coefficient = 100,
    categories = {
       "elona.equip_leg_shoes",
       "elona.equip_leg"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.leg" },
+         dv = 3,
+         pv = 1,
+         pcc_part = 5,
+      }
    }
 }
 
@@ -102,18 +113,20 @@ data:add {
    image = "elona.item_boots",
    value = 1500,
    weight = 450,
-   pv = 2,
-   dv = 5,
    material = "elona.soft",
-   appearance = 1,
    level = 15,
-   category = 18000,
-   equip_slots = { "elona.leg" },
-   subcategory = 18002,
    coefficient = 100,
    categories = {
       "elona.equip_leg_shoes",
       "elona.equip_leg"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.leg" },
+         dv = 5,
+         pv = 2,
+         pcc_part = 1,
+      }
    }
 }
 
@@ -124,18 +137,20 @@ data:add {
    image = "elona.item_tight_boots",
    value = 3500,
    weight = 650,
-   pv = 3,
-   dv = 6,
    material = "elona.soft",
-   appearance = 2,
    level = 30,
-   category = 18000,
-   equip_slots = { "elona.leg" },
-   subcategory = 18002,
    coefficient = 100,
    categories = {
       "elona.equip_leg_shoes",
       "elona.equip_leg"
+   },
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.leg" },
+         dv = 6,
+         pv = 3,
+         pcc_part = 2,
+      }
    }
 }
 
@@ -146,14 +161,8 @@ data:add {
    image = "elona.item_composite_boots",
    value = 24000,
    weight = 300,
-   pv = 2,
-   dv = 7,
    material = "elona.soft",
-   appearance = 3,
    level = 30,
-   category = 18000,
-   equip_slots = { "elona.leg" },
-   subcategory = 18002,
    rarity = 25000,
    coefficient = 100,
 
@@ -171,6 +180,15 @@ data:add {
 
    enchantments = {
       { _id = "elona.fast_travel", power = 500 },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.leg" },
+         dv = 7,
+         pv = 2,
+         pcc_part = 3,
+      }
    }
 }
 
@@ -181,15 +199,9 @@ data:add {
    image = "elona.item_tight_boots",
    value = 25000,
    weight = 650,
-   pv = 7,
-   dv = 16,
    material = "elona.leather",
-   appearance = 2,
    level = 15,
    fltselect = 3,
-   category = 18000,
-   equip_slots = { "elona.leg" },
-   subcategory = 18002,
    coefficient = 100,
 
    is_precious = true,
@@ -211,5 +223,14 @@ data:add {
       { _id = "elona.fast_travel", power = 100 },
       { _id = "elona.modify_attribute", power = 250, params = { skill_id = "elona.stat_dexterity" } },
       { _id = "elona.modify_skill", power = 200, params = { skill_id = "elona.traveling" } },
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.leg" },
+         dv = 16,
+         pv = 7,
+         pcc_part = 2,
+      }
    }
 }

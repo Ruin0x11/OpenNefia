@@ -9,6 +9,7 @@ local Enum = require("api.Enum")
 local IItem = require("api.item.IItem")
 local env = require("internal.env")
 local hotload = require("internal.hotload")
+local ItemMaterial = require("mod.elona.api.ItemMaterial")
 
 local TestUtil = {}
 
@@ -50,6 +51,7 @@ function TestUtil.stripped_chara(id, map, x, y)
    chara:iter_items():each(IItem.remove_ownership)
    -- TODO event
    chara.god = nil
+   chara:refresh()
    return chara
 end
 
@@ -61,6 +63,7 @@ function TestUtil.stripped_item(id, map, x, y, amount, aspects)
       item = Item.create(id, x, y, {amount=amount or 1,aspects=aspects}, map)
    end
    item.curse_state = Enum.CurseState.Normal
+   ItemMaterial.change_item_material(item, nil)
    return item
 end
 

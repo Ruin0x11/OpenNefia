@@ -162,3 +162,39 @@ function test_ICharaEquip_iter_merged_enchantments__multiple()
    Assert.is_truthy(chara:unequip_item(item2))
    Assert.eq(0, ICharaEquip.iter_merged_enchantments(chara):length())
 end
+
+function test_ICharaEquip_on_refresh__weapon_bonuses()
+   local item = TestUtil.stripped_item("elona.dragon_slayer")
+   local chara = TestUtil.stripped_chara("elona.wizard_of_elea")
+
+   Assert.eq(0, chara:calc("dv"))
+   Assert.eq(0, chara:calc("pv"))
+   Assert.eq(0, chara:calc("hit_bonus"))
+   Assert.eq(0, chara:calc("damage_bonus"))
+
+   Assert.is_truthy(chara:take_item(item))
+   Assert.is_truthy(chara:equip_item(item))
+   chara:refresh()
+   Assert.eq(-42, chara:calc("dv"))
+   Assert.eq(30, chara:calc("pv"))
+   Assert.eq(0, chara:calc("hit_bonus"))
+   Assert.eq(0, chara:calc("damage_bonus"))
+end
+
+function test_ICharaEquip_on_refresh__equipment_bonuses()
+   local item = TestUtil.stripped_item("elona.gloves")
+   local chara = TestUtil.stripped_chara("elona.wizard_of_elea")
+
+   Assert.eq(0, chara:calc("dv"))
+   Assert.eq(0, chara:calc("pv"))
+   Assert.eq(0, chara:calc("hit_bonus"))
+   Assert.eq(0, chara:calc("damage_bonus"))
+
+   Assert.is_truthy(chara:take_item(item))
+   Assert.is_truthy(chara:equip_item(item))
+   chara:refresh()
+   Assert.eq(5, chara:calc("dv"))
+   Assert.eq(4, chara:calc("pv"))
+   Assert.eq(5, chara:calc("hit_bonus"))
+   Assert.eq(1, chara:calc("damage_bonus"))
+end

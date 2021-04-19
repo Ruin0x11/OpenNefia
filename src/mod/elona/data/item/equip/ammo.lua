@@ -1,3 +1,5 @@
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
+
 --
 -- Arrow
 --
@@ -11,12 +13,7 @@ data:add {
    weight = 1200,
    dice_x = 1,
    dice_y = 8,
-   hit_bonus = 2,
-   damage_bonus = 1,
    material = "elona.metal",
-   category = 25000,
-   equip_slots = { "elona.ammo" },
-   subcategory = 25001,
    coefficient = 100,
 
    skill = "elona.bow",
@@ -24,6 +21,14 @@ data:add {
    categories = {
       "elona.equip_ammo",
       "elona.equip_ammo_arrow"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.ammo" },
+         hit_bonus = 2,
+         damage_bonus = 1,
+      }
    }
 }
 
@@ -40,12 +45,7 @@ data:add {
    weight = 3500,
    dice_x = 1,
    dice_y = 8,
-   hit_bonus = 2,
-   damage_bonus = 1,
    material = "elona.metal",
-   category = 25000,
-   equip_slots = { "elona.ammo" },
-   subcategory = 25002,
    coefficient = 100,
 
    skill = "elona.crossbow",
@@ -53,6 +53,14 @@ data:add {
    categories = {
       "elona.equip_ammo",
       "elona.equip_ammo_bolt"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.ammo" },
+         hit_bonus = 2,
+         damage_bonus = 1,
+      }
    }
 }
 
@@ -69,12 +77,7 @@ data:add {
    weight = 2400,
    dice_x = 2,
    dice_y = 2,
-   hit_bonus = 4,
-   damage_bonus = 1,
    material = "elona.metal",
-   category = 25000,
-   equip_slots = { "elona.ammo" },
-   subcategory = 25020,
    coefficient = 100,
 
    skill = "elona.firearm",
@@ -85,6 +88,14 @@ data:add {
       "elona.equip_ammo",
       "elona.equip_ammo_bullet",
       "elona.tag_sf"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.ammo" },
+         hit_bonus = 4,
+         damage_bonus = 1,
+      }
    }
 }
 
@@ -101,11 +112,7 @@ data:add {
    weight = 800,
    dice_x = 2,
    dice_y = 3,
-   damage_bonus = 1,
    material = "elona.metal",
-   category = 25000,
-   equip_slots = { "elona.ammo" },
-   subcategory = 25030,
    coefficient = 100,
 
    skill = "elona.firearm",
@@ -116,5 +123,12 @@ data:add {
       "elona.equip_ammo",
       "elona.equip_ammo_energy_cell",
       "elona.tag_sf"
+   },
+
+   _ext = {
+      [IItemEquipment] = {
+         equip_slots = { "elona.ammo" },
+         damage_bonus = 1,
+      }
    }
 }
