@@ -364,7 +364,7 @@ data:add {
 
    _ext = {
       [IItemFood] = {
-         food_type = "elona_egg",
+         food_type = "elona.egg",
          spoilage_hours = 240
       },
       IItemFromChara

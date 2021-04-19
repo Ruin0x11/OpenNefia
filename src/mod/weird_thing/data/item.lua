@@ -11,6 +11,16 @@ local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
 local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
 local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
+local IItemMonsterBall = require("mod.elona.api.aspect.IItemMonsterBall")
+local IItemMoneyBox = require("mod.elona.api.aspect.IItemMoneyBox")
+local IItemBait = require("mod.elona.api.aspect.IItemBait")
+local IItemFishingPole = require("mod.elona.api.aspect.IItemFishingPole")
+local IItemCookingTool = require("mod.elona.api.aspect.IItemCookingTool")
+local IItemBookOfRachel = require("mod.elona.api.aspect.IItemBookOfRachel")
+local IItemGaroksHammer = require("mod.elona.api.aspect.IItemGaroksHammer")
+local IItemTextbook = require("mod.elona.api.aspect.IItemTextbook")
+local IItemBook = require("mod.elona.api.aspect.IItemBook")
+local IItemMusicDisc = require("mod.elona.api.aspect.IItemMusicDisc")
 
 data:add {
    _type = "elona.plant",
@@ -35,6 +45,8 @@ data:add {
    weight = 40,
    rarity = 1000000,
    coefficient = 100,
+
+   material = "elona.metal",
 
    tags = { "noshop", "spshop" },
    color = { 0, 90, 128 },
@@ -88,6 +100,18 @@ data:add {
          skill = "elona.firearm",
          dice_x = 10,
          dice_y = 10,
-      }
+      },
+      IItemMonsterBall,
+      IItemMoneyBox,
+      -- IItemBait,
+      IItemFishingPole,
+      [IItemCookingTool] = {
+         cooking_quality = 100
+      },
+      IItemGaroksHammer,
+      IItemTextbook,
+      IItemBook,
+      IItemBookOfRachel,
+      IItemMusicDisc
    }
 }

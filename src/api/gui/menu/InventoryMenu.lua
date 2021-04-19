@@ -333,9 +333,7 @@ function InventoryMenu.build_list(ctxt)
 
    -- NOTE: This needs to be a stable sort, which table.sort isn't. If
    -- correctness is not important, it should use merge sort...
-   print("Before", inspect(fun.iter(filtered):extract("item"):extract("_id"):to_list(), {always_tabify=true}))
    table.insertion_sort(filtered, ctxt:gen_sort())
-   print("After", inspect(fun.iter(filtered):extract("item"):extract("_id"):to_list(), { always_tabify=true }))
 
    return filtered
 end

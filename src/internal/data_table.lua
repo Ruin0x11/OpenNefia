@@ -50,6 +50,7 @@ function data_table:init()
     rawset(self, "schemas", {})
     rawset(self, "metatables", {})
     rawset(self, "generates", {})
+    rawset(self, "ext", {})
     rawset(self, "strict", false)
 
     rawset(self, "global_edits", {})
@@ -287,6 +288,14 @@ function data_table:replace(dat)
    self:add(dat)
 end
 
+local function make_ext_fallback(dat)
+   local fields = dat.fields or {}
+
+   local ext = make_fallbacks({}, fields)
+
+   return ext
+end
+
 function data_table:add(dat)
    local mod_name, loc = env.find_calling_mod()
 
@@ -339,6 +348,44 @@ function data_table:add(dat)
       end
    end
 
+   -- Verify extension fields.
+   if dat._ext then
+      -- Convert extensions in list part to blank-parameter ones in map part
+      --
+      -- _ext = {
+      --    IItemFromChara
+      -- }
+      --
+      -- _ext = {
+      --    [IItemFromChara] = {}
+      -- }
+      --
+      -- This is for easier querying by always being able to do
+      -- data._ext[aspect].
+      local move_to_key = {}
+      for k, v in pairs(dat._ext) do
+         if type(k) == "number" then
+            table.insert(move_to_key, k)
+         end
+      end
+      for _, k in ipairs(move_to_key) do
+         local v = dat._ext[k]
+         dat._ext[v] = {}
+         dat._ext[k] = nil
+      end
+
+      for k, v in pairs(dat._ext) do
+         if type(k) == "string" then
+            -- This is a base.data_ext identifier.
+            if not self["base.data_ext"][k] then
+               self:error("No data extension (base.data.ext) with ID " .. k .. " was registered yet.")
+            end
+         elseif type(k) == "table" then
+            -- This is an aspect.
+         end
+      end
+   end
+
    if self.strict and failed then return nil end
 
    local full_id = mod_name .. "." .. _id
@@ -361,6 +408,10 @@ function data_table:add(dat)
             add_index_field(self, dat, _type, field)
          end
 
+         if _type == "base.data_ext" then
+            self.ext[full_id] = make_ext_fallback(dat)
+         end
+
          Event.trigger("base.on_hotload_prototype", {entry=dat})
 
          update_docs(dat, _schema, loc, true)
@@ -380,6 +431,10 @@ function data_table:add(dat)
    end
 
    dat._id = full_id
+
+   if _type == "base.data_ext" then
+      self.ext[full_id] = make_ext_fallback(dat)
+   end
 
    update_docs(dat, _schema, loc)
 
@@ -624,6 +679,17 @@ function proxy:ensure(k)
       error(string.format("No instance of '%s' with ID '%s' was found.", self._type, k))
    end
    return it
+end
+
+function proxy:ext(k, ext_id)
+   self.data["base.data_ext"]:ensure(ext_id)
+   local it = self:ensure(k)
+   local ext = it._ext and it._ext[ext_id]
+   if ext == nil then
+      local fallback = self.data.ext[ext_id]
+      ext = fallback
+   end
+   return ext
 end
 
 local function iter(state, prev_index)

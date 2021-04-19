@@ -10,6 +10,7 @@ local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Gui = require("api.Gui")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local MapgenUtils = require("mod.elona.api.MapgenUtils")
+local IItemBookOfRachel = require("mod.elona.api.aspect.IItemBookOfRachel")
 
 do
    local lumiest_graveyard = {
@@ -614,8 +615,7 @@ do
       map:set_archetype("elona.mansion_of_younger_sister", { set_properties = true })
 
       if params.is_first_generation then
-         local item = Item.create("elona.book_of_rachel", 12, 8, nil, map)
-         item.params.book_of_rachel_number = 4
+         Item.create("elona.book_of_rachel", 12, 8, {aspects={[IItemBookOfRachel]={book_number=4}}}, map)
       end
 
       local chara = Chara.create("elona.younger_sister_of_mansion", 12, 6, nil, map)

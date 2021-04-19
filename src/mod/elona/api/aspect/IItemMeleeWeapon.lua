@@ -5,8 +5,11 @@ local IItemMeleeWeapon = class.interface("IItemMeleeWeapon", {}, { IAspect, IIte
 
 IItemMeleeWeapon.default_impl = "mod.elona.api.aspect.ItemMeleeWeaponAspect"
 
-function IItemMeleeWeapon:is_active(chara)
-   return true
+function IItemMeleeWeapon:is_active(item)
+   return item:is_equipped()
+      and not item:is_equipped_at("elona.ranged")
+      and not item:is_equipped_at("elona.ammo")
+      and item:get_aspect(IItemMeleeWeapon)
 end
 
 return IItemMeleeWeapon

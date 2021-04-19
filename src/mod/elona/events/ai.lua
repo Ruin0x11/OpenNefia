@@ -65,23 +65,6 @@ local function on_ai_dir_check(chara, params, result)
 end
 Event.register("elona.on_ai_dir_check", "Count closed doors as open spaces", on_ai_dir_check)
 
-local function check_if_sandbag(chara, params, result)
-   -- >>>>>>>> shade2/ai.hsp:29 	if cBit(cSandBag,cc){ ...
-   if chara:calc("is_hung_on_sandbag") then
-      if chara:is_in_fov() then
-         if Rand.one_in(30) then
-            Gui.mes_c(I18N.quote_speech("action.npc.sand_bag", chara), "Talk")
-         end
-      end
-      chara:set_aggro(chara:get_target(), 0)
-      return true, "blocked"
-   end
-
-   return result
-   -- <<<<<<<< shade2/ai.hsp:32 		} ..
-end
-Event.register("elona.before_default_ai_action", "Block if hung on sandbag", check_if_sandbag, {priority = 5000})
-
 local function check_if_leashed(chara, params, result)
    -- >>>>>>>> shade2/ai.hsp:34 	if sync(cc)=false : if cBlind(pc)=false : if rnd( ...
    local leashed_to = chara.leashed_to

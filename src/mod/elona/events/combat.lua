@@ -6,6 +6,7 @@ local Gui = require("api.Gui")
 local Map = require("api.Map")
 local Const = require("api.Const")
 local ICharaEquipStyle = require("api.chara.aspect.ICharaEquipStyle")
+local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
 
 local function retreat_in_fear(chara, params)
    -- >>>>>>>> shade2/chara_func.hsp:1535 		if cHp(tc)<cMhp(tc)/5:if tc!pc:if cFear(tc)=0:if ..
@@ -290,7 +291,7 @@ Event.register("base.on_calc_kill_exp",
 local function calc_exp_modifier(target)
    -- >>>>>>>> shade2/action.hsp:1251 	expModifer=1+cBit(cSandBag,tc)*15+cBit(cSplit,tc) ..
    local map = target:current_map()
-   return 1 + ((target:calc("is_hung_on_sandbag") and 15) or 0)
+   return 1 + ((target:calc(ICharaSandBag, "is_hung_on_sand_bag") and 15) or 0)
       + ((target:calc("splits") and 1) or 0)
       + ((target:calc("splits2") and 1) or 0)
       + (map:calc("exp_modifier") or 0)

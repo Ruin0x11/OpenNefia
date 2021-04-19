@@ -35,6 +35,12 @@ local function linear(v0, v1, t)
    return (1 - t) * v0 + t * v1
 end
 
+local function is_nan(t)
+   -- According to IEEE 754, a nan value is considered not equal to any value,
+   -- including itself.
+   return t ~= t
+end
+
 function Curve:evaluate(t)
    if #self.keyframes == 0 then
       return 0.0
@@ -45,6 +51,9 @@ function Curve:evaluate(t)
    local kf_before, kf_after = self:keyframes_between(t)
 
    local t_scaled = (t - kf_before.time) / (kf_after.time - kf_before.time)
+   if is_nan(t_scaled) then
+      t_scaled = 0.0
+   end
 
    return linear(kf_before.value, kf_after.value, t_scaled)
 end

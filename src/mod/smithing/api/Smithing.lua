@@ -16,12 +16,9 @@ local Env = require("api.Env")
 local global = require("mod.smithing.internal.global")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 local IItemBlacksmithHammer = require("mod.smithing.api.aspect.IItemBlacksmithHammer")
+local SmithingFormula = require("mod.smithing.api.SmithingFormula")
 
 local Smithing = {}
-
-function Smithing.calc_hammer_activity_turns(act, params, chara)
-   return 25 - chara:trait_level("smithing.blacksmith") * 5 + Rand.rnd(11)
-end
 
 local function item_type_prompt(choices)
    return function()
@@ -57,14 +54,6 @@ Smithing.prompt_armor_type = item_type_prompt {
    "elona.equip_leg_heavy_boots",
    "elona.equip_wrist_gauntlet"
 }
-
-function Smithing.calc_required_hammer_levels_to_next_bonus(hammer)
-   local bonus = hammer
-   if type(hammer) == "table" then
-      bonus = hammer.bonus
-   end
-   return 2000 * (bonus + 1)
-end
 
 function Smithing.can_smith_item(item, hammer, selected_items)
    if item.own_state == Enum.OwnState.NotOwned or item.own_state == Enum.OwnState.Unobtainable then
@@ -247,53 +236,6 @@ function Smithing.on_use_blacksmith_hammer(hammer, chara)
    -- <<<<<<<< oomSEST/src/southtyris.hsp:83534 		goto *label_1454 ..
 end
 
-function Smithing.calc_smith_extend_chance(hammer, extend)
-   -- >>>>>>>> oomSEST/src/southtyris.hsp:98541 			if (rnd(limitmin(200 + extend * 50 - iEnhanceme ..
-   return math.max(200 + extend * 50 - hammer.bonus * 100, 1)
-   -- <<<<<<<< oomSEST/src/southtyris.hsp:98541 			if (rnd(limitmin(200 + extend * 50 - iEnhanceme ..
-end
-
-function Smithing.calc_hammer_required_exp(hammer_level)
-   return Calc.calc_living_weapon_required_exp(hammer_level)
-end
-
--- >>>>>>>> oomSEST/src/southtyris.hsp:104907 #deffunc modexpsmith int __fff, int __ggg ..
-function Smithing.gain_hammer_experience(hammer, amount)
-   amount = math.floor(amount)
-
-   local aspect = hammer:get_aspect(IItemBlacksmithHammer)
-   local level = aspect.hammer_level
-   local cur_exp = aspect.hammer_experience
-   local req_exp = aspect:calc_required_exp(hammer)
-
-   if aspect:can_upgrade(hammer) then
-      aspect.hammer_experience = (cur_exp + amount) % req_exp
-      return false
-   end
-
-   if level <= Smithing.calc_required_hammer_levels_to_next_bonus(hammer.bonus-1) then
-      amount = amount * 100 * hammer.bonus
-   end
-
-   if cur_exp < req_exp then
-      cur_exp = math.max(cur_exp, 0)
-      aspect.hammer_experience = cur_exp + amount
-   end
-
-   if aspect.hammer_experience >= req_exp then
-      aspect:gain_level(hammer)
-      Gui.play_sound("base.ding3")
-      Gui.mes_c("smithing.blacksmith_hammer.skill_increases", "Green")
-   end
-
-   local exp_perc = aspect:exp_percent(hammer)
-   exp_perc = ("%3.6f"):format(exp_perc):sub(1, 6)
-   Gui.mes(("%s(Lv: %d Exp:%s%%)"):format(I18N.space(), aspect.hammer_level, string.right_pad(tostring(exp_perc), 6)))
-
-   return true
-end
--- <<<<<<<< oomSEST/src/southtyris.hsp:104931 	return 1 ..
-
 function Smithing.material_for_chara(chara_id)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:98595             s = refchara(iSubname(ci), 8, 1) ..
    local chara_data = data["base.chara"]:ensure(chara_id)
@@ -388,11 +330,6 @@ function Smithing.extendable_enchantment(item)
    return fun.iter(merged_encs):filter(function(merged_enc) return merged_enc.total_power > 0 end):nth(1)
 end
 
-function Smithing.calc_item_generation_seed(hammer)
-   local aspect = hammer:get_aspect(IItemBlacksmithHammer)
-   return aspect.hammer_level * 1000000 + aspect.hammer_experience
-end
-
 function Smithing.create_equipment(hammer, chara, target_item, material, categories, extend)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:98549 		quality = 0 ..
    local quality = 0
@@ -422,7 +359,7 @@ function Smithing.create_equipment(hammer, chara, target_item, material, categor
       else
          exp = 1 + Rand.rnd(math.max(10 / hammer_level), 1) + math.min(aspect.total_uses, quality / 1000)
       end
-      Smithing.gain_hammer_experience(hammer, exp)
+      aspect:gain_experience(hammer, exp)
 
       aspect.total_uses = aspect.total_uses + 1
       Skill.gain_skill_exp(chara, "elona.stat_constitution", 10)
@@ -484,7 +421,7 @@ function Smithing.create_equipment(hammer, chara, target_item, material, categor
          + math.min(aspect.total_uses, quality / 1000)
    end
 
-   Smithing.gain_hammer_experience(hammer, hammer_exp)
+   aspect:gain_experience(hammer, hammer_exp)
    aspect.total_uses = aspect.total_uses + 1
    Skill.gain_skill_exp(chara, "elona.stat_constitution", 50)
 
@@ -534,7 +471,7 @@ function Smithing.repair_furniture(hammer, chara, target_item, material)
    material:remove(1)
 
    local exp_gain = 1 + Rand.rnd(10) + math.min(material:calc("value") / 200, 100)
-   Smithing.gain_hammer_experience(hammer, exp_gain)
+   hammer:get_aspect(IItemBlacksmithHammer):gain_experience(hammer, exp_gain)
    Skill.gain_skill_exp(chara, "elona.stat_constitution", 50)
    chara:refresh()
    -- <<<<<<<< oomSEST/src/hammer.hsp:766 		gosub *chara_refresh ..
@@ -564,7 +501,7 @@ function Smithing.repair_equipment(hammer, chara, item, power)
    end
 
    local exp_gain = 1 + Rand.rnd(math.max(10 / hammer:calc_aspect(IItemBlacksmithHammer, "hammer_level"), 1))
-   Smithing.gain_hammer_experience(hammer, exp_gain)
+   hammer:get_aspect(IItemBlacksmithHammer):gain_experience(hammer, exp_gain)
    Skill.gain_skill_exp(chara, "elona.stat_constitution", 50)
    chara:refresh()
 end

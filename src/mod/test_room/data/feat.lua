@@ -15,7 +15,7 @@ data:add {
 
    on_bumped_into = function(self, params)
       local pred = function(arc) return state.is_test_map[arc._id] end
-      local arcs = data["base.map_archetype"]:iter():filter(pred)
+      local arcs = data["base.map_archetype"]:iter():filter(pred):into_sorted(function(a, b) return a._id < b._id end)
 
       local choices = arcs:map(function(arc) return arc._id:gsub("^.*%.", "") end):to_list()
       local choice, canceled = Input.prompt(choices)

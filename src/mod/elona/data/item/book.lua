@@ -5,6 +5,9 @@ local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
+local IItemTextbook = require("mod.elona.api.aspect.IItemTextbook")
+local IItemBook = require("mod.elona.api.aspect.IItemBook")
+local IItemBookOfRachel = require("mod.elona.api.aspect.IItemBookOfRachel")
 
 --
 -- Book
@@ -30,7 +33,6 @@ data:add {
    coefficient = 100,
    is_wishable = false,
 
-   param1 = 1,
    elona_type = "normal_book",
    categories = {
       "elona.book",
@@ -45,32 +47,9 @@ data:add {
    image = "elona.item_book",
    value = 500,
    weight = 80,
-   on_read = function(self)
-      -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
-      Effect.identify_item(self, Enum.IdentifyState.Name)
-      local text = I18N.get("_.elona.book." .. self.params.book_id .. ".text")
-      local BookMenu = require("api.gui.menu.BookMenu")
-      BookMenu:new(text, true):query()
-      return "player_turn_query"
-      -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
-   end,
    category = 55000,
    rarity = 2000000,
    coefficient = 100,
-
-   params = { book_id = nil },
-
-   on_init_params = function(self)
-      -- >>>>>>>> shade2/item.hsp:618 	if iId(ci)=idBook	:if iBookId(ci)=0:iBookId(ci)=i ..
-      if not self.params.book_id then
-         local cands = data["elona.book"]:iter()
-         :filter(function(book) return book.is_randomly_generated end)
-            :extract("_id")
-            :to_list()
-         self.params.book_id = Rand.choice(cands)
-      end
-      -- <<<<<<<< shade2/item.hsp:618 	if iId(ci)=idBook	:if iBookId(ci)=0:iBookId(ci)=i ..
-   end,
 
    elona_type = "normal_book",
 
@@ -78,6 +57,10 @@ data:add {
 
    categories = {
       "elona.book"
+   },
+
+   _ext = {
+      IItemBook
    }
 }
 
@@ -111,34 +94,14 @@ data:add {
    rarity = 50000,
    coefficient = 100,
 
-   params = { textbook_skill_id = nil },
-   on_init_params = function(self, params)
-      -- >>>>>>>> shade2/item.hsp:619 	if iId(ci)=idBookSkill	:if iBookId(ci)=0:iBookId( ..
-      self.params.textbook_skill_id = Skill.random_skill()
-      -- <<<<<<<< shade2/item.hsp:619 	if iId(ci)=idBookSkill	:if iBookId(ci)=0:iBookId( ..
-   end,
-
-   on_read = function(self, params)
-      -- >>>>>>>> shade2/command.hsp:4447 	if iId(ci)=idBookSkill{ ...
-      local skill_id = self.params.textbook_skill_id
-      local chara = params.chara
-      if chara:is_player() and not chara:has_skill(skill_id) then
-         Gui.mes("action.read.book.not_interested")
-         if not Input.yes_no() then
-            return "player_turn_query"
-         end
-      end
-
-      chara:start_activity("elona.training", {skill_id=skill_id,item=self})
-
-      return "turn_end"
-      -- <<<<<<<< shade2/command.hsp:4454 		} ...         end,
-   end,
-
    elona_type = "normal_book",
 
    categories = {
       "elona.book"
+   },
+
+   _ext = {
+      IItemTextbook
    }
 }
 
@@ -153,19 +116,6 @@ data:add {
    rarity = 50000,
    coefficient = 0,
 
-   params = { book_of_rachel_number = 1 },
-   on_init_params = function(self)
-      self.params.book_of_rachel_number = Rand.rnd(4) + 1
-   end,
-
-   on_read = function(self)
-      -- >>>>>>>> shade2/proc.hsp:1250 	if iId(ci)=idDeedVoid: :snd seOpenBook: txt lang( ...
-      Gui.play_sound("base.book1")
-      Gui.mes("action.read.book.book_of_rachel")
-      return "turn_end"
-      -- <<<<<<<< shade2/proc.hsp:1250 	if iId(ci)=idDeedVoid: :snd seOpenBook: txt lang( ..
-   end,
-
    elona_type = "normal_book",
 
    tags = { "noshop" },
@@ -173,6 +123,10 @@ data:add {
    categories = {
       "elona.book",
       "elona.tag_noshop"
+   },
+
+   _ext = {
+      IItemBookOfRachel
    }
 }
 
@@ -207,8 +161,6 @@ data:add {
    rarity = 50000,
    coefficient = 0,
    originalnameref2 = "book",
-
-   param1 = 1,
 
    params = { book_of_bokonon_no = 1 },
    on_init_params = function(self)

@@ -11,6 +11,13 @@ local Pos = require("api.Pos")
 local Chara = require("api.Chara")
 local Anim = require("mod.elona_sys.api.Anim")
 local Weather = require("mod.elona.api.Weather")
+local IItemMusicDisc = require("mod.elona.api.aspect.IItemMusicDisc")
+local Aspect = require("api.Aspect")
+local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
+local IItemCookingTool = require("mod.elona.api.aspect.IItemCookingTool")
+local IItemGaroksHammer = require("mod.elona.api.aspect.IItemGaroksHammer")
+local IItemFishingPole = require("mod.elona.api.aspect.IItemFishingPole")
+local IItemMoneyBox = require("mod.elona.api.aspect.IItemMoneyBox")
 
 --
 -- Tool
@@ -121,12 +128,14 @@ data:add {
    category = 59000,
    coefficient = 100,
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-   params = { cooking_quality = 60 },
    categories = {
       "elona.misc_item"
+   },
+
+   _ext = {
+      [IItemCookingTool] = {
+         cooking_quality = 60
+      }
    }
 }
 
@@ -140,16 +149,18 @@ data:add {
    category = 59000,
    coefficient = 100,
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-   params = { cooking_quality = 40 },
    categories = {
       "elona.misc_item"
    },
 
    light = light.torch,
    ambient_sounds = { "base.bg_fire" },
+
+   _ext = {
+      [IItemCookingTool] = {
+         cooking_quality = 40
+      }
+   }
 }
 
 data:add {
@@ -162,12 +173,14 @@ data:add {
    category = 59000,
    coefficient = 100,
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-   params = { cooking_quality = 80 },
    categories = {
       "elona.misc_item"
+   },
+
+   _ext = {
+      [IItemCookingTool] = {
+         cooking_quality = 80
+      }
    }
 }
 
@@ -181,16 +194,12 @@ data:add {
    category = 59000,
    coefficient = 100,
 
-   params = { bait_type = "elona.water_flea", bait_amount = 0 },
-
-   on_use = function(self, params)
-      Magic.cast("elona.fishing", { source = params.chara, item = self })
-   end,
-
-   elona_function = 16,
-   param1 = 60,
    categories = {
       "elona.misc_item"
+   },
+
+   _ext = {
+      IItemFishingPole
    }
 }
 
@@ -240,17 +249,9 @@ data:add {
    image = "elona.item_playback_disc",
    value = 1000,
    weight = 500,
-   on_use = function() end,
    category = 59000,
    rarity = 1500000,
    coefficient = 100,
-
-   elona_function = 6,
-
-   params = { disc_music_id = "" },
-   on_init_params = function(self, params)
-      self.disc_music_id = Rand.choice(data["base.music"]:iter())._id
-   end,
 
    tags = { "sf" },
    random_color = "Furniture",
@@ -258,7 +259,11 @@ data:add {
       "elona.tag_sf",
       "elona.misc_item"
    },
-   light = light.item
+   light = light.item,
+
+   _ext = {
+      [IItemMusicDisc] = {}
+   }
 }
 
 data:add {
@@ -392,34 +397,19 @@ data:add {
    image = "elona.item_kitty_bank",
    value = 1400,
    weight = 500,
-   on_use = function() end,
    category = 59000,
    rarity = 300000,
    coefficient = 100,
-
-   elona_function = 11,
-
-   params = {
-      bank_gold_stored = 0,
-      bank_gold_increment = 0,
-   },
-
-   on_init_params = function(self, params)
-      -- >>>>>>>> shade2/item.hsp:69 	moneyBox =500,2000,10000,50000,500000,5000000,100 ..
-      local BANK_INCREMENTS = { 500, 2000, 10000, 50000, 500000, 5000000, 100000000 }
-      -- <<<<<<<< shade2/item.hsp:69 	moneyBox =500,2000,10000,50000,500000,5000000,100 ..
-      -- >>>>>>>> shade2/item.hsp:661 	if iId(ci)=idMoneyBox{ ..
-      local idx = Rand.rnd(Rand.rnd(#BANK_INCREMENTS) + 1) + 1
-      self.params.bank_gold_increment = BANK_INCREMENTS[idx]
-      self.value = 2000 + idx * idx + idx * 100
-      -- <<<<<<<< shade2/item.hsp:664 		} ..
-   end,
 
    categories = {
       "elona.misc_item"
    },
 
-   light = light.item
+   light = light.item,
+
+   _ext = {
+      IItemMoneyBox
+   }
 }
 
 data:add {
@@ -941,100 +931,6 @@ data:add {
    rarity = 400000,
    coefficient = 100,
 
-   elona_function = 33,
-
-   params = {
-      monster_ball_captured_chara_id = nil,
-      monster_ball_captured_chara_level = 0,
-      monster_ball_max_level = 0
-   },
-
-   on_init_params = function(self, params)
-      -- >>>>>>>> shade2/item.hsp:665 	if iId(ci)=idMonsterBall{ ..
-      self.params.monster_ball_max_level = Rand.rnd(params.level + 1) + 1
-      self.value = 2000 + self.params.monster_ball_max_level * self.params.monster_ball_max_level
-         + self.params.monster_ball_max_level * 100
-      -- <<<<<<<< shade2/item.hsp:668 		} ..
-   end,
-
-   on_throw = function(self, params)
-      -- >>>>>>>> shade2/action.hsp:17 	if iId(ci)=idMonsterBall{ ...
-      local map = params.chara:current_map()
-      local clone = self:clone()
-      if map and map:can_take_object(clone) then
-         assert(map:take_object(clone, params.x, params.y))
-         clone.amount = 1
-      end
-      -- <<<<<<<< shade2/action.hsp:21 		} ..
-
-      -- >>>>>>>> shade2/action.hsp:27 		snd seThrow2 ...
-      Gui.play_sound("base.throw2", params.x, params.y)
-      map:refresh_tile(params.x, params.y)
-      local target = Chara.at(params.x, params.y, map)
-      if target then
-         Gui.mes("action.throw.hits", target)
-
-         -- >>>>>>>> shade2/action.hsp:32 			if iId(ci)=idMonsterBall{ ...
-         if not config.base.development_mode then
-            if target:is_ally() or target:has_any_roles() or target:calc("quality") == Enum.Quality.Unique or target:calc("is_precious") then
-               Gui.mes("action.throw.monster_ball.cannot_be_captured")
-               return "turn_end"
-            end
-
-            if target:calc("level") > clone.params.monster_ball_max_level then
-               Gui.mes("action.throw.monster_ball.not_enough_power")
-               return "turn_end"
-            end
-
-            if target.hp > target:calc("max_hp") / 10 then
-               Gui.mes("action.throw.monster_ball.not_weak_enough")
-               return "turn_end"
-            end
-         end
-
-         Gui.mes_c("action.throw.monster_ball.capture", "Green", target)
-         local anim = Anim.load("elona.anim_smoke", params.x, params.y)
-         Gui.start_draw_callback(anim)
-
-         clone.params.monster_ball_captured_chara_id = target._id
-         clone.params.monster_ball_captured_chara_level = target.level
-         clone.weight = math.clamp(target.weight, 10000, 100000)
-         clone.value = 1000
-         clone.can_throw = false
-         -- <<<<<<<< shade2/action.hsp:43 				 ..
-
-         -- >>>>>>>> shade2/action.hsp:49 			chara_vanquish tc ...
-         target:vanquish() -- triggers "elona_sys.on_quest_check" via "base.on_chara_vanquished"
-         -- <<<<<<<< shade2/action.hsp:50 			check_quest ..
-      end
-      -- <<<<<<<< shade2/action.hsp:31 			txtMore:txt lang(name(tc)+"に見事に命中した！","It hits  ..
-
-      return "turn_end"
-   end,
-
-   on_use = function(self, params)
-      -- >>>>>>>> shade2/action.hsp:2082 	case effMonsterBall ...
-      local source = params.chara
-      if self.params.monster_ball_captured_chara_id == nil then
-         Gui.mes("action.use.monster_ball.empty")
-         return "player_turn_query"
-      end
-
-      if not source:can_recruit_allies() then
-         Gui.mes("action.use.monster_ball.party_is_full")
-         return "player_turn_query"
-      end
-
-      Gui.mes("action.use.monster_ball.use", self:build_name(1))
-      self.amount = self.amount - 1
-      self:refresh_cell_on_map()
-
-      -- TODO void
-      local chara = Chara.create(self.params.monster_ball_captured_chara_id, source.x, source.y, {}, source:current_map())
-      source:recruit_as_ally(chara)
-      -- <<<<<<<< shade2/action.hsp:2089 	swbreak ..
-   end,
-
    categories = {
       "elona.misc_item"
    }
@@ -1323,18 +1219,8 @@ data:add {
          return "player_turn_query"
       end
 
-      if target.hp >= target:calc("max_hp") and not config.base.development_mode then
-         Gui.mes("action.use.sandbag.not_weak_enough")
-         return "player_turn_query"
-      end
-
       if not target:is_player() and target:is_in_player_party() then
          Gui.mes("action.use.sandbag.ally")
-         return "player_turn_query"
-      end
-
-      if target.is_hung_on_sandbag then
-         Gui.mes("action.use.sandbag.already")
          return "player_turn_query"
       end
 
@@ -1343,15 +1229,22 @@ data:add {
          return "turn_end"
       end
 
-      -- TODO render sand bag chip if is_hung_on_sandbag
+      if target:calc_aspect(ICharaSandBag, "is_hung_on_sand_bag") then
+         Gui.mes("action.use.sandbag.already")
+         return "player_turn_query"
+      end
+
+      if target.hp >= target:calc("max_hp") and not config.base.development_mode then
+         Gui.mes("action.use.sandbag.not_weak_enough")
+         return "player_turn_query"
+      end
+
       Gui.play_sound("base.build1", x, y)
-      target.is_hung_on_sandbag = true
+      target:get_aspect_or_default(ICharaSandBag, true):hang_on_sand_bag(target, self, true)
       Gui.mes("action.use.sandbag.start", target)
       Gui.mes("action.use.leash.other.start.dialog", target)
       local anim = Anim.load("elona.anim_smoke", target.x, target.y)
       Gui.start_draw_callback(anim)
-      target:refresh()
-      self:remove(1)
 
       return "turn_end"
       -- <<<<<<<< shade2/action.hsp:1918 	swbreak ...         end,
@@ -1514,19 +1407,12 @@ data:add {
    image = "elona.item_material_kit",
    value = 75000,
    weight = 5000,
-   on_use = function() end,
    fltselect = 3,
    category = 59000,
    rarity = 5000,
    coefficient = 0,
 
-   elona_function = 49,
    is_precious = true,
-
-   params = { garoks_hammer_seed = 0 },
-   on_init_params = function(self)
-      self.params.garoks_hammer_seed = Rand.rnd(20000) + 1
-   end,
 
    quality = Enum.Quality.Unique,
    medal_value = 94,
@@ -1534,7 +1420,11 @@ data:add {
       "elona.unique_item",
       "elona.misc_item"
    },
-   light = light.item
+   light = light.item,
+
+   _ext = {
+      IItemGaroksHammer
+   }
 }
 
 data:add {
@@ -1599,13 +1489,13 @@ data:add {
    coefficient = 100,
    random_color = "Furniture",
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-
    categories = {
       "elona.misc_item_crafting",
       "elona.misc_item"
+   },
+
+   _ext = {
+      IItemCookingTool
    }
 }
 
@@ -1621,12 +1511,12 @@ data:add {
    coefficient = 100,
    random_color = "Furniture",
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-
    categories = {
       "elona.misc_item_crafting",
       "elona.misc_item"
+   },
+
+   _ext = {
+      IItemCookingTool
    }
 }

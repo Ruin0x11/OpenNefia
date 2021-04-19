@@ -5,6 +5,18 @@ local CodeGenerator = require("api.CodeGenerator")
 local Enum = require("api.Enum")
 
 data:add_type {
+   name = "data_ext",
+   fields = {
+      {
+         name = "fields",
+         template = true,
+         type = "table",
+         default = {}
+      }
+   }
+}
+
+data:add_type {
    name = "event",
    schema = schema.Record {
       observer = schema.Optional(schema.String)
@@ -411,7 +423,6 @@ Skills this character will already know on creation.
          is_lay_hand_available = nil,
          is_invisible = nil,
          is_summoned = nil,
-         is_hung_on_sandbag = nil,
          taught_words = nil,
 
          prevent_sell_in_own_shop = nil

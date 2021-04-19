@@ -24,6 +24,9 @@ function test_IAspectHolder_normal_build()
    local aspect = IAspectHolder.get_aspect(item, AspectHolder_ITestAspect)
    Assert.eq(true, class.is_an(AspectHolder_TestAspect, aspect))
    Assert.eq(0, aspect.foo)
+
+   -- Conversion by data_table to map-part
+   Assert.same({}, data["base.item"]["@test@.aspected"]._ext[AspectHolder_ITestAspect])
 end
 
 function test_IAspectHolder_normal_build__params()

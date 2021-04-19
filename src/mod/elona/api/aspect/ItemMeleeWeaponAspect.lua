@@ -9,11 +9,4 @@ function ItemMeleeWeaponAspect:init(item, params)
    self.skill = params.skill or "elona.martial_arts"
 end
 
-function ItemMeleeWeaponAspect:is_active(item)
-   return item:is_equipped()
-      and not item:is_equipped_at("elona.ranged")
-      and not item:is_equipped_at("elona.ammo")
-      and item:get_aspect(IItemMeleeWeapon)
-end
-
 return ItemMeleeWeaponAspect

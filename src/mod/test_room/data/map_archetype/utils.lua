@@ -5,6 +5,7 @@ local Chara = require("api.Chara")
 local InstancedMap = require("api.InstancedMap")
 local Pos = require("api.Pos")
 local Area = require("api.Area")
+local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
 
 local utils = {}
 
@@ -31,9 +32,8 @@ end
 
 function utils.create_sandbag(x, y, map, chara_id)
    chara_id = chara_id or "elona.lomias"
-   local sandbag = assert(Item.create("elona.sand_bag", x, y, {}, map))
    local chara = assert(Chara.create(chara_id, x, y, {}, map))
-   chara.is_hung_on_sandbag = true
+   chara:get_aspect_or_default(ICharaSandBag, true):hang_on_sand_bag(chara)
    chara.relation = Enum.Relation.Enemy
 end
 

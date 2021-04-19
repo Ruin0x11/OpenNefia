@@ -25,6 +25,8 @@ local IItemDice = require("mod.elona.api.aspect.IItemDice")
 local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
 local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
 local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
+local IItemMusicDisc = require("mod.elona.api.aspect.IItemMusicDisc")
+local IItemLocalizableExtra = require("mod.elona.api.aspect.IItemLocalizableExtra")
 
 local Itemname = {}
 
@@ -113,12 +115,7 @@ local function item_name_sub(s, item, jp)
    local skip = false
    local identify = item:calc("identify_state")
 
-   if _id == "elona.kitty_bank" then
-      local increment = I18N.localize("base.item", _id, "names._" .. item.params.bank_gold_increment)
-      s = s .. I18N.localize("base.item", _id, "amount", increment)
-   elseif _id == "elona.bait" then
-      s = s .. I18N.space() .. I18N.localize("base.item", _id, "title", "bait._." .. item.params.bait_type .. ".name")
-   elseif _id == "elona.ancient_book" then
+   if _id == "elona.ancient_book" then
       if jp and item.params.ancient_book_is_decoded then
          s = s .. "解読済みの"
       end
@@ -128,17 +125,6 @@ local function item_name_sub(s, item, jp)
       end
    elseif _id == "elona.recipe" then
       -- TODO recipe
-   end
-
-   if item:has_category("elona.book") then
-      if _id == "elona.textbook" then
-         local skill_name = I18N.localize("base.skill", item.params.textbook_skill_id, "name")
-         s = s .. I18N.localize("base.item", _id, "title", skill_name)
-      elseif _id == "elona.book_of_rachel" then
-         s = s .. I18N.localize("base.item", _id, "title", item.params.book_of_rachel_number)
-      elseif _id == "elona.book" then
-         s = s .. I18N.localize("base.item", _id, "title", "_.elona.book." .. item.params.book_id .. ".title")
-      end
    end
 
    if item._id == "elona.recipe" then
@@ -374,19 +360,7 @@ function itemname.jp(item, amount, no_article)
    -- <<<<<<<< shade2/item_func.hsp:615 		} ..
 
    -- >>>>>>>> shade2/item_func.hsp:640 	if iId(id)=idFishingPole{ ..
-   if _id == "elona.fishing_pole" then
-      if item.params.bait_amount > 0 then
-         s = s .. I18N.localize("base.item", _id, "remaining", "bait._." .. item.params.bait_type .. ".name", item.params.bait_amount)
-      end
-   elseif _id == "elona.monster_ball" then
-      local chara_id = item.params.monster_ball_captured_chara_id
-      if chara_id then
-         local chara_name = I18N.localize("base.chara", chara_id, "name")
-         s = s .. ("(%s)"):format(chara_name)
-      else
-         s = s .. I18N.localize("base.item", _id, "level", item.params.monster_ball_max_level)
-      end
-   elseif _id == "elona.small_gamble_chest" then
+   if _id == "elona.small_gamble_chest" then
       s = s .. I18N.localize("base.item", _id, "level", item.params.chest_lockpick_difficulty)
    end
 
@@ -435,13 +409,10 @@ function itemname.jp(item, amount, no_article)
 
    if _id == "elona.shelter" then
       s = s .. I18N.get("item.serial_no", item.params.shelter_serial_no)
-   elseif _id == "elona.disc" then
-      local bgm_number = "???"
-      local music = data["base.music"][item.params.disc_music_id]
-      if music and music.elona_id then
-         bgm_number = tostring(music.elona_id)
-      end
-      s = s .. (" <BGM%s>"):format(bgm_number)
+   end
+
+   for _, aspect in item:iter_aspects(IItemLocalizableExtra) do
+      s = aspect:localize_extra(s, item) or s
    end
 
    return s
@@ -642,19 +613,7 @@ function itemname.en(item, amount, no_article)
    -- <<<<<<<< shade2/item_func.hsp:638 		} ..
 
    -- >>>>>>>> shade2/item_func.hsp:640 	if iId(id)=idFishingPole{ ..
-   if _id == "elona.fishing_pole" then
-      if item.params.bait_amount > 0 then
-         s = s .. I18N.localize("base.item", _id, "remaining", "bait._." .. item.params.bait_type .. ".name", item.params.bait_amount)
-      end
-   elseif _id == "elona.monster_ball" then
-      local chara_id = item.params.monster_ball_captured_chara_id
-      if chara_id then
-         local chara_name = I18N.localize("base.chara", chara_id, "name")
-         s = s .. (" (%s)"):format(chara_name)
-      else
-         s = s .. I18N.localize("base.item", _id, "level", item.params.monster_ball_max_level)
-      end
-   elseif _id == "elona.small_gamble_chest" then
+   if _id == "elona.small_gamble_chest" then
       s = s .. I18N.localize("base.item", _id, "level", item.params.chest_lockpick_difficulty)
    end
 
@@ -703,13 +662,10 @@ function itemname.en(item, amount, no_article)
 
    if _id == "elona.shelter" then
       s = s .. I18N.get("item.serial_no", item.params.shelter_serial_no)
-   elseif _id == "elona.disc" then
-      local bgm_number = "???"
-      local music = data["base.music"][item.params.disc_music_id]
-      if music and music.elona_id then
-         bgm_number = tostring(music.elona_id)
-      end
-      s = s .. (" <BGM%s>"):format(bgm_number)
+   end
+
+   for _, aspect in item:iter_aspects(IItemLocalizableExtra) do
+      s = aspect:localize_extra(s, item) or s
    end
 
    return s

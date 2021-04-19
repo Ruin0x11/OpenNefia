@@ -2,6 +2,8 @@ local light = require("mod.elona.data.item.light")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Enum = require("api.Enum")
+local IItemFishingPole = require("mod.elona.api.aspect.IItemFishingPole")
+local IItemBait = require("mod.elona.api.aspect.IItemBait")
 
 --
 -- Junk
@@ -371,60 +373,14 @@ data:add {
    category = 64000,
    coefficient = 100,
 
-   on_dip_into = function(self, params)
-      -- >>>>>>>> shade2/action.hsp:1600 	if iId(ciDip)=idBite{	 ...
-      local target_item = params.target_item
-      target_item = target_item:separate()
-      self:remove(1)
-      Gui.play_sound("base.equip1")
-      Gui.mes("action.dip.result.bait_attachment", target_item:build_name(), self:build_name(1))
-
-      if target_item.params.bait_type == self.params.bait_type then
-         target_item.params.bait_amount = target_item.params.bait_amount + Rand.rnd(10) + 15
-      else
-         target_item.params.bait_amount = Rand.rnd(10) + 15
-         target_item.params.bait_type = self.params.bait_type
-      end
-
-      return "turn_end"
-      -- <<<<<<<< shade2/action.hsp:1605 		} ..
-   end,
-
-   params = { bait_type = "elona.water_flea" },
-
-   on_init_params = function(self)
-      -- >>>>>>>> shade2/item.hsp:638:DONE 	if iId(ci)=idBite{ ..
-      self.params.bait_type = Rand.choice {
-         "elona.water_flea",
-         "elona.grasshopper",
-         "elona.ladybug",
-         "elona.dragonfly",
-         "elona.locust",
-         "elona.beetle",
-      }
-
-      local proto = data["elona.bait"]:ensure(self.params.bait_type)
-      self.image = proto.image or self.image
-
-      self.value = proto.value or proto.rank * proto.rank * 500 + 200
-      -- <<<<<<<< shade2/item.hsp:642 		} ..
-   end,
+   _ext = {
+      IItemBait
+   },
 
    categories = {
       "elona.no_generate",
       "elona.junk"
-   },
-
-   events = {
-      {
-         id = "elona_sys.calc_item_can_dip_into",
-         name = "Bait dipping",
-
-         callback = function(self, params)
-            return params.item._id == "elona.fishing_pole"
-         end
-      },
-   },
+   }
 }
 
 data:add {

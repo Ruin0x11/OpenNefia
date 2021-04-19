@@ -8,12 +8,4 @@ function ItemAmmoAspect:init(item, params)
    self.skill = params.skill or "elona.bow"
 end
 
-function ItemAmmoAspect:is_active(item)
-   return item:is_equipped_at("elona.ammo")
-      and item:get_aspect(IItemAmmo)
-end
-
-function ItemAmmoAspect:is_compatible_with(ammo, ranged_weapon)
-end
-
 return ItemAmmoAspect

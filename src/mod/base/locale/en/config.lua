@@ -301,12 +301,12 @@ return {
             -- Menu: message
             --
 
-            add_timestamps = {
+            message_timestamps = {
                doc = "Add a turn timestamp to each message received.\n",
                name = "Add time info"
             },
 
-            transparency = {
+            message_transparency = {
                doc = "Controls the amount of transparency older message log messages receive.",
                formatter = function(_1)
                   return ("%s %%")

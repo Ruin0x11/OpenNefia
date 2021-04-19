@@ -2,6 +2,7 @@ local Csv = require("mod.extlibs.api.Csv")
 local I18N = require("api.I18N")
 local Rand = require("api.Rand")
 local Util = require("mod.elona_sys.api.Util")
+local Const = require("api.Const")
 
 local Text = {}
 
@@ -265,8 +266,8 @@ function Text.unidentified_item_name(item, seed)
    return I18N.localize("base.item", item._id, "name")
 end
 
-function Text.random_subname_seed()
-   return 40000 + Rand.rnd(30000)
+function Text.random_title_seed()
+   return Rand.rnd(Const.RANDOM_ITEM_TITLE_SEED_MAX)
 end
 
 return Text

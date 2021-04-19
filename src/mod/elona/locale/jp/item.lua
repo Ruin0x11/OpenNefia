@@ -328,10 +328,7 @@ local item = {
     unidentified_name = "巨大な斧"
   },
   bait = {
-    name = "",
-    title = function(_1)
-       return ("%s"):format(_1)
-    end,
+    name = ""
   },
   banded_mail = {
     desc = {
@@ -770,11 +767,7 @@ local item = {
       }
     },
     name = "本",
-    unidentified_name = "本",
-
-    title = function(title)
-       return ("《%s》という題名の"):format(title)
-    end
+    unidentified_name = "本"
   },
   book_of_bokonon = {
     _0 = {
@@ -3071,11 +3064,7 @@ local item = {
         text = "釣りの際に必要な道具。使用することができる。"
       }
     },
-    name = "釣竿",
-
-    remaining = function(bait, charges)
-       return ("(%s残り%s匹)"):format(bait, charges)
-    end
+    name = "釣竿"
   },
   five_horned_helm = {
     desc = {
@@ -4301,20 +4290,7 @@ local item = {
         text = "指定された額ごとに貯金できる箱。使用することができる。"
       }
     },
-    name = "貯金箱",
-
-    amount = function(amount)
-       return ("%s"):format(amount)
-    end,
-    names = {
-       _500       = "5百金貨",
-       _2000      = "2千金貨",
-       _10000     = "1万金貨",
-       _50000     = "5万金貨",
-       _500000    = "50万金貨",
-       _5000000   = "500万金貨",
-       _100000000 = "1億金貨"
-    }
+    name = "貯金箱"
   },
   kiwi = {
     desc = {
@@ -5259,11 +5235,7 @@ local item = {
         text = "モンスターを捕獲できる玉。投げることができる。"
       }
     },
-    name = "モンスターボール",
-
-    level = function(lv)
-       return (" Lv %s (空)"):format(lv)
-    end
+    name = "モンスターボール"
   },
   monster_heart = {
     desc = {
@@ -9893,11 +9865,7 @@ local item = {
       }
     },
     name = "学習書",
-    unidentified_name = "本",
-
-    title = function(skill_name)
-       return ("《%s》という題名の"):format(skill_name)
-    end
+    unidentified_name = "本"
   },
   thick_gauntlets = {
     desc = {

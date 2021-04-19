@@ -59,7 +59,7 @@ local function add_great_god_enchantments(item, params)
       return
    end
 
-   item.title_seed = Rand.rnd(Const.RANDOM_ITEM_TITLE_SEED_MAX)
+   item.title_seed = Text.random_title_seed()
    item.title = Text.random_title("weapon", item.title_seed)
 
    if quality == Enum.Quality.God or (quality == Enum.Quality.Great and Rand.one_in(10)) then

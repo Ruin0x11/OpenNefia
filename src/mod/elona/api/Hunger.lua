@@ -355,7 +355,10 @@ function Hunger.apply_general_eating_effect(chara, food)
 
    local exp_gains = {}
 
+   -- In case the item has no food aspect, like if it's a weapon made out of
+   -- "raw" material, the default aspect will be used instead.
    local aspect = food:get_aspect_or_default(IItemFood)
+
    local food_type = aspect:calc(food, "food_type")
    if food_type then
       local proto = data["elona.food_type"]:ensure(food_type)

@@ -198,10 +198,7 @@ local item = {
         text = "Bait for a fishing pole,"
       }
     },
-    name = "bait",
-    title = function(_1)
-       return ("<%s>"):format(_1)
-    end,
+    name = "bait"
   },
   banded_mail = {
     desc = {
@@ -432,11 +429,7 @@ local item = {
       }
     },
     name = "book",
-    unidentified_name = "book",
-
-    title = function(title)
-       return (" titled <%s>"):format(title)
-    end
+    unidentified_name = "book"
   },
   book_of_bokonon = {
     name = "Bokonon"
@@ -447,11 +440,7 @@ local item = {
         text = "A book decorated with pictures,"
       }
     },
-    name = "book",
-
-    title = function(no)
-       return (" of Rachel No.%s"):format(no)
-    end
+    name = "book"
   },
   book_of_resurrection = {
     desc = {
@@ -1711,11 +1700,7 @@ local item = {
         text = "A pole used for bait fishing,"
       }
     },
-    name = "fishing pole",
-
-    remaining = function(bait, charges)
-       return ("(%s %s)"):format(charges, bait)
-    end
+    name = "fishing pole"
   },
   five_horned_helm = {
     name = "<Five Horned Helm>",
@@ -2355,19 +2340,6 @@ local item = {
       }
     },
     name = "kitty bank",
-
-    amount = function(amount)
-       return ("(%s)"):format(amount)
-    end,
-    names = {
-       _500       = "500 GP",
-       _2000      = "2k GP",
-       _10000     = "10K GP",
-       _50000     = "50K GP",
-       _500000    = "500K GP",
-       _5000000   = "5M GP",
-       _100000000 = "500M GP"
-    }
   },
   kiwi = {
     desc = {
@@ -2858,10 +2830,6 @@ local item = {
       }
     },
     name = "monster ball",
-
-    level = function(lv)
-       return (" Level %s(Empty)"):format(lv)
-    end
   },
   monster_heart = {
     desc = {
@@ -5451,11 +5419,7 @@ local item = {
         }
       },
       name = "textbook",
-      unidentified_name = "book",
-
-      title = function(skill_name)
-         return (" titled <Art of %s>"):format(skill_name)
-      end
+      unidentified_name = "book"
     },
     thick_gauntlets = {
       desc = {
