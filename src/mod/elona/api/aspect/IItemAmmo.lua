@@ -9,7 +9,8 @@ local IItemAmmo = class.interface("IItemAmmo", {
 IItemAmmo.default_impl = "mod.elona.api.aspect.ItemAmmoAspect"
 
 function IItemAmmo:is_active(item)
-   return true
+   return item:is_equipped_at("elona.ammo")
+      and item:get_aspect(IItemAmmo)
 end
 
 return IItemAmmo
