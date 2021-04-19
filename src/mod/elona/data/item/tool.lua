@@ -12,6 +12,8 @@ local Chara = require("api.Chara")
 local Anim = require("mod.elona_sys.api.Anim")
 local Weather = require("mod.elona.api.Weather")
 local IItemMusicDisc = require("mod.elona.api.aspect.IItemMusicDisc")
+local Aspect = require("api.Aspect")
+local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
 
 --
 -- Tool
@@ -1236,7 +1238,7 @@ data:add {
          return "player_turn_query"
       end
 
-      if target.is_hung_on_sandbag then
+      if target:calc_aspect(ICharaSandBag, "is_hung_on_sand_bag") then
          Gui.mes("action.use.sandbag.already")
          return "player_turn_query"
       end
@@ -1246,15 +1248,12 @@ data:add {
          return "turn_end"
       end
 
-      -- TODO render sand bag chip if is_hung_on_sandbag
       Gui.play_sound("base.build1", x, y)
-      target.is_hung_on_sandbag = true
+      target:get_aspect_or_default(ICharaSandBag, true):hang_on_sand_bag(target, self, true)
       Gui.mes("action.use.sandbag.start", target)
       Gui.mes("action.use.leash.other.start.dialog", target)
       local anim = Anim.load("elona.anim_smoke", target.x, target.y)
       Gui.start_draw_callback(anim)
-      target:refresh()
-      self:remove(1)
 
       return "turn_end"
       -- <<<<<<<< shade2/action.hsp:1918 	swbreak ...         end,

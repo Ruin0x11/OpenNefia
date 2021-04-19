@@ -8,6 +8,7 @@ local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local Gui = require("api.Gui")
 local ChangeAppearanceMenu = require("api.gui.menu.ChangeAppearanceMenu")
 local Item = require("api.Item")
+local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
 
 --
 -- Interact Actions
@@ -102,9 +103,9 @@ end
 local function interact_release(chara, player)
    -- >>>>>>>> shade2/command.hsp:1904 	if p=9{ ...
    Gui.play_sound("base.build1", chara.x, chara.y)
-   chara.is_hung_on_sandbag = false
+   local aspect = 
+   chara:get_aspect(ICharaSandBag):release_from_sand_bag(chara, true)
    Gui.mes("action.interact.release", chara)
-   Item.create("elona.sand_bag", chara.x, chara.y, nil, chara:current_map())
    chara:refresh()
 
    return "player_turn_query"
@@ -157,8 +158,7 @@ local function add_interact_actions(chara, params, actions)
       add_option("action.interact.choices.change_tone", interact_change_tone)
 
       -- TODO show house
-      -- TODO move to "special items" event handler
-      if chara.is_hung_on_sandbag then
+      if chara:calc_aspect(ICharaSandBag, "is_hung_on_sand_bag") then
          add_option("action.interact.choices.release", interact_release)
       end
    end

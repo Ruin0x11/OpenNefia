@@ -3,6 +3,7 @@ local Gui = require("api.Gui")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local Enum = require("api.Enum")
 local Effect = require("mod.elona.api.Effect")
+local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
 
 local function bump_into_chara(player, params, result)
    -- >>>>>>>> shade2/action.hsp:537 		tc=cellChara ...
@@ -12,7 +13,7 @@ local function bump_into_chara(player, params, result)
    if relation >= Enum.Relation.Ally
       or (relation == Enum.Relation.Dislike and (not config.base.attack_neutral_npcs or Gui.player_is_running()))
    then
-      if not on_cell:calc("is_hung_on_sandbag") then
+      if not on_cell:calc_aspect(ICharaSandBag, "is_hung_on_sand_bag") then
          Gui.mes("action.move.displace.text", on_cell)
          if player:swap_places(on_cell) then
             on_cell:emit("elona.on_chara_displaced", {chara=player})

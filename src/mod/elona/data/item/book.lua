@@ -33,7 +33,6 @@ data:add {
    coefficient = 100,
    is_wishable = false,
 
-   param1 = 1,
    elona_type = "normal_book",
    categories = {
       "elona.book",
@@ -162,8 +161,6 @@ data:add {
    rarity = 50000,
    coefficient = 0,
    originalnameref2 = "book",
-
-   param1 = 1,
 
    params = { book_of_bokonon_no = 1 },
    on_init_params = function(self)

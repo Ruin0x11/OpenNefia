@@ -92,3 +92,5 @@ local function aspect_item_throwable(obj, params, result)
    return result
 end
 Event.register("elona_sys.on_item_throw", "Aspect: IItemThrowable", aspect_item_throwable)
+
+require("mod.elona.events.aspect.sand_bag")

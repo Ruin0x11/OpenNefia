@@ -52,12 +52,17 @@ function AspectHolder:set_aspect(target, iface, aspect, priority)
       iface = env.safe_require(iface)
    end
    class.assert_is_an(IAspect, iface)
-   class.assert_is_an(iface, aspect)
-
-   aspect.temp = aspect.temp or {}
 
    local name = assert(iface.__name)
-   self._store:set(name, aspect, priority or AspectHolder.DEFAULT_PRIORITY)
+   if aspect == nil then
+      self._store:set(name, nil)
+   else
+      class.assert_is_an(iface, aspect)
+
+      aspect.temp = aspect.temp or {}
+
+      self._store:set(name, aspect, priority or AspectHolder.DEFAULT_PRIORITY)
+   end
 end
 
 local function find_iface(aspect, name)
