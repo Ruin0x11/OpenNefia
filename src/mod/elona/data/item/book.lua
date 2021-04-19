@@ -7,6 +7,7 @@ local Gui = require("api.Gui")
 local Input = require("api.Input")
 local IItemTextbook = require("mod.elona.api.aspect.IItemTextbook")
 local IItemBook = require("mod.elona.api.aspect.IItemBook")
+local IItemBookOfRachel = require("mod.elona.api.aspect.IItemBookOfRachel")
 
 --
 -- Book
@@ -116,19 +117,6 @@ data:add {
    rarity = 50000,
    coefficient = 0,
 
-   params = { book_of_rachel_number = 1 },
-   on_init_params = function(self)
-      self.params.book_of_rachel_number = Rand.rnd(4) + 1
-   end,
-
-   on_read = function(self)
-      -- >>>>>>>> shade2/proc.hsp:1250 	if iId(ci)=idDeedVoid: :snd seOpenBook: txt lang( ...
-      Gui.play_sound("base.book1")
-      Gui.mes("action.read.book.book_of_rachel")
-      return "turn_end"
-      -- <<<<<<<< shade2/proc.hsp:1250 	if iId(ci)=idDeedVoid: :snd seOpenBook: txt lang( ..
-   end,
-
    elona_type = "normal_book",
 
    tags = { "noshop" },
@@ -136,6 +124,10 @@ data:add {
    categories = {
       "elona.book",
       "elona.tag_noshop"
+   },
+
+   _ext = {
+      IItemBookOfRachel
    }
 }
 

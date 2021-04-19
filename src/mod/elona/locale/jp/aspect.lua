@@ -31,6 +31,13 @@ return {
                title = function(s, title)
                   return ("《%s》という題名の%s"):format(title, s)
                end
+            },
+            IItemBookOfRachel = {
+               action_name = "レイチェルの絵本",
+
+               title = function(s, no)
+                  return ("第%s巻目の%s"):format(no, s)
+               end
             }
          }
       }

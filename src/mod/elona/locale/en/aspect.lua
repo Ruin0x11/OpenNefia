@@ -31,6 +31,13 @@ return {
                title = function(s, title)
                   return ("%s titled <%s>"):format(s, title)
                end
+            },
+            IItemBookOfRachel = {
+               action_name = "Book of Rachel",
+
+               title = function(s, no)
+                  return ("%s of Rachel No.%s"):format(s, no)
+               end
             }
          }
       }

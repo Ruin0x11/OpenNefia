@@ -443,11 +443,7 @@ local item = {
         text = "A book decorated with pictures,"
       }
     },
-    name = "book",
-
-    title = function(no)
-       return (" of Rachel No.%s"):format(no)
-    end
+    name = "book"
   },
   book_of_resurrection = {
     desc = {
