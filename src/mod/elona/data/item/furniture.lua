@@ -10,6 +10,7 @@ local Input = require("api.Input")
 local ElonaMagic = require("mod.elona.api.ElonaMagic")
 local Item = require("api.Item")
 local Enum = require("api.Enum")
+local IItemCookingTool = require("mod.elona.api.aspect.IItemCookingTool")
 
 --
 -- Furniture
@@ -3619,16 +3620,17 @@ data:add {
    rarity = 150000,
    coefficient = 100,
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-   params = { cooking_quality = 150 },
-
    tags = { "sf" },
 
    categories = {
       "elona.tag_sf",
       "elona.furniture"
+   },
+
+   _ext = {
+      [IItemCookingTool] = {
+         cooking_quality = 150
+      }
    }
 }
 
@@ -3644,12 +3646,14 @@ data:add {
    rarity = 150000,
    coefficient = 100,
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-   params = { cooking_quality = 200 },
    categories = {
       "elona.furniture"
+   },
+
+   _ext = {
+      [IItemCookingTool] = {
+         cooking_quality = 200
+      }
    }
 }
 
@@ -3666,12 +3670,14 @@ data:add {
    coefficient = 100,
    random_color = "Furniture",
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-   params = { cooking_quality = 100 },
    categories = {
       "elona.furniture"
+   },
+
+   _ext = {
+      [IItemCookingTool] = {
+         cooking_quality = 100
+      }
    }
 }
 
@@ -3688,12 +3694,14 @@ data:add {
    coefficient = 100,
    random_color = "Furniture",
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-   params = { cooking_quality = 100 },
    categories = {
       "elona.furniture"
+   },
+
+   _ext = {
+      [IItemCookingTool] = {
+         cooking_quality = 100
+      }
    }
 }
 
@@ -3710,12 +3718,14 @@ data:add {
    coefficient = 100,
    random_color = "Furniture",
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-   params = { cooking_quality = 100 },
    categories = {
       "elona.furniture"
+   },
+
+   _ext = {
+      [IItemCookingTool] = {
+         cooking_quality = 100
+      }
    }
 }
 
@@ -3730,16 +3740,17 @@ data:add {
    rarity = 200000,
    coefficient = 100,
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-   params = { bed_quality = 200 },
-
    tags = { "sf" },
 
    categories = {
       "elona.tag_sf",
       "elona.furniture"
+   },
+
+   _ext = {
+      [IItemCookingTool] = {
+         cooking_quality = 200
+      }
    }
 }
 
@@ -3755,12 +3766,14 @@ data:add {
    rarity = 150000,
    coefficient = 100,
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-   params = { cooking_quality = 225 },
    categories = {
       "elona.furniture"
+   },
+
+   _ext = {
+      [IItemCookingTool] = {
+         cooking_quality = 225
+      }
    }
 }
 

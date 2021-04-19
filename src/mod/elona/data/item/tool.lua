@@ -14,6 +14,7 @@ local Weather = require("mod.elona.api.Weather")
 local IItemMusicDisc = require("mod.elona.api.aspect.IItemMusicDisc")
 local Aspect = require("api.Aspect")
 local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
+local IItemCookingTool = require("mod.elona.api.aspect.IItemCookingTool")
 
 --
 -- Tool
@@ -124,12 +125,14 @@ data:add {
    category = 59000,
    coefficient = 100,
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-   params = { cooking_quality = 60 },
    categories = {
       "elona.misc_item"
+   },
+
+   _ext = {
+      [IItemCookingTool] = {
+         cooking_quality = 60
+      }
    }
 }
 
@@ -143,16 +146,18 @@ data:add {
    category = 59000,
    coefficient = 100,
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-   params = { cooking_quality = 40 },
    categories = {
       "elona.misc_item"
    },
 
    light = light.torch,
    ambient_sounds = { "base.bg_fire" },
+
+   _ext = {
+      [IItemCookingTool] = {
+         cooking_quality = 40
+      }
+   }
 }
 
 data:add {
@@ -165,12 +170,14 @@ data:add {
    category = 59000,
    coefficient = 100,
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-   params = { cooking_quality = 80 },
    categories = {
       "elona.misc_item"
+   },
+
+   _ext = {
+      [IItemCookingTool] = {
+         cooking_quality = 80
+      }
    }
 }
 
@@ -1228,14 +1235,14 @@ data:add {
          return "player_turn_query"
       end
 
-      if target.hp >= target:calc("max_hp") and not config.base.development_mode then
-         Gui.mes("action.use.sandbag.not_weak_enough")
-         return "player_turn_query"
-      end
-
       if not target:is_player() and target:is_in_player_party() then
          Gui.mes("action.use.sandbag.ally")
          return "player_turn_query"
+      end
+
+      if target:is_player() then
+         Gui.mes("action.use.sandbag.self")
+         return "turn_end"
       end
 
       if target:calc_aspect(ICharaSandBag, "is_hung_on_sand_bag") then
@@ -1243,9 +1250,9 @@ data:add {
          return "player_turn_query"
       end
 
-      if target:is_player() then
-         Gui.mes("action.use.sandbag.self")
-         return "turn_end"
+      if target.hp >= target:calc("max_hp") and not config.base.development_mode then
+         Gui.mes("action.use.sandbag.not_weak_enough")
+         return "player_turn_query"
       end
 
       Gui.play_sound("base.build1", x, y)
@@ -1501,13 +1508,13 @@ data:add {
    coefficient = 100,
    random_color = "Furniture",
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-
    categories = {
       "elona.misc_item_crafting",
       "elona.misc_item"
+   },
+
+   _ext = {
+      IItemCookingTool
    }
 }
 
@@ -1523,12 +1530,12 @@ data:add {
    coefficient = 100,
    random_color = "Furniture",
 
-   on_use = function(self, params)
-      Magic.cast("elona.cooking", { source = params.chara, item = self })
-   end,
-
    categories = {
       "elona.misc_item_crafting",
       "elona.misc_item"
+   },
+
+   _ext = {
+      IItemCookingTool
    }
 }

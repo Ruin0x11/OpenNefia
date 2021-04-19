@@ -18,6 +18,9 @@ return {
                   return ("%s Lv %s (空)"):format(s, lv)
                end
             },
+            IItemCookingTool = {
+               action_name = "調理道具"
+            },
             IItemTextbook = {
                action_name = "学習書",
 

@@ -10,6 +10,7 @@ local Hunger = require("mod.elona.api.Hunger")
 local Enum = require("api.Enum")
 local Pos = require("api.Pos")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
+local IItemCookingTool = require("mod.elona.api.aspect.IItemCookingTool")
 
 data:add {
    _id = "performer",
@@ -76,7 +77,9 @@ local function cook(chara, item, cooking_tool)
    local item = item:separate()
    local name = item:build_name()
 
-   local food_quality = math.min(Rand.rnd(cooking + 6) + Rand.rnd(cooking_tool.params.cooking_quality/50+1, math.floor(cooking / 5 + 7)))
+   local cooking_quality = item:get_aspect_or_default(IItemCookingTool):calc(item, "cooking_quality")
+
+   local food_quality = math.min(Rand.rnd(cooking + 6) + Rand.rnd(cooking_quality/50+1, math.floor(cooking / 5 + 7)))
    food_quality = Rand.rnd(food_quality + 1)
    if food_quality > 3 then
       food_quality = Rand.rnd(food_quality)
@@ -87,7 +90,7 @@ local function cook(chara, item, cooking_tool)
    if cooking >= 10 and food_quality < 3 and Rand.one_in(3) then
       food_quality = 3
    end
-   food_quality = math.clamp(math.floor(food_quality + cooking_tool.params.cooking_quality/100), 1, 9)
+   food_quality = math.clamp(math.floor(food_quality + cooking_quality/100), 1, 9)
 
    Hunger.make_dish(item, food_quality)
 
