@@ -2,16 +2,16 @@ local Rand = require("api.Rand")
 local Gui = require("api.Gui")
 local Smithing = require("mod.smithing.api.Smithing")
 local Effect = require("mod.elona.api.Effect")
-local Input = require("api.Input")
 local Item = require("api.Item")
 local Prompt = require("api.gui.Prompt")
+local SmithingFormula = require("mod.smithing.api.SmithingFormula")
 
 data:add {
    _type = "base.activity",
    _id = "upgrade_hammer",
 
    params = { hammer = "table" },
-   default_turns = Smithing.calc_hammer_activity_turns,
+   default_turns = SmithingFormula.calc_hammer_activity_turns,
 
    animation_wait = 20,
 
@@ -49,7 +49,7 @@ data:add {
    _id = "create_equipment",
 
    params = { hammer = "table", extend = "number", categories = "table", target_item = "table", material_item = "table", infinite = "boolean" },
-   default_turns = Smithing.calc_hammer_activity_turns,
+   default_turns = SmithingFormula.calc_hammer_activity_turns,
 
    animation_wait = 20,
 
@@ -75,7 +75,7 @@ data:add {
          end
       end
 
-      if Rand.one_in(Smithing.calc_smith_extend_chance(self.params.hammer, self.params.extend)) then
+      if Rand.one_in(SmithingFormula.calc_smith_extend_chance(self.params.hammer, self.params.extend)) then
          self.params.extend = self.params.extend + Rand.rnd(3)
       end
 
@@ -135,7 +135,7 @@ data:add {
    _id = "repair_furniture",
 
    params = { hammer = "table", target_item = "table", material_item = "table" },
-   default_turns = Smithing.calc_hammer_activity_turns,
+   default_turns = SmithingFormula.calc_hammer_activity_turns,
 
    animation_wait = 20,
 
@@ -173,7 +173,7 @@ data:add {
    _id = "repair_equipment",
 
    params = { hammer = "table", target_item = "table", power = "number" },
-   default_turns = Smithing.calc_hammer_activity_turns,
+   default_turns = SmithingFormula.calc_hammer_activity_turns,
 
    animation_wait = 20,
 
