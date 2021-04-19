@@ -4,6 +4,7 @@ local ansicolors = require("thirdparty.ansicolors")
 
 return function(args)
    local mod_id = args.mod_id
+   local example = args.example
 
    if not mod.is_valid_mod_identifier(mod_id) then
       error("Mod ID must start with a letter and consist of letters, numbers or underscores only")
@@ -34,12 +35,8 @@ return {
 ]]):format(mod_id)
 
    local tmpl_init_lua = ([[
-local Log = require("api.Log")
-
 require("mod.%s.data.init")
 require("mod.%s.event.init")
-
-Log.info("Hello from %%s!", _MOD_NAME)
 ]]):format(mod_id, mod_id)
 
    local tmpl_data_init_lua = ([[
@@ -119,9 +116,15 @@ Describe your mod here.
    create("data/init.lua", tmpl_data_init_lua)
    create("event/init.lua", tmpl_event_init_lua)
    create("event/save.lua", tmpl_event_save_lua)
-   create("api/ExampleApi.lua", tmpl_example_api_lua)
-   create(("locale/en/%s.lua"):format(mod_id), tmpl_locale_en_lua)
-   create(("locale/jp/%s.lua"):format(mod_id), tmpl_locale_jp_lua)
+   if example then
+      create("api/ExampleApi.lua", tmpl_example_api_lua)
+      create(("locale/en/%s.lua"):format(mod_id), tmpl_locale_en_lua)
+      create(("locale/jp/%s.lua"):format(mod_id), tmpl_locale_jp_lua)
+   else
+      create("api/.keep")
+      create("locale/en/.keep")
+      create("locale/jp/.keep")
+   end
    create("graphic/.keep")
    create("sound/.keep")
    create("README.md", tmpl_readme_md)

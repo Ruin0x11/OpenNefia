@@ -41,7 +41,7 @@ local item_spec = {
    fixdamage    = { to = "damage_bonus" },
    fixhit       = { to = "hit_bonus" },
    irare        = { to = "rarity", cb = function(rarity) return rarity * 1000 end },
-   icolref      = { to = "color", cb = Util.convert_122_color_index },
+   icolref      = { to = "color", cb = Compat.convert_122_color_index },
    iorgvalue    = { to = "value" },
    iorgweight   = { to = "weight" },
    identifydef  = { to = "identify_difficulty" },

@@ -159,7 +159,9 @@ function Theme.generate_hsp_asset_overrides(mod_root_path)
             if path then
                local t = table.deepcopy(entry)
                set_source(t, path)
-               overrides[#overrides+1] = t
+
+               overrides[_type] = overrides[_type] or {}
+               overrides[_type][entry._id] = t
             end
          end
       end
@@ -170,6 +172,10 @@ end
 
 function Theme.is_active(theme_id)
    return theme.is_active(theme_id)
+end
+
+function Theme.get_override(_type, _id)
+   return theme.get_override(_type, _id)
 end
 
 return Theme
