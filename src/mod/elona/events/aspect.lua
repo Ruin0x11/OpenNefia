@@ -106,6 +106,7 @@ local function aspect_item_throwable(obj, params, result)
    for _, aspect in obj:iter_aspects(IItemThrowable) do
       if aspect:on_thrown(obj, params, result) then
          did_something = true
+         break
       end
    end
 

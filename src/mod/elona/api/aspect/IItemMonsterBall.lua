@@ -58,7 +58,7 @@ function IItemMonsterBall:on_thrown(item, params)
 
       -- >>>>>>>> shade2/action.hsp:32 			if iId(ci)=idMonsterBall{ ...
       if not aspect:can_capture_chara(clone, target) then
-         return true
+         return false
       end
 
       Gui.mes_c("action.throw.monster_ball.capture", "Green", target)
@@ -66,11 +66,13 @@ function IItemMonsterBall:on_thrown(item, params)
       Gui.start_draw_callback(anim)
 
       aspect:capture_chara(clone, target)
+
+      return true
       -- <<<<<<<< shade2/action.hsp:43 				 ..
    end
    -- <<<<<<<< shade2/action.hsp:31 			txtMore:txt lang(name(tc)+"に見事に命中した！","It hits  ..
 
-   return true
+   return false
 end
 
 function IItemMonsterBall:can_capture_chara(item, target)

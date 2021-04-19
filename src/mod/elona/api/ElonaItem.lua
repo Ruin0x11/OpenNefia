@@ -22,6 +22,7 @@ local Hunger = require("mod.elona.api.Hunger")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local IItemInittable = require("mod.elona.api.aspect.IItemInittable")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 
 local ElonaItem = {}
 
@@ -131,7 +132,7 @@ end
 
 -- TODO remove
 function ElonaItem.is_equipment(item)
-   return has_any_category(item, EQUIPMENT_CATEGORIES)
+   return item:get_aspect(IItemEquipment)
 end
 
 -- TODO remove
