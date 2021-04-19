@@ -5,6 +5,7 @@ local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
+local IItemTextbook = require("mod.elona.api.aspect.IItemTextbook")
 
 --
 -- Book
@@ -111,34 +112,14 @@ data:add {
    rarity = 50000,
    coefficient = 100,
 
-   params = { textbook_skill_id = nil },
-   on_init_params = function(self, params)
-      -- >>>>>>>> shade2/item.hsp:619 	if iId(ci)=idBookSkill	:if iBookId(ci)=0:iBookId( ..
-      self.params.textbook_skill_id = Skill.random_skill()
-      -- <<<<<<<< shade2/item.hsp:619 	if iId(ci)=idBookSkill	:if iBookId(ci)=0:iBookId( ..
-   end,
-
-   on_read = function(self, params)
-      -- >>>>>>>> shade2/command.hsp:4447 	if iId(ci)=idBookSkill{ ...
-      local skill_id = self.params.textbook_skill_id
-      local chara = params.chara
-      if chara:is_player() and not chara:has_skill(skill_id) then
-         Gui.mes("action.read.book.not_interested")
-         if not Input.yes_no() then
-            return "player_turn_query"
-         end
-      end
-
-      chara:start_activity("elona.training", {skill_id=skill_id,item=self})
-
-      return "turn_end"
-      -- <<<<<<<< shade2/command.hsp:4454 		} ...         end,
-   end,
-
    elona_type = "normal_book",
 
    categories = {
       "elona.book"
+   },
+
+   _ext = {
+      IItemTextbook
    }
 }
 

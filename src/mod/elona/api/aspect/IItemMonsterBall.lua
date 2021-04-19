@@ -141,15 +141,15 @@ function IItemMonsterBall:spawn_chara(item, chara_id, x, y, map)
    return Chara.create(chara_id, x, y, {}, map)
 end
 
-function IItemMonsterBall:localize_extra(item)
+function IItemMonsterBall:localize_extra(s, item)
    local chara_id = self:calc(item, "chara_id")
 
    if chara_id then
       local chara_name = I18N.localize("base.chara", chara_id, "name")
-      return ("(%s)"):format(chara_name)
+      return s .. ("(%s)"):format(chara_name)
    end
 
-   return I18N.get("base:aspect._.elona.IItemMonsterBall.level", self:calc(item, "max_level"))
+   return I18N.get("base:aspect._.elona.IItemMonsterBall.level", s, self:calc(item, "max_level"))
 end
 
 return IItemMonsterBall

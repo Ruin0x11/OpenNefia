@@ -5447,11 +5447,7 @@ local item = {
         }
       },
       name = "textbook",
-      unidentified_name = "book",
-
-      title = function(skill_name)
-         return (" titled <Art of %s>"):format(skill_name)
-      end
+      unidentified_name = "book"
     },
     thick_gauntlets = {
       desc = {

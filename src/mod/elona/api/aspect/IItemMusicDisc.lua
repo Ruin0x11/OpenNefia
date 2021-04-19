@@ -11,7 +11,6 @@ local IItemMusicDisc = class.interface("IItemMusicDisc", {
                                        {
                                           IAspect,
                                           ISortable,
-                                          IItemLocalizableExtra,
                                           IItemUseable,
                                           IItemLocalizableExtra
                                        })
@@ -26,7 +25,7 @@ function IItemMusicDisc:sort(other)
    return self.music_id < other.music_id
 end
 
-function IItemMusicDisc:localize_extra(item)
+function IItemMusicDisc:localize_extra(s, item)
    local info
    local music_id = self:calc(item, "music_id")
    local music = data["base.music"][music_id]
@@ -49,7 +48,7 @@ function IItemMusicDisc:localize_extra(item)
    else
       info = "???"
    end
-   return (" <BGM%s>"):format(info)
+   return ("%s <BGM%s>"):format(s, info)
 end
 
 function IItemMusicDisc:on_use(item, params)

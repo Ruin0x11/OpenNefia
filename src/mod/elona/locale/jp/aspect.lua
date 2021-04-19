@@ -14,8 +14,15 @@ return {
             IItemMonsterBall = {
                action_name = "モンスターボール",
 
-               level = function(lv)
-                  return (" Lv %s (空)"):format(lv)
+               level = function(s, lv)
+                  return ("%s Lv %s (空)"):format(s, lv)
+               end
+            },
+            IItemTextbook = {
+               action_name = "学習書",
+
+               title = function(s, skill_name)
+                  return ("《%s》という題名の%s"):format(skill_name, s)
                end
             }
          }

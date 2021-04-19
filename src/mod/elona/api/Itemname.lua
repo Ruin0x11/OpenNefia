@@ -133,10 +133,7 @@ local function item_name_sub(s, item, jp)
    end
 
    if item:has_category("elona.book") then
-      if _id == "elona.textbook" then
-         local skill_name = I18N.localize("base.skill", item.params.textbook_skill_id, "name")
-         s = s .. I18N.localize("base.item", _id, "title", skill_name)
-      elseif _id == "elona.book_of_rachel" then
+      if _id == "elona.book_of_rachel" then
          s = s .. I18N.localize("base.item", _id, "title", item.params.book_of_rachel_number)
       elseif _id == "elona.book" then
          s = s .. I18N.localize("base.item", _id, "title", "_.elona.book." .. item.params.book_id .. ".title")
@@ -432,10 +429,7 @@ function itemname.jp(item, amount, no_article)
    end
 
    for _, aspect in item:iter_aspects(IItemLocalizableExtra) do
-      local extra = aspect:localize_extra(item)
-      if extra then
-         s = s .. " " .. extra
-      end
+      s = aspect:localize_extra(s, item) or s
    end
 
    return s
@@ -700,10 +694,7 @@ function itemname.en(item, amount, no_article)
    end
 
    for _, aspect in item:iter_aspects(IItemLocalizableExtra) do
-      local extra = aspect:localize_extra(item)
-      if extra then
-         s = s .. extra
-      end
+      s = aspect:localize_extra(s, item) or s
    end
 
    return s

@@ -14,8 +14,15 @@ return {
             IItemMonsterBall = {
                action_name = "Monster Ball",
 
-               level = function(lv)
-                  return (" Level %s(Empty)"):format(lv)
+               level = function(s, lv)
+                  return ("%s Level %s(Empty)"):format(s, lv)
+               end
+            },
+            IItemTextbook = {
+               action_name = "Textbook",
+
+               title = function(s, skill_name)
+                  return ("%s titled <Art of %s>"):format(s, skill_name)
                end
             }
          }

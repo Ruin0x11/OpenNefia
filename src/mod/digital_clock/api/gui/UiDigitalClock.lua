@@ -22,7 +22,11 @@ end
 
 function UiDigitalClock:default_widget_refresh()
    self.date = World.date()
-   self.time_of_day_text = UiShadowedText:new(("%d/%d/%d (%s) %s"):format(self.date.year, self.date.month, self.date.day, World.time_to_text(self.date.hour), I18N.get("weather." .. save.elona.weather_id .. ".name")), 13)
+   local time_text = World.time_to_text(self.date.hour)
+   if time_text ~= "" then
+      time_text = (" (%s)"):format(time_text)
+   end
+   self.time_of_day_text = UiShadowedText:new(("%d/%d/%d%s %s"):format(self.date.year, self.date.month, self.date.day, time_text, I18N.get("weather." .. save.elona.weather_id .. ".name")), 13)
 end
 
 function UiDigitalClock:default_widget_z_order()

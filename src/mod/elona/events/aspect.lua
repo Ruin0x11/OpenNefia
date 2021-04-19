@@ -1,36 +1,69 @@
 local IItemUseable = require("mod.elona.api.aspect.IItemUseable")
 local Event = require("api.Event")
 local IEvented = require("mod.elona.api.aspect.IEvented")
-local I18N = require("api.I18N")
 local Prompt = require("api.gui.Prompt")
 local Gui = require("api.Gui")
 local IItemThrowable = require("mod.elona.api.aspect.IItemThrowable")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
+local IItemReadable = require("mod.elona.api.aspect.IItemReadable")
 
-local function aspect_item_useable(item, params, result)
-   local aspects = item:iter_aspects(IItemUseable):to_list()
+local function permit_item_actions(item)
+   if item:get_aspect(IItemFood) then
+      item.can_eat = true
+   end
 
-   if #aspects == 0 then
-      return result
-   elseif #aspects == 1 then
-      return aspects[1]:on_use(item, params, result)
-   else
-      local map = function(aspect)
-         return aspect:localize_action(item, IItemUseable)
-      end
+   if item:has_category("elona.drink") then
+      item.can_throw = true
+   end
 
-      local choices = fun.iter(aspects):map(map):to_list()
+   if item:iter_aspects(IItemUseable):length() > 0 then
+      item.can_use = true
+   end
 
-      Gui.mes("base:aspect._.elona.IItemUseable.prompt", item:build_name(1))
-      local result, canceled = Prompt:new(choices):query()
+   if item:iter_aspects(IItemThrowable):length() > 0 then
+      item.can_throw = true
+   end
 
-      if canceled then
-         return "player_turn_query"
-      end
-
-      return aspects[result.index]:on_use(item, params, result)
+   if item:iter_aspects(IItemReadable):length() > 0 then
+      item.can_read = true
    end
 end
+Event.register("base.on_item_instantiated", "Permit item actions", permit_item_actions)
+
+local function prompt_aspect(iface, name, cb_name)
+   return function(item, params, result)
+      local aspects = item:iter_aspects(iface):to_list()
+
+      if #aspects == 0 then
+         return result
+      elseif #aspects == 1 then
+         local aspect = aspects[1]
+         return aspect[cb_name](aspect, item, params, result)
+      else
+         local map = function(aspect)
+            return aspect:localize_action(item, iface)
+         end
+
+         local choices = fun.iter(aspects):map(map):to_list()
+
+         Gui.mes("base:aspect._.elona." .. name .. ".prompt", item:build_name(1))
+         local result, canceled = Prompt:new(choices):query()
+
+         if canceled then
+            return "player_turn_query"
+         end
+
+         local aspect = aspects[result.index]
+         return aspect[cb_name](aspect, item, params, result)
+      end
+   end
+end
+
+local aspect_item_useable = prompt_aspect(IItemUseable, "IItemUseable", "on_use")
 Event.register("elona_sys.on_item_use", "Aspect: IItemUseable", aspect_item_useable)
+
+local aspect_item_readable = prompt_aspect(IItemReadable, "IItemReadable", "on_read")
+Event.register("elona_sys.on_item_read", "Aspect: IItemReadable", aspect_item_readable)
 
 local _retain = setmetatable({}, { __mode = "k" })
 local function aspect_evented(obj, params, result)

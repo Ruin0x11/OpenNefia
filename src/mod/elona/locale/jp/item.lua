@@ -9889,11 +9889,7 @@ local item = {
       }
     },
     name = "学習書",
-    unidentified_name = "本",
-
-    title = function(skill_name)
-       return ("《%s》という題名の"):format(skill_name)
-    end
+    unidentified_name = "本"
   },
   thick_gauntlets = {
     desc = {
