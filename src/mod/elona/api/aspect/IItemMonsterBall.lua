@@ -134,6 +134,8 @@ function IItemMonsterBall:on_use(item, params)
    if chara then
       source:recruit_as_ally(chara)
    end
+
+   return "turn_end"
    -- <<<<<<<< shade2/action.hsp:2089 	swbreak ..
 end
 

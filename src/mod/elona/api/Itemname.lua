@@ -115,10 +115,7 @@ local function item_name_sub(s, item, jp)
    local skip = false
    local identify = item:calc("identify_state")
 
-   if _id == "elona.kitty_bank" then
-      local increment = I18N.localize("base.item", _id, "names._" .. item.params.bank_gold_increment)
-      s = s .. I18N.localize("base.item", _id, "amount", increment)
-   elseif _id == "elona.ancient_book" then
+   if _id == "elona.ancient_book" then
       if jp and item.params.ancient_book_is_decoded then
          s = s .. "解読済みの"
       end

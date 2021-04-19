@@ -17,6 +17,7 @@ local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
 local IItemCookingTool = require("mod.elona.api.aspect.IItemCookingTool")
 local IItemGaroksHammer = require("mod.elona.api.aspect.IItemGaroksHammer")
 local IItemFishingPole = require("mod.elona.api.aspect.IItemFishingPole")
+local IItemMoneyBox = require("mod.elona.api.aspect.IItemMoneyBox")
 
 --
 -- Tool
@@ -396,34 +397,19 @@ data:add {
    image = "elona.item_kitty_bank",
    value = 1400,
    weight = 500,
-   on_use = function() end,
    category = 59000,
    rarity = 300000,
    coefficient = 100,
-
-   elona_function = 11,
-
-   params = {
-      bank_gold_stored = 0,
-      bank_gold_increment = 0,
-   },
-
-   on_init_params = function(self, params)
-      -- >>>>>>>> shade2/item.hsp:69 	moneyBox =500,2000,10000,50000,500000,5000000,100 ..
-      local BANK_INCREMENTS = { 500, 2000, 10000, 50000, 500000, 5000000, 100000000 }
-      -- <<<<<<<< shade2/item.hsp:69 	moneyBox =500,2000,10000,50000,500000,5000000,100 ..
-      -- >>>>>>>> shade2/item.hsp:661 	if iId(ci)=idMoneyBox{ ..
-      local idx = Rand.rnd(Rand.rnd(#BANK_INCREMENTS) + 1) + 1
-      self.params.bank_gold_increment = BANK_INCREMENTS[idx]
-      self.value = 2000 + idx * idx + idx * 100
-      -- <<<<<<<< shade2/item.hsp:664 		} ..
-   end,
 
    categories = {
       "elona.misc_item"
    },
 
-   light = light.item
+   light = light.item,
+
+   _ext = {
+      IItemMoneyBox
+   }
 }
 
 data:add {

@@ -2340,19 +2340,6 @@ local item = {
       }
     },
     name = "kitty bank",
-
-    amount = function(amount)
-       return ("(%s)"):format(amount)
-    end,
-    names = {
-       _500       = "500 GP",
-       _2000      = "2k GP",
-       _10000     = "10K GP",
-       _50000     = "50K GP",
-       _500000    = "500K GP",
-       _5000000   = "5M GP",
-       _100000000 = "500M GP"
-    }
   },
   kiwi = {
     desc = {

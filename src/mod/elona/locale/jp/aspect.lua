@@ -38,6 +38,22 @@ return {
                   return ("%s%s"):format(s, bait_name)
                end
             },
+            IItemMoneyBox = {
+               action_name = "貯金箱",
+
+               amount = function(s, amount)
+                  return ("%s%s"):format(s, amount)
+               end,
+               increments = {
+                  _500       = "5百金貨",
+                  _2000      = "2千金貨",
+                  _10000     = "1万金貨",
+                  _50000     = "5万金貨",
+                  _500000    = "50万金貨",
+                  _5000000   = "500万金貨",
+                  _100000000 = "1億金貨"
+               }
+            },
             IItemTextbook = {
                action_name = "学習書",
 

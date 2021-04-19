@@ -38,6 +38,22 @@ return {
                   return ("%s <%s>"):format(s, bait_name)
                end
             },
+            IItemMoneyBox = {
+               action_name = "Kitty Bank",
+
+               amount = function(s, amount)
+                  return ("%s(%s)"):format(s, amount)
+               end,
+               increments = {
+                  _500       = "500 GP",
+                  _2000      = "2k GP",
+                  _10000     = "10K GP",
+                  _50000     = "50K GP",
+                  _500000    = "500K GP",
+                  _5000000   = "5M GP",
+                  _100000000 = "500M GP"
+               }
+            },
             IItemTextbook = {
                action_name = "Textbook",
 
