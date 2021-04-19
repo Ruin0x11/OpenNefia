@@ -240,6 +240,7 @@ function InventoryContext:can_select(item)
    return true
 end
 
+-- >>>>>>>> shade2/command.hsp:3431 	list(0,listMax)=cnt,refType*1000+iId(cnt) ...
 local function category_order(item)
    local order = function(cat)
       return data["base.item_type"]:ensure(cat).ordering or 0
@@ -263,6 +264,7 @@ local function default_sort(a, b)
 
    return a_sort < b_sort
 end
+-- <<<<<<<< shade2/command.hsp:3446 	if invCtrl=28	:list(1,listMax)=calcMedalValue(cnt ..
 
 function InventoryContext:gen_sort(a, b)
    local f = default_sort

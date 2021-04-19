@@ -7,6 +7,9 @@ return {
             },
             IItemSeed = {
                action_name = "種"
+            },
+            IItemMusicDisc = {
+               action_name = "ディスク"
             }
          }
       }

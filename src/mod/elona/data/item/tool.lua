@@ -11,6 +11,7 @@ local Pos = require("api.Pos")
 local Chara = require("api.Chara")
 local Anim = require("mod.elona_sys.api.Anim")
 local Weather = require("mod.elona.api.Weather")
+local IItemMusicDisc = require("mod.elona.api.aspect.IItemMusicDisc")
 
 --
 -- Tool
@@ -240,17 +241,9 @@ data:add {
    image = "elona.item_playback_disc",
    value = 1000,
    weight = 500,
-   on_use = function() end,
    category = 59000,
    rarity = 1500000,
    coefficient = 100,
-
-   elona_function = 6,
-
-   params = { disc_music_id = "" },
-   on_init_params = function(self, params)
-      self.disc_music_id = Rand.choice(data["base.music"]:iter())._id
-   end,
 
    tags = { "sf" },
    random_color = "Furniture",
@@ -258,7 +251,11 @@ data:add {
       "elona.tag_sf",
       "elona.misc_item"
    },
-   light = light.item
+   light = light.item,
+
+   _ext = {
+      [IItemMusicDisc] = {}
+   }
 }
 
 data:add {

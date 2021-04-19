@@ -25,6 +25,8 @@ local IItemDice = require("mod.elona.api.aspect.IItemDice")
 local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
 local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
 local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
+local IItemMusicDisc = require("mod.elona.api.aspect.IItemMusicDisc")
+local IItemLocalizableExtra = require("mod.elona.api.aspect.IItemLocalizableExtra")
 
 local Itemname = {}
 
@@ -435,13 +437,10 @@ function itemname.jp(item, amount, no_article)
 
    if _id == "elona.shelter" then
       s = s .. I18N.get("item.serial_no", item.params.shelter_serial_no)
-   elseif _id == "elona.disc" then
-      local bgm_number = "???"
-      local music = data["base.music"][item.params.disc_music_id]
-      if music and music.elona_id then
-         bgm_number = tostring(music.elona_id)
-      end
-      s = s .. (" <BGM%s>"):format(bgm_number)
+   end
+
+   for _, aspect in item:iter_aspects(IItemLocalizableExtra) do
+      s = s .. " " .. aspect:localize_extra(item)
    end
 
    return s
@@ -703,13 +702,10 @@ function itemname.en(item, amount, no_article)
 
    if _id == "elona.shelter" then
       s = s .. I18N.get("item.serial_no", item.params.shelter_serial_no)
-   elseif _id == "elona.disc" then
-      local bgm_number = "???"
-      local music = data["base.music"][item.params.disc_music_id]
-      if music and music.elona_id then
-         bgm_number = tostring(music.elona_id)
-      end
-      s = s .. (" <BGM%s>"):format(bgm_number)
+   end
+
+   for _, aspect in item:iter_aspects(IItemLocalizableExtra) do
+      s = s .. " " .. aspect:localize_extra(item)
    end
 
    return s

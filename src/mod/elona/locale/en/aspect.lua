@@ -7,6 +7,9 @@ return {
             },
             IItemSeed = {
                action_name = "Seed"
+            },
+            IItemMusicDisc = {
+               action_name = "Music Disc"
             }
          }
       }
