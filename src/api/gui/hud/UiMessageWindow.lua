@@ -43,6 +43,8 @@ function UiMessageWindow:handle_on_hud_message(params)
       self:prevent_next_duplicate()
    elseif action == "clear" then
       self:clear()
+   elseif action == "redraw" then
+      self.redraw = true
    end
 end
 
@@ -143,13 +145,19 @@ function UiMessageWindow:push_text(text, color)
    first.text[#first.text+1] = {color = color, text = work, width = Draw.text_width(work)}
 end
 
-function UiMessageWindow:draw_one_line(x, y, line)
+function UiMessageWindow:draw_one_line(x, y, line, line_number)
    for _, item in ipairs(line.text) do
-      -- love.graphics.print() accepts arguments like
-      --   {color, text, color, text...}
-      Draw.set_color(item.color or {255, 255, 255})
+      -- >>>>>>>> shade2/init.hsp:3955 			if cfg_msgTrans@{ ...
+      local alpha = 255
+      local trans = config.base.message_transparency
+      if trans > 0 then
+         alpha = 255 - trans * 20 * (line_number - 1)
+      end
+      local color = item.color or {255, 255, 255}
+      Draw.set_color(color[1], color[2], color[3], alpha)
       Draw.text(item.text, x, y)
       x = x + item.width
+      -- <<<<<<<< shade2/init.hsp:3964 				} ..
    end
 end
 
@@ -282,7 +290,7 @@ function UiMessageWindow:redraw_window()
    local y = 5 + (self.each_line:len() - 1) * Draw.text_height()
    for i=1,self.each_line:len() do
       local line = self.each_line:get(i)
-      self:draw_one_line(x, y, line)
+      self:draw_one_line(x, y, line, i)
       y = y - Draw.text_height()
    end
 end
@@ -329,7 +337,7 @@ function UiMessageWindow:message(text, color)
 
    if self.is_new_turn then
       self.is_new_turn = false
-      if config.base.add_timestamps then
+      if config.base.message_timestamps then
          local minute = save.base.date.minute
          text = string.format("[%d] %s", minute, text)
       else

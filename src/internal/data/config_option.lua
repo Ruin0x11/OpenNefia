@@ -6,6 +6,7 @@ local startup = require("game.startup")
 local ISoundHolder = require("api.ISoundHolder")
 local midi = require("internal.midi")
 local global_sound_manager = require("internal.global.global_sound_manager")
+local Event = require("api.Event")
 
 data:add_multi(
    "base.config_option",
@@ -597,19 +598,25 @@ data:add_multi(
    "base.config_option",
    {
       {
-         _id = "add_timestamps",
+         _id = "message_timestamps",
 
          type = "boolean"
       },
       {
-         _id = "transparency",
+         _id = "message_transparency",
 
          type = "integer",
-         default = 0,
+         -- >>>>>>>> shade2/config.txt:50 msg_trans.	"4" ...
+         default = 4,
+         -- <<<<<<<< shade2/config.txt:50 msg_trans.	"4" ..
          -- >>>>>>>> shade2/help.hsp:1255 			if cs=1:configSelect cfg_msgTrans,"msg_trans.", ...
          min_value = 0,
-         max_value = 5
+         max_value = 5,
          -- <<<<<<<< shade2/help.hsp:1255 			if cs=1:configSelect cfg_msgTrans,"msg_trans.", ..
+
+         on_changed = function()
+            Event.trigger("base.on_hud_message", {action="redraw"})
+         end
       }
    }
 )
@@ -618,8 +625,8 @@ data:add {
    _id = "message",
    _type = "base.config_menu",
    items = {
-      "base.add_timestamps",
-      "base.transparency"
+      "base.message_timestamps",
+      "base.message_transparency"
    }
 }
 

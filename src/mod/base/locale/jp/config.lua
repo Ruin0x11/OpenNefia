@@ -305,12 +305,12 @@ return {
             -- Menu: message
             --
 
-            add_timestamps = {
+            message_timestamps = {
                doc = "メッセージに現在の分を表示します。",
                name = "ﾒｯｾｰｼﾞに分表示追加"
             },
 
-            transparency = {
+            message_transparency = {
                doc = "古いメッセージをこのパーセンテージだけ透明にして表示します。",
                formatter = function(_1)
                   return ("%s %%")
