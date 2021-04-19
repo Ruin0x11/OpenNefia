@@ -6,6 +6,7 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
 local IItemTextbook = require("mod.elona.api.aspect.IItemTextbook")
+local IItemBook = require("mod.elona.api.aspect.IItemBook")
 
 --
 -- Book
@@ -46,32 +47,9 @@ data:add {
    image = "elona.item_book",
    value = 500,
    weight = 80,
-   on_read = function(self)
-      -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
-      Effect.identify_item(self, Enum.IdentifyState.Name)
-      local text = I18N.get("_.elona.book." .. self.params.book_id .. ".text")
-      local BookMenu = require("api.gui.menu.BookMenu")
-      BookMenu:new(text, true):query()
-      return "player_turn_query"
-      -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
-   end,
    category = 55000,
    rarity = 2000000,
    coefficient = 100,
-
-   params = { book_id = nil },
-
-   on_init_params = function(self)
-      -- >>>>>>>> shade2/item.hsp:618 	if iId(ci)=idBook	:if iBookId(ci)=0:iBookId(ci)=i ..
-      if not self.params.book_id then
-         local cands = data["elona.book"]:iter()
-         :filter(function(book) return book.is_randomly_generated end)
-            :extract("_id")
-            :to_list()
-         self.params.book_id = Rand.choice(cands)
-      end
-      -- <<<<<<<< shade2/item.hsp:618 	if iId(ci)=idBook	:if iBookId(ci)=0:iBookId(ci)=i ..
-   end,
 
    elona_type = "normal_book",
 
@@ -79,6 +57,10 @@ data:add {
 
    categories = {
       "elona.book"
+   },
+
+   _ext = {
+      IItemBook
    }
 }
 

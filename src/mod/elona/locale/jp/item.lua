@@ -770,11 +770,7 @@ local item = {
       }
     },
     name = "本",
-    unidentified_name = "本",
-
-    title = function(title)
-       return ("《%s》という題名の"):format(title)
-    end
+    unidentified_name = "本"
   },
   book_of_bokonon = {
     _0 = {

@@ -24,6 +24,13 @@ return {
                title = function(s, skill_name)
                   return ("《%s》という題名の%s"):format(skill_name, s)
                end
+            },
+            IItemBook = {
+               action_name = "本",
+
+               title = function(s, title)
+                  return ("《%s》という題名の%s"):format(title, s)
+               end
             }
          }
       }

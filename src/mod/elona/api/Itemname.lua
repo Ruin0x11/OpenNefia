@@ -135,8 +135,6 @@ local function item_name_sub(s, item, jp)
    if item:has_category("elona.book") then
       if _id == "elona.book_of_rachel" then
          s = s .. I18N.localize("base.item", _id, "title", item.params.book_of_rachel_number)
-      elseif _id == "elona.book" then
-         s = s .. I18N.localize("base.item", _id, "title", "_.elona.book." .. item.params.book_id .. ".title")
       end
    end
 

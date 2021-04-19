@@ -24,6 +24,13 @@ return {
                title = function(s, skill_name)
                   return ("%s titled <Art of %s>"):format(s, skill_name)
                end
+            },
+            IItemBook = {
+               action_name = "Book",
+
+               title = function(s, title)
+                  return ("%s titled <%s>"):format(s, title)
+               end
             }
          }
       }

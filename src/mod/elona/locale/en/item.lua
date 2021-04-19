@@ -432,11 +432,7 @@ local item = {
       }
     },
     name = "book",
-    unidentified_name = "book",
-
-    title = function(title)
-       return (" titled <%s>"):format(title)
-    end
+    unidentified_name = "book"
   },
   book_of_bokonon = {
     name = "Bokonon"

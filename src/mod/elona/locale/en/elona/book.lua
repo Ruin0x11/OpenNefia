@@ -1071,11 +1071,9 @@ South Tyris, Elona
 }
 
 return {
-   _ = {
-      elona = {
-         book = {
-            elona = book
-         }
+   book = {
+      _ = {
+         elona = book
       }
    }
 }
