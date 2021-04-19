@@ -21,6 +21,9 @@ return {
             IItemCookingTool = {
                action_name = "調理道具"
             },
+            IItemGaroksHammer = {
+               action_name = "ガロクの槌"
+            },
             IItemTextbook = {
                action_name = "学習書",
 

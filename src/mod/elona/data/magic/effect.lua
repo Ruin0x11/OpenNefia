@@ -26,6 +26,8 @@ local Hunger = require("mod.elona.api.Hunger")
 local Material = require("mod.elona.api.Material")
 local Area = require("api.Area")
 local Nefia = require("mod.elona.api.Nefia")
+local IItemGaroksHammer = require("mod.elona.api.aspect.IItemGaroksHammer")
+local Enchantment = require("mod.elona.api.Enchantment")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    assert(type(curse_state) == "number")
@@ -1230,32 +1232,45 @@ data:add {
          return true
       end
 
-      local seed = hammer.params.garoks_hammer_seed
-      assert(seed)
-
       -- Prevent save scumming by using a predefined seed when regenerating the
       -- item.
+      local seed = hammer:get_aspect_or_default(IItemGaroksHammer):calc(hammer, "seed")
       Rand.set_seed(seed)
 
       local material = hammer:calc("material")
+      if material == nil then
+         material = ItemMaterial.choose_random_material(target_item)
+      end
 
       local cb = Anim.load("elona.anim_smoke", target.x, target.y)
       Gui.start_draw_callback(cb)
 
       ItemMaterial.change_item_material(target_item, material)
 
-      Rand.set_seed(seed)
-
       target_item:reset("quality", Enum.Quality.Great)
-      target_item.subname = Text.random_subname_seed()
+      target_item.title_seed = Text.random_title_seed()
+      target_item.title = Text.random_title("weapon", target_item.title_seed)
 
       local times = Rand.rnd(Rand.rnd(Rand.rnd(10) + 1) + 3) + 3
-      -- TODO random enchantment
-      local enchant_level = Rand.rnd(math.clamp(Rand.rnd(30/10+3), 0, Const.MAX_ENCHANTMENT_LEVEL) + 1)
+      local ego_enchant_level = Rand.rnd(math.clamp(Rand.rnd(30/10+3), 0, Enchantment.MAX_ENCHANTMENT_LEVEL) + 1)
+
+      -- XXX: Where did fixLv come from here?
+      local quality = target_item:calc("quality")
 
       for _ = 1, times do
-         Rand.set_seed(seed)
-         -- TODO random enchantment
+         local enc_level = Enchantment.random_enc_level(target_item, ego_enchant_level)
+         local enc_id = Enchantment.random_enc_id(target_item, enc_level)
+         local enc_power = Enchantment.random_enc_power(target_item)
+         local enc_curse_power = 20
+         if quality == Enum.Quality.God then
+            enc_power = enc_power + 100
+            enc_curse_power = enc_curse_power - 10
+         end
+         if target_item:calc("is_eternal_force") then
+            enc_power = enc_power + 100
+            enc_curse_power = enc_curse_power - 20
+         end
+         target_item:add_enchantment(enc_id, enc_power, "randomized", enc_curse_power)
       end
 
       Rand.set_seed()
@@ -1264,8 +1279,9 @@ data:add {
 
       target:refresh()
 
-      hammer.amount = hammer.amount - 1
-      hammer:refresh_cell_on_map()
+      hammer:remove(1)
+
+      Save.queue_autosave()
 
       return true
    end

@@ -15,6 +15,7 @@ local IItemMusicDisc = require("mod.elona.api.aspect.IItemMusicDisc")
 local Aspect = require("api.Aspect")
 local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
 local IItemCookingTool = require("mod.elona.api.aspect.IItemCookingTool")
+local IItemGaroksHammer = require("mod.elona.api.aspect.IItemGaroksHammer")
 
 --
 -- Tool
@@ -1423,19 +1424,12 @@ data:add {
    image = "elona.item_material_kit",
    value = 75000,
    weight = 5000,
-   on_use = function() end,
    fltselect = 3,
    category = 59000,
    rarity = 5000,
    coefficient = 0,
 
-   elona_function = 49,
    is_precious = true,
-
-   params = { garoks_hammer_seed = 0 },
-   on_init_params = function(self)
-      self.params.garoks_hammer_seed = Rand.rnd(20000) + 1
-   end,
 
    quality = Enum.Quality.Unique,
    medal_value = 94,
@@ -1443,7 +1437,11 @@ data:add {
       "elona.unique_item",
       "elona.misc_item"
    },
-   light = light.item
+   light = light.item,
+
+   _ext = {
+      IItemGaroksHammer
+   }
 }
 
 data:add {
