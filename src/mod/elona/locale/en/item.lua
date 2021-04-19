@@ -198,10 +198,7 @@ local item = {
         text = "Bait for a fishing pole,"
       }
     },
-    name = "bait",
-    title = function(_1)
-       return ("<%s>"):format(_1)
-    end,
+    name = "bait"
   },
   banded_mail = {
     desc = {
@@ -1703,11 +1700,7 @@ local item = {
         text = "A pole used for bait fishing,"
       }
     },
-    name = "fishing pole",
-
-    remaining = function(bait, charges)
-       return ("(%s %s)"):format(charges, bait)
-    end
+    name = "fishing pole"
   },
   five_horned_helm = {
     name = "<Five Horned Helm>",

@@ -24,6 +24,20 @@ return {
             IItemGaroksHammer = {
                action_name = "Garok's Hammer"
             },
+            IItemFishingPole = {
+               action_name = "Fishing Pole",
+
+               remaining = function(s, bait, charges)
+                  return ("%s(%s %s)"):format(s, charges, bait)
+               end
+            },
+            IItemBait = {
+               action_name = "Bait",
+
+               title = function(s, bait_name)
+                  return ("%s <%s>"):format(s, bait_name)
+               end
+            },
             IItemTextbook = {
                action_name = "Textbook",
 

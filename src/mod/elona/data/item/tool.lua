@@ -16,6 +16,7 @@ local Aspect = require("api.Aspect")
 local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
 local IItemCookingTool = require("mod.elona.api.aspect.IItemCookingTool")
 local IItemGaroksHammer = require("mod.elona.api.aspect.IItemGaroksHammer")
+local IItemFishingPole = require("mod.elona.api.aspect.IItemFishingPole")
 
 --
 -- Tool
@@ -192,16 +193,12 @@ data:add {
    category = 59000,
    coefficient = 100,
 
-   params = { bait_type = "elona.water_flea", bait_amount = 0 },
-
-   on_use = function(self, params)
-      Magic.cast("elona.fishing", { source = params.chara, item = self })
-   end,
-
-   elona_function = 16,
-   param1 = 60,
    categories = {
       "elona.misc_item"
+   },
+
+   _ext = {
+      IItemFishingPole
    }
 }
 

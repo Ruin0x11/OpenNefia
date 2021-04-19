@@ -328,10 +328,7 @@ local item = {
     unidentified_name = "巨大な斧"
   },
   bait = {
-    name = "",
-    title = function(_1)
-       return ("%s"):format(_1)
-    end,
+    name = ""
   },
   banded_mail = {
     desc = {
@@ -3067,11 +3064,7 @@ local item = {
         text = "釣りの際に必要な道具。使用することができる。"
       }
     },
-    name = "釣竿",
-
-    remaining = function(bait, charges)
-       return ("(%s残り%s匹)"):format(bait, charges)
-    end
+    name = "釣竿"
   },
   five_horned_helm = {
     desc = {

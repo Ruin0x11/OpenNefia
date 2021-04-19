@@ -6,6 +6,7 @@ local Gui = require("api.Gui")
 local IItemThrowable = require("mod.elona.api.aspect.IItemThrowable")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local IItemReadable = require("mod.elona.api.aspect.IItemReadable")
+local IItemDippable = require("mod.elona.api.aspect.IItemDippable")
 
 local function permit_item_actions(item)
    if item:get_aspect(IItemFood) then
@@ -27,12 +28,19 @@ local function permit_item_actions(item)
    if item:iter_aspects(IItemReadable):length() > 0 then
       item.can_read = true
    end
+
+   if item:iter_aspects(IItemDippable):length() > 0 then
+      item.can_dip_into = true
+   end
 end
 Event.register("base.on_item_instantiated", "Permit item actions", permit_item_actions)
 
-local function prompt_aspect(iface, name, cb_name)
+-- Queries the player for an aspect action to use if there is more than one
+-- aspect on an item that fulfills a specific interface.
+local function prompt_aspect(iface, name, cb_name, filter)
+   filter = filter or function() return true end
    return function(item, params, result)
-      local aspects = item:iter_aspects(iface):to_list()
+      local aspects = item:iter_aspects(iface):filter(function(a) return filter(a, item, params, result) end):to_list()
 
       if #aspects == 0 then
          return result
@@ -64,6 +72,22 @@ Event.register("elona_sys.on_item_use", "Aspect: IItemUseable", aspect_item_usea
 
 local aspect_item_readable = prompt_aspect(IItemReadable, "IItemReadable", "on_read")
 Event.register("elona_sys.on_item_read", "Aspect: IItemReadable", aspect_item_readable)
+
+local function dippable_filter(aspect, item, params)
+   return aspect:can_dip_into(item, params.target_item)
+end
+local aspect_item_dippable = prompt_aspect(IItemDippable, "IItemDippable", "on_dip_into", dippable_filter)
+Event.register("elona_sys.on_item_dip_into", "Aspect: IItemDippable", aspect_item_dippable)
+
+local function aspect_item_dippable_can_dip_into(dip_item, params, result)
+   for _, aspect in dip_item:iter_aspects(IItemDippable) do
+      if aspect:can_dip_into(dip_item, params.item) then
+         return true
+      end
+   end
+   return false
+end
+Event.register("elona_sys.calc_item_can_dip_into", "Aspect: IItemDippable can dip into", aspect_item_dippable_can_dip_into)
 
 local _retain = setmetatable({}, { __mode = "k" })
 local function aspect_evented(obj, params, result)

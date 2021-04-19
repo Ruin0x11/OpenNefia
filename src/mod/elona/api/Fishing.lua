@@ -2,11 +2,12 @@ local Rand = require("api.Rand")
 local WeightedSampler = require("mod.tools.api.WeightedSampler")
 local Log = require("api.Log")
 local Item = require("api.Item")
+local IItemFishingPole = require("mod.elona.api.aspect.IItemFishingPole")
 
 local Fishing = {}
 
 function Fishing.random_fish_level(fishing_pole)
-   local bait = data["elona.bait"]:ensure(fishing_pole.params.bait_type)
+   local bait = data["elona.bait"]:ensure(fishing_pole:calc_aspect(IItemFishingPole, "bait_type", "base"))
    local rank = bait.rank or 0
 
    local level = Rand.rnd(rank)
@@ -38,7 +39,7 @@ function Fishing.random_fish_id(fishing_pole)
    data["elona.fish"]:iter():filter(filter):foldl(sample, sampler)
 
    if sampler:len() == 0 then
-      Log.warn("No fish generation candidates found for bait '%s'", fishing_pole.params.bait_type)
+      Log.warn("No fish generation candidates found for bait '%s'", fishing_pole:calc_aspect(IItemFishingPole, "bait_type", "base"))
    end
 
    return sampler:sample()

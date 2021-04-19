@@ -118,8 +118,6 @@ local function item_name_sub(s, item, jp)
    if _id == "elona.kitty_bank" then
       local increment = I18N.localize("base.item", _id, "names._" .. item.params.bank_gold_increment)
       s = s .. I18N.localize("base.item", _id, "amount", increment)
-   elseif _id == "elona.bait" then
-      s = s .. I18N.space() .. I18N.localize("base.item", _id, "title", "bait._." .. item.params.bait_type .. ".name")
    elseif _id == "elona.ancient_book" then
       if jp and item.params.ancient_book_is_decoded then
          s = s .. "解読済みの"
@@ -365,11 +363,7 @@ function itemname.jp(item, amount, no_article)
    -- <<<<<<<< shade2/item_func.hsp:615 		} ..
 
    -- >>>>>>>> shade2/item_func.hsp:640 	if iId(id)=idFishingPole{ ..
-   if _id == "elona.fishing_pole" then
-      if item.params.bait_amount > 0 then
-         s = s .. I18N.localize("base.item", _id, "remaining", "bait._." .. item.params.bait_type .. ".name", item.params.bait_amount)
-      end
-   elseif _id == "elona.small_gamble_chest" then
+   if _id == "elona.small_gamble_chest" then
       s = s .. I18N.localize("base.item", _id, "level", item.params.chest_lockpick_difficulty)
    end
 
@@ -622,19 +616,7 @@ function itemname.en(item, amount, no_article)
    -- <<<<<<<< shade2/item_func.hsp:638 		} ..
 
    -- >>>>>>>> shade2/item_func.hsp:640 	if iId(id)=idFishingPole{ ..
-   if _id == "elona.fishing_pole" then
-      if item.params.bait_amount > 0 then
-         s = s .. I18N.localize("base.item", _id, "remaining", "bait._." .. item.params.bait_type .. ".name", item.params.bait_amount)
-      end
-   elseif _id == "elona.monster_ball" then
-      local chara_id = item.params.monster_ball_captured_chara_id
-      if chara_id then
-         local chara_name = I18N.localize("base.chara", chara_id, "name")
-         s = s .. (" (%s)"):format(chara_name)
-      else
-         s = s .. I18N.localize("base.item", _id, "level", item.params.monster_ball_max_level)
-      end
-   elseif _id == "elona.small_gamble_chest" then
+   if _id == "elona.small_gamble_chest" then
       s = s .. I18N.localize("base.item", _id, "level", item.params.chest_lockpick_difficulty)
    end
 
