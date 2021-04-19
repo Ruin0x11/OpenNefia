@@ -5,6 +5,7 @@ local Chara = require("api.Chara")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
 local Const = require("api.Const")
+local ICharaEquipStyle = require("api.chara.aspect.ICharaEquipStyle")
 
 local function retreat_in_fear(chara, params)
    -- >>>>>>>> shade2/chara_func.hsp:1535 		if cHp(tc)<cMhp(tc)/5:if tc!pc:if cFear(tc)=0:if ..
@@ -328,11 +329,12 @@ local function proc_on_physical_attack(chara, params)
       Skill.gain_skill_exp(chara, attack_skill, attack_skill_exp, 0, 4)
 
       if not params.is_ranged then
+         local style = chara:get_aspect(ICharaEquipStyle)
          Skill.gain_skill_exp(chara, "elona.tactics", 20 / exp_modifier, 0, 4)
-         if chara:calc("is_wielding_two_handed") then
+         if style:calc(chara, "is_wielding_two_handed") then
             Skill.gain_skill_exp(chara, "elona.two_hand", 20 / exp_modifier, 0, 4)
          end
-         if chara:calc("is_dual_wielding") then
+         if style:calc(chara, "is_dual_wielding") then
             Skill.gain_skill_exp(chara, "elona.dual_wield", 20 / exp_modifier, 0, 4)
          end
       elseif attack_skill == "elona.throwing" then
@@ -347,7 +349,7 @@ local function proc_on_physical_attack(chara, params)
       if Chara.is_alive(target) then
          local exp = math.clamp(250 * base_damage / target:calc("max_hp") + 1, 3, 100) / exp_modifier
          Skill.gain_skill_exp(target, target:calc("armor_class"), exp, 0, 5)
-         if target:calc("is_wielding_shield") then
+         if target:calc_aspect(ICharaEquipStyle, "is_wielding_shield") then
             Skill.gain_skill_exp(target, "elona.shield", 40 / exp_modifier, 0, 4)
          end
       end

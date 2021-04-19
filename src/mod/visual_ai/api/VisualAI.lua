@@ -1,11 +1,11 @@
 local Chara = require("api.Chara")
 local Item = require("api.Item")
 local Log = require("api.Log")
-local InstancedMap = require("api.InstancedMap")
 local Pos = require("api.Pos")
 local VisualAIEditor = require("mod.visual_ai.api.gui.VisualAIEditor")
 local MapObject = require("api.MapObject")
 local VisualAIPlan = require("mod.visual_ai.api.plan.VisualAIPlan")
+local ICharaVisualAI = require("mod.visual_ai.api.aspect.ICharaVisualAI")
 
 local VisualAI = {}
 
@@ -210,12 +210,7 @@ local function run_one_plan(chara, plan, state)
 end
 
 function VisualAI.run(chara, plan)
-   local ext = chara:get_mod_data("visual_ai")
-   plan = plan or ext.visual_ai_plan
-
-   -- BUG: #118
-   -- class.assert_is_an(IChara, chara)
-   -- class.assert_is_an(VisualAIPlan, plan)
+   class.assert_is_an(VisualAIPlan, plan)
 
    Log.debug("+++ Running Visual AI for %s +++", chara.name)
 
@@ -226,8 +221,9 @@ function VisualAI.run(chara, plan)
       return false, (("Plan has %d errors:\n%s"):format(#errors, error_text))
    end
 
-   if ext.stored_target and not target_filter_in_fov.filter(nil, chara, ext.stored_target) then
-      ext.stored_target = nil
+   local aspect = chara:get_aspect_or_default(ICharaVisualAI, true)
+   if not Chara.is_alive(aspect.stored_target) or not target_filter_in_fov.filter(nil, chara, aspect.stored_target) then
+      aspect.stored_target = nil
    end
 
    local state = {
@@ -253,19 +249,13 @@ function VisualAI.run(chara, plan)
    return true, nil
 end
 
-function VisualAI.set_plan(chara, plan)
-   local ext = chara:get_mod_data("visual_ai")
-   ext.visual_ai_plan = plan
-   ext.visual_ai_enabled = true
-end
-
 function VisualAI.edit(chara)
-   local ext = chara:get_mod_data("visual_ai")
-   local plan = ext.visual_ai_plan or VisualAIPlan:new()
+   local aspect = chara:get_aspect_or_default(ICharaVisualAI, true)
+   local plan = aspect.plan or VisualAIPlan:new()
    local ok, canceled = VisualAIEditor:new(plan, {chara=chara}):query()
 
-   ext.visual_ai_plan = plan
-   ext.visual_ai_enabled = true
+   aspect.plan = plan
+   aspect.enabled = true
 end
 
 return VisualAI

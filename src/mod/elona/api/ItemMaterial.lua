@@ -2,6 +2,9 @@ local Rand = require("api.Rand")
 local Enum = require("api.Enum")
 local CharaMake = require("api.CharaMake")
 local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
+local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
+local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
+local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
 
 local ItemMaterial = {}
 
@@ -135,6 +138,26 @@ function ItemMaterial.apply_material_enchantments(item, material)
    end
 end
 
+local function reset_dice(item)
+   -- HACK need a way to get the aspect interface(s) that a concrete impl
+   -- satisfies
+   local function reset(iface)
+      local aspect = item:get_aspect(iface)
+      if aspect then
+         local proto = item:get_aspect_proto(iface)
+         if proto then
+            aspect.dice_y = proto.dice_y or 0
+         else
+            aspect.dice_y = 0
+         end
+      end
+   end
+
+   reset(IItemMeleeWeapon)
+   reset(IItemRangedWeapon)
+   reset(IItemAmmo)
+end
+
 function ItemMaterial.change_item_material(item, new_material)
    -- >>>>>>>> shade2/item_data.hsp:1175 	iCol(ci)=0 ..
    if item.material then
@@ -154,7 +177,7 @@ function ItemMaterial.change_item_material(item, new_material)
          equip.dv = 0
          equip.pv = 0
       end
-      item.dice_y = proto.dice_y or 0
+      reset_dice(item)
       item.color = proto.color or nil
       item.value = math.floor(item.value * 100 / cur_material.value)
    end
@@ -208,8 +231,20 @@ function ItemMaterial.apply_item_material(item, material)
             equip.pv = math.floor(mat_data.pv * equip.pv * 9 / (coeff - Rand.rnd(30)))
          end
       end
-      if item.dice_y > 0 then
-         item.dice_y = math.floor(mat_data.dice_y * item.dice_y / (coeff + Rand.rnd(25)))
+
+      do
+         -- HACK need a way to get the aspect interface(s) that a concrete impl
+         -- satisfies
+         local function set_dice(iface)
+            local aspect = item:get_aspect(iface)
+            if aspect and aspect.dice_y > 0 then
+               aspect.dice_y = math.floor(mat_data.dice_y * aspect.dice_y / (coeff + Rand.rnd(25)))
+            end
+         end
+
+         set_dice(IItemMeleeWeapon)
+         set_dice(IItemRangedWeapon)
+         set_dice(IItemAmmo)
       end
 
       ItemMaterial.apply_material_enchantments(item, material)

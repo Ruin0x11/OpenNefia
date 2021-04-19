@@ -5,14 +5,14 @@ local Assert = {}
 
 function Assert.is_truthy(actual, msg)
    if not actual then
-      error(msg or "assertion failed!", 2)
+      error(("expected truthy, got '%s'"):format(actual), 2)
    end
    return actual
 end
 
 function Assert.is_falsy(actual, msg)
    if actual then
-      error(msg or "assertion failed!", 2)
+      error(("expected falsy, got '%s'"):format(actual), 2)
    end
 end
 

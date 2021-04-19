@@ -84,9 +84,13 @@ return {
          no_information = "There is no information about this object.",
          speeds_up_ether_disease = "It speeds up the ether disease while equipping.",
          weapon = {
-            heavy = "It is a heavy weapon.",
-            it_can_be_wielded = "It can be wielded as a weapon.",
+            it_can_be_wielded = {
+               melee = "It can be wielded as a weapon.",
+               ranged = "It can be wielded as a ranged weapon.",
+               ammo = "It can be equipped as ammo.",
+            },
             light = "It is a light weapon.",
+            heavy = "It is a heavy weapon.",
             dice = function(dice_x, dice_y, pierce)
                return ("(%dd%d Pierce %d%%)")
                   :format(dice_x, dice_y, pierce)

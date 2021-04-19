@@ -14,13 +14,17 @@ local CurseState = Enum.CurseState
 local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local Effect = require("mod.elona.api.Effect")
 local ElonaItem = require("mod.elona.api.ElonaItem")
-local Ui = require("api.Ui")
 local World = require("api.World")
 local Hunger = require("mod.elona.api.Hunger")
+local EquipRules = require("api.chara.EquipRules")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
+local IItemDice = require("mod.elona.api.aspect.IItemDice")
+local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
+local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
+local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
 
 local Itemname = {}
 
@@ -30,6 +34,25 @@ local function number_string(i)
    end
 
    return tostring(i)
+end
+
+local function get_dice(item)
+   local aspect
+   if EquipRules.is_melee_weapon(item) then
+      aspect = item:get_aspect(IItemMeleeWeapon)
+   elseif EquipRules.is_ranged_weapon(item) then
+      aspect = item:get_aspect(IItemRangedWeapon)
+   elseif EquipRules.is_ammo(item) then
+      aspect = item:get_aspect(IItemAmmo)
+   else
+      aspect = item:iter_aspects(IItemDice):nth(1)
+   end
+   if aspect == nil then
+      return 0, 0
+   end
+   local dice_x = aspect:calc(item, "dice_x") or 0
+   local dice_y = aspect:calc(item, "dice_y") or 0
+   return dice_x, dice_y
 end
 
 -- >>>>>>>> shade2/item_func.hsp:616 	if iKnown(id)>=knownFull{ ..
@@ -46,8 +69,7 @@ local function item_known_info(item)
 
    local equip = item:get_aspect(IItemEquipment)
 
-   local dice_x = item:calc("dice_x") or 0
-   local dice_y = item:calc("dice_y") or 0
+   local dice_x, dice_y = get_dice(item)
    local hit_bonus = (equip and equip:calc(item, "hit_bonus")) or 0
    local damage_bonus = (equip and equip:calc(item, "damage_bonus")) or 0
 

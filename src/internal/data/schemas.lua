@@ -446,39 +446,6 @@ Relative strength of this item.
             template = true
          },
          {
-            name = "dv",
-            default = 0,
-            type = "number",
-            doc = [[
-DV of this item. Applies if it is equipment.
-]]
-         },
-         {
-            name = "pv",
-            type = "number",
-            default = 0
-         },
-         {
-            name = "dice_x",
-            type = "number",
-            default = 0
-         },
-         {
-            name = "dice_y",
-            type = "number",
-            default = 0
-         },
-         {
-            name = "hit_bonus",
-            type = "number",
-            default = 0
-         },
-         {
-            name = "damage_bonus",
-            type = "number",
-            default = 0
-         },
-         {
             name = "color",
             default = nil,
             type = "table?"
@@ -700,8 +667,6 @@ If false, this item cannot be wished for.
          value = 1,
          params = {},
 
-         is_melee_weapon = nil,
-         is_ranged_weapon = nil,
          x_offset = nil,
          y_offset = nil,
 

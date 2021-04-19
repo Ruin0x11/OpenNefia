@@ -5,6 +5,8 @@ local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local I18N = require("api.I18N")
 local Ui = require("api.Ui")
+local EquipRules = require("api.chara.EquipRules")
+local ICharaEquipStyle = require("api.chara.aspect.ICharaEquipStyle")
 
 local IInput = require("api.gui.IInput")
 local IPaged = require("api.gui.IPaged")
@@ -50,7 +52,7 @@ local UiListExt = function(equipment_menu)
       local subtext = entry.subtext
 
       if entry.equipped then
-         equipment_menu.map_object_batch:add(entry.equipped, x + 12, y + 10, nil, nil, {255, 255, 255}, true)
+         equipment_menu.map_object_batch:add(entry.equipped, x + 12, y + 10, nil, nil, nil, true)
 
          if equipment_menu.layout then
             item_name, subtext = equipment_menu.layout:draw_row(entry.equipped, item_name, subtext, x, y)
@@ -210,15 +212,17 @@ function EquipmentMenu.message_weapon_stats(chara)
       if part.body_part._id == "elona.hand" then
          local equipped = assert(part.equipped)
          local weight = equipped:calc("weight")
-         if equipped:calc("is_melee_weapon") then
+         if EquipRules.is_melee_weapon(equipped) then
             attack_count = attack_count + 1
-            if chara:calc("is_wielding_two_handed") and weight >= Const.WEAPON_WEIGHT_HEAVY then
+
+            local style = chara:get_aspect(ICharaEquipStyle)
+            if style:calc(chara, "is_wielding_two_handed") and weight >= Const.WEAPON_WEIGHT_HEAVY then
                Gui.mes("action.equip.two_handed.fits_well", equipped:build_name())
             end
-            if chara:calc("is_dual_wielding") then
+            if style:calc(chara, "is_dual_wielding") then
                if attack_count == 1 then
                   if weight >= Const.WEAPON_WEIGHT_HEAVY then
-                     Gui.mes("action.equip.two_handed.too_heavy_other_hand", equipped:build_name())
+                     Gui.mes("action.equip.two_handed.too_heavy", equipped:build_name())
                   end
                else
                   if weight > Const.WEAPON_WEIGHT_LIGHT then

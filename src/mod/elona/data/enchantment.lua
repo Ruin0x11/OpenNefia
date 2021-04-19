@@ -16,6 +16,7 @@ local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Effect = require("mod.elona.api.Effect")
 local Log = require("api.Log")
 local Hunger = require("mod.elona.api.Hunger")
+local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
 
 ---
 --- Parameterized enchantments
@@ -461,7 +462,7 @@ data:add {
    end,
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:578 		if enc=encProc{ ..
-      if not item:has_category("elona.equip_ammo") then
+      if not item:get_aspect(IItemAmmo) then
          return { skip = true }
       end
 
