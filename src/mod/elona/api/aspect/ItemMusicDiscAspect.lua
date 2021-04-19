@@ -7,12 +7,16 @@ local I18N = require("api.I18N")
 
 local ItemMusicDiscAspect = class.class("ItemMusicDiscAspect", { IItemMusicDisc, IItemUseable, IItemLocalizableExtra })
 
+local function can_generate(music)
+   return data["base.music"]:ext(music._id, "elona.music_disc").can_randomly_generate
+end
+
 function ItemMusicDiscAspect:init(item, params)
    if params.music_id then
       data["base.music"]:ensure(params.music_id)
       self.music_id = params.music_id
    else
-      self.music_id = Rand.choice(data["base.music"]:iter())._id
+      self.music_id = Rand.choice(data["base.music"]:iter():filter(can_generate))._id
    end
 end
 
@@ -33,11 +37,18 @@ function ItemMusicDiscAspect:localize_extra(item)
    local music_id = self:calc(item, "music_id")
    local music = data["base.music"][music_id]
    if music then
+      local ext = data["base.music"]:ext(music_id, "elona.music_disc")
       local name = I18N.localize_optional("base.music", music_id, "name")
       if name then
          info = (" \"%s\""):format(name)
+      elseif ext and ext.music_number then
+         info = tostring(ext.music_number)
       elseif music.elona_id then
-         info = tostring(music.elona_id - 50)
+         if music.elona_id > 50 then
+            info = tostring(music.elona_id - 50 - 1)
+         else
+            info = "???"
+         end
       else
          info = (" \"%s\""):format(music_id)
       end

@@ -4,9 +4,14 @@ data:add {
 
    fields = {
       {
-         name = "generate_music_disc",
+         name = "can_randomly_generate",
          type = "boolean",
          default = true
+      },
+      {
+         name = "music_number",
+         type = "integer?",
+         default = nil
       }
    }
 }
@@ -21,7 +26,7 @@ data:add_multi(
 
          _ext = {
             ["elona.music_disc"] = {
-               generate_music_disc = false
+               can_randomly_generate = false
             }
          }
       },
