@@ -5,6 +5,18 @@ local CodeGenerator = require("api.CodeGenerator")
 local Enum = require("api.Enum")
 
 data:add_type {
+   name = "data_ext",
+   fields = {
+      {
+         name = "fields",
+         template = true,
+         type = "table",
+         default = {}
+      }
+   }
+}
+
+data:add_type {
    name = "event",
    schema = schema.Record {
       observer = schema.Optional(schema.String)

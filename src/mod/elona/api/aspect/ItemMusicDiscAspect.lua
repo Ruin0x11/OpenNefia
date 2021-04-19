@@ -35,16 +35,16 @@ function ItemMusicDiscAspect:localize_extra(item)
    if music then
       local name = I18N.localize_optional("base.music", music_id, "name")
       if name then
-         info = name
+         info = (" \"%s\""):format(name)
       elseif music.elona_id then
-         info = ("BGM%d"):format(tostring(music.elona_id - 50))
+         info = tostring(music.elona_id - 50)
       else
-         info = ("BGM \"%s\""):format(music_id)
+         info = (" \"%s\""):format(music_id)
       end
    else
-      info = "BGM???"
+      info = "???"
    end
-   return ("<%s>"):format(info)
+   return ("<BGM%s>"):format(info)
 end
 
 return ItemMusicDiscAspect

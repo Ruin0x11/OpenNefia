@@ -1,3 +1,16 @@
+data:add {
+   _type = "base.data_ext",
+   _id = "music_disc",
+
+   fields = {
+      {
+         name = "generate_music_disc",
+         type = "boolean",
+         default = true
+      }
+   }
+}
+
 data:add_multi(
    "base.music",
    {
@@ -5,6 +18,12 @@ data:add_multi(
          _id = "reset",
          file = "mod/elona/sound/gm_on.mid",
          elona_id = 50,
+
+         _ext = {
+            ["elona.music_disc"] = {
+               generate_music_disc = false
+            }
+         }
       },
       {
          _id = "town1",
