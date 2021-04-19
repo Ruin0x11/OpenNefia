@@ -6,6 +6,7 @@ local event = {
    { _id = "on_ai_ally_action" },
    { _id = "on_item_eat_begin" },
    { _id = "on_chara_sleep" },
+   { _id = "on_sleep_finish" },
    { _id = "on_dig_success" },
    { _id = "on_search_finish" },
    { _id = "on_feat_calc_materials" },

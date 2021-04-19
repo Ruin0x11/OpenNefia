@@ -53,7 +53,7 @@ function sound_manager:play_looping(tag, id, ty, x, y, volume)
 
    local sound = self.data[ty][id]
    if sound == nil then
-      Log.warn("Unknown sound %s:%s", ty, id)
+      Log.error("Unknown sound %s:%s", ty, id)
       return
    end
 
@@ -143,7 +143,7 @@ function sound_manager:play(id, x, y, volume, channel)
 
    local sound = self.data.sound[id]
    if sound == nil then
-      Log.warn("Unknown sound %s", tostring(id))
+      Log.error("Unknown sound %s", tostring(id))
       return
    end
 
