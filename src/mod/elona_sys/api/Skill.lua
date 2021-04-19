@@ -182,6 +182,10 @@ end
 
 -- TODO replace with ICharaSkills:mod_skill_potential()
 function Skill.modify_potential(chara, skill, delta)
+   if not chara:has_base_skill(skill) then
+      return
+   end
+
    local potential = math.clamp(math.floor(chara:skill_potential(skill) + delta), 2, 400)
    chara.skills[skill].potential = potential
 end

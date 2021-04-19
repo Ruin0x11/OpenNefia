@@ -29,6 +29,7 @@ local Calc = require("mod.elona.api.Calc")
 local Shortcut = require("mod.elona.api.Shortcut")
 local God = require("mod.elona.api.God")
 local GodConvertMenu = require("mod.elona.api.gui.GodConvertMenu")
+local Event = require("api.Event")
 
 local ElonaCommand = {}
 
@@ -391,6 +392,8 @@ function ElonaCommand.do_sleep(player, bed, no_animation, sleep_hours)
 
    RandomEvent.set_kind()
    global.is_player_sleeping = false
+
+   Event.trigger("elona.on_sleep_finish", {bed=bed,sleep_hours=sleep_hours})
 
    if not ok then
       error(err)
