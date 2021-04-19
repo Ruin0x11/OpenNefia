@@ -250,22 +250,28 @@ function i18n.make_prefix_lookup()
    local d = dawg:new()
    local corpus = {}
    local add
-   add = function(id, item)
+   add = function(namespace, id, item)
+      local full_id = id
+      if namespace ~= "base" then
+         full_id = namespace .. ":" .. id
+      end
       if type(item) == "string" then
-         corpus[#corpus+1] = { item, id }
+         corpus[#corpus+1] = { item, full_id }
       elseif type(item) == "function" then
          local ok, result = pcall(item, {}, {}, {}, {}, {})
          if ok and type(result) == "string" then
-            corpus[#corpus+1] = { result, id }
+            corpus[#corpus+1] = { result, full_id }
          end
       elseif type(item) == "table" then
          for _, v in ipairs(item) do
-            add(id, v)
+            add(namespace, id, v)
          end
       end
    end
-   for id, item in pairs(i18n.db[i18n.language]) do
-      add(id, item)
+   for namespace, t in pairs(i18n.db[i18n.language]) do
+      for id, item in pairs(t) do
+         add(namespace, id, item)
+      end
    end
 
    table.sort(corpus, function(a, b) return a[1] < b[1] end)
