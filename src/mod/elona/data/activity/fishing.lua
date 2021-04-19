@@ -208,7 +208,7 @@ data:add {
                            Gui.update_screen(dt)
                         end
                      end
-                     Gui.start_draw_callback(cb)
+                     Gui.start_draw_callback(cb, nil, "elona.fishing_1")
                   end
 
                   if Rand.one_in(3) then
@@ -234,7 +234,7 @@ data:add {
                         Gui.step_effect_map()
                      end
                   end
-                  Gui.start_draw_callback(cb)
+                  Gui.start_draw_callback(cb, nil, "elona.fishing_2")
                end
 
                if not Rand.one_in(10) then
@@ -271,7 +271,7 @@ data:add {
                         Gui.step_effect_map()
                      end
                   end
-                  Gui.start_draw_callback(cb)
+                  Gui.start_draw_callback(cb, nil, "elona.fishing_3")
                end
 
                local difficulty = data["elona.fish"]:ensure(p.fish).power
@@ -300,7 +300,7 @@ data:add {
                         Gui.step_effect_map()
                      end
                   end
-                  Gui.start_draw_callback(cb)
+                  Gui.start_draw_callback(cb, nil, "elona.fishing_4")
                end
 
                Gui.play_sound(Rand.choice({"base.get1", "base.get2"}))
@@ -326,6 +326,10 @@ data:add {
             params.chara.y_offset = self.params.chara_y_offset
             params.chara:set_item_using(nil)
             Gui.stop_draw_callback("elona.fishing")
+            Gui.stop_draw_callback("elona.fishing_1")
+            Gui.stop_draw_callback("elona.fishing_2")
+            Gui.stop_draw_callback("elona.fishing_3")
+            Gui.stop_draw_callback("elona.fishing_4")
          end
       },
       {
