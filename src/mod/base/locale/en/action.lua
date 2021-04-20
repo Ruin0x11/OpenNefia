@@ -377,7 +377,8 @@ return {
                   :format(name(_1))
             end,
             title = "Tone of Voice",
-            tone_title = "Title"
+            tone_title = "Title",
+            mod_name = "Mod"
          },
          choices = {
             appearance = "Appearance",

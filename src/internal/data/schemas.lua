@@ -212,6 +212,16 @@ The character must have `can_talk` set to `true` for this to trigger.
 ]]
          },
          {
+            name = "tone",
+            default = nil,
+            type = "base.tone",
+            doc = [[
+Custom talk tone for this character.
+
+This is for making characters say custom text on certain events.
+]]
+         },
+         {
             name = "cspecialeq",
             default = nil
          },

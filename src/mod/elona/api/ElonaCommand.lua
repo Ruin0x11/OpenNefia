@@ -280,7 +280,7 @@ local function do_chara_sleep(chara)
 end
 
 local function do_sleep(player, bed, no_animation, sleep_hours)
-   if player:calc("catches_god_signal") then
+   if player:calc("can_catch_god_signals") then
       -- TODO god talk
    end
 

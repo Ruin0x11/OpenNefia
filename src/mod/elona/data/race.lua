@@ -508,6 +508,7 @@ local race =
             breed_power = 700,
             image = "elona.chara_race_slime",
             cast_style = "spill",
+            tone = "elona.slime"
          },
 
          male_ratio = 54,
@@ -2172,8 +2173,9 @@ local race =
             melee_style = "elona.bite",
             cast_style = "spider",
             dv_correction = 170,
+            tone = "elona.spider",
 
-            can_pass_through_webs = true
+            can_pass_through_webs = true,
          },
 
          male_ratio = 53,
@@ -2214,6 +2216,7 @@ local race =
             image = "elona.chara_golem",
             breaks_into_debris = true,
             pv_correction = 140,
+            tone = "elona.golem"
          },
 
          male_ratio = 53,
@@ -2461,6 +2464,7 @@ local race =
             image = "elona.chara_cat",
             melee_style = "elona.claw",
             cast_style = "gaze",
+            tone = "elona.cat"
          },
 
          male_ratio = 53,
@@ -2600,6 +2604,7 @@ local race =
             breed_power = 1100,
             image = "elona.chara_rat",
             melee_style = "elona.bite",
+            tone = "elona.rat",
          },
 
          male_ratio = 53,
@@ -3363,6 +3368,7 @@ local race =
             melee_style = "elona.bite",
             dv_correction = 150,
             pv_correction = 1000,
+            tone = "elona.metal"
          },
 
          male_ratio = 53,

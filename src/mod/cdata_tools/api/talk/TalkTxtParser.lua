@@ -49,9 +49,13 @@ function TalkTxtParser.parse(content)
          end
          txt = state:read_directive()
       else
-         txt, finished = read_txt(txt, state, result)
-         if finished then
-            break
+         if state:has_directive() then
+            txt = state:read_directive()
+         else
+            txt, finished = read_txt(txt, state, result)
+            if finished then
+               break
+            end
          end
       end
    end

@@ -96,6 +96,8 @@ stds.i18n_jp = {
       "na",
       "ru",
       "thanks",
+      "nii",
+      "syujin"
    }
 }
 

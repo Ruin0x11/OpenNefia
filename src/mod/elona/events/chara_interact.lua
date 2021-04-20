@@ -9,6 +9,7 @@ local Gui = require("api.Gui")
 local ChangeAppearanceMenu = require("api.gui.menu.ChangeAppearanceMenu")
 local Item = require("api.Item")
 local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
+local ChangeToneMenu = require("api.gui.menu.ChangeToneMenu")
 
 --
 -- Interact Actions
@@ -93,8 +94,17 @@ end
 
 local function interact_change_tone(chara, player)
    -- >>>>>>>> shade2/command.hsp:1910 	if p=10:gosub *com_tone ...
-   -- TODO talk text
-   Gui.mes_c("TODO", "Yellow")
+   local result, canceled = ChangeToneMenu:new():query()
+
+   if result and not canceled then
+      Gui.mes("action.interact.change_tone.is_somewhat_different", chara)
+      local tone_id = result.tone_id
+      if tone_id == nil then
+         chara.tone = chara.proto.tone
+      else
+         chara.tone = tone_id
+      end
+   end
 
    return "player_turn_query"
    -- <<<<<<<< shade2/command.hsp:1910 	if p=10:gosub *com_tone ..
@@ -103,7 +113,6 @@ end
 local function interact_release(chara, player)
    -- >>>>>>>> shade2/command.hsp:1904 	if p=9{ ...
    Gui.play_sound("base.build1", chara.x, chara.y)
-   local aspect = 
    chara:get_aspect(ICharaSandBag):release_from_sand_bag(chara, true)
    Gui.mes("action.interact.release", chara)
    chara:refresh()

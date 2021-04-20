@@ -139,7 +139,6 @@ end
 
 function IChara:instantiate(no_bind_events)
    IMapObject.instantiate(self, no_bind_events)
-   ICharaTalk.instantiate(self, no_bind_events)
 
    self:emit("base.on_chara_instantiated")
 end

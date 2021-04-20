@@ -1,125 +1,153 @@
---- @module Talk
-
-local Rand = require("api.Rand")
-local Log = require("api.Log")
-local Event = require("api.Event")
-local Gui = require("api.Gui")
 local data = require("internal.data")
+local i18n = require("internal.i18n.init")
+local Chara = require("api.Chara")
+local Rand = require("api.Rand")
+local I18N = require("api.I18N")
+local WeightedSampler = require("mod.tools.api.WeightedSampler")
+local Log = require("api.Log")
 
 local Talk = {}
 
---- Formats a string according to the talk ID given.
----
---- @tparam id:base.talk talk_id
---- @tparam string talk_event_id
---- @tparam[opt] IChara chara
---- @tparam[opt] table args Extra arguments to the talk formatter.
-function Talk.message(talk_id, talk_event_id, chara, args)
-   if not talk_id then
-      return
+Talk.DEFAULT_RANDOM_WEIGHT = 10
+
+local env_fns = {}
+
+function env_fns.name(obj, ignore_sight)
+   local env = i18n.env
+   if ignore_sight == nil then
+      ignore_sight = true
    end
-
-   local talk = data["base.talk"][talk_id]
-   if not talk then
-      return
-   end
-
-   args = args or {}
-   local is_event = string.has_prefix(talk_event_id, "event:")
-
-   if not is_event then
-      local ev = data["base.talk_event"][talk_event_id]
-      if not ev then
-         Log.warn("Unknown talk event %s for talk %s", talk_event_id, talk_id)
-         return nil
-      end
-      args = table.merge_existing(table.deepcopy(ev.params) or {}, args)
-   end
-
-   local lang = "jp"
-   local talk_entry = talk.messages[lang][talk_event_id]
-   local mes = talk_entry
-
-   if type(mes) == "table" and mes[1] ~= nil then
-      mes = Rand.choice(mes)
-      talk_entry = mes
-   end
-
-   if type(mes) == "table" and mes[1] == nil then
-      mes = mes.talk
-   end
-
-   if type(mes) == "function" then
-      -- chara = chara or Chara.mock()
-      mes = mes(chara, args)
-   end
-
-   return mes, talk_entry
+   return env.name(obj, ignore_sight)
 end
 
---- Makes a character say a message given a talk event ID.
----
---- @tparam IChara chara
---- @tparam string talk_event_id
---- @tparam[opt] table args
---- @tparam[opt] any source
-function Talk.say(chara, talk_event_id, args, source)
-   local message, talk_entry = Talk.message(chara.talk, talk_event_id, chara, args, source)
-
-   if not string.nonempty(message) then
-      return
-   end
-
-   Gui.mes(message)
-
-   chara:emit("base.on_talk", {talk_event_id=talk_event_id,message=message,talk_entry=talk_entry})
-end
-
-local function talk_voice_handler(chara, params)
-   if type(params.talk_entry) == "table" and params.talk_entry.voice then
-      Gui.play_sound(params.talk_entry.voice, chara.x, chara.y)
+function env_fns.player()
+   local player = Chara.player()
+   if player then
+      return player:calc("name")
+   else
+      return ""
    end
 end
 
-Event.register("base.on_talk", "talk voice handler2", talk_voice_handler)
+function env_fns.aka()
+   local player = Chara.player()
+   if player then
+      return player:calc("title")
+   else
+      return ""
+   end
+end
 
---- Sets up talk events for this character.
---- TODO shouldn't be public.
----
---- @tparam IChara chara
-function Talk.setup(chara)
-   if not chara.talk then
+local function gen_env()
+   return {
+      i18n = i18n.env,
+      name = env_fns.name,
+      player = env_fns.player,
+      aka = env_fns.aka
+   }
+end
+
+function Talk.gen_text(chara, talk_event_id, args)
+   local tone = chara:calc("tone")
+   if type(tone) == "nil" then
       return
+   elseif type(tone) == "string" then
+      tone = { tone }
    end
 
-   local talk = data["base.talk"][chara.talk]
-   if not talk then
-      chara:disconnect_self("base.before_handle_self_event", "talk handler")
-      return
-   end
+   assert(type(tone) == "table")
 
-   local lang = "jp"
-   for event_id, _ in pairs(talk.messages[lang]) do
-      -- TODO: unify talk and base events
-      if string.has_prefix(event_id, "event:") then
-         event_id = string.strip_prefix(event_id, "event:")
-         if data["base.event"][event_id] then
-            -- Event.add_observer(event_id, chara)
+   data["base.talk_event"]:ensure(talk_event_id)
+
+   local cands = {}
+
+   for _, tone_id in ipairs(tone) do
+      local tone_proto = data["base.tone"][tone_id]
+
+      if tone_proto then
+         local lang = tone_proto.texts[I18N.language()]
+         if lang then
+            local texts = lang[talk_event_id]
+            if texts then
+               for _, cand in ipairs(texts) do
+                  cands[#cands+1] = { tone_id = tone_id, cand = cand }
+               end
+            end
          end
+      else
+         Log.error("Missing custom talk tone '%s'", tone_id)
       end
    end
 
-   if not chara:has_event_handler("base.before_handle_self_event", "talk handler") then
-      chara:connect_self("base.before_handle_self_event", "talk handler",
-                            function(self, params)
-                               if params.event_id == "base.on_talk" then
-                                  return
-                               end
+   local sampler = WeightedSampler:new()
 
-                               Talk.say(self, "event:" .. params.event_id, params.args)
-                            end
-      )
+   for _, entry in ipairs(cands) do
+      local tone_id = entry.tone_id
+      local cand = entry.cand
+
+      local ty = type(cand)
+
+      local weight = Talk.DEFAULT_RANDOM_WEIGHT
+      if ty == "string" or ty == "function" then
+      elseif ty == "table" then
+         if cand.pred == nil or cand.pred(chara, args) then
+            if type(cand[1]) == "string" then
+               cand = cand
+            else
+               cand = cand
+               weight = cand.weight or weight
+            end
+         end
+      else
+         error("Unknown talk text of type " .. ty .. "(" .. tone_id .. ")")
+      end
+
+      sampler:add(cand, weight)
    end
+
+   if sampler:len() == 0 then
+      return nil
+   end
+
+   local result = sampler:sample()
+   local ty = type(result)
+
+   local locale_data = nil
+   local env = gen_env()
+
+   local function get_text(r)
+      local text
+      if ty == "string" then
+         text = r
+      elseif ty == "function" then
+         locale_data = locale_data or chara:produce_locale_data()
+         text = r(locale_data, env, args, chara)
+      elseif ty == "table" then
+         local choice = Rand.choice(r)
+         if choice then
+            text = get_text(r)
+         end
+      else
+         error("Unknown talk text of type " .. ty)
+      end
+      return text
+   end
+
+   return get_text(result)
+end
+
+function Talk.say(chara, talk_event_id, args, opts)
+   local text = Talk.gen_text(chara, talk_event_id, args)
+
+   if text then
+      local color = opts and opts.color
+      if color == nil then
+         color = "SkyBlue"
+      end
+      chara:mes_c(text, color)
+   end
+
+   return text
 end
 
 return Talk

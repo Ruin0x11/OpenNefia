@@ -130,3 +130,11 @@ function string.reflow(str, limit, indent, indent1)
                        return string.wrap(line, limit, indent, indent1)
    end))
 end
+
+function string.to_snake_case(s)
+   return s:gsub('%f[^%l]%u','_%1')
+      :gsub('%f[^%a]%d','_%1')
+      :gsub('%f[^%d]%a','_%1')
+      :gsub('(%u)(%u%l)','%1_%2')
+      :lower()
+end

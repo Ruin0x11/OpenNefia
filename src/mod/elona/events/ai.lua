@@ -37,6 +37,8 @@ local function on_act_hostile_towards(chara, params)
          other:set_relation_towards(chara, Enum.Relation.Enemy)
          other:set_target(chara, 80)
       end
+
+      other:say("base.aggro", { target = chara })
    end
 
    if other.is_livestock and Rand.one_in(50) then

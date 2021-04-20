@@ -92,6 +92,30 @@ function jp.kare_wa(obj)
    end
 end
 
+function jp.nii(obj)
+   if not type(obj) == "table" then
+      return "兄"
+   end
+
+   if obj.gender == "male" then
+      return "兄"
+   else
+      return "姉"
+   end
+end
+
+function jp.syujin(obj)
+   if not type(obj) == "table" then
+      return "ご主人様"
+   end
+
+   if obj.gender == "male" then
+      return "ご主人様"
+   else
+      return "お嬢様"
+   end
+end
+
 local marks = {"。", "？", "！", ""}
 local endings = {
    yoro = {

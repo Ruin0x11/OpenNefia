@@ -76,4 +76,23 @@ function Compat.convert_122_color_index(color_idx)
    return Enum.Color[color]
 end
 
+function Compat.convert_122_talk_event(elona_txt_id)
+   local filter = function(te)
+      if te.elona_txt_id == elona_txt_id then
+         return true
+      end
+
+      if te.variant_txt_ids then
+         for _, id in pairs(te.variant_txt_ids) do
+            if id == elona_txt_id then
+               return true
+            end
+         end
+      end
+
+      return false
+   end
+   return data["base.talk_event"]:iter():filter(filter):extract("_id"):nth(1)
+end
+
 return Compat

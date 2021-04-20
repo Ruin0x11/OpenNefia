@@ -1,28 +1,30 @@
-local Chara = require("api.Chara")
+local Gui = require("api.Gui")
 local Talk = require("api.Talk")
 
 local ICharaTalk = class.interface("ICharaTalk")
 
 function ICharaTalk:init()
-   self.talk = nil
-   self.is_talk_silenced = false
 end
 
-function ICharaTalk:instantiate(no_bind_events)
-   self:set_talk(self.talk)
-end
-
-function ICharaTalk:set_talk(talk)
-   self.talk = talk
-   Talk.setup(self)
-end
-
-function ICharaTalk:say(talk_id, args)
-   if not Chara.is_alive(self) then
-      return
+function ICharaTalk:mes_c(text, args, ...)
+   local color
+   if type(args) == "string" then
+      color = args
+   elseif type(args) == "table" then
+      color = args.color or nil
    end
 
-   Talk.say(self, talk_id, args)
+   Gui.mes_c(text, color, ...)
+
+   self:emit("base.on_chara_say_message")
+end
+
+function ICharaTalk:mes(id, ...)
+   return self:mes_c(id, "Talk", ...)
+end
+
+function ICharaTalk:say(talk_id, args, opts)
+   return Talk.say(self, talk_id, args, opts)
 end
 
 return ICharaTalk
