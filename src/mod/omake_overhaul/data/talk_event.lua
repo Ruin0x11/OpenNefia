@@ -131,6 +131,11 @@ local oomsest = {
 local function make_talk_events(evs, variant)
    local map = function(ev,t)
       local _id = t._id or string.to_snake_case(ev)
+
+      if _id:match("^[0-9]") then
+         _id = "_" .. _id
+      end
+
       return {
          _id = _id,
          variant_ids = {
