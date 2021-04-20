@@ -7,8 +7,9 @@ data:add_multi(
    {
       {
          _id = "enabled",
-         type = "boolean",
-         default = true,
+         type = "enum",
+         choices = { "disabled", "once", "unlimited" },
+         default = "disabled",
 
          on_changed = function(v)
             ChatBubble.clear()

@@ -106,9 +106,9 @@ local function gen_list(default, chara)
             id = "show_when_disabled",
             text = I18N.get("chat_bubbles:ui.menu.config.options.show_when_disabled.title"),
             type = "enum",
-            default = "never",
+            default = "disabled",
             def = {
-               choices = { "never", "once", "unlimited" },
+               choices = { "disabled", "once", "unlimited" },
                formatter = function(_id, value, index)
                   return I18N.get("chat_bubbles:ui.menu.config.options.show_when_disabled.choices." .. value)
                end

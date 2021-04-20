@@ -33,7 +33,7 @@ return {
                show_when_disabled = {
                   title = "Show When Disabled",
                   choices = {
-                     never = "Never",
+                     disabled = "Don't Show",
                      once = "Once",
                      unlimited = "Unlimited",
                   }

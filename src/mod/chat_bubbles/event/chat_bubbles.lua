@@ -20,7 +20,7 @@ local function add_chat_bubble(chara, params)
       local text = extract_quoted_text(params.text)
 
       -- >>>>>>>> oomSEST/src/southtyris.hsp:1137 			if (cfg_txtpop > 0 | ocdata(164, oom_talkchara) ...
-      if not config.chat_bubbles.enabled and show_when_disabled == "never" then
+      if config.chat_bubbles.enabled == "disabled" and show_when_disabled == "disabled" then
          return
       end
       -- <<<<<<<< oomSEST/src/southtyris.hsp:1137 			if (cfg_txtpop > 0 | ocdata(164, oom_talkchara) ..

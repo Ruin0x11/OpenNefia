@@ -33,7 +33,7 @@ return {
                show_when_disabled = {
                   title = "吹き出しオフでも表示",
                   choices = {
-                     never = "しない",
+                     disabled = "しない",
                      once = "一つ",
                      unlimited = "無制限",
                   }

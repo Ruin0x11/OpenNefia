@@ -41,7 +41,7 @@ function ChatBubble.get_bubble_params(chara)
    local bubble_color, text_color, font, font_size, font_style
    local x_offset = 0
    local y_offset = 0
-   local show_when_disabled = "never"
+   local show_when_disabled
 
    local aspect = chara:get_aspect(ICharaChatBubble)
    if aspect then
@@ -61,6 +61,7 @@ function ChatBubble.get_bubble_params(chara)
    font = font or config.chat_bubbles.default_font
    font_size = font_size or config.chat_bubbles.default_font_size
    font_style = font_style or config.chat_bubbles.default_font_style
+   show_when_disabled = show_when_disabled or config.chat_bubbles.enabled
 
    return bubble_color, text_color, font, font_size, font_style, x_offset, y_offset, show_when_disabled
 end
