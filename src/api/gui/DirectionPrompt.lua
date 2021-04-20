@@ -11,9 +11,10 @@ local DirectionPrompt = class.class("DirectionPrompt", IUiLayer)
 
 DirectionPrompt:delegate("input", IInput)
 
-function DirectionPrompt:init(x, y)
+function DirectionPrompt:init(x, y, screen_pos)
    self.center_x = x
    self.center_y = y
+   self.screen_pos = screen_pos or false
    self.frame = 0
    self.diagonal_only = false
    self.result = nil
@@ -70,8 +71,17 @@ function DirectionPrompt:make_keymap()
    }
 end
 
-function DirectionPrompt:relayout()
-   self.x, self.y = Gui.tile_to_screen(self.center_x, self.center_y)
+function DirectionPrompt:relayout(x, y)
+   if self.screen_pos then
+      x = x or self.center_x
+      y = y or self.center_y
+   end
+
+   if self.screen_pos then
+      self.x, self.y = x, y
+   else
+      self.x, self.y = Gui.tile_to_screen(self.center_x, self.center_y)
+   end
    self.tile_width, self.tile_height = Draw.get_coords():get_size()
    self.t = UiTheme.load(self)
 end

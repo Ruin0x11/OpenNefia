@@ -10,6 +10,7 @@ local bmp_convert = require("internal.bmp_convert")
 local config = require("internal.config")
 local Gui = require("api.Gui")
 local Event = require("api.Event")
+local theme_state = require("internal.global.theme_state")
 
 local theme = {}
 
@@ -156,16 +157,13 @@ function theme.load_tilemap_portrait(portrait_tiles)
    return portrait_atlas
 end
 
-local active_themes = table.set {}
-local overrides = {}
-
 function theme.is_active(theme_id)
-   return not not active_themes[theme_id]
+   return not not theme_state.active_themes[theme_id]
 end
 
 function theme.get_override(_type, _id)
    data["base.theme_transform"]:ensure(_type)
-   local t = overrides[_type]
+   local t = theme_state.overrides[_type]
    if t == nil then
       return nil
    end
@@ -220,8 +218,8 @@ function theme.reload_all(log_cb)
    UiTheme.clear()
    UiTheme.set_assets(asset_map)
 
-   active_themes = table.set(_active_themes)
-   overrides = _overrides
+   theme_state.active_themes = table.set(_active_themes)
+   theme_state.overrides = _overrides
 
    -- Check if we're changing the theme in-game, and if so, do some special
    -- cleanup.
