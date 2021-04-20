@@ -1,9 +1,9 @@
 local Draw = require("api.Draw")
 local IDrawLayer = require("api.gui.IDrawLayer")
 local Gui = require("api.Gui")
-local easing = require("mod.damage_popups.lib.easing")
 local global = require("mod.chat_bubbles.internal.global")
 local Map = require("api.Map")
+local Chara = require("api.Chara")
 
 local ChatBubbleLayer = class.class("ChatBubbleLayer", IDrawLayer)
 
@@ -31,18 +31,23 @@ function ChatBubbleLayer:reset()
 end
 
 function ChatBubbleLayer:update(map, dt, screen_updated)
-   local dead = {}
-
+   -- >>>>>>>> oomSEST/src/net.hsp:1458 					oom_speed = cfg_txtpopspeed * 150 ...
    for uid, v in pairs(global.chat_bubbles) do
+      local max_frame = config.chat_bubbles.max_display_time * 150
+
+      if config.chat_bubbles.shorten_dead_character_messages then
+         local obj = map:get_object(uid)
+         if not obj or (obj._type == "base.chara" and not Chara.is_alive(obj)) then
+            max_frame = max_frame / 4
+         end
+      end
+
       v.frame = v.frame + dt * 1000
-      if v.frame > config.chat_bubbles.max_display_time * 150 then
-         dead[#dead+1] = uid
+      if v.frame > max_frame then
+         global.chat_bubbles[uid] = nil
       end
    end
-
-   if #dead > 0 then
-      table.remove_keys(global.chat_bubbles, dead)
-   end
+   -- <<<<<<<< oomSEST/src/net.hsp:1464 					if (txtpopup(0, txtpopupcnt2) + oom_speed > t ..
 end
 
 function ChatBubbleLayer.draw_chat_bubble(x, y, text, tw, th, bubble_color, text_color, curve, edge, kind)

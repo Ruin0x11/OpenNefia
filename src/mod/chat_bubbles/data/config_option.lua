@@ -26,6 +26,11 @@ data:add_multi(
          -- <<<<<<<< oomSEST/src/config.hsp:1994 				oomSEST_setOption cfg_txtpopspeed, 1, 50 ..
       },
       {
+         _id = "shorten_dead_character_messages",
+         type = "boolean",
+         default = false
+      },
+      {
          _id = "default_text_color",
          type = "extra_config_options.color",
          default = {0, 0, 0},

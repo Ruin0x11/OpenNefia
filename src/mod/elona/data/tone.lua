@@ -1141,7 +1141,7 @@ data:add {
   texts = {
     jp = {
       ["base.dead"] = { "「クゥン…」" },
-      ["base.killed"] = { "「わん！」", "「ゥワン！」」" },
+      ["base.killed"] = { "「わん！」", "「ゥワン！」" },
       ["base.welcome"] = { "「おかえりワン！」" }
     }
   }

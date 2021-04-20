@@ -45,6 +45,10 @@ function ChatBubbleConfigMenu:make_keymap()
    }
 end
 
+function ChatBubbleConfigMenu:on_query()
+   Gui.play_sound("base.pop2")
+end
+
 function ChatBubbleConfigMenu:switch_mode(default)
    Gui.play_sound("base.ok1")
 
