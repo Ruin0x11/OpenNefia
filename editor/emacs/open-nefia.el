@@ -188,6 +188,7 @@
               ("template" (open-nefia--command-template response))
               ("ids" (open-nefia--command-ids args response))
               ("locale_search" (open-nefia--command-locale-search response))
+              ("locale_key_search" (open-nefia--command-locale-key-search response))
               ("run" t)
               ("hotload" t)
               (else (error "No action for %s %s" cmd (prin1-to-string response)))))
@@ -412,10 +413,29 @@
                                                    :caller 'open-nefia--command-locale-search)))
       (insert (format "\"%s\"" result)))))
 
+(defun open-nefia--command-locale-key-search-transformer (id)
+  (let ((text (gethash id open-nefia--locale-search-table)))
+    (concat (format "%s" id)
+            (propertize (format " (\"%s\")" text) 'face 'font-lock-string-face))))
+
+(defun open-nefia--command-locale-key-search (response)
+  (let ((items (append (alist-get 'results response) nil)))
+    (setq open-nefia--locale-search-table (make-hash-table))
+    (mapc (lambda (i)
+            (puthash (aref i 1) (aref i 0) open-nefia--locale-search-table))
+          items)
+    (let* ((cands (mapcar (lambda (i) (aref i 1)) items))
+           (result (open-nefia--do-completing-read "Candidate: " cands
+                                                   :require-match t
+                                                   :caller 'open-nefia--command-locale-key-search)))
+      (insert (format "\"%s\"" result)))))
+
 (when (require 'ivy nil t)
   (if (fboundp 'ivy-configure)
       (ivy-configure 'open-nefia--command-locale-search
-        :display-transformer-fn #'open-nefia--command-locale-search-transformer)))
+        :display-transformer-fn #'open-nefia--command-locale-search-transformer)
+      (ivy-configure 'open-nefia--command-locale-key-search
+        :display-transformer-fn #'open-nefia--command-locale-key-search-transformer)))
 
 (defun open-nefia--unbracket-string (pre post string)
   "Remove PRE/POST from the beginning/end of STRING.
@@ -976,6 +996,10 @@ removed.  Return the new string.  If STRING is nil, return nil."
 (defun open-nefia-locale-search (query)
   (interactive "sSearch localized strings: \n")
   (open-nefia--send "locale_search" (list :query query)))
+
+(defun open-nefia-locale-key-search (query)
+  (interactive "sSearch locale keys: \n")
+  (open-nefia--send "locale_key_search" (list :query query)))
 
 (defun open-nefia--containing-mod-id-this-file ()
   (let* ((path (file-relative-name

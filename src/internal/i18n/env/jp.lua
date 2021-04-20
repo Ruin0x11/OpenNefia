@@ -483,7 +483,7 @@ for name, list in pairs(endings) do
          gender_index = 2
       end
 
-      local base = list[obj.talk_type or 1]
+      local base = list[(obj.talk_type or 0) + 1]
       if not base then
          base = list[1]
       end
