@@ -4,8 +4,21 @@ local Log = require("api.Log")
 
 local CustomFileLexer = class.class("CustomFileLexer")
 
+local function strip_comments(content)
+   local result = {}
+   for line in string.lines(content) do
+      line = line:gsub("//(.*)", "")
+      line = line:gsub("[ \t]+$", "")
+
+      if line ~= "" then
+         result[#result+1] = line
+      end
+   end
+   return table.concat(result, "\n")
+end
+
 function CustomFileLexer:init(src)
-   self.src = src
+   self.src = strip_comments(src)
    self.line = 1
    self.line_offset = 1
    self.offset = 1
@@ -88,9 +101,10 @@ function CustomFileLexer:read_directive()
    if not b then
       error("end of file")
    end
+   print("read")
 
    local line = self:read_rest_of_line()
-   line = string.gsub(line, ".+//(.*)", "")
+
    local result = split(line, ",")
 
    if string.sub(result[1], 1, 3) == "txt" then
