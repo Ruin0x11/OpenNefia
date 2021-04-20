@@ -263,7 +263,7 @@ Event.register("base.hook_calc_damage",
 local function proc_damage_immunity(chara, params, result)
    -- >>>>>>>> elona122/shade2/chara_func.hsp:1466 	if cImmuneDamage(tc)>0:if cImmuneDamage(tc)>rnd(1 ..
    local chance = chara:calc("damage_immunity_rate") or 0
-   if chance > 0 and chance > Rand.one_in(100) then
+   if chance > 0 and Rand.one_in(100) then
       result = 0
    end
    return result

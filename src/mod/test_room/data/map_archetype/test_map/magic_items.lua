@@ -2,6 +2,7 @@ local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
 local Item = require("api.Item")
 local utils = require("mod.test_room.data.map_archetype.utils")
+local InventoryContext = require("api.gui.menu.InventoryContext")
 
 local magic_items = {
    _id = "magic_items"
@@ -11,7 +12,7 @@ local function create_magic_items(x, y, width, map)
    local categories = table.set {
       "elona.spellbook",
       "elona.rod",
-      "elona.drink_potion",
+      "elona.drink",
       "elona.scroll",
    }
    local filter = function(i)
@@ -28,12 +29,10 @@ local function create_magic_items(x, y, width, map)
       Effect.identify_item(item, Enum.IdentifyState.Full)
       return item
    end
-   local sort = function(a, b)
-      return (a.proto.elona_id or 0) < (b.proto.elona_id or 0)
-   end
 
-   local items = data["base.item"]:iter():filter(filter):map(create):to_list()
-   table.sort(items, sort)
+   local items = data["base.item"]:iter():filter(filter):map(create)
+      :filter(fun.op.truth)
+      :into_sorted(InventoryContext.default_sort):to_list()
 
    utils.roundup(items, x, y, width)
 end

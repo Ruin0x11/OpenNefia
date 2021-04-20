@@ -10,80 +10,12 @@ local bmp_convert = require("internal.bmp_convert")
 local config = require("internal.config")
 local Gui = require("api.Gui")
 local Event = require("api.Event")
+local theme_state = require("internal.global.theme_state")
 
 local theme = {}
 
 function theme.get_tile_size()
    return draw.get_coords():get_size()
-end
-
-local types = {}
-
-types["base.chip"] = function(old, new)
-   local fields = {
-      image = new.image,
-      width = new.width,
-      height = new.height,
-      tall = new.tall,
-      key_color = new.key_color
-   }
-   if fields.tall == nil then
-      fields.tall = old.tall
-   end
-   return table.merge(old, fields)
-end
-
-types["base.sound"] = function(old, new)
-   local fields = {
-      file = new.file
-   }
-   return table.merge(old, fields)
-end
-
-types["base.map_tile"] = function(old, new)
-   local fields = {
-      image = new.image
-   }
-   return table.merge(old, fields)
-end
-
-types["base.portrait"] = function(old, new)
-   local fields = {
-      image = new.image
-   }
-   return table.merge(old, fields)
-end
-
-types["base.pcc_part"] = function(old, new)
-   local fields = {
-      image = new.image,
-      key_color = new.key_color
-   }
-   return table.merge(old, fields)
-end
-
-types["base.asset"] = function(old, new)
-   local fields = {
-      -- TODO: maybe use only "image" and detect type based on x/y/width/height
-      -- parameter presence, like all other asset types
-      image = new.image,
-      source = new.source,
-
-      x = new.x,
-      y = new.y,
-      width = new.width,
-      height = new.height,
-      count_x = new.count_x,
-      count_y = new.count_y,
-      key_color = new.key_color,
-
-      -- XXX: probably a bad idea to mod this, given the pervasive amount of
-      -- fixed offsets used when rendering. The better option would to be code
-      -- entirely new GUIs instead.
-      --
-      -- regions = new.regions
-   }
-   return table.merge(old, fields)
 end
 
 --- Builds a modified table of all supported assets with the overrides set in
@@ -107,7 +39,7 @@ function theme.build_overrides()
    local make_entry_map = function(ty)
       return ty, data[ty]:iter():map(function(t) return t._id, table.deepcopy(t) end):to_map()
    end
-   local supported_types = table.keys(types)
+   local supported_types = data["base.theme_transform"]:iter():extract("applies_to"):to_list()
    local t = fun.iter(supported_types):map(make_entry_map):to_map()
 
    -- Get the list of overrides for each theme.
@@ -116,21 +48,24 @@ function theme.build_overrides()
 
    -- later themes override earlier ones
    for _, active_theme in active_themes:unwrap() do
-      for _, new_entry in ipairs(active_theme.overrides) do
-         local _type = new_entry._type
-         local _id = new_entry._id
+      for _type, overrides in pairs(active_theme.overrides) do
+         local theme_transform = data["base.theme_transform"]:iter():filter(function(tr) return tr.applies_to == _type end):nth(1)
+         if theme_transform then
+            for _id, override in pairs(overrides) do
 
-         assert(types[_type], ("Unsupported theme type '%s'"):format(_type))
-
-         -- Get the original entry in the working copy and modify it.
-         --
-         -- TODO if this theme offers more than one override for the same _id,
-         -- allow the user to configure which one gets chosen.
-         local old_entry = t[_type][_id]
-         if old_entry then
-            t[_type][_id] = types[_type](old_entry, new_entry)
+               -- Get the original entry in the working copy and modify it.
+               --
+               -- TODO if this theme offers more than one override for the same _id,
+               -- allow the user to configure which one gets chosen.
+               local old_entry = t[_type][_id]
+               if old_entry then
+                  t[_type][_id] = theme_transform.transform(old_entry, override)
+               else
+                  Log.error("Theme '%s' overrides '%s.%s', but it was missing. Are you missing a mod?", active_theme._id, _type, _id)
+               end
+            end
          else
-            Log.error("Theme '%s' overrides '%s.%s', but it was missing. Are you missing a mod?", active_theme._id, _type, _id)
+            Log.error("No theme_transform available for type '%s'!", _type)
          end
       end
    end
@@ -139,24 +74,14 @@ function theme.build_overrides()
    --
    -- {
    --    ["base.chip"] = {
-   --      { _id = "elona.chara_putit", image = "..." },
-   --      { _id = "elona.chara_yeek", image = "..." },
+   --      ["elona.chara_putit"] = { _id = "elona.chara_putit", image = "..." },
+   --      ["elona.chara_yeek"]  = { _id = "elona.chara_yeek",  image = "..." },
    --      ...
    --    },
    --    ["base.map_tile"] = { ... },
    --    ...
    -- }
-   local final = {}
-
-   for _type, entries in pairs(t) do
-      local list = {}
-      for _, entry in pairs(entries) do
-         list[#list+1] = entry
-      end
-      final[_type] = list
-   end
-
-   return final, active_theme_ids
+   return t, active_theme_ids
 end
 
 function theme.load_tilemap_tile(map_tiles)
@@ -232,10 +157,17 @@ function theme.load_tilemap_portrait(portrait_tiles)
    return portrait_atlas
 end
 
-local active_themes = table.set {}
-
 function theme.is_active(theme_id)
-   return not not active_themes[theme_id]
+   return not not theme_state.active_themes[theme_id]
+end
+
+function theme.get_override(_type, _id)
+   data["base.theme_transform"]:ensure(_type)
+   local t = theme_state.overrides[_type]
+   if t == nil then
+      return nil
+   end
+   return t[_id]
 end
 
 function theme.reload_all(log_cb)
@@ -245,10 +177,10 @@ function theme.reload_all(log_cb)
 
    bmp_convert.clear_cache()
 
-   local overrides, _active_themes = theme.build_overrides()
-   local map_tiles = overrides["base.map_tile"]
-   local chip_tiles = overrides["base.chip"]
-   local portrait_tiles = overrides["base.portrait"]
+   local _overrides, _active_themes = theme.build_overrides()
+   local map_tiles = table.values(_overrides["base.map_tile"])
+   local chip_tiles = table.values(_overrides["base.chip"])
+   local portrait_tiles = table.values(_overrides["base.portrait"])
 
    local sw = Stopwatch:new()
 
@@ -281,14 +213,13 @@ function theme.reload_all(log_cb)
 
    log_cb("Loading theme...")
 
-   local asset_map = fun.iter(overrides["base.asset"])
-      :map(function(a) return a._id, a end)
-      :to_map()
+   local asset_map = _overrides["base.asset"]
 
    UiTheme.clear()
    UiTheme.set_assets(asset_map)
 
-   active_themes = table.set(_active_themes)
+   theme_state.active_themes = table.set(_active_themes)
+   theme_state.overrides = _overrides
 
    -- Check if we're changing the theme in-game, and if so, do some special
    -- cleanup.

@@ -43,6 +43,7 @@ local function build_app()
 
       local mod_new_command = mod_command:command("new", "Create a new mod.")
       mod_new_command:argument("mod_id", "Mod ID to use. Must consist of lowercase alphanumerals and underscores only.")
+      mod_new_command:flag("-e --example", "Generate placeholder example code.")
 
       local mod_deps_command = mod_command:command("dependencies", "Print the dependency tree of a mod.")
       mod_deps_command:argument("mod_id", "Mod ID to inspect.", "")

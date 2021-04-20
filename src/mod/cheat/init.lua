@@ -68,6 +68,10 @@ local function enable_themes()
       themes[#themes+1] = "ceri_items.ceri_items"
    end
 
+   if Env.is_mod_loaded("ffhp_matome") then
+      themes[#themes+1] = "ffhp_matome.ffhp_matome"
+   end
+
    config.base.themes = themes
 end
 
