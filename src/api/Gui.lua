@@ -359,8 +359,8 @@ function Gui.mes_c(text, color, ...)
    local t = I18N.get_optional(text, ...) or text or tostring(text)
    if t then text = t end
 
-   if color == nil and string.find(text, I18N.quote_character()) then
-      color = {210, 250, 160}
+   if I18N.is_quoted(text) then
+      color = "Talk"
    end
 
    local color_tbl

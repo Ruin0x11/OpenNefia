@@ -34,6 +34,9 @@ local function on_kill_chara(victim, params)
    local attacker = params.attacker
 
    if attacker then
+      if not attacker:is_player() then
+         attacker:say("base.killed", { victim = victim, params = params })
+      end
       local gained_exp = victim:emit("base.on_calc_kill_exp", params, 0)
 
       -- TODO chara:gain_experience() to allow global experience

@@ -652,9 +652,9 @@ local function ai_talk(chara, params)
             local leader = chara:get_party_leader()
             if leader and Pos.is_in_square(chara.x, chara.y, leader.x, leader.y, 20) then
                if chara.aggro <= 0 then
-                  chara:say("base.ai_calm")
+                  chara:say("base.calm")
                else
-                  chara:say("base.ai_aggro")
+                  chara:say("base.aggro")
                end
             end
          end

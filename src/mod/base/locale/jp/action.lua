@@ -377,7 +377,8 @@ end
 end,
         prompt = "どんな言葉を教えようか。",
         title = "口調一覧",
-        tone_title = "題名"
+        tone_title = "題名",
+        mod_name = "モッド"
       },
       choices = {
         appearance = "着替えさせる",

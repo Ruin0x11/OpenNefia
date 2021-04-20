@@ -6,14 +6,19 @@ local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 local World = require("api.World")
 local ElonaAction = require("mod.elona.api.ElonaAction")
+local Talk = require("api.Talk")
 
-local function talk_text(t)
-   -- >>>>>>>> elona122/shade2/text.hsp:957 *random_talk ..
+local function get_random_text(t)
    local speaker = t.speaker
    local id = "talk.random.default"
    local params = {
       gender = I18N.get("ui.sex2." .. Chara.player():calc("gender"))
    }
+
+   local from_talk = Talk.gen_text(speaker, "base.dialog")
+   if from_talk then
+      return from_talk
+   end
 
    local map = speaker:current_map()
    local area = Area.for_map(map)
@@ -54,6 +59,13 @@ local function talk_text(t)
    if str == nil then
       str = I18N.get("talk.random.default", npc, player, params)
    end
+
+   return str
+end
+
+local function talk_text(t)
+   -- >>>>>>>> elona122/shade2/text.hsp:957 *random_talk ..
+   local str = get_random_text(t)
 
    return { {str} }
    -- <<<<<<<< elona122/shade2/text.hsp:977 	return ..

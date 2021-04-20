@@ -149,10 +149,18 @@ function I18N.quote_speech(id, ...)
 
    -- TODO
    if not I18N.is_fullwidth() then
-      text = ("\"%s\""):format(text)
+      text = I18N.quote(text)
    end
 
    return text
+end
+
+function I18N.quote(text)
+   return ("\"%s\""):format(text)
+end
+
+function I18N.is_quoted(text)
+   return not not (text:match("「.*」") or text:match("\".*\""))
 end
 
 return I18N

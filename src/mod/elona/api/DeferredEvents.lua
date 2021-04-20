@@ -140,8 +140,7 @@ function DeferredEvents.welcome_home(map)
 
    local welcome = function(chara)
       chara:set_emotion_icon("elona.happy", 20)
-      -- TODO custom talk
-      local has_talk = false
+      local has_talk = chara:say("base.welcome")
       if not has_talk then
          extra_talks = extra_talks + 1
       end
