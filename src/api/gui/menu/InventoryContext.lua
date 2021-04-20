@@ -254,12 +254,12 @@ local function category_order(item)
    return fun.iter(major):map(order):min()
 end
 
-local function default_sort(a, b)
-   local a_sort = category_order(a.item)
-   local b_sort = category_order(b.item)
+function InventoryContext.default_sort(a, b)
+   local a_sort = category_order(a)
+   local b_sort = category_order(b)
 
    if a_sort == b_sort then
-      return a.item._id < b.item._id
+      return a._id < b._id
    end
 
    return a_sort < b_sort
@@ -267,7 +267,9 @@ end
 -- <<<<<<<< shade2/command.hsp:3446 	if invCtrl=28	:list(1,listMax)=calcMedalValue(cnt ..
 
 function InventoryContext:gen_sort(a, b)
-   local f = default_sort
+   local f = function(a, b)
+      return InventoryContext.default_sort(a.item, b.item)
+   end
 
    if self.proto.sort then
       f = function(a, b) return self.proto.sort(self, a, b) end
