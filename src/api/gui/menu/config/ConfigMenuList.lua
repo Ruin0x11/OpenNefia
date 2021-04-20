@@ -239,7 +239,7 @@ function ConfigMenuList:draw_item(item, i, x, y)
       else
          Draw.set_color(255, 255, 255, 100)
       end
-         self.t.base.arrow_right:draw(x + 302, y - 5)
+      self.t.base.arrow_right:draw(x + 302, y - 5)
    end
 end
 

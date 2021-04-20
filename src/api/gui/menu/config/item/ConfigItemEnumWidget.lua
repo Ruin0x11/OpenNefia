@@ -50,7 +50,8 @@ function ConfigItemEnumWidget:set_value(value)
 
    self.value = value
    if self.item.formatter then
-      self.text = self.item.formatter(self.item._id, self.value)
+      local index = table.index_of(self.choices, self.value)
+      self.text = self.item.formatter(self.item._id, self.value, index)
    elseif self.item._id then
       self.text = I18N.get_optional("config.option." .. self.item._id .. ".variants." .. self.value) or tostring(self.value)
    else

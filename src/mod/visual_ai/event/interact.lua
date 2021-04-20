@@ -12,4 +12,4 @@ local function add_interact_action(chara, params, actions)
 
    return actions
 end
-Event.register("elona_sys.on_build_interact_actions", "Add Visual AI option", add_interact_action)
+Event.register("elona_sys.on_build_interact_actions", "Add Visual AI option", add_interact_action, { priority = 500000 })

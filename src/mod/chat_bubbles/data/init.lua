@@ -1,4 +1,1 @@
--- Add more data definition files in this directory.
-
--- require("mod.chat_bubbles.data.chara")
--- require("mod.chat_bubbles.data.item")
+require("mod.chat_bubbles.data.config_option")

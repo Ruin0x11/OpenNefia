@@ -30,14 +30,12 @@ function ChatBubbleLayer:reset()
    global.chat_bubbles = {}
 end
 
-local max_frame = 200
-
 function ChatBubbleLayer:update(map, dt, screen_updated)
    local dead = {}
 
    for uid, v in pairs(global.chat_bubbles) do
-      v.frame = v.frame + dt * 50
-      if v.frame > max_frame then
+      v.frame = v.frame + dt * 1000
+      if v.frame > config.chat_bubbles.max_display_time * 150 then
          dead[#dead+1] = uid
       end
    end
@@ -47,12 +45,10 @@ function ChatBubbleLayer:update(map, dt, screen_updated)
    end
 end
 
-function ChatBubbleLayer.draw_chat_bubble(x, y, text, tw, th, bubble_color, text_color, curve, edge)
+function ChatBubbleLayer.draw_chat_bubble(x, y, text, tw, th, bubble_color, text_color, curve, edge, kind)
    curve = math.floor(math.clamp(curve, 0, th / 2 - 2))
 
    edge = math.floor(math.clamp(edge, 0, th / 2))
-
-   local kind = 1
 
    local vt = {}
    local p = function(x, y)
@@ -71,8 +67,6 @@ function ChatBubbleLayer.draw_chat_bubble(x, y, text, tw, th, bubble_color, text
    p(x + tw - curve, y + th)
 
    if kind == 0 then
-      -- Draw.line(, x + tw - curve, y + th)
-      p(x + curve, y + th)
    elseif kind == 1 then
       -- Draw.line(, x + tw - curve, y + th)
       -- Draw.line(, x + tw / 2, y + th)
@@ -81,7 +75,6 @@ function ChatBubbleLayer.draw_chat_bubble(x, y, text, tw, th, bubble_color, text
       p(x + tw / 2, y + th)
       p(x + tw / 2, y + th + edge)
       p(x + tw / 2 - edge, y + th)
-      p(x + curve, y + th)
    elseif kind == 2 then
       -- Draw.line(, x + tw - curve, y + th)
       -- Draw.line(, x + curve + edge * 2, y + th)
@@ -90,7 +83,6 @@ function ChatBubbleLayer.draw_chat_bubble(x, y, text, tw, th, bubble_color, text
       p(x + curve + edge * 2, y + th)
       p(x + curve + edge * 2, y + th + edge)
       p(x + curve + edge, y + th)
-      p(x + curve, y + th)
    elseif kind == 3 then
       -- Draw.line(, x + tw - curve, y + th)
       -- Draw.line(, x + tw - curve - edge, y + th)
@@ -106,6 +98,7 @@ function ChatBubbleLayer.draw_chat_bubble(x, y, text, tw, th, bubble_color, text
    p(x, y + th - curve)
    p(x, y + curve)
    p(x + curve, y)
+   p(x, y)
 
    Draw.set_color(bubble_color)
    Draw.filled_polygon(vt)
@@ -127,14 +120,14 @@ function ChatBubbleLayer:draw(draw_x, draw_y)
          -- >>>>>>>> oomSEST/src/karioki.hsp:316 #deffunc fukidashi int __rrr, int __sss, int __ttt ...
          local x, y = self.coords:tile_to_screen(obj.x, obj.y)
 
-         x = x + draw_x - math.floor(v.width / 2 - self.th / 2)
-         y = y + draw_y - v.height - self.th / 2 + (obj:calc("y_offset") or 0)
+         x = x + draw_x - math.floor(v.width / 2 - self.th / 2) + v.x_offset
+         y = y + draw_y - v.height - self.th / 2 + (obj:calc("y_offset") or 0) + v.y_offset
 
-         Draw.set_font(v.font)
+         Draw.set_font(v.font_size)
 
          local curve = 5
          local edge = 10
-         ChatBubbleLayer.draw_chat_bubble(x, y, v.text, v.width, v.height, v.bubble_color, v.text_color, curve, edge)
+         ChatBubbleLayer.draw_chat_bubble(x, y, v.text, v.width, v.height, v.bubble_color, v.text_color, curve, edge, 1)
          -- <<<<<<<< oomSEST/src/karioki.hsp:363 	return ..
       end
    end

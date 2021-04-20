@@ -13,7 +13,7 @@ local ColorEditorMenu = class.class("ColorEditorMenu", IUiLayer)
 ColorEditorMenu:delegate("input", IInput)
 
 function ColorEditorMenu:init(color)
-   self.win = UiWindow:new("Color", true)
+   self.win = UiWindow:new("extra_config_options:ui.menu.color_editor.title", true)
    self.list = ColorEditorMenuList:new(color)
 
    self.input = InputHandler:new()
