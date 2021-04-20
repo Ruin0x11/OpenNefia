@@ -33,16 +33,16 @@ end
 function ChatBubbleLayer:update(map, dt, screen_updated)
    -- >>>>>>>> oomSEST/src/net.hsp:1458 					oom_speed = cfg_txtpopspeed * 150 ...
    for uid, v in pairs(global.chat_bubbles) do
-      local max_frame = config.chat_bubbles.max_display_time * 150
+      local max_frame = config.chat_bubbles.display_duration * 150
 
-      if config.chat_bubbles.shorten_dead_character_messages then
+      if config.chat_bubbles.shorten_last_words then
          local obj = map:get_object(uid)
          if not obj or (obj._type == "base.chara" and not Chara.is_alive(obj)) then
             max_frame = max_frame / 4
          end
       end
 
-      v.frame = v.frame + dt * 1000
+      -- v.frame = v.frame + dt * 1000
       if v.frame > max_frame then
          global.chat_bubbles[uid] = nil
       end

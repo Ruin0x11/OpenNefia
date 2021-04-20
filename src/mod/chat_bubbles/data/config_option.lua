@@ -16,7 +16,7 @@ data:add_multi(
          end
       },
       {
-         _id = "max_display_time",
+         _id = "display_duration",
          type = "integer",
          -- >>>>>>>> oomSEST/src/config.hsp:2461 	cfg_txtpopspeed = 20 ...
          default = 20,
@@ -27,7 +27,7 @@ data:add_multi(
          -- <<<<<<<< oomSEST/src/config.hsp:1994 				oomSEST_setOption cfg_txtpopspeed, 1, 50 ..
       },
       {
-         _id = "shorten_dead_character_messages",
+         _id = "shorten_last_words",
          type = "boolean",
          default = false
       },
@@ -51,6 +51,7 @@ data:add_multi(
       {
          _id = "default_font_size",
          type =  "integer",
+         default = 11,
          min_value = 8,
          max_value = 30,
       },
@@ -65,3 +66,21 @@ data:add_multi(
       },
    }
 )
+
+data:add {
+   _type = "base.config_menu",
+   _id = "menu",
+
+   items = {
+      "chat_bubbles.enabled",
+      "chat_bubbles.default_font_size",
+      "chat_bubbles.display_duration",
+      "chat_bubbles.default_text_color",
+      "chat_bubbles.default_bubble_color",
+      "chat_bubbles.shorten_last_words",
+   }
+}
+
+-- TODO immutable data edits
+local menu = { _type = "base.config_menu", _id = "chat_bubbles.menu" }
+table.insert(data["base.config_menu"]:ensure("base.default").items, menu)
