@@ -295,7 +295,16 @@ function ElonaItem.default_item_color(item, seed)
    elseif item.proto.random_color == "Furniture" then
       return ElonaItem.random_furniture_color(item)
    else
-      return item.proto.color
+      if item.proto.color then
+         return item.proto.color
+      end
+
+      local material = item:calc("material")
+      if material then
+         return data["elona.item_material"]:ensure(material).color
+      end
+
+      return nil
    end
    -- <<<<<<<< shade2/item.hsp:616 	if iCol(ci)=coRand	:iCol(ci)=randColor(rnd(length ..
 end

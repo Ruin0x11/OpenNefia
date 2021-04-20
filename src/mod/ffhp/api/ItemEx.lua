@@ -49,9 +49,13 @@ function ItemEx.apply_mapping(mapping, item)
       if item.proto.image == nil or item.image == item.proto.image then
          item.image = mapping.chip_id
       end
+   else
+      item.image = ElonaItem.default_item_image(item)
    end
    if mapping.color then
       item.color = table.deepcopy(mapping.color)
+   else
+      item.color = ElonaItem.default_item_color(item)
    end
 end
 
@@ -60,8 +64,6 @@ function ItemEx.can_apply_mapping(item, mapping)
 end
 
 function ItemEx.refresh_item_appearance(item)
-   item.image = ElonaItem.default_item_image(item)
-   item.color = ElonaItem.default_item_color(item)
    -- TODO need a way to update an item's memory in the map
 
    local mapping = ItemEx.mapping_for(item._id)
@@ -84,23 +86,27 @@ function ItemEx.query_change_chip_variant(item, chips)
       end
    end
 
+   local chip
    if #chips == 0 then
       return nil
-   end
-
-   local player = Chara.player()
-   if not Chara.is_alive(player) then
-      return nil
-   end
-
-   local chip
-   local result, canceled = ItemExChipVariantPrompt:new(player.x, player.y, chips):query()
-   if result and not canceled and result.chip then
-      chip = result.chip
-   else
+   elseif #chips == 1 then
       chip = chips[1]
+   else
+      local player = Chara.player()
+      if not Chara.is_alive(player) then
+         return nil
+      end
+
+      local result, canceled = ItemExChipVariantPrompt:new(player.x, player.y, chips):query()
+      if result and not canceled and result.chip then
+         chip = result.chip
+      else
+         chip = chips[1]
+      end
    end
 
+   -- XXX: Would be better to store this in an aspect, so it gets preserved
+   -- better between theme changes.
    item.image = chip
 
    return chip
