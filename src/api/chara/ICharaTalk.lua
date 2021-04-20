@@ -24,7 +24,7 @@ function ICharaTalk:mes(id, ...)
 end
 
 function ICharaTalk:say(talk_id, args, opts)
-   Talk.say(self, talk_id, args, opts)
+   return Talk.say(self, talk_id, args, opts)
 end
 
 return ICharaTalk

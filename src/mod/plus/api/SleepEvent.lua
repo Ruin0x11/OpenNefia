@@ -105,8 +105,9 @@ function SleepEvent.breakfast()
    Gui.play_sound("base.chat")
    Gui.wait(400)
    Gui.play_sound("base.chat")
-   -- TODO custom talk
-   if true then
+
+   local had_talk = main_ally:say("plus.breakfast", { allies = allies })
+   if not had_talk then
       Gui.mes_c("plus:talk.sleep_event.breakfast", "SkyBlue", main_ally)
    end
 
@@ -244,8 +245,9 @@ function SleepEvent.handmade_gift()
    Gui.play_sound("base.chat")
    Gui.wait(400)
    Gui.play_sound("base.chat")
-   -- TODO custom talk
-   if true then
+
+   local had_talk = main_ally:say("plus.create", { allies = allies })
+   if not had_talk then
       Gui.mes_c("plus:talk.sleep_event.handmade_gift", "SkyBlue", main_ally)
    end
 
@@ -359,8 +361,9 @@ function SleepEvent.handknitted_gift()
    Gui.play_sound("base.chat")
    Gui.wait(400)
    Gui.play_sound("base.chat")
-   -- TODO custom talk
-   if true then
+
+   local had_talk = main_ally:say("plus.create", { allies = allies })
+   if not had_talk then
       Gui.mes_c("plus:talk.sleep_event.handknitted_gift", "SkyBlue", main_ally)
    end
 

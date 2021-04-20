@@ -63,7 +63,8 @@ local chara = {
       has_own_name = true,
       ai_calm_action = "elona.calm_dull",
       ai_distance = 6,
-      ai_move_chance = 80
+      ai_move_chance = 80,
+      tone = "elona.shopkeeper",
    },
    {
       _id = "caravan_master",
@@ -102,8 +103,7 @@ local chara = {
       coefficient = 400,
       has_own_name = true,
       ai_calm_action = "elona.calm_dull",
-      ai_actions = {
-      }
+      tone = "elona.bartender",
    },
    {
       _id = "informer",
@@ -123,8 +123,7 @@ local chara = {
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
       ai_calm_action = "elona.calm_dull",
-      ai_actions = {
-      }
+      tone = "elona.citizen_2",
    },
    {
       _id = "arena_master",
@@ -144,8 +143,7 @@ local chara = {
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
       ai_calm_action = "elona.calm_dull",
-      ai_actions = {
-      }
+      tone = "elona.citizen_2",
    },
    {
       _id = "healer",
@@ -166,9 +164,7 @@ local chara = {
       coefficient = 400,
       on_eat_corpse = eating_effect.holy_one,
       ai_calm_action = "elona.calm_dull",
-      ai_actions = {
-      }
-   },
+      },
    {
       _id = "nun",
       elona_id = 206,
@@ -188,9 +184,7 @@ local chara = {
       coefficient = 400,
       on_eat_corpse = eating_effect.holy_one,
       ai_calm_action = "elona.calm_dull",
-      ai_actions = {
-      }
-   },
+      },
    {
       _id = "elder",
       elona_id = 38,
@@ -209,8 +203,7 @@ local chara = {
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
       ai_calm_action = "elona.calm_dull",
-      ai_actions = {
-      }
+      tone = "elona.citizen_2"
    },
    {
       _id = "trainer",
@@ -230,8 +223,7 @@ local chara = {
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
       ai_calm_action = "elona.calm_dull",
-      ai_actions = {
-      }
+      tone = "elona.trainer",
    },
    {
       _id = "guild_trainer",
@@ -251,8 +243,7 @@ local chara = {
       fltselect = Enum.FltSelect.Sp,
       coefficient = 400,
       ai_calm_action = "elona.calm_dull",
-      ai_actions = {
-      }
+      tone = "elona.trainer",
    },
    {
       _id = "guard_port_kapul",
@@ -270,7 +261,8 @@ local chara = {
       fltselect = Enum.FltSelect.TownSp,
       coefficient = 400,
       on_eat_corpse = eating_effect.guard,
-      ai_move_chance = 50
+      ai_move_chance = 50,
+      tone = "elona.guard",
    },
    {
       _id = "guard",
@@ -288,7 +280,8 @@ local chara = {
       fltselect = Enum.FltSelect.TownSp,
       coefficient = 400,
       on_eat_corpse = eating_effect.guard,
-      ai_move_chance = 50
+      ai_move_chance = 50,
+      tone = "elona.guard",
    },
    {
       _id = "palmian_elite_soldier",
@@ -314,7 +307,8 @@ local chara = {
          }
       },
       ai_distance = 2,
-      ai_move_chance = 50
+      ai_move_chance = 50,
+      tone = "elona.palmian_elite_soldier",
    },
    {
       _id = "zeome",
@@ -358,7 +352,8 @@ local chara = {
 
       initial_equipment = {
          ["elona.primary_weapon"] = { _id = "elona.scythe_of_void" }
-      }
+      },
+      tone = "elona.zeome",
    },
    {
       _id = "at",
@@ -376,6 +371,7 @@ local chara = {
       fltselect = Enum.FltSelect.Sp,
       coefficient = 400,
       on_eat_corpse = eating_effect.at,
+      tone = "elona.at",
    },
    {
       _id = "orphe",
@@ -400,7 +396,8 @@ local chara = {
 
       initial_equipment = {
          ["elona.primary_weapon"] = { _id = "elona.mournblade" },
-      }
+      },
+      tone = "elona.orphe",
    },
    {
       _id = "mad_scientist",
@@ -461,7 +458,8 @@ local chara = {
 
       initial_equipment = {
          ["elona.primary_weapon"] = { _id = "elona.ragnarok" },
-      }
+      },
+      tone = "elona.whom_dwell_in_the_vanity",
    },
    {
       _id = "loyter",
@@ -481,6 +479,7 @@ local chara = {
       rarity = 1000,
       coefficient = 400,
       dialog = "elona.loyter",
+      tone = "elona.loyter",
    },
    {
       _id = "vesda",
@@ -529,6 +528,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.miches",
+      tone = "elona.miches",
    },
    {
       _id = "shena",
@@ -547,6 +547,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.shena",
+      tone = "elona.shena",
    },
    {
       _id = "the_leopard_warrior",
@@ -609,7 +610,8 @@ local chara = {
             }
          end
          -- <<<<<<<< shade2/item.hsp:396 	} ..
-      end
+      end,
+      tone = "elona.the_leopard_warrior",
    },
    {
       _id = "silvia",
@@ -657,7 +659,8 @@ local chara = {
             }
          end
          -- <<<<<<<< shade2/item.hsp:396 	} ..
-      end
+      end,
+      tone = "elona.silvia",
    },
    {
       _id = "dungeon_cleaner",
@@ -673,6 +676,7 @@ local chara = {
       quality = Enum.Quality.Unique,
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
+      tone = "elona.dungeon_cleaner",
    },
    {
       _id = "larnneire",
@@ -706,6 +710,7 @@ local chara = {
       initial_equipment = {
          ["elona.primary_weapon"] = { _id = "elona.claymore", is_two_handed = true },
       },
+      tone = "elona.larnneire",
    },
    {
       _id = "lomias",
@@ -755,7 +760,8 @@ local chara = {
             drops[#drops+1] = { _id = "elona.secret_experience_of_lomias" }
          end
          -- <<<<<<<< shade2/item.hsp:347 	} ..
-      end
+      end,
+      tone = "elona.lomias",
    },
    {
       _id = "slan",
@@ -774,6 +780,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.slan",
+      tone = "elona.slan",
    },
    {
       _id = "karam",
@@ -792,6 +799,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.karam",
+      tone = "elona.karam",
    },
    {
       _id = "erystia",
@@ -810,6 +818,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.erystia",
+      tone = "elona.erystia",
    },
    {
       _id = "issizzle",
@@ -1210,7 +1219,7 @@ local chara = {
       rarity = 80000,
       coefficient = 400,
       flags = { "IsSuitableForMount" },
-      on_eat_corpse = eating_effect.putit,
+      on_eat_corpse = eating_effect.putit
    },
    {
       _id = "red_putit",
@@ -1285,7 +1294,7 @@ local chara = {
          "elona.spell_acid_ground"
       },
       unarmed_element_id = "elona.acid",
-      unarmed_element_power = 100
+      unarmed_element_power = 100,
    },
    {
       _id = "bubble",
@@ -1413,6 +1422,7 @@ local chara = {
       race = "elona.snail",
       class = "elona.tourist",
       coefficient = 400,
+      tone = "elona.snail",
    },
    {
       _id = "fallen_soldier",
@@ -1427,6 +1437,7 @@ local chara = {
       class = "elona.warrior",
       image = "elona.chara_fallen_soldier",
       coefficient = 400,
+      tone = "elona.fallen_soldier",
    },
    {
       _id = "mercenary",
@@ -1443,6 +1454,7 @@ local chara = {
       female_image = "elona.chara_mercenary_female",
       fltselect = Enum.FltSelect.Town,
       coefficient = 400,
+      tone = "elona.fallen_soldier",
    },
    {
       _id = "beggar",
@@ -1468,7 +1480,8 @@ local chara = {
             equip_spec["elona.amulet_1"] = { _id = "elona.beggars_pendant" }
          end
          -- <<<<<<<< shade2/chara.hsp:173 	if cId(rc)=9 	: if rnd(120)=0	:eqAmulet1	=705	;be ..
-      end
+      end,
+      tone = "elona.beggar",
    },
    {
       _id = "farmer",
@@ -1487,6 +1500,7 @@ local chara = {
       fltselect = Enum.FltSelect.TownSp,
       rarity = 2000,
       coefficient = 400,
+      tone = "elona.farmer",
    },
    {
       _id = "cleaner",
@@ -1514,7 +1528,8 @@ local chara = {
       },
       ai_sub_action_chance = 30,
       ai_distance = 3,
-      ai_move_chance = 50
+      ai_move_chance = 50,
+      tone = "elona.cleaner",
    },
    {
       _id = "miner",
@@ -1533,6 +1548,7 @@ local chara = {
       fltselect = Enum.FltSelect.TownSp,
       rarity = 2000,
       coefficient = 400,
+      tone = "elona.miner",
    },
    {
       _id = "bard",
@@ -1566,7 +1582,8 @@ local chara = {
             Itemgen.create(nil, nil, filter, self)
          end
          -- <<<<<<<< shade2/chara.hsp:328 		} ..
-      end
+      end,
+      tone = "elona.bard",
    },
    {
       _id = "sister",
@@ -1585,6 +1602,7 @@ local chara = {
       fltselect = Enum.FltSelect.TownSp,
       rarity = 2000,
       coefficient = 400,
+      tone = "elona.sister",
    },
    {
       _id = "holy_beast",
@@ -1601,6 +1619,7 @@ local chara = {
       rarity = 2000,
       coefficient = 400,
       flags = { "IsQuickTempered" },
+      tone = "elona.holy_beast",
    },
    {
       _id = "part_time_worker",
@@ -1621,8 +1640,7 @@ local chara = {
       flags = { "IsQuickTempered" },
       dialog = "elona.part_time_worker",
       ai_calm_action = "elona.calm_stand",
-      ai_actions = {
-      }
+      tone = "elona.part_time_worker",
    },
    {
       _id = "fanatic",
@@ -1649,7 +1667,8 @@ local chara = {
       },
       skills = {
          "elona.spell_healing_rain"
-      }
+      },
+      tone = "elona.fanatic",
    },
    {
       _id = "rogue",
@@ -1701,7 +1720,8 @@ local chara = {
                -- <<<<<<<< shade2/action.hsp:550 				} ..
             end
          }
-      }
+      },
+      tone = "elona.rogue",
    },
    {
       _id = "prostitute",
@@ -1737,7 +1757,8 @@ local chara = {
                -- <<<<<<<< shade2/chat.hsp:2308 	if cId(tc)=335:if evId()=falseM: chatList 60,lang ..
             end
          }
-      }
+      },
+      tone = "elona.rogue",
    },
    {
       _id = "prisoner",
@@ -1756,6 +1777,7 @@ local chara = {
       fltselect = Enum.FltSelect.TownSp,
       rarity = 2000,
       coefficient = 400,
+      tone = "elona.prisoner",
    },
    {
       _id = "artist",
@@ -1774,6 +1796,7 @@ local chara = {
       fltselect = Enum.FltSelect.TownSp,
       rarity = 2000,
       coefficient = 400,
+      tone = "elona.artist",
    },
    {
       _id = "noble",
@@ -1799,7 +1822,8 @@ local chara = {
             equip_spec["elona.ranged_weapon"] = { _id = "elona.shenas_panty" }
          end
          -- <<<<<<<< shade2/chara.hsp:174 	if cId(rc)=274 	: if rnd(100)=0	:eqRange	=718	;lo ..
-      end
+      end,
+      tone = "elona.noble",
    },
    {
       _id = "mage_guild_member",
@@ -1832,7 +1856,8 @@ local chara = {
          "elona.spell_magic_dart",
          "elona.spell_ice_bolt",
          "elona.spell_darkness_bolt"
-      }
+      },
+      tone = "elona.guild_member",
    },
    {
       _id = "thief_guild_member",
@@ -1852,7 +1877,8 @@ local chara = {
       rarity = 2000,
       coefficient = 400,
       ai_distance = 1,
-      ai_move_chance = 50
+      ai_move_chance = 50,
+      tone = "elona.guild_member",
    },
    {
       _id = "fighter_guild_member",
@@ -1872,7 +1898,8 @@ local chara = {
       rarity = 2000,
       coefficient = 400,
       ai_distance = 1,
-      ai_move_chance = 90
+      ai_move_chance = 90,
+      tone = "elona.guild_member",
    },
    {
       _id = "town_child",
@@ -1891,6 +1918,7 @@ local chara = {
       fltselect = Enum.FltSelect.Town,
       coefficient = 400,
       can_use_snow = true,
+      tone = "elona.town_child",
    },
    {
       _id = "old_person",
@@ -1908,6 +1936,7 @@ local chara = {
       female_image = "elona.chara_old_person_female",
       fltselect = Enum.FltSelect.Town,
       coefficient = 400,
+      tone = "elona.old_person",
    },
    {
       _id = "punk",
@@ -1925,7 +1954,8 @@ local chara = {
       rarity = 60000,
       coefficient = 400,
       ai_distance = 2,
-      ai_move_chance = 50
+      ai_move_chance = 50,
+      tone = "elona.punk",
    },
    {
       _id = "wild_sheep",
@@ -1965,6 +1995,7 @@ local chara = {
       male_image = "elona.chara_gangster_male",
       female_image = "elona.chara_gangster_female",
       coefficient = 400,
+      tone = "elona.punk",
    },
    {
       _id = "kobold",
@@ -2103,7 +2134,8 @@ local chara = {
       },
       skills = {
          "elona.action_suicide_attack"
-      }
+      },
+      tone = "elona.kamikaze_samurai",
    },
    {
       _id = "bomb_rock",
@@ -2156,7 +2188,8 @@ local chara = {
       ai_move_chance = 100,
       skills = {
          "elona.action_suicide_attack"
-      }
+      },
+      tone = "elona.hard_gay",
    },
    {
       _id = "rodlob",
@@ -2198,7 +2231,8 @@ local chara = {
          "elona.spell_dark_eye",
          "elona.spell_short_teleport",
          "elona.action_curse"
-      }
+      },
+      tone = "elona.rodlob",
    },
    {
       _id = "hot_spring_maniac",
@@ -2215,6 +2249,7 @@ local chara = {
       female_image = "elona.chara_hot_spring_maniac_female",
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
+      tone = "elona.citizen",
    },
    {
       _id = "centipede",
@@ -2320,6 +2355,7 @@ local chara = {
       female_image = "elona.chara_citizen_female",
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
+      tone = "elona.citizen",
    },
    {
       _id = "citizen2",
@@ -2337,6 +2373,7 @@ local chara = {
       female_image = "elona.chara_citizen2_female",
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
+      tone = "elona.citizen",
    },
    {
       _id = "citizen_of_cyber_dome",
@@ -2354,6 +2391,7 @@ local chara = {
       female_image = "elona.chara_citizen_of_cyber_dome_female",
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
+      tone = "elona.citizen",
    },
    {
       _id = "citizen_of_cyber_dome2",
@@ -2371,6 +2409,7 @@ local chara = {
       female_image = "elona.chara_citizen_of_cyber_dome2_female",
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
+      tone = "elona.citizen",
    },
    {
       _id = "sales_person",
@@ -2388,6 +2427,7 @@ local chara = {
       female_image = "elona.chara_sales_person_female",
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
+      tone = "elona.sales_person",
    },
    {
       _id = "sailor",
@@ -2405,6 +2445,7 @@ local chara = {
       female_image = "elona.chara_sailor_female",
       fltselect = Enum.FltSelect.Shop,
       coefficient = 400,
+      tone = "elona.citizen_2",
    },
    {
       _id = "captain",
@@ -2422,6 +2463,7 @@ local chara = {
       image = "elona.chara_captain",
       fltselect = Enum.FltSelect.Sp,
       coefficient = 400,
+      tone = "elona.captain",
    },
    {
       _id = "stersha",
@@ -2440,6 +2482,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.stersha",
+      tone = "elona.stersha",
    },
    {
       _id = "xabi",
@@ -2458,6 +2501,7 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.xabi",
+      tone = "elona.xabi",
    },
    {
       _id = "orc",
@@ -3955,7 +3999,8 @@ local chara = {
       flags = { "IsQuickTempered" },
       on_eat_corpse = eating_effect.titan,
       ai_distance = 1,
-      ai_move_chance = 85
+      ai_move_chance = 85,
+      tone = "elona.titan",
    },
    {
       _id = "imp",
@@ -4722,7 +4767,8 @@ local chara = {
       category = Enum.CharaCategory.Bear,
       coefficient = 400,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.brown_bear",
    },
    {
       _id = "grizzly",
@@ -5202,7 +5248,8 @@ local chara = {
       ai_move_chance = 80,
       skills = {
          "elona.spell_web"
-      }
+      },
+      tone = "elona.spider",
    },
    {
       _id = "black_widow",
@@ -5233,7 +5280,8 @@ local chara = {
          "elona.spell_web"
       },
       unarmed_element_id = "elona.poison",
-      unarmed_element_power = 150
+      unarmed_element_power = 150,
+      tone = "elona.black_widow",
    },
    {
       _id = "paralyzer",
@@ -5264,7 +5312,8 @@ local chara = {
          "elona.spell_web"
       },
       unarmed_element_id = "elona.nerve",
-      unarmed_element_power = 150
+      unarmed_element_power = 150,
+      tone = "elona.paralyzer",
    },
    {
       _id = "tarantula",
@@ -5295,7 +5344,8 @@ local chara = {
          "elona.spell_web"
       },
       unarmed_element_id = "elona.poison",
-      unarmed_element_power = 200
+      unarmed_element_power = 200,
+      tone = "elona.tarantula",
    },
    {
       _id = "blood_spider",
@@ -5325,7 +5375,8 @@ local chara = {
          "elona.spell_web"
       },
       unarmed_element_id = "elona.nether",
-      unarmed_element_power = 100
+      unarmed_element_power = 100,
+      tone = "elona.blood_spider",
    },
    {
       _id = "wooden_golem",
@@ -5342,6 +5393,7 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       effect_immunities = { "elona.fear" },
+      tone = "elona.wooden_golem",
    },
    {
       _id = "stone_golem",
@@ -5358,6 +5410,7 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       pffect_immunities = { "elona.fear" },
+      tone = "elona.stone_golem",
    },
    {
       _id = "steel_golem",
@@ -5376,6 +5429,7 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       effect_immunities = { "elona.fear" },
+      tone = "elona.steel_golem",
    },
    {
       _id = "golden_golem",
@@ -5393,6 +5447,7 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       effect_immunities = { "elona.fear" },
+      tone = "elona.golden_golem",
    },
    {
       _id = "mithril_golem",
@@ -5410,6 +5465,7 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       effect_immunities = { "elona.fear" },
+      tone = "elona.mithril_golem",
    },
    {
       _id = "sky_golem",
@@ -5427,6 +5483,7 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       effect_immunities = { "elona.fear" },
+      tone = "elona.sky_golem",
    },
    {
       _id = "adamantium_golem",
@@ -5444,6 +5501,7 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       effect_immunities = { "elona.fear" },
+      tone = "elona.adamantium_golem",
    },
    {
       _id = "fire_crab",
@@ -5586,6 +5644,7 @@ local chara = {
       unarmed_element_id = "elona.mind",
       unarmed_element_power = 150,
       effect_immunities = { "elona.fear" },
+      tone = "elona.missionary_of_darkness",
    },
    {
       _id = "pawn",
@@ -5749,7 +5808,8 @@ local chara = {
       rarity = 25000,
       coefficient = 400,
       ai_distance = 1,
-      ai_move_chance = 80
+      ai_move_chance = 80,
+      tone = "elona.mercenary",
    },
    {
       _id = "mercenary_archer",
@@ -5767,7 +5827,8 @@ local chara = {
       category = Enum.CharaCategory.Mercenary,
       rarity = 25000,
       coefficient = 400,
-      ai_move_chance = 50
+      ai_move_chance = 50,
+      tone = "elona.mercenary",
    },
    {
       _id = "mercenary_wizard",
@@ -5795,7 +5856,8 @@ local chara = {
       ai_move_chance = 50,
       skills = {
          "elona.spell_magic_dart"
-      }
+      },
+      tone = "elona.mercenary",
    },
    {
       _id = "rogue_boss",
@@ -5826,6 +5888,7 @@ local chara = {
       skills = {
          "elona.buff_boost"
       },
+      tone = "elona.rogue_party",
 
       on_drop_loot = function(self, _, drops)
          -- TODO dedup
@@ -5851,7 +5914,7 @@ local chara = {
             }
          end
          -- <<<<<<<< shade2/item.hsp:383 	} ..
-      end
+      end,
    },
    {
       _id = "rogue_warrior",
@@ -5886,7 +5949,8 @@ local chara = {
             drops[#drops+1] = { _id = "elona.blue_capsule_drug" }
          end
          -- <<<<<<<< shade2/item.hsp:360 	} ..
-      end
+      end,
+      tone = "elona.rogue_party",
    },
    {
       _id = "rogue_archer",
@@ -5909,6 +5973,7 @@ local chara = {
       },
       ai_distance = 1,
       ai_move_chance = 50,
+      tone = "elona.rogue_party",
 
       on_initialize_equipment = function(self, _, equip_spec)
          -- >>>>>>>> shade2/chara.hsp:179 	if cId(rc)=304 	: if rnd(250)=0	:eqAmulet1 	=722	 ...
@@ -5925,7 +5990,7 @@ local chara = {
             drops[#drops+1] = { _id = "elona.blue_capsule_drug" }
          end
          -- <<<<<<<< shade2/item.hsp:360 	} ..
-      end
+      end,
    },
    {
       _id = "rogue_wizard",
@@ -5956,6 +6021,7 @@ local chara = {
          "elona.spell_magic_dart",
          "elona.buff_slow"
       },
+      tone = "elona.rogue_party",
 
       on_drop_loot = function(self, _, drops)
          -- TODO dedup
@@ -5964,7 +6030,7 @@ local chara = {
             drops[#drops+1] = { _id = "elona.blue_capsule_drug" }
          end
          -- <<<<<<<< shade2/item.hsp:360 	} ..
-      end
+      end,
    },
    {
       _id = "yerles_machine_infantry",
@@ -5979,7 +6045,8 @@ local chara = {
       image = "elona.chara_yerles_machine_infantry",
       coefficient = 400,
       ai_distance = 3,
-      ai_move_chance = 40
+      ai_move_chance = 40,
+      tone = "elona.yerles_machine_infantry",
    },
    {
       _id = "yerles_elite_machine_infantry",
@@ -5995,7 +6062,8 @@ local chara = {
       color = { 255, 155, 155 },
       coefficient = 400,
       ai_distance = 3,
-      ai_move_chance = 40
+      ai_move_chance = 40,
+      tone = "elona.yerles_machine_infantry",
    },
    {
       _id = "gilbert_the_colonel",
@@ -6017,7 +6085,8 @@ local chara = {
       dialog = "elona.gilbert",
       ai_calm_action = "elona.calm_dull",
       ai_distance = 3,
-      ai_move_chance = 40
+      ai_move_chance = 40,
+      tone = "elona.gilbert_the_colonel",
    },
    {
       _id = "yerles_self_propelled_gun",
@@ -6052,7 +6121,8 @@ local chara = {
       image = "elona.chara_juere_swordman",
       coefficient = 400,
       ai_distance = 1,
-      ai_move_chance = 95
+      ai_move_chance = 95,
+      tone = "elona.juere_infantry",
    },
    {
       _id = "juere_swordman",
@@ -6068,7 +6138,8 @@ local chara = {
       color = { 175, 175, 255 },
       coefficient = 400,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.juere_infantry",
    },
    {
       _id = "rock_thrower",
@@ -6148,7 +6219,8 @@ local chara = {
       coefficient = 0,
       on_eat_corpse = eating_effect.cat,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.stray_cat",
    },
    {
       _id = "lion",
@@ -6166,7 +6238,8 @@ local chara = {
       coefficient = 400,
       flags = { "IsSuitableForMount" },
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.lion",
    },
    {
       _id = "cacy",
@@ -6192,7 +6265,8 @@ local chara = {
       ai_move_chance = 50,
       skills = {
          "elona.action_summon_cats"
-      }
+      },
+      tone = "elona.cacy",
    },
    {
       _id = "carbuncle",
@@ -6238,7 +6312,8 @@ local chara = {
       coefficient = 400,
       flags = { "IsSuitableForMount" },
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.dog",
    },
    {
       _id = "poppy",
@@ -6256,7 +6331,8 @@ local chara = {
       flags = { "IsSuitableForMount" },
       dialog = "elona.poppy",
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.poppy",
    },
    {
       _id = "rilian",
@@ -6276,7 +6352,8 @@ local chara = {
       dialog = "elona.rilian",
       ai_calm_action = "elona.calm_dull",
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.rilian",
    },
    {
       _id = "tam",
@@ -6297,7 +6374,8 @@ local chara = {
       dialog = "elona.tam",
       ai_calm_action = "elona.calm_dull",
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.tam",
    },
    {
       _id = "little_girl",
@@ -6314,7 +6392,8 @@ local chara = {
       coefficient = 400,
       flags = { "IsSuitableForMount" },
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.little_girl",
    },
    {
       _id = "rat",
@@ -6373,6 +6452,7 @@ local chara = {
       initial_equipment = {
          ["elona.ranged_weapon"] = { _id = "elona.stone" },
       },
+      tone = "elona.public_performer",
    },
    {
       _id = "frisia",
@@ -6388,7 +6468,8 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       ai_distance = 1,
-      ai_move_chance = 50
+      ai_move_chance = 50,
+      tone = "elona.frisia",
    },
    {
       _id = "younger_sister",
@@ -6405,6 +6486,7 @@ local chara = {
       fltselect = Enum.FltSelect.Sp,
       coefficient = 400,
       flags = { "IsSuitableForMount" },
+      tone = "elona.younger_sister",
    },
    {
       _id = "younger_sister_of_mansion",
@@ -6429,7 +6511,8 @@ local chara = {
       ai_sub_action_chance = 100,
       skills = {
          "elona.action_summon_sister"
-      }
+      },
+      tone = "elona.younger_sister",
    },
    {
       _id = "younger_cat_sister",
@@ -6444,6 +6527,7 @@ local chara = {
       class = "elona.thief",
       fltselect = Enum.FltSelect.Sp,
       coefficient = 400,
+      tone = "elona.younger_cat_sister",
    },
    {
       _id = "young_lady",
@@ -6476,7 +6560,8 @@ local chara = {
          "elona.spell_healing_rain",
          "elona.buff_mist_of_frailness",
          "elona.buff_slow"
-      }
+      },
+      tone = "elona.young_lady",
    },
    {
       _id = "utima",
@@ -6521,6 +6606,7 @@ local chara = {
          ["elona.ranged_weapon"] = { _id = "elona.rail_gun" },
          ["elona.ammo"] = { category = "elona.equip_ammo_energy_cell", quality = Enum.Quality.Good },
       },
+      tone = "elona.utima",
    },
    {
       _id = "azzrssil",
@@ -6560,7 +6646,8 @@ local chara = {
          "elona.spell_darkness_bolt",
          "elona.spell_short_teleport",
          "elona.buff_mist_of_silence"
-      }
+      },
+      tone = "elona.azzrssil",
    },
    {
       _id = "pet_arena_master",
@@ -6594,7 +6681,8 @@ local chara = {
       coefficient = 400,
       dialog = "elona.garokk",
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.garokk",
    },
    {
       _id = "miral",
@@ -6613,7 +6701,8 @@ local chara = {
       coefficient = 400,
       dialog = "elona.miral",
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.miral",
    },
    {
       _id = "twintail",
@@ -6628,7 +6717,8 @@ local chara = {
       coefficient = 400,
       flags = { "IsSuitableForMount" },
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.twintail",
    },
    {
       _id = "silver_wolf",
@@ -6643,7 +6733,8 @@ local chara = {
       fltselect = Enum.FltSelect.Friend,
       coefficient = 400,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.silver_wolf",
    },
    {
       _id = "nurse",
@@ -6668,7 +6759,8 @@ local chara = {
       ai_move_chance = 50,
       skills = {
          "elona.spell_healing_touch"
-      }
+      },
+      tone = "elona.nurse",
    },
    {
       _id = "rich_person",
@@ -6692,7 +6784,8 @@ local chara = {
       -- <<<<<<<< shade2/item.hsp:314 	if cId(rc)=183 : lootRich=8 ..
       calc_initial_gold = function()
          return 5000 + Rand.rnd(11000)
-      end
+      end,
+      tone = "elona.rich_person",
    },
    {
       _id = "noble_child",
@@ -6716,7 +6809,8 @@ local chara = {
       -- <<<<<<<< shade2/item.hsp:315 	if cId(rc)=184 : lootRich=4 ..
       calc_initial_gold = function()
          return 2000 + Rand.rnd(5000)
-      end
+      end,
+      tone = "elona.noble_child",
    },
    {
       _id = "tourist",
@@ -6740,7 +6834,8 @@ local chara = {
       -- <<<<<<<< shade2/item.hsp:316 	if cId(rc)=185 : lootRich=2	;大富豪、貴族、観光客 ..
       calc_initial_gold = function()
          return 1000 + Rand.rnd(3000)
-      end
+      end,
+      tone = "elona.tourist",
    },
    {
       _id = "festival_tourist",
@@ -6759,6 +6854,7 @@ local chara = {
       color = { 255, 255, 255 },
       fltselect = Enum.FltSelect.Sp,
       coefficient = 400,
+      tone = "elona.festival_tourist",
    },
    {
       _id = "blade",
@@ -6857,6 +6953,7 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 0,
       effect_immunities = { "elona.fear" },
+      tone = "elona.kaneda_bike",
    },
    {
       _id = "cub",
@@ -6877,6 +6974,7 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 0,
       effect_immunities = { "elona.fear" },
+      tone = "elona.cub",
    },
    {
       _id = "mine_dog",
@@ -7074,7 +7172,8 @@ local chara = {
       rarity = 30000,
       coefficient = 400,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.chicken",
    },
    {
       _id = "pumpkin",
@@ -7269,7 +7368,8 @@ local chara = {
       ai_move_chance = 80,
       skills = {
          "elona.action_fire_breath"
-      }
+      },
+      tone = "elona.ebon",
    },
    {
       _id = "moyer_the_crooked",
@@ -7288,8 +7388,7 @@ local chara = {
       fltselect = Enum.FltSelect.Sp,
       coefficient = 400,
       ai_calm_action = "elona.calm_stand",
-      ai_actions = {
-      }
+      tone = "elona.moyer_the_crooked",
    },
    {
       _id = "maid",
@@ -7318,7 +7417,8 @@ local chara = {
                -- <<<<<<<< shade2/chara.hsp:515 		} ..
             end
          }
-      }
+      },
+      tone = "elona.maid",
    },
    {
       _id = "ebon2",
@@ -7347,7 +7447,8 @@ local chara = {
       ai_move_chance = 80,
       skills = {
          "elona.action_fire_breath"
-      }
+      },
+      tone = "elona.ebon2",
    },
    -- "Has" the same name as "Stersha" in "EN", but is named "実験台" in "JP".
    {
@@ -7401,7 +7502,8 @@ local chara = {
             }
          end
          -- <<<<<<<< shade2/item.hsp:369 	} ..
-      end
+      end,
+      tone = "elona.gwen",
    },
    {
       _id = "pael",
@@ -7422,7 +7524,8 @@ local chara = {
       coefficient = 400,
       dialog = "elona.pael",
       ai_calm_action = "elona.calm_stand",
-      ai_distance = 1
+      ai_distance = 1,
+      tone = "elona.pael",
    },
    {
       _id = "lily",
@@ -7443,7 +7546,8 @@ local chara = {
       coefficient = 400,
       dialog = "elona.lily",
       ai_calm_action = "elona.calm_stand",
-      ai_distance = 1
+      ai_distance = 1,
+      tone = "elona.lily",
    },
    {
       _id = "raphael",
@@ -7464,7 +7568,8 @@ local chara = {
       coefficient = 400,
       dialog = "elona.raphael",
       ai_calm_action = "elona.calm_dull",
-      ai_distance = 1
+      ai_distance = 1,
+      tone = "elona.raphael",
    },
    {
       _id = "ainc",
@@ -7485,7 +7590,8 @@ local chara = {
       coefficient = 400,
       dialog = "elona.ainc",
       ai_calm_action = "elona.calm_stand",
-      ai_distance = 1
+      ai_distance = 1,
+      tone = "elona.ainc",
    },
    {
       _id = "arnord",
@@ -7506,7 +7612,8 @@ local chara = {
       coefficient = 400,
       dialog = "elona.arnord",
       ai_calm_action = "elona.calm_stand",
-      ai_distance = 1
+      ai_distance = 1,
+      tone = "elona.arnord",
    },
    {
       _id = "mia",
@@ -7524,7 +7631,8 @@ local chara = {
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
       dialog = "elona.mia",
-      ai_distance = 1
+      ai_distance = 1,
+      tone = "elona.mia",
    },
    {
       _id = "renton",
@@ -7558,7 +7666,8 @@ local chara = {
          "elona.spell_raging_roar",
          "elona.spell_nether_arrow",
          "elona.spell_mutation"
-      }
+      },
+      tone = "elona.renton",
    },
    {
       _id = "marks",
@@ -7587,7 +7696,8 @@ local chara = {
       ai_move_chance = 70,
       skills = {
          "elona.action_suspicious_hand"
-      }
+      },
+      tone = "elona.marks",
    },
    {
       _id = "noel",
@@ -7616,7 +7726,8 @@ local chara = {
       ai_move_chance = 70,
       skills = {
          "elona.action_suspicious_hand"
-      }
+      },
+      tone = "elona.noel",
    },
    {
       _id = "conery",
@@ -7647,6 +7758,7 @@ local chara = {
             spec.is_two_handed = true
          end
       end,
+      tone = "elona.conery",
    },
    {
       _id = "thief",
@@ -7671,7 +7783,8 @@ local chara = {
       ai_move_chance = 70,
       skills = {
          "elona.action_suspicious_hand"
-      }
+      },
+      tone = "elona.thief",
    },
    {
       _id = "robber",
@@ -7698,7 +7811,8 @@ local chara = {
       ai_move_chance = 70,
       skills = {
          "elona.action_suspicious_hand"
-      }
+      },
+      tone = "elona.robber",
    },
    {
       _id = "master_thief",
@@ -7725,7 +7839,8 @@ local chara = {
       ai_move_chance = 70,
       skills = {
          "elona.action_suspicious_hand"
-      }
+      },
+      tone = "elona.master_thief",
    },
    {
       _id = "great_race_of_yith",
@@ -7934,7 +8049,8 @@ local chara = {
          "elona.spell_magic_dart",
          "elona.action_drain_blood",
          "elona.action_eye_of_insanity"
-      }
+      },
+      tone = "elona.black_cat",
    },
    {
       _id = "cute_fairy",
@@ -7971,6 +8087,7 @@ local chara = {
          "elona.buff_slow",
          "elona.spell_nether_arrow"
       },
+      tone = "elona.cute_fairy",
    },
    {
       _id = "android",
@@ -8039,7 +8156,8 @@ local chara = {
          "elona.buff_speed",
          "elona.buff_boost",
          "elona.buff_slow"
-      }
+      },
+      tone = "elona.black_angel",
    },
    {
       _id = "exile",
@@ -8160,7 +8278,8 @@ local chara = {
       flags = { "IsSuitableForMount" },
       on_eat_corpse = eating_effect.horse,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.lame_horse",
    },
    {
       _id = "wild_horse",
@@ -8179,7 +8298,8 @@ local chara = {
       flags = { "IsSuitableForMount" },
       on_eat_corpse = eating_effect.horse,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.wild_horse",
    },
    {
       _id = "noyel_horse",
@@ -8198,7 +8318,8 @@ local chara = {
       flags = { "IsSuitableForMount" },
       on_eat_corpse = eating_effect.horse,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.noyel_horse",
    },
    {
       _id = "yowyn_horse",
@@ -8217,7 +8338,8 @@ local chara = {
       flags = { "IsSuitableForMount" },
       on_eat_corpse = eating_effect.horse,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.yowyn_horse",
    },
    {
       _id = "wild_horse2",
@@ -8236,7 +8358,8 @@ local chara = {
       flags = { "IsSuitableForMount" },
       on_eat_corpse = eating_effect.horse,
       ai_distance = 1,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.wild_horse2",
    },
    {
       _id = "mutant",
@@ -8271,7 +8394,8 @@ local chara = {
       coefficient = 400,
       dialog = "elona.icolle",
       ai_distance = 1,
-      ai_move_chance = 70
+      ai_move_chance = 70,
+      tone = "elona.icolle",
    },
    {
       _id = "balzak",
@@ -8292,7 +8416,8 @@ local chara = {
       dialog = "elona.balzak",
       ai_calm_action = "elona.calm_special",
       ai_distance = 1,
-      ai_move_chance = 70
+      ai_move_chance = 70,
+      tone = "elona.balzak",
    },
    {
       _id = "revlus",
@@ -8325,7 +8450,8 @@ local chara = {
          "elona.spell_magic_dart",
          "elona.spell_nether_arrow",
          "elona.spell_dark_eye"
-      }
+      },
+      tone = "elona.revlus",
    },
    {
       _id = "lexus",
@@ -8361,7 +8487,8 @@ local chara = {
          "elona.spell_magic_dart",
          "elona.spell_nether_arrow",
          "elona.spell_dark_eye"
-      }
+      },
+      tone = "elona.lexus",
    },
    {
       _id = "sin",
@@ -8401,7 +8528,8 @@ local chara = {
       dialog = "elona.abyss",
       ai_calm_action = "elona.calm_stand",
       ai_distance = 1,
-      ai_move_chance = 65
+      ai_move_chance = 65,
+      tone = "elona.abyss",
    },
    {
       _id = "fray",
@@ -8441,7 +8569,8 @@ local chara = {
       dialog = "elona.doria",
       ai_calm_action = "elona.calm_stand",
       ai_distance = 1,
-      ai_move_chance = 90
+      ai_move_chance = 90,
+      tone = "elona.doria",
    },
    {
       _id = "silver_eyed_witch",
@@ -8483,7 +8612,8 @@ local chara = {
             spec["elona.primary_weapon"] = { _id = "elona.claymore_unique", is_two_handed = true }
          end
          -- <<<<<<<< shade2/chara.hsp:177 	if cId(rc)=317 	: if rnd(150)=0	:eqWeapon1 	=719	 ..
-      end
+      end,
+      tone = "elona.silver_eyed_witch",
    },
    {
       _id = "big_daddy",
@@ -8516,6 +8646,7 @@ local chara = {
          ["elona.ammo"] = { category = "elona.equip_ammo_bullet", quality = Enum.Quality.Good },
       },
       effect_immunities = { "elona.fear" },
+      tone = "elona.big_daddy",
    },
    {
       _id = "little_sister",
@@ -8533,7 +8664,8 @@ local chara = {
       rarity = 50000,
       coefficient = 400,
       ai_distance = 5,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.little_sister",
    },
    {
       _id = "strange_scientist",
@@ -8553,7 +8685,8 @@ local chara = {
       coefficient = 400,
       dialog = "elona.strange_scientist",
       ai_distance = 3,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.strange_scientist",
    },
    {
       _id = "mysterious_producer",
@@ -8572,7 +8705,8 @@ local chara = {
       rarity = 50000,
       coefficient = 400,
       ai_distance = 3,
-      ai_move_chance = 100
+      ai_move_chance = 100,
+      tone = "elona.mysterious_producer",
    },
    {
       _id = "shade",
@@ -8680,7 +8814,7 @@ local chara = {
             drops[#drops+1] = { _id = "elona.small_medal" }
          end
          -- <<<<<<<< shade2/item.hsp:387 	} ..
-      end
+      end,
    },
    {
       _id = "gold_bell",
@@ -8714,7 +8848,7 @@ local chara = {
             amount = 2500 + Rand.rnd(Chara.player():calc("fame") + 1000)
          }
          -- <<<<<<<< shade2/item.hsp:390 	}	 ..
-      end
+      end,
    },
    {
       _id = "alien",

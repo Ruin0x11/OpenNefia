@@ -35,7 +35,7 @@ local function on_kill_chara(victim, params)
 
    if attacker then
       if not attacker:is_player() then
-         attacker:say("base.killed", { victim = victim, params = params })
+         attacker:say("base.killed", { target = victim })
       end
       local gained_exp = victim:emit("base.on_calc_kill_exp", params, 0)
 

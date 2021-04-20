@@ -98,7 +98,12 @@ local function interact_change_tone(chara, player)
 
    if result and not canceled then
       Gui.mes("action.interact.change_tone.is_somewhat_different", chara)
-      chara.tone = result.tone_id
+      local tone_id = result.tone_id
+      if tone_id == nil then
+         chara.tone = chara.proto.tone
+      else
+         chara.tone = tone_id
+      end
    end
 
    return "player_turn_query"

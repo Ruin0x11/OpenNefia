@@ -363,4 +363,10 @@ function CodeGenerator:__tostring()
    return table.concat(self.buffer)
 end
 
+function CodeGenerator.inspect(t, options)
+   local gen = CodeGenerator:new(options)
+   gen:write_table(t)
+   return tostring(gen)
+end
+
 return CodeGenerator

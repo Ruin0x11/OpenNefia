@@ -30,7 +30,7 @@ local UiListExt = function(choose_npc_menu)
    end
    function E:draw_select_key(item, i, key_name, x, y)
       if (i - 1) % 2 == 0 then
-         Draw.filled_rect(x - 1, y, 640, 18, {12, 14, 16, 16})
+         Draw.filled_rect(x - 1, y, 500 - 100, 18, {12, 14, 16, 16})
       end
 
       UiList.draw_select_key(self, item, i, key_name, x, y)
@@ -45,12 +45,16 @@ function ChangeToneMenu.generate_list()
    }
 
    for _, tone in data["base.tone"]:iter() do
-      list[#list+1] = {
-         text = I18N.localize("base.tone", tone._id, "title"),
-         tone_id = tone._id,
-         mod_id = tone._id:gsub("%..*", "")
-      }
+      if tone.show_in_menu and tone.texts[I18N.language()] then
+         list[#list+1] = {
+            text = I18N.localize_optional("base.tone", tone._id, "title") or tone._id,
+            tone_id = tone._id,
+            mod_id = tone._id:gsub("%..*", "")
+         }
+      end
    end
+
+   table.sort(list, function(a, b) return a.mod_id < b.mod_id end)
 
    return list
 end

@@ -101,7 +101,6 @@ function CustomFileLexer:read_directive()
    if not b then
       error("end of file")
    end
-   print("read")
 
    local line = self:read_rest_of_line()
 
@@ -120,7 +119,7 @@ function CustomFileLexer:read_directive()
          self.has_event = false
       else
          if self.in_text then
-            Log.warn("Already in text %s", self.in_text[1])
+            Log.debug("Already in text %s", self.in_text[1])
          end
          self.in_text = result
       end

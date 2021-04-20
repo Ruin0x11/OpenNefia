@@ -1,16 +1,8 @@
 local Fs = require("api.Fs")
 
-local function to_snake_case(s)
-   return s:gsub('%f[^%l]%u','_%1')
-      :gsub('%f[^%a]%d','_%1')
-      :gsub('%f[^%d]%a','_%1')
-      :gsub('(%u)(%u%l)','%1_%2')
-      :lower()
-end
-
 local icons = {}
 for _, path in Fs.iter_directory_items("mod/visual_ai/graphic/icon", "full_path"):unwrap() do
-   local id = ("icon_%s"):format(to_snake_case(Fs.filename_part(path)))
+   local id = ("icon_%s"):format(string.to_snake_case(Fs.filename_part(path)))
    icons[#icons+1] = {
       _id = id,
       image = path

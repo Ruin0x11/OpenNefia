@@ -30,7 +30,7 @@ Event.register("base.on_kill_chara", "npc memory",
                   -- >>>>>>>> shade2/chara_func.hsp:1726 		if tc!pc{ ..
                   if not victim:is_player() then
                      NpcMemory.on_killed(victim._id)
-                     victim:say("base.dead", { params = params })
+                     victim:say("base.dead", { source = params.source })
                      if victim:is_in_player_party() then
                         Gui.mes("damage.you_feel_sad")
                      end

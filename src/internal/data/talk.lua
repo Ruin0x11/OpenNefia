@@ -20,6 +20,11 @@ data:add_type {
 
    fields = {
       {
+         name = "show_in_menu",
+         default = nil,
+         type = "boolean?"
+      },
+      {
          name = "texts",
          template = true,
          type = "table"
