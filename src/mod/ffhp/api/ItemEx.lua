@@ -6,6 +6,8 @@ local ElonaItem = require("mod.elona.api.ElonaItem")
 local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local CodeGenerator = require("api.CodeGenerator")
 local Log = require("api.Log")
+local Chara = require("api.Chara")
+local ItemExChipVariantPrompt = require("mod.ffhp.api.gui.ItemExChipVariantPrompt")
 
 local ItemEx = {}
 
@@ -62,16 +64,46 @@ function ItemEx.refresh_item_appearance(item)
    item.color = ElonaItem.default_item_color(item)
    -- TODO need a way to update an item's memory in the map
 
-   if item._id == "elona.staff_of_insanity" then
-      cache = nil
-   end
    local mapping = ItemEx.mapping_for(item._id)
-   if item._id == "elona.staff_of_insanity" then
-      print(inspect(cache))
-   end
    if mapping and ItemEx.can_apply_mapping(item, mapping) then
       ItemEx.apply_mapping(mapping, item)
    end
+end
+
+function ItemEx.query_change_chip_variant(item, chips)
+   if chips == nil then
+      local mapping = ItemEx.mapping_for(item._id)
+      if mapping == nil then
+         chips = {}
+      else
+         chips = {mapping.chip_id}
+         local variants = mapping.chip_variants
+         if type(variants) == "table" and #variants > 0 then
+            table.append(chips, variants)
+         end
+      end
+   end
+
+   if #chips == 0 then
+      return nil
+   end
+
+   local player = Chara.player()
+   if not Chara.is_alive(player) then
+      return nil
+   end
+
+   local chip
+   local result, canceled = ItemExChipVariantPrompt:new(player.x, player.y, chips):query()
+   if result and not canceled and result.chip then
+      chip = result.chip
+   else
+      chip = chips[1]
+   end
+
+   item.image = chip
+
+   return chip
 end
 
 function ItemEx.parse_item_ex_csv(csv_file, base_path, mod_id)
@@ -154,7 +186,7 @@ function ItemEx.convert_item_ex_csv(csv_file, base_path, mod_id)
    local raw = ItemEx.parse_item_ex_csv(csv_file, base_path, mod_id)
 
    local lookup = data["ffhp.item_ex_mapping"]:iter()
-      :map(function(m) data["base.item"]:ensure(m.item_id); return m.item_id, m end)
+   :map(function(m) data["base.item"]:ensure(m.item_id); return m.item_id, m end)
       :to_map()
 
    local gen = CodeGenerator:new()
@@ -223,7 +255,7 @@ function ItemEx.convert_item_ex_csv(csv_file, base_path, mod_id)
                chip_variants = entry.chip_variant_ids or nil
             }
             return mapping._id, override
-           end)
+          end)
       :to_map()
 
    local overrides = {

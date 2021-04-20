@@ -198,4 +198,16 @@ Enum.Burden = enum("Burden", {
     Max = 4
 })
 
+Enum.Direction = enum("Direction", {
+   North     = "North",
+   South     = "South",
+   East      = "East",
+   West      = "West",
+   Northeast = "Northeast",
+   Southeast = "Southeast",
+   Northwest = "Northwest",
+   Southwest = "Southwest",
+   Center    = "Center"
+})
+
 return Enum

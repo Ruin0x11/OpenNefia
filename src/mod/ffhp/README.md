@@ -6,6 +6,8 @@ Basic theming needs can be satisfied by overriding the properties of data types 
 
 This mod also implements omake's extension to FFHP that allows for directional item chip variants. When an item is dropped, you will now be able to choose a chip variant if the FFHP override for that item has any chip overrides available.
 
+![FFHP chip variants](./static/chip_variant.png)
+
 ## Notes
 
 By default, FFHP item overrides will only take effect if the item has been identified in the past at least once. This is different than normal FFHP, where the image would always be substituted regardless of identify state.

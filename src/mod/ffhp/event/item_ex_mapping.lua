@@ -4,6 +4,7 @@ local Item = require("api.Item")
 local Chara = require("api.Chara")
 local ItemEx = require("mod.ffhp.api.ItemEx")
 local ItemMemory = require("mod.elona_sys.api.ItemMemory")
+local ItemExChipVariantPrompt = require("mod.ffhp.api.gui.ItemExChipVariantPrompt")
 
 local function set_item_image_on_memorize(_, params)
    local map = Map.current()
@@ -52,20 +53,7 @@ Event.register("base.on_hotload_end", "Clear FFHP mapping cache",
 local function query_ffhp_directional_chip(item)
    local mapping = ItemEx.mapping_for(item._id)
    if mapping and ItemEx.can_apply_mapping(item, mapping) then
-      local variants = mapping.chip_variants
-      if type(variants) == "table" and #variants > 0 then
-         local chips = {mapping.chip_id}
-         table.append(chips, variants)
-         local chip
-         local result, canceled = ItemExChipVariantPrompt:new(chips):query()
-         if result and not canceled then
-            chip = result.chip
-         else
-            chip = mapping.chip_id
-         end
-
-         item.chip = chip
-      end
+      ItemEx.query_change_chip_variant(item)
    end
 end
 Event.register("base.on_drop_item", "Query FFHP directional chip", query_ffhp_directional_chip)

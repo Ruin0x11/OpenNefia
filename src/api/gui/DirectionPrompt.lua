@@ -19,6 +19,7 @@ function DirectionPrompt:init(x, y, screen_pos)
    self.diagonal_only = false
    self.result = nil
    self.canceled = false
+   self.disabled = table.set {}
 
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
@@ -28,39 +29,49 @@ end
 function DirectionPrompt:make_keymap()
    return {
       enter = function()
-         self.result = "Center"
+         if not self.disabled["Center"] then
+            self.result = "Center"
+         end
       end,
       north = function()
-         if not self.diagonal_only then
+         if not self.diagonal_only and not self.disabled["North"] then
             self.result = "North"
          end
       end,
       south = function()
-         if not self.diagonal_only then
+         if not self.diagonal_only and not self.disabled["South"] then
             self.result = "South"
          end
       end,
       west = function()
-         if not self.diagonal_only then
+         if not self.diagonal_only and not self.disabled["West"] then
             self.result = "West"
          end
       end,
       east = function()
-         if not self.diagonal_only then
+         if not self.diagonal_only and not self.disabled["East"] then
             self.result = "East"
          end
       end,
       northwest = function()
-         self.result = "Northwest"
+         if not self.disabled["Northwest"] then
+            self.result = "Northwest"
+         end
       end,
       northeast = function()
-         self.result = "Northeast"
+         if not self.disabled["Northeast"] then
+            self.result = "Northeast"
+         end
       end,
       southwest = function()
-         self.result = "Southwest"
+         if not self.disabled["Southwest"] then
+            self.result = "Southwest"
+         end
       end,
       southeast = function()
-         self.result = "Southeast"
+         if not self.disabled["Southeast"] then
+            self.result = "Southeast"
+         end
       end,
       escape = function()
          self.canceled = true
@@ -69,6 +80,10 @@ function DirectionPrompt:make_keymap()
          self.canceled = true
       end
    }
+end
+
+function DirectionPrompt:set_direction_enabled(dir, enabled)
+   self.disabled[dir] = not enabled
 end
 
 function DirectionPrompt:relayout(x, y)
@@ -80,8 +95,13 @@ function DirectionPrompt:relayout(x, y)
    if self.screen_pos then
       self.x, self.y = x, y
    else
-      self.x, self.y = Gui.tile_to_screen(self.center_x, self.center_y)
+      self.x, self.y = Gui.tile_to_visible_screen(self.center_x, self.center_y)
    end
+
+   local tw, th = Draw.get_coords():get_size()
+   self.x = self.x + math.floor(tw / 2)
+   self.y = self.y + math.floor(th / 2)
+
    self.tile_width, self.tile_height = Draw.get_coords():get_size()
    self.t = UiTheme.load(self)
 end
@@ -93,26 +113,29 @@ end
 function DirectionPrompt:draw()
    local frame = math.floor(self.frame*50)
    local alpha = math.floor(200 - frame / 2 % 20 * (frame / 2 % 20))
-   local draw_x, draw_y = Gui.field_draw_pos()
-   local tw, th = Draw.get_coords():get_size()
-   local x = self.x + draw_x + math.floor(tw / 2)
-   local y = self.y + draw_y + math.floor(th / 2)
 
-   -- TODO move draw args into params
+   local x = self.x
+   local y = self.y
 
    Draw.set_color(255,255,255,alpha)
 
-   if not self.diagonal_only then
-      self.t.base.direction_arrow:draw(x, y - self.tile_height, nil, nil, nil, true, 0)
-      self.t.base.direction_arrow:draw(x, y + self.tile_height, nil, nil, nil, true, 180)
-      self.t.base.direction_arrow:draw(x + self.tile_width, y, nil, nil, nil, true, 90)
-      self.t.base.direction_arrow:draw(x - self.tile_width, y, nil, nil, nil, true, 270)
+   local function draw_arrow(dir, sx, sy, rot)
+      if not self.disabled[dir] then
+         self.t.base.direction_arrow:draw(sx, sy, nil, nil, nil, true, rot)
+      end
    end
 
-   self.t.base.direction_arrow:draw(x - self.tile_width, y - self.tile_height, nil, nil, nil, true, 315)
-   self.t.base.direction_arrow:draw(x + self.tile_width, y + self.tile_height, nil, nil, nil, true, 135)
-   self.t.base.direction_arrow:draw(x + self.tile_width, y - self.tile_height, nil, nil, nil, true, 45)
-   self.t.base.direction_arrow:draw(x - self.tile_width, y + self.tile_height, nil, nil, nil, true, 225)
+   if not self.diagonal_only then
+      draw_arrow("North", x, y - self.tile_height, 0)
+      draw_arrow("South", x, y + self.tile_height, 180)
+      draw_arrow("East", x + self.tile_width, y, 90)
+      draw_arrow("West", x - self.tile_width, y, 270)
+   end
+
+   draw_arrow("Northwest", x - self.tile_width, y - self.tile_height, 315)
+   draw_arrow("Southeast", x + self.tile_width, y + self.tile_height, 135)
+   draw_arrow("Southwest", x + self.tile_width, y - self.tile_height, 45)
+   draw_arrow("Northeast", x - self.tile_width, y + self.tile_height, 225)
 end
 
 function DirectionPrompt:update(dt)
@@ -120,12 +143,18 @@ function DirectionPrompt:update(dt)
 
    self.diagonal_only = self.input:is_modifier_held("alt")
 
-   if self.canceled then
+   local canceled = self.canceled
+   local result = self.result
+
+   self.canceled = nil
+   self.result = nil
+
+   if canceled then
       return nil, "canceled"
    end
 
-   if self.result then
-      return self.result
+   if result then
+      return result
    end
 end
 
