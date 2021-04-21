@@ -41,6 +41,11 @@ function TalkTxtParser.parse(content)
    }
 
    while not state:end_of_file() do
+      -- BUG: Blank lines in talk files are used to decrease the chance that the
+      -- text will appear. 9 blank texts and 1 text with content means the text
+      -- will get displayed only 10% as much as it normally would. The
+      -- lexer/decoder ought to take this into account to maintain
+      -- compatibility.
       state:skip_blank_lines()
 
       if txt == nil then
