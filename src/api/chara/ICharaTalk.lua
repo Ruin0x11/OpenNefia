@@ -16,7 +16,7 @@ function ICharaTalk:mes_c(text, args, ...)
 
    Gui.mes_c(text, color, ...)
 
-   self:emit("base.on_chara_say_message")
+   self:emit("base.on_chara_say_text", { text = text, color = color, args = args })
 end
 
 function ICharaTalk:mes(id, ...)

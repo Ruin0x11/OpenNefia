@@ -375,6 +375,29 @@ function commands.locale_search(args)
    }
 end
 
+-- Request:
+--
+-- {
+--   "command": "locale_key_search",
+--   "args": { "query": "yes" }
+-- }
+--
+-- Response:
+--
+-- {
+--   "success":true,
+--   "results":["ui.yes"]
+-- }
+function commands.locale_key_search(args)
+   local results = fun.iter(i18n.search_keys(args.query))
+      :take(100)
+      :map(function(r) return { i18n.get(r), r } end)
+      :to_list()
+   return {
+      results = results
+   }
+end
+
 local debug_server = class.class("debug_server")
 
 function debug_server:init(port)

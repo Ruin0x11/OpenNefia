@@ -155,6 +155,14 @@ function Draw.line_rect(x, y, width, height, color)
    love.graphics.polygon("line", x, y, x + width, y, x + width, y + height, x, y + height)
 end
 
+function Draw.filled_polygon(vertices)
+   love.graphics.polygon("fill", vertices)
+end
+
+function Draw.line_polygon(vertices)
+   love.graphics.polygon("line", vertices)
+end
+
 --- Draws a line.
 ---
 --- @tparam int x1

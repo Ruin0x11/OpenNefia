@@ -39,13 +39,13 @@ local UiListExt = function(choose_npc_menu)
    return E
 end
 
-function ChangeToneMenu.generate_list()
+function ChangeToneMenu.generate_list(show_hidden)
    local list = {
       { text = I18N.get("action.interact.change_tone.default_tone"), tone_id = nil, mod_id = "" }
    }
 
    for _, tone in data["base.tone"]:iter() do
-      if tone.show_in_menu and tone.texts[I18N.language()] then
+      if (tone.show_in_menu or show_hidden) and tone.texts[I18N.language()] then
          list[#list+1] = {
             text = I18N.localize_optional("base.tone", tone._id, "title") or tone._id,
             tone_id = tone._id,
@@ -59,8 +59,10 @@ function ChangeToneMenu.generate_list()
    return list
 end
 
-function ChangeToneMenu:init()
-   self.data = ChangeToneMenu.generate_list()
+function ChangeToneMenu:init(show_hidden)
+   self.show_hidden = show_hidden
+
+   self.data = ChangeToneMenu.generate_list(self.show_hidden)
    self.pages = UiList:new_paged(self.data, 16)
 
    self.window = UiWindow:new("action.interact.change_tone.title", true, "key help")
@@ -79,12 +81,20 @@ function ChangeToneMenu:make_keymap()
    return {
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end,
+      identify = function() self:toggle_hidden(not self.show_hidden) end,
    }
+end
+
+function ChangeToneMenu:toggle_hidden(show_hidden)
+   Gui.play_sound("base.ok1")
+   self.show_hidden = show_hidden
+   self.data = ChangeToneMenu.generate_list(show_hidden)
+   self.pages:set_data(self.data)
 end
 
 function ChangeToneMenu:relayout()
    self.width = 500
-   self.height = 400
+   self.height = 440
    self.x, self.y = Ui.params_centered(self.width, self.height)
 
    self.t = UiTheme.load(self)

@@ -30,9 +30,21 @@ end
 --- Opens a dialog prompt asking for a yes or no response. Returns
 --- true if "yes" was selected.
 ---
+--- @tparam bool invert
 --- @treturn bool
-function Input.yes_no()
-   local res = Input.prompt({{ text = "ui.yes", key = "y" }, { text = "ui.no", key = "n" }})
+function Input.yes_no(invert)
+   local choices = {
+      { text = "ui.yes", key = "y", index = 1 },
+      { text = "ui.no", key = "n", index = 2 }
+   }
+
+   if invert then
+      local tmp = choices[1]
+      choices[1] = choices[2]
+      choices[2] = tmp
+   end
+
+   local res = Input.prompt(choices)
    return res.index == 1
 end
 

@@ -10,9 +10,9 @@ function ConfigItemIntegerWidget:init(item)
 
    self.item = item
    self.text = ""
-   self:set_value(0)
    self.min_value = item.min_value or nil
    self.max_value = item.max_value or nil
+   self:set_value(self.min_value or 0)
 end
 
 function ConfigItemIntegerWidget:relayout(x, y, width, height)
@@ -44,6 +44,8 @@ function ConfigItemIntegerWidget:set_value(value)
    local formatter = self.item._id and I18N.get_optional("config.option." .. self.item._id .. ".formatter", value)
    if formatter then
       self.text = I18N.get_optional(formatter, self.value) or formatter
+   elseif self.item.formatter then
+      self.text = self.item.formatter(self.item._id, self.value)
    else
       self.text = tostring(self.value)
    end

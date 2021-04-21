@@ -8,6 +8,7 @@ local UiTheme = require("api.gui.UiTheme")
 local IList = require("api.gui.IList")
 local Gui = require("api.Gui")
 local ListModel = require("api.gui.ListModel")
+local I18N = require("api.I18N")
 
 local ColorEditorMenuList = class.class("ColorEditorMenuList", IUiList)
 
@@ -67,16 +68,16 @@ function ColorEditorMenuList:draw_item(item, i, x, y)
 
    local title
    if i == 1 then
-      title = "Red"
+      title = "extra_config_options:ui.menu.color_editor.value.red"
    elseif i == 2 then
-      title = "Green"
+      title = "extra_config_options:ui.menu.color_editor.value.green"
    elseif i == 3 then
-      title = "Blue"
+      title = "extra_config_options:ui.menu.color_editor.value.blue"
    else
-      title = "Alpha"
+      title = "extra_config_options:ui.menu.color_editor.value.alpha"
    end
 
-   UiList.draw_item_text(self, title, item, i, x, y - 1)
+   UiList.draw_item_text(self, I18N.get(title), item, i, x, y - 1)
 
    Draw.text(tostring(item), x + 134, y)
 

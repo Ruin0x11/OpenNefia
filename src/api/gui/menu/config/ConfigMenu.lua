@@ -44,7 +44,6 @@ function ConfigMenu:relayout()
       self.height = self.height + 10 + 30 * (self.list:len() - 9)
    end
 
-   print(self.list:len(), self.height)
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.y = self.y - 12
 

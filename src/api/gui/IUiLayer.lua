@@ -124,9 +124,7 @@ function IUiLayer:query(z_order)
                local ran = self:run_actions(dt)
                return self:update(dt, ran)
             end,
-            function(err)
-               return trimmed_traceback(err, "IUiLayer.* in function 'query'")
-            end)
+            debug.traceback)
          if not success then
             Log.error("Error on query:\n\t%s", res)
             res = nil

@@ -141,6 +141,6 @@ data:add_multi(
       { _id = "on_chara_calc_can_recruit_allies" },
       { _id = "on_map_generated_from_archetype" },
       { _id = "on_hud_message" },
-      { _id = "on_chara_say_message" },
+      { _id = "on_chara_say_text" },
    }
 )

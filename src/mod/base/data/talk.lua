@@ -57,6 +57,8 @@ data:add {
    _type = "base.tone",
    _id = "example",
 
+   show_in_menu = true,
+
    texts = {
       jp = jp,
       en = en

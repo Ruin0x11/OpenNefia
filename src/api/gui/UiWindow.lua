@@ -51,7 +51,7 @@ function UiWindow:relayout(x, y, width, height)
 end
 
 function UiWindow:set_title(title)
-   self.title = title
+   self.title = I18N.get_optional(title) or title or ""
    if string.nonempty(self.title) then
       if self.topic_window == nil then
          self.topic_window = TopicWindow:new(1, 1)

@@ -9,6 +9,7 @@ local data = require("internal.data")
 local i18n = {}
 i18n.db = {}
 i18n.index = nil
+i18n.key_index = nil
 i18n.data = {}
 
 local reify_one
@@ -295,6 +296,36 @@ function i18n.search(prefix)
       i18n.index = i18n.make_prefix_lookup()
    end
    return i18n.index:search(prefix)
+end
+
+function i18n.make_key_prefix_lookup()
+   local d = dawg:new()
+   local corpus = {}
+
+   for namespace, t in pairs(i18n.db[i18n.language]) do
+      for id, item in pairs(t) do
+         local full_id = namespace .. ":" .. id
+         corpus[#corpus+1] = full_id
+      end
+   end
+
+   table.sort(corpus, function(a, b) return a < b end)
+
+   for _, key in ipairs(corpus) do
+      d:insert(key, key)
+   end
+
+   d:finish()
+
+   return d
+end
+
+function i18n.search_keys(prefix)
+   if i18n.key_index == nil then
+      Log.warn("Building i18n key search index.")
+      i18n.key_index = i18n.make_key_prefix_lookup()
+   end
+   return i18n.key_index:search(prefix)
 end
 
 function i18n.on_hotload(old, new)
