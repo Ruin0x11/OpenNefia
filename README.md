@@ -33,5 +33,7 @@ OpenNefia uses the [Gitflow workflow](https://www.atlassian.com/git/tutorials/co
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
+See [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) for a high-level overview of the codebase.
+
 ## Credits
 See [CREDITS.md](CREDITS.md) for third-party code information.
