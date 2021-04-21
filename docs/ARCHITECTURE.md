@@ -12,7 +12,7 @@ OpenNefia uses a game loop based on coroutines. There is an update phase and a d
 
 Input and interface interaction is handled by a "draw layer" system. A draw layer is a thing that can be updated and drawn, and potentially receives input from the underlying game engine. Whenever input from a keyboard or mouse is received, it gets forwarded to the draw layer that is currently active.
 
-There is at most one currently active draw layer at a time, which is the one that is at the top of the stack. Entering and exiting menus is accomplished by pushing to or popping off the topmost slot on the draw layer stack.
+Draw layers are held in a stack, and can have a custom rendering order defined. There is at most one currently active draw layer at a time, which is the one that is at the top of the stack. Entering and exiting menus is accomplished by pushing to or popping off the topmost slot on the draw layer stack.
 
 This is the sequence of actions that happens on every frame of the engine for the currently active draw layer:
 
@@ -20,21 +20,21 @@ This is the sequence of actions that happens on every frame of the engine for th
 2. The draw layer's update routine is called.
 3. The draw layer's drawing routine is called.
 
-Additionally, there is a level of abstraction on top of the draw layer system, which is called the "UI layer" system. These are special draw layers which can return results in the update routine, which will cause the layer to be popped off the stack and the focus to return to the previous layer. UI layers also have some extra features for things like keybinding. Almost all user interface components in OpenNefia are constructed in terms of UI layers.
+Additionally, there is a level of abstraction on top of the draw layer system, which is called the "UI layer" system. These are special draw layers which can return results in the update routine, which will cause the layer to be popped off the stack and the focus to return to the previous layer. UI layers also have some extra features for things like keybinding. Almost all interactive user interface components in OpenNefia are constructed in terms of UI layers.
 
 ### Data System
 
-One of the core principles of OpenNefia is that the average player should be able to easily extend the game's data. There's a wide variety of data types available, from important things like characters and items to more mundane ones like the kinds of seeds you can plant or the randomly generated equipment loadouts of generated monsters.
+One of the core principles of OpenNefia is that the average player should be able to easily extend the game's data. There's a wide variety of data types available, from important things like characters and items to more mundane ones like the kinds of seeds you can plant or the randomly generated equipment loadouts of new monsters.
 
 Game data is kept in one massive `data` table, shared by every mod. Mods can add new data prototypes and brand new types of data. These new types can then be extended by other mods in turn, keeping the ever-continuing cycle of modding and extension alive.
 
 ### Event System
 
-When declarative modification of game data isn't enough to achieve the desired behavior, the game's logic can be altered by inserting new pieces logic through an event system.
+When declarative modification of game data isn't enough to achieve a desired behavior, the game's logic can be altered by inserting new pieces logic through an event system.
 
-The event system is rather simple: there are a variety of different event types, and each event type can have many event callbacks registered for it. Each event callback gets its own *priority*, which affects the order in which the event can be run. Also, event callbacks can *block* the event callbacks that follow it, in order to change the flow of existing game logic.
+The event system is rather simple: there are a variety of different event types, and each event type can have one or more event callbacks registered for it. Each event callback gets its own *priority*, which affects the order in which the callback is run. Also, event callbacks can *block* the event callbacks that follow it, in order to change the flow of existing game logic.
 
-The usage of event callbacks is extremely common in the codebase, and are used to implement the majority of Elona's original logic in a way that is much more extensible than before, at the cost of somewhat decreased maintainability.
+The usage of event callbacks is extremely common in the codebase, and they implement the majority of Elona's original logic in a way that is much more extensible than before, at the cost of somewhat decreased maintainability.
 
 ## Codemap
 
@@ -96,7 +96,7 @@ Defines the vast majority of the base engine types, like characters and items. I
 
 Defines the base engine's config options. Config options are global to a single player profile and can be edited in the in-game settings menu. Of course, it's possible for mods to add their own config options as well.
 
-### `src/api/`
+### `src/api`
 
 This holds the public API of OpenNefia. Mods can use anything that's available in this folder (and conversely, cannot use things in `src/game` or `src/internal`).
 
@@ -104,7 +104,7 @@ This holds the public API of OpenNefia. Mods can use anything that's available i
 
 Generally speaking, when you think of `api/`, you should think of "a collection of functions that only reads from or writes to the state you pass in, and preferably doesn't mutate any state at all." When writing new code in OpenNefia, it's a good idea not to do things like ask for the current global map in the logic you write, since global state can become ambiguous at times (like when the player is entering a new map). Instead, you should do things like ask a character object passed as an argument to your function for the map they're currently living in, and use that in your computations instead.
 
-Also, when wanting to implement some new game logic, it's also preferable to create API modules that are called inside event callbacks instead of using stateful class instances. Classes in OpenNefia work best when used inside the UI subsystem, where nearly everything is already OO-based.
+Also, when wanting to implement some new game logic, it's preferable to create API modules that are called inside event callbacks instead of using stateful class instances. Classes in OpenNefia work best when used inside the UI subsystem, where nearly everything is already OO-based.
 
 ### `src/api/Draw.lua`
 
@@ -112,21 +112,21 @@ Contains functions for drawing primitive shapes to the screen. Most of these fun
 
 ### `src/api/InstancedMap.lua`
 
-This is the main data structure that holds everything in a map. Nearly all of the game's state is held in one of these at any given time.
+This is the main data structure that represents a game map. Nearly all of the game's state is held in one of these at any given time.
 
 OpenNefia is designed such that you can create new maps and operate on them as individual objects. This is different than in vanilla, where if you wanted to load a map it would have to replace the one currently loaded. This is useful for things like events that are triggered when transitioning from one map to another, since the objects in either map can both be accessed at the same time.
 
 ### `src/api/Chara.lua` / `src/api/Item.lua` / `src/api/Feat.lua` / `src/api/Mef.lua`
 
-Public interface for querying the four main types of game objects: characters, items, map features (feats) and map effects (mefs).
+Public interfaces for querying the four main types of game objects: characters, items, map features (feats) and map effects (mefs).
 
-The most important thing these APIs provide is a way of iterating all of the objects of the relevant type in the map. Their interface was designed to be consistent with one another, so if you frequently use a function like `Chara.is_alive()` to check if a reference points to a living character, you can expect that the corresponding `Item.is_alive()` function will also exist and serve much the same purpose.
+The most important thing these APIs provide is a way of iterating all of the objects of the relevant type in a map. Their interface was designed to be consistent with one another, so if you frequently use a function like `Chara.is_alive()` to check if a reference points to a living character, you can expect that the corresponding `Item.is_alive()` function will also exist and serve much the same purpose.
 
 ### `src/api/chara/IChara.lua` / `src/api/item/IItem.lua` / `src/api/feat/IFeat.lua` / `src/api/mef/IMef.lua`
 
-These interfaces hold the instance methods for instantiated game objects of the relevant types. They all derive from the `IMapObject` interface, which specifies some common functions for moving objects from one location to another (such as between different maps) and removing objects from the map.
+These interfaces hold the instance methods for instantiated game objects of the relevant types. They all include the `IMapObject` interface, which specifies some common functions for moving objects from one location to another (such as between different maps) and removing objects from the map.
 
-The "interface" terminology for parts of the API like this is somewhat of a misnomer. Interfaces in OpenNefia's OOP layer act more like mixins, since they can add extra state to the implementer. For example, `IIEventEmitter` is an interface which adds the ability for a game object to trigger event callbacks for an event type, passing in the object emitting the event as the main argument to the registered callbacks. But unlike interfaces in the purest OO sense, interfaces in OpenNefia can also add some extra state to the objects that implement them. In the case of `IIEventEmitter`, it holds data on event callbacks registered on that object individually, separate from the event callbacks that have been registered globally and will affect all objects that emit an event.
+The "interface" terminology for parts of the API like this is somewhat of a misnomer. Interfaces in OpenNefia's OOP layer act more like mixins, since they can add extra state to the implementer. For example, `IIEventEmitter` is an interface which adds the ability for a game object to trigger event callbacks for an event type, passing in the object emitting the event as the main argument to the registered callbacks. But unlike interfaces in the purest OO sense, interfaces in OpenNefia can also add some extra state to the objects that implement them. In the case of `IIEventEmitter`, it holds data on event callbacks registered on that object individually, separate from the event callbacks that have been registered globally and affect all objects that emit an event.
 
 ### `src/api/Event.lua`
 
@@ -172,7 +172,7 @@ However, my opinion is likely to change when the main focus of OpenNefia turns t
 
 ### `mod/<...>/internal/global.lua`
 
-A convention for declaring some state that's global to a mod. The modules generally just return a table with the appropriate fields that can be modified at will. These are generally used for state that needs to be shared between more than one API/internal module, but should *not* be associated with a save. One example where this is used is for the damage popups mod, where it holds the elapsed time for each popup and their position/font/color. New popups are added through an API module that appends a new entry to the state. This data is then read by a separate tile layer class to render the damage popups to the screen.
+A convention for declaring some state that's global to a mod. This module simply returns a table with the appropriate fields that can be modified at will. This is generally used for state that needs to be shared between more than one API/internal module, but should *not* be associated with a save. One example where this is used is for the damage popups mod, where it holds the elapsed time for each popup and their position/font/color. New popups are added through an API module that appends a new entry to the state. This data is then read by a separate tile layer class to render the damage popups to the screen.
 
 ### `mod/<...>/locale`
 
@@ -219,4 +219,4 @@ Refactoring OpenNefia to have no dependencies on the `elona` mod isn't very high
 
 ### Testing
 
-Tests are run by the `test` command found under `src/tools/cli`. The base engine tests are found under `src/test` and comprise parts of the public API. It is also possible for mods to add their own tests by putting them under a top-level `test/` folder. To accommodate differing mod dependencies, for each mod-provided test suite that gets run, the engine will reset all of its global state back to a clean start and rerun the mod loading process if necessary.
+Tests are run by the `test` command found under `src/tools/cli`. The base engine tests are found under `src/test` and comprise parts of the public API. It is also possible for mods to add their own tests by putting them under a top-level `test/` folder. To accommodate differing mod dependencies, for each mod-provided test suite that gets run, the engine will reset all of its global state back to a clean slate and rerun the mod loading process if necessary.
