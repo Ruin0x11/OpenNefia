@@ -156,6 +156,8 @@ The current convention is to put definitions for the base engine datatypes at th
 
 Holds event callbacks. Each file under this folder would usually be named after what parts of the game the event callbacks affect. So event callbacks that would affect how characters move around would be under `chara.lua`, events from automatically picking up items might be under `autopickup.lua`, and so on. However, there is of course no strictly enforced naming scheme.
 
+The *vast majority* of the actual logic for the game lives here, especially inside the `elona` mod.
+
 ### `mod/<...>/event/save.lua`
 
 Mods can have their own separate save data which gets serialized along with the base save data. For mods where save data is a concern, an event callback which initializes the save data to some safe default values should be added. This callback is usually found under `event/save.lua`, so you can easily find out what save data a mod has.
