@@ -51,7 +51,7 @@ data:add {
 
 data:add {
    _type = "elona_sys.inventory_group",
-   _id = "multidrop",
+   _id = "multi_drop",
 
    protos = {
       "elona.inv_drop",

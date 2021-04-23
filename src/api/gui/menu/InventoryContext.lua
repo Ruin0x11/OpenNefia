@@ -166,7 +166,7 @@ local function gen_default_sort(user_sort)
    end
 end
 
-function InventoryContext:init(proto, params)
+function InventoryContext:init(proto, params, ctxt_params)
    self.proto = proto
    self.input = InputHandler:new()
 
@@ -195,17 +195,19 @@ function InventoryContext:init(proto, params)
    self.ground_y = params.ground_y or nil
    self.params = {}
 
-   local passed_params = params.params or {}
+   local passed_params = ctxt_params or params.params or {}
 
    self.icon = (self.proto.icon or 0) + 1
-
-   if self.proto.keybinds then
-      self.input:bind_keys(self.proto.keybinds)
-   end
 
    if self.proto.params then
       for name, required_type in pairs(self.proto.params) do
          local val = passed_params[name]
+         local optional = false
+
+         if type(required_type) == "table" then
+            optional = required_type.optional
+            required_type = assert(required_type.type)
+         end
 
          local ok = type(val) == required_type
 
@@ -215,7 +217,7 @@ function InventoryContext:init(proto, params)
                and val:is_a(required_type)
          end
 
-         if not ok then
+         if not ok and not (optional and val == nil) then
             error(string.format("Inventory context expects parameter %s (%s) to be passed.", name, required_type))
          end
 
@@ -229,6 +231,9 @@ function InventoryContext:init(proto, params)
 end
 
 function InventoryContext:additional_keybinds()
+   if self.proto.keybinds then
+      return self.proto.keybinds(self)
+   end
    return {}
 end
 

@@ -46,12 +46,14 @@ local inv_examine = {
    _id = "inv_examine",
    elona_id = 1,
 
-   keybinds = {
-      mode2 = function(ctxt, item)
-         item.flags.no_drop = not item.flags.no_drop
-         print("nodrop toggle")
-      end
-   },
+   keybinds = function(ctxt)
+      return {
+         mode2 = function(wrapper, item)
+            -- item.flags.no_drop = not item.flags.no_drop
+            Gui.mes("TODO nodrop toggle")
+         end
+      }
+   end,
 
    sources = { "chara", "equipment", "ground" },
    shortcuts = true,
@@ -72,13 +74,16 @@ local inv_drop = {
    _id = "inv_drop",
    elona_id = 2,
 
-   keybinds = {
-      mode2 = function(ctxt, item)
-         if not ctxt.multi_drop then
-            ctxt.multi_drop = true
+   params = { is_multi_drop = { type = "boolean", optional = true } },
+   keybinds = function(ctxt)
+      return {
+         mode2 = function(wrapper)
+            if not ctxt.params.multi_drop then
+               wrapper:set_inventory_group("elona.multi_drop", "elona.inv_drop", { is_multi_drop = true })
+            end
          end
-      end
-   },
+      }
+   end,
 
    sources = { "chara" },
    icon = 8,
@@ -102,9 +107,9 @@ local inv_drop = {
    query_amount = true,
 
    on_select = function(ctxt, item, amount)
-      Action.drop(ctxt.chara, item, amount)
+      Action.drop(ctxt.chara, item, amount, ctxt.params.is_multi_drop)
 
-      if ctxt.multi_drop then
+      if ctxt.params.is_multi_drop then
          return "inventory_continue"
       end
 
@@ -115,7 +120,7 @@ local inv_drop = {
       -- TODO: Ensure this is always called in multi-drop by
       -- restricting the menus that can be switched to when it is
       -- active, or in some other way.
-      if ctxt.multi_drop then
+      if ctxt.params.is_multi_drop then
          return "turn_end"
       end
 

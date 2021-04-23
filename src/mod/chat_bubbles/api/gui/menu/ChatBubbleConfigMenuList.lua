@@ -97,7 +97,11 @@ local function gen_list(default, chara)
             default = 0,
             def = {
                min_value = 0,
-               max_value = 6
+               max_value = 6,
+               formatter = function(_id, value, index)
+                  local gender = chara:calc("gender")
+                  return I18N.get("chat_bubbles:ui.menu.config.options.talk_type.choices." .. gender .. "._" .. value)
+               end
             }
             -- <<<<<<<< oomSEST/src/southtyris.hsp:95836 			} ..
          },

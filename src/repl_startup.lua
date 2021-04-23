@@ -21,6 +21,7 @@ PlotViewer = require("mod.plot.api.PlotViewer")
 Weather = require("mod.elona.api.Weather")
 TreemapViewer = require("mod.treemap.api.gui.TreemapViewer")
 MapEdit = require("mod.elona.api.MapEdit")
+UiTestPrompt = require("mod.tools.api.UiTestPrompt")
 
 Log.set_level("info")
 

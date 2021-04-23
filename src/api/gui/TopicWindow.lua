@@ -11,8 +11,8 @@ function TopicWindow:init(frame_style, fill_style)
 end
 
 function TopicWindow:relayout(x, y, width, height)
-   width = math.max(width, 32)
-   height = math.max(height, 24)
+   width = width
+   height = height
 
    self.x = x
    self.y = y

@@ -125,7 +125,7 @@ function Autopickup.run_rule(chara, item, rule)
 
    local destroy = false
    if ops[Autopickup.OP.DESTROY_PROMPT] then
-      Gui.mes("autopickup.act.destroy.prompt", item:build_name())
+      Gui.mes("autopickup:act.destroy.prompt", item:build_name())
       Gui.update_screen()
       if Input.yes_no() then
          destroy = true
@@ -141,7 +141,7 @@ function Autopickup.run_rule(chara, item, rule)
          Gui.play_sound("base.crush1", item.x, item.y)
       end
       item:remove_ownership()
-      Gui.mes("autopickup.act.destroy.execute", item:build_name())
+      Gui.mes("autopickup:act.destroy.execute", item:build_name())
       return true
    end
 
@@ -151,7 +151,7 @@ function Autopickup.run_rule(chara, item, rule)
    end
 
    if ops[Autopickup.OP.PROMPT] then
-      Gui.mes("autopickup.act.pick_up.prompt", item:build_name())
+      Gui.mes("autopickup:act.pick_up.prompt", item:build_name())
       Gui.update_screen()
       if not Input.yes_no() then
          return true
