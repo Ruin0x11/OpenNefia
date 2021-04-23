@@ -21,6 +21,8 @@ local IItemGaroksHammer = require("mod.elona.api.aspect.IItemGaroksHammer")
 local IItemTextbook = require("mod.elona.api.aspect.IItemTextbook")
 local IItemBook = require("mod.elona.api.aspect.IItemBook")
 local IItemMusicDisc = require("mod.elona.api.aspect.IItemMusicDisc")
+local IItemPotion = require("mod.elona.api.aspect.IItemPotion")
+local IItemWell = require("mod.elona.api.aspect.IItemWell")
 
 data:add {
    _type = "elona.plant",
@@ -112,6 +114,13 @@ data:add {
       IItemTextbook,
       IItemBook,
       IItemBookOfRachel,
-      IItemMusicDisc
+      IItemMusicDisc,
+      [IItemPotion] = {
+         effects = {
+            { _id = "elona.effect_gain_potential", power = 100 },
+            { _id = "elona.mutation", power = 100 }
+         }
+      },
+      IItemWell
    }
 }

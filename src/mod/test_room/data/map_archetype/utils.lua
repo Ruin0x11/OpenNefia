@@ -58,7 +58,7 @@ function utils.roundup(tbl, x, y, width)
       i = i + 1
       max_y = math.max(max_y, y + ty)
    end
-   return x, max_y
+   return x, max_y + 2
 end
 
 return utils

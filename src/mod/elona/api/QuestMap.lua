@@ -23,6 +23,7 @@ local Filters = require("mod.elona.api.Filters")
 local Itemgen = require("mod.elona.api.Itemgen")
 local IFeat = require("api.feat.IFeat")
 local IChara = require("api.chara.IChara")
+local IItemWell = require("mod.elona.api.aspect.IItemWell")
 
 local QuestMap = {}
 
@@ -291,8 +292,9 @@ function QuestMap.generate_derived_hunt(map_archetype_id, create_cb)
    create_cb(map)
 
    for _, item in Item.iter(map) do
-      if item._id == "elona.well" or item._id == "elona.fountain" then
-         item.params.amount_remaining = item.params.amount_remaining - 10
+      local well = item:get_aspect(IItemWell)
+      if well then
+         well.water_amount = well.water_amount - 10
       end
       if item._id == "elona.safe" then
          item.params.chest_item_level = 0

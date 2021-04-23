@@ -37,10 +37,6 @@ function ElonaMagic.drink_potion(magic_id, power, item, params)
       curse_state = item:calc("curse_state")
    elseif triggered_by == "potion" then
       curse_state = item:calc("curse_state")
-      if chara:is_in_fov() then
-         Gui.play_sound("base.drink1", chara.x, chara.y)
-         Gui.mes("action.drink.potion", chara, item:build_name(1))
-      end
    elseif triggered_by == "potion_spilt" then
       -- pass
    end
@@ -70,82 +66,7 @@ function ElonaMagic.drink_potion(magic_id, power, item, params)
       Hunger.vomit(chara)
    end
 
-   if did_something then
-      return "turn_end"
-   else
-      return "player_turn_query"
-   end
-end
-
-local function proc_well_events(well, chara)
-   -- >>>>>>>> shade2/proc.hsp:1389 	p=rnd(100) ..
-   local event = Rand.rnd(100)
-   Log.error("TODO well")
-
-   if not chara:is_player() and Rand.one_in(15) then
-      -- Fall into well.
-      Gui.mes("action.drink.well.effect.falls.text", chara)
-      Gui.mes_c("action.drink.well.effect.falls.dialog", "SkyBlue", chara)
-      if SkillCheck.is_floating(chara) then
-         Gui.mes_c("action.drink.well.effect.falls.floats", chara)
-      else
-         chara:damage_hp(9999, "elona.well")
-      end
-   end
-
-   if well._id == "elona.holy_well" then
-      if Rand.one_in(2) then
-         Magic.cast("elona.wish")
-         return
-      end
-   end
-
-   if chara:is_player() then
-      Gui.mes("action.drink.well.effect.default")
-   end
-
-   if chara:is_player() then
-      chara.nutrition = chara.nutrition + 500
-   else
-      chara.nutrition = chara.nutrition + 4000
-   end
-
-   if well._id == "elona.holy_well" then
-      save.elona.holy_well_count = save.elona.holy_well_count - 1
-   else
-      well.params.count_1 = well.params.count_1 - Rand.rnd(3)
-      well.params.count_2 = well.params.count_2 + Rand.rnd(3)
-      if well.params.count_2 >= 20 then
-         Gui.mes("action.drink.well.completely_dried_up", well)
-         return "turn_end"
-      end
-   end
-   if well.params.count_1 < -5 then
-      Gui.mes("action.drink.well.dried_up", well)
-   end
-   return "turn_end"
-   -- <<<<<<<< shade2/proc.hsp:1462 	return true ..
-end
-
-function ElonaMagic.drink_well(item, params)
-   -- >>>>>>>> shade2/proc.hsp:1383 *drinkWell ..
-   local chara = params.chara
-   Gui.mes_c("TODO well", "Red")
-
-   -- if item.params.count_1 < -5 or item.params.count_2 >= 20
-   --    or (item._id == "elona.holy_well" and save.elona.holy_well_count <= 0)
-   -- then
-   --    Gui.mes("action.drink.well.is_dry", item)
-   --    return "turn_end"
-   -- end
-
-   -- local sep = item:separate()
-   -- Gui.play_sound("base.drink1", chara.x, chara.y)
-   -- Gui.mes("action.drink.well.draw", chara, item)
-   -- <<<<<<<< shade2/proc.hsp:1387 	tc=cc:ciBk=ci ..
-
-   -- return proc_well_events(sep, chara)
-   return "turn_end"
+   return did_something
 end
 
 --- @tparam IItem item

@@ -17,6 +17,7 @@ function Skill.iter_attributes()
 end
 
 function Skill.iter_base_attributes()
+   -- HACK
    return Skill.iter_attributes():filter(function(s) return s._id ~= "elona.stat_speed" and s._id ~= "elona.stat_luck" end)
 end
 

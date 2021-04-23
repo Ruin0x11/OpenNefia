@@ -7,6 +7,7 @@ local IItemThrowable = require("mod.elona.api.aspect.IItemThrowable")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local IItemReadable = require("mod.elona.api.aspect.IItemReadable")
 local IItemDippable = require("mod.elona.api.aspect.IItemDippable")
+local IItemDrinkable = require("mod.elona.api.aspect.IItemDrinkable")
 
 local function permit_item_actions(item)
    if item:get_aspect(IItemFood) then
@@ -31,6 +32,10 @@ local function permit_item_actions(item)
 
    if item:iter_aspects(IItemDippable):length() > 0 then
       item.can_dip_into = true
+   end
+
+   if item:iter_aspects(IItemDrinkable):length() > 0 then
+      item.can_drink = true
    end
 end
 Event.register("base.on_item_instantiated", "Permit item actions", permit_item_actions)
@@ -117,5 +122,23 @@ local function aspect_item_throwable(obj, params, result)
    return result
 end
 Event.register("elona_sys.on_item_throw", "Aspect: IItemThrowable", aspect_item_throwable)
+
+local function aspect_item_drinkable(obj, params, result)
+   local did_something
+
+   for _, aspect in obj:iter_aspects(IItemDrinkable) do
+      if aspect:on_drink(obj, params, result) then
+         did_something = true
+         -- break
+      end
+   end
+
+   if did_something then
+      return "turn_end"
+   end
+
+   return result
+end
+Event.register("elona_sys.on_item_drink", "Aspect: IItemDrinkable", aspect_item_drinkable)
 
 require("mod.elona.events.aspect.sand_bag")

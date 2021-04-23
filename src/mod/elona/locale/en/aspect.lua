@@ -74,6 +74,12 @@ return {
                title = function(s, no)
                   return ("%s of Rachel No.%s"):format(s, no)
                end
+            },
+            IItemPotion = {
+               action_name = "Potion"
+            },
+            IItemWell = {
+               action_name = "Well"
             }
          }
       }

@@ -1019,7 +1019,7 @@ data:add {
       Gui.mes_visible("magic.poison_attack", target)
       if target:calc("is_pregnant") then
          target:reset("is_pregnant", false)
-         Gui.mes_visible("common.melts_alien_children", target)
+         Gui.mes_visible("magic.common.melts_alien_children", target)
       end
 
       target:apply_effect("elona.poison", params.power)
