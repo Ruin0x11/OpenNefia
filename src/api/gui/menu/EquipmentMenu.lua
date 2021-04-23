@@ -135,7 +135,8 @@ function EquipmentMenu:show_item_description()
       return
    end
    local rest = self.pages:iter_all_pages():extract("item"):to_list()
-   ItemDescriptionMenu:new(item, rest):query()
+   local index = ItemDescriptionMenu:new(item, rest):query()
+   self.pages:select(index)
 end
 
 function EquipmentMenu.build_list(chara)

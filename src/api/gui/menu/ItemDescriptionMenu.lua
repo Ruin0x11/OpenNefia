@@ -181,7 +181,7 @@ end
 
 function ItemDescriptionMenu:update()
    if self.finished then
-      return true
+      return self.list_index, nil
    end
 
    self.win:update()
