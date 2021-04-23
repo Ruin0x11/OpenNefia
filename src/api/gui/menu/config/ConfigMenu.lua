@@ -40,8 +40,10 @@ end
 function ConfigMenu:relayout()
    self.width = self.config_menu.menu_width or 440
    self.height = self.config_menu.menu_height or 300
-   if self.list:len() > 8 then
-      self.height = self.height + 10 + 30 * (self.list:len() - 9)
+
+   local item_count = math.min(self.list:len(), self.list.model.page_size)
+   if item_count > 8 then
+      self.height = self.height + 10 + 30 * (item_count - 9)
    end
 
    self.x, self.y = Ui.params_centered(self.width, self.height)
@@ -50,6 +52,7 @@ function ConfigMenu:relayout()
    self.t = UiTheme.load(self)
 
    self.win:relayout(self.x, self.y, self.width, self.height)
+   self.win:set_pages(self.list.model)
    self.list:relayout(self.x + 56, self.y + 66)
 end
 
@@ -78,6 +81,9 @@ function ConfigMenu:update(dt)
    if self.list.chosen then
       self.list.chosen = nil
       return self.list:selected_item().menu
+   end
+   if self.list.changed then
+      self.win:set_pages(self.list.model)
    end
 
    self.win:update()

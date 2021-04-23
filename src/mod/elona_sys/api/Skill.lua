@@ -603,8 +603,6 @@ local function refresh_weight(chara)
       chara.inventory_weight_type = Enum.Burden.None
    end
 
-   print("IT", chara.inventory_weight_type, weight, max_weight, max_weight / 2)
-
    if config.base.debug_no_weight then
       chara.inventory_weight_type = Enum.Burden.None
    end

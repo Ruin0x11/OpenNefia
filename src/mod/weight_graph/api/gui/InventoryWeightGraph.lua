@@ -55,6 +55,8 @@ function InventoryWeightGraph:draw()
    local weight_max = self.weight_max
    if self.add == "add" then
       weight_max = math.max(weight_max, self.weight_current + self.weight_delta)
+   else
+      weight_max = math.max(weight_max, self.weight_current)
    end
 
    local bar_current = h * (self.weight_current / weight_max)

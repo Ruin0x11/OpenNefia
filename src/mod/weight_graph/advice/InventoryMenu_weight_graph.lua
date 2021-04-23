@@ -11,7 +11,7 @@ InventoryMenu_weight_graph.before = {}
 function InventoryMenu_weight_graph.after:init(...)
    local ext = Extend.get_or_create(self, "weight_graph")
 
-   ext.weight_graph = InventoryWeightGraph:new(config.weight_graph.position)
+   ext.weight_graph = InventoryWeightGraph:new(config.weight_graph.show_weight_graph)
    ext.enabled = false
 end
 
@@ -22,7 +22,7 @@ function InventoryMenu_weight_graph.after:relayout(...)
 
    local ext = Extend.get_or_create(self, "weight_graph")
    local weight_graph = ext.weight_graph
-   weight_graph.position = config.weight_graph.position
+   weight_graph.position = config.weight_graph.show_weight_graph
 
    if weight_graph.position == "left" then
       weight_graph:relayout(x - 40, y, 24, 416)
@@ -49,7 +49,7 @@ end
 
 function InventoryMenu_weight_graph.after:draw(...)
    local ext = Extend.get(self, "weight_graph")
-   if config.weight_graph.enabled and ext.enabled then
+   if config.weight_graph.show_weight_graph ~= "disabled" and ext.enabled then
       ext.weight_graph:draw()
    end
 end
@@ -71,7 +71,7 @@ function InventoryMenu_weight_graph.before:update(dt, ...)
    if proto_kind == nil or current_weight == nil or max_weight == nil then
       ext.enabled = false
    else
-      local burden = max_weight * 2
+      local burden = max_weight * 2 * 1.1
       local display = math.max(burden, current_weight)
 
       ext.enabled = true
@@ -87,7 +87,7 @@ function InventoryMenu_weight_graph.before:update(dt, ...)
 
       print(current_weight, max_weight, proto_kind, ext.enabled)
 
-   if config.weight_graph.enabled and ext.enabled then
+   if config.weight_graph.show_weight_graph ~= "disabled" and ext.enabled then
       ext.weight_graph:update(dt)
    end
 end

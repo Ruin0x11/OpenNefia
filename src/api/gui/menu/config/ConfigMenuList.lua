@@ -109,6 +109,14 @@ end
 
 function ConfigMenuList:change(item, delta)
    if item.menu then
+      if delta < 0 then
+         self:previous_page()
+         Gui.play_sound("base.pop1")
+      elseif delta > 0 then
+         self:next_page()
+         Gui.play_sound("base.pop1")
+      end
+
       return
    end
 
@@ -139,7 +147,7 @@ function ConfigMenuList:can_choose(item, i)
 end
 
 function ConfigMenuList:choose(i)
-   local item = self.model:get(i)
+   local item = self.model:get_current_page(i)
 
    if not item or not self:can_choose(item) then
       return
