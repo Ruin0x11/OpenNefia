@@ -6,6 +6,7 @@ local Assert = require("api.test.Assert")
 local Feat = require("api.Feat")
 local IFeat = require("api.feat.IFeat")
 
+disable("Flaky due to items blocking stairs, mean player is not placed directly on them (#297)")
 function test_map_entrance_sets_child_area_position()
    local north_tyris_area = Area.create_unique("elona.north_tyris", "root")
    local _, north_tyris_map = assert(north_tyris_area:load_or_generate_floor(north_tyris_area:starting_floor()))
