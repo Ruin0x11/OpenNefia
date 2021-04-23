@@ -401,7 +401,6 @@ local function play_map_music(map)
       Gui.play_music(music_id)
    end
 end
-
 Event.register("base.on_map_changed", "Play map music", play_map_music)
 
 local PlayerLightDrawable = require("api.gui.PlayerLightDrawable")

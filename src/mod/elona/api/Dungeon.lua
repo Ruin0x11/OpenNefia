@@ -1293,6 +1293,10 @@ function Dungeon.gen_type_puppy_cave(floor, params)
    end
 
    local try_place_door = function(x, y)
+      if x <= 0 or y <= 0 or x >= map:width()-1 or y >= map:height()-1 then
+         return
+      end
+
       if map:tile(x, y)._id ~= "elona.mapgen_tunnel" then
          return
       end
