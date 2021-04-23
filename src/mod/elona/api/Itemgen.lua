@@ -120,7 +120,7 @@ local function set_fltselect(categories, _type)
    table.remove_keys(categories, remove)
 
    if _type then
-      categories[#categories+1] = _type
+      categories[_type] = true
    end
 end
 
@@ -147,7 +147,7 @@ local function do_generate_item_id(params)
    local id = Itemgen.random_item_id_raw(params.level, params.categories)
 
    if id == nil then
-      if get_fltselect(params.categories) == "elona.unique_item" then
+      if params.categories["elona.unique_item"] then
          params.quality = Enum.Quality.Great
       end
       params.level = params.level + 10
@@ -155,7 +155,7 @@ local function do_generate_item_id(params)
       id = Itemgen.random_item_id_raw(params.level, params.categories)
    end
 
-   if id == nil and params.categories["elona.furniture_altar"] then
+   if id == nil and table.params.categories["elona.furniture_altar"] then
       id = "elona.scroll_of_change_material"
    end
 

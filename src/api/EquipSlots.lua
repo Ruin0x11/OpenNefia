@@ -3,6 +3,7 @@
 local ICloneable = require("api.ICloneable")
 local ILocation = require("api.ILocation")
 local IOwned = require("api.IOwned")
+local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 local MapObject = require("api.MapObject")
 local pool = require("internal.pool")
 local data = require("internal.data")
@@ -52,6 +53,10 @@ end
 function EquipSlots:find_free_slot(item, body_part_type)
    local pred
 
+   if not item:get_aspect(IItemEquipment) then
+      return nil
+   end
+
    if body_part_type then
       if not item:can_equip_at(body_part_type) then
          return nil
@@ -95,7 +100,13 @@ function EquipSlots:equip(obj, slot)
       return nil, "slot_out_of_range"
    end
 
-   if self.body_parts[slot].equipped then
+   local body_part = self.body_parts[slot]
+
+   if not obj:can_equip_at(body_part.type) then
+      return nil, "cannot_equip_at"
+   end
+
+   if body_part.equipped then
       return nil, "slot_is_occupied"
    end
 
@@ -109,7 +120,7 @@ function EquipSlots:equip(obj, slot)
    end
 
    self.equipped[obj.uid] = slot
-   self.body_parts[slot].equipped = obj.uid
+   body_part.equipped = obj.uid
 
    return obj
 end
