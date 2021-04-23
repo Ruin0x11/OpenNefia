@@ -336,10 +336,6 @@ function Tools.partition(tbl, key, extract)
    return fun.iter(g):map(function(k, v) return k, fun.iter(v):extract(extract):to_list() end):to_map()
 end
 
-function Tools.mkplayer(id)
-   return Chara.create(id or "base.player", nil, nil, {ownerless=true})
-end
-
 function Tools.print_map(map)
    map = map or Map.current()
    local res = "\n"
