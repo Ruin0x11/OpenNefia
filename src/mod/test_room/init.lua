@@ -60,7 +60,7 @@ local function on_game_start(self, player)
 
    Item.create("elona.putitoro", nil, nil, {}, player)
    Item.create("elona.rod_of_identify", nil, nil, {amount=10}, player)
-   Item.create("elona.stomafillia", nil, nil, {amount=1000}, player)
+   Item.create("elona.stomafillia", nil, nil, {amount=10}, player)
 
    player:heal_to_max()
 

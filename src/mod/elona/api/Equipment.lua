@@ -223,9 +223,6 @@ spec_kinds["elona.primary_weapon"] = function(spec, equip_spec, add_quality, cha
    for i = 1, MAX_TRIES do
       local item = default_spec_gen(spec, equip_spec, add_quality, chara, map)
       if item then
-      if item._id == "elona.monster_heart" or item._id == "elona.kumiromis_gem_stone_of_rejuvenation" or item._id == "elona.statue_of_lulwy" or item.quality == Enum.Quality.Unique then
-         pause()
-      end
          if spec.is_two_handed and item.weight < Const.WEAPON_WEIGHT_HEAVY and i < MAX_TRIES then
             item:remove_ownership()
          elseif spec.is_dual_wield and item.weight > Const.WEAPON_WEIGHT_LIGHT and i < MAX_TRIES then

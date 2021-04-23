@@ -82,7 +82,7 @@ local function play_default_map_music(map, _, music_id)
       music_id = choices[hour % 6 + 1]
    end
 
-   if music_id == nil or map:has_type("world_map") then
+   if map:has_type("world_map") then
       local choices = {
          "elona.field1",
          "elona.field2",

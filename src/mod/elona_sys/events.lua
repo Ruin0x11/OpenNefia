@@ -397,7 +397,7 @@ Event.register("base.on_chara_pass_turn", "Update character buffs", update_buffs
 
 local function play_map_music(map)
    local music_id = map:emit("elona_sys.calc_map_music", {}, map.music)
-   if data["base.music"][music_id] then
+   if music_id and data["base.music"][music_id] then
       Gui.play_music(music_id)
    end
 end

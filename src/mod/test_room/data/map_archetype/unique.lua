@@ -12,7 +12,11 @@ local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 
 local arc = {
    _type = "base.map_archetype",
-   _id = "test_room"
+   _id = "test_room",
+
+   properties = {
+      music = "elona.lonely"
+   }
 }
 
 function arc.on_map_renew_minor(map)
@@ -260,13 +264,13 @@ local test_room = {
 
    types = { "guild" },
    metadata = {
-      can_return_to = true
-   },
+      can_return_to = true,
+   }
 }
 
 function test_room.on_generate_floor(area, floor)
    local map = InstancedMap:new(50, 50)
-   map:set_archetype("test_room.test_room")
+   map:set_archetype("test_room.test_room", { set_properties = true })
    map:clear("elona.cobble")
    map.is_indoor = true
    map.name = "Test Room"
