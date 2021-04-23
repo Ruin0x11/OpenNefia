@@ -1,8 +1,6 @@
 # chat_bubbles
 
-Implements the chat bubble feature from omake overhaul modify. It hooks into the custom talk system to show a chat bubble for characters that speak.
-
-This feature was originally added in [omake overhaul modify](http://zeffi.web.fc2.com/oom_readme.html#N2016).
+Implements the [chat bubble feature](http://zeffi.web.fc2.com/oom_readme.html#N2016) from omake overhaul modify. It hooks into the custom talk system to show a chat bubble for characters that speak.
 
 ![Chat bubbles](./static/chat_bubbles.png)
 

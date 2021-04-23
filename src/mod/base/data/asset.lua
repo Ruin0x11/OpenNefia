@@ -1487,6 +1487,11 @@ local assets = {
       color = {235, 235, 235}
    },
    {
+      _id = "text_resist_grade_shadow",
+      type = "color",
+      color = {80, 60, 40}
+   },
+   {
       _id = "equip_slot_text_color_empty",
       type = "color",
       -- >>>>>>>> shade2/command.hsp:3587 			color 100,100,100 ...

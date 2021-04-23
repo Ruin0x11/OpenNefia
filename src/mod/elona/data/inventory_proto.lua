@@ -1492,7 +1492,7 @@ local inv_buy_small_medals = {
    show_money = true,
    window_title = "ui.inventory_command.buy",
    query_text = "ui.inv.title.buy",
-   window_detail_header = "ui.inv.buy.window.price",
+   window_detail_header = "ui.inv.trade_medals.window.medal",
 
    get_item_detail_text = function(name, item)
       return I18N.get("ui.inv.trade_medals.medal_value", Calc.calc_item_medal_value(item))

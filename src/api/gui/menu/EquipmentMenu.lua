@@ -7,6 +7,8 @@ local I18N = require("api.I18N")
 local Ui = require("api.Ui")
 local EquipRules = require("api.chara.EquipRules")
 local ICharaEquipStyle = require("api.chara.aspect.ICharaEquipStyle")
+local ResistanceLayout = require("api.gui.menu.inv.ResistanceLayout")
+local IInventoryMenuDetailView = require("api.gui.menu.inv.IInventoryMenuDetailView")
 
 local IInput = require("api.gui.IInput")
 local IPaged = require("api.gui.IPaged")
@@ -28,7 +30,7 @@ local UiListExt = function(equipment_menu)
    local E = {}
 
    function E:get_item_text(entry)
-      return entry.text
+      return entry.name
    end
    function E:get_item_color(entry)
       return entry.color
@@ -51,11 +53,12 @@ local UiListExt = function(equipment_menu)
    function E:draw_item_text(item_name, entry, i, x, y, x_offset, color)
       local subtext = entry.subtext
 
-      if entry.equipped then
-         equipment_menu.map_object_batch:add(entry.equipped, x + 12, y + 10, nil, nil, nil, true)
+      if entry.item then
+         equipment_menu.map_object_batch:add(entry.item, x + 12, y + 10, nil, nil, nil, true)
 
-         if equipment_menu.layout then
-            item_name, subtext = equipment_menu.layout:draw_row(entry.equipped, item_name, subtext, x, y)
+         if equipment_menu.detail_view then
+            equipment_menu.detail_view:draw_row(entry, i, x + 20, y)
+            item_name = utf8.wide_sub(item_name, 0, 22)
          end
       end
 
@@ -80,6 +83,8 @@ function EquipmentMenu:init(chara)
    self.win = UiWindow:new("ui.equip.title")
    self.pages = UiList:new_paged({}, 14)
    table.merge(self.pages, UiListExt(self))
+   self.detail_view = nil
+
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
    self.input:bind_keys(self:make_keymap())
@@ -97,6 +102,16 @@ end
 function EquipmentMenu:make_keymap()
    return {
       identify = function() self:show_item_description() end,
+      -- >>>>>>>> shade2/command.hsp:3179 	if key=key_mode{ ...
+      mode = function()
+         Gui.play_sound("base.pop1")
+         if self.detail_view then
+            self:set_detail_view(nil)
+         else
+            self:set_detail_view(ResistanceLayout:new())
+         end
+      end,
+      -- <<<<<<<< shade2/command.hsp:3182 		} ..
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end,
    }
@@ -111,7 +126,7 @@ function EquipmentMenu:selected_item_object()
    if selected == nil then
       return nil
    end
-   return selected.equipped
+   return selected.item
 end
 
 function EquipmentMenu:show_item_description()
@@ -119,7 +134,7 @@ function EquipmentMenu:show_item_description()
    if item == nil then
       return
    end
-   local rest = self.pages:iter_all_pages():extract("equipped"):to_list()
+   local rest = self.pages:iter_all_pages():extract("item"):to_list()
    ItemDescriptionMenu:new(item, rest):query()
 end
 
@@ -131,15 +146,15 @@ function EquipmentMenu.build_list(chara)
 
       entry.body_part = i.body_part
       entry.body_part_text = I18N.get("ui.body_part." .. i.body_part._id)
-      entry.equipped = nil
+      entry.item = nil
       entry.color = {10, 10, 10}
-      entry.text = "-    "
+      entry.name = "-    "
       entry.subtext = "-"
 
       if i.equipped then
-         entry.equipped = i.equipped
+         entry.item = i.equipped
          entry.color = i.equipped:calc_ui_color()
-         entry.text = i.equipped:build_name()
+         entry.name = i.equipped:build_name()
          entry.subtext = Ui.display_weight(i.equipped:calc("weight"))
       end
 
@@ -188,18 +203,43 @@ function EquipmentMenu:relayout()
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.pages:relayout(self.x + 88, self.y + 60, self.width, self.height)
    self.win:set_pages(self.pages)
+
+   if self.detail_view then
+      self.detail_view:relayout()
+   end
+end
+
+function EquipmentMenu:set_detail_view(detail_view)
+   if detail_view then
+      class.assert_is_an(IInventoryMenuDetailView, detail_view)
+   else
+      detail_view = nil
+   end
+
+   self.detail_view = detail_view
+
+   if self.detail_view then
+      self.detail_view:on_page_changed(self)
+      self.detail_view:relayout()
+   end
 end
 
 function EquipmentMenu:draw()
    self.win:draw()
 
-   Ui.draw_topic("Category/Name", self.x + 28, self.y + 30)
+   Ui.draw_topic("ui.equip.category_name", self.x + 28, self.y + 30)
+   if self.detail_view == nil then
+      Ui.draw_topic("ui.equip.weight", self.x + 524 + 50, self.y + 30)
+   end
 
    Draw.set_color(255, 255, 255)
    self.t.base.inventory_icons:draw_region(10, self.x + 46, self.y - 16)
    self.t.base.deco_wear_a:draw(self.x + self.width - 106, self.y)
    self.t.base.deco_wear_b:draw(self.x, self.y + self.height - 164)
 
+   if self.detail_view then
+      self.detail_view:draw_header(self.x + 50, self.y + 40)
+   end
    Ui.draw_note(self.text_equip_stats, self.x, self.y, self.width, self.height, 0)
 
    self.pages:draw()
@@ -257,6 +297,9 @@ function EquipmentMenu:update(dt)
    self.canceled = false
    self.win:update(dt)
    self.pages:update(dt)
+   if self.detail_view then
+      self.detail_view:update(dt)
+   end
 
    if canceled then
       return nil, "canceled"
@@ -266,16 +309,16 @@ function EquipmentMenu:update(dt)
       local slot = self.pages.selected
       local entry = self.pages:selected_item()
 
-      if entry.equipped then
-         local success, err = Action.unequip(self.chara, entry.equipped)
+      if entry.item then
+         local success, err = Action.unequip(self.chara, entry.item)
          self.changed_equipment = true
          if success then
             self:update_from_chara()
          else
             if err == "is_cursed" then
-               Gui.mes("ui.equip.cannot_be_taken_off", entry.equipped)
+               Gui.mes("ui.equip.cannot_be_taken_off", entry.item)
             else
-               Gui.mes("ui.equip.cannot_be_taken_off", entry.equipped)
+               Gui.mes("ui.equip.cannot_be_taken_off", entry.item)
             end
          end
       else
