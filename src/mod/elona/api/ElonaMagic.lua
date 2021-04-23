@@ -54,17 +54,6 @@ function ElonaMagic.drink_potion(magic_id, power, item, params)
    if result and item and chara:is_player() and result.obvious then
       Effect.identify_item(item, Enum.IdentifyState.Name)
    end
-   -- Event will be triggered globally if potion is consumed
-   -- through spilling, since there will be no item to pass
-   if class.is_an(IItem, item) then
-      item.amount = item.amount - 1
-   end
-
-   chara.nutrition = chara.nutrition + 150
-
-   if chara:is_in_player_party() and chara.nutrition > Const.HUNGER_THRESHOLD_BLOATED and Rand.one_in(5) then
-      Hunger.vomit(chara)
-   end
 
    return did_something
 end

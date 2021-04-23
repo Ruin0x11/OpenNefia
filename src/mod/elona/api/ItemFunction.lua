@@ -8,6 +8,7 @@ local Effect = require("mod.elona.api.Effect")
 local Calc = require("mod.elona.api.Calc")
 local Enum = require("api.Enum")
 local Itemgen = require("mod.elona.api.Itemgen")
+local Charagen = require("mod.elona.api.Charagen")
 
 local ItemFunction = {}
 
@@ -74,7 +75,7 @@ function ItemFunction.drink_from_well(item, chara)
             level = Calc.calc_object_level(chara:calc("level") * 3 / 2 + 3),
             quality = Calc.calc_object_quality(Enum.Quality.Normal)
          }
-         Itemgen.create(chara.x, chara.y, filter, map)
+         Charagen.create(chara.x, chara.y, filter, map)
       end
    elseif event > 33 then
       Magic.cast("elona.effect_gain_potential", { target = chara })

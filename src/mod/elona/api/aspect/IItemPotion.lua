@@ -2,6 +2,9 @@ local IAspect = require("api.IAspect")
 local IItemDrinkable = require("mod.elona.api.aspect.IItemDrinkable")
 local Gui = require("api.Gui")
 local ElonaMagic = require("mod.elona.api.ElonaMagic")
+local Const = require("api.Const")
+local Rand = require("api.Rand")
+local Hunger = require("mod.elona.api.Hunger")
 
 local IItemPotion = class.interface("IItemPotion",
                                   {
@@ -30,6 +33,14 @@ function IItemPotion:on_drink(item, params)
       local effect_id = assert(effect._id)
       local power = effect.power or 100
       did_something = did_something or ElonaMagic.drink_potion(effect_id, power, item, params)
+   end
+
+   item.amount = item.amount - 1
+
+   chara.nutrition = chara.nutrition + 150
+
+   if chara:is_in_player_party() and chara.nutrition > Const.HUNGER_THRESHOLD_BLOATED and Rand.one_in(5) then
+      Hunger.vomit(chara)
    end
 
    return "turn_end"
