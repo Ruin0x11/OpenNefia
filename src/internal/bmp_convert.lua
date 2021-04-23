@@ -1,6 +1,7 @@
 local binary_reader = require("internal.binary_reader")
 local Stopwatch = require("api.Stopwatch")
 local Env = require("api.Env")
+local Log = require("api.Log")
 
 local ffi, fs, vips, ok
 if jit then
@@ -188,12 +189,32 @@ local function convert_lua51(filepath, key_color)
 end
 
 
-local function remove_key_color(image, key_color)
-   if image:bands() == 4 then
-      key_color[4] = 0
+local function remove_key_color(vips_image, key_color)
+   if vips_image:bands() == 4 then
+      vips_image = vips_image:flatten()
    end
-   local alpha = image:equal(key_color):ifthenelse(0, 255):bandor()
-   return image:bandjoin(alpha)
+   key_color[4] = nil
+   local alpha = vips_image:equal(key_color):ifthenelse(0, 255):bandor()
+   return vips_image:bandjoin(alpha)
+end
+
+local function get_image_format(vips_image)
+   return "rgba8", 4
+end
+
+local function vips_to_love_image(vips_image, filename)
+   local image_format, pixel_size = get_image_format(vips_image)
+
+   local memory = vips_image:write_to_memory()
+   local memory_size = vips_image:width() * vips_image:height() * pixel_size
+   local str = ffi.string(memory, memory_size)
+
+   local image_data = love.image.newImageData(vips_image:width(),
+                                              vips_image:height(),
+                                              image_format,
+                                              str)
+
+   return love.graphics.newImage(image_data)
 end
 
 local function convert_luajit(filepath, key_color)
@@ -202,18 +223,11 @@ local function convert_luajit(filepath, key_color)
 
    if key_color then
       vips_image = remove_key_color(vips_image, key_color)
-   else
+   elseif vips_image:bands() == 3 then
       vips_image = vips_image:bandjoin_const(255)
    end
 
-   local buffer = vips_image:write_to_memory()
-   local str = ffi.string(buffer, vips_image:width() * vips_image:height() * 4)
-
-   local image_data = love.image.newImageData(vips_image:width(),
-                                              vips_image:height(),
-                                              "rgba8",
-                                              str)
-   return love.graphics.newImage(image_data)
+   return vips_to_love_image(vips_image)
 end
 
 if jit and vips then
