@@ -332,7 +332,7 @@ return {
             return ("%sは外せない。")
                :format(itemname(_1))
          end,
-         category = "部位",
+         category_name = "部位/装備品名称",
          damage_bonus = "ダメージ修正",
          equip_weight = "装備重量",
          fireproof = "熱",
@@ -349,20 +349,6 @@ return {
             _7 = "魅",
             _8 = "速",
             _9 = "運"
-         },
-         name = "装備品名称",
-         resist = {
-            _0 = "火",
-            _1 = "冷",
-            _10 = "魔",
-            _2 = "雷",
-            _3 = "闇",
-            _4 = "幻",
-            _5 = "毒",
-            _6 = "獄",
-            _7 = "音",
-            _8 = "神",
-            _9 = "沌"
          },
          title = "装備品",
          weight = "重さ",

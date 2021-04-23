@@ -155,7 +155,7 @@ local function do_generate_item_id(params)
       id = Itemgen.random_item_id_raw(params.level, params.categories)
    end
 
-   if id == nil and table.params.categories["elona.furniture_altar"] then
+   if id == nil and params.categories["elona.furniture_altar"] then
       id = "elona.scroll_of_change_material"
    end
 

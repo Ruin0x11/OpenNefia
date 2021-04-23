@@ -5,10 +5,11 @@ local I18N = require("api.I18N")
 local InventoryTargetEquipWindow = require("api.gui.menu.InventoryTargetEquipWindow")
 local Chara = require("api.Chara")
 local MapObjectBatch = require("api.draw.MapObjectBatch")
-local save = require("internal.global.save")
 local config = require("internal.config")
 local Shortcut = require("mod.elona.api.Shortcut")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
+local IInventoryMenuDetailView = require("api.gui.menu.inv.IInventoryMenuDetailView")
+local ResistanceLayout = require("api.gui.menu.inv.ResistanceLayout")
 
 local IInput = require("api.gui.IInput")
 local UiList = require("api.gui.UiList")
@@ -51,8 +52,9 @@ local UiListExt = function(inventory_menu)
    function E:draw_item_text(item_name, entry, i, x, y, x_offset, color)
       local detail_text = entry.detail_text
 
-      if inventory_menu.layout then
-         item_name, detail_text = inventory_menu.layout:draw_row(entry.item, item_name, detail_text, x, y)
+      if inventory_menu.detail_view then
+         inventory_menu.detail_view:draw_row(entry, i, x, y)
+         item_name = utf8.wide_sub(item_name, 0, 24)
       end
 
       UiList.draw_item_text(self, item_name, entry, i, x, y, x_offset, color)
@@ -83,7 +85,7 @@ function InventoryMenu:init(ctxt, returns_item)
    self.total_weight = 0
    self.max_weight = 0
    self.cargo_weight = 0
-   self.layout = nil -- ResistanceLayout:new()
+   self.detail_view = nil
    self.subtext_column = self.ctxt.proto.window_detail_header or "ui.inv.window.weight"
    self.is_drawing = true
    self.total_weight_text = ""
@@ -105,6 +107,16 @@ end
 
 function InventoryMenu:make_keymap()
    local keymap = {
+      -- >>>>>>>> shade2/command.hsp:4010 	if key=key_mode{ ...
+      mode = function()
+         Gui.play_sound("base.pop1")
+         if self.detail_view then
+            self:set_detail_view(nil)
+         else
+            self:set_detail_view(ResistanceLayout:new())
+         end
+      end,
+      -- <<<<<<<< shade2/command.hsp:4013 		} ..
       identify = function() self:show_item_description() end,
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end,
@@ -250,6 +262,25 @@ function InventoryMenu:relayout(x, y)
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.pages:relayout(self.x + 58, self.y + 60)
    self.win:set_pages(self.pages)
+
+   if self.detail_view then
+      self.detail_view:relayout()
+   end
+end
+
+function InventoryMenu:set_detail_view(detail_view)
+   if detail_view then
+      class.assert_is_an(IInventoryMenuDetailView, detail_view)
+   else
+      detail_view = nil
+   end
+
+   self.detail_view = detail_view
+
+   if self.detail_view then
+      self.detail_view:on_page_changed(self)
+      self.detail_view:relayout()
+   end
 end
 
 function InventoryMenu.filter_item(ctxt, item)
@@ -403,7 +434,7 @@ function InventoryMenu:draw()
    self.t.base.inventory_icons:draw_region(self.ctxt.icon, self.x + 46, self.y - 14)
 
    self.t.base.deco_inv_a:draw(self.x + self.width - 136, self.y - 6)
-   if self.layout == nil then
+   if self.detail_view == nil then
       self.t.base.deco_inv_b:draw(self.x + self.width - 186, self.y - 6)
    end
    self.t.base.deco_inv_c:draw(self.x + self.width - 246, self.y - 6)
@@ -412,6 +443,10 @@ function InventoryMenu:draw()
    Ui.draw_topic("ui.inv.window.name", self.x + 28, self.y + 30)
 
    Ui.draw_topic(self.subtext_column, self.x + 526, self.y + 30)
+
+   if self.detail_view then
+      self.detail_view:draw_header(self.x, self.y + 40)
+   end
 
    Ui.draw_note(self.total_weight_text, self.x, self.y, self.width, self.height, 0)
 
@@ -455,11 +490,17 @@ function InventoryMenu:update(dt)
    self.win:update(dt)
    self.pages:update(dt)
    self.target_equip:update(dt)
+   if self.detail_view then
+      self.detail_view:update(dt)
+   end
    self.result = nil
    self.canceled = nil
 
    if changed_page then
       self.win:set_pages(self)
+      if self.detail_view then
+         self.detail_view:on_page_changed(self)
+      end
    end
 
    if chosen then

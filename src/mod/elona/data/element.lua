@@ -8,10 +8,15 @@ local IMapObject = require("api.IMapObject")
 local IChara = require("api.chara.IChara")
 local Enum = require("api.Enum")
 
+local function order(elona_id)
+   return 100000 + elona_id * 10000
+end
+
 local element = {
    {
       _id = "fire",
       elona_id = 50,
+      ordering = order(50),
       color = { 255, 155, 155 },
       ui_color = { 150, 0, 0 },
       can_resist = true,
@@ -55,8 +60,10 @@ local element = {
    {
       _id = "cold",
       elona_id = 51,
+      ordering = order(51),
       color = { 255, 255, 255 },
       ui_color = { 0, 0, 150 },
+      can_resist = true,
       sound = "base.atk_ice",
       death_anim = "base.anim_elem_cold",
       rarity = 1,
@@ -76,6 +83,7 @@ local element = {
    {
       _id = "lightning",
       elona_id = 52,
+      ordering = order(52),
       color = { 255, 255, 175 },
       ui_color = { 150, 150, 0 },
       can_resist = true,
@@ -108,6 +116,7 @@ local element = {
    {
       _id = "darkness",
       elona_id = 53,
+      ordering = order(53),
       color = { 175, 175, 255 },
       ui_color = { 100, 80, 80 },
       can_resist = true,
@@ -125,6 +134,7 @@ local element = {
    {
       _id = "mind",
       elona_id = 54,
+      ordering = order(54),
       color = { 255, 195, 185 },
       ui_color = { 150, 100, 50 },
       can_resist = true,
@@ -141,8 +151,27 @@ local element = {
       end
    },
    {
+      _id = "poison",
+      elona_id = 55,
+      ordering = order(55),
+      color = { 175, 255, 175 },
+      ui_color = { 0, 150, 0 },
+      can_resist = true,
+      sound = "base.atk_poison",
+      death_anim = "base.anim_elem_poison",
+      rarity = 3,
+
+      on_damage = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1554 			if ele=rsResPoison	: dmgCon tc,conPoison,rnd(el ..
+         chara:apply_effect("elona.poison",
+                            Rand.rnd(params.element_power + 1))
+         -- <<<<<<<< shade2/chara_func.hsp:1554 			if ele=rsResPoison	: dmgCon tc,conPoison,rnd(el ..
+      end
+   },
+   {
       _id = "nether",
       elona_id = 56,
+      ordering = order(56),
       color = { 155, 154, 153 },
       ui_color = { 150, 50, 0 },
       can_resist = true,
@@ -175,25 +204,9 @@ local element = {
       end
    },
    {
-      _id = "poison",
-      elona_id = 55,
-      color = { 175, 255, 175 },
-      ui_color = { 0, 150, 0 },
-      can_resist = true,
-      sound = "base.atk_poison",
-      death_anim = "base.anim_elem_poison",
-      rarity = 3,
-
-      on_damage = function(chara, params)
-         -- >>>>>>>> shade2/chara_func.hsp:1554 			if ele=rsResPoison	: dmgCon tc,conPoison,rnd(el ..
-         chara:apply_effect("elona.poison",
-                            Rand.rnd(params.element_power + 1))
-         -- <<<<<<<< shade2/chara_func.hsp:1554 			if ele=rsResPoison	: dmgCon tc,conPoison,rnd(el ..
-      end
-   },
-   {
       _id = "sound",
       elona_id = 57,
+      ordering = order(57),
       color = { 235, 215, 155 },
       ui_color = { 50, 100, 150 },
       can_resist = true,
@@ -209,8 +222,28 @@ local element = {
       end
    },
    {
+      _id = "nerve",
+      elona_id = 58,
+      ordering = order(59),
+      color = { 155, 205, 205 },
+      ui_color = { 100, 150, 50 },
+      can_resist = true,
+      preserves_sleep = true,
+      sound = "base.atk_nerve",
+      death_anim = "base.anim_elem_nerve",
+      rarity = 3,
+
+      on_damage = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1551 			if ele=rsResNerve 	: dmgCon tc,conParalyze,rnd( ..
+         chara:apply_effect("elona.paralysis",
+                            Rand.rnd(params.element_power + 1))
+         -- <<<<<<<< shade2/chara_func.hsp:1551 			if ele=rsResNerve 	: dmgCon tc,conParalyze,rnd( ..
+      end
+   },
+   {
       _id = "chaos",
       elona_id = 59,
+      ordering = order(59),
       color = { 185, 155, 215 },
       ui_color = { 150, 0, 150 },
       can_resist = true,
@@ -245,26 +278,9 @@ local element = {
       end,
    },
    {
-      _id = "nerve",
-      elona_id = 58,
-      color = { 155, 205, 205 },
-      ui_color = { 100, 150, 50 },
-      can_resist = true,
-      preserves_sleep = true,
-      sound = "base.atk_nerve",
-      death_anim = "base.anim_elem_nerve",
-      rarity = 3,
-
-      on_damage = function(chara, params)
-         -- >>>>>>>> shade2/chara_func.hsp:1551 			if ele=rsResNerve 	: dmgCon tc,conParalyze,rnd( ..
-         chara:apply_effect("elona.paralysis",
-                            Rand.rnd(params.element_power + 1))
-         -- <<<<<<<< shade2/chara_func.hsp:1551 			if ele=rsResNerve 	: dmgCon tc,conParalyze,rnd( ..
-      end
-   },
-   {
       _id = "magic",
       elona_id = 60,
+      ordering = order(60),
       ui_color = { 150, 100, 100 },
       can_resist = true,
       rarity = 5,
@@ -281,6 +297,7 @@ local element = {
    {
       _id = "cut",
       elona_id = 61,
+      ordering = order(61),
 
       on_damage = function(chara, params)
          -- >>>>>>>> shade2/chara_func.hsp:1555 			if ele=rsResCut		: dmgCon tc,conBleed,rnd(eleP+ ..
@@ -292,6 +309,7 @@ local element = {
    {
       _id = "ether",
       elona_id = 62,
+      ordering = order(62),
 
       on_damage = function(chara)
          print("ether")
@@ -301,6 +319,7 @@ local element = {
       _id = "acid",
       color = { 175, 255, 175 },
       elona_id = 63,
+      ordering = order(63),
       sound = "base.atk_poison",
       death_anim = "base.anim_elem_poison",
 

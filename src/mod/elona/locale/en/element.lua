@@ -3,11 +3,13 @@ return {
       elona = {
          chaos = {
             description = "Resistance to chaos.",
-            name = "chaos"
+            name = "chaos",
+            short_name = "Ch"
          },
          cold = {
             description = "Resistance to cold.",
-            name = "cold"
+            name = "cold",
+            short_name = "Co"
          },
          cut = {
             description = "Resistance to cut.",
@@ -15,39 +17,48 @@ return {
          },
          darkness = {
             description = "Resistance to darkness.",
-            name = "darkness"
+            name = "darkness",
+            short_name = "Da"
          },
          fire = {
             description = "Resistance to fire.",
-            name = "fire"
+            name = "fire",
+            short_name = "Fi"
          },
          lightning = {
             description = "Resistance to lightning.",
-            name = "lightning"
+            name = "lightning",
+            short_name = "Li"
          },
          magic = {
             description = "Resistance to magic.",
-            name = "magic"
+            name = "magic",
+            short_name = "Ma"
          },
          mind = {
             description = "Resistance to mind.",
-            name = "mind"
+            name = "mind",
+            short_name = "Mi"
          },
          nerve = {
             description = "Resistance to nerve.",
-            name = "nerve"
+            name = "nerve",
+            short_name = "Nr"
          },
          nether = {
             description = "Resistance to nether.",
-            name = "nether"
+            name = "nether",
+            short_name = "Mt"
          },
          poison = {
             description = "Resistance to poison.",
-            name = "poison"
+            name = "poison",
+            short_name = "Po"
          },
          sound = {
             description = "Resistance to sound.",
-            name = "sound"
+            name = "sound",
+            short_name = "So"
          },
       }
    }
