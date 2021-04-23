@@ -35,7 +35,7 @@ function InstancedArea:has_type(ty)
    return self._types[ty] ~= nil
 end
 
-function InstancedArea:add_floor(map, floor)
+function InstancedArea:add_floor(map, floor, force)
    floor = floor or (self:deepest_floor() + 1)
 
    assert(class.is_an(InstancedMap, map))
@@ -141,11 +141,12 @@ function InstancedArea:load_floor(floor)
    return nil, map
 end
 
+--- Returns (ok, map_or_err, was_generated)
 function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
    assert(math.type(floor) == "integer")
    local ok, map = self:load_floor(floor)
    if ok then
-      return ok, map, false
+      return true, map, false
    end
 
    -- WARNING: Map.save() should always be called on the map this returns, or
@@ -155,7 +156,7 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
 
    if map_archetype_id == nil then
       if archetype == nil then
-         return false, "no_archetype"
+         return false, "no_archetype", false
       end
 
       if archetype.floors and archetype.floors[floor] then
@@ -168,6 +169,24 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
       is_first_generation = true
    }
 
+   ok, map = self:generate_map_for_floor(floor, map_archetype_id, params)
+   if not ok then
+      return false, map, false
+   end
+
+   self:add_floor(map, floor)
+
+   map:emit("base.on_generate_area_floor", {area=self, floor_number=floor, is_first_generation=params.is_first_generation})
+
+   Log.debug("Generated area %d's floor %d with map archetype %s", self.uid, floor, map._archetype)
+
+   return true, map, true
+end
+
+function InstancedArea:generate_map_for_floor(floor, map_archetype_id, params)
+   local archetype = self:archetype()
+   local map
+
    if map_archetype_id then
       map = MapArchetype.generate_map(map_archetype_id, self, floor, params)
    else
@@ -178,13 +197,8 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
    end
 
    assert(class.is_an(InstancedMap, map))
-   self:add_floor(map, floor)
 
-   map:emit("base.on_generate_area_floor", {area=self, floor_number=floor, is_first_generation=params.is_first_generation})
-
-   Log.debug("Generated area %d's floor %d with map archetype %s", self.uid, floor, map._archetype)
-
-   return true, map, true
+   return true, map
 end
 
 function InstancedArea:iter_child_areas(floor)

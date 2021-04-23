@@ -206,6 +206,41 @@ local function entrance_in_parent_map(map, area, parent_area, chara, prev)
    return { x = x + Rand.rnd(math.floor(index / 5) + 1), y = y + Rand.rnd(math.floor(index / 5) + 1) }
 end
 
+-- This should take place before things like StayingCharas, which is
+-- triggered in "base.on_map_leave".
+local function rebuild_map(map, params)
+   local map_uid = map.uid
+   Log.warn("About to regenerate map %s. (is_generated_every_time == true)", map_uid)
+
+   local area = Area.for_map(map)
+   if area == nil then
+      Log.error("Map must be in an area to regenerate it every time.")
+      return false, nil
+   end
+
+   local floor = assert(area:floor_of_map(map_uid))
+
+   local ok, new_map = area:generate_map_for_floor(floor)
+   if not ok then
+      local err = new_map
+      Log.error("Could not generate map for %s, floor %s: %s", area, floor, err)
+      return false, nil
+   end
+
+   new_map.uid = map_uid
+
+   -- Update the area_uid on the new map.
+   --
+   -- This is only safe because we know the new map is supposed to have the same
+   -- map UID as the old map, and because we're throwing away the old map
+   -- entirely. Otherwise we'd have to load the old map from disk and make sure
+   -- its area_uid property is updated.
+   new_map.area_uid = area.uid
+
+   Log.warn("Regenerated map %s.", map_uid)
+   return true, new_map
+end
+
 local function travel(start_pos_fn, set_prev_map)
    return function(self, params)
       local chara = params.chara
@@ -243,6 +278,13 @@ local function travel(start_pos_fn, set_prev_map)
             return "player_turn_query"
          end
 
+         if map.visit_times > 0 and map.is_generated_every_time then
+            local ok, new_map = rebuild_map(map, params)
+            if ok then
+               map = new_map
+            end
+         end
+
          local starting_pos
          local map_archetype = map:archetype()
 
@@ -276,6 +318,8 @@ local function travel(start_pos_fn, set_prev_map)
                      -- Assume there will be stairs in the connecting map, and if
                      -- not fall back to the archetype's declared map start
                      -- position.
+                     Log.warn("Did not find entrance in parent map for map %s, parent %s.", map.uid, parent_area)
+                     pause()
                      starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
                   end
                else

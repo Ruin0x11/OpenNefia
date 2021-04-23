@@ -27,7 +27,7 @@ local newline = true
 --- Refreshes and scrolls the screen and recalculates FOV.
 function Gui.update_screen(dt, and_draw)
    local sw
-   if Log.has_level("debug") then
+   if Log.has_level("trace") then
       sw = Stopwatch:new()
    end
 

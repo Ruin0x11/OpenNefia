@@ -523,7 +523,7 @@ end
 function field_logic.run_one_event(event, target_chara)
    local cb = nil
 
-   Log.debug("Turn event: %s (%s)", event, target_chara)
+   Log.trace("Turn event: %s (%s)", event, target_chara)
 
    if Chara.player() == nil then
       -- Something went wrong; at least boot the game back to the
