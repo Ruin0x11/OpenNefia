@@ -595,7 +595,7 @@ local function refresh_weight(chara)
       chara.inventory_weight_type = Enum.Burden.Max
    elseif weight > max_weight then
       chara.inventory_weight_type = Enum.Burden.Heavy
-   elseif weight > max_weight / 4 * 3  then
+   elseif weight > max_weight / 4 * 3 then
       chara.inventory_weight_type = Enum.Burden.Moderate
    elseif weight > max_weight / 2 then
       chara.inventory_weight_type = Enum.Burden.Light

@@ -99,7 +99,6 @@ function InventoryMenu:init(ctxt, returns_item)
    -- TODO
    -- self.pages:register("on_chosen", self.on_chosen)
    self.input:bind_keys(self:make_keymap())
-   self.input:bind_keys(self.ctxt:additional_keybinds())
 
    self:update_filtering(true)
 end
@@ -119,6 +118,10 @@ function InventoryMenu:make_keymap()
    end
 
    return keymap
+end
+
+function InventoryMenu:additional_keybinds()
+   return self.ctxt:additional_keybinds()
 end
 
 function InventoryMenu:on_query()

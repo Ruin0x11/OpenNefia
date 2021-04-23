@@ -21,6 +21,7 @@ function IconBar:set_data(icon_order)
    end
 
    self.icon_order = icon_order
+   self.redraw = true
 end
 
 function IconBar:relayout(x, y, width, height)

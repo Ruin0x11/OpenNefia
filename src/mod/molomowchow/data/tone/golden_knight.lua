@@ -2,6 +2,7 @@ data:add {
    _id = "golden_knight",
    _type = "base.tone",
 
+   author = "MoloMowChow",
    show_in_menu = true,
 
    texts = {

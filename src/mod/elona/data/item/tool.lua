@@ -30,7 +30,6 @@ data:add {
    image = "elona.item_alchemy_kit",
    value = 1960,
    weight = 900,
-   category = 59000,
    coefficient = 100,
    random_color = "Furniture",
 
@@ -51,7 +50,6 @@ data:add {
    image = "elona.item_sewing_kit",
    value = 780,
    weight = 500,
-   category = 59000,
    coefficient = 100,
    random_color = "Furniture",
 
@@ -72,7 +70,6 @@ data:add {
    image = "elona.item_carpenters_tool",
    value = 1250,
    weight = 500,
-   category = 59000,
    coefficient = 100,
    random_color = "Furniture",
 
@@ -93,8 +90,6 @@ _type = "base.item",
    image = "elona.item_rope",
    value = 180,
    weight = 340,
-   category = 59000,
-   subcategory = 64000,
    coefficient = 100,
    random_color = "Furniture",
 
@@ -125,7 +120,6 @@ data:add {
    image = "elona.item_pot",
    value = 150,
    weight = 15000,
-   category = 59000,
    coefficient = 100,
 
    categories = {
@@ -146,7 +140,6 @@ data:add {
    image = "elona.item_campfire",
    value = 1860,
    weight = 12000,
-   category = 59000,
    coefficient = 100,
 
    categories = {
@@ -170,7 +163,6 @@ data:add {
    image = "elona.item_portable_cooking_tool",
    value = 1860,
    weight = 1200,
-   category = 59000,
    coefficient = 100,
 
    categories = {
@@ -191,7 +183,6 @@ data:add {
    image = "elona.item_fishing_pole",
    value = 1200,
    weight = 2400,
-   category = 59000,
    coefficient = 100,
 
    categories = {
@@ -210,7 +201,6 @@ data:add {
    image = "elona.item_gem_cutter",
    value = 2000,
    weight = 500,
-   category = 59000,
    coefficient = 100,
    random_color = "Furniture",
 
@@ -232,7 +222,6 @@ data:add {
    value = 1200,
    weight = 250,
    on_use = function() end,
-   category = 59000,
    coefficient = 100,
 
    elona_function = 5,
@@ -249,7 +238,6 @@ data:add {
    image = "elona.item_playback_disc",
    value = 1000,
    weight = 500,
-   category = 59000,
    rarity = 1500000,
    coefficient = 100,
 
@@ -275,7 +263,6 @@ data:add {
    weight = 12500,
    on_use = function() end,
    level = 5,
-   category = 59000,
    rarity = 200000,
    coefficient = 100,
 
@@ -306,7 +293,6 @@ data:add {
       return "player_turn_query"
    end,
    fltselect = 1,
-   category = 59000,
    coefficient = 100,
 
    elona_function = 8,
@@ -327,7 +313,6 @@ data:add {
    value = 2400,
    weight = 800,
    charge_level = 12,
-   category = 59000,
    rarity = 500000,
    coefficient = 0,
 
@@ -351,7 +336,6 @@ data:add {
    value = 2400,
    weight = 800,
    charge_level = 12,
-   category = 59000,
    rarity = 500000,
    coefficient = 0,
 
@@ -375,7 +359,6 @@ data:add {
    value = 1000,
    weight = 500,
    on_use = function() end,
-   category = 59000,
    rarity = 200000,
    coefficient = 100,
 
@@ -397,7 +380,6 @@ data:add {
    image = "elona.item_kitty_bank",
    value = 1400,
    weight = 500,
-   category = 59000,
    rarity = 300000,
    coefficient = 100,
 
@@ -419,7 +401,6 @@ data:add {
    image = "elona.item_torch",
    value = 200,
    weight = 150,
-   category = 59000,
    coefficient = 100,
 
    elona_function = 13,
@@ -447,7 +428,6 @@ data:add {
    image = "elona.item_house_board",
    value = 3500,
    weight = 1200,
-   category = 59000,
    rarity = 50000,
    coefficient = 100,
 
@@ -472,7 +452,6 @@ data:add {
    charge_level = 4,
    on_use = function() end,
    level = 5,
-   category = 59000,
    rarity = 100000,
    coefficient = 0,
 
@@ -494,7 +473,6 @@ data:add {
    value = 2500,
    weight = 5000,
    on_use = function() end,
-   category = 59000,
    rarity = 5000,
    coefficient = 0,
 
@@ -530,7 +508,6 @@ data:add {
    image = "elona.item_leash",
    value = 1200,
    weight = 1200,
-   category = 59000,
    rarity = 500000,
    coefficient = 0,
 
@@ -595,7 +572,6 @@ data:add {
    weight = 9800,
    on_use = function() end,
    level = 10,
-   category = 59000,
    rarity = 250000,
    coefficient = 0,
 
@@ -616,7 +592,6 @@ data:add {
    image = "elona.item_lockpick",
    value = 800,
    weight = 400,
-   category = 59000,
    rarity = 2000000,
    coefficient = 0,
    categories = {
@@ -633,7 +608,6 @@ data:add {
    weight = 400,
    level = 20,
    fltselect = 2,
-   category = 59000,
    rarity = 10000,
    coefficient = 100,
 
@@ -652,7 +626,6 @@ data:add {
    image = "elona.item_unicorn_horn",
    value = 8000,
    weight = 2000,
-   category = 59000,
    rarity = 40000,
    coefficient = 0,
 
@@ -675,7 +648,6 @@ data:add {
    value = 100000,
    weight = 15000,
    fltselect = 3,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
    originalnameref2 = "statue",
@@ -698,7 +670,6 @@ data:add {
    value = 100000,
    weight = 14000,
    fltselect = 3,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
    originalnameref2 = "statue",
@@ -755,7 +726,6 @@ data:add {
    on_use = function() end,
    level = 10,
    fltselect = 3,
-   category = 59000,
    rarity = 250000,
    coefficient = 0,
 
@@ -776,7 +746,6 @@ data:add {
    value = 5000,
    weight = 1000,
    fltselect = 3,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
 
@@ -799,7 +768,6 @@ data:add {
    value = 50000,
    weight = 1200,
    fltselect = 3,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
    originalnameref2 = "Lulwy's gem stone",
@@ -827,7 +795,6 @@ data:add {
    value = 50000,
    weight = 1200,
    fltselect = 3,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
    originalnameref2 = "Jure's gem stone",
@@ -855,7 +822,6 @@ data:add {
    value = 50000,
    weight = 1200,
    fltselect = 3,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
    originalnameref2 = "Kumiromi's gem stone",
@@ -881,7 +847,6 @@ data:add {
    value = 50000,
    weight = 1200,
    fltselect = 3,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
    originalnameref2 = "gem stone",
@@ -909,7 +874,6 @@ data:add {
    value = 20000,
    weight = 25000,
    level = 15,
-   category = 59000,
    rarity = 10000,
    coefficient = 100,
 
@@ -927,7 +891,6 @@ data:add {
    image = "elona.item_monster_ball",
    value = 4500,
    weight = 1400,
-   category = 59000,
    rarity = 400000,
    coefficient = 100,
 
@@ -944,7 +907,6 @@ data:add {
    value = 100000,
    weight = 12000,
    fltselect = 3,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
    originalnameref2 = "statue",
@@ -966,7 +928,6 @@ data:add {
    image = "elona.item_iron_maiden",
    value = 7500,
    weight = 26000,
-   category = 59000,
    rarity = 5000,
    coefficient = 100,
 
@@ -1003,7 +964,6 @@ data:add {
    image = "elona.item_guillotine",
    value = 5000,
    weight = 22000,
-   category = 59000,
    rarity = 5000,
    coefficient = 100,
 
@@ -1040,7 +1000,6 @@ data:add {
    image = "elona.item_monster_ball",
    value = 10,
    weight = 3000,
-   category = 59000,
    rarity = 400000,
    coefficient = 100,
 
@@ -1092,7 +1051,6 @@ data:add {
    image = "elona.item_deck",
    value = 2200,
    weight = 20,
-   category = 59000,
    rarity = 20000,
    coefficient = 0,
 
@@ -1110,7 +1068,6 @@ data:add {
    image = "elona.item_whistle",
    value = 1400,
    weight = 20,
-   category = 59000,
    rarity = 75000,
    coefficient = 0,
 
@@ -1128,7 +1085,6 @@ data:add {
    image = "elona.item_gemstone",
    value = 6800,
    weight = 1200,
-   category = 59000,
    rarity = 1000,
    coefficient = 100,
    originalnameref2 = "secret experience",
@@ -1151,7 +1107,6 @@ data:add {
    value = 6800,
    weight = 1200,
    fltselect = 1,
-   category = 59000,
    rarity = 1000,
    coefficient = 100,
    originalnameref2 = "secret experience",
@@ -1174,7 +1129,6 @@ data:add {
    value = 100000,
    weight = 12000,
    fltselect = 3,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
    originalnameref2 = "statue",
@@ -1196,7 +1150,6 @@ data:add {
    image = "elona.item_sand_bag",
    value = 4800,
    weight = 8500,
-   category = 59000,
    rarity = 10000,
    coefficient = 100,
 
@@ -1263,7 +1216,6 @@ data:add {
    value = 50000,
    weight = 1200,
    fltselect = 1,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
    originalnameref2 = "plank",
@@ -1290,7 +1242,6 @@ data:add {
    value = 50000,
    weight = 1200,
    fltselect = 1,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
 
@@ -1316,7 +1267,6 @@ data:add {
    value = 50000,
    weight = 1200,
    fltselect = 1,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
 
@@ -1342,7 +1292,6 @@ data:add {
    value = 50000,
    weight = 1200,
    fltselect = 1,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
 
@@ -1368,7 +1317,6 @@ data:add {
    value = 4500,
    weight = 7500,
    on_use = function() end,
-   category = 59000,
    rarity = 20000,
    coefficient = 0,
 
@@ -1388,7 +1336,6 @@ data:add {
    image = "elona.item_statue_of_creator",
    value = 50,
    weight = 15000,
-   category = 59000,
    rarity = 800000,
    coefficient = 0,
    originalnameref2 = "statue",
@@ -1408,7 +1355,6 @@ data:add {
    value = 75000,
    weight = 5000,
    fltselect = 3,
-   category = 59000,
    rarity = 5000,
    coefficient = 0,
 
@@ -1435,7 +1381,6 @@ data:add {
    value = 100000,
    weight = 15000,
    fltselect = 3,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
    originalnameref2 = "statue",
@@ -1458,7 +1403,6 @@ data:add {
    value = 100000,
    weight = 15000,
    fltselect = 3,
-   category = 59000,
    rarity = 800000,
    coefficient = 100,
    originalnameref2 = "statue",
@@ -1484,8 +1428,6 @@ data:add {
    image = "elona.item_pot_for_testing",
    value = 1000,
    weight = 500,
-   category = 59000,
-   subcategory = 59500,
    coefficient = 100,
    random_color = "Furniture",
 
@@ -1506,8 +1448,6 @@ data:add {
    image = "elona.item_frying_pan_for_testing",
    value = 1000,
    weight = 500,
-   category = 59000,
-   subcategory = 59500,
    coefficient = 100,
    random_color = "Furniture",
 

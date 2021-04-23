@@ -148,15 +148,16 @@ end
 --- @tparam IChara chara
 --- @tparam IItem item
 --- @tparam[opt] int amount
+--- @tparam[opt] boolean is_multi_drop
 --- @treturn bool success
-function Action.drop(chara, item, amount)
+function Action.drop(chara, item, amount, is_multi_drop)
    if item == nil then
       return nil
    end
 
    local dropped = chara:drop_item(item, amount)
    if dropped then
-      dropped:emit("base.on_drop_item", {chara=chara,amount=amount})
+      dropped:emit("base.on_drop_item", {chara=chara,amount=amount,is_multi_drop=is_multi_drop})
       dropped:stack()
       Gui.mes("action.drop.execute", item:build_name(amount))
       Gui.play_sound("base.drop1", chara.x, chara.y)

@@ -42,7 +42,7 @@ function ChatBubbleLayer:update(map, dt, screen_updated)
          end
       end
 
-      -- v.frame = v.frame + dt * 1000
+      v.frame = v.frame + dt * 1000
       if v.frame > max_frame then
          global.chat_bubbles[uid] = nil
       end
@@ -52,7 +52,6 @@ end
 
 function ChatBubbleLayer.draw_chat_bubble(x, y, text, tw, th, bubble_color, text_color, curve, edge, kind)
    curve = math.floor(math.clamp(curve, 0, th / 2 - 2))
-
    edge = math.floor(math.clamp(edge, 0, th / 2))
 
    local vt = {}

@@ -193,6 +193,7 @@ local function default_spec_gen(spec, equip_spec, add_quality, chara, map)
       }
       return Itemgen.create(nil, nil, filter, chara)
    else
+      assert(spec._id)
       return Item.create(spec._id, nil, nil, {}, chara)
    end
    -- <<<<<<<< shade2/chara.hsp:196 		} ..
@@ -222,6 +223,9 @@ spec_kinds["elona.primary_weapon"] = function(spec, equip_spec, add_quality, cha
    for i = 1, MAX_TRIES do
       local item = default_spec_gen(spec, equip_spec, add_quality, chara, map)
       if item then
+      if item._id == "elona.monster_heart" or item._id == "elona.kumiromis_gem_stone_of_rejuvenation" or item._id == "elona.statue_of_lulwy" or item.quality == Enum.Quality.Unique then
+         pause()
+      end
          if spec.is_two_handed and item.weight < Const.WEAPON_WEIGHT_HEAVY and i < MAX_TRIES then
             item:remove_ownership()
          elseif spec.is_dual_wield and item.weight > Const.WEAPON_WEIGHT_LIGHT and i < MAX_TRIES then
@@ -333,7 +337,7 @@ function Equipment.apply_equipment_spec(chara, equip_spec, gen_chance, add_quali
                   -- The item ought to be compatible with this body part, or
                   -- we're being weird.
                   if not chara:equip_item(item, true, entry.slot) then
-                     Log.error("Could not equip generated equipment for body part %s on %s", entry.body_part._id, chara._id)
+                     Log.error("Could not equip generated equipment for body part %s, spec %s on %s: %s\n%s", entry.body_part._id, spec_id, chara._id, item._id, inspect(spec))
                      item:remove_ownership()
                   end
                   break

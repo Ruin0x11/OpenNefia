@@ -36,7 +36,25 @@ function InventoryWrapper:init(proto_id, params, returns_item, group_id)
    self.submenu = nil
    self.icon_bar = IconBar:new("inventory_icons")
 
-   if group_id then
+   self:set_inventory_group(group_id, proto_id)
+end
+
+function InventoryWrapper:make_keymap()
+   return {
+      previous_page = function() self:previous_menu() end,
+      next_page = function() self:next_menu() end,
+      raw_ctrl_tab = function() self:previous_menu() end,
+      raw_tab = function() self:next_menu() end,
+   }
+end
+
+function InventoryWrapper:set_inventory_group(group_id, proto_id, ctxt_params)
+   if group_id == nil then
+      self.group = nil
+      self.proto_id = proto_id
+      self.menu_count = 0
+      self.selected_index = 1
+   else
       self.group = data["elona_sys.inventory_group"]:ensure(group_id)
 
       local icon_order = fun.iter(self.group.protos)
@@ -57,6 +75,7 @@ function InventoryWrapper:init(proto_id, params, returns_item, group_id)
       if proto_id == nil then
          proto_id = self.group.protos[1]
       end
+      self.proto_id = proto_id
 
       self.selected_index = fun.iter(self.group.protos):index(proto_id)
       if self.selected_index == nil then
@@ -65,18 +84,7 @@ function InventoryWrapper:init(proto_id, params, returns_item, group_id)
       end
    end
 
-   self.proto_id = proto_id
-
-   self:switch_context()
-end
-
-function InventoryWrapper:make_keymap()
-   return {
-      previous_page = function() self:previous_menu() end,
-      next_page = function() self:next_menu() end,
-      raw_ctrl_tab = function() self:previous_menu() end,
-      raw_tab = function() self:next_menu() end,
-   }
+   self:switch_context(ctxt_params)
 end
 
 function InventoryWrapper:next_menu()
@@ -105,18 +113,34 @@ function InventoryWrapper:previous_menu()
    self:switch_context()
 end
 
-function InventoryWrapper:switch_context()
+function InventoryWrapper:switch_context(ctxt_params)
    if self.group then
       self.proto_id = self.group.protos[self.selected_index]
    end
    local proto = data["elona_sys.inventory_proto"]:ensure(self.proto_id)
 
-   local ctxt = InventoryContext:new(proto, self.params)
+   local ctxt = InventoryContext:new(proto, self.params, ctxt_params or nil)
    self.submenu = InventoryMenu:new(ctxt, self.returns_item)
+
+   self.input:bind_keys(self:make_keymap())
+   local keybinds = self.submenu:additional_keybinds()
+   if keybinds then
+      for key, fn in pairs(keybinds) do
+         keybinds[key] = function(...)
+            return fn(self, ...)
+         end
+      end
+      self.input:bind_keys(keybinds)
+   end
+
    self.input:forward_to(self.submenu)
 
    if self.group then
       self.icon_bar:select(self.selected_index)
+   end
+
+   if self.group then
+      self.icon_bar:relayout(self.width - (44 * self.menu_count + 60), 34, 44 * self.menu_count + 40, 22)
    end
 
    self.submenu:relayout(self.x, self.y, self.width, self.height)

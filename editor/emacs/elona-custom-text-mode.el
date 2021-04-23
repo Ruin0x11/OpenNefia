@@ -41,13 +41,15 @@
   (rx "from " (group (+? nonl)) (or " " eol) (? "as " (group (1+ nonl)))))
 
 (defvar elona-custom-text-font-lock-keywords
-  `(("^\\(%\\)\\(txt.*\\),\\(.*\\)"
+  `(("^\\(%\\)\\(txt[^,]*\\),\\(.*\\)"
      (1 font-lock-keyword-face)
      (2 font-lock-function-name-face)
-     (3 font-lock-constant-face))
+     ;; (3 font-lock-constant-face)
+     )
+    ("%END" (0 font-lock-keyword-face))
     ("^.*$"
      (0 font-lock-string-face))
-    ("\\({.*}\\)"
+    ("\\({.*?}\\)"
      (1 font-lock-constant-face t))
     )
   "Default `font-lock-keywords' for `elona-custom-text mode'.")

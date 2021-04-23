@@ -36,6 +36,10 @@ function PagedListModel:get(i)
    return self.model:get(i)
 end
 
+function PagedListModel:get_current_page(i)
+   return self:get((i - 1) % self.page_size + 1)
+end
+
 function PagedListModel:iter()
    return self.model:iter()
 end
