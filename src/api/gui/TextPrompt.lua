@@ -23,7 +23,7 @@ TextPrompt:delegate("input", IInput)
 --- val(5): maximum number
 function TextPrompt:init(length, can_cancel, limit_length, autocenter, y_offset, initial_text, shadow)
    self.length = length or 16
-   self.width = self.length * 16 + 60
+   self.width = math.max(16 * 16 + 60, utf8.wide_len(self.length) * 8) + 10
    self.height = 36
    self.can_cancel = can_cancel
    if can_cancel == nil then self.can_cancel = true end

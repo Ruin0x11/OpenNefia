@@ -10,7 +10,7 @@ local Wish = {}
 --- Queries the player for a wish and grants it.
 function Wish.query_wish()
    Gui.mes_c("wish.what_do_you_wish_for", "Yellow")
-   local wish = Input.query_text(16, false, false)
+   local wish = Input.query_text(32, false, false)
 
    Gui.mes(I18N.quote_speech(I18N.get("wish.your_wish", wish)))
 
