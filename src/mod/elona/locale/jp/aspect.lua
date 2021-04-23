@@ -74,6 +74,12 @@ return {
                title = function(s, no)
                   return ("第%s巻目の%s"):format(no, s)
                end
+            },
+            IItemPotion = {
+               action_name = "ポーション"
+            },
+            IItemWell = {
+               action_name = "井戸"
             }
          }
       }

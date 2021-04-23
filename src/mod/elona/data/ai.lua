@@ -8,6 +8,8 @@ local AiUtil = require("mod.elona.api.AiUtil")
 local Log = require("api.Log")
 local Itemgen = require("mod.elona.api.Itemgen")
 local Skill = require("mod.elona_sys.api.Skill")
+local IItemWell = require("mod.elona.api.aspect.IItemWell")
+local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 local Action = require("api.Action")
 local Item = require("api.Item")
@@ -218,7 +220,8 @@ local function do_eat_ally(chara, _, result)
    local item = Item.at(chara.x, chara.y, chara:current_map()):nth(1)
    if item then
       if chara.nutrition <= Const.ALLY_HUNGER_THRESHOLD then
-         if item:has_category("elona.food")
+         local food = item:get_aspect(IItemFood)
+         if food
             and item:calc("own_state") <= Enum.OwnState.None
             and item:calc("curse_state") >= Enum.CurseState.Normal
          then
@@ -226,11 +229,11 @@ local function do_eat_ally(chara, _, result)
             return true
          end
 
-         if item:has_category("elona.furniture_well")
+         local well = item:get_aspect(IItemWell)
+         if well
             and item:calc("own_state") <= Enum.OwnState.NotOwned
-            and item.params.amount_remaining >= -5
-            and item.params.amount_dryness < 20
-            and item._id ~= "elona.holy_well"
+            and not well:is_dry(item)
+            and well:ai_drinks_from(item)
          then
             ElonaAction.drink(chara, item)
             return true

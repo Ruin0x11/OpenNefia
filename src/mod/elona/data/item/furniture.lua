@@ -11,6 +11,9 @@ local ElonaMagic = require("mod.elona.api.ElonaMagic")
 local Item = require("api.Item")
 local Enum = require("api.Enum")
 local IItemCookingTool = require("mod.elona.api.aspect.IItemCookingTool")
+local IItemWell = require("mod.elona.api.aspect.IItemWell")
+local ItemWellAspect = require("mod.elona.api.aspect.ItemWellAspect")
+local ItemHolyWellAspect = require("mod.elona.api.aspect.ItemHolyWellAspect")
 
 --
 -- Furniture
@@ -23,7 +26,6 @@ data:add {
    image = "elona.item_round_chair",
    value = 80,
    weight = 900,
-   category = 60000,
    coefficient = 100,
 
    elona_function = 44,
@@ -41,7 +43,6 @@ data:add {
    value = 1800,
    weight = 10200,
    level = 12,
-   category = 60000,
    rarity = 600000,
    coefficient = 100,
    categories = {
@@ -57,7 +58,6 @@ data:add {
    value = 6400,
    weight = 8900,
    level = 20,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -72,7 +72,6 @@ data:add {
    image = "elona.item_rag_doll",
    value = 240,
    weight = 350,
-   category = 60000,
    coefficient = 100,
 
    elona_function = 44,
@@ -92,7 +91,6 @@ data:add {
    image = "elona.item_noble_toy",
    value = 320,
    weight = 320,
-   category = 60000,
    coefficient = 100,
    random_color = "Furniture",
    categories = {
@@ -108,7 +106,6 @@ data:add {
    value = 2400,
    weight = 6800,
    level = 7,
-   category = 60000,
    rarity = 400000,
    coefficient = 100,
    random_color = "Furniture",
@@ -126,7 +123,6 @@ data:add {
    value = 3800,
    weight = 7000,
    level = 18,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    random_color = "Furniture",
@@ -143,7 +139,6 @@ data:add {
    value = 1600,
    weight = 8400,
    level = 15,
-   category = 60000,
    rarity = 300000,
    coefficient = 100,
    random_color = "Furniture",
@@ -160,7 +155,6 @@ data:add {
    value = 450,
    weight = 800,
    level = 5,
-   category = 60000,
    coefficient = 100,
    originalnameref2 = "lot",
    random_color = "Furniture",
@@ -177,7 +171,6 @@ data:add {
    value = 720,
    weight = 750,
    level = 5,
-   category = 60000,
    coefficient = 100,
    originalnameref2 = "lot",
    random_color = "Furniture",
@@ -194,7 +187,6 @@ data:add {
    value = 1200,
    weight = 7900,
    level = 12,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    random_color = "Furniture",
@@ -211,7 +203,6 @@ data:add {
    value = 1200,
    weight = 7900,
    level = 12,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    random_color = "Furniture",
@@ -227,7 +218,6 @@ data:add {
    image = "elona.item_barrel",
    value = 180,
    weight = 3400,
-   category = 60000,
    coefficient = 100,
    categories = {
       "elona.furniture"
@@ -242,7 +232,6 @@ data:add {
    value = 750,
    weight = 1100,
    level = 3,
-   category = 60000,
    rarity = 600000,
    coefficient = 100,
 
@@ -263,7 +252,6 @@ data:add {
    image = "elona.item_pick",
    value = 160,
    weight = 1200,
-   category = 60000,
    coefficient = 100,
    random_color = "Furniture",
    categories = {
@@ -278,7 +266,6 @@ data:add {
    image = "elona.item_lantern",
    value = 120,
    weight = 400,
-   category = 60000,
    coefficient = 100,
    random_color = "Furniture",
    categories = {
@@ -295,7 +282,6 @@ data:add {
    value = 4200,
    weight = 3800,
    level = 7,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    random_color = "Furniture",
@@ -312,7 +298,6 @@ data:add {
    value = 3500,
    weight = 9500,
    level = 9,
-   category = 60000,
    rarity = 300000,
    coefficient = 100,
    random_color = "Furniture",
@@ -328,7 +313,6 @@ data:add {
    image = "elona.item_closed_pot",
    value = 140,
    weight = 420,
-   category = 60000,
    coefficient = 100,
    random_color = "Furniture",
    categories = {
@@ -343,7 +327,6 @@ data:add {
    image = "elona.item_open_pot",
    value = 120,
    weight = 540,
-   category = 60000,
    coefficient = 100,
    random_color = "Furniture",
    categories = {
@@ -358,7 +341,6 @@ data:add {
    image = "elona.item_academic_table",
    value = 1050,
    weight = 4200,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    random_color = "Furniture",
@@ -375,7 +357,6 @@ data:add {
    value = 3800,
    weight = 80,
    level = 13,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    originalnameref2 = "rack",
@@ -391,7 +372,6 @@ data:add {
    image = "elona.item_square_chair",
    value = 360,
    weight = 1200,
-   category = 60000,
    coefficient = 100,
    random_color = "Furniture",
 
@@ -409,7 +389,6 @@ data:add {
    image = "elona.item_cheap_chair",
    value = 120,
    weight = 6800,
-   category = 60000,
    coefficient = 100,
    random_color = "Furniture",
 
@@ -428,7 +407,6 @@ data:add {
    value = 2400,
    weight = 7300,
    level = 11,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -443,7 +421,6 @@ data:add {
    image = "elona.item_barn",
    value = 750,
    weight = 8200,
-   category = 60000,
    coefficient = 100,
    categories = {
       "elona.furniture"
@@ -458,7 +435,6 @@ data:add {
    value = 1800,
    weight = 7600,
    level = 7,
-   category = 60000,
    rarity = 300000,
    coefficient = 100,
    categories = {
@@ -474,7 +450,6 @@ data:add {
    value = 1500,
    weight = 6800,
    level = 7,
-   category = 60000,
    rarity = 400000,
    coefficient = 100,
    random_color = "Furniture",
@@ -490,7 +465,6 @@ data:add {
    image = "elona.item_variety_of_tools",
    value = 1050,
    weight = 750,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    originalnameref2 = "variety",
@@ -507,7 +481,6 @@ data:add {
    value = 1300,
    weight = 820,
    level = 3,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    originalnameref2 = "variety",
@@ -524,7 +497,6 @@ data:add {
    value = 1800,
    weight = 950,
    level = 5,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    originalnameref2 = "variety",
@@ -542,7 +514,6 @@ data:add {
    value = 4400,
    weight = 45800,
    level = 17,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -558,7 +529,6 @@ data:add {
    image = "elona.item_sign",
    value = 100,
    weight = 3200,
-   category = 60000,
    coefficient = 100,
    categories = {
       "elona.furniture"
@@ -572,7 +542,6 @@ data:add {
    image = "elona.item_crossroad_sign",
    value = 120,
    weight = 3500,
-   category = 60000,
    coefficient = 100,
    categories = {
       "elona.furniture"
@@ -586,7 +555,6 @@ data:add {
    image = "elona.item_board",
    value = 240,
    weight = 9500,
-   category = 60000,
    coefficient = 100,
    categories = {
       "elona.furniture"
@@ -600,7 +568,6 @@ data:add {
    image = "elona.item_empty_basket",
    value = 20,
    weight = 80,
-   category = 64000,
    coefficient = 100,
    tags = { "fish" },
    random_color = "Furniture",
@@ -617,7 +584,6 @@ data:add {
    image = "elona.item_show_case_of_breads",
    value = 1400,
    weight = 7800,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    originalnameref2 = "show case",
@@ -633,7 +599,6 @@ data:add {
    image = "elona.item_beaker",
    value = 80,
    weight = 210,
-   category = 60000,
    coefficient = 100,
    random_color = "Furniture",
    categories = {
@@ -648,7 +613,6 @@ data:add {
    image = "elona.item_pentagram",
    value = 3500,
    weight = 1840,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    random_color = "Furniture",
@@ -666,7 +630,6 @@ data:add {
    value = 850,
    weight = 420,
    level = 7,
-   category = 60000,
    rarity = 300000,
    coefficient = 100,
    random_color = "Furniture",
@@ -683,7 +646,6 @@ data:add {
    value = 1050,
    weight = 400,
    level = 9,
-   category = 60000,
    rarity = 300000,
    coefficient = 100,
    random_color = "Furniture",
@@ -700,7 +662,6 @@ data:add {
    value = 1800,
    weight = 380,
    level = 11,
-   category = 60000,
    rarity = 300000,
    coefficient = 100,
    random_color = "Furniture",
@@ -716,7 +677,6 @@ data:add {
    image = "elona.item_sage",
    value = 650,
    weight = 320,
-   category = 60000,
    coefficient = 100,
    random_color = "Furniture",
    categories = {
@@ -731,7 +691,6 @@ data:add {
    image = "elona.item_gazania",
    value = 750,
    weight = 350,
-   category = 60000,
    coefficient = 100,
    random_color = "Furniture",
    categories = {
@@ -746,7 +705,6 @@ data:add {
    image = "elona.item_nerine",
    value = 880,
    weight = 400,
-   category = 60000,
    coefficient = 100,
    random_color = "Furniture",
    categories = {
@@ -761,7 +719,6 @@ data:add {
    image = "elona.item_anemos",
    value = 920,
    weight = 300,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    random_color = "Furniture",
@@ -777,7 +734,6 @@ data:add {
    image = "elona.item_foxtail_grass",
    value = 1500,
    weight = 240,
-   category = 60000,
    rarity = 250000,
    coefficient = 100,
    random_color = "Furniture",
@@ -793,7 +749,6 @@ data:add {
    image = "elona.item_carnation",
    value = 780,
    weight = 250,
-   category = 60000,
    coefficient = 100,
    random_color = "Furniture",
    categories = {
@@ -809,7 +764,6 @@ data:add {
    value = 3400,
    weight = 32000,
    level = 18,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -825,7 +779,6 @@ data:add {
    value = 3900,
    weight = 32000,
    level = 20,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -840,7 +793,6 @@ data:add {
    image = "elona.item_canvas",
    value = 830,
    weight = 1100,
-   category = 59000,
    coefficient = 100,
    random_color = "Furniture",
    categories = {
@@ -855,7 +807,6 @@ data:add {
    image = "elona.item_map",
    value = 450,
    weight = 240,
-   category = 60000,
    coefficient = 100,
    random_color = "Furniture",
    categories = {
@@ -870,7 +821,6 @@ data:add {
    image = "elona.item_bundle_of_bows",
    value = 240,
    weight = 1500,
-   category = 60000,
    coefficient = 100,
    originalnameref2 = "bundle",
    categories = {
@@ -885,7 +835,6 @@ data:add {
    image = "elona.item_bundle_of_weapons",
    value = 940,
    weight = 2400,
-   category = 60000,
    coefficient = 100,
    originalnameref2 = "bundle",
    random_color = "Furniture",
@@ -901,7 +850,6 @@ data:add {
    image = "elona.item_decorated_cloth",
    value = 1400,
    weight = 860,
-   category = 60000,
    rarity = 250000,
    coefficient = 100,
    random_color = "Furniture",
@@ -917,7 +865,6 @@ data:add {
    image = "elona.item_decorated_armor",
    value = 1900,
    weight = 4400,
-   category = 60000,
    rarity = 250000,
    coefficient = 100,
    random_color = "Furniture",
@@ -933,7 +880,6 @@ data:add {
    image = "elona.item_statue_of_armor",
    value = 3600,
    weight = 7500,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    originalnameref2 = "statue",
@@ -950,7 +896,6 @@ data:add {
    image = "elona.item_disorderly_book",
    value = 240,
    weight = 830,
-   category = 60000,
    coefficient = 100,
    categories = {
       "elona.furniture"
@@ -964,7 +909,6 @@ data:add {
    image = "elona.item_lot_of_books",
    value = 320,
    weight = 940,
-   category = 60000,
    coefficient = 100,
    originalnameref2 = "lot",
    categories = {
@@ -980,7 +924,6 @@ data:add {
    value = 4500,
    weight = 8700,
    level = 17,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    random_color = "Furniture",
@@ -997,7 +940,6 @@ data:add {
    value = 4400,
    weight = 8600,
    level = 17,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    random_color = "Furniture",
@@ -1013,7 +955,6 @@ data:add {
    image = "elona.item_lot_of_alcohols",
    value = 350,
    weight = 320,
-   category = 60000,
    coefficient = 100,
    originalnameref2 = "lot",
    random_color = "Furniture",
@@ -1029,7 +970,6 @@ data:add {
    image = "elona.item_narrow_dining_table",
    value = 1200,
    weight = 9700,
-   category = 60000,
    coefficient = 100,
    categories = {
       "elona.furniture"
@@ -1044,7 +984,6 @@ data:add {
    value = 3500,
    weight = 8600,
    level = 14,
-   category = 60000,
    rarity = 250000,
    coefficient = 100,
    random_color = "Furniture",
@@ -1060,7 +999,6 @@ data:add {
    image = "elona.item_gorgeous_candlestick",
    value = 800,
    weight = 860,
-   category = 60000,
    coefficient = 100,
    categories = {
       "elona.furniture"
@@ -1075,7 +1013,6 @@ data:add {
    image = "elona.item_simple_shelf",
    value = 1200,
    weight = 11000,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    random_color = "Furniture",
@@ -1091,7 +1028,6 @@ data:add {
    image = "elona.item_messy_cloth",
    value = 430,
    weight = 1200,
-   category = 60000,
    coefficient = 100,
    random_color = "Furniture",
    categories = {
@@ -1107,7 +1043,6 @@ data:add {
    value = 1400,
    weight = 340,
    level = 4,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    random_color = "Furniture",
@@ -1123,8 +1058,6 @@ data:add {
    image = "elona.item_collapsed_grave",
    value = 1800,
    weight = 400000,
-   category = 60000,
-   subcategory = 64000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -1140,8 +1073,6 @@ data:add {
    image = "elona.item_crumbled_grave",
    value = 1700,
    weight = 400000,
-   category = 60000,
-   subcategory = 64000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -1158,8 +1089,6 @@ data:add {
    value = 3250,
    weight = 650000,
    level = 5,
-   category = 60000,
-   subcategory = 64000,
    rarity = 50000,
    coefficient = 100,
    originalnameref2 = "grave",
@@ -1177,7 +1106,6 @@ data:add {
    value = 2500,
    weight = 650000,
    level = 5,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -1193,7 +1121,6 @@ data:add {
    value = 4400,
    weight = 650000,
    level = 10,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -1209,7 +1136,6 @@ data:add {
    value = 6500,
    weight = 650000,
    level = 20,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -1225,7 +1151,6 @@ data:add {
    value = 2400,
    weight = 650000,
    level = 10,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -1240,7 +1165,6 @@ data:add {
    image = "elona.item_stack_of_dishes",
    value = 120,
    weight = 450,
-   category = 60000,
    coefficient = 100,
    categories = {
       "elona.furniture"
@@ -1254,7 +1178,6 @@ data:add {
    image = "elona.item_figurine_of_warrior",
    value = 2000,
    weight = 240,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    originalnameref2 = "figurine",
@@ -1271,7 +1194,6 @@ data:add {
    image = "elona.item_figurine_of_sword",
    value = 2000,
    weight = 240,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    originalnameref2 = "figurine",
@@ -1289,7 +1211,6 @@ data:add {
    value = 2600,
    weight = 350000,
    level = 8,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -1305,7 +1226,6 @@ data:add {
    value = 1300,
    weight = 300000,
    level = 4,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    categories = {
@@ -1321,7 +1241,6 @@ data:add {
    value = 1200,
    weight = 300000,
    level = 10,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    tags = { "sf" },
@@ -1339,7 +1258,6 @@ data:add {
    image = "elona.item_water_tub",
    value = 380,
    weight = 300000,
-   category = 60000,
    coefficient = 100,
    categories = {
       "elona.furniture"
@@ -1353,7 +1271,6 @@ data:add {
    image = "elona.item_comfortable_table",
    value = 1800,
    weight = 9800,
-   category = 60000,
    rarity = 400000,
    coefficient = 100,
    categories = {
@@ -1368,7 +1285,6 @@ data:add {
    image = "elona.item_inner_tube",
    value = 380,
    weight = 1500,
-   category = 60000,
    coefficient = 100,
    tags = { "fish" },
    categories = {
@@ -1384,7 +1300,6 @@ data:add {
    image = "elona.item_treasure_map",
    value = 380,
    weight = 180,
-   category = 60000,
    coefficient = 100,
    can_read_multiple_times = true,
    categories = {
@@ -1399,7 +1314,6 @@ data:add {
    image = "elona.item_well_kept_armor",
    value = 1500,
    weight = 12000,
-   category = 60000,
    rarity = 400000,
    coefficient = 100,
    categories = {
@@ -1414,7 +1328,6 @@ data:add {
    image = "elona.item_rack_of_goods",
    value = 1800,
    weight = 6800,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    originalnameref2 = "rack",
@@ -1430,7 +1343,6 @@ data:add {
    image = "elona.item_rack_of_accessories",
    value = 2000,
    weight = 7500,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    originalnameref2 = "rack",
@@ -1446,7 +1358,6 @@ data:add {
    image = "elona.item_towel",
    value = 320,
    weight = 1080,
-   category = 60000,
    coefficient = 100,
    tags = { "fest" },
    categories = {
@@ -1462,7 +1373,6 @@ data:add {
    image = "elona.item_ragged_table",
    value = 890,
    weight = 4500,
-   category = 60000,
    coefficient = 100,
    categories = {
       "elona.furniture"
@@ -1477,7 +1387,6 @@ data:add {
    value = 2400,
    weight = 15000,
    level = 18,
-   category = 60000,
    rarity = 250000,
    coefficient = 100,
    categories = {
@@ -1493,7 +1402,6 @@ data:add {
    value = 2000,
    weight = 2400,
    level = 7,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    categories = {
@@ -1510,7 +1418,6 @@ data:add {
    value = 5500,
    weight = 9000,
    level = 14,
-   category = 60000,
    rarity = 150000,
    coefficient = 100,
 
@@ -1531,7 +1438,6 @@ data:add {
    value = 1900,
    weight = 8500,
    level = 7,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    categories = {
@@ -1547,7 +1453,6 @@ data:add {
    value = 1500,
    weight = 6800,
    level = 4,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    originalnameref2 = "chest",
@@ -1563,7 +1468,6 @@ data:add {
    image = "elona.item_cheap_rack",
    value = 1200,
    weight = 9000,
-   category = 60000,
    rarity = 800000,
    coefficient = 100,
    categories = {
@@ -1579,7 +1483,6 @@ data:add {
    value = 2400,
    weight = 8000,
    level = 7,
-   category = 60000,
    rarity = 250000,
    coefficient = 100,
 
@@ -1600,7 +1503,6 @@ data:add {
    value = 4800,
    weight = 28000,
    level = 19,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1618,7 +1520,6 @@ data:add {
    weight = 14000,
    on_use = function() end,
    fltselect = 1,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1637,7 +1538,6 @@ data:add {
    weight = 24000,
    on_use = function() end,
    fltselect = 1,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1655,7 +1555,6 @@ data:add {
    weight = 12000,
    on_use = function() end,
    fltselect = 1,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1674,7 +1573,6 @@ data:add {
    weight = 8900,
    on_use = function() end,
    fltselect = 1,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1691,7 +1589,6 @@ data:add {
    value = 3200,
    weight = 1200,
    level = 18,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1706,7 +1603,6 @@ data:add {
    image = "elona.item_old_shelf",
    value = 890,
    weight = 7600,
-   category = 60000,
    rarity = 600000,
    coefficient = 100,
    categories = {
@@ -1721,7 +1617,6 @@ data:add {
    image = "elona.item_old_bookshelf",
    value = 1020,
    weight = 8900,
-   category = 60000,
    rarity = 600000,
    coefficient = 100,
    categories = {
@@ -1736,7 +1631,6 @@ data:add {
    image = "elona.item_cheap_table",
    value = 900,
    weight = 6800,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1751,7 +1645,6 @@ data:add {
    image = "elona.item_neat_rack",
    value = 1480,
    weight = 8800,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    categories = {
@@ -1767,7 +1660,6 @@ data:add {
    value = 2200,
    weight = 12000,
    level = 4,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
 
@@ -1788,7 +1680,6 @@ data:add {
    value = 2800,
    weight = 8900,
    level = 7,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1803,7 +1694,6 @@ data:add {
    image = "elona.item_sacred_altar",
    value = 1500,
    weight = 15000,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1819,7 +1709,6 @@ data:add {
    image = "elona.item_simple_rack",
    value = 1400,
    weight = 8900,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    categories = {
@@ -1834,7 +1723,6 @@ data:add {
    image = "elona.item_wide_chair",
    value = 600,
    weight = 6400,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
 
@@ -1853,7 +1741,6 @@ data:add {
    value = 4600,
    weight = 29000,
    level = 18,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
 
@@ -1874,7 +1761,6 @@ data:add {
    image = "elona.item_statue_of_cross",
    value = 1500,
    weight = 15600,
-   category = 60000,
    coefficient = 100,
    originalnameref2 = "statue",
    categories = {
@@ -1891,7 +1777,6 @@ data:add {
    value = 1440,
    weight = 1050,
    level = 3,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1907,7 +1792,6 @@ data:add {
    value = 1200,
    weight = 4900,
    level = 3,
-   category = 60000,
    rarity = 20000,
    coefficient = 100,
    categories = {
@@ -1923,7 +1807,6 @@ data:add {
    value = 6800,
    weight = 35000,
    level = 22,
-   category = 60000,
    rarity = 150000,
    coefficient = 100,
 
@@ -1944,7 +1827,6 @@ data:add {
    value = 1200,
    weight = 15000,
    level = 8,
-   category = 60000,
    rarity = 400000,
    coefficient = 100,
    categories = {
@@ -1961,7 +1843,6 @@ data:add {
    value = 3200,
    weight = 21000,
    level = 18,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1977,7 +1858,6 @@ data:add {
    value = 780,
    weight = 500,
    on_use = function() end,
-   category = 60000,
    coefficient = 100,
 
    elona_function = 22,
@@ -1999,7 +1879,6 @@ data:add {
    on_use = function() end,
    level = 18,
    fltselect = 1,
-   category = 60000,
    rarity = 50000,
    coefficient = 100,
    categories = {
@@ -2018,7 +1897,6 @@ data:add {
    on_use = function() end,
    level = 18,
    fltselect = 1,
-   category = 60000,
    rarity = 50000,
    coefficient = 100,
    categories = {
@@ -2035,7 +1913,6 @@ data:add {
    value = 3600,
    weight = 150000,
    level = 5,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
 
@@ -2058,7 +1935,6 @@ data:add {
    value = 4400,
    weight = 45000,
    level = 12,
-   category = 60000,
    rarity = 300000,
    coefficient = 100,
 
@@ -2081,7 +1957,6 @@ data:add {
    value = 2400,
    weight = 120000,
    level = 11,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
 
@@ -2108,7 +1983,6 @@ data:add {
    image = "elona.item_camera",
    value = 1600,
    weight = 1500,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
 
@@ -2130,7 +2004,6 @@ data:add {
    value = 3200,
    weight = 150000,
    level = 15,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
 
@@ -2151,7 +2024,6 @@ data:add {
    value = 2400,
    weight = 95000,
    level = 18,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
 
@@ -2172,7 +2044,6 @@ data:add {
    value = 3100,
    weight = 14000,
    level = 11,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
 
@@ -2192,7 +2063,6 @@ data:add {
    image = "elona.item_trash_can",
    value = 1000,
    weight = 8000,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    tags = { "sf" },
@@ -2209,7 +2079,6 @@ data:add {
    image = "elona.item_chip",
    value = 1200,
    weight = 800,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
 
@@ -2229,7 +2098,6 @@ data:add {
    image = "elona.item_playback_disc",
    value = 1000,
    weight = 500,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
 
@@ -2252,7 +2120,6 @@ data:add {
    value = 8500,
    weight = 68000,
    level = 19,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -2269,7 +2136,6 @@ data:add {
    value = 9400,
    weight = 45000,
    level = 23,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -2286,7 +2152,6 @@ data:add {
    value = 7500,
    weight = 85000,
    level = 22,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -2303,7 +2168,6 @@ data:add {
    value = 4500,
    weight = 15000,
    level = 18,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -2319,7 +2183,6 @@ data:add {
    value = 2400,
    weight = 5800,
    level = 5,
-   category = 60000,
    rarity = 400000,
    coefficient = 100,
    categories = {
@@ -2335,7 +2198,6 @@ data:add {
    value = 8500,
    weight = 2000,
    level = 15,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    originalnameref2 = "painting",
@@ -2352,7 +2214,6 @@ data:add {
    value = 8200,
    weight = 500,
    level = 14,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    originalnameref2 = "painting",
@@ -2369,7 +2230,6 @@ data:add {
    value = 12000,
    weight = 450,
    level = 28,
-   category = 60000,
    rarity = 50000,
    coefficient = 100,
    originalnameref2 = "painting",
@@ -2386,7 +2246,6 @@ data:add {
    value = 25000,
    weight = 48000,
    level = 30,
-   category = 60000,
    rarity = 50000,
    coefficient = 100,
    originalnameref2 = "statue",
@@ -2403,7 +2262,6 @@ data:add {
    value = 7000,
    weight = 2500,
    level = 20,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    categories = {
@@ -2419,7 +2277,6 @@ data:add {
    image = "elona.item_snow_man",
    value = 200,
    weight = 8500,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -2436,7 +2293,6 @@ data:add {
    value = 1600,
    weight = 10200,
    level = 12,
-   category = 60000,
    rarity = 600000,
    coefficient = 100,
    categories = {
@@ -2451,7 +2307,6 @@ data:add {
    image = "elona.item_candle",
    value = 1500,
    weight = 200,
-   category = 60000,
    rarity = 250000,
    coefficient = 100,
    random_color = "Furniture",
@@ -2469,7 +2324,6 @@ data:add {
    value = 4500,
    weight = 1500,
    level = 20,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -2486,7 +2340,6 @@ data:add {
    value = 7200,
    weight = 250000,
    level = 30,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    tags = { "sf" },
@@ -2504,7 +2357,6 @@ data:add {
    image = "elona.item_mini_snow_man",
    value = 400,
    weight = 8500,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -2520,7 +2372,6 @@ data:add {
    image = "elona.item_snow_barrel",
    value = 180,
    weight = 3400,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -2536,7 +2387,6 @@ data:add {
    value = 7200,
    weight = 250000,
    level = 30,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    tags = { "sf" },
@@ -2555,7 +2405,6 @@ data:add {
    value = 18000,
    weight = 12000,
    level = 40,
-   category = 60000,
    rarity = 50000,
    coefficient = 100,
    originalnameref2 = "statue",
@@ -2573,7 +2422,6 @@ data:add {
    value = 2500,
    weight = 16000,
    level = 20,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -2589,7 +2437,6 @@ data:add {
    value = 1800,
    weight = 4800,
    level = 10,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -2606,7 +2453,6 @@ data:add {
    value = 12000,
    weight = 2400,
    level = 35,
-   category = 60000,
    rarity = 10000,
    coefficient = 100,
 
@@ -2626,7 +2472,6 @@ data:add {
    image = "elona.item_green_plant",
    value = 400,
    weight = 800,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    categories = {
@@ -2642,7 +2487,6 @@ data:add {
    value = 2200,
    weight = 1200,
    level = 15,
-   category = 60000,
    rarity = 400000,
    coefficient = 100,
    categories = {
@@ -2657,7 +2501,6 @@ data:add {
    image = "elona.item_giant_cactus",
    value = 2600,
    weight = 4200,
-   category = 60000,
    rarity = 300000,
    coefficient = 100,
    categories = {
@@ -2672,7 +2515,6 @@ data:add {
    image = "elona.item_square_window",
    value = 500,
    weight = 1500,
-   category = 60000,
    rarity = 600000,
    coefficient = 100,
    categories = {
@@ -2688,7 +2530,6 @@ data:add {
    image = "elona.item_window",
    value = 700,
    weight = 1600,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    categories = {
@@ -2705,7 +2546,6 @@ data:add {
    value = 1500,
    weight = 5600,
    level = 18,
-   category = 60000,
    rarity = 600000,
    coefficient = 100,
    categories = {
@@ -2720,7 +2560,6 @@ data:add {
    image = "elona.item_nice_window",
    value = 1000,
    weight = 2000,
-   category = 60000,
    rarity = 400000,
    coefficient = 100,
    categories = {
@@ -2737,7 +2576,6 @@ data:add {
    value = 2000,
    weight = 8000,
    level = 15,
-   category = 60000,
    rarity = 400000,
    coefficient = 100,
    categories = {
@@ -2753,7 +2591,6 @@ data:add {
    value = 7500,
    weight = 8000,
    fltselect = 1,
-   category = 60000,
    rarity = 10000,
    coefficient = 100,
 
@@ -2776,7 +2613,6 @@ data:add {
    weight = 5000000,
    level = 15,
    fltselect = 1,
-   category = 60000,
    rarity = 400000,
    coefficient = 100,
    categories = {
@@ -2797,7 +2633,6 @@ data:add {
    image = "elona.item_rice_barrel",
    value = 500,
    weight = 4800,
-   category = 60000,
    coefficient = 100,
    categories = {
       "elona.furniture"
@@ -2811,7 +2646,6 @@ data:add {
    image = "elona.item_decorated_window",
    value = 2400,
    weight = 2000,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -2828,7 +2662,6 @@ data:add {
    value = 9500,
    weight = 11000,
    level = 35,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -2844,7 +2677,6 @@ data:add {
    value = 1800,
    weight = 4500,
    level = 5,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    categories = {
@@ -2860,7 +2692,6 @@ data:add {
    value = 5000,
    weight = 7800,
    level = 18,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -2876,7 +2707,6 @@ data:add {
    value = 2500,
    weight = 5000,
    level = 5,
-   category = 60000,
    rarity = 250000,
    coefficient = 100,
    random_color = "Furniture",
@@ -2896,7 +2726,6 @@ data:add {
    value = 1500,
    weight = 4000,
    level = 10,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    random_color = "Furniture",
@@ -2913,7 +2742,6 @@ data:add {
    value = 4800,
    weight = 8400,
    level = 25,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -2929,7 +2757,6 @@ data:add {
    value = 3500,
    weight = 15000,
    level = 15,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    categories = {
@@ -2944,7 +2771,6 @@ data:add {
    image = "elona.item_junk",
    value = 600,
    weight = 150000,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -2960,7 +2786,6 @@ data:add {
    value = 3000,
    weight = 7900,
    level = 12,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    categories = {
@@ -2977,7 +2802,6 @@ data:add {
    value = 3500,
    weight = 1200,
    level = 14,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    categories = {
@@ -2994,7 +2818,6 @@ data:add {
    value = 2500,
    weight = 500,
    level = 14,
-   category = 60000,
    rarity = 500000,
    coefficient = 100,
    categories = {
@@ -3011,7 +2834,6 @@ data:add {
    value = 1000,
    weight = 1000,
    level = 5,
-   category = 60000,
    rarity = 800000,
    coefficient = 100,
    random_color = "Furniture",
@@ -3028,7 +2850,6 @@ data:add {
    value = 2000,
    weight = 1200,
    level = 10,
-   category = 60000,
    rarity = 800000,
    coefficient = 100,
    categories = {
@@ -3043,7 +2864,6 @@ data:add {
    image = "elona.item_gift",
    value = 2500,
    weight = 1000,
-   category = 60000,
    rarity = 5000,
    coefficient = 0,
 
@@ -3075,7 +2895,6 @@ data:add {
    value = 150000,
    weight = 7500,
    fltselect = 1,
-   category = 60000,
    rarity = 20000,
    coefficient = 0,
    categories = {
@@ -3118,7 +2937,6 @@ data:add {
    value = 150000,
    weight = 7500,
    fltselect = 1,
-   category = 60000,
    rarity = 20000,
    coefficient = 0,
    categories = {
@@ -3163,7 +2981,6 @@ data:add {
    weight = 9800,
    level = 28,
    fltselect = 1,
-   category = 60000,
    rarity = 10000,
    coefficient = 100,
    random_color = "Furniture",
@@ -3193,7 +3010,6 @@ data:add {
    value = 3200,
    weight = 720,
    fltselect = 1,
-   category = 60000,
    coefficient = 100,
    categories = {
       "elona.no_generate",
@@ -3210,7 +3026,6 @@ data:add {
    weight = 280,
    level = 25,
    fltselect = 1,
-   category = 60000,
    rarity = 5000,
    coefficient = 100,
    tags = { "fest" },
@@ -3230,7 +3045,6 @@ data:add {
    value = 3600,
    weight = 85000,
    level = 15,
-   category = 60000,
    rarity = 40000,
    coefficient = 100,
    random_color = "Furniture",
@@ -3247,7 +3061,6 @@ data:add {
    value = 1200,
    weight = 9900,
    level = 5,
-   category = 60000,
    rarity = 25000,
    coefficient = 100,
    categories = {
@@ -3263,7 +3076,6 @@ data:add {
    value = 3800,
    weight = 48500,
    level = 30,
-   category = 60000,
    rarity = 10000,
    coefficient = 100,
    categories = {
@@ -3279,7 +3091,6 @@ data:add {
    value = 3800,
    weight = 48500,
    level = 30,
-   category = 60000,
    rarity = 10000,
    coefficient = 100,
    categories = {
@@ -3296,7 +3107,6 @@ data:add {
    weight = 150,
    level = 10,
    fltselect = 1,
-   category = 60000,
    rarity = 5000,
    coefficient = 100,
    tags = { "fest" },
@@ -3316,7 +3126,6 @@ data:add {
    weight = 530,
    level = 10,
    fltselect = 1,
-   category = 60000,
    rarity = 5000,
    coefficient = 100,
    tags = { "fest" },
@@ -3335,7 +3144,6 @@ data:add {
    value = 2400,
    weight = 15000,
    level = 18,
-   category = 60000,
    rarity = 400000,
    coefficient = 100,
    categories = {
@@ -3351,7 +3159,6 @@ data:add {
    value = 7200,
    weight = 23800,
    level = 24,
-   category = 60000,
    rarity = 150000,
    coefficient = 100,
    categories = {
@@ -3367,7 +3174,6 @@ data:add {
    value = 4900,
    weight = 9000,
    level = 15,
-   category = 60000,
    rarity = 100000,
    coefficient = 100,
    random_color = "Furniture",
@@ -3387,7 +3193,6 @@ data:add {
    value = 16000,
    weight = 1800,
    level = 32,
-   category = 60000,
    rarity = 10000,
    coefficient = 100,
    categories = {
@@ -3403,7 +3208,6 @@ data:add {
    value = 23000,
    weight = 4200,
    level = 45,
-   category = 60000,
    rarity = 10000,
    coefficient = 100,
    categories = {
@@ -3418,7 +3222,6 @@ data:add {
    image = "elona.item_dish",
    value = 100,
    weight = 150,
-   category = 60000,
    rarity = 250000,
    coefficient = 100,
    categories = {
@@ -3437,24 +3240,17 @@ data:add {
    image = "elona.item_well",
    value = 1800,
    weight = 350000,
-   category = 60001,
-   subcategory = 60001,
    coefficient = 100,
-
-   param2 = 100,
-   params = {
-      amount_remaining = 0,
-      amount_dryness = 0,
-   },
-
-   on_drink = ElonaMagic.drink_well,
-   elona_type = "well",
 
    categories = {
       "elona.furniture_well"
    },
 
-   light = light.item
+   light = light.item,
+
+   _ext = {
+      IItemWell
+   }
 }
 
 data:add {
@@ -3465,22 +3261,15 @@ data:add {
    value = 2400,
    weight = 600000,
    fltselect = 1,
-   category = 60001,
-   subcategory = 60001,
    coefficient = 100,
-
-   param2 = 100,
-   params = {
-      amount_remaining = 0,
-      amount_dryness = 0,
-   },
-
-   on_drink = ElonaMagic.drink_well,
-   elona_type = "well",
 
    categories = {
       "elona.furniture_well",
       "elona.no_generate"
+   },
+
+   _ext = {
+      IItemWell
    }
 }
 
@@ -3492,19 +3281,8 @@ data:add {
    value = 185000,
    weight = 350000,
    fltselect = 1,
-   category = 60001,
-   subcategory = 60001,
    rarity = 50000,
    coefficient = 100,
-
-   param2 = 100,
-   params = {
-      amount_remaining = 0,
-      amount_dryness = 0,
-   },
-
-   on_drink = ElonaMagic.drink_well,
-   elona_type = "well",
 
    categories = {
       "elona.furniture_well",
@@ -3526,6 +3304,12 @@ data:add {
             -- <<<<<<<< shade2/command.hsp:1597 		if iId(ci)=idHolyWell:iNum(ci)=0:flt:item_create ..
          end
       },
+   },
+
+   _ext = {
+      [IItemWell] = {
+         _impl = ItemHolyWellAspect
+      }
    }
 }
 
@@ -3537,22 +3321,16 @@ data:add {
    value = 1000,
    weight = 12000,
    level = 4,
-   category = 60001,
-   subcategory = 60001,
    rarity = 500000,
    coefficient = 100,
    random_color = "Furniture",
 
-   params = {
-      count_1 = 0,
-      count_2 = 0,
-   },
-
-   on_drink = ElonaMagic.drink_well,
-   elona_type = "well",
-
    categories = {
       "elona.furniture_well"
+   },
+
+   _ext = {
+      IItemWell
    }
 }
 
@@ -3568,8 +3346,6 @@ data:add {
    value = 1500,
    weight = 500000,
    fltselect = 1,
-   category = 60002,
-   subcategory = 60002,
    coefficient = 100,
 
    params = { altar = { god_id = "" } },
@@ -3590,8 +3366,6 @@ data:add {
    value = 1600,
    weight = 500000,
    fltselect = 1,
-   category = 60002,
-   subcategory = 60002,
    coefficient = 100,
    categories = {
       "elona.furniture_altar",
@@ -3616,7 +3390,6 @@ data:add {
    value = 8500,
    weight = 14000,
    level = 22,
-   category = 60000,
    rarity = 150000,
    coefficient = 100,
 
@@ -3642,7 +3415,6 @@ data:add {
    value = 7800,
    weight = 17400,
    level = 14,
-   category = 60000,
    rarity = 150000,
    coefficient = 100,
 
@@ -3665,7 +3437,6 @@ data:add {
    value = 1200,
    weight = 14000,
    level = 4,
-   category = 60000,
    rarity = 250000,
    coefficient = 100,
    random_color = "Furniture",
@@ -3689,7 +3460,6 @@ data:add {
    value = 1100,
    weight = 15000,
    level = 4,
-   category = 60000,
    rarity = 250000,
    coefficient = 100,
    random_color = "Furniture",
@@ -3713,7 +3483,6 @@ data:add {
    value = 1500,
    weight = 14000,
    level = 4,
-   category = 60000,
    rarity = 250000,
    coefficient = 100,
    random_color = "Furniture",
@@ -3736,7 +3505,6 @@ data:add {
    image = "elona.item_food_processor",
    value = 5200,
    weight = 34000,
-   category = 60000,
    rarity = 200000,
    coefficient = 100,
 
@@ -3762,7 +3530,6 @@ data:add {
    value = 9500,
    weight = 8250,
    level = 25,
-   category = 60000,
    rarity = 150000,
    coefficient = 100,
 
@@ -3789,8 +3556,6 @@ data:add {
    value = 1400,
    weight = 15000,
    level = 5,
-   category = 60000,
-   subcategory = 60004,
    coefficient = 100,
    random_color = "Furniture",
 
@@ -3810,8 +3575,6 @@ data:add {
    value = 2200,
    weight = 12400,
    level = 5,
-   category = 60000,
-   subcategory = 60004,
    rarity = 100000,
    coefficient = 100,
 
@@ -3831,8 +3594,6 @@ data:add {
    value = 4500,
    weight = 17500,
    level = 15,
-   category = 60000,
-   subcategory = 60004,
    rarity = 200000,
    coefficient = 100,
 
@@ -3852,8 +3613,6 @@ data:add {
    value = 3800,
    weight = 15000,
    level = 12,
-   category = 60000,
-   subcategory = 60004,
    rarity = 400000,
    coefficient = 100,
 
@@ -3872,8 +3631,6 @@ data:add {
    image = "elona.item_plain_bed",
    value = 1200,
    weight = 13000,
-   category = 60000,
-   subcategory = 60004,
    coefficient = 100,
 
    params = { bed_quality = 100 },
@@ -3892,8 +3649,6 @@ data:add {
    value = 2400,
    weight = 8900,
    level = 18,
-   category = 60000,
-   subcategory = 60004,
    rarity = 100000,
    coefficient = 100,
 
@@ -3912,8 +3667,6 @@ data:add {
    image = "elona.item_soft_bed",
    value = 2200,
    weight = 12000,
-   category = 60000,
-   subcategory = 60004,
    rarity = 200000,
    coefficient = 100,
 
@@ -3932,8 +3685,6 @@ data:add {
    image = "elona.item_clean_bed",
    value = 1500,
    weight = 9500,
-   category = 60000,
-   subcategory = 60004,
    rarity = 500000,
    coefficient = 100,
 
@@ -3952,8 +3703,6 @@ data:add {
    image = "elona.item_cheap_bed",
    value = 880,
    weight = 2800,
-   category = 60000,
-   subcategory = 60004,
    rarity = 600000,
    coefficient = 100,
 
@@ -3973,8 +3722,6 @@ data:add {
    value = 2800,
    weight = 10000,
    level = 9,
-   category = 60000,
-   subcategory = 60004,
    rarity = 200000,
    coefficient = 100,
 
@@ -3993,8 +3740,6 @@ data:add {
    image = "elona.item_sleeping_bag",
    value = 800,
    weight = 2400,
-   category = 59000,
-   subcategory = 60004,
    coefficient = 0,
 
    params = { bed_quality = 0 },
@@ -4014,8 +3759,6 @@ data:add {
    value = 35000,
    weight = 24000,
    level = 50,
-   category = 60000,
-   subcategory = 60004,
    rarity = 50000,
    coefficient = 100,
 
@@ -4034,8 +3777,6 @@ data:add {
    image = "elona.item_eastern_bed",
    value = 2500,
    weight = 2000,
-   category = 59000,
-   subcategory = 60004,
    rarity = 200000,
    coefficient = 0,
 
@@ -4055,8 +3796,6 @@ data:add {
    value = 7500,
    weight = 16000,
    level = 40,
-   category = 60000,
-   subcategory = 60004,
    rarity = 250000,
    coefficient = 100,
    random_color = "Furniture",
@@ -4077,8 +3816,6 @@ data:add {
    value = 25000,
    weight = 31000,
    level = 45,
-   category = 60000,
-   subcategory = 60004,
    rarity = 2000,
    coefficient = 100,
 
@@ -4103,8 +3840,6 @@ data:add {
    weight = 800,
    level = 5,
    fltselect = 1,
-   category = 60000,
-   subcategory = 60004,
    rarity = 25000,
    coefficient = 100,
 
@@ -4129,8 +3864,6 @@ data:add {
    value = 15000,
    weight = 45000,
    level = 20,
-   category = 60000,
-   subcategory = 60005,
    rarity = 100000,
    coefficient = 100,
 
@@ -4154,8 +3887,6 @@ data:add {
    value = 2500,
    weight = 6500,
    level = 5,
-   category = 60000,
-   subcategory = 60005,
    rarity = 500000,
    coefficient = 100,
 
@@ -4182,8 +3913,6 @@ data:add {
    value = 4500,
    weight = 18000,
    level = 15,
-   category = 60000,
-   subcategory = 60005,
    rarity = 350000,
    coefficient = 100,
 
@@ -4210,8 +3939,6 @@ data:add {
    value = 3800,
    weight = 8500,
    level = 10,
-   category = 60000,
-   subcategory = 60005,
    rarity = 400000,
    coefficient = 100,
 
@@ -4237,8 +3964,6 @@ data:add {
    image = "elona.item_harmonica",
    value = 1500,
    weight = 850,
-   category = 60000,
-   subcategory = 60005,
    rarity = 500000,
    coefficient = 100,
 
@@ -4265,8 +3990,6 @@ data:add {
    value = 7500,
    weight = 30000,
    level = 10,
-   category = 60000,
-   subcategory = 60005,
    rarity = 250000,
    coefficient = 100,
 
@@ -4290,8 +4013,6 @@ data:add {
    value = 35000,
    weight = 4500,
    fltselect = 3,
-   category = 60000,
-   subcategory = 60005,
    rarity = 400000,
    coefficient = 100,
 
@@ -4326,8 +4047,6 @@ data:add {
    weight = 45000,
    level = 20,
    fltselect = 3,
-   category = 60000,
-   subcategory = 60005,
    rarity = 100000,
    coefficient = 100,
 

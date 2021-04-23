@@ -67,6 +67,7 @@ function PagedListModel:select(i)
    self:select_page(page)
    self.model:select(index)
    self:update_selected_index()
+   self.changed = true
 end
 
 function PagedListModel:get_item_text(item)

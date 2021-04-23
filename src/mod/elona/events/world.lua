@@ -138,3 +138,21 @@ local function create_income(_, params)
    -- <<<<<<<< shade2/main.hsp:660 		if (gDay=1)or(gDay=15)	:gosub *event_income ..
 end
 Event.register("base.on_day_passed", "create_income", create_income, 200000)
+
+local function update_holy_well_count(_, params)
+   -- >>>>>>>> shade2/main.hsp:658 		if gDay>=31		:gMonth++:gDay=gDay-30:if gMonth¥2= ...
+   if save.base.date.month % 2 == 0 then
+      save.elona.holy_well_count = save.elona.holy_well_count + 1
+   end
+   -- <<<<<<<< shade2/main.hsp:658 		if gDay>=31		:gMonth++:gDay=gDay-30:if gMonth¥2= ..
+end
+Event.register("base.on_month_passed", "Update holy well count", update_holy_well_count, 100000)
+
+local function update_well_wish_count_trainer_wallet(_, params)
+   -- >>>>>>>> shade2/main.hsp:659 		if gMonth>=13		:gYear++:gMonth=1:gGuildTrainer=0 ...
+   save.elona.next_guest_trainer_date = 0
+   save.elona.well_wish_count = math.clamp(save.elona.well_wish_count - 1, 0, 10)
+   save.elona.lost_wallets_reported = math.clamp(save.elona.lost_wallets_reported - 1, 0, 999999)
+   -- <<<<<<<< shade2/main.hsp:659 		if gMonth>=13		:gYear++:gMonth=1:gGuildTrainer=0 ..
+end
+Event.register("base.on_year_passed", "Update well wish count, etc.", update_well_wish_count_trainer_wallet, 100000)

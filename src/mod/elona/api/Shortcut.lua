@@ -85,6 +85,7 @@ local function shortcut_item(player, sc)
       return true
    end
 
+   -- BUG: needs to take items on the ground into consideration
    local rest = player:iter_items():filter(filter)
    local found = rest:nth(1)
 

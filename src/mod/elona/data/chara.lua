@@ -5249,7 +5249,6 @@ local chara = {
       skills = {
          "elona.spell_web"
       },
-      tone = "elona.spider",
    },
    {
       _id = "black_widow",
@@ -5281,7 +5280,6 @@ local chara = {
       },
       unarmed_element_id = "elona.poison",
       unarmed_element_power = 150,
-      tone = "elona.black_widow",
    },
    {
       _id = "paralyzer",
@@ -5313,7 +5311,6 @@ local chara = {
       },
       unarmed_element_id = "elona.nerve",
       unarmed_element_power = 150,
-      tone = "elona.paralyzer",
    },
    {
       _id = "tarantula",
@@ -5345,7 +5342,6 @@ local chara = {
       },
       unarmed_element_id = "elona.poison",
       unarmed_element_power = 200,
-      tone = "elona.tarantula",
    },
    {
       _id = "blood_spider",
@@ -5375,8 +5371,7 @@ local chara = {
          "elona.spell_web"
       },
       unarmed_element_id = "elona.nether",
-      unarmed_element_power = 100,
-      tone = "elona.blood_spider",
+      unarmed_element_power = 100
    },
    {
       _id = "wooden_golem",
@@ -5393,7 +5388,6 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       effect_immunities = { "elona.fear" },
-      tone = "elona.wooden_golem",
    },
    {
       _id = "stone_golem",
@@ -5409,8 +5403,7 @@ local chara = {
       on_eat_corpse = eating_effect.iron,
       ai_distance = 1,
       ai_move_chance = 100,
-      pffect_immunities = { "elona.fear" },
-      tone = "elona.stone_golem",
+      effect_immunities = { "elona.fear" },
    },
    {
       _id = "steel_golem",
@@ -5429,7 +5422,6 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       effect_immunities = { "elona.fear" },
-      tone = "elona.steel_golem",
    },
    {
       _id = "golden_golem",
@@ -5447,7 +5439,6 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       effect_immunities = { "elona.fear" },
-      tone = "elona.golden_golem",
    },
    {
       _id = "mithril_golem",
@@ -5465,7 +5456,6 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       effect_immunities = { "elona.fear" },
-      tone = "elona.mithril_golem",
    },
    {
       _id = "sky_golem",
@@ -5483,7 +5473,6 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       effect_immunities = { "elona.fear" },
-      tone = "elona.sky_golem",
    },
    {
       _id = "adamantium_golem",
@@ -5501,7 +5490,6 @@ local chara = {
       ai_distance = 1,
       ai_move_chance = 100,
       effect_immunities = { "elona.fear" },
-      tone = "elona.adamantium_golem",
    },
    {
       _id = "fire_crab",

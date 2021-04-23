@@ -1007,12 +1007,10 @@ data:add {
 
    type = "skill",
    params = {
-      "source",
+      "target",
    },
 
    cast = function(self, params)
-      local source = params.source
-
       Wish.query_wish()
 
       return true

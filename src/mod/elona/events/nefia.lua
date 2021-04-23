@@ -57,7 +57,7 @@ Event.register("base.on_map_initialize", "Spawn nefia boss on deepest floor", sp
 local function play_nefia_boss_music(map, _, music_id)
    local area = Area.for_map(map)
    if area == nil or not Nefia.get_type(area) then
-      return
+      return music_id
    end
 
    if area:deepest_floor() == Map.floor_number(map) then

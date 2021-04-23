@@ -11,6 +11,9 @@ local SkillCheck = require("mod.elona.api.SkillCheck")
 local Effect = require("mod.elona.api.Effect")
 local Weather = require("mod.elona.api.Weather")
 local Const = require("api.Const")
+local IItemPotion = require("mod.elona.api.aspect.IItemPotion")
+local Item = require("api.Item")
+local Aspect = require("api.Aspect")
 
 data:add {
    _type = "base.mef",
@@ -219,15 +222,23 @@ data:add {
       end
 
       local item_data = data["base.item"]:ensure(self.params.item_id)
-      if item_data.on_drink then
-         local drink_params = {
-            chara = chara,
-            curse_state = self.params.curse_state,
-            triggered_by = "potion_spilt"
-         }
-         item_data.on_drink(nil, drink_params)
+      -- TODO feat params, save aspect from potion
+      local potion_params = item_data._ext and item_data._ext[IItemPotion]
+      if potion_params then
+         -- HACK
+         local item = Item.create("elona.empty_bottle", self.x, self.y, {}, self:current_map())
+         if item then
+            local potion = Aspect.new_default(IItemPotion, item, potion_params)
+            local drink_params = {
+               chara = chara,
+               curse_state = self.params.curse_state,
+               triggered_by = "potion_spilt"
+            }
+            potion:on_drink(item, drink_params)
+            item:remove_ownership()
+         end
       else
-         Log.warn("Potion mef '%s' missing 'on_drink' callback", self.params.item_id)
+         Log.warn("Potion mef '%s' missing IItemPotion aspect", self.params.item_id)
       end
 
       if not Chara.is_alive(chara) then

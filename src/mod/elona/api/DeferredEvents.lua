@@ -175,6 +175,7 @@ function DeferredEvents.nefia_boss(map, boss_uid)
    -- >>>>>>>> shade2/main.hsp:1747 	txt lang("どうやら最深層まで辿り着いたらしい…","It seems you have  ...
    Gui.mes("event.reached_deepest_level")
    Gui.mes_c("event.guarded_by_lord", "Red", map.name, boss)
+   Gui.play_default_music(map)
    -- <<<<<<<< shade2/main.hsp:1748 	txtEf coRed : txtMore:txt lang("気をつけろ！この階は"+mapNa ..
 end
 
@@ -184,6 +185,7 @@ function DeferredEvents.nefia_boss_defeated(map)
       return
    end
 
+   Gui.play_music("elona.victory")
    Gui.play_sound("base.complete1")
 
    local player = Chara.player()

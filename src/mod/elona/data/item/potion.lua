@@ -1,4 +1,3 @@
-local ElonaMagic = require("mod.elona.api.ElonaMagic")
 local Item = require("api.Item")
 local Enum = require("api.Enum")
 local Gui = require("api.Gui")
@@ -7,6 +6,7 @@ local Chara = require("api.Chara")
 local Effect = require("mod.elona.api.Effect")
 local Skill = require("mod.elona_sys.api.Skill")
 local light = require("mod.elona.data.item.light")
+local IItemPotion = require("mod.elona.api.aspect.IItemPotion")
 
 --
 -- Potion
@@ -23,11 +23,16 @@ data:add {
    coefficient = 100,
    originalnameref2 = "bottle",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_dirty_water", item, params)
-   end,
    categories = {
       "elona.drink",
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            { _id = "elona.effect_dirty_water", power = 100 }
+         }
+      }
    }
 }
 
@@ -44,15 +49,20 @@ data:add {
    originalnameref2 = "potion",
    has_random_name = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_blind", 200, item, params)
-   end,
 
    tags = { "neg" },
    random_color = "Random",
    categories = {
       "elona.drink",
       "elona.tag_neg"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_blind", power = 200}
+         }
+      }
    }
 }
 
@@ -69,15 +79,20 @@ data:add {
    originalnameref2 = "potion",
    has_random_name = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_confuse", 150, item, params)
-   end,
 
    tags = { "neg" },
    random_color = "Random",
    categories = {
       "elona.drink",
       "elona.tag_neg"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_confuse", power = 150}
+         }
+      }
    }
 }
 
@@ -94,15 +109,20 @@ data:add {
    originalnameref2 = "potion",
    has_random_name = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_paralyze", 200, item, params)
-   end,
 
    tags = { "neg" },
    random_color = "Random",
    categories = {
       "elona.drink",
       "elona.tag_neg"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_paralyze", power = 200}
+         }
+      }
    }
 }
 
@@ -118,15 +138,20 @@ data:add {
    coefficient = 100,
    has_random_name = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_sleep", 200, item, params)
-   end,
 
    tags = { "nogive" },
    random_color = "Random",
    categories = {
       "elona.drink",
       "elona.tag_nogive"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_sleep", power = 200}
+         }
+      }
    }
 }
 
@@ -142,15 +167,20 @@ data:add {
    coefficient = 100,
    has_random_name = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_poison", 200, item, params)
-   end,
 
    tags = { "nogive", "elona.is_acid" },
    random_color = "Random",
    categories = {
       "elona.drink",
       "elona.tag_nogive"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_poison", power = 200}
+         }
+      }
    }
 }
 
@@ -169,15 +199,20 @@ data:add {
    originalnameref2 = "potion",
    has_random_name = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_gain_potential", 100, item, params)
-   end,
 
    tags = { "spshop" },
    random_color = "Random",
    categories = {
       "elona.drink",
       "elona.tag_spshop"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_gain_potential", power = 100}
+         }
+      }
    }
 }
 
@@ -195,11 +230,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.buff_holy_shield", 200, item, params)
-   end,
    categories = {
       "elona.drink",
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.buff_holy_shield", power = 200}
+         }
+      }
    }
 }
 
@@ -216,15 +256,20 @@ data:add {
    originalnameref2 = "potion",
    has_random_name = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.buff_mist_of_silence", 400, item, params)
-   end,
 
    tags = { "neg" },
    random_color = "Random",
    categories = {
       "elona.drink",
       "elona.tag_neg"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.buff_mist_of_silence", power = 400}
+         }
+      }
    }
 }
 
@@ -243,11 +288,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.buff_regeneration", 300, item, params)
-   end,
    categories = {
       "elona.drink",
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.buff_regeneration", power = 300}
+         }
+      }
    }
 }
 
@@ -266,11 +316,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.buff_elemental_shield", 250, item, params)
-   end,
    categories = {
       "elona.drink",
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.buff_elemental_shield", power = 250}
+         }
+      }
    }
 }
 
@@ -289,11 +344,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.buff_speed", 250, item, params)
-   end,
    categories = {
       "elona.drink",
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.buff_speed", power = 250}
+         }
+      }
    }
 }
 
@@ -310,15 +370,20 @@ data:add {
    originalnameref2 = "potion",
    has_random_name = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.buff_slow", 400, item, params)
-   end,
 
    tags = { "neg" },
    random_color = "Random",
    categories = {
       "elona.drink",
       "elona.tag_neg"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.buff_slow", power = 400}
+         }
+      }
    }
 }
 
@@ -336,11 +401,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.buff_hero", 250, item, params)
-   end,
    categories = {
       "elona.drink",
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.buff_hero", power = 250}
+         }
+      }
    }
 }
 
@@ -357,15 +427,20 @@ data:add {
    originalnameref2 = "potion",
    has_random_name = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.buff_mist_of_frailness", 250, item, params)
-   end,
 
    tags = { "neg" },
    random_color = "Random",
    categories = {
       "elona.drink",
       "elona.tag_neg"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.buff_mist_of_frailness", power = 250}
+         }
+      }
    }
 }
 
@@ -380,15 +455,20 @@ data:add {
    coefficient = 0,
    originalnameref2 = "bottle",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_sulfuric", 100, item, params)
-   end,
 
    tags = { "nogive", "elona.is_acid" },
 
    categories = {
       "elona.drink",
       "elona.tag_nogive"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_sulfuric", power = 100}
+         }
+      }
    }
 }
 
@@ -405,15 +485,20 @@ data:add {
    originalnameref2 = "potion",
    has_random_name = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_weaken_resistance", 100, item, params)
-   end,
 
    tags = { "neg" },
    random_color = "Random",
    categories = {
       "elona.drink",
       "elona.tag_neg"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_weaken_resistance", power = 100}
+         }
+      }
    }
 }
 
@@ -432,15 +517,20 @@ data:add {
    originalnameref2 = "potion",
    has_random_name = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.mutation", 100, item, params)
-   end,
 
    tags = { "nogive" },
    random_color = "Random",
    categories = {
       "elona.drink",
       "elona.tag_nogive"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.mutation", power = 100}
+         }
+      }
    }
 }
 
@@ -460,11 +550,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_cure_mutation", 200, item, params)
-   end,
    categories = {
       "elona.drink",
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_cure_mutation", power = 200}
+         }
+      }
    }
 }
 
@@ -481,9 +576,7 @@ data:add {
    originalnameref2 = "bottle",
 
    prevent_dip = true,
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_water", 100, item, params)
-   end,
+
    medal_value = 3,
    categories = {
       "elona.drink",
@@ -520,6 +613,14 @@ data:add {
             -- <<<<<<<< shade2/action.hsp:301 		} ..
          end
       }
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_water", power = 100}
+         }
+      }
    }
 }
 
@@ -537,9 +638,6 @@ data:add {
    originalnameref2 = "bottle",
    has_random_name = true,
 
-   on_drink = function(self, params)
-      return ElonaMagic.drink_potion("elona.effect_poison", 150, self, params)
-   end,
 
    on_init_params = function(self, params)
       self.color = Rand.choice(Enum.Color:values())
@@ -549,6 +647,14 @@ data:add {
    categories = {
       "elona.drink",
       "elona.tag_nogive"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_poison", power = 150}
+         }
+      }
    }
 }
 
@@ -567,9 +673,6 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_cure_corruption", 200, item, params)
-   end,
    medal_value = 10,
    categories = {
       "elona.drink",
@@ -587,6 +690,14 @@ data:add {
          end
       },
    },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_cure_corruption", power = 200}
+         }
+      }
+   }
 }
 
 data:add {
@@ -602,15 +713,20 @@ data:add {
    coefficient = 100,
    has_random_name = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_sulfuric", 250, item, params)
-   end,
 
    tags = { "nogive" },
    random_color = "Random",
    categories = {
       "elona.drink",
       "elona.tag_nogive"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_sulfuric", power = 250}
+         }
+      }
    }
 }
 
@@ -628,11 +744,16 @@ data:add {
 
    params = { chara_id = nil },
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.milk", 100, item, params)
-   end,
    categories = {
       "elona.drink",
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.milk", power = 100}
+         }
+      }
    }
 }
 
@@ -649,15 +770,20 @@ data:add {
    coefficient = 0,
    has_random_name = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_molotov", 100, item, params)
-   end,
 
    tags = { "nogive" },
    random_color = "Random",
    categories = {
       "elona.drink",
       "elona.tag_nogive"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_molotov", power = 100}
+         }
+      }
    }
 }
 
@@ -675,9 +801,6 @@ data:add {
 
    elona_function = 14,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_water", 100, item, params)
-   end,
 
    on_throw = function(self, params)
       -- >>>>>>>> shade2/action.hsp:57 		if sync(tlocX,tlocY) : if iId(ci)=idSnow{ ...
@@ -726,7 +849,15 @@ data:add {
    categories = {
       "elona.drink",
    },
-   light = light.item
+   light = light.item,
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_water", power = 100}
+         }
+      }
+   }
 }
 
 data:add {
@@ -741,9 +872,6 @@ data:add {
    rarity = 150000,
    coefficient = 0,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_love_potion", 100, item, params)
-   end,
 
    tags = { "nogive" },
 
@@ -772,6 +900,14 @@ data:add {
          end
       },
    },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_love_potion", power = 100}
+         }
+      }
+   }
 }
 
 data:add {
@@ -791,9 +927,6 @@ data:add {
 
    is_precious = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_troll_blood", 500, item, params)
-   end,
 
    tags = { "spshop" },
    random_color = "Random",
@@ -801,6 +934,14 @@ data:add {
    categories = {
       "elona.drink",
       "elona.tag_spshop"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_troll_blood", power = 500}
+         }
+      }
    }
 }
 
@@ -816,11 +957,16 @@ data:add {
    coefficient = 100,
    originalnameref2 = "potion",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_salt", 100, item, params)
-   end,
    categories = {
       "elona.drink",
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_salt", power = 100}
+         }
+      }
    }
 }
 
@@ -835,11 +981,16 @@ data:add {
    rarity = 10000,
    coefficient = 0,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_dirty_water", 100, item, params)
-   end,
    categories = {
       "elona.drink",
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_dirty_water", power = 100}
+         }
+      }
    }
 }
 
@@ -858,9 +1009,6 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_descent", 100, item, params)
-   end,
    categories = {
       "elona.drink",
    },
@@ -877,6 +1025,14 @@ data:add {
          end
       },
    },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_descent", power = 100}
+         }
+      }
+   }
 }
 
 data:add {
@@ -894,11 +1050,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.evolution", 100, item, params)
-   end,
    categories = {
       "elona.drink",
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.evolution", power = 100}
+         }
+      }
    }
 }
 
@@ -915,15 +1076,20 @@ data:add {
    coefficient = 100,
    has_random_name = true,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_sulfuric", 250, item, params)
-   end,
 
    tags = { "nogive" },
    random_color = "Random",
    categories = {
       "elona.drink",
       "elona.tag_nogive"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_sulfuric", power = 250}
+         }
+      }
    }
 }
 
@@ -940,9 +1106,6 @@ data:add {
    coefficient = 0,
    originalnameref2 = "bottle",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_soda", 100, item, params)
-   end,
 
    tags = { "fest" },
 
@@ -950,6 +1113,14 @@ data:add {
       "elona.drink",
       "elona.tag_fest",
       "elona.no_generate"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_soda", power = 100}
+         }
+      }
    }
 }
 
@@ -967,12 +1138,17 @@ data:add {
 
    quality = Enum.Quality.Unique,
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_cupsule", 100, item, params)
-   end,
    categories = {
       "elona.drink",
       "elona.unique_item"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_cupsule", power = 100}
+         }
+      }
    }
 }
 
@@ -995,12 +1171,17 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.heal_light", 100, item, params)
-   end,
    categories = {
       "elona.drink",
       "elona.drink_potion"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.heal_light", power = 100}
+         }
+      }
    }
 }
 
@@ -1020,12 +1201,17 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.heal_light", 300, item, params)
-   end,
    categories = {
       "elona.drink",
       "elona.drink_potion"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.heal_light", power = 300}
+         }
+      }
    }
 }
 
@@ -1045,12 +1231,17 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.heal_critical", 100, item, params)
-   end,
    categories = {
       "elona.drink",
       "elona.drink_potion"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.heal_critical", power = 100}
+         }
+      }
    }
 }
 
@@ -1071,12 +1262,17 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.heal_critical", 300, item, params)
-   end,
    categories = {
       "elona.drink",
       "elona.drink_potion"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.heal_critical", power = 300}
+         }
+      }
    }
 }
 
@@ -1097,12 +1293,17 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.heal_critical", 400, item, params)
-   end,
    categories = {
       "elona.drink",
       "elona.drink_potion"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.heal_critical", power = 400}
+         }
+      }
    }
 }
 
@@ -1123,12 +1324,17 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.cure_of_eris", 100, item, params)
-   end,
    categories = {
       "elona.drink",
       "elona.drink_potion"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.cure_of_eris", power = 100}
+         }
+      }
    }
 }
 
@@ -1149,12 +1355,17 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.cure_of_eris", 300, item, params)
-   end,
    categories = {
       "elona.drink",
       "elona.drink_potion"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.cure_of_eris", power = 300}
+         }
+      }
    }
 }
 
@@ -1175,12 +1386,17 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.cure_of_jure", 100, item, params)
-   end,
    categories = {
       "elona.drink",
       "elona.drink_potion"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.cure_of_jure", power = 100}
+         }
+      }
    }
 }
 
@@ -1199,12 +1415,17 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.restore_body", 100, item, params)
-   end,
    categories = {
       "elona.drink",
       "elona.drink_potion"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.restore_body", power = 100}
+         }
+      }
    }
 }
 
@@ -1223,12 +1444,17 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.restore_spirit", 100, item, params)
-   end,
    categories = {
       "elona.drink",
       "elona.drink_potion"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.restore_spirit", power = 100}
+         }
+      }
    }
 }
 
@@ -1248,12 +1474,17 @@ data:add {
    coefficient = 0,
    originalnameref2 = "bottle",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_ale", 300, item, params)
-   end,
    categories = {
       "elona.drink",
       "elona.drink_alcohol"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_ale", power = 300}
+         }
+      }
    }
 }
 
@@ -1269,12 +1500,17 @@ data:add {
    coefficient = 100,
    originalnameref2 = "bottle",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_ale", 500, item, params)
-   end,
    categories = {
       "elona.drink",
       "elona.drink_alcohol"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_ale", power = 500}
+         }
+      }
    }
 }
 
@@ -1290,12 +1526,17 @@ data:add {
    coefficient = 0,
    originalnameref2 = "bottle",
 
-   on_drink = function(item, params)
-      return ElonaMagic.drink_potion("elona.effect_ale", 200, item, params)
-   end,
    categories = {
       "elona.drink",
       "elona.drink_alcohol"
+   },
+
+   _ext = {
+      [IItemPotion] = {
+         effects = {
+            {_id = "elona.effect_ale", power = 200}
+         }
+      }
    }
 }
 
