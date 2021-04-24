@@ -105,6 +105,7 @@ local function init_save()
    s.quest_time_limit_notice_interval = 0
    s.sidequest = {}
    s.deferred_events = SkipList:new()
+   s.active_main_quests = {}
 end
 
 Event.register("base.on_init_save", "Init save (elona_sys)", init_save)

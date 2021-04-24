@@ -58,7 +58,9 @@ function JournalMenu:set_data(pages)
       local lines = BookMenuMarkup.parse(page, false)
 
       for _, line in ipairs(lines) do
-         local _, wrapped = Draw.wrap_text(line.line, 280)
+         -- local max_width = 280
+         local max_width = 260
+         local _, wrapped = Draw.wrap_text(line.line, max_width)
 
          if #wrapped == 0 then
             -- line.line was an empty string ("")

@@ -10,6 +10,7 @@ local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local Weather = require("mod.elona.api.Weather")
 local Adventurer = require("mod.elona.api.Adventurer")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 
 local function load_towns(north_tyris)
    for _, area in Area.iter_in_parent(north_tyris) do
@@ -34,6 +35,7 @@ local function load_towns(north_tyris)
 end
 
 local function start(self, player)
+   Sidequest.set_main_quest("elona.main_quest")
    Scene.play("elona.story0")
 
    -- >>>>>>>> shade2/main.hsp:457 		gYear		=initYear,initMonth,initDay,1,10	 ..

@@ -10,6 +10,7 @@ local Nefia = require("mod.elona.api.Nefia")
 local Rand = require("api.Rand")
 local Tools = require("mod.tools.api.Tools")
 local Adventurer = require("mod.elona.api.Adventurer")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 
 require("mod.test_room.data")
 
@@ -43,6 +44,8 @@ local function load_towns(north_tyris)
 end
 
 local function on_game_start(self, player)
+   Sidequest.set_main_quest("elona.main_quest")
+
    local bow = Item.create("elona.long_bow", nil, nil, { ownerless = true })
    local arrow = Item.create("elona.arrow", nil, nil, { ownerless = true })
    bow.curse_state = Enum.CurseState.Normal

@@ -89,18 +89,25 @@ data:add {
    ordering = 45000,
 
    render = function()
-      -- TODO main quest
-      local main_quest_info = "TODO main quest"
+      local main_quest_infos = Sidequest.iter_active_main_quests()
+         :map(Sidequest.localize_progress_text)
+         :to_list()
+      local main_quest_info = table.concat(main_quest_infos, "\n\n")
 
       local quest_infos = Quest.iter_accepted():map(format_quest_status):to_list()
       local quest_info = table.concat(quest_infos, "\n\n")
 
-      local sub_quest_infos = Sidequest.iter():map(format_sidequest_status):filter(fun.op.truth):to_list()
+      local sub_quest_infos = Sidequest.iter_active_sub_quests()
+         :filter(Sidequest.is_sub_quest)
+         :map(format_sidequest_status)
+         :filter(fun.op.truth)
+         :to_list()
       local sub_quest_info = table.concat(sub_quest_infos, "\n\n")
 
       return ([[
  - %s -
 
+<color=#006400>%s
 %s
 
 %s
@@ -109,6 +116,7 @@ data:add {
 %s
 ]]):format(
          I18N.get("journal._.elona.quest.title"),
+         I18N.get("quest.journal.main.title"),
          main_quest_info,
          quest_info,
          I18N.get("sidequest.journal.title"),
