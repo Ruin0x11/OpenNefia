@@ -1,17 +1,16 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local I18N = require("game.I18N")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
+local Gui = require("api.Gui")
+local Chara = require("api.Chara")
+local Item = require("api.Item")
+local common = require("mod.elona.data.dialog.common")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 
-local common = require_relative("data/dialog/common")
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "xabi",
 
-return {
-   id = "xabi",
-   root = "core.talk.unique.xabi",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("main_quest")
+         local flag = Sidequest.progress("elona.main_quest")
          if flag >= 60 then
             return "late"
          elseif flag == 50 then
@@ -20,35 +19,37 @@ return {
             return "early"
          end
 
-         return "__IGNORED__"
+         return "elona_sys.ignores_you:__start"
       end,
       late = {
-         text = {
-            {"late"}
-         }
+         text = "talk.unique.xabi.late"
       },
       mid = {
-         text = {
-            {"mid"}
-         }
+         text = "talk.unique.xabi.mid"
       },
       early = {
+         on_start = function()
+            Sidequest.set_progress("elona.main_quest", 50)
+         end,
          text = {
-            function() Internal.set_quest_flag("main_quest", 50) end,
-            {"early._0"},
-            GUI.fade_out,
-            {"early._1", args = common.args_name},
+            "talk.unique.xabi.early._0",
+            function() Gui.fade_out() end,
+            {"talk.unique.xabi.early._1", args = common.args_name},
          },
          choices = {
-            {"__start", "__MORE__"}
+            {"__start", "ui.more"}
          },
          on_finish = function()
-            Item.create(Chara.player().position, "core.gold_piece", 2500)
-            Item.create(Chara.player().position, "core.platinum_coin", 3)
-            Item.create(Chara.player().position, "core.potion_of_cure_corruption", 0)
-            Item.create(Chara.player().position, "core.treasure_map", 0)
-            GUI.txt(I18N.get("core.common.something_is_put_on_the_ground"))
-            GUI.show_journal_update_message()
+            local player = Chara.player()
+            local x = player.x
+            local y = player.y
+            local map = player:current_map()
+            Item.create("elona.gold_piece", x, y, {amount=2500}, map)
+            Item.create("elona.platinum_coin", x, y, {amount=3}, map)
+            Item.create("elona.potion_of_cure_corruption", x, y, {}, map)
+            Item.create("elona.treasure_map", x, y, {}, map)
+            Gui.mes("common.something_is_put_on_the_ground")
+            Sidequest.update_journal()
          end
       }
    }
