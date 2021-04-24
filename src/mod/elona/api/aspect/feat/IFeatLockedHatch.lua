@@ -1,8 +1,11 @@
 local Gui = require("api.Gui")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local Feat = require("api.Feat")
+local IAspect = require("api.IAspect")
+local IFeatDescendable = require("mod.elona.api.aspect.feat.IFeatDescendable")
+local IFeatActivatable = require("mod.elona.api.aspect.feat.IFeatActivatable")
 
-local IFeatLockedDoor = class.interface("IFeatLockedDoor",
+local IFeatLockedHatch = class.interface("IFeatLockedHatch",
                                         {
                                            sidequest_id = "string",
                                            sidequest_flag = "number",
@@ -10,17 +13,20 @@ local IFeatLockedDoor = class.interface("IFeatLockedDoor",
                                            feat_id = "string",
                                            area_uid = "number",
                                            area_floor = "number"
-                                        })
+                                        }, { IAspect, IFeatDescendable, IFeatActivatable })
 
-function IFeatLockedDoor:localize_action()
-   return "base:aspect._.elona.IFeatLockedDoor.action_name"
+
+IFeatLockedHatch.default_impl = "mod.elona.api.aspect.feat.FeatLockedHatchAspect"
+
+function IFeatLockedHatch:localize_action()
+   return "base:aspect._.elona.IFeatLockedHatch.action_name"
 end
 
-function IFeatLockedDoor:can_unlock(feat, chara)
+function IFeatLockedHatch:can_unlock(feat, chara)
    return Sidequest.progress(self:calc(feat, "sidequest_id")) >= self:calc(feat, "sidequest_flag")
 end
 
-function IFeatLockedDoor:on_descend(feat, params)
+function IFeatLockedHatch:on_descend(feat, params)
    if self:can_unlock(feat, params.chara) then
       local text = self:calc(feat, "on_unlock_text")
       if text then
@@ -44,8 +50,8 @@ function IFeatLockedDoor:on_descend(feat, params)
    return "turn_end"
 end
 
-function IFeatLockedDoor:on_activate(feat, params)
+function IFeatLockedHatch:on_activate(feat, params)
    return self:on_descend(feat, params)
 end
 
-return IFeatLockedDoor
+return IFeatLockedHatch

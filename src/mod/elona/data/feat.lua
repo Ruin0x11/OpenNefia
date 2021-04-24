@@ -446,4 +446,3 @@ data:add {
 }
 
 require("mod.elona.data.feat.entrance")
-require("mod.elona.data.feat.story")

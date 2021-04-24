@@ -230,7 +230,7 @@ end
 function DungeonTemplate.lesimas(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:60 	if areaId(gArea)=areaLesimas{ ...
    params.level = Nefia.calc_nefia_map_level(floor, params.level)
-   params.tileset = "elona.lesimas"
+   params.tileset = "elona.tower_2"
    params.on_generate_params = scale_density_with_floor
 
    if Rand.one_in(20) then

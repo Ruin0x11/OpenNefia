@@ -1039,7 +1039,7 @@ local feat_chips = {
       elona_atlas = 1,
    },
    {
-      _id = "hatch",
+      _id = "locked_hatch",
       elona_id = 237,
       elona_atlas = 1,
    },

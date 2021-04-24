@@ -1,4 +1,5 @@
 --- @module Mef
+local Log = require("api.Log")
 
 local Event = require("api.Event")
 local Map = require("api.Map")
@@ -103,15 +104,15 @@ function Mef.create(id, x, y, params, where)
       origin_uid = params.origin.uid
    end
 
+   local gen_params = {
+      no_build = params.no_build,
+      build_params = params
+   }
    local mef = MapObject.generate_from("base.mef", id)
 
    mef.origin_uid = origin_uid
    mef.turns = params.duration or 10
    mef.power = params.power or 0
-
-   local gen_params = {
-      no_build = params.no_build
-   }
 
    if where then
       local other_mef = Mef.at(x, y, where)
@@ -131,7 +132,12 @@ function Mef.create(id, x, y, params, where)
       assert(mef:current_map())
    end
 
-   MapObject.finalize(mef, gen_params)
+   local ok, err = xpcall(MapObject.finalize, debug.traceback, mef, gen_params)
+   if not ok then
+      Log.error(err)
+      mef:remove_ownership()
+      return nil, err
+   end
 
    mef:refresh()
 

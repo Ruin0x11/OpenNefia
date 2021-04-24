@@ -1,8 +1,8 @@
-local IFeatLockedDoor = require("mod.elona.api.aspect.IFeatLockedDoor")
+local IFeatLockedHatch = require("mod.elona.api.aspect.feat.IFeatLockedHatch")
 
-local FeatLockedDoorAspect = class.class("FeatLockedDoorAspect", IFeatLockedDoor)
+local FeatLockedHatchAspect = class.class("FeatLockedHatchAspect", IFeatLockedHatch)
 
-function FeatLockedDoorAspect:init(item, params)
+function FeatLockedHatchAspect:init(item, params)
    self.feat_id = params.feat_id or "elona.stairs_down"
    self.sidequest_id = params.sidequest_id or "elona.main_quest"
    self.sidequest_flag = params.sidequest_flag or 0
@@ -14,4 +14,4 @@ function FeatLockedDoorAspect:init(item, params)
    data["elona_sys.sidequest"]:ensure(self.sidequest_id)
 end
 
-return FeatLockedDoorAspect
+return FeatLockedHatchAspect

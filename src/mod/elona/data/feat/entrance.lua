@@ -9,6 +9,7 @@ local Map = require("api.Map")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local ExHelp = require("mod.elona.api.ExHelp")
 local NefiaCompletionDrawable = require("mod.elona.api.gui.NefiaCompletionDrawable")
+local IFeatLockedHatch = require("mod.elona.api.aspect.feat.IFeatLockedHatch")
 
 local function get_map_display_name(area, description)
    if area.metadata.is_hidden then
@@ -174,7 +175,6 @@ local function travel(start_pos_fn, set_prev_map)
                      -- not fall back to the archetype's declared map start
                      -- position.
                      Log.warn("Did not find entrance in parent map for map %s, parent %s.", map.uid, parent_area)
-                     pause()
                      starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
                   end
                else
@@ -374,6 +374,23 @@ data:add
                end
             end
          end
+      }
+   }
+}
+
+data:add {
+   _type = "base.feat",
+   _id = "locked_hatch",
+   -- elona_id = 21,
+
+   image = "elona.feat_locked_hatch",
+   is_solid = false,
+   is_opaque = false,
+
+   _ext = {
+      [IFeatLockedHatch] = {
+         sidequest_id = "elona.main_quest",
+         feat_id = "elona.stairs_down",
       }
    }
 }

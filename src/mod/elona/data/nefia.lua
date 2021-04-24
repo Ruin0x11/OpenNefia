@@ -115,7 +115,6 @@ function area_nefia.on_generate_floor(area, floor)
    end
 
    map.name = area.name
-   map.level_text = Dungeon.map_level_text(floor)
 
    if area:deepest_floor() == floor then
       remove_down_stairs(map, area)

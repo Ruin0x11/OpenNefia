@@ -136,7 +136,12 @@ function Item.create(id, x, y, params, where)
       end
    end
 
-   MapObject.finalize(item, gen_params)
+   local ok, err = xpcall(MapObject.finalize, debug.traceback, item, gen_params)
+   if not ok then
+      Log.error(err)
+      item:remove_ownership()
+      return nil, err
+   end
 
    item:emit("base.on_item_generate", params)
 

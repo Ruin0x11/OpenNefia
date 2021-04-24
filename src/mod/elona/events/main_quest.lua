@@ -8,6 +8,9 @@ local Feat = require("api.Feat")
 local Scene = require("mod.elona_sys.scene.api.Scene")
 local Map = require("api.Map")
 local Home = require("mod.elona.api.Home")
+local IFeatLockedHatch = require("mod.elona.api.aspect.feat.IFeatLockedHatch")
+local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local DeferredEvents = require("mod.elona.api.DeferredEvents")
 
 local function proc_main_quest_scenes(map)
    -- >>>>>>>> shade2/map.hsp:1995 	proc "Map:Proc scene" ...
@@ -75,6 +78,50 @@ local function proc_main_quest_scenes(map)
    -- <<<<<<<< shade2/map.hsp:2015 		} ..
 end
 Event.register("base.after_map_changed", "Proc main quest scenes", proc_main_quest_scenes)
+
+local function proc_lesimas_locked_stairs(map)
+   -- >>>>>>>> shade2/map_rand.hsp:292 	if areaId(gArea)=areaLesimas{ ...
+   if map._archetype ~= "elona.lesimas" then
+      return
+   end
+
+   local floor = Map.floor_number(map)
+
+   local function gen_locked(on_floor, main_quest_flag, on_unlock_text)
+      if on_floor == floor then
+         local is_down_stair = function(feat)
+            return feat._id == "elona.stairs_down"
+         end
+
+         local replace_with_door = function(feat)
+            local x, y = feat.x, feat.y
+            local aspects = {
+               [IFeatLockedHatch] = {
+                  sidequest_id = "elona.main_quest",
+                  sidequest_flag = main_quest_flag,
+                  area_uid = assert(feat.params.area_uid),
+                  area_floor = assert(feat.params.area_floor),
+                  feat_id = "elona.stairs_down",
+                  on_unlock_text = on_unlock_text or nil
+               }
+            }
+            feat:remove_ownership()
+            assert(Feat.create("elona.locked_hatch", x, y, {force=true, aspects=aspects}, map))
+         end
+
+         Feat.iter(map):filter(is_down_stair):each(replace_with_door)
+      end
+   end
+   -- <<<<<<<< shade2/map_rand.hsp:298 		} ..
+
+   -- >>>>>>>> shade2/action.hsp:821 		if gLevel=3 :if flagMain>=65	: f=true ...
+   gen_locked(3, 65)
+   gen_locked(17, 115)
+   gen_locked(25, 125)
+   gen_locked(44, 125, "action.use_stairs.unlock.stones")
+   -- <<<<<<<< shade2/action.hsp:824 		if gLevel=44:if flagMain>=125	: f=true ..
+end
+Event.register("base.on_generate_area_floor", "Proc locked stairs for main quest in Lesimas", proc_lesimas_locked_stairs)
 
 local function find_kapul(map)
    return Area.iter_entrances_in_parent(map):filter(
@@ -180,3 +227,17 @@ local function proc_vanquish_xabi(map)
    -- <<<<<<<< shade2/map.hsp:2094 		} ..
 end
 Event.register("base.on_map_entered", "Vanquish Xabi if story was progressed", proc_vanquish_xabi)
+
+local function proc_lesimas_final_boss_event(map)
+   local area = Area.for_map(map)
+
+   if area then
+      local floor = Map.floor_number(map)
+      if map._archetype == "elona.lesimas"
+         and floor == area:archetype().deepest_floor
+      and Sidequest.progress("elona.main_quest") < 170 then
+         DeferredEvent.add(DeferredEvents.lesimas_final_boss)
+      end
+   end
+end
+Event.register("base.on_map_entered", "Proc lesimas final boss dialog event", proc_lesimas_final_boss_event)

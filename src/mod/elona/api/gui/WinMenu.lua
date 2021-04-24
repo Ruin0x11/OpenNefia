@@ -30,6 +30,10 @@ function WinMenu:init(chara, win_comment)
    self.input:bind_keys(self:make_keymap())
 end
 
+function WinMenu:default_z_order()
+   return 100000000
+end
+
 function WinMenu:on_query()
    Gui.fade_in()
 end
@@ -66,6 +70,7 @@ end
 
 function WinMenu:draw()
    -- >>>>>>>> shade2/main.hsp:1448 	cmBG=0:x=wW/3-20:y=wH-140:gmode 4,180,300,250:pos ...
+   Draw.set_color(255, 255, 255)
    self.t.base.void:draw(self.x, self.y, self.width, self.height)
    if Draw.has_active_global_draw_callbacks(true) then
       return

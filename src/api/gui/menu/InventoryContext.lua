@@ -328,6 +328,7 @@ function InventoryContext:query_item_amount(item)
    if amount > 1 and self.query_amount and can_query then
       local canceled
 
+      -- TODO
       Gui.mes("How many? ")
       amount, canceled = Input.query_number(item.amount)
       if canceled then

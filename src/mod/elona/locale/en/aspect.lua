@@ -88,8 +88,8 @@ return {
             IFeatDescendable = {
                prompt = function(_1) return ("How do you want to use %s?"):format(_1) end,
             },
-            IFeatLockedDoor = {
-               action_name = "Door"
+            IFeatLockedHatch = {
+               action_name = "Hatch"
             }
          }
       }

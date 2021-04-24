@@ -537,10 +537,10 @@ function ElonaCommand.get_enter_action(player)
       if feat:has_event_handler("elona_sys.on_feat_search") then
          command = Command.search
       end
-      if feat:has_event_handler("elona_sys.on_feat_ascend") then
+      if feat.can_ascend then
          command = ElonaCommand.ascend
       end
-      if feat:has_event_handler("elona_sys.on_feat_descend") then
+      if feat.can_descend then
          command = ElonaCommand.descend
       end
    end

@@ -1,6 +1,6 @@
 local Advice = require("api.Advice")
 local Extend = require("api.Extend")
-local Draw = require("api.Draw")
+local IFeatLockedHatch = require("mod.elona.api.aspect.feat.IFeatLockedHatch")
 
 local UiMinimap_show_stair_locations = {}
 
@@ -23,7 +23,7 @@ function UiMinimap_show_stair_locations.after:refresh_visible(map)
    for _, feat in map:iter_feats() do
       if feat._id == "elona.stairs_up" then
          locs[#locs+1] = { type = "up", x = feat.x, y = feat.y }
-      elseif feat._id == "elona.stairs_down" then
+      elseif feat._id == "elona.stairs_down" or feat:get_aspect(IFeatLockedHatch) then
          locs[#locs+1] = { type = "down", x = feat.x, y = feat.y }
       end
    end

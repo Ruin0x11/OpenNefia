@@ -246,7 +246,7 @@ function DeferredEvents.calc_win_comment()
    Rand.shuffle(arr)
 
    local to_win_comment = function(i)
-      return I18N.get("win.words._" .. i)
+      return I18N.get("win.words._" .. (i-1))
    end
 
    local win_comments = fun.iter(arr):take(3):map(to_win_comment):to_list()
@@ -309,6 +309,7 @@ local function show_orphe_dialog()
 end
 
 function DeferredEvents.show_win_event()
+   Gui.update_screen()
    Gui.play_sound("base.complete1")
    Gui.stop_music()
    Gui.mes("win.conquer_lesimas")

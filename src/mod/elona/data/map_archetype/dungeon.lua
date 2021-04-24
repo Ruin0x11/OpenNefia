@@ -83,10 +83,6 @@ do
       if Sidequest.is_active_main_quest("elona.main_quest") then
          map.music = "elona.last_boss"
 
-         if Sidequest.progress("elona.main_quest") < 170 then
-            DeferredEvent.add(DeferredEvents.lesimas_final_boss)
-         end
-
          assert(Area.create_stairs_up(area, floor - 1, 16, 13, {}, map))
 
          if NpcMemory.killed("elona.zeome") == 0 then
