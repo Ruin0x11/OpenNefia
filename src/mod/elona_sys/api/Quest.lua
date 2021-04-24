@@ -245,7 +245,7 @@ function Quest.format_name_and_desc(quest, speaker, is_active)
 
    Rand.set_seed(quest.client_uid + 1)
 
-   local index = Rand.rnd(choices) + 1
+   local index = Rand.rnd(choices)
 
    Rand.set_seed()
 
