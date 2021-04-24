@@ -24,7 +24,9 @@ function IItemPotion:on_drink(item, params)
 
    if chara:is_in_fov() then
       Gui.play_sound("base.drink1", chara.x, chara.y)
-      Gui.mes("action.drink.potion", chara, item:build_name(1))
+      if (params.triggered_by or "potion") == "potion" then
+         Gui.mes("action.drink.potion", chara, item:build_name(1))
+      end
    end
 
    local did_something = false
