@@ -139,9 +139,15 @@ function draw_callbacks:update(dt)
    return false
 end
 
-function draw_callbacks:has_more()
+function draw_callbacks:has_more(include_bg_cbs)
+   if include_bg_cbs then
+      print(inspect(self.draw_callbacks))
+   end
    for _, draw_cb in pairs(self.draw_callbacks) do
       if not draw_cb.is_background then
+         return true
+      end
+      if include_bg_cbs and draw_cb.is_background then
          return true
       end
    end

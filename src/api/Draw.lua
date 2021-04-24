@@ -55,6 +55,8 @@ Draw.remove_global_draw_callback = draw.remove_global_draw_callback
 
 Draw.wait_global_draw_callbacks = draw.wait_global_draw_callbacks
 
+Draw.has_active_global_draw_callbacks = draw.has_active_global_draw_callbacks
+
 --- Sets the current drawing color. You can provide a table of up to  four
 --- values or four separate integers.
 ---

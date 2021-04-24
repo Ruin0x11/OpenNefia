@@ -10,7 +10,7 @@ function CharaMakeCaption:init(caption)
    self.width = 760
    self.height = 24
 
-   self.caption = I18N.get(caption) or caption
+   self.caption = I18N.get_optional(caption) or caption
 end
 
 function CharaMakeCaption:set_data(caption)

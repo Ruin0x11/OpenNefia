@@ -19,6 +19,10 @@ local Rank = require("mod.elona.api.Rank")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local I18N = require("api.I18N")
 local Prompt = require("api.gui.Prompt")
+local WinMenu = require("mod.elona.api.gui.WinMenu")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local UiTheme = require("api.gui.UiTheme")
+local Draw = require("api.Draw")
 
 local DeferredEvents = {}
 
@@ -234,18 +238,22 @@ function DeferredEvents.lesimas_final_boss()
    Effect.try_to_chat(zeome, player)
 end
 
-function DeferredEvents.calc_win_text_choices()
+function DeferredEvents.calc_win_comment()
    -- >>>>>>>> shade2/text.hsp:375 #deffunc txtSetWinWord	int a ...
    local choices = I18N.get_choice_count("win.words")
 
    local arr = fun.range(choices):to_list()
    Rand.shuffle(arr)
 
-   local to_win_text = function(i)
+   local to_win_comment = function(i)
       return I18N.get("win.words._" .. i)
    end
 
-   return fun.iter(arr):take(3):map(to_win_text):to_list()
+   local win_comments = fun.iter(arr):take(3):map(to_win_comment):to_list()
+
+   local prompt = Prompt:new(win_comments, 310, false)
+   local result = prompt:query()
+   return win_comments[result.index]
    -- <<<<<<<< shade2/text.hsp:391 	return 	 ..
 end
 
@@ -305,23 +313,27 @@ function DeferredEvents.show_win_event()
    Gui.stop_music()
    Gui.mes("win.conquer_lesimas")
 
-   local win_texts = DeferredEvents.calc_win_text_choices()
-
-   local prompt = Prompt:new(win_texts, 310, false)
-   local result = prompt:query()
-   local win_comment = win_texts[result.index]
+   local win_comment = DeferredEvents.calc_win_comment()
 
    show_orphe_dialog()
 
    Gui.play_music("elona.march2")
    Gui.fade_out()
 
-   Gui.fade_in()
+   WinMenu:new(Chara.player(), win_comment):query()
 end
 
 function DeferredEvents.win()
    -- >>>>>>>> shade2/main.hsp:1651 	gosub *win ...
-   DeferredEvents.show_win_event()
+   local going = true
+   while going do
+      DeferredEvents.show_win_event()
+
+      Gui.mes("win.watch_event_again")
+      going = Input.yes_no()
+   end
+
+   Sidequest.set_progress("elona.main_quest", 180)
 
    local player = Chara.player()
    Chara.create("elona.orphe", player.x, player.y, {}, player:current_map())

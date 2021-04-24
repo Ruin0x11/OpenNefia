@@ -40,6 +40,7 @@ local function start(self, player)
 
    -- >>>>>>>> shade2/main.hsp:457 		gYear		=initYear,initMonth,initDay,1,10	 ..
    save.base.date = DateTime:new(Const.INITIAL_YEAR, Const.INITIAL_MONTH, Const.INITIAL_DAY, 1, 10)
+   save.base.initial_date = save.base.date:clone()
    Weather.change_to("elona.rain", 6)
    -- <<<<<<<< shade2/main.hsp:467 		gWeather	=weatherRain,6 ..
 

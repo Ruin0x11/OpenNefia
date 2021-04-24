@@ -10,6 +10,7 @@ local StayingCharas = require("api.StayingCharas")
 local function init_save()
    local s = save.base
    s.date = DateTime:new(Const.INITIAL_YEAR, Const.INITIAL_MONTH, Const.INITIAL_DAY, 1, 10)
+   s.initial_date = s.date:clone()
    s.play_time = 0
    s.play_turns = 0
    s.play_days = 0

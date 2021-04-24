@@ -126,6 +126,11 @@ function Gui.wait_for_draw_callbacks()
    field:wait_for_draw_callbacks()
 end
 
+--- Waits for all draw callbacks to finish before continuing.
+function Gui.has_active_draw_callbacks(include_bg_cbs)
+   return field:has_draw_callbacks(include_bg_cbs)
+end
+
 --- Waits for the specified number of milliseconds.
 function Gui.wait(ms, no_update)
    local anim = function()

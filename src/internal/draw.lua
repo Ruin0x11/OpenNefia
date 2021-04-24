@@ -263,6 +263,10 @@ function draw.wait_global_draw_callbacks()
    global_draw_callbacks:wait()
 end
 
+function draw.has_active_global_draw_callbacks(include_bg_cbs)
+   return global_draw_callbacks:has_more(include_bg_cbs)
+end
+
 function draw.needs_wait()
    for _, v in ipairs(coroutines) do
       if v.wait then

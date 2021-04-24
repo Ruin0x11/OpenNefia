@@ -116,11 +116,11 @@ function World.time_to_text(hour)
 end
 
 -- TODO move
-function World.calc_score()
+function World.calc_score(player)
    local Chara = require("api.Chara")
-   local chara = Chara.player()
+   player = player or Chara.player()
    local deepest = save.base.deepest_level
-   local score = chara.level * chara.level + deepest * deepest + save.base.total_killed
+   local score = player.level * player.level + deepest * deepest + save.base.total_killed
    if save.base.total_deaths > 1 then
       score = math.floor(score / 10 + 1)
    end
