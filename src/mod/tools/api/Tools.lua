@@ -1112,4 +1112,16 @@ function Tools.take_picture(map, kind)
    return Gui.render_tilemap_to_image(map, layers, map_object_types)
 end
 
+function Tools.goto_chara(_id)
+   local player = Chara.player()
+   local map = player:current_map()
+   local chara = Chara.find(_id, "others", map)
+   if chara then
+      local x, y = Map.find_free_position(chara.x, chara.y, {}, map)
+      if x and y then
+         player:set_pos(x, y)
+      end
+   end
+end
+
 return Tools

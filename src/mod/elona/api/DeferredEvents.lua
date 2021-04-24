@@ -235,7 +235,7 @@ function DeferredEvents.lesimas_final_boss()
    local player = Chara.player()
    local map = player:current_map()
    local zeome = assert(Chara.find("elona.zeome", "all", map))
-   Effect.try_to_chat(zeome, player)
+   Effect.try_to_chat(zeome, player, true)
 end
 
 function DeferredEvents.calc_win_comment()

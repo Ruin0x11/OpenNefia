@@ -402,13 +402,17 @@ local function step_dialog(node_data, talk, state, prev_node_id)
                -- cancelled. If nil, prevent cancellation.
                local default_choice = nil
                if node.default_choice ~= nil then
+                  local full_id = node.default_choice
+                  if not full_id:find(":") then
+                     full_id = talk.id .. ":" .. full_id
+                  end
                   for j, choice in ipairs(choices) do
-                     if choice[1] == node.default_choice then
+                     if choice[1] == full_id then
                         default_choice = j
                      end
                   end
                   if default_choice == nil then
-                     dialog_error(talk, "Could not find default choice \"" .. node.default_choice .. "\"")
+                     dialog_error(talk, "Could not find default choice \"" .. full_id .. "\"")
                   end
                end
 

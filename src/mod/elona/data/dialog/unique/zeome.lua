@@ -1,20 +1,17 @@
-local Internal = require("game.Internal")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 
-return {
-   id = "zeome",
-   root = "core.talk.unique.zeome",
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "zeome",
 
    nodes = {
+      -- >>>>>>>> shade2/chat.hsp:339 	case 2 ...
       __start = {
-         text = {
-            {"dialog"}
-         },
-         choices = {
-            {"__END__", "__MORE__"}
-         },
+         text = "talk.unique.zeome.dialog",
          on_finish = function()
-            Internal.set_quest_flag("main_quest", 170)
+            Sidequest.set_progress("elona.main_quest", 170)
          end
       }
+      -- <<<<<<<< shade2/chat.hsp:342 	goto *chat_end ..
    }
 }
