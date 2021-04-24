@@ -44,7 +44,7 @@ local function load_towns(north_tyris)
 end
 
 local function on_game_start(self, player)
-   Sidequest.set_main_quest("elona.main_quest")
+   Sidequest.set_main_quest("elona.main_quest", 1000)
 
    local bow = Item.create("elona.long_bow", nil, nil, { ownerless = true })
    local arrow = Item.create("elona.arrow", nil, nil, { ownerless = true })

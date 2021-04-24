@@ -141,7 +141,7 @@ function I18N.get_choice_count(prefix, suffix)
       i = i + 1
    end
 
-   return i - 1
+   return i
 end
 
 function I18N.quote_speech(id, ...)

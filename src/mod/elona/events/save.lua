@@ -39,7 +39,6 @@ local function init_save()
    s.guild_thief_stolen_goods_quota = 0
    s.news_buffer = CircularBuffer:new(38)
    s.staying_adventurers = StayingCharas:new(nil)
-   s.main_quest_progress = 0
    s.ex_help_shown = {}
    s.shortcuts = {}
 end

@@ -16,6 +16,9 @@ local StayingCharas = require("api.StayingCharas")
 local Area = require("api.Area")
 local Nefia = require("mod.elona.api.Nefia")
 local Rank = require("mod.elona.api.Rank")
+local Dialog = require("mod.elona_sys.dialog.api.Dialog")
+local I18N = require("api.I18N")
+local Prompt = require("api.gui.Prompt")
 
 local DeferredEvents = {}
 
@@ -222,6 +225,107 @@ function DeferredEvents.proc_guild_intruder(guild_id, chara, map)
       end
    end
    -- <<<<<<<< shade2/main.hsp:2045 	swbreak ..
+end
+
+function DeferredEvents.lesimas_final_boss()
+   local player = Chara.player()
+   local map = player:current_map()
+   local zeome = assert(Chara.find("elona.zeome", "all", map))
+   Effect.try_to_chat(zeome, player)
+end
+
+function DeferredEvents.calc_win_text_choices()
+   -- >>>>>>>> shade2/text.hsp:375 #deffunc txtSetWinWord	int a ...
+   local choices = I18N.get_choice_count("win.words")
+
+   local arr = fun.range(choices):to_list()
+   Rand.shuffle(arr)
+
+   local to_win_text = function(i)
+      return I18N.get("win.words._" .. i)
+   end
+
+   return fun.iter(arr):take(3):map(to_win_text):to_list()
+   -- <<<<<<<< shade2/text.hsp:391 	return 	 ..
+end
+
+local function show_orphe_dialog()
+   -- >>>>>>>> shade2/main.hsp:1394 	if jp{ ...
+   Gui.mes_clear()
+   Gui.mes("win.event.text._0")
+
+   local player = Chara.player()
+   local map = player:current_map()
+   local orphe = Chara.find("elona.orphe", "others", map)
+   if not Chara.is_alive(orphe) then
+      orphe = assert(Chara.create("elona.orphe", player.x, player.y, {}, player:current_map()))
+   end
+   Gui.update_screen()
+   Gui.play_music("elona.chaos")
+   Input.query_more()
+   Gui.mes_clear()
+
+   Gui.mes("win.event.text._1")
+   Gui.mes("win.event.text._2")
+   Gui.mes("win.event.text._3")
+   Input.query_more()
+   Gui.mes_clear()
+
+   Gui.mes("win.event.text._4")
+   Gui.mes("win.event.text._5")
+   Gui.mes("win.event.text._6")
+   Input.query_more()
+   Gui.mes_clear()
+
+   Gui.mes("win.event.text._7")
+   Gui.mes("win.event.text._8")
+   Input.query_more()
+   Gui.mes_clear()
+
+   Gui.mes("win.event.text._9")
+   Input.query_more()
+
+   Effect.try_to_chat(orphe, player, true, "elona.orphe:dialog")
+
+   Gui.mes_clear()
+   Gui.mes("win.event.text._10")
+   Input.query_more()
+   Gui.mes_clear()
+
+   orphe:vanquish()
+   Gui.update_screen()
+
+   Gui.mes("win.event.text._11")
+   Input.query_more()
+   -- <<<<<<<< shade2/main.hsp:1428 		} ..
+end
+
+function DeferredEvents.show_win_event()
+   Gui.play_sound("base.complete1")
+   Gui.stop_music()
+   Gui.mes("win.conquer_lesimas")
+
+   local win_texts = DeferredEvents.calc_win_text_choices()
+
+   local prompt = Prompt:new(win_texts, 310, false)
+   local result = prompt:query()
+   local win_comment = win_texts[result.index]
+
+   show_orphe_dialog()
+
+   Gui.play_music("elona.march2")
+   Gui.fade_out()
+
+   Gui.fade_in()
+end
+
+function DeferredEvents.win()
+   -- >>>>>>>> shade2/main.hsp:1651 	gosub *win ...
+   DeferredEvents.show_win_event()
+
+   local player = Chara.player()
+   Chara.create("elona.orphe", player.x, player.y, {}, player:current_map())
+   -- <<<<<<<< shade2/main.hsp:1652 	flt :chara_create -1,23,cX(pc),cY(pc) ..
 end
 
 return DeferredEvents

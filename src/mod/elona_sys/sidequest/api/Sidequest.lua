@@ -6,7 +6,9 @@ local I18N = require("api.I18N")
 
 local Sidequest = {}
 
-function Sidequest.set_main_quest(sidequest_id)
+function Sidequest.set_main_quest(sidequest_id, progress)
+   progress = progress or 1
+
    local proto = data["elona_sys.sidequest"]:ensure(sidequest_id)
    if not proto.is_main_quest then
       error(("Quest %s is not useable as a main quest."):format(sidequest_id))
@@ -15,19 +17,46 @@ function Sidequest.set_main_quest(sidequest_id)
    save.elona_sys.active_main_quests = {
       [sidequest_id] = true
    }
-   if not save.elona_sys.sidequest[sidequest_id] then
-      Sidequest.set_progress(sidequest_id, 0)
-   end
+   Sidequest.set_progress(sidequest_id, progress)
 end
 
 function Sidequest.progress(sidequest_id)
-   data["elona_sys.sidequest"]:ensure(sidequest_id)
+   local proto = data["elona_sys.sidequest"]:ensure(sidequest_id)
    local sq = save.elona_sys.sidequest[sidequest_id]
    if sq == nil then
       return 0
    end
 
+   if proto.is_main_quest and not Sidequest.is_active_main_quest(sidequest_id) then
+      return 0
+   end
+
    return sq.progress
+end
+
+function Sidequest.set_progress(sidequest_id, progress)
+   data["elona_sys.sidequest"]:ensure(sidequest_id)
+   progress = math.floor(progress or 0)
+   assert(type(progress) == "number")
+
+   local sidequest = save.elona_sys.sidequest
+   if sidequest[sidequest_id] == nil then
+      sidequest[sidequest_id] = {}
+   end
+   sidequest[sidequest_id].progress = progress
+end
+
+function Sidequest.is_complete(sidequest_id)
+   -- TODO don't base progress on some arbitrary number, use a flag or something
+   -- instead
+   return Sidequest.progress(sidequest_id) >= 1000
+end
+
+function Sidequest.is_in_progress(sidequest_id)
+   -- TODO don't base progress on some arbitrary number, use a flag or something
+   -- instead
+   local progress = Sidequest.progress(sidequest_id)
+   return progress > 0 and progress < 1000
 end
 
 function Sidequest.is_active_main_quest(sidequest_id)
@@ -47,18 +76,6 @@ end
 function Sidequest.is_sub_quest(sidequest_id)
    local proto = data["elona_sys.sidequest"]:ensure(sidequest_id)
    return not proto.is_main_quest
-end
-
-function Sidequest.set_progress(sidequest_id, progress)
-   data["elona_sys.sidequest"]:ensure(sidequest_id)
-   progress = math.floor(progress or 0)
-   assert(type(progress) == "number")
-
-   local sidequest = save.elona_sys.sidequest
-   if sidequest[sidequest_id] == nil then
-      sidequest[sidequest_id] = {}
-   end
-   sidequest[sidequest_id].progress = progress
 end
 
 local function iter_sub_quests(state, i)

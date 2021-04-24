@@ -336,7 +336,7 @@ function Dungeon.create_room_door(room, dir, place_door, map)
       door_positions[i] = i
    end
 
-   door_positions = Rand.shuffle(door_positions)
+   Rand.shuffle(door_positions)
    local dirs1 = {}
    local dirs2 = {}
    local x, y
@@ -720,7 +720,7 @@ function Dungeon.dig_maze(map, rooms, params, class, bold)
    local way = { 0, 1, 2, 3 }
 
    while true do
-      way = Rand.shuffle(way)
+      Rand.shuffle(way)
 
       was_dug = false
 

@@ -30,7 +30,9 @@ data:add {
 
    on_generate = function(map)
       -- >>>>>>>> shade2/map.hsp:877 	 		if gHomeLevel=0{ ..
-      if save.elona.main_quest_progress == 0 then
+      if Sidequest.is_active_main_quest("elona.main_quest")
+         and Sidequest.progress("elona.main_quest") == 0
+      then
          local chara = Chara.create("elona.larnneire", 18, 10, {}, map)
          chara:add_role("elona.special")
 
@@ -49,7 +51,7 @@ data:add {
          item = Item.create("elona.book", 18, 19, {}, map)
          item.params = { book_id = "elona.beginners_guide" }
       end
-      -- <<<<<<<< shade2/map.hsp:884 				flt:item_create -1,idBook,18,19:iBookId(ci)=1 ..
+   -- <<<<<<<< shade2/map.hsp:884 				flt:item_create -1,idBook,18,19:iBookId(ci)=1 ..
    end
 }
 

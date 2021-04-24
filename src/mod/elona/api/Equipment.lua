@@ -334,7 +334,7 @@ function Equipment.apply_equipment_spec(chara, equip_spec, gen_chance, add_quali
                   -- The item ought to be compatible with this body part, or
                   -- we're being weird.
                   if not chara:equip_item(item, true, entry.slot) then
-                     Log.error("Could not equip generated equipment for body part %s, spec %s on %s: %s\n%s", entry.body_part._id, spec_id, chara._id, item._id, inspect(spec))
+                     Log.error("Could not equip generated equipment for body part %s, spec %s on %s: %s\n%s", entry.body_part._id, spec_id, chara and chara._id, item and item._id, inspect(spec))
                      item:remove_ownership()
                   end
                   break

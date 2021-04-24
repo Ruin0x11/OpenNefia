@@ -65,11 +65,8 @@ local function format_sidequest_status(sidequest_id, progress)
    -- >>>>>>>> shade2/text.hsp:1017 #define sqTitle(%%1,%%2) p=false:if %%1!0:s=%%2:p=%%1:i ...
    local name = I18N.get("sidequest._." .. sidequest_id .. ".name")
 
-   -- TODO don't base progress on some arbitrary number, use a flag or something
-   -- instead
-   local is_complete = progress >= 1000
    local text
-   if is_complete then
+   if Sidequest.is_complete(sidequest_id, progress) then
       text = ("%s%s"):format(I18N.get("sidequest.journal.done"), name)
    else
       text = Sidequest.localize_progress_text(sidequest_id, progress)
@@ -99,6 +96,7 @@ data:add {
 
       local sub_quest_infos = Sidequest.iter_active_sub_quests()
          :filter(Sidequest.is_sub_quest)
+         :filter(Sidequest.is_in_progress)
          :map(format_sidequest_status)
          :filter(fun.op.truth)
          :to_list()
@@ -125,6 +123,36 @@ data:add {
    end
 }
 
+local function get_quest_item_infos()
+   -- >>>>>>>> shade2/text.hsp:1121 *quest_item ...
+   local infos = {
+      "quest.journal.item.old_talisman"
+   }
+
+   if Sidequest.progress("elona.main_quest") >= 30 then
+      infos[#infos+1] = "quest.journal.item.letter_to_the_king"
+   end
+
+   if save.elona.flag_fools_magic_stone then
+      infos[#infos+1] = "quest.journal.item.fools_magic_stone"
+   end
+
+   if save.elona.flag_kings_magic_stone then
+      infos[#infos+1] = "quest.journal.item.kings_magic_stone"
+   end
+
+   if save.elona.flag_sages_magic_stone then
+      infos[#infos+1] = "quest.journal.item.sages_magic_stone"
+   end
+
+   local map = function(info)
+      return ("[%s]"):format(I18N.get(info))
+   end
+
+   return fun.iter(infos):map(map):to_list()
+   -- <<<<<<<< shade2/text.hsp:1127 	return ..
+end
+
 data:add {
    _type = "base.journal_page",
    _id = "quest_item",
@@ -132,14 +160,15 @@ data:add {
    ordering = 50000,
 
    render = function()
-      -- TODO main quest, side quests
+      local quest_item_infos = get_quest_item_infos()
+      local quest_item_info = table.concat(quest_item_infos, "\n")
 
       return ([[
  - %s -
 
-]]):format(
-         I18N.get("journal._.elona.quest_item.title")
-          )
+%s
+]]):format(I18N.get("journal._.elona.quest_item.title"),
+           quest_item_info)
    end
 }
 
@@ -262,13 +291,21 @@ data:add {
    ordering = 65000,
 
    render = function()
-      -- TODO main quest, side quests
+      local sub_quest_infos = Sidequest.iter_active_sub_quests()
+         :filter(Sidequest.is_sub_quest)
+         :filter(Sidequest.is_complete)
+         :map(format_sidequest_status)
+         :filter(fun.op.truth)
+         :to_list()
+      local sub_quest_info = table.concat(sub_quest_infos, "\n\n")
 
       return ([[
  - %s -
 
+%s
 ]]):format(
-         I18N.get("journal._.elona.completed_quests.title")
+         I18N.get("journal._.elona.completed_quests.title"),
+         sub_quest_info
           )
    end
 }

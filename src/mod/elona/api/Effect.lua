@@ -1066,9 +1066,9 @@ function Effect.wake_up_everyone(map)
 end
 -- <<<<<<<< shade2/chara_func.hsp:483 #global ..
 
-function Effect.try_to_chat(chara, player)
+function Effect.try_to_chat(chara, player, force, dialog_id)
    -- >>>>>>>> shade2/chat.hsp:42 *chat ...
-   if chara:relation_towards(player) <= Enum.Relation.Dislike then
+   if chara:relation_towards(player) <= Enum.Relation.Dislike and not force then
       Gui.mes("talk.will_not_listen", chara)
       return
    end
@@ -1094,7 +1094,7 @@ function Effect.try_to_chat(chara, player)
    end
    -- <<<<<<<< elona122/shade2/chat.hsp:75 	if tc=pc:goto *chat_end ..
 
-   Dialog.start(chara)
+   Dialog.start(chara, dialog_id or nil)
 end
 
 function Effect.try_to_set_ai_item(chara, item)

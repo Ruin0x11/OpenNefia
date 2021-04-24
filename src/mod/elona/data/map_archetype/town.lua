@@ -172,10 +172,6 @@ do
 
    function vernis.on_map_loaded(map)
       -- >>>>>>>> shade2/map.hsp:2035 	if gArea=areaVernis{ ..
-      if save.elona.main_quest_progress == 0 then
-         Scene.play("elona.story1")
-         save.elona.main_quest_progress = 1
-      end
       if not save.elona.flag_has_met_ally then
          save.elona.flag_has_met_ally = true
          DeferredEvent.add(DeferredEvents.first_ally)

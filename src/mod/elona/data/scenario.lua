@@ -35,8 +35,8 @@ local function load_towns(north_tyris)
 end
 
 local function start(self, player)
-   Sidequest.set_main_quest("elona.main_quest")
-   Scene.play("elona.story0")
+   Sidequest.set_main_quest("elona.main_quest", 0)
+   Scene.play("elona.story_0")
 
    -- >>>>>>>> shade2/main.hsp:457 		gYear		=initYear,initMonth,initDay,1,10	 ..
    save.base.date = DateTime:new(Const.INITIAL_YEAR, Const.INITIAL_MONTH, Const.INITIAL_DAY, 1, 10)
