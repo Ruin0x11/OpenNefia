@@ -141,7 +141,7 @@ local function query(talk, text, choices, default_choice)
                                impression,
                                interest)
 
-   local result = menu:query()
+   local result, canceled = menu:query()
 
    if Env.is_headless() and Log.has_level("info") then
       local mes = ("<dialog> %%{yellow}>> %s %%{blue}(%s)%%{reset}")

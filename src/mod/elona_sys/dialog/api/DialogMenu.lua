@@ -27,7 +27,6 @@ function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, ima
    self.chara_image = chara_image
    self.image_color = image_color
    self.default_choice = default_choice
-   self.can_cancel = default_choice ~= nil
    self.is_in_game = is_in_game
    self.impression = impression
    self.interest = interest
@@ -143,7 +142,9 @@ function DialogMenu:update()
    end
 
    if self.default_choice and self.canceled then
-      Gui.play_sound("base.more1")
+      if self.is_in_game then
+         Gui.play_sound("base.more1")
+      end
       return self.default_choice, "canceled"
    end
 

@@ -206,7 +206,7 @@ function SceneLayer:update(dt)
         if actor == nil then
           error(("Actor '%d' was not declared in the scene."):format(actor_id))
         end
-        local m = DialogMenu:new(txt, {}, actor.name, actor.portrait, actor.chip, 1, false)
+        local m = DialogMenu:new(txt, {}, actor.name, actor.portrait, actor.chip, nil, 1, false)
         m:relayout(0, 0, self.width, self.height)
         if self.first then
           fade_between()
