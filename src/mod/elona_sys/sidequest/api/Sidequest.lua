@@ -50,11 +50,9 @@ function Sidequest.is_sub_quest(sidequest_id)
 end
 
 function Sidequest.set_progress(sidequest_id, progress)
-   local sidequest_data = data["elona_sys.sidequest"]:ensure(sidequest_id)
+   data["elona_sys.sidequest"]:ensure(sidequest_id)
    progress = math.floor(progress or 0)
    assert(type(progress) == "number")
-   assert(progress == 0 or sidequest_data.progress[progress],
-          ("Invalid sidequest progress %d (%s)"):format(progress, sidequest_id))
 
    local sidequest = save.elona_sys.sidequest
    if sidequest[sidequest_id] == nil then
