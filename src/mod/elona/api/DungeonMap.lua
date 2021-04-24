@@ -163,9 +163,7 @@ function DungeonMap.generate_raw(generator, area, floor, width, height, attempts
 
       if dungeon then
          assert(class.is_an(InstancedMap, dungeon))
-         if validate(dungeon) then
-            break
-         end
+         break
       end
    end
 

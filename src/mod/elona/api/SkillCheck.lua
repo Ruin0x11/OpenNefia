@@ -77,8 +77,8 @@ function SkillCheck.try_to_perceive(target, perceiver)
 end
 
 --- @hsp *lockpick
-function SkillCheck.try_to_lockpick(chara, item, difficulty)
-   difficulty = difficulty or item.params.chest_lockpick_difficulty
+function SkillCheck.try_to_lockpick(chara, difficulty)
+   difficulty = difficulty or 0
 
    -- >>>>>>>> shade2/action.hsp:861 *lockpick ...
    while true do
@@ -135,6 +135,27 @@ function SkillCheck.try_to_lockpick(chara, item, difficulty)
    Skill.gain_skill_exp(chara, "elona.lock_picking", 100)
    return true
    -- <<<<<<<< shade2/action.hsp:886 	return true ..
+end
+
+function SkillCheck.try_to_open_door(chara, door)
+   -- TODO jail
+   -- TODO move to aspect
+   -- local difficulty = door.difficulty or 0
+   -- if difficulty > 0 and chara:is_player() then
+   --    if not SkillCheck.try_to_lockpick(chara, difficulty) then
+   --       return false
+   --    end
+   --    door.difficulty = 0
+   -- else
+   --    return true
+   -- end
+
+   local difficulty = door.difficulty or 0
+   if difficulty <= 0 then
+      return true
+   end
+
+   return Rand.rnd(difficulty * 20 + 150) < chara:skill_level("elona.lock_picking") * 20 + 20
 end
 
 return SkillCheck

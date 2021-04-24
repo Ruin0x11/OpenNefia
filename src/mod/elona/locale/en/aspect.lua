@@ -80,6 +80,16 @@ return {
             },
             IItemWell = {
                action_name = "Well"
+            },
+
+            IFeatActivatable = {
+               prompt = function(_1) return ("How do you want to use %s?"):format(_1) end,
+            },
+            IFeatDescendable = {
+               prompt = function(_1) return ("How do you want to use %s?"):format(_1) end,
+            },
+            IFeatLockedDoor = {
+               action_name = "Door"
             }
          }
       }
