@@ -1,51 +1,65 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local I18N = require("game.I18N")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
-local Map = require("game.Map")
-local Rand = require("game.Rand")
+local Item = require("api.Item")
+local Chara = require("api.Chara")
+local Map = require("api.Map")
+local Rand = require("api.Rand")
+local I18N = require("api.I18N")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Gui = require("api.Gui")
+local Calc = require("mod.elona.api.Calc")
+local Enum = require("api.Enum")
+local Filters = require("mod.elona.api.Filters")
+local Itemgen = require("mod.elona.api.Itemgen")
 
-return {
-   id = "karam",
-   root = "core.talk.unique.karam",
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "karam",
+
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("main_quest")
+         local flag = Sidequest.progress("elona.main_quest")
          if flag == 90 then
             return "dialog"
          end
 
-         return "__IGNORED__"
+         return "elona_sys.ignores_you:__start"
       end,
       dialog = {
+         on_start = function()
+            Sidequest.set_progress("elona.main_quest", 100)
+         end,
          text = {
-            function() Internal.set_quest_flag("main_quest", 100) end,
-            {"dialog._0"},
-            {"dialog._1"},
-            {"dialog._2"},
-            {"dialog._3"},
-            {"dialog._4"},
-            {"dialog._5"},
+            {"talk.unique.karam.dialog._0"},
+            {"talk.unique.karam.dialog._1"},
+            {"talk.unique.karam.dialog._2"},
+            {"talk.unique.karam.dialog._3"},
+            {"talk.unique.karam.dialog._4"},
+            {"talk.unique.karam.dialog._5"},
          },
          on_finish = function(t)
-            for i=0,3 do
-               Item.create(
-                  Chara.player().position,
-                  {
-                     level = Map.data.current_dungeon_level,
-                     quality = "Bad",
-                     flttypemajor = Internal.filter_set_dungeon()
-                  }
-               )
+            -- >>>>>>>> shade2/chat.hsp:875 		repeat 4 ...
+            local player = Chara.player()
+            local map = player:current_map()
+            local x = player.x
+            local y = player.y
+
+            for _ = 1, 4 do
+               local filter = {
+                  level = Calc.calc_object_level(map:calc("level"), map),
+                  quality = Enum.Quality.Bad,
+                  categories = Filters.dungeon()
+               }
+               Itemgen.create(x, y, filter, map)
             end
-            Item.create(Chara.player().position, "core.gold_piece", Rand.between(1000, 1200))
-            Item.create(Chara.player().position, "core.platinum_coin", 3)
-            local item = Item.create(Chara.player().position, "core.bejeweled_chest", 0)
-            item.param2 = 0
-            GUI.show_journal_update_message()
-            GUI.txt(I18N.get("core.talk.unique.karam.dies", t.speaker))
+            Item.create("elona.gold_piece", x, y, { amount = 1000 + Rand.rnd(200) }, map)
+            Item.create("elona.platinum_coin", x, y, { amount = 3 }, map)
+            local chest = Item.create("elona.bejeweled_chest", x, y, {}, map)
+            if chest then
+               chest.params.chest_lockpick_difficulty = 0
+            end
+            Sidequest.update_journal()
+            Gui.mes("talk.unique.karam.dies", t.speaker)
             t.speaker:vanquish()
+            -- <<<<<<<< shade2/chat.hsp:886 		goto *chat_end ..
          end
       }
    },
