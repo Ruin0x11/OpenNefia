@@ -7,7 +7,7 @@ data:add {
 
    nodes = {
       __start = function()
-         return "elona_sys.ignores_you:__start"
+         return "elona.ignores_you:__start"
       end,
       dialog = {
          text = {

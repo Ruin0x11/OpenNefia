@@ -4,6 +4,7 @@ local Log = require("api.Log")
 local I18N = require("api.I18N")
 local SceneLayer = require("mod.elona_sys.scene.api.SceneLayer")
 local Env = require("api.Env")
+local CodeGenerator = require("api.CodeGenerator")
 
 local Scene = {}
 
@@ -42,10 +43,10 @@ function Scene.convert(text)
       local id = line:match("{(.*)}")
       if id then
          if state == "txt" then
-            scene[#scene+1] = { "txt", txt }
+            scene[#scene+1] = { "txt", CodeGenerator.gen_block_string(txt) }
             txt = ""
          elseif state == "chat" then
-            scene[#scene+1] = { "chat", chat, txt }
+            scene[#scene+1] = { "chat", chat, string.strip_whitespace(txt) }
             chat = nil
             txt = ""
          end
@@ -57,13 +58,13 @@ function Scene.convert(text)
             scene = {}
             index = tonumber(id)
          else
-            local rest = line:gsub("{.*}", ""):gsub("[ \t\"]+", "")
+            local rest = string.strip_whitespace(line:gsub("{.*}", ""))
             if id == "pic" then
                scene[#scene+1] = { "pic", rest }
             elseif id == "mc" then
-               scene[#scene+1] = { "mc", lookup_mc[rest:lower()] }
+               scene[#scene+1] = { "mc", lookup_mc[rest:lower()] or rest }
             elseif id == "se" then
-               scene[#scene+1] = { "se", lookup_se[rest:lower()] }
+               scene[#scene+1] = { "se", lookup_se[rest:lower()] or rest }
             elseif id == "txt" then
                state = "txt"
             elseif id == "fade" then
@@ -74,9 +75,10 @@ function Scene.convert(text)
                scene[#scene+1] = { "wait" }
             elseif id:match("^actor_") then
                local actor = id:gsub("^actor_", "")
-               local name, portrait = rest:match("(.*),([0-9]+)")
+               local name, portrait = rest:gsub("\"(.*)\"", "%1"):match("(.*),(.*)")
+               print(name, rest)
                actor = tonumber(actor)
-               portrait = Compat.convert_122_id("base.portrait", tonumber(portrait))
+               portrait = Compat.convert_122_id("base.portrait", tonumber(portrait)) or portrait
                scene[#scene+1] = { "actor", actor, name = name, portrait = portrait }
             elseif id:match("^chat_") then
                state = "chat"
@@ -102,7 +104,7 @@ function Scene.convert(text)
    end
 
    if index then
-      scenes[index] = scene
+      scenes[tostring(index)] = scene
    end
    return scenes
 end

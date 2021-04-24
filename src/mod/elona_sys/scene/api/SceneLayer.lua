@@ -94,6 +94,7 @@ function SceneLayer:proceed()
         finished = true
       elseif id == "pic" then
         self.bg = t[2]
+        assert(data["base.asset"][self.bg], "Missing scene bg '" .. self.bg .. "'")
       elseif id == "chat" then
         finished = true
       elseif id == "actor" then
@@ -142,8 +143,9 @@ function SceneLayer:draw()
   Draw.set_color(0, 0, 0)
   Draw.filled_rect(0, 0, self.width, self.height)
   if self.bg then
-    Draw.set_color(255, 255, 255)
-    self.t[self.bg]:draw(0, y1, self.width, y2-y1)
+     local bg = assert(self.t[self.bg])
+     Draw.set_color(255, 255, 255)
+     bg:draw(0, y1, self.width, y2-y1)
   end
 
   Draw.set_color(255, 255, 255)
