@@ -4,7 +4,7 @@ return {
          noafindskitten = {
             noafindskitten = {
                detail = "Help Noa find kitten.",
-               _1 = {
+               _0 = {
                   title = "Lost Kitten",
                   desc = "Kitten has gone missing. Help me find kitten."
                },

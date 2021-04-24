@@ -67,6 +67,7 @@ function Ui.draw_note(text, x, y, width, height, x_offset)
              {0, 0, 0})
 end
 
+-- TODO return string identifier instead
 function Ui.random_cm_bg(t)
    t_ = t_ or UiTheme.load() -- TODO pass as argument?
    t = t or t_

@@ -39,4 +39,35 @@ function Aspect.new_default(iface, obj, params)
    return Aspect.get_default_impl(iface):new(obj, params)
 end
 
+-- Queries the player for an aspect action to use if there is more than one
+-- aspect on an item that fulfills a specific interface.
+function Aspect.query_aspect(obj, iface, filter, mes_cb)
+   local aspects = obj:iter_aspects(iface):filter(function(a) return filter(a, obj) end):to_list()
+
+   if #aspects == 0 then
+      return nil
+   elseif #aspects == 1 then
+      return aspects[1]
+   else
+      local map = function(aspect)
+         return aspect:localize_action(obj, iface)
+      end
+
+      local choices = fun.iter(aspects):map(map):to_list()
+
+      -- TODO disambiguate serialization ID and __name for classes
+      if mes_cb then
+         mes_cb(obj, iface)
+      end
+      local Prompt = require("api.gui.Prompt")
+      local result, canceled = Prompt:new(choices):query()
+
+      if canceled then
+         return nil
+      end
+
+      return aspects[result.index]
+   end
+end
+
 return Aspect

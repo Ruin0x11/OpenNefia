@@ -19,7 +19,7 @@ data:add {
             return "quest_check"
          end
 
-         return "elona.ignores_you:__start"
+         return "elona_sys.ignores_you:__start"
       end,
       quest_completed = {
          text = "talk.unique.rillian.complete",

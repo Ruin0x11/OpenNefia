@@ -118,9 +118,9 @@ function repl.require_all_apis(dir, recurse, full_path)
                name = fs.basename(fs.parent(path))
             end
          end
-         Log.debug("API require: %s %s", name, path)
+         Log.trace("API require: %s %s", name, path)
          if api_env[name] then
-            Log.warn("Duplicate API required in environment: %s", name)
+            Log.debug("Duplicate API required in environment: %s", name)
          end
          local success, tbl = pcall(require, path)
          if success then

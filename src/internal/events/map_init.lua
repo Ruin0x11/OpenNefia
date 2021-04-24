@@ -109,7 +109,7 @@ local function renew_major(map)
    -- >>>>>>>> shade2/map.hsp:2180 		proc "renew_major" ..
    local is_first_renewal = map.renew_major_date == 0
 
-   Log.warn("Running map major renewal for %d. (%s)", map.uid, map._archetype)
+   Log.warn("Running major renewal for map %d. (%s)", map.uid, map._archetype)
 
    if not is_first_renewal then
       Feat.iter(map):filter(function(f) return f.is_temporary end)
@@ -155,7 +155,7 @@ local function renew_minor(map)
      renew_steps = math.max(math.floor((World.date_hours() - map.renew_minor_date) / Const.MAP_RENEW_MINOR_HOURS), 1)
   end
 
-   Log.warn("Running map minor renewal for %d. (%s, %d steps)", map.uid, map._archetype, renew_steps)
+   Log.warn("Running minor renewal for map %d. (%s, %d steps)", map.uid, map._archetype, renew_steps)
 
   -- <<<<<<<< elona122/shade2/map.hsp:2227 		if mRenewMinor=0:renewMulti=1:else:renewMulti=(d ..
   map:emit("base.on_map_renew_minor", {renew_steps=renew_steps})

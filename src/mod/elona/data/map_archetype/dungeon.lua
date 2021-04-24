@@ -11,6 +11,9 @@ local Chara = require("api.Chara")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local DungeonTemplate = require("mod.elona.api.DungeonTemplate")
 local Dungeon = require("mod.elona.api.Dungeon")
+local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local DeferredEvents = require("mod.elona.api.DeferredEvents")
+local Gui = require("api.Gui")
 
 do
    local lesimas = {
@@ -71,24 +74,27 @@ do
    }
 
    local function last_boss_map(area, floor)
+      -- >>>>>>>> shade2/map.hsp:1664 		if gLevel=areaMaxLevel(gArea){ ...
       local map = Elona122Map.generate("lesimas_1")
       map:set_archetype("elona.lesimas", { set_properties = true })
       map.max_crowd_density = 0
       map.is_temporary = true
-      map.music = "elona.last_boss"
       map.level = floor
 
-      -- TODO main quest
+      if Sidequest.is_active_main_quest("elona.main_quest") then
+         map.music = "elona.last_boss"
 
-      assert(Area.create_stairs_up(area, floor - 1, 16, 13, {}, map))
+         assert(Area.create_stairs_up(area, floor - 1, 16, 13, {}, map))
 
-      if NpcMemory.killed("elona.zeome") == 0 then
-         assert(Chara.create("elona.zeome", 16, 6, {}, map))
-      elseif NpcMemory.killed("elona.orphe") == 0 then
-         assert(Chara.create("elona.orphe", 16, 6, {}, map))
+         if NpcMemory.killed("elona.zeome") == 0 then
+            assert(Chara.create("elona.zeome", 16, 6, {}, map))
+         elseif NpcMemory.killed("elona.orphe") == 0 then
+            assert(Chara.create("elona.orphe", 16, 6, {}, map))
+         end
       end
 
       return map
+      -- <<<<<<<< shade2/map.hsp:1682 			} ..
    end
 
    function area_lesimas.on_generate_floor(area, floor)
@@ -100,18 +106,6 @@ do
          local gen, params = DungeonTemplate.lesimas(floor, { level = 1 })
          map = DungeonMap.generate(area, floor, gen, params)
          map:set_archetype("elona.lesimas", { set_properties = true })
-      end
-
-      if floor == 3 then
-         local chara = assert(Chara.create("elona.slan", Chara.player().x, Chara.player().y, {}, map))
-         chara:add_role("elona.special")
-         chara.ai_calm = Enum.AiBehavior.Stand
-      end
-
-      if floor == 17 then
-         local chara = assert(Chara.create("elona.karam", Chara.player().x, Chara.player().y, {}, map))
-         chara:add_role("elona.special")
-         chara.ai_calm = Enum.AiBehavior.Stand
       end
 
       return map
@@ -210,6 +204,20 @@ do
          quality = quality,
          tag_filters = {"fire"}
       }
+   end
+
+   function tower_of_fire.on_map_pass_turn(map)
+      -- >>>>>>>> shade2/map.hsp:3310 	if gArea=areaFireTrial{ ...
+      if Rand.one_in(5) then
+         local player = Chara.player()
+         local resist = player:resist_grade("elona.fire")
+         if resist < 6 then
+            local damage = ((6 - resist) ^ 2) * 2
+            Gui.mes_c("action.exit_map.it_is_hot", "Red")
+            player:damage_hp(damage, "elona.fire")
+         end
+      end
+      -- <<<<<<<< shade2/map.hsp:3316 	} ..
    end
 
    data:add(tower_of_fire)

@@ -141,7 +141,7 @@ local function query(talk, text, choices, default_choice)
                                impression,
                                interest)
 
-   local result = menu:query()
+   local result, canceled = menu:query()
 
    if Env.is_headless() and Log.has_level("info") then
       local mes = ("<dialog> %%{yellow}>> %s %%{blue}(%s)%%{reset}")
@@ -402,13 +402,21 @@ local function step_dialog(node_data, talk, state, prev_node_id)
                -- cancelled. If nil, prevent cancellation.
                local default_choice = nil
                if node.default_choice ~= nil then
+                  local full_id = node.default_choice
+                  if not full_id:find(":") then
+                     full_id = talk.id .. ":" .. full_id
+                  end
                   for j, choice in ipairs(choices) do
-                     if choice[1] == node.default_choice then
+                     local choice_id = choice[1]
+                     if not choice_id:find(":") then
+                        choice_id = talk.id .. ":" .. choice_id
+                     end
+                     if choice_id == full_id then
                         default_choice = j
                      end
                   end
                   if default_choice == nil then
-                     dialog_error(talk, "Could not find default choice \"" .. node.default_choice .. "\"")
+                     dialog_error(talk, "Could not find default choice \"" .. full_id .. "\"")
                   end
                end
 

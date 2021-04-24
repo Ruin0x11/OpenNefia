@@ -1,35 +1,24 @@
-local Chara = require("game.Chara")
-local I18N = require("game.I18N")
-local World = require("game.World")
+local Chara = require("api.Chara")
+local I18N = require("api.I18N")
 
-return {
-   id = "orphe",
-   root = "core.talk.unique.orphe",
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "orphe",
 
    nodes = {
       __start = function()
-         if World.deferred_event_id() == 1 then
-            return "dialog"
-         end
-
-         return "__IGNORED__"
+         return "elona_sys.ignores_you:__start"
       end,
       dialog = {
          text = {
-            {"dialog._0", args = function()
-                local sex
-                if Chara.player().sex == "Female" then
-                   sex = 1
-                else
-                   sex = 0
-                end
-                return {I18N.get_enum("core.ui.sex", sex)}
+            {"talk.unique.orphe.dialog._0", args = function()
+                return {I18N.get("ui.sex." .. Chara.player():calc("gender"))}
             end},
-            {"dialog._1"},
-            {"dialog._2"},
-            {"dialog._3"},
-            {"dialog._4"},
-            {"dialog._5"},
+            {"talk.unique.orphe.dialog._1"},
+            {"talk.unique.orphe.dialog._2"},
+            {"talk.unique.orphe.dialog._3"},
+            {"talk.unique.orphe.dialog._4"},
+            {"talk.unique.orphe.dialog._5"},
          }
       }
    }

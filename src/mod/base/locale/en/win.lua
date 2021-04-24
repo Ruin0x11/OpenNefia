@@ -30,6 +30,36 @@ return {
       you_acquired_codex = function(_1, _2)
          return ("Blessing to %s, %s! You've finally acquired the codex!")
             :format(_2, _1)
-      end
+      end,
+      words = {
+         _0 = "Finally!",
+         _1 = "It's a matter of course.",
+         _2 = "Woooooo!",
+         _3 = "Heh.",
+         _4 = "I can't sleep tonight.",
+         _5 = "You're kidding."
+      },
+      event = {
+         text = {
+            _0 = "<This sentence is untranslated.>",
+
+            _1 = "<This sentence is untranslated.>",
+            _2 = "<This sentence is untranslated.>",
+            _3 = "<This sentence is untranslated.>",
+
+            _4 = "<This sentence is untranslated.>",
+            _5 = "<This sentence is untranslated.>",
+            _6 = "<This sentence is untranslated.>",
+
+            _7 = "<This sentence is untranslated.>",
+            _8 = "<This sentence is untranslated.>",
+
+            _9 = "<This sentence is untranslated.>",
+
+            _10 = "<This sentence is untranslated.>",
+
+            _11 = "<This sentence is untranslated.>",
+         }
+      }
    }
 }

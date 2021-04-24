@@ -1,33 +1,28 @@
-local Internal = require("game.Internal")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 
-return {
-   id = "stersha",
-   root = "core.talk.unique.stersha",
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "stersha",
+
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("main_quest")
-         if flag == 200 then
+         local flag = Sidequest.progress("elona.main_quest")
+         if flag >= 200 then
             return "late"
          elseif flag < 90 then
             return "early"
-         else
-            return "mid"
          end
+
+         return "mid"
       end,
       late = {
-         text = {
-            {"late"}
-         }
+         text = "talk.unique.stersha.late"
       },
       early = {
-         text = {
-            {"early"}
-         }
+         text = "talk.unique.stersha.early"
       },
       mid = {
-         text = {
-            {"mid"}
-         }
-      },
+         text = "talk.unique.stersha.mid"
+      }
    }
 }

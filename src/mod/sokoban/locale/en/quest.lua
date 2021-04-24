@@ -4,7 +4,7 @@ return {
          sokoban = {
             sokoban = {
                detail = "Solve the sokoban puzzle.",
-               _1 = {
+               _0 = {
                   title = "Sokoban",
                   desc = "Do you want to challenge a sokoban puzzle? I have a good one for you."
                },

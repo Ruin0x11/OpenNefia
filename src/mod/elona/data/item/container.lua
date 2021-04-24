@@ -33,7 +33,7 @@ local function open_chest(filter, item_count, after_cb)
       end
 
       if sep.params.chest_lockpick_difficulty > 0 then
-         local success = SkillCheck.try_to_lockpick(params.chara, sep)
+         local success = SkillCheck.try_to_lockpick(params.chara, sep.params.chest_lockpick_difficulty)
          if not success then
             return "turn_end"
          end
@@ -475,7 +475,7 @@ local function open_new_years_gift(self, params)
    end
 
    if sep.params.chest_lockpick_difficulty > 0 then
-      local success = SkillCheck.try_to_lockpick(params.chara, sep)
+      local success = SkillCheck.try_to_lockpick(params.chara, sep.params.chest_lockpick_difficulty)
       if not success then
          return "turn_end"
       end

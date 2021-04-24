@@ -80,6 +80,16 @@ return {
             },
             IItemWell = {
                action_name = "井戸"
+            },
+
+            IFeatActivatable = {
+               prompt = function(_1) return ("どうやって%sを使う？"):format(_1) end,
+            },
+            IFeatDescendable = {
+               prompt = function(_1) return ("どうやって%sを使う？"):format(_1) end,
+            },
+            IFeatLockedHatch = {
+               action_name = "ハッチ"
             }
          }
       }

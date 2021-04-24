@@ -24,6 +24,28 @@ data:add {
 
 data:add {
    _type = "elona_sys.sidequest",
+   _id = "main_quest",
+   elona_id = 2,
+   ordering = order(2),
+
+   is_main_quest = true,
+
+   -- >>>>>>>> shade2/text.hsp:1005 	if (flagMain>=0 )&(flagMain<30)	 : s1=lang("ヴェルニー ...
+   progress = {
+      [0] = "quest.journal.main.progress._0",
+      [30] = "quest.journal.main.progress._1",
+      [50] = "quest.journal.main.progress._2",
+      [60] = "quest.journal.main.progress._3",
+      [100] = "quest.journal.main.progress._4",
+      [110] = "quest.journal.main.progress._5",
+      [125] = "quest.journal.main.progress._6",
+      [180] = "quest.journal.main.progress._7",
+   }
+   -- <<<<<<<< shade2/text.hsp:1012 	if (flagMain>=180)&(flagMain<1000): s1=lang("第一部メ ..
+}
+
+data:add {
+   _type = "elona_sys.sidequest",
    _id = "putit_attacks",
    elona_id = 200,
    ordering = order(200),

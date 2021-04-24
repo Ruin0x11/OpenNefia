@@ -1,4 +1,4 @@
-local story0 = {
+local story_0 = {
     { "pic", "base.bg3" },
     { "mc", "elona.intro" },
     {
@@ -100,5 +100,5 @@ from you as sink into the depths...
   }
 
 return {
-  story0 = story0
+  story_0 = story_0
 }

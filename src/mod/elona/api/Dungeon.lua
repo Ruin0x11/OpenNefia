@@ -9,6 +9,7 @@ local Charagen = require("mod.elona.api.Charagen")
 local Itemgen = require("mod.elona.api.Itemgen")
 local Calc = require("mod.elona.api.Calc")
 local I18N = require("api.I18N")
+local Log = require("api.Log")
 
 -- functions for nefia generation used by Elona 1.22's map generators.
 local Dungeon = {}
@@ -335,7 +336,7 @@ function Dungeon.create_room_door(room, dir, place_door, map)
       door_positions[i] = i
    end
 
-   door_positions = Rand.shuffle(door_positions)
+   Rand.shuffle(door_positions)
    local dirs1 = {}
    local dirs2 = {}
    local x, y
@@ -719,7 +720,7 @@ function Dungeon.dig_maze(map, rooms, params, class, bold)
    local way = { 0, 1, 2, 3 }
 
    while true do
-      way = Rand.shuffle(way)
+      Rand.shuffle(way)
 
       was_dug = false
 
@@ -812,15 +813,16 @@ function Dungeon.dig_maze(map, rooms, params, class, bold)
 end
 
 function Dungeon.place_stairs_in_maze(map)
+   -- >>>>>>>> shade2/map_rand.hsp:930 	repeat  ...
    local up_x, up_y, down_x, down_y
 
-   for _ = 0, 1000 do
+   for _ = 0, 5000 do
       up_x = Rand.rnd(map:width())
       up_y = Rand.rnd(map:height())
-      if map:tile(up_x, up_y)._id == "elona.mapgen_tunnel" then
+      if Map.can_access(up_x, up_y, map) and map:tile(up_x, up_y)._id == "elona.mapgen_tunnel" then
          down_x = Rand.rnd(map:width())
          down_y = Rand.rnd(map:height())
-         if map:tile(down_x, down_y)._id == "elona.mapgen_tunnel" then
+         if Map.can_access(up_x, up_y, map) and map:tile(down_x, down_y)._id == "elona.mapgen_tunnel" then
             if Pos.dist(up_x, up_y, down_x, down_y) >= 10 then
                break
             end
@@ -828,8 +830,20 @@ function Dungeon.place_stairs_in_maze(map)
       end
    end
 
-   Feat.create("elona.stairs_up", up_x, up_y, {}, map)
-   Feat.create("elona.stairs_down", down_x, down_y, {}, map)
+   if not up_x then
+      Log.error("Could not place stairs in dungeon maze.")
+      return false
+   end
+
+   if not Feat.create("elona.stairs_up", up_x, up_y, {}, map) then
+      return false
+   end
+   if not Feat.create("elona.stairs_down", down_x, down_y, {}, map) then
+      return false
+   end
+
+   return true
+   -- <<<<<<<< shade2/map_rand.hsp:938 	loop ..
 end
 
 local function maybe_dig_room(kind, min_size, max_size, rooms, map)
@@ -1198,7 +1212,9 @@ function Dungeon.gen_type_maze(floor, params)
    local rooms = {}
 
    Dungeon.dig_maze(map, rooms, params, class, bold)
-   Dungeon.place_stairs_in_maze(map)
+   if not Dungeon.place_stairs_in_maze(map) then
+      return nil
+   end
    Dungeon.dig_maze(map, rooms, params, class, bold)
 
    map.rooms = rooms
@@ -1208,6 +1224,7 @@ end
 
 -- Large cavern with walls interspersed throughout (Puppy's Cave).
 function Dungeon.gen_type_puppy_cave(floor, params)
+   -- >>>>>>>> shade2/map_rand.hsp:942 *map_createDungeonDog ...
    local class = 5 + Rand.rnd(4)
    local bold = 2
 
@@ -1219,7 +1236,9 @@ function Dungeon.gen_type_puppy_cave(floor, params)
    local rooms = {}
 
    Dungeon.dig_maze(map, rooms, params, class, bold)
-   Dungeon.place_stairs_in_maze(map)
+   if not Dungeon.place_stairs_in_maze(map) then
+      return nil
+   end
 
    local tunnels = {}
 
@@ -1341,6 +1360,7 @@ function Dungeon.gen_type_puppy_cave(floor, params)
    map.rooms = rooms
 
    return map
+   -- <<<<<<<< shade2/map_rand.hsp:997 	return ..
 end
 
 function Dungeon.set_template_property(params, property, value)

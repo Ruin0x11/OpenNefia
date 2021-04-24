@@ -57,8 +57,11 @@ function TargetPrompt:update_target_text()
    local target = self.list:selected_item()
    if target then
       self.target_text = Action.target_text(self.chara, target.x, target.y, true)
+      local sx, sy = Draw.get_coords():tile_to_screen(target.x, target.y)
+      Gui.set_camera_pos(sx, sy)
    else
       self.target_text = {}
+      Gui.set_camera_pos()
    end
 end
 
@@ -87,10 +90,12 @@ end
 
 function TargetPrompt:update(dt)
    if self.canceled then
+      Gui.set_camera_pos()
       return nil, "canceled"
    end
 
    if self.list.chosen then
+      Gui.set_camera_pos()
       return self.list:selected_item()
    end
 end

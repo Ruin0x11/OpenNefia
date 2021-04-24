@@ -27,7 +27,7 @@ local newline = true
 --- Refreshes and scrolls the screen and recalculates FOV.
 function Gui.update_screen(dt, and_draw)
    local sw
-   if Log.has_level("debug") then
+   if Log.has_level("trace") then
       sw = Stopwatch:new()
    end
 
@@ -124,6 +124,11 @@ function Gui.wait_for_draw_callbacks()
    end
 
    field:wait_for_draw_callbacks()
+end
+
+--- Waits for all draw callbacks to finish before continuing.
+function Gui.has_active_draw_callbacks(include_bg_cbs)
+   return field:has_draw_callbacks(include_bg_cbs)
 end
 
 --- Waits for the specified number of milliseconds.

@@ -93,7 +93,6 @@ function Command.move(player, x, y)
    else
       for _, obj in Map.current():objects_at_pos(next_pos.x, next_pos.y) do
          if obj:calc("is_solid") then
-            Input.halt_input()
             local result = obj:emit("elona_sys.on_bump_into", {chara=player}, nil)
             if result then
                return "turn_end"

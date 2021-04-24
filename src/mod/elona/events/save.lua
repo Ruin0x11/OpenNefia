@@ -37,9 +37,11 @@ local function init_save()
    s.guild_fighter_target_chara_id = nil
    s.guild_fighter_target_chara_quota = 0
    s.guild_thief_stolen_goods_quota = 0
+   s.flag_fools_magic_stone = false
+   s.flag_kings_magic_stone = false
+   s.flag_sages_magic_stone = false
    s.news_buffer = CircularBuffer:new(38)
    s.staying_adventurers = StayingCharas:new(nil)
-   s.main_quest_progress = 0
    s.ex_help_shown = {}
    s.shortcuts = {}
 end

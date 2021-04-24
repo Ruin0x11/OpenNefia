@@ -7,6 +7,7 @@ data:add_multi(
    "base.config_option",
    {
       { _id = "enabled", type = "boolean", default = false },
+      { _id = "show_stair_locations", type = "boolean", default = false },
    }
 )
 
@@ -85,3 +86,5 @@ local function setup_dev_config()
    end
 end
 Event.register("base.on_engine_init", "Set some useful config options", setup_dev_config)
+
+require("mod.cheat.advice.init")

@@ -455,7 +455,6 @@ data:add {
    coefficient = 0,
    originalnameref2 = "bottle",
 
-
    tags = { "nogive", "elona.is_acid" },
 
    categories = {

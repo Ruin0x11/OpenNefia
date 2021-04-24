@@ -8,6 +8,8 @@ local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local DeferredEvents = require("mod.elona.api.DeferredEvents")
 local ElonaWorld = require("mod.elona.api.ElonaWorld")
 local ExHelp = require("mod.elona.api.ExHelp")
+local Dungeon = require("mod.elona.api.Dungeon")
+local Map = require("api.Map")
 
 local function spawn_random_sites(map, params)
    local amount = Calc.calc_random_site_generate_count(map)
@@ -97,3 +99,13 @@ local function show_role_ex_help(chara)
    -- <<<<<<<< shade2/chat.hsp:45 	if cRole(tc)=cRoleTrainer :help 8,1 ..
 end
 Event.register("elona_sys.on_chara_dialog_start", "Show role EX help", show_role_ex_help, 10000)
+
+local function set_dungeon_level_text(map, params)
+   if map:has_type("dungeon") then
+      local floor = Map.floor_number(map)
+      if floor then
+         map.level_text = Dungeon.map_level_text(floor)
+      end
+   end
+end
+Event.register("base.on_map_entered", "Set dungeon level text", set_dungeon_level_text)

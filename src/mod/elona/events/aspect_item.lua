@@ -8,6 +8,7 @@ local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local IItemReadable = require("mod.elona.api.aspect.IItemReadable")
 local IItemDippable = require("mod.elona.api.aspect.IItemDippable")
 local IItemDrinkable = require("mod.elona.api.aspect.IItemDrinkable")
+local Aspect = require("api.Aspect")
 
 local function permit_item_actions(item)
    if item:get_aspect(IItemFood) then
@@ -41,47 +42,39 @@ end
 Event.register("base.on_item_instantiated", "Permit item actions", permit_item_actions)
 
 -- Queries the player for an aspect action to use if there is more than one
--- aspect on an item that fulfills a specific interface.
-local function prompt_aspect(iface, name, cb_name, filter)
-   filter = filter or function() return true end
-   return function(item, params, result)
-      local aspects = item:iter_aspects(iface):filter(function(a) return filter(a, item, params, result) end):to_list()
+-- aspect on an item that fulfills a specific interface. Runs the specified
+-- callback on that aspect and returns its turn result.
+local function prompt_and_run_aspect(iface, name, cb_name, filter)
+   filter = filter or function(aspect, obj, params, result) return true end
 
-      if #aspects == 0 then
-         return result
-      elseif #aspects == 1 then
-         local aspect = aspects[1]
+   return function(item, params, result)
+      local filter2 = function(aspect, obj)
+         return filter(aspect, obj, params, result)
+      end
+      local mes = function(obj)
+         Gui.mes("base:aspect._." .. name .. ".prompt", obj:build_name(1))
+      end
+
+      local aspect = Aspect.query_aspect(item, iface, filter2, mes)
+
+      if aspect then
          return aspect[cb_name](aspect, item, params, result)
       else
-         local map = function(aspect)
-            return aspect:localize_action(item, iface)
-         end
-
-         local choices = fun.iter(aspects):map(map):to_list()
-
-         Gui.mes("base:aspect._.elona." .. name .. ".prompt", item:build_name(1))
-         local result, canceled = Prompt:new(choices):query()
-
-         if canceled then
-            return "player_turn_query"
-         end
-
-         local aspect = aspects[result.index]
-         return aspect[cb_name](aspect, item, params, result)
+         return "player_turn_query"
       end
    end
 end
 
-local aspect_item_useable = prompt_aspect(IItemUseable, "IItemUseable", "on_use")
+local aspect_item_useable = prompt_and_run_aspect(IItemUseable, "elona.IItemUseable", "on_use")
 Event.register("elona_sys.on_item_use", "Aspect: IItemUseable", aspect_item_useable)
 
-local aspect_item_readable = prompt_aspect(IItemReadable, "IItemReadable", "on_read")
+local aspect_item_readable = prompt_and_run_aspect(IItemReadable, "elona.IItemReadable", "on_read")
 Event.register("elona_sys.on_item_read", "Aspect: IItemReadable", aspect_item_readable)
 
 local function dippable_filter(aspect, item, params)
    return aspect:can_dip_into(item, params.target_item)
 end
-local aspect_item_dippable = prompt_aspect(IItemDippable, "IItemDippable", "on_dip_into", dippable_filter)
+local aspect_item_dippable = prompt_and_run_aspect(IItemDippable, "elona.IItemDippable", "on_dip_into", dippable_filter)
 Event.register("elona_sys.on_item_dip_into", "Aspect: IItemDippable", aspect_item_dippable)
 
 local function aspect_item_dippable_can_dip_into(dip_item, params, result)

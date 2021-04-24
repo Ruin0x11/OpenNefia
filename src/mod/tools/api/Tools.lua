@@ -31,6 +31,7 @@ local IMef = require("api.mef.IMef")
 local Shortcut = require("mod.elona.api.Shortcut")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
+local IFeatLockedHatch = require("mod.elona.api.aspect.feat.IFeatLockedHatch")
 
 local Tools = {}
 
@@ -336,10 +337,6 @@ function Tools.partition(tbl, key, extract)
    return fun.iter(g):map(function(k, v) return k, fun.iter(v):extract(extract):to_list() end):to_map()
 end
 
-function Tools.mkplayer(id)
-   return Chara.create(id or "base.player", nil, nil, {ownerless=true})
-end
-
 function Tools.print_map(map)
    map = map or Map.current()
    local res = "\n"
@@ -502,16 +499,24 @@ function Tools.open_dictionary()
 end
 
 function Tools.goto_down_stairs()
-   local stairs = Map.current():iter_feats():filter(function(f) return f._id == "elona.stairs_down" end):nth(1)
+   local map = Map.current()
+   local stairs = map:iter_feats():filter(function(f) return f._id == "elona.stairs_down" or f:get_aspect(IFeatLockedHatch) end):nth(1)
    if stairs then
-      Chara.player():set_pos(stairs.x, stairs.y)
+      local x, y = Map.find_free_position(stairs.x, stairs.y, map)
+      if x and y then
+         Chara.player():set_pos(x, y)
+      end
    end
 end
 
 function Tools.goto_up_stairs()
-   local stairs = Map.current():iter_feats():filter(function(f) return f._id == "elona.stairs_up" end):nth(1)
+   local map = Map.current()
+   local stairs = map:iter_feats():filter(function(f) return f._id == "elona.stairs_up" end):nth(1)
    if stairs then
-      Chara.player():set_pos(stairs.x, stairs.y)
+      local x, y = Map.find_free_position(stairs.x, stairs.y, map)
+      if x and y then
+         Chara.player():set_pos(x, y)
+      end
    end
 end
 
@@ -1114,6 +1119,18 @@ function Tools.take_picture(map, kind)
    end
 
    return Gui.render_tilemap_to_image(map, layers, map_object_types)
+end
+
+function Tools.goto_chara(_id)
+   local player = Chara.player()
+   local map = player:current_map()
+   local chara = Chara.find(_id, "others", map)
+   if chara then
+      local x, y = Map.find_free_position(chara.x, chara.y, {}, map)
+      if x and y then
+         player:set_pos(x, y)
+      end
+   end
 end
 
 return Tools

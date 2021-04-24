@@ -50,8 +50,11 @@ function Prompt.make_list(choices)
    return fun.iter(choices):enumerate():map(map):to_list()
 end
 
-function Prompt:init(choices, width)
-   self.can_cancel = true
+function Prompt:init(choices, width, can_cancel)
+   self.can_cancel = can_cancel
+   if self.can_cancel == nil then
+      self.can_cancel = true
+   end
    self.width = width or 160
 
    choices = Prompt.make_list(choices)

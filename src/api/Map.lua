@@ -78,12 +78,12 @@ function Map.save(map)
    end
 
    if map.area_uid == nil then
-      Log.debug("Autogenerating new area for map '%d'", map.uid)
+      Log.warn("Autogenerating new area for map '%d'", map.uid)
       local area = InstancedArea:new()
       area:add_floor(map)
       local parent = Area.for_map(map)
       if parent == nil then
-         Log.debug("Generating new root area since this map isn't part of an area.")
+         Log.warn("Generating new root area since this map isn't part of an area.")
          parent = "root"
       end
       Area.register(area, { parent = parent })
@@ -561,10 +561,6 @@ function Map.try_place_chara(chara, x, y, map)
    return nil
 end
 
-local function rebuild_map(map, params)
-   Log.error("TODO rebuild map")
-end
-
 --- Cleans up the current map and moves the player and allies to a
 --- different map. This is the recommended function to call to
 --- transport the player to another map.
@@ -581,10 +577,6 @@ function Map.travel_to(map, params)
    local current = field.map
    Log.debug("Traveling: %d -> %d", current.uid, map.uid)
 
-   if map.visit_times > 0 and map.is_generated_every_time then
-      rebuild_map(map, params)
-   end
-
    if map.uid == current.uid then
       -- Nothing to do.
       return true
@@ -594,13 +586,14 @@ function Map.travel_to(map, params)
    if type(params.start_x) == "number" and type(params.start_y) == "number" then
       x = params.start_x
       y = params.start_y
+      Log.debug("Start position from params: %s %s", x, y)
    else
       x, y = Map.calc_start_position(map,
                                      current,
                                      params.feat)
+      Log.debug("Start position from calc_start_position: %s %s", x, y)
    end
 
-   Log.debug("Start position: %s %s", x, y)
    if not (x and y) then
       Log.error("Map does not declare a start position. Defaulting to the center of the map.")
       x = map:width() / 2
@@ -611,12 +604,12 @@ function Map.travel_to(map, params)
    y = math.floor(y)
 
    if map.area_uid == nil then
-      Log.debug("Autogenerating new area for map '%d'", map.uid)
+      Log.warn("Autogenerating new area for map '%d'", map.uid)
       local area = InstancedArea:new()
       area:add_floor(map)
       local parent = Area.for_map(current)
       if parent == nil then
-         Log.debug("Generating new root area since this map isn't part of an area.")
+         Log.warn("Generating new root area since this map isn't part of an area.")
          parent = "root"
       end
       Area.register(area, { parent = parent })

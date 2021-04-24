@@ -1,4 +1,4 @@
-local story0 = {
+local story_0 = {
     { "pic", "base.bg3" },
     { "mc", "elona.intro" },
     {
@@ -52,7 +52,7 @@ local story0 = {
     { "fade" }
   }
 
-local story1 = {
+local story_1 = {
   {
     "actor", 1,
     name = "ザナンの皇子『サイモア』",
@@ -106,7 +106,7 @@ local story1 = {
   { "fade" }
 }
 
-local story2 = {
+local story_2 = {
   {
     "actor", 1,
     name = "ザナンの紅血『ロイター』",
@@ -225,7 +225,7 @@ local story2 = {
   { "fade" }
 }
 
-local story3 = {
+local story_3 = {
   {
     "actor", 1,
     name = "ザナンの皇子『サイモア』",
@@ -285,7 +285,7 @@ local story3 = {
   { "fade" }
 }
 
-local story4 = {
+local story_4 = {
   {
     "actor", 1,
     name = "パルミア王『ジャビ』",
@@ -406,7 +406,7 @@ local story4 = {
   { "fade" }
 }
 
-local story5 = {
+local story_5 = {
   {
     "actor", 1,
     name = "風を聴く者『ラーネイレ』",
@@ -519,7 +519,7 @@ local story5 = {
   { "fade" }
 }
 
-local story7 = {
+local story_7 = {
   {
     "actor", 1,
     name = "ダルフィの霧『セビリス』",
@@ -632,7 +632,7 @@ local story7 = {
   }
 }
 
-local story15  = {
+local story_15  = {
   {
     "actor", 1,
     name = "ザナンの皇子『サイモア』",
@@ -704,7 +704,7 @@ local story15  = {
   }
 }
 
-local story16  = {
+local story_16  = {
   {
     "actor", 1,
     name = "ダルフィの霧『セビリス』",
@@ -769,7 +769,7 @@ local story16  = {
   }
 }
 
-local story17  = {
+local story_17  = {
   {
     "actor", 1,
     name = "ザナンの皇子『サイモア』",
@@ -843,7 +843,7 @@ local story17  = {
   }
 }
 
-local story24  = {
+local story_24  = {
   {
     "actor", 1,
     name = "ダルフィの霧『セビリス』",
@@ -946,7 +946,7 @@ local story24  = {
   }
 }
 
-local story25  = {
+local story_25  = {
   {
     "actor", 1,
     name = "ダルフィの霧『セビリス』",
@@ -1009,7 +1009,7 @@ local story25  = {
   }
 }
 
-local story26  = {
+local story_26  = {
   {
     "actor", 1,
     name = "ダルフィの霧『セビリス』",
@@ -1060,7 +1060,7 @@ local story26  = {
   }
 }
 
-local story28  = {
+local story_28  = {
   {
     "actor", 1,
     name = "ヴェセル",
@@ -1128,7 +1128,7 @@ local story28  = {
   }
 }
 
-local story29  = {
+local story_29  = {
   {
     "actor", 1,
     name = "ヴェセル",
@@ -1167,7 +1167,7 @@ local story29  = {
   }
 }
 
-local story30  = {
+local story_30  = {
   {
     "actor", 1,
     name = "ヴェセル",
@@ -1198,7 +1198,7 @@ local story30  = {
   }
 }
 
-local story33  = {
+local story_33  = {
   {
     "actor", 1,
     name = "ダルフィの霧『セビリス』",
@@ -1278,7 +1278,7 @@ local story33  = {
   }
 }
 
-local story35  = {
+local story_35  = {
   {
     "actor", 1,
     name = "ダルフィの霧『セビリス』",
@@ -1336,7 +1336,7 @@ local story35  = {
   }
 }
 
-local story40  = {
+local story_40  = {
   {
     "actor", 1,
     name = "ダルフィの霧『セビリス』",
@@ -1389,7 +1389,7 @@ local story40  = {
   }
 }
 
-local story60  = {
+local story_60  = {
   {
     "actor", 1,
     name = "ザナンの皇子『サイモア』",
@@ -1457,7 +1457,7 @@ local story60  = {
   }
 }
 
-local story70  = {
+local story_70  = {
   {
     "actor", 1,
     name = "ダルフィの霧『セビリス』",
@@ -1506,7 +1506,7 @@ local story70  = {
   }
 }
 
-local story90  = {
+local story_90  = {
   {
     "actor", 1,
     name = "ダルフィの霧『セビリス』",
@@ -1589,7 +1589,7 @@ local story90  = {
   }
 }
 
-local story100  = {
+local story_100  = {
   { "pic", "base.bg12" },
   { "mc", "elona.epilogue" },
   {
@@ -1764,27 +1764,27 @@ Eternal League of Nefia
 }
 
 return {
-  story0 = story0,
-  story1 = story1,
-  story2 = story2,
-  story3 = story3,
-  story4 = story4,
-  story5 = story5,
-  story7 = story7,
-  story15 = story15,
-  story16 = story16,
-  story17 = story17,
-  story24 = story24,
-  story25 = story25,
-  story26 = story26,
-  story28 = story28,
-  story29 = story29,
-  story30 = story30,
-  story33 = story33,
-  story35 = story35,
-  story40 = story40,
-  story60 = story60,
-  story70 = story70,
-  story90 = story90,
-  story100 = story100,
+  story_0 = story_0,
+  story_1 = story_1,
+  story_2 = story_2,
+  story_3 = story_3,
+  story_4 = story_4,
+  story_5 = story_5,
+  story_7 = story_7,
+  story_15 = story_15,
+  story_16 = story_16,
+  story_17 = story_17,
+  story_24 = story_24,
+  story_25 = story_25,
+  story_26 = story_26,
+  story_28 = story_28,
+  story_29 = story_29,
+  story_30 = story_30,
+  story_33 = story_33,
+  story_35 = story_35,
+  story_40 = story_40,
+  story_60 = story_60,
+  story_70 = story_70,
+  story_90 = story_90,
+  story_100 = story_100,
 }

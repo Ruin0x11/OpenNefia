@@ -1,5 +1,6 @@
 --- @module Feat
 local data = require("internal.data")
+local Log = require("api.Log")
 
 local Event = require("api.Event")
 local Map = require("api.Map")
@@ -122,7 +123,8 @@ function Feat.create(id, x, y, params, where)
    end
 
    local gen_params = {
-      no_build = params.no_build
+      no_build = params.no_build,
+      build_params = params
    }
    local feat = MapObject.generate_from("base.feat", id)
 
@@ -141,7 +143,12 @@ function Feat.create(id, x, y, params, where)
       assert(feat:current_map())
    end
 
-   MapObject.finalize(feat, gen_params)
+   local ok, err = xpcall(MapObject.finalize, debug.traceback, feat, gen_params)
+   if not ok then
+      Log.error(err)
+      feat:remove_ownership()
+      return nil, err
+   end
 
    feat:refresh()
 

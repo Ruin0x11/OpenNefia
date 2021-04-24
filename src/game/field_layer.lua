@@ -250,8 +250,8 @@ function field_layer:wait_for_draw_callbacks()
    self.draw_callbacks:wait()
 end
 
-function field_layer:has_draw_callbacks()
-   return self.draw_callbacks:has_more()
+function field_layer:has_draw_callbacks(include_bg_cbs)
+   return self.draw_callbacks:has_more(include_bg_cbs)
 end
 
 function field_layer:update_draw_callbacks(dt)

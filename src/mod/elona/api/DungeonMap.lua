@@ -228,7 +228,7 @@ function DungeonMap.generate(area, floor, generator, opts)
    map.tileset = tileset
    MapTileset.apply(tileset, map)
 
-   Log.info("Populating dungeon rooms.")
+   Log.debug("Populating dungeon rooms.")
    populate_rooms(map, gen_params.creature_packs, has_monster_houses, chara_filter)
 
    -- HACK: Block the starting positions so nothing gets generated
@@ -269,23 +269,23 @@ function DungeonMap.generate(area, floor, generator, opts)
       block:remove_ownership()
    end
 
-   Log.info("Connecting stairs.")
+   Log.debug("Connecting stairs.")
    connect_stairs(map, area, floor)
 
-   Log.info("Generation finished: %d", map.uid)
+   Log.debug("Generation finished: %d", map.uid)
 
    return map
 end
 
 function DungeonMap.add_mobs_and_traps(dungeon, crowd_density, mob_density, item_density, chara_filter)
-   Log.info("Map density: %s", crowd_density)
+   Log.debug("Map density: %s", crowd_density)
 
-   Log.info("Creating %d mobs.", mob_density)
+   Log.debug("Creating %d mobs.", mob_density)
    for _=1, mob_density do
       Charagen.create(nil, nil, chara_filter(dungeon), dungeon)
    end
 
-   Log.info("Creating %d items.", item_density)
+   Log.debug("Creating %d items.", item_density)
    for _=1, item_density do
       Itemgen.create(nil, nil,
                      {
@@ -296,7 +296,7 @@ function DungeonMap.add_mobs_and_traps(dungeon, crowd_density, mob_density, item
                      dungeon)
    end
 
-   Log.info("Placing traps.")
+   Log.debug("Placing traps.")
    for _=0, Rand.rnd(dungeon:width() * dungeon:height() / 80) do
       place_trap(0, 0, dungeon.level, dungeon)
    end

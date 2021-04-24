@@ -7,19 +7,17 @@ local Env = require("api.Env")
 
 local Scene = {}
 
-function Scene.play(id)
+function Scene.play(scene_id)
    if not config.base.story or Env.is_headless() then
       return
    end
-   local scene_data = data["elona_sys.scene"][id]
-   if scene_data then
-      scene_data = scene_data.content[I18N.language()]
-   end
+   local scene_proto = data["elona_sys.scene"]:ensure(scene_id)
+   local scene_data = scene_proto.content[I18N.language()]
 
    if scene_data then
       SceneLayer:new(scene_data):query()
    else
-      Log.warn("Scene '%s' does not exist, skipping playback", id)
+      Log.warn("Scene content for language '%s' in '%s' does not exist, skipping playback", I18N.language(), scene_id)
    end
 end
 

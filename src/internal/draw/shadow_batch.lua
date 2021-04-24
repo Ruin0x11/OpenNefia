@@ -301,9 +301,14 @@ function shadow_batch:draw(x, y, width, height)
          if iy >= 0 and iy-ty+1 < self.height then
             for ix=tx-1,tdx+1 do
                if ix >= 0 and ix-tx+1 < self.width then
-                  local tile = self_tiles[ix-tx+1][iy-ty+1]
-                  local i, j = self.coords:tile_to_screen(ix - tx + offset_tx, iy - ty + offset_ty)
-                  self:add_one(tile, i, j)
+                  local tiles = self_tiles[ix-tx+1]
+                  if tiles then
+                     local tile = tiles[iy-ty+1]
+                     local i, j = self.coords:tile_to_screen(ix - tx + offset_tx, iy - ty + offset_ty)
+                     self:add_one(tile, i, j)
+                  else
+                     break
+                  end
                end
             end
          end

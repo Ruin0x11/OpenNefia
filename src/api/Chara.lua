@@ -5,6 +5,7 @@ local Enum = require("api.Enum")
 local MapObject = require("api.MapObject")
 local ILocation = require("api.ILocation")
 local Event = require("api.Event")
+local Log = require("api.Log")
 
 local field = require("game.field")
 local save = require("internal.global.save")
@@ -236,6 +237,7 @@ function Chara.create(id, x, y, params, where)
 
    local gen_params = {
       no_build = params.no_build,
+      build_params = params
    }
 
    params.id = id
@@ -264,7 +266,12 @@ function Chara.create(id, x, y, params, where)
          end
       end
 
-      MapObject.finalize(chara, gen_params)
+      local ok, err = xpcall(MapObject.finalize, debug.traceback, chara, gen_params)
+      if not ok then
+         Log.error(err)
+         chara:remove_ownership()
+         return nil, err
+      end
    end
 
    if chara and not params.no_build then

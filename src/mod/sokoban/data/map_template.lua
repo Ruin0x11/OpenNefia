@@ -37,6 +37,7 @@ data:add {
 
       if Map.can_access(new_x, new_y, map) then
          self:set_pos(new_x, new_y)
+         Input.halt_input()
       end
 
       if SokobanMap.is_solved(map) then

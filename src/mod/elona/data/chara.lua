@@ -11,6 +11,8 @@ local Itemgen = require("mod.elona.api.Itemgen")
 local Event = require("api.Event")
 local ElonaChara = require("mod.elona.api.ElonaChara")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local DeferredEvents = require("mod.elona.api.DeferredEvents")
 
 local eating_effect = require("mod.elona.data.chara.eating_effect")
 
@@ -354,6 +356,25 @@ local chara = {
          ["elona.primary_weapon"] = { _id = "elona.scythe_of_void" }
       },
       tone = "elona.zeome",
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Add win event",
+
+            callback = function(self, params)
+               -- >>>>>>>> shade2/chara_func.hsp:1698 			if cId(tc)=2 : evAdd evWinLesimas ...
+               -- TODO show house
+               -- TODO void
+               if Sidequest.is_active_main_quest("elona.main_quest")
+                  and Sidequest.progress("elona.main_quest") <= 180
+               then
+                  DeferredEvent.add(DeferredEvents.win)
+               end
+               -- <<<<<<<< shade2/chara_func.hsp:1698 			if cId(tc)=2 : evAdd evWinLesimas ..
+            end
+         }
+      }
    },
    {
       _id = "at",
@@ -862,6 +883,25 @@ local chara = {
       initial_equipment = {
          ["elona.primary_weapon"] = { _id = "elona.staff_of_insanity" },
       },
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Obtain fool's magic stone",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+               if Sidequest.is_active_main_quest("elona.main_quest")
+                  and not save.elona.flag_fools_magic_stone
+               then
+                  Gui.mes_c("scenario.obtain_stone.fool", "Green")
+                  Gui.play_sound("base.complete1")
+                  save.elona.flag_fools_magic_stone = true
+               end
+            end
+         }
+      }
    },
    {
       _id = "wynan",
@@ -901,6 +941,25 @@ local chara = {
       initial_equipment = {
          ["elona.primary_weapon"] = { _id = "elona.rankis" },
       },
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Obtain fool's magic stone",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+               if Sidequest.is_active_main_quest("elona.main_quest")
+                  and not save.elona.flag_kings_magic_stone
+               then
+                  Gui.mes_c("scenario.obtain_stone.king", "Green")
+                  Gui.play_sound("base.complete1")
+                  save.elona.flag_kings_magic_stone = true
+               end
+            end
+         }
+      }
    },
    {
       _id = "quruiza",
@@ -943,6 +1002,25 @@ local chara = {
       initial_equipment = {
          ["elona.primary_weapon"] = { _id = "elona.blood_moon" },
       },
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Obtain sage's magic stone",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+               if Sidequest.is_active_main_quest("elona.main_quest")
+                  and not save.elona.flag_sages_magic_stone
+               then
+                  Gui.mes_c("scenario.obtain_stone.sage", "Green")
+                  Gui.play_sound("base.complete1")
+                  save.elona.flag_sages_magic_stone = true
+               end
+            end
+         }
+      }
    },
    {
       _id = "corgon",

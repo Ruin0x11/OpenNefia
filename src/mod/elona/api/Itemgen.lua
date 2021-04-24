@@ -96,10 +96,6 @@ function Itemgen.random_item_id_raw(objlv, categories)
       end
    end
 
-   if sampler:len() == 0 then
-      Log.warn("No item generation candidates found for parameters: %d %s\n%s", objlv, inspect(categories), debug.traceback())
-   end
-
    return sampler:sample()
 end
 -- <<<<<<<< shade2/db_item.hsp:11117 	return ...
@@ -157,6 +153,10 @@ local function do_generate_item_id(params)
 
    if id == nil and params.categories["elona.furniture_altar"] then
       id = "elona.scroll_of_change_material"
+   end
+
+   if id == nil then
+      Log.warn("No item generation candidates found for parameters: %d %s\n%s", params.level, inspect(params.categories))
    end
 
    return id
