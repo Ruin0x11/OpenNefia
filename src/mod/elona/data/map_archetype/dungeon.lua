@@ -13,6 +13,7 @@ local DungeonTemplate = require("mod.elona.api.DungeonTemplate")
 local Dungeon = require("mod.elona.api.Dungeon")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local DeferredEvents = require("mod.elona.api.DeferredEvents")
+local Gui = require("api.Gui")
 
 do
    local lesimas = {
@@ -105,22 +106,6 @@ do
          local gen, params = DungeonTemplate.lesimas(floor, { level = 1 })
          map = DungeonMap.generate(area, floor, gen, params)
          map:set_archetype("elona.lesimas", { set_properties = true })
-      end
-
-      if Sidequest.is_active_main_quest("elona.main_quest") then
-         local player = Chara.player()
-
-         if floor == 3 then
-            local chara = assert(Chara.create("elona.slan", player.x, player.y, {}, map))
-            chara:add_role("elona.special")
-            chara.ai_calm = Enum.AiBehavior.Stand
-         end
-
-         if floor == 17 then
-            local chara = assert(Chara.create("elona.karam", player.x, player.y, {}, map))
-            chara:add_role("elona.special")
-            chara.ai_calm = Enum.AiBehavior.Stand
-         end
       end
 
       return map
@@ -219,6 +204,20 @@ do
          quality = quality,
          tag_filters = {"fire"}
       }
+   end
+
+   function tower_of_fire.on_map_pass_turn(map)
+      -- >>>>>>>> shade2/map.hsp:3310 	if gArea=areaFireTrial{ ...
+      if Rand.one_in(5) then
+         local player = Chara.player()
+         local resist = player:resist_grade("elona.fire")
+         if resist < 6 then
+            local damage = ((6 - resist) ^ 2) * 2
+            Gui.mes_c("action.exit_map.it_is_hot", "Red")
+            player:damage_hp(damage, "elona.fire")
+         end
+      end
+      -- <<<<<<<< shade2/map.hsp:3316 	} ..
    end
 
    data:add(tower_of_fire)

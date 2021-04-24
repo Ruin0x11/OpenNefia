@@ -51,16 +51,16 @@ local function proc_main_quest_scenes(map)
       Sidequest.set_progress("elona.main_quest", f.new_flag)
    end
 
-   if map._archetype == "elona.lesmias" then
+   if map._archetype == "elona.lesimas" then
       local floor_number = Map.floor_number(map)
 
       local LESIMAS_FLAGS = {
-         [10]   = { scene = "elona.story_3",  new_flag = 20 },
+         [10]  = { scene = "elona.story_3",  new_flag = 20 },
          [65]  = { scene = "elona.story_7",  new_flag = 70, floor = 4 },
-         [70] = { scene = "elona.story_15", new_flag = 75, floor = 7 },
-         [75] = { scene = "elona.story_16", new_flag = 80, floor = 10 },
-         [80] = { scene = "elona.story_17", new_flag = 85, floor = 14 },
-         [85] = { scene = "elona.story_24", new_flag = 90, floor = 16 },
+         [70]  = { scene = "elona.story_15", new_flag = 75, floor = 7 },
+         [75]  = { scene = "elona.story_16", new_flag = 80, floor = 10 },
+         [80]  = { scene = "elona.story_17", new_flag = 85, floor = 14 },
+         [85]  = { scene = "elona.story_24", new_flag = 90, floor = 16 },
          [125] = { scene = "elona.story_33", new_flag = 130, floor = 26 },
          [130] = { scene = "elona.story_35", new_flag = 135, floor = 28 },
          [135] = { scene = "elona.story_40", new_flag = 140, floor = 31 },
@@ -77,10 +77,14 @@ local function proc_main_quest_scenes(map)
    end
    -- <<<<<<<< shade2/map.hsp:2015 		} ..
 end
-Event.register("base.after_map_changed", "Proc main quest scenes", proc_main_quest_scenes)
+Event.register("base.after_map_changed", "Proc main quest scenes", proc_main_quest_scenes, { priority = 200000 })
 
 local function proc_lesimas_locked_stairs(map)
    -- >>>>>>>> shade2/map_rand.hsp:292 	if areaId(gArea)=areaLesimas{ ...
+   if not Sidequest.is_active_main_quest("elona.main_quest") then
+      return
+   end
+
    if map._archetype ~= "elona.lesimas" then
       return
    end
@@ -123,6 +127,39 @@ local function proc_lesimas_locked_stairs(map)
 end
 Event.register("base.on_generate_area_floor", "Proc locked stairs for main quest in Lesimas", proc_lesimas_locked_stairs)
 
+local function proc_lesimas_npcs(map)
+   if not Sidequest.is_active_main_quest("elona.main_quest") then
+      return
+   end
+
+   if map._archetype ~= "elona.lesimas" then
+      return
+   end
+
+   local floor = Map.floor_number(map)
+   local player = Chara.player()
+   local flag = Sidequest.progress("elona.main_quest")
+
+   if floor == 3 and flag == 20 then
+      local chara = Chara.find("elona.slan", "others", map)
+      if not Chara.is_alive(chara) then
+         chara = assert(Chara.create("elona.slan", player.x, player.y, {}, map))
+         chara:add_role("elona.special")
+         chara.ai_calm = Enum.AiBehavior.Stand
+      end
+   end
+
+   if floor == 17 and flag == 90 then
+      local chara = Chara.find("elona.karam", "others", map)
+      if not Chara.is_alive(chara) then
+         chara = assert(Chara.create("elona.karam", player.x, player.y, {}, map))
+         chara:add_role("elona.special")
+         chara.ai_calm = Enum.AiBehavior.Stand
+      end
+   end
+end
+Event.register("base.after_map_changed", "Spawn NPCs for main quest in Lesimas", proc_lesimas_npcs)
+
 local function find_kapul(map)
    return Area.iter_entrances_in_parent(map):filter(
       function(feat)
@@ -157,7 +194,7 @@ local function proc_three_years_elapsed(map)
    end
    -- <<<<<<<< shade2/map.hsp:1873 		} ..
 end
-Event.register("base.after_map_changed", "Proc main quest clear event (\"Three years elapsed...\")", proc_three_years_elapsed)
+Event.register("base.after_map_changed", "Proc main quest clear event (\"Three years elapsed...\")", proc_three_years_elapsed, { priority = 300000 })
 
 local function proc_main_quest_vernis(map)
    -- >>>>>>>> shade2/map.hsp:2036 		if flagMain=0:sceneId=1:gosub *scene:flagMain=9 ...
@@ -173,7 +210,7 @@ local function proc_main_quest_vernis(map)
    end
    -- <<<<<<<< shade2/map.hsp:2036 		if flagMain=0:sceneId=1:gosub *scene:flagMain=9 ..
 end
-Event.register("base.after_map_changed", "Proc main quest (Vernis)", proc_main_quest_vernis)
+Event.register("base.after_map_changed", "Proc main quest (Vernis)", proc_main_quest_vernis, { priority = 300000 })
 
 -- >>>>>>>> shade2/map.hsp:2040 	if gArea=areaPalmia{ ...
 local function proc_main_quest_palmia(map)
@@ -192,7 +229,7 @@ local function proc_main_quest_palmia(map)
    -- <<<<<<<< shade2/map.hsp:2036 		if flagMain=0:sceneId=1:gosub *scene:flagMain=9 ..
 end
 -- <<<<<<<< shade2/map.hsp:2043 		} ..
-Event.register("base.after_map_changed", "Proc main quest (Palmia)", proc_main_quest_palmia)
+Event.register("base.after_map_changed", "Proc main quest (Palmia)", proc_main_quest_palmia, { priority = 300000 })
 
 local function proc_vanquish_lomias_larnneire(map)
    -- >>>>>>>> shade2/map.hsp:2090 		if flagMain!0{ ...
@@ -204,7 +241,7 @@ local function proc_vanquish_lomias_larnneire(map)
       if lomias then
          lomias:vanquish()
       end
-      local larnneire = Chara.find("elona.lomias", "others", map)
+      local larnneire = Chara.find("elona.larnneire", "others", map)
       if larnneire then
          larnneire:vanquish()
       end

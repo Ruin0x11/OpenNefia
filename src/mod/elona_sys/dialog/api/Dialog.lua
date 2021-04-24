@@ -407,7 +407,11 @@ local function step_dialog(node_data, talk, state, prev_node_id)
                      full_id = talk.id .. ":" .. full_id
                   end
                   for j, choice in ipairs(choices) do
-                     if choice[1] == full_id then
+                     local choice_id = choice[1]
+                     if not choice_id:find(":") then
+                        choice_id = talk.id .. ":" .. choice_id
+                     end
+                     if choice_id == full_id then
                         default_choice = j
                      end
                   end
