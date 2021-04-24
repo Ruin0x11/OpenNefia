@@ -153,11 +153,11 @@ local function proc_vanquish_lomias_larnneire(map)
       and Sidequest.progress("elona.main_quest") > 0
       and Home.is_home(map)
    then
-      local lomias = Chara.find("elona.lomias", "others")
+      local lomias = Chara.find("elona.lomias", "others", map)
       if lomias then
          lomias:vanquish()
       end
-      local larnneire = Chara.find("elona.lomias", "others")
+      local larnneire = Chara.find("elona.lomias", "others", map)
       if larnneire then
          larnneire:vanquish()
       end
@@ -172,7 +172,7 @@ local function proc_vanquish_xabi(map)
       and Sidequest.progress("elona.main_quest") >= 90
       and map._archetype == "elona.palmia"
    then
-      local xabi = Chara.find("elona.xabi", "others")
+      local xabi = Chara.find("elona.xabi", "others", map)
       if xabi then
          xabi:vanquish()
       end
