@@ -58,10 +58,10 @@ data:add {
          text = {
             {"talk.unique.erystia.stones.dialog._0", args = common.args_name},
             function() Gui.fade_out() end,
-            {"talk.unique.erystia.stones.dialog._1"},
-            {"talk.unique.erystia.stones.dialog._2"},
-            {"talk.unique.erystia.stones.dialog._3"},
-            {"talk.unique.erystia.stones.dialog._4"},
+            "talk.unique.erystia.stones.dialog._1",
+            "talk.unique.erystia.stones.dialog._2",
+            "talk.unique.erystia.stones.dialog._3",
+            "talk.unique.erystia.stones.dialog._4",
          },
          on_finish = function()
             Gui.play_sound("base.write1")

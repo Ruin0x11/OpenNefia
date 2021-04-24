@@ -28,12 +28,12 @@ data:add {
             Sidequest.set_progress("elona.main_quest", 100)
          end,
          text = {
-            {"talk.unique.karam.dialog._0"},
-            {"talk.unique.karam.dialog._1"},
-            {"talk.unique.karam.dialog._2"},
-            {"talk.unique.karam.dialog._3"},
-            {"talk.unique.karam.dialog._4"},
-            {"talk.unique.karam.dialog._5"},
+            "talk.unique.karam.dialog._0",
+            "talk.unique.karam.dialog._1",
+            "talk.unique.karam.dialog._2",
+            "talk.unique.karam.dialog._3",
+            "talk.unique.karam.dialog._4",
+            "talk.unique.karam.dialog._5",
          },
          on_finish = function(t)
             -- >>>>>>>> shade2/chat.hsp:875 		repeat 4 ...
@@ -45,7 +45,7 @@ data:add {
             for _ = 1, 4 do
                local filter = {
                   level = Calc.calc_object_level(map:calc("level"), map),
-                  quality = Enum.Quality.Bad,
+                  quality = Enum.Quality.Normal,
                   categories = Filters.dungeon()
                }
                Itemgen.create(x, y, filter, map)
