@@ -374,7 +374,7 @@ local chara = {
                -- <<<<<<<< shade2/chara_func.hsp:1698 			if cId(tc)=2 : evAdd evWinLesimas ..
             end
          }
-      },
+      }
    },
    {
       _id = "at",
@@ -883,6 +883,25 @@ local chara = {
       initial_equipment = {
          ["elona.primary_weapon"] = { _id = "elona.staff_of_insanity" },
       },
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Obtain fool's magic stone",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+               if Sidequest.is_active_main_quest("elona.main_quest")
+                  and not save.elona.flag_fools_magic_stone
+               then
+                  Gui.mes_c("scenario.obtain_stone.fool", "Green")
+                  Gui.play_sound("base.complete1")
+                  save.elona.flag_fools_magic_stone = true
+               end
+            end
+         }
+      }
    },
    {
       _id = "wynan",
@@ -922,6 +941,25 @@ local chara = {
       initial_equipment = {
          ["elona.primary_weapon"] = { _id = "elona.rankis" },
       },
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Obtain fool's magic stone",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+               if Sidequest.is_active_main_quest("elona.main_quest")
+                  and not save.elona.flag_kings_magic_stone
+               then
+                  Gui.mes_c("scenario.obtain_stone.king", "Green")
+                  Gui.play_sound("base.complete1")
+                  save.elona.flag_kings_magic_stone = true
+               end
+            end
+         }
+      }
    },
    {
       _id = "quruiza",
@@ -964,6 +1002,25 @@ local chara = {
       initial_equipment = {
          ["elona.primary_weapon"] = { _id = "elona.blood_moon" },
       },
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Obtain sage's magic stone",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+               if Sidequest.is_active_main_quest("elona.main_quest")
+                  and not save.elona.flag_sages_magic_stone
+               then
+                  Gui.mes_c("scenario.obtain_stone.sage", "Green")
+                  Gui.play_sound("base.complete1")
+                  save.elona.flag_sages_magic_stone = true
+               end
+            end
+         }
+      }
    },
    {
       _id = "corgon",
