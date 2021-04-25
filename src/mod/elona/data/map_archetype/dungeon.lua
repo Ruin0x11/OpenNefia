@@ -14,6 +14,7 @@ local Dungeon = require("mod.elona.api.Dungeon")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local DeferredEvents = require("mod.elona.api.DeferredEvents")
 local Gui = require("api.Gui")
+local Map = require("api.Map")
 
 do
    local lesimas = {
@@ -704,6 +705,27 @@ do
       local gen, params = DungeonTemplate.nefia_dungeon(floor, { level = 5 })
       local map = DungeonMap.generate(area, floor, gen, params)
       map:set_archetype("elona.yeeks_nest", { set_properties = true })
+
+      -- >>>>>>>> shade2/map.hsp:1754 	if gArea=areaYeekDungeon{ ...
+      if area and floor == area:archetype().deepest_floor then
+         if Sidequest.progress("elona.novice_knight") < 2 then
+            local rodlob = Chara.create("elona.rodlob", nil, nil, {}, map)
+            if Chara.is_alive(rodlob) then
+               local x = rodlob.x
+               local y = rodlob.y
+
+               for _ = 1, 5 do
+                  Chara.create("elona.master_yeek", x, y, {}, map)
+               end
+               for _ = 1, 10 do
+                  Chara.create("elona.yeek_warrior", x, y, {}, map)
+                  Chara.create("elona.kamikaze_yeek", x, y, {}, map)
+               end
+            end
+         end
+      end
+      -- <<<<<<<< shade2/map.hsp:1769 		} ..
+
       return map
    end
 

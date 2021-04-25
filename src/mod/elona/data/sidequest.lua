@@ -97,6 +97,19 @@ data:add {
 
 data:add {
    _type = "elona_sys.sidequest",
+   _id = "novice_knight",
+   elona_id = 208,
+   ordering = order(208),
+
+   progress = {
+      [1] = "sidequest._.elona.novice_knight.progress._0",
+      [2] = "sidequest._.elona.novice_knight.progress._1",
+      [1000] = "",
+   },
+}
+
+data:add {
+   _type = "elona_sys.sidequest",
    _id = "sewer_sweeping",
    elona_id = 215,
    ordering = order(215),

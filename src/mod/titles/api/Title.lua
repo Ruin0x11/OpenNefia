@@ -17,6 +17,10 @@ function Title.state(title_id)
    return state
 end
 
+function Title.iter_earned()
+   return fun.iter_pairs(save.titles.title_states)
+end
+
 function Title.earn(title_id)
    local state = Title.state(title_id)
 
@@ -39,17 +43,26 @@ function Title.set_state(title_id, state)
    local old_state = save.titles.title_states[title_id]
    save.titles.title_states[title_id] = state
 
+   local chara = Chara.player()
+   local do_refresh = false
+
    if old_state ~= state then
       local on_toggle_effect = title.on_toggle_effect
       if old_state ~= nil and on_toggle_effect then
          -- TODO maybe have titles separate per party member?
-         local chara = Chara.player()
          if state == "effect_on" then
             on_toggle_effect(true, chara)
          elseif state == "earned" then
             on_toggle_effect(false, chara)
          end
+
       end
+      do_refresh = true
+   end
+
+   -- Update any titles with :on_refresh() callbacks.
+   if do_refresh then
+      chara:refresh()
    end
 end
 

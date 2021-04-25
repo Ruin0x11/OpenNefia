@@ -2311,6 +2311,25 @@ local chara = {
          "elona.action_curse"
       },
       tone = "elona.rodlob",
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Set sidequest flag: Novice Knight",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+
+               -- >>>>>>>> shade2/chara_func.hsp:1712 			if cId(tc)=242:if sqYeek<1000:sqYeek=2:updateJo ...
+               if Sidequest.progress("elona.novice_knight") < 1000 then
+                  Sidequest.set_progress("elona.novice_knight", 2)
+                  Sidequest.update_journal()
+               end
+               -- <<<<<<<< shade2/chara_func.hsp:1712 			if cId(tc)=242:if sqYeek<1000:sqYeek=2:updateJo ..
+            end
+         }
+      }
    },
    {
       _id = "hot_spring_maniac",

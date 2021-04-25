@@ -30,12 +30,10 @@ data:add {
       -- <<<<<<<< oomSEST/src/southtyris.hsp:42883 	} ..
    end,
 
-   on_toggle_effect = function(enabled, chara)
+   on_refresh = function(chara, effect_on)
       -- >>>>>>>> oomSEST/src/southtyris.hsp:42435 		if (ogdata(440) == 2) { ...
-      if enabled then
-         chara:mod_base_skill_level("elona.action_summon_yeek", 1, "set")
-      else
-         chara:mod_base_skill_level("elona.action_summon_yeek", 0, "set")
+      if effect_on then
+         chara:mod_skill_level("elona.action_summon_yeek", 1, "set", true)
       end
       -- <<<<<<<< oomSEST/src/southtyris.hsp:42439 		} ..
    end
