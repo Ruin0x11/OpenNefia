@@ -110,6 +110,20 @@ data:add {
 
 data:add {
    _type = "elona_sys.sidequest",
+   _id = "kamikaze_attack",
+   elona_id = 209,
+   ordering = order(209),
+
+   progress = {
+      [1] = "sidequest._.elona.kamikaze_attack.progress._0",
+      [2] = "sidequest._.elona.kamikaze_attack.progress._1",
+      [3] = "sidequest._.elona.kamikaze_attack.progress._2",
+      [1000] = "",
+   },
+}
+
+data:add {
+   _type = "elona_sys.sidequest",
    _id = "sewer_sweeping",
    elona_id = 215,
    ordering = order(215),

@@ -176,7 +176,7 @@ return {
       },
       quest = {
          kamikaze_attack = {
-            message = "The messenger The retreat of our army is over now. You don't need to fight them any more. Please leave at once!",
+            message = "The messenger \"The retreat of our army is over now. You don't need to fight them any more. Please leave at once!\"",
             stairs_appear = "Suddenly, stairs appear."
          }
       },

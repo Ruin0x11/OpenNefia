@@ -939,7 +939,8 @@ do
 
       floors = {
          [1] = "elona.port_kapul",
-         [3] = "elona.fighters_guild"
+         [3] = "elona.fighters_guild",
+         [25] = "elona.doom_ground"
       },
 
       metadata = {

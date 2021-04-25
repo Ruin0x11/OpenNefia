@@ -1018,6 +1018,7 @@ function Tools.powerup(chara, levels)
    if chara:is_player() then
       Shortcut.assign_skill_shortcut(1, "elona.spell_crystal_spear")
       Shortcut.assign_skill_shortcut(2, "elona.spell_magic_storm")
+      Shortcut.assign_skill_shortcut(3, "elona.action_harvest_mana")
       Shortcut.assign_skill_shortcut(4, "elona.spell_healing_rain")
       Shortcut.assign_skill_shortcut(8, "elona.spell_sense_object")
       Shortcut.assign_skill_shortcut(9, "elona.spell_magic_map")

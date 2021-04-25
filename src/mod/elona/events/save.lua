@@ -44,6 +44,7 @@ local function init_save()
    s.staying_adventurers = StayingCharas:new(nil)
    s.ex_help_shown = {}
    s.shortcuts = {}
+   s.flag_kamikaze_attack = 0
 end
 
 Event.register("base.on_init_save", "Init save (elona)", init_save)
