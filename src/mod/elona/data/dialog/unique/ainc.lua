@@ -11,7 +11,7 @@ return {
    root = "core.talk.unique.ainc",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("novice_knight")
+         local flag = Sidequest.progress("elona.novice_knight")
          if flag == 1000 then
             return "quest_completed"
          elseif flag == 0 then

@@ -22,7 +22,7 @@ return {
    root = "core.talk.unique.raphael",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("wife_collector")
+         local flag = Sidequest.progress("elona.wife_collector")
          if flag == 0 then
             return "quest_ask"
          elseif flag == 1 or flag == 1000 then
@@ -96,7 +96,7 @@ return {
 
          if result then
             t:say("bring_wife.this_one.not_human")
-         elseif Internal.get_quest_flag("wife_collector") == 1 then
+         elseif Sidequest.progress("elona.wife_collector") == 1 then
             Item.create(Chara.player().position, "core.gold_piece", 5000)
             GUI.txt(I18N.get("core.quest.completed"))
             GUI.show_journal_update_message()

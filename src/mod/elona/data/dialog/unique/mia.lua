@@ -10,7 +10,7 @@ return {
    root = "core.talk.unique.mia",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("mias_dream")
+         local flag = Sidequest.progress("elona.mias_dream")
          if flag == 1000 then
             return "quest_completed"
          elseif flag == 0 then

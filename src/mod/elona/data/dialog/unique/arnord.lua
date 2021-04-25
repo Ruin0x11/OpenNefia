@@ -10,7 +10,7 @@ return {
    root = "core.talk.unique.arnord",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("kamikaze_attack")
+         local flag = Sidequest.progress("elona.kamikaze_attack")
          if flag == 1000 then
             return "quest_completed"
          elseif flag == 0 then

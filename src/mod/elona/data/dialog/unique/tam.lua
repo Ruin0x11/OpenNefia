@@ -10,7 +10,7 @@ return {
    root = "core.talk.unique.tam",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("cat_house")
+         local flag = Sidequest.progress("elona.cat_house")
          if flag == 1000 then
             return "quest_completed"
          elseif flag == 0 then

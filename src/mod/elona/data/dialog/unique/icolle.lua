@@ -7,7 +7,7 @@ local Item = require("game.Item")
 local common = require_relative("data/dialog/common")
 
 local function give_monster_balls()
-   local flag = Internal.get_quest_flag("ambitious_scientist")
+   local flag = Sidequest.progress("elona.ambitious_scientist")
    local found = false
 
    for _, item in Item.iter(0, 200) do
@@ -36,7 +36,7 @@ return {
    root = "core.talk.unique.icolle",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("ambitious_scientist")
+         local flag = Sidequest.progress("elona.ambitious_scientist")
          if flag >= 1000 then
             return "quest_completed"
          elseif flag == 0 then
@@ -96,7 +96,7 @@ return {
             {"quest.give.have"}
          },
          choices = function()
-            if Internal.get_quest_flag("ambitious_scientist") >= 6 then
+            if Sidequest.progress("elona.ambitious_scientist") >= 6 then
                return {{"quest_finish", "__BYE__"}}
             end
             return {{"__END__", "__BYE__"}}

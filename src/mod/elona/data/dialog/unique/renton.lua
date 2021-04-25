@@ -23,7 +23,7 @@ return {
    root = "core.talk.unique.renton",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("rare_books")
+         local flag = Sidequest.progress("elona.rare_books")
          if flag == 1000 then
             return "quest_completed"
          elseif flag == 0 or flag == 1 then
@@ -49,7 +49,7 @@ return {
          },
       },
       quest_check = function()
-         if Internal.get_quest_flag("rare_books") == 0 then
+         if Sidequest.progress("elona.rare_books") == 0 then
             GUI.show_journal_update_message()
             Internal.set_quest_flag("rare_books", 1)
             return "__END__"

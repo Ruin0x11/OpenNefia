@@ -23,7 +23,7 @@ return {
    root = "core.talk.unique.pael",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("pael_and_her_mom")
+         local flag = Sidequest.progress("elona.pael_and_her_mom")
          if flag == 1000 then
             if Map.id() == "core.noyel" and Map.area().christmas_festival then
                return "festival"
@@ -84,7 +84,7 @@ return {
          },
          on_finish = function()
             GUI.show_journal_update_message()
-            Internal.set_quest_flag("pael_and_her_mom", Internal.get_quest_flag("pael_and_her_mom") + 1)
+            Internal.set_quest_flag("pael_and_her_mom", Sidequest.progress("elona.pael_and_her_mom") + 1)
          end
       },
       after_face = {

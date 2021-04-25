@@ -10,7 +10,7 @@ return {
    root = "core.talk.unique.gilbert",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("defense_line")
+         local flag = Sidequest.progress("elona.defense_line")
          if flag == 1000 then
             return "quest_completed"
          elseif Chara.player().fame < 5000 then

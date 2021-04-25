@@ -10,7 +10,7 @@ return {
    root = "core.talk.unique.balzak",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("sewer_sweeping")
+         local flag = Sidequest.progress("elona.sewer_sweeping")
          if flag == 1000 then
             return "quest_completed"
          elseif flag == 0 then

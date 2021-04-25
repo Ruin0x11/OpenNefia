@@ -19,7 +19,7 @@ return {
    root = "core.talk.unique.noel",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("red_blossom_in_palmia")
+         local flag = Sidequest.progress("elona.red_blossom_in_palmia")
          if flag == 1000 then
             return "quest_completed"
          elseif flag == 1 then

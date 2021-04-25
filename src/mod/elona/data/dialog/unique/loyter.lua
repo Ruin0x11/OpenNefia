@@ -10,7 +10,7 @@ return {
    root = "core.talk.unique.loyter",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("nightmare")
+         local flag = Sidequest.progress("elona.nightmare")
          if Chara.player().fame < 20000 then
             return "quest_fame_too_low"
          end

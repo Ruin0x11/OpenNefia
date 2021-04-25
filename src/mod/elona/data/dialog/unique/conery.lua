@@ -10,7 +10,7 @@ return {
    root = "core.talk.unique.conery",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("minotaur_king")
+         local flag = Sidequest.progress("elona.minotaur_king")
          if flag == 1000 then
             return "quest_completed"
          elseif flag == 0 then

@@ -9,7 +9,7 @@ return {
    root = "core.talk.unique.kaneda_bike",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("blue_capsule_drug")
+         local flag = Sidequest.progress("elona.blue_capsule_drug")
          if flag >= 3 then
             return "query_join"
          end
@@ -82,7 +82,7 @@ return {
             {"before_drug.yes.dialog"},
          },
          on_finish = function()
-            Internal.set_quest_flag("blue_capsule_drug", Internal.get_quest_flag("blue_capsule_drug") + 1)
+            Internal.set_quest_flag("blue_capsule_drug", Sidequest.progress("elona.blue_capsule_drug") + 1)
          end
       },
       do_not_have_drug = {

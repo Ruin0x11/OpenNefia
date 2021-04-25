@@ -22,7 +22,7 @@ return {
    root = "core.talk.unique.lily",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("pael_and_her_mom")
+         local flag = Sidequest.progress("elona.pael_and_her_mom")
          if flag == 1002 then
             return "after_sold"
          elseif flag == 10 then

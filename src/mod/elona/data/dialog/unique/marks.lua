@@ -12,7 +12,7 @@ return {
    root = "core.talk.unique.marks",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("pyramid_trial")
+         local flag = Sidequest.progress("elona.pyramid_trial")
          if flag ~= 0 then
             return "quest_completed"
          elseif Chara.player().fame < 3000 then

@@ -6,22 +6,22 @@ local Item = require("game.Item")
 local table = require("game.table")
 
 local function can_receive_reward()
-   local count = Internal.get_quest_flag("kill_count_of_little_sister")
+   local count = Sidequest.progress("elona.kill_count_of_little_sister")
 
-   for i=1,Internal.get_quest_flag("gift_count_of_little_sister")+1 do
+   for i=1,Sidequest.progress("elona.gift_count_of_little_sister")+1 do
       count = count + i
    end
 
-    return Internal.get_quest_flag("save_count_of_little_sister") >= count
+    return Sidequest.progress("elona.save_count_of_little_sister") >= count
 end
 
 local function turn_over_little_sister()
     GUI.txt(I18N.get("core.talk.unique.strange_scientist.turn_over.text"))
     Internal.set_quest_flag("save_count_of_little_sister",
-                            Internal.get_quest_flag("save_count_of_little_sister") + 1)
+                            Sidequest.progress("elona.save_count_of_little_sister") + 1)
     GUI.txt(I18N.get("core.talk.unique.strange_scientist.saved_count",
-                     Internal.get_quest_flag("save_count_of_little_sister"),
-                     Internal.get_quest_flag("kill_count_of_little_sister")), "Green")
+                     Sidequest.progress("elona.save_count_of_little_sister"),
+                     Sidequest.progress("elona.kill_count_of_little_sister")), "Green")
     Chara.find("core.little_sister", "Allies"):vanquish()
     GUI.play_sound("core.complete1")
 end
@@ -31,7 +31,7 @@ return {
    root = "core.talk.unique.strange_scientist",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("little_sister")
+         local flag = Sidequest.progress("elona.little_sister")
          if flag == 0 then
             return "first"
          elseif flag > 0 then

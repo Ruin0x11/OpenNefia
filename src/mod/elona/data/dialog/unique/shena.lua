@@ -10,7 +10,7 @@ return {
    root = "core.talk.unique.shena",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("thieves_hideout")
+         local flag = Sidequest.progress("elona.thieves_hideout")
          if flag == 1000 then
             return "quest_completed"
          elseif flag == 0 then
