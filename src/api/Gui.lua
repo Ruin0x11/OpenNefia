@@ -364,7 +364,7 @@ function Gui.mes_c(text, color, ...)
    local t = I18N.get_optional(text, ...) or text or tostring(text)
    if t then text = t end
 
-   if I18N.is_quoted(text) then
+   if color == nil and I18N.is_quoted(text) then
       color = "Talk"
    end
 
