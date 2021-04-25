@@ -27,7 +27,7 @@ local function give_monster_balls()
 
    Chara.player():refresh_weight()
 
-   Internal.set_quest_flag("ambitious_scientist", flag)
+   Sidequest.set_progress("elona.ambitious_scientist", flag)
    return found
 end
 
@@ -74,7 +74,7 @@ return {
             {"quest.alright"},
          },
          on_finish = function()
-            Internal.set_quest_flag("ambitious_scientist", 1)
+            Sidequest.set_progress("elona.ambitious_scientist", 1)
          end
       },
       quest_no = {
@@ -118,7 +118,7 @@ return {
 
             common.quest_completed()
 
-            Internal.set_quest_flag("ambitious_scientist", 1000)
+            Sidequest.set_progress("elona.ambitious_scientist", 1000)
          end
       }
    }

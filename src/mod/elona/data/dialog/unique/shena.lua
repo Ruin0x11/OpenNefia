@@ -44,7 +44,7 @@ return {
             {"quest.yes"},
          },
          on_finish = function()
-            Internal.set_quest_flag("thieves_hideout", 1)
+            Sidequest.set_progress("elona.thieves_hideout", 1)
             common.create_downstairs(48, 5, 4)
          end
       },
@@ -73,7 +73,7 @@ return {
             {"quest.end"},
          },
          on_finish = function()
-            Internal.set_quest_flag("thieves_hideout", 1000)
+            Sidequest.set_progress("elona.thieves_hideout", 1000)
          end
       },
    }

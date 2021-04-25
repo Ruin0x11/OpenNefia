@@ -44,7 +44,7 @@ return {
             {"quest.do_it"},
          },
          on_finish = function()
-            Internal.set_quest_flag("minotaur_king", 1)
+            Sidequest.set_progress("elona.minotaur_king", 1)
          end
       },
       quest_no = {
@@ -69,7 +69,7 @@ return {
 
             common.quest_completed()
 
-            Internal.set_quest_flag("minotaur_king", 1000)
+            Sidequest.set_progress("elona.minotaur_king", 1000)
          end
       },
    }

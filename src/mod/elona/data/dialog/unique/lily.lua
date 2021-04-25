@@ -64,7 +64,7 @@ return {
             {"progress.last._2"},
          },
          on_finish = function(t)
-            Internal.set_quest_flag("pael_and_her_mom", 1000)
+            Sidequest.set_progress("elona.pael_and_her_mom", 1000)
             t.speaker:set_flag("IsSilent", true)
          end
       },

@@ -45,7 +45,7 @@ return {
             {"quest.do_it"},
          },
          on_finish = function()
-            Internal.set_quest_flag("novice_knight", 1)
+            Sidequest.set_progress("elona.novice_knight", 1)
          end
       },
       quest_no = {
@@ -72,7 +72,7 @@ return {
             GUI.txt(I18N.get("core.common.something_is_put_on_the_ground"))
             GUI.show_journal_update_message()
 
-            Internal.set_quest_flag("novice_knight", 1000)
+            Sidequest.set_progress("elona.novice_knight", 1000)
          end
       },
    }

@@ -42,7 +42,7 @@ return {
             {"quest.yes"},
          },
          on_finish = function()
-            Internal.set_quest_flag("mias_dream", 1)
+            Sidequest.set_progress("elona.mias_dream", 1)
          end
       },
       quest_no = {
@@ -74,7 +74,7 @@ return {
 
             common.quest_completed()
 
-            Internal.set_quest_flag("mias_dream", 1000)
+            Sidequest.set_progress("elona.mias_dream", 1000)
 
             local silver_cat = Chara.find("core.silver_cat", "Allies")
             Chara.remove_from_party(silver_cat)

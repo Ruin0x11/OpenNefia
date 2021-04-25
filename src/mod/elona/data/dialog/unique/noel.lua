@@ -57,7 +57,7 @@ return {
 
                common.quest_completed()
 
-               Internal.set_quest_flag("red_blossom_in_palmia", 1000)
+               Sidequest.set_progress("elona.red_blossom_in_palmia", 1000)
             end,
             {"quest.end"},
          },
@@ -80,7 +80,7 @@ return {
          text = {
             function()
                GUI.show_journal_update_message()
-               Internal.set_quest_flag("red_blossom_in_palmia", 1)
+               Sidequest.set_progress("elona.red_blossom_in_palmia", 1)
             end,
             {"quest.of_course"},
          },

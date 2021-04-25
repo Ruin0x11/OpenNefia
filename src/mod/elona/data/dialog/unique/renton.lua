@@ -51,7 +51,7 @@ return {
       quest_check = function()
          if Sidequest.progress("elona.rare_books") == 0 then
             GUI.show_journal_update_message()
-            Internal.set_quest_flag("rare_books", 1)
+            Sidequest.set_progress("elona.rare_books", 1)
             return "__END__"
          end
 
@@ -100,7 +100,7 @@ return {
 
             common.quest_completed()
 
-            Internal.set_quest_flag("rare_books", 1000)
+            Sidequest.set_progress("elona.rare_books", 1000)
          end
       },
    }

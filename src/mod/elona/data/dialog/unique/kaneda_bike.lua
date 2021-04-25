@@ -50,7 +50,7 @@ return {
          },
          on_finish = function(t)
             Chara.player():recruit_as_ally(t.speaker)
-            Internal.set_quest_flag("blue_capsule_drug", 0)
+            Sidequest.set_progress("elona.blue_capsule_drug", 0)
          end
       },
 
@@ -82,7 +82,7 @@ return {
             {"before_drug.yes.dialog"},
          },
          on_finish = function()
-            Internal.set_quest_flag("blue_capsule_drug", Sidequest.progress("elona.blue_capsule_drug") + 1)
+            Sidequest.set_progress("elona.blue_capsule_drug", Sidequest.progress("elona.blue_capsule_drug") + 1)
          end
       },
       do_not_have_drug = {

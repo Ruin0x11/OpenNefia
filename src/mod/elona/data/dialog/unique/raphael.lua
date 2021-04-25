@@ -53,7 +53,7 @@ return {
             {"quest.yes"},
          },
          on_finish = function()
-            Internal.set_quest_flag("wife_collector", 1)
+            Sidequest.set_progress("elona.wife_collector", 1)
          end
       },
 
@@ -100,7 +100,7 @@ return {
             Item.create(Chara.player().position, "core.gold_piece", 5000)
             GUI.txt(I18N.get("core.quest.completed"))
             GUI.show_journal_update_message()
-            Internal.set_quest_flag("wife_collector", 1000)
+            Sidequest.set_progress("elona.wife_collector", 1000)
          end
 
          return "bring_wife_end"

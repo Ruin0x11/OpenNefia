@@ -55,7 +55,7 @@ return {
             {"quest.yes"},
          },
          on_finish = function()
-            Internal.set_quest_flag("nightmare", 1)
+            Sidequest.set_progress("elona.nightmare", 1)
          end
       },
       quest_no = {
@@ -79,7 +79,7 @@ return {
             {"quest.begin.yes"},
          },
          on_finish = function()
-            Internal.set_quest_flag("nightmare", 2)
+            Sidequest.set_progress("elona.nightmare", 2)
             Internal.go_to_quest_map("core.vernis", 5)
          end
       },
@@ -101,7 +101,7 @@ return {
             {"quest.end"}
          },
          on_finish = function()
-            Internal.set_quest_flag("nightmare", 1000)
+            Sidequest.set_progress("elona.nightmare", 1000)
          end
       }
    }

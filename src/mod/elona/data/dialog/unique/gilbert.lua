@@ -52,7 +52,7 @@ return {
             {"quest.yes"},
          },
          on_finish = function()
-            Internal.set_quest_flag("defense_line", 1)
+            Sidequest.set_progress("elona.defense_line", 1)
          end
       },
       quest_no = {
@@ -75,7 +75,7 @@ return {
             {"quest.begin.yes"},
          },
          on_finish = function()
-            Internal.set_quest_flag("defense_line", 2)
+            Sidequest.set_progress("elona.defense_line", 2)
             Internal.go_to_quest_map("core.yowyn", 4)
          end
       },
@@ -96,7 +96,7 @@ return {
             {"quest.end"},
          },
          on_finish = function()
-            Internal.set_quest_flag("defense_line", 1000)
+            Sidequest.set_progress("elona.defense_line", 1000)
          end
       }
    }

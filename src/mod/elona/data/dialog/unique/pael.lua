@@ -84,7 +84,7 @@ return {
          },
          on_finish = function()
             GUI.show_journal_update_message()
-            Internal.set_quest_flag("pael_and_her_mom", Sidequest.progress("elona.pael_and_her_mom") + 1)
+            Sidequest.set_progress("elona.pael_and_her_mom", Sidequest.progress("elona.pael_and_her_mom") + 1)
          end
       },
       after_face = {

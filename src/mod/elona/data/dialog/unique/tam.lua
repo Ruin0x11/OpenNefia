@@ -43,7 +43,7 @@ return {
             {"quest.yes"},
          },
          on_finish = function()
-            Internal.set_quest_flag("cat_house", 1)
+            Sidequest.set_progress("elona.cat_house", 1)
             Map.set_feat(23, 22, 231, 11, 3)
          end
       },
@@ -70,7 +70,7 @@ return {
             {"quest.end"},
          },
          on_finish = function()
-            Internal.set_quest_flag("cat_house", 1000)
+            Sidequest.set_progress("elona.cat_house", 1000)
          end
       }
    }

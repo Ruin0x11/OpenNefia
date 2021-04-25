@@ -63,7 +63,7 @@ return {
             {"quest.pay"},
          },
          on_finish = function()
-            Internal.set_quest_flag("pyramid_trial", 1)
+            Sidequest.set_progress("elona.pyramid_trial", 1)
          end
       },
       quest_no = {
