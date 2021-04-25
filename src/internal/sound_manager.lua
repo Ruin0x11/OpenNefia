@@ -136,18 +136,30 @@ function sound_manager:stop_looping(tag, ty)
    self.looping_sources[tag] = nil
 end
 
-function sound_manager:play(id, x, y, volume, channel)
+function sound_manager:play(id_or_data, x, y, volume, channel)
    if _IS_LOVEJS then
       return
    end
 
-   local sound = self.data.sound[id]
-   if sound == nil then
-      Log.error("Unknown sound %s", tostring(id))
-      return
+   local src
+   if type(id_or_data) == "string" then
+      local id = id_or_data
+      local sound = self.data.sound[id]
+      if sound == nil then
+         Log.error("Unknown sound %s", tostring(id))
+         return
+      end
+      src = love.audio.newSource(sound.file, "static")
+      if volume == nil then
+         volume = sound.volume or nil
+      end
+   elseif type(id_or_data == "table") then
+      assert(id_or_data.type == "wave")
+      local wav = assert(id_or_data.data)
+      local filedata = love.filesystem.newFileData(wav, id_or_data.filename or "sound.wav")
+      src = love.audio.newSource(filedata, "static")
    end
 
-   local src = love.audio.newSource(sound.file, "static")
    src:setLooping(false)
    src:setVolume(math.clamp(volume or 1.0, 0.0, 1.0))
 
@@ -162,16 +174,12 @@ function sound_manager:play(id, x, y, volume, channel)
       end
    end
 
-   if sound.volume then
-      src:setVolume(sound.volume)
-   end
-
    love.audio.play(src)
 
    local channel = channel or src
 
    if self.sources[channel] then
-      love.audio.stop()
+      love.audio.stop(self.sources[channel])
    end
 
    self.sources[channel] = src
