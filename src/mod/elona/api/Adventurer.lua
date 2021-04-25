@@ -186,6 +186,9 @@ function Adventurer.generate()
       ownerless = true
    }
    local adv = Charagen.create(nil, nil, filter)
+   if adv == nil then
+      return nil
+   end
    adv.relation = Enum.Relation.Neutral
    adv.image = ElonaChara.random_human_image(adv)
    adv.name = Text.random_name()
@@ -209,12 +212,16 @@ end
 
 function Adventurer.generate_and_place()
    local adv = Adventurer.generate()
+   if adv == nil then
+      Log.warn("Character generation failed for adventurer.")
+      return nil
+   end
 
    local area = Adventurer.calc_starting_area()
 
    if area == nil then
       Log.warn("No area for adventurer %s found.", adv)
-      return
+      return nil
    end
 
    if not save.elona.staying_adventurers:take_object(adv) then
