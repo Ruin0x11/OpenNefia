@@ -1,5 +1,5 @@
 local Gui = require("api.Gui")
-local Mecab = require("mod.aquestalk.api.Mecab")
+local MeCab = require("mod.aquestalk.api.MeCab")
 local Henkan = require("mod.aquestalk.api.Henkan")
 local Log = require("api.Log")
 local IAquesTalkConfig = require("mod.aquestalk.api.aspect.IAquesTalkConfig")
@@ -8,11 +8,19 @@ local AquesTalk = {}
 
 local aquestalk = nil
 
+function AquesTalk.init()
+   aquestalk = nil
+
+   local ok, lib = pcall(require, "lua_aquestalk")
+   if not ok then return false, lib end
+   aquestalk = lib
+
+   return true, nil
+end
+
 function AquesTalk.set_usr_key(key)
    if aquestalk == nil then
-      local ok, lib = pcall(require, "lua_aquestalk")
-      if not ok then return false, lib end
-      aquestalk = lib
+      return false, "AquesTalk not initialized"
    end
 
    return aquestalk.set_usr_key(key)
@@ -20,9 +28,7 @@ end
 
 function AquesTalk.set_dev_key(key)
    if aquestalk == nil then
-      local ok, lib = pcall(require, "lua_aquestalk")
-      if not ok then return false, lib end
-      aquestalk = lib
+      return false, "AquesTalk not initialized"
    end
 
    return aquestalk.set_dev_key(key)
@@ -48,7 +54,11 @@ local ACCENTS = table.set {
 }
 
 function AquesTalk.speak(text, x, y, volume, channel, bas, spd, vol, pit, acc, lmd, fsc)
-   local ok, words = Mecab.parse(text)
+   if aquestalk == nil then
+      return false, "AquesTalk not initialized"
+   end
+
+   local ok, words = MeCab.parse(text)
    if not ok then
       return false, words
    end
@@ -104,9 +114,7 @@ local ERROR_MESSAGES = {
 
 function AquesTalk.speak_hiragana(hiragana, x, y, volume, channel, bas, spd, vol, pit, acc, lmd, fsc)
    if aquestalk == nil then
-      local ok, lib = pcall(require, "lua_aquestalk")
-      if not ok then return false, lib end
-      aquestalk = lib
+      return false, "AquesTalk not initialized"
    end
 
    local VoiceBase = aquestalk.VoiceBase

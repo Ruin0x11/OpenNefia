@@ -156,7 +156,7 @@ local function do_generate_item_id(params)
    end
 
    if id == nil then
-      Log.warn("No item generation candidates found for parameters: %d %s\n%s", params.level, inspect(params.categories))
+      Log.warn("No item generation candidates found for parameters: %d %s\n%s", inspect(params))
    end
 
    return id

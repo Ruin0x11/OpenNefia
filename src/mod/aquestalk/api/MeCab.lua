@@ -1,6 +1,6 @@
 local Ipadic = require("mod.aquestalk.api.Ipadic")
 
-local Mecab = {}
+local MeCab = {}
 
 local mecab = nil
 
@@ -264,12 +264,17 @@ local function to_words(nodes)
    return words
 end
 
-function Mecab.parse(text)
-   if mecab == nil then
-      local ok, lib = pcall(require, "lua-mecab")
-      if not ok then return false, lib end
-      mecab = lib
-   end
+function MeCab.init()
+   mecab = nil
+
+   local ok, lib = pcall(require, "lua-mecab")
+   if not ok then return false, lib end
+   mecab = lib
+
+   return true, nil
+end
+
+function MeCab.parse(text)
 
    local parser = mecab:new("")
 
@@ -280,4 +285,4 @@ function Mecab.parse(text)
    return true, words
 end
 
-return Mecab
+return MeCab
