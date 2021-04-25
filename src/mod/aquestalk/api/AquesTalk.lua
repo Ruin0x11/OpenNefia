@@ -34,10 +34,13 @@ local ALLOWED_SYMBOLS = table.set {
 }
 
 local PAUSES = table.set {
-   "。",
-   "…",
    "「",
    "」"
+}
+
+local LONG_PAUSES = table.set {
+   "。",
+   "…",
 }
 
 local ACCENTS = table.set {
@@ -62,8 +65,10 @@ function AquesTalk.speak(text, x, y, volume, channel, bas, spd, vol, pit, acc, l
             s[#s+1] = word.extra.reading
          elseif PAUSES[reading] then
             s[#s+1] = "、"
+         elseif LONG_PAUSES[reading] then
+            s[#s+1] = "、、"
          elseif ACCENTS[reading] then
-            s[#s+1] = "ー"
+            s[#s+1] = "ー、"
          else
             local ok, hiragana = Henkan.katakana_to_hiragana(reading)
             if ok then
@@ -136,7 +141,7 @@ function AquesTalk.speak_hiragana(hiragana, x, y, volume, channel, bas, spd, vol
 end
 
 function AquesTalk.calc_chara_params(chara)
-   local aspect = chara:get_aspect_or_default(IAquesTalkConfig, true)
+   local aspect = chara:get_aspect_or_default(IAquesTalkConfig)
 
    local bas = aspect:calc(chara, "bas")
    local spd = aspect:calc(chara, "spd")

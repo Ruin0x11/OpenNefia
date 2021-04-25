@@ -122,7 +122,7 @@ function Henkan.katakana_to_hiragana(katakana)
       local ch = utf8.char(c)
       local hiragana
       if ch == "ヴ" then
-         hiragana = "ぶぃ"
+         hiragana = "ぶい"
       else
          hiragana = katakana_to_hiragana[ch]
       end
