@@ -101,7 +101,7 @@ end
 --- responsibility to ensure that IChara:build() is also called at
 --- some later point.
 function IChara:normal_build(params)
-   self:emit("base.on_chara_normal_build")
+   self:emit("base.on_chara_normal_build", {}, { build_params = params })
 
    IObject.normal_build(self, params)
 end
