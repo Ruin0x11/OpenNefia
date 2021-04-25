@@ -165,6 +165,7 @@ The character's female image. Can be nil to use the race's default image.
          {
             name = "gender",
             default = "female",
+            no_fallback = true,
             type = "string",
             doc = [[
 The character's gender, either "male" or "female".
