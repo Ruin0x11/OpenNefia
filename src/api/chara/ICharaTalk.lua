@@ -27,4 +27,8 @@ function ICharaTalk:say(talk_id, args, opts)
    return Talk.say(self, talk_id, args, opts)
 end
 
+function ICharaTalk:get_talk_channel()
+   return ("%s:%s:%d"):format(self._type, self._id, self.uid)
+end
+
 return ICharaTalk

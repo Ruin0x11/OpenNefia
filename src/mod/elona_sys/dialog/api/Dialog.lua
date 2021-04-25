@@ -130,6 +130,8 @@ local function query(talk, text, choices, default_choice)
    end
    -- <<<<<<<< shade2/chat.hsp:61 	if cQuality(tc)=fixUnique:chatVal(1)=cId(tc),fals ..
 
+   Event.trigger("elona_sys.on_show_dialog", {text=text,talk=talk})
+
    local menu = DialogMenu:new(text,
                                the_choices,
                                speaker_name(talk.speaker),

@@ -1,7 +1,7 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local I18N = require("api.I18N")
-local Log = require("api.Log")
+local Event = require("api.Event")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
@@ -83,6 +83,9 @@ function SceneLayer:proceed()
   while not finished do
     self.index = self.index + 1
     local t = self.scene[self.index]
+
+    local result = Event.trigger("elona_sys.on_scene_proceed", { index = self.index }, { node = t })
+    t = result.node or t
 
     if self.index > #self.scene then
       finished = true
