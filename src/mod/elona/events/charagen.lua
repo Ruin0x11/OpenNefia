@@ -9,6 +9,7 @@ local CharaMake = require("api.CharaMake")
 local Const = require("api.Const")
 local Map = require("api.Map")
 local Charagen = require("mod.elona.api.Charagen")
+local Log = require("api.Log")
 
 local function fix_name_gender_age(chara)
    if chara.proto.has_own_name then
@@ -189,12 +190,19 @@ end
 Event.register("base.on_initialize_player", "Init player defaults", init_player_defaults)
 
 local function init_chara_image(chara)
+   if chara.image == nil then
+      chara.image = "base.default"
+   end
+
    if chara.image == "base.default" then
       if chara.male_image and chara.gender == "male" then
          chara.image = chara.male_image
       end
       if chara.female_image and chara.gender == "female" then
          chara.image = chara.female_image
+      end
+      if chara.image == "base.default" then
+         Log.error("No chara image for %s", chara)
       end
    end
 end
