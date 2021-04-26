@@ -52,7 +52,9 @@ function ConfigMenu:relayout()
    self.t = UiTheme.load(self)
 
    self.win:relayout(self.x, self.y, self.width, self.height)
-   self.win:set_pages(self.list.model)
+   if self.list.page_max > 1 then
+      self.win:set_pages(self.list.model)
+   end
    self.list:relayout(self.x + 56, self.y + 66)
 end
 
@@ -83,7 +85,9 @@ function ConfigMenu:update(dt)
       return self.list:selected_item().menu
    end
    if self.list.changed then
-      self.win:set_pages(self.list.model)
+      if self.list.page_max > 1 then
+         self.win:set_pages(self.list)
+      end
    end
 
    self.win:update()
