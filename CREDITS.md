@@ -17,7 +17,6 @@ The following is a list of third-party projects whose code is used in OpenNefia.
 - [Penlight](https://github.com/stevedonovan/Penlight) (MIT)
 - [profile.lua](https://bitbucket.org/itraykov/profile.lua) (unlicensed)
 - [strict.lua](http://lua-users.org/lists/lua-l/2005-08/msg00737.html) (unlicensed)
-- [ldoc](https://github.com/stevedonovan/LDoc) (MIT)
 - [binpack](https://gist.github.com/leafi/c39489b97f33139b3aaf53b3c476df40) (MIT)
 - [coxpcall](https://github.com/keplerproject/coxpcall) (MIT)
 - [json.lua](https://github.com/rxi/json.lua) (MIT)
