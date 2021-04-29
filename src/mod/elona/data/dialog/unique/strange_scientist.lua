@@ -46,7 +46,7 @@ return {
             {"first"},
          },
          choices = {
-            {"__END__", "__MORE__"},
+            {"__END__", "ui.more"},
          },
          on_finish = function()
             Item.create(Chara.player().position, "core.little_ball", 0)
@@ -113,7 +113,7 @@ return {
             {"turn_over.dialog"},
          },
          choices = {
-            {"__END__", "__MORE__"},
+            {"__END__", "ui.more"},
          }
       },
    }

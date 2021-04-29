@@ -37,7 +37,7 @@ return {
             {"complete"},
          },
          choices = {
-            {"buy_nuke", "__MORE__"}
+            {"buy_nuke", "ui.more"}
          }
       },
       quest_waiting = {
@@ -45,7 +45,7 @@ return {
             {"quest.waiting"}
          },
          choices = {
-            {"buy_nuke", "__MORE__"}
+            {"buy_nuke", "ui.more"}
          }
       },
       quest_finish = {
@@ -62,7 +62,7 @@ return {
             {"quest.end"},
          },
          choices = {
-            {"buy_nuke", "__MORE__"}
+            {"buy_nuke", "ui.more"}
          }
       },
       quest_ask = {
@@ -85,7 +85,7 @@ return {
             {"quest.of_course"},
          },
          choices = {
-            {"buy_nuke", "__MORE__"},
+            {"buy_nuke", "ui.more"},
          }
       },
       quest_no = {

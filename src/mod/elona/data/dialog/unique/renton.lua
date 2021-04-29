@@ -45,7 +45,7 @@ return {
             {"quest.dialog._3"},
          },
          choices = {
-            {"quest_check", "__MORE__"},
+            {"quest_check", "ui.more"},
          },
       },
       quest_check = function()

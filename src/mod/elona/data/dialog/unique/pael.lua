@@ -66,7 +66,7 @@ return {
           {"give.do_not_have"}
          },
          choices = {
-            {"__END__", "__MORE__"}
+            {"__END__", "ui.more"}
          }
       },
       give_potion = {
@@ -80,7 +80,7 @@ return {
             {"give.dialog"}
          },
          choices = {
-            {"__END__", "__MORE__"}
+            {"__END__", "ui.more"}
          },
          on_finish = function()
             GUI.show_journal_update_message()
