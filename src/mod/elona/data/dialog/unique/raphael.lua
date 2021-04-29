@@ -29,7 +29,7 @@ return {
             return "bring_wife"
          end
 
-         return "__IGNORED__"
+         return "elona_sys.ignores_you:__start"
       end,
 
       quest_ask = {

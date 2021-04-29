@@ -19,7 +19,7 @@ return {
             return "quest_check"
          end
 
-         return "__IGNORED__"
+         return "elona_sys.ignores_you:__start"
       end,
       quest_completed = {
          text = {

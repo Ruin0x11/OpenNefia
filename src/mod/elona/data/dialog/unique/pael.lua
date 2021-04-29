@@ -51,7 +51,7 @@ return {
             return "progress_6"
          end
 
-         return "__IGNORED__"
+         return "elona_sys.ignores_you:__start"
       end,
       give_check = function()
          local potion = Item.find("core.potion_of_cure_corruption", "PlayerInventory")

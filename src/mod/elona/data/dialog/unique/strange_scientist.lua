@@ -38,7 +38,7 @@ return {
             return "dialog"
          end
 
-         return "__IGNORED__"
+         return "elona_sys.ignores_you:__start"
       end,
 
       first = {
