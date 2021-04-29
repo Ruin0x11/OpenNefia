@@ -3,7 +3,7 @@ _CONSOLE = _CONSOLE or false
 
 _IS_LOVEJS = jit == nil
 
-package.path = package.path .. ";./thirdparty/?.lua;./?/init.lua;./?.fnl;./?/init.fnl"
+package.path = package.path .. ";./thirdparty/?.lua;./?/init.lua"
 
 local dir_sep = package.config:sub(1,1)
 local is_windows = dir_sep == "\\"
@@ -35,9 +35,6 @@ end
 -- from package.path in order to make love.filesystem.load work
 -- properly
 love.filesystem.setRequirePath(package.path)
-
-local fennel = require("thirdparty.fennel")
-table.insert(package.loaders or package.searchers, fennel.searcher)
 
 -- globals that will be used very often.
 

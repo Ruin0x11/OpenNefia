@@ -126,40 +126,6 @@
 (defun open-nefia--eldoc-message (&optional msg)
   (run-with-idle-timer 0 nil (lambda () (eldoc-message open-nefia--eldoc-saved-message))))
 
-(defun open-nefia--eldoc-get ()
-  (ignore-errors
-    (let ((sym (open-nefia--dotted-symbol-at-point)))
-      (if (and (not (string-empty-p sym))
-               (open-nefia--game-running-p)
-               (not (string-equal sym "nil")))
-          (open-nefia--send "signature" sym))))
-  eldoc-last-message)
-
-(defun open-nefia-eldoc-function ()
-  (if (and open-nefia--eldoc-saved-message
-           (equal open-nefia--eldoc-saved-point (point)))
-      open-nefia--eldoc-saved-message
-
-    (setq open-nefia--eldoc-saved-message nil
-          open-nefia--eldoc-saved-point nil)
-    (open-nefia--eldoc-get)
-    (let* ((sym-dotted (open-nefia--dotted-symbol-at-point))
-           (sym (symbol-at-point)))
-      (when (not (or (string-empty-p sym-dotted) (string-empty-p sym)))
-        (let ((defs (or (and sym-dotted (etags--xref-find-definitions sym-dotted))
-                        (and sym (etags--xref-find-definitions (prin1-to-string sym))))))
-          (when defs
-            (let* ((def (car defs))
-                   (raw (substring-no-properties (xref-item-summary def))))
-              (with-temp-buffer
-                (insert raw)
-                (delay-mode-hooks (lua-mode))
-                (font-lock-default-function 'lua-mode)
-                (font-lock-default-fontify-region (point-min)
-                                                  (point-max)
-                                                  nil)
-                (buffer-string)))))))))
-
 (defun open-nefia--game-running-p ()
   (or
    (and (buffer-live-p lua-process-buffer) (get-buffer-process lua-process-buffer))
@@ -173,18 +139,12 @@
               ; in pairs of ("api.Api.name", "api.api.name")
               (let* ((cand (open-nefia--completing-read "Candidate: " (append candidates nil)))
                      (args (pcase cmd
-                             ("help" (list :query cand))
                              ("ids" (list :type cand))
                              ("template" (list :type cand))
                              ("hotload" (list :require_path cand))
                              (else (error "Candidates not supported for %s" cmd)))))
                 (open-nefia--send cmd args))
             (pcase cmd
-              ("help" (open-nefia--command-help args response))
-              ("jump_to" (open-nefia--command-jump-to args response))
-              ("signature" (open-nefia--command-signature response))
-              ("apropos" (open-nefia--command-apropos response))
-              ("completion" (open-nefia--command-completion response))
               ("template" (open-nefia--command-template response))
               ("ids" (open-nefia--command-ids args response))
               ("locale_search" (open-nefia--command-locale-search response))
@@ -197,202 +157,6 @@
 ;;
 ;; Commands
 ;;
-
-(defun open-nefia--start-of-help-buffer ()
-  (let* ((str (buffer-string))
-         (pos (string-match "^\n  " str)))
-    (or (and pos (+ 1 pos))
-        (save-excursion
-          (beginning-of-buffer)
-          (next-line 3)
-          (point)))))
-
-(defun open-nefia--end-of-help-buffer ()
-  (let ((str (buffer-string)))
-    (or (string-match "\n= Parameters$" str)
-        (string-match "\n= Returns$" str)
-        (point-max))))
-
-(defvar open-nefia--help-buffer-font-lock-keywords
-  `(;; Definitions
-    (,(rx line-start "'" (group-n 1 (+ not-newline)) "'"
-          " is " (? (or "a " "an ")) (group-n 2 (+ not-newline))
-          " defined in '" (group-n 3 (+ not-newline))
-          "' on line " (group-n 4 (+ digit)) ".")
-     (1 font-lock-function-name-face t noerror)
-     (2 font-lock-type-face t noerror)
-     (3 '(face link) t noerror)
-     (4 font-lock-constant-face t noerror))
-
-    ;; Type signature
-    (,(lua-rx line-start
-              (group-n 1 lua-funcname)
-              "("
-              (group-n 2 (? "[") (* (or lua-name "...") (* (any " ,[])"))))
-              ") :: ("
-              (group-n 3 (* (+ (not (any "-)"))) (? " -> ")))
-              ") => "
-              (group-n 4 (+ (not (any "\n" space)))))
-     (1 font-lock-function-name-face t noerror)
-     (2 font-lock-variable-name-face t noerror)
-     (3 font-lock-type-face t noerror)
-     (4 font-lock-type-face t noerror))
-
-    ;; Section headers
-    (,(rx line-start "= " (group-n 1 (or "Parameters" "Returns")) line-end)
-     (0 font-lock-comment-face t noerror))
-
-    ;; Parameters
-    (,(lua-rx line-start " * " (group-n 1 lua-name)
-              " :: " (group-n 2 (+ (not (any "\n" space)))) (? ":"))
-     (1 font-lock-variable-name-face t noerror)
-     (2 font-lock-type-face t noerror))
-
-    ;; Returns
-    (,(lua-rx line-start " * " (group-n 1 (+ (not (any "\n" space)))))
-     (1 font-lock-type-face nil noerror))
-    ))
-
-(define-button-type 'open-nefia-file
-  :supertype 'help-xref
-  'help-function (lambda (file line)
-                   (let ((path (string-join (list (projectile-project-root)
-                                                  "src/"
-                                                  file))))
-                     (pop-to-buffer (find-file-noselect path))
-                     (goto-line line)
-                     (recenter)))
-  'help-echo (purecopy "mouse-2, RET: find object's definition"))
-
-(defvar open-nefia--file-regexp "defined in '\\(.*?\\)' on line \\([0-9]+\\)")
-
-(defun open-nefia--format-help-buffer ()
-  (save-excursion
-    (beginning-of-buffer)
-    (let ((paragraph-start "[ \t]*\n[ \t]*$\\|[ \t]*[-+*=] ")
-          (fill-column 80)
-          (start (open-nefia--start-of-help-buffer))
-          (end (open-nefia--end-of-help-buffer))
-          (inhibit-read-only t))
-      (open-nefia--fontify-region 'markdown-mode start end)
-      (font-lock-add-keywords nil open-nefia--help-buffer-font-lock-keywords)
-      (font-lock-fontify-region (point-min) (point-max))
-      (beginning-of-buffer)
-      (next-line 3)
-      (fill-region (point) (point-max))
-      (beginning-of-buffer)
-      (when (and (re-search-forward open-nefia--file-regexp nil t)
-                 (match-string 1))
-        (help-xref-button 1 'open-nefia-file (match-string 1) (string-to-number (match-string 2)))))))
-
-(defvar open-nefia--signature-font-lock-keywords
-  `((,(lua-rx line-start
-              (group-n 1 (symbol "function"))
-              " "
-              (group-n 2 lua-funcname)
-              "("
-              (group-n 3 (? "[") (* (or lua-name "...") (* (any " ,[])"))))
-              ") "
-              (group-n 4 (symbol "end"))
-              " :: ("
-              (group-n 5 (* (+ (not (any "-)"))) (? " -> ")))
-              ") => "
-              (group-n 6 (+ (not (any "\n" space)))))
-     (1 font-lock-keyword-face t noerror)
-     (2 font-lock-function-name-face t noerror)
-     (3 font-lock-variable-name-face t noerror)
-     (4 font-lock-keyword-face t noerror)
-     (5 font-lock-type-face t noerror)
-     (6 font-lock-type-face t noerror))))
-
-(defun open-nefia--fontify-signature (str)
-  (with-temp-buffer
-    (insert str)
-    (font-lock-add-keywords nil open-nefia--signature-font-lock-keywords)
-    (font-lock-fontify-region (point-min) (point-max))
-    (buffer-string)))
-
-(defun open-nefia--command-help (args response)
-  (-let (((&alist 'doc 'message) response)
-         (buffer (get-buffer-create "*open-nefia-help*")))
-    (with-help-window buffer
-      (princ doc)
-      (with-current-buffer buffer
-        (open-nefia--format-help-buffer)))
-    (message "%s" message)))
-
-(defvar open-nefia--is-completing nil)
-
-(defun open-nefia--command-completion (response)
-  (when open-nefia--is-completing
-    (-let* (((&alist 'results 'prefix) response)
-            (candidates (mapcar (lambda (item)
-                                  (open-nefia--make-completion-candidate item prefix))
-                                results)))))
-  (funcall open-nefia--is-completing candidates)
-  (setq open-nefia--is-completing nil))
-
-(defun open-nefia--company-candidates (prefix callback)
-  (message (prin1-to-string prefix))
-  (when (open-nefia--game-running-p)
-    (progn
-      (setq open-nefia--is-completing callback)
-      (open-nefia--send "completion" prefix))))
-
-;;;###autoload
-(defun company-open-nefia (command &optional arg &rest _)
-  (interactive (list 'interactive))
-  (cl-case command
-    (interactive (company-begin-backend #'company-open-nefia))
-    (prefix (substring-no-properties (company-grab-symbol)))
-    (candidates (cons :async (lambda (callback) (open-nefia--company-candidates arg callback))))
-    ;(annotation (open-nefia--company-annotation arg))
-    ;(quickhelp-string (open-nefia--company-quickhelp-string arg))
-    ;; (doc-buffer (company-doc-buffer "*open-nefia-help*"))
-    ))
-
-(defun open-nefia--command-jump-to (args response)
-  (-let* (((&alist 'success 'file 'line 'column) response))
-    (if file
-        (let* ((loc (xref-make-file-location file line column))
-               (marker (xref-location-marker loc))
-               (buf (marker-buffer marker)))
-          (xref-push-marker-stack)
-          (switch-to-buffer buf)
-          (xref--goto-char marker))
-      (xref-find-definitions (strip-text-properties (plist-get :query args))))))
-
-(defun open-nefia--command-signature (response)
-  (-let* (((&alist 'sig 'params 'summary) response))
-    (when sig
-      (setq open-nefia--eldoc-saved-message
-            (format "%s :: %s%s" sig params (or (and (not (string-blank-p summary))
-                                                     (format "\n%s" summary))
-                                                ""))
-            open-nefia--eldoc-saved-point (point))
-      (open-nefia--eldoc-message open-nefia--eldoc-saved-message))))
-
-(defvar open-nefia--apropos-candidates nil)
-
-(defun open-nefia--apropos-file (path)
-  (let ((base (if (open-nefia--headless-mode-p)
-                  (string-trim-right (temporary-file-directory) "/")
-                (getenv "HOME")))
-        (sep (if (eq system-type 'windows-nt) "\\" "/"))
-        (dir
-         (if (eq system-type 'windows-nt)
-             "AppData\\Roaming\\LOVE"
-           ".local/share/love")))
-    (string-join (list base dir "Open-Nefia" path) sep)))
-
-(defun open-nefia--command-apropos (response)
-  (-let* (((&alist 'path 'updated) response)
-          (items (or
-                  (and (not updated) open-nefia--apropos-candidates)
-                  (json-read-file (open-nefia--apropos-file path)))))
-    (setq open-nefia--apropos-candidates items)
-    (let ((item (open-nefia--completing-read "Apropos: " items)))
-      (open-nefia--send "help" item))))
 
 (defvar open-nefia--locale-search-table nil)
 
@@ -790,31 +554,6 @@ removed.  Return the new string.  If STRING is nil, return nil."
      (symbol-name
       (symbol-at-point))
      "[.:]" "[.:]")))
-
-(defun open-nefia-describe-thing-at-point (arg)
-  (interactive "P")
-  (let ((sym (if arg
-                 (symbol-name (symbol-at-point))
-               (open-nefia--dotted-symbol-at-point))))
-    (open-nefia--send "help" (list :query sym))))
-
-(defun open-nefia-jump-to-definition (arg)
-  (interactive "P")
-  (if (open-nefia--game-running-p)
-      (let* ((sym (if arg
-                      (symbol-name (symbol-at-point))
-                    (open-nefia--dotted-symbol-at-point)))
-             (result (if (string-equal sym "nil")
-                         (open-nefia--completing-read
-                          "Jump to: "
-                          (json-read-file (open-nefia--apropos-file "data/apropos.json")))
-                       sym)))
-        (open-nefia--send "jump_to" (list :query result)))
-    (xref-find-definitions (open-nefia--dotted-symbol-at-point))))
-
-(defun open-nefia-describe-apropos ()
-  (interactive)
-  (open-nefia--send "apropos" '()))
 
 (defun open-nefia-eval-sexp-fu-setup ()
   (define-eval-sexp-fu-flash-command open-nefia-send-defun

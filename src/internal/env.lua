@@ -287,26 +287,16 @@ local function env_dofile(path, mod_env)
    end
 
    local chunk, err
-   if fs.extension_part(resolved) == "fnl" then
-      local src = assert(io.open(resolved, "r"):read("*all"))
 
-      -- include some standard macros
-      src = "(require-macros :internal.fennel.macros)\n" .. src
-
-      rawset(_G, "_ENV", mod_env or _G)
-      local ok, str = xpcall(require("thirdparty.fennel").compileString, debug.traceback, src, {env = {}})
-      if not ok then
-         return nil, str
-      end
-      rawset(_G, "_ENV", nil)
-      chunk, err = loadstring(str)
+   -- `transient` is a "virtually loaded" file with no on-disk counterpart. It
+   -- is associated with a Lua require path, and is used for filesystem mocking
+   -- during tests.
+   local transient = transient_paths[path]
+   if transient then
+      chunk, err = loadstring(transient.code)
    else
-      local transient = transient_paths[path]
-      if transient then
-         chunk, err = loadstring(transient.code)
-      else
-         chunk, err = loadfile(resolved)
-      end
+      -- We will assume `resolved` points to a .lua file.
+      chunk, err = loadfile(resolved)
    end
 
    if chunk == nil then

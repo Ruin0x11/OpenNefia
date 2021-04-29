@@ -27,7 +27,6 @@ local function convert_to_require_path(path)
    local path = path
 
    path = string.strip_suffix(path, ".lua")
-   path = string.strip_suffix(path, ".fnl")
    path = string.gsub(path, "/", ".")
    path = string.gsub(path, "\\", ".")
    path = string.strip_suffix(path, ".init")

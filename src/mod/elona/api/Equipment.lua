@@ -8,7 +8,6 @@ local Const = require("api.Const")
 local Stopwatch = require("api.Stopwatch")
 local Log = require("api.Log")
 local News = require("mod.elona.api.News")
-local text = require("thirdparty.pl.text")
 local I18N = require("api.I18N")
 local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
 

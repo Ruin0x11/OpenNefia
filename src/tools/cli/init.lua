@@ -1,8 +1,5 @@
 require("internal.data.base")
 local fs = require("util.fs")
-local Fs = require("api.Fs")
-local dir = require("thirdparty.pl.dir")
-local env = require("internal.env")
 local paths = require("internal.paths")
 
 local argparse = require("thirdparty.argparse")

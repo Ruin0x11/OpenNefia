@@ -2,7 +2,6 @@ local Draw = require("api.Draw")
 local Env = require("api.Env")
 local Gui = require("api.Gui")
 local Object = require("api.Object")
-local Doc = require("api.Doc")
 local SaveFs = require("api.SaveFs")
 local Log = require("api.Log")
 local CircularBuffer = require("api.CircularBuffer")
@@ -174,8 +173,8 @@ function ReplLayer:make_keymap()
                local rest = "("
                local mod_name = string.match(self.completion.base, "^([a-zA-Z_]+)")
                if mod_name then
-                  local doc = Doc.get(text)
-                  if doc and doc.entry and #doc.entry.params == 0 then
+                  local has_zero_args = false -- TODO
+                  if has_zero_args then
                      rest = "()"
                   end
                end
