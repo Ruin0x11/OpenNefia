@@ -21,7 +21,6 @@ The following is a list of third-party projects whose code is used in OpenNefia.
 - [coxpcall](https://github.com/keplerproject/coxpcall) (MIT)
 - [json.lua](https://github.com/rxi/json.lua) (MIT)
 - [lua-repl](https://github.com/hoelzro/lua-repl) (MIT)
-- [fennel](https://github.com/bakpakin/Fennel) (MIT)
 - [binser](https://github.com/bakpakin/binser) (MIT)
 - [bit.numberlua](https://github.com/davidm/lua-bit-numberlua) (MIT)
 - [ansicolors](https://github.com/kikito/ansicolors.lua) (MIT)

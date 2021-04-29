@@ -16,12 +16,10 @@ export function uriToLuaPath(uri: vscode.Uri): string {
     let relative = removePrefix(uri.path, root.path);
     relative = removePrefix(relative, "/src");
     relative = removePrefix(relative, "/");
-    
+
     let luaPath = relative.replace(/[\\\/]/g, ".");
     luaPath = removeSuffix(luaPath, ".init.lua");
-    luaPath = removeSuffix(luaPath, ".init.fnl");
     luaPath = removeSuffix(luaPath, ".lua");
-    luaPath = removeSuffix(luaPath, ".fnl");
     return luaPath;
 }
 

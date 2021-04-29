@@ -427,7 +427,7 @@ function fs.join(base, ...)
    return res
 end
 
-local EXTS = { "lua", "fnl" }
+local EXTS = { "lua" }
 function fs.can_load(path)
    local my_ext = fs.extension_part(path)
    for _, ext in ipairs(EXTS) do
@@ -438,10 +438,10 @@ function fs.can_load(path)
    return false
 end
 
--- Searches for a file loadable with `require` at the nested path -
--- either .lua or .fnl.
--- @param ... Set of directory components, without file extension
--- @treturn[opt] string
+-- Searches for a file loadable with `require` at the nested path, which is one
+-- that ends with .lua.
+-- @param ... Set of directory components, without file
+-- extension @treturn[opt] string
 function fs.find_loadable(...)
    local path = fs.join(...)
    for _, ext in ipairs(EXTS) do
