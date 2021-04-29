@@ -1,12 +1,10 @@
 local mod = require("internal.mod")
 local i18n = require("internal.i18n")
 local data = require("internal.data")
-local doc = require("internal.doc")
 local draw = require("internal.draw")
 local field = require("game.field")
 local Event = require("api.Event")
 local Log = require("api.Log")
-local Doc = require("api.Doc")
 local Rand = require("api.Rand")
 local Repl = require("api.Repl")
 local UiFpsCounter = require("api.gui.hud.UiFpsCounter")
@@ -81,15 +79,7 @@ function startup.set_gc_params()
    collectgarbage("setstepmul", config.base.gc_step_multiplier)
 end
 
--- skip documenting api tables to save startup time from dozens of
--- requires.
--- TODO should be config option
-local alias_api_tables = false
-
 function startup.run_all(mods)
-   -- we're running headless, turn off expensive documentation loading
-   alias_api_tables = false
-
    local coro = coroutine.create(function() startup.run(mods) end)
    while startup.get_progress() ~= nil do
       local ok, err = coroutine.resume(coro)
@@ -111,10 +101,6 @@ function startup.run(mods)
 
    draw.add_global_widget(UiFpsCounter:new(), "fps_counter")
 
-   progress("Loading documentation...")
-
-   doc.load(alias_api_tables)
-
    if rawget(_G, "jit") and jit.status() == false then
       Log.warn("JIT compiler is _off_ due to sethook/debug settings.")
    end
@@ -130,10 +116,6 @@ function startup.run(mods)
    data:run_all_edits()
 
    -- data is finalized at this point.
-
-   -- if alias_api_tables then
-   --    doc.alias_api_tables()
-   -- end
 
    progress("Loading config...")
 
@@ -176,21 +158,8 @@ function startup.run(mods)
 end
 
 function startup.shutdown()
-   doc.save()
    midi.stop()
 end
-
-local atlas = require("internal.draw.atlas")
-
-local mkpred = function(group)
-   return function(i) return i.group == group end
-end
-
-local function get_map_tiles()
-   return data["base.map_tile"]:iter():to_list()
-end
-
-local tile_size = 48
 
 function startup.load_batches()
    Log.debug("Loading tile batches.")

@@ -1,6 +1,5 @@
 local schema = require("thirdparty.schema")
 local data = require("internal.data")
-local Doc = require("api.Doc")
 local CodeGenerator = require("api.CodeGenerator")
 local Enum = require("api.Enum")
 
@@ -21,9 +20,6 @@ data:add_type {
    schema = schema.Record {
       observer = schema.Optional(schema.String)
    },
-   on_document = function(dat)
-      return Doc.make_ldoc_doc(dat, dat.params, dat.returns)
-   end,
    doc = [[
 Events that can be fired.
 ]]
