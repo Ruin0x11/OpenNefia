@@ -1,7 +1,7 @@
 local story_0 = {
-    { "pic", "base.bg3" },
-    { "mc", "elona.intro" },
-    {
+   { "pic", "base.bg3" },
+   { "mc", "elona.intro" },
+   {
       "txt",
       [[
 Ages ago, in the times when the scars
@@ -13,8 +13,8 @@ still plagued by destruction and war
 and though prophesized as the beginnings of peace,
 Sierre Terre brought chaos as well as hope.
 ]]
-    },
-    {
+   },
+   {
       "txt",
       [[
 It rained for over a month.
@@ -32,8 +32,8 @@ As the forest devoured the land,
 it drove countless refugees into the
 western reaches of the continent.
 ]]
-    },
-    {
+   },
+   {
       "txt",
       [[
 But then, not so long ago,
@@ -53,9 +53,9 @@ fled deep into the Vindale.
 Now, the conflict grows worse with each passing day
 and a final confrontation becomes more and more inevitable.
 ]]
-    },
-    { "pic", "base.bg4" },
-    {
+   },
+   { "pic", "base.bg4" },
+   {
       "txt",
       [[
 The night has almost passed.
@@ -78,8 +78,8 @@ An old sailor mutters a faint curse under his breath.
 
 "The ether wind descends upon us..."
 ]]
-    },
-    {
+   },
+   {
       "txt",
       [[
 The ship roars in misery as the very planks
@@ -95,10 +95,10 @@ is swallowed into the depths of the sea, is the mysterious
 dancing light of the ether winds drifting away
 from you as sink into the depths...
 ]]
-    },
-    { "fade" }
-  }
+   },
+   { "fade" }
+}
 
 return {
-  story_0 = story_0
+   story_0 = story_0
 }
