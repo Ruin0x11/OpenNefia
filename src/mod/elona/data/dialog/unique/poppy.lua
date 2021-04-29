@@ -25,7 +25,7 @@ data:add {
             if Chara.player():can_recruit_allies() then
                table.insert(choices, {"take", "find.choices.take"})
             end
-            table.insert(choices, {"__END__", "__BYE__"})
+            table.insert(choices, {"__END__", "ui.bye"})
 
             return choices
          end

@@ -43,7 +43,7 @@ return {
             if Chara.player().gold >= 20000 then
                table.insert(choices, {"quest_yes", "quest.choices.pay"})
             end
-            table.insert(choices, {"quest_no", "__BYE__"})
+            table.insert(choices, {"quest_no", "ui.bye"})
 
             return choices
          end,

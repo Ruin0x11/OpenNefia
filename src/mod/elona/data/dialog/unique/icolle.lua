@@ -60,7 +60,7 @@ return {
          },
          choices = {
             {"quest_yes", "quest.choices.alright"},
-            {"quest_no", "__BYE__"}
+            {"quest_no", "ui.bye"}
          },
          default_choice = "quest_no"
       },
@@ -97,9 +97,9 @@ return {
          },
          choices = function()
             if Sidequest.progress("elona.ambitious_scientist") >= 6 then
-               return {{"quest_finish", "__BYE__"}}
+               return {{"quest_finish", "ui.bye"}}
             end
-            return {{"__END__", "__BYE__"}}
+            return {{"__END__", "ui.bye"}}
          end
       },
       quest_waiting = {

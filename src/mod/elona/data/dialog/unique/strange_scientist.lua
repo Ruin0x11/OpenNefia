@@ -71,7 +71,7 @@ return {
             if Chara.find("core.little_sister", "Allies") ~= nil then
                table.insert(choices, {"turn_over", "choices.turn_over"})
             end
-            table.insert(choices, {"__END__", "__BYE__"})
+            table.insert(choices, {"__END__", "ui.bye"})
 
             return choices
          end

@@ -72,7 +72,7 @@ return {
          },
          choices = {
             {"quest_yes", "quest.choices.of_course"},
-            {"quest_no", "__BYE__"},
+            {"quest_no", "ui.bye"},
          },
          default_choice = "quest_no"
       },
@@ -102,7 +102,7 @@ return {
             if Chara.player().gold >= 12000 then
                table.insert(choices, {"buy_nuke_yes", "quest.buy_nuke.choices.buy"})
             end
-            table.insert(choices, {"buy_nuke_no", "__BYE__"})
+            table.insert(choices, {"buy_nuke_no", "ui.bye"})
 
             return choices
          end,
