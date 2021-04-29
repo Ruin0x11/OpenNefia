@@ -21,7 +21,7 @@ function DebugStatsHook.hook_fn(api, fn_name)
       return false
    end
 
-   if Advice.is_advised(api, fn_name, _MOD_NAME, advice_id) then
+   if Advice.is_advised(api, fn_name, _MOD_ID, advice_id) then
       return false
    end
 
@@ -82,8 +82,8 @@ function DebugStatsHook.unhook(api)
    local tbl = require(api)
    for k, v in pairs(tbl) do
       local advice_id = make_advice_id(api, k)
-      if type(v) == "function" and Advice.is_advised(api, k, _MOD_NAME, advice_id) then
-         Advice.remove(api, k, _MOD_NAME, advice_id)
+      if type(v) == "function" and Advice.is_advised(api, k, _MOD_ID, advice_id) then
+         Advice.remove(api, k, _MOD_ID, advice_id)
          unhooked = unhooked + 1
       end
    end

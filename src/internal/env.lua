@@ -156,7 +156,7 @@ function env.find_calling_mod(offset)
             if funcinfo then
                local funcenv = getfenv(funcinfo.func)
                if funcenv then
-                  local mn = rawget(funcenv, "_MOD_NAME")
+                  local mn = rawget(funcenv, "_MOD_ID")
                   if mn then
                      mod_name = mn
                      loc = info
@@ -691,7 +691,7 @@ function env.generate_sandbox(mod_name, is_strict)
       sandbox[k] = _G[k]
    end
 
-   sandbox["_MOD_NAME"] = mod_name
+   sandbox["_MOD_ID"] = mod_name
 
    sandbox["require"] = mod_require
    sandbox["dofile"] = function(path) return env.load_sandboxed_chunk(path, mod_name) end

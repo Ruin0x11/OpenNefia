@@ -13,7 +13,7 @@ local function prompt_give_potion(prompt)
       },
       choices = {
          {"give_check", "give.choice"},
-         {"__END__", "__BYE__"}
+         {"__END__", "ui.bye"}
       }
    }
 end

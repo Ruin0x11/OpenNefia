@@ -41,7 +41,7 @@ files["mod/**/*.lua"] = {
       "data",
       "save",
       "config",
-      "_MOD_NAME",
+      "_MOD_ID",
    }
 }
 files["scratch/**/*.lua"].globals = files["mod/**/*.lua"].globals
