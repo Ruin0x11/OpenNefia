@@ -226,6 +226,7 @@ function Chara.create(id, x, y, params, where)
    if params.ownerless then
       where = nil
    else
+      Log.debug("Implicit global map used in Chara.create().")
       where = where or field.map
    end
 

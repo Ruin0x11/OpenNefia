@@ -262,7 +262,7 @@ do
       chara = Chara.create("elona.tam", 26, 11, nil, map)
       chara:add_role("elona.special")
 
-      chara = Chara.create("elona.gilbert_the_colonel", 14, 20, nil, map)
+      chara = Chara.create("elona.gilbert", 14, 20, nil, map)
       chara:add_role("elona.special")
 
       chara = Chara.create("elona.shopkeeper", 11, 5, nil, map)
@@ -355,7 +355,8 @@ do
       types = { "town" },
       image = "elona.feat_area_village",
       floors = {
-         [1] = "elona.yowyn"
+         [1] = "elona.yowyn",
+         [4] = "elona.battle_field"
       },
 
       metadata = {

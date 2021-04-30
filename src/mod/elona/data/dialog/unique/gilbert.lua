@@ -1,19 +1,18 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Chara = require("api.Chara")
+local common = require("mod.elona.data.dialog.common")
+local Item = require("api.Item")
 
-local common = require_relative("data/dialog/common")
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "gilbert",
 
-return {
-   id = "gilbert",
-   root = "core.talk.unique.gilbert",
    nodes = {
       __start = function()
          local flag = Sidequest.progress("elona.defense_line")
          if flag == 1000 then
             return "quest_completed"
-         elseif Chara.player().fame < 5000 then
+         elseif Chara.player():calc("fame") < 5000 then
             return "quest_fame_too_low"
          elseif flag == 0 then
             return "quest_ask"
@@ -26,75 +25,63 @@ return {
          return "elona_sys.ignores_you:__start"
       end,
       quest_completed = {
-         text = {
-            {"complete"},
-         },
+         text = "talk.unique.gilbert.complete",
       },
       quest_fame_too_low = {
-         text = {
-            {"fame_too_low"},
-         },
+         text = "talk.unique.gilbert.fame_too_low",
       },
       quest_ask = {
          text = {
-            {"quest.dialog._0", args = common.args_title},
-            {"quest.dialog._1"},
+            {"talk.unique.gilbert.quest.dialog._0", args = common.args_title},
+            "talk.unique.gilbert.quest.dialog._1",
          },
          choices = {
-            {"quest_yes", "quest.choices.yes"},
-            {"quest_no", "quest.choices.no"}
+            {"quest_yes", "talk.unique.gilbert.quest.choices.yes"},
+            {"quest_no", "talk.unique.gilbert.quest.choices.no"}
          },
          default_choice = "quest_no"
       },
       quest_yes = {
-         text = {
-            GUI.show_journal_update_message,
-            {"quest.yes"},
-         },
+         on_start = function()
+            Sidequest.update_journal()
+         end,
+         text = "talk.unique.gilbert.quest.yes",
          on_finish = function()
             Sidequest.set_progress("elona.defense_line", 1)
          end
       },
       quest_no = {
-         text = {
-            {"quest.no"},
-         },
+         text = "talk.unique.gilbert.quest.no",
       },
       quest_begin = {
-         text = {
-            {"quest.begin.dialog"}
-         },
+         text = "talk.unique.gilbert.quest.begin.dialog",
          choices = {
-            {"quest_begin_yes", "quest.begin.choices.yes"},
-            {"quest_begin_no", "quest.begin.choices.no"}
+            {"quest_begin_yes", "talk.unique.gilbert.quest.begin.choices.yes"},
+            {"quest_begin_no", "talk.unique.gilbert.quest.begin.choices.no"}
          },
          default_choice = "quest_begin_no"
       },
       quest_begin_yes = {
-         text = {
-            {"quest.begin.yes"},
-         },
-         on_finish = function()
+         text = "talk.unique.gilbert.quest.begin.yes",
+         on_finish = function(t)
             Sidequest.set_progress("elona.defense_line", 2)
-            Internal.go_to_quest_map("core.yowyn", 4)
+            common.go_to_quest_map(t.speaker:current_map(), 4)
          end
       },
       quest_begin_no = {
-         text = {
-            {"quest.begin.no"},
-         },
+         text = "talk.unique.gilbert.quest.begin.no",
       },
       quest_finish = {
-         text = {
-            function()
-               Item.create(Chara.player().position, "core.hero_cheese", 0)
-               Item.create(Chara.player().position, "core.gold_piece", 10000)
-               Item.create(Chara.player().position, "core.platinum_coin", 3)
+         on_start = function()
+            local player = Chara.player()
+            local map = player:current_map()
+            Item.create("elona.hero_cheese", player.x, player.y, {}, map)
+            Item.create("elona.gold_piece", player.x, player.y, {amount=10000}, map)
+            Item.create("elona.platinum_coin", player.x, player.y, {amount=3}, map)
 
-               common.quest_completed()
-            end,
-            {"quest.end"},
-         },
+            common.quest_completed()
+         end,
+         text = "talk.unique.gilbert.quest.end",
          on_finish = function()
             Sidequest.set_progress("elona.defense_line", 1000)
          end

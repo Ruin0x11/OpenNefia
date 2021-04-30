@@ -216,7 +216,7 @@ function QuestMap.generate_party(difficulty)
    end
 
    special_chara("elona.loyter")
-   special_chara("elona.gilbert_the_colonel")
+   special_chara("elona.gilbert")
    special_chara("elona.shena")
    special_chara("elona.mia")
 

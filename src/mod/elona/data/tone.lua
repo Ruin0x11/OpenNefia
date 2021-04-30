@@ -996,7 +996,7 @@ data:add {
 
 data:add {
   _type = "base.tone",
-  _id = "gilbert_the_colonel",
+  _id = "gilbert",
 
   texts = {
     en = {

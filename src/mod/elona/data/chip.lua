@@ -332,7 +332,7 @@ local chara_chips = {
    { elona_id = 367, _id = "carbuncle" },
    { elona_id = 368, _id = "lion" },
    { elona_id = 369, _id = "cacy" },
-   { elona_id = 370, _id = "gilbert_the_colonel" },
+   { elona_id = 370, _id = "gilbert" },
    { elona_id = 373, _id = "yerles_self_propelled_gun" },
    { elona_id = 377, _id = "juere_swordman" },
    { elona_id = 378, _id = "yeek" },

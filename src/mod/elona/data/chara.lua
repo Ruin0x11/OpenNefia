@@ -6170,7 +6170,7 @@ local chara = {
       tone = "elona.yerles_machine_infantry",
    },
    {
-      _id = "gilbert_the_colonel",
+      _id = "gilbert",
       elona_id = 231,
       loot_type = "elona.humanoid",
       tags = { "man" },
@@ -6182,7 +6182,7 @@ local chara = {
       race = "elona.juere",
       class = "elona.gunner",
       gender = "male",
-      image = "elona.chara_gilbert_the_colonel",
+      image = "elona.chara_gilbert",
       quality = Enum.Quality.Unique,
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
@@ -6190,7 +6190,7 @@ local chara = {
       ai_calm_action = "elona.calm_dull",
       ai_distance = 3,
       ai_move_chance = 40,
-      tone = "elona.gilbert_the_colonel",
+      tone = "elona.gilbert",
    },
    {
       _id = "yerles_self_propelled_gun",

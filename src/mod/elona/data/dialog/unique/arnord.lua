@@ -64,14 +64,7 @@ data:add {
          text = "talk.unique.arnord.quest.begin.yes",
          on_finish = function(t)
             Sidequest.set_progress("elona.kamikaze_attack", 2)
-
-            local player = Chara.player()
-            local current_map = t.speaker:current_map()
-            local area = assert(Area.for_map(current_map))
-            local ok, quest_map = assert(area:load_or_generate_floor(25))
-            quest_map:set_previous_map_and_location(current_map, player.x, player.y)
-            Map.travel_to(quest_map)
-            -- Internal.go_to_quest_map("core.port_kapul", 25)
+            common.go_to_quest_map(t.speaker:current_map(), 25)
          end
       },
       quest_begin_no = {

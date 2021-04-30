@@ -63,58 +63,141 @@ data:add {
    }
 }
 
-local the_sewer = {
-   _type = "base.map_archetype",
-   _id = "the_sewer",
+do
+   local the_sewer = {
+      _type = "base.map_archetype",
+      _id = "the_sewer",
 
-   on_generate_map = function(area, floor)
-      local map = Elona122Map.generate("sqSewer")
-      map:set_archetype("elona.the_sewer", { set_properties = true })
+      on_generate_map = function(area, floor)
+         local map = Elona122Map.generate("sqSewer")
+         map:set_archetype("elona.the_sewer", { set_properties = true })
 
-      -- TODO hardcoded position
-      util.connect_stair_at(map, 2, 3, area, 1, 18, 45)
+         -- TODO hardcoded position
+         util.connect_stair_at(map, 2, 3, area, 1, 18, 45)
 
-      return map
-   end,
+         return map
+      end,
 
-   starting_pos = MapEntrance.stairs_up,
+      starting_pos = MapEntrance.stairs_up,
 
-   properties = {
-      music = "elona.puti",
-      types = { "dungeon" },
-      level = 20,
-      is_indoor = true,
-      is_temporary = true,
-      default_ai_calm = 1,
-      max_crowd_density = 0,
-      material_spot_type = "elona.dungeon"
-   },
+      properties = {
+         music = "elona.puti",
+         types = { "dungeon" },
+         level = 20,
+         is_indoor = true,
+         is_temporary = true,
+         default_ai_calm = 1,
+         max_crowd_density = 0,
+         material_spot_type = "elona.dungeon"
+      },
 
-   events = {
-      {
-         id = "elona_sys.on_quest_check",
-         name = "Sidequest: sewer_sweeping",
+      events = {
+         {
+            id = "elona_sys.on_quest_check",
+            name = "Sidequest: sewer_sweeping",
 
-         callback = function(map)
-            if Sidequest.progress("elona.sewer_sweeping") < 2 then
-               if Sidequest.no_targets_remaining(map) then
-                  Sidequest.set_progress("elona.sewer_sweeping", 2)
-                  Sidequest.update_journal()
+            callback = function(map)
+               if Sidequest.progress("elona.sewer_sweeping") < 2 then
+                  if Sidequest.no_targets_remaining(map) then
+                     Sidequest.set_progress("elona.sewer_sweeping", 2)
+                     Sidequest.update_journal()
+                  end
                end
             end
-         end
-      },
-      {
-         id = "base.on_map_generated_from_archetype",
-         name = "Sidequest: sewer_sweeping",
+         },
+         {
+            id = "base.on_map_generated_from_archetype",
+            name = "Sidequest: sewer_sweeping",
 
-         callback = function(map)
-            Sidequest.set_quest_targets(map)
-         end
+            callback = function(map)
+               Sidequest.set_quest_targets(map)
+            end
+         }
       }
    }
-}
-data:add(the_sewer)
+   data:add(the_sewer)
+end
+
+do
+   local battle_field = {
+      _type = "base.map_archetype",
+      _id = "battle_field",
+
+      starting_pos = MapEntrance.south,
+
+      properties = {
+         music = "elona.puti",
+         types = { "dungeon" },
+         level = 4,
+         is_indoor = false,
+         is_temporary = true,
+         max_crowd_density = 0,
+         tileset = "elona.dungeon",
+         material_spot_type = "elona.dungeon"
+      },
+
+      events = {
+         {
+            id = "elona_sys.on_quest_check",
+            name = "Sidequest: Defense Line",
+
+            callback = function(map)
+               if Sidequest.progress("elona.defense_line") < 3 then
+                  if Sidequest.no_targets_remaining(map) then
+                     Sidequest.set_progress("elona.defense_line", 3)
+                     Sidequest.update_journal()
+                  end
+               end
+            end
+         },
+         {
+            id = "base.on_map_generated_from_archetype",
+            name = "Sidequest: Defense Line",
+
+            callback = function(map)
+               Sidequest.set_quest_targets(map)
+
+               -- >>>>>>>> shade2/map.hsp:1235 			listMax=0		 ...
+               local enemies = Chara.iter_others(map):filter(function(c) return c.is_quest_target end):to_list()
+               for i = 1, 30 do
+                  local chara_id
+                  if i > (22-1) then
+                     chara_id = "elona.juere_swordman"
+                  else
+                     chara_id = "elona.juere_infantry"
+                  end
+                  local ally = Chara.create(chara_id, 11, 16, {}, map)
+                  if ally then
+                     ally.relation = Enum.Relation.Ally
+                     local enemy = Rand.choice(enemies)
+                     ally:set_target(enemy, 100)
+                     enemy:set_target(ally, 100)
+                  end
+               end
+               -- <<<<<<<< shade2/map.hsp:1244 			noAggroRefresh=true ..
+
+               -- TODO noAggroRefresh
+            end
+         }
+      }
+   }
+
+   function battle_field.on_generate_map(area, floor)
+      local map = Elona122Map.generate("sqwar")
+      map:set_archetype("elona.battle_field", { set_properties = true })
+      return map
+   end
+
+   function battle_field.on_map_entered(map)
+      local map_uid, start_x, start_y = map:previous_map_and_location()
+      if map_uid then
+         local area, floor = Area.for_map(map_uid)
+         util.connect_stair_at(map, 2, 2, area, floor, start_x, start_y)
+      end
+   end
+
+   data:add(battle_field)
+end
 
 do
    local test_site = {

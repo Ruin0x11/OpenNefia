@@ -97,6 +97,20 @@ data:add {
 
 data:add {
    _type = "elona_sys.sidequest",
+   _id = "defense_line",
+   elona_id = 207,
+   ordering = order(207),
+
+   progress = {
+      [1] = "sidequest._.elona.defense_line.progress._0",
+      [2] = "sidequest._.elona.defense_line.progress._1",
+      [3] = "sidequest._.elona.defense_line.progress._2",
+      [1000] = "",
+   },
+}
+
+data:add {
+   _type = "elona_sys.sidequest",
    _id = "novice_knight",
    elona_id = 208,
    ordering = order(208),

@@ -106,6 +106,7 @@ function Item.create(id, x, y, params, where)
    if params.ownerless then
       where = nil
    else
+      Log.debug("Implicit global map used in Item.create().")
       where = where or field.map
    end
 
