@@ -68,6 +68,7 @@ data:add {
    progress = {
       [1] = "sidequest._.elona.nightmare.progress._0",
       [2] = "sidequest._.elona.nightmare.progress._1",
+      [3] = "sidequest._.elona.nightmare.progress._2",
       [1000] = "",
    },
 }

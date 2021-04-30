@@ -1,13 +1,13 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Chara = require("api.Chara")
+local common = require("mod.elona.data.dialog.common")
+local Item = require("api.Item")
+local ItemMaterial = require("mod.elona.api.ItemMaterial")
 
-local common = require_relative("data/dialog/common")
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "loyter",
 
-return {
-   id = "loyter",
-   root = "core.talk.unique.loyter",
    nodes = {
       __start = function()
          local flag = Sidequest.progress("elona.nightmare")
@@ -29,77 +29,69 @@ return {
          return "__END__"
       end,
       quest_fame_too_low = {
-         text = {
-            {"fame_too_low"}
-         }
+         text = "talk.unique.loyter.fame_too_low"
+
       },
       quest_completed = {
-         text = {
-            {"complete"}
-         }
+         text = "talk.unique.loyter.complete"
       },
       quest_ask = {
          text = {
-            {"quest.dialog._0", args = common.args_title},
-            {"quest.dialog._1"},
+            {"talk.unique.loyter.quest.dialog._0", args = common.args_title},
+            "talk.unique.loyter.quest.dialog._1",
          },
          choices = {
-            {"quest_yes", "quest.choices.yes"},
-            {"quest_no", "quest.choices.no"}
+            {"quest_yes", "talk.unique.loyter.quest.choices.yes"},
+            {"quest_no", "talk.unique.loyter.quest.choices.no"}
          },
          default_choice = "quest_no"
       },
       quest_yes = {
-         text = {
-             GUI.show_journal_update_message,
-            {"quest.yes"},
-         },
+         on_start = function()
+            Sidequest.update_journal()
+         end,
+         text = "talk.unique.loyter.quest.yes",
          on_finish = function()
             Sidequest.set_progress("elona.nightmare", 1)
          end
       },
       quest_no = {
-         text = {
-            {"quest.no"},
-         }
+         text = "talk.unique.loyter.quest.no",
       },
       quest_begin = {
-         text = {
-            {"quest.begin.dialog"},
-         },
+         text = "talk.unique.loyter.quest.begin.dialog",
          choices = {
-            {"quest_begin_yes", "quest.begin.choices.yes"},
-            {"quest_begin_no", "quest.begin.choices.no"}
+            {"quest_begin_yes", "talk.unique.loyter.quest.begin.choices.yes"},
+            {"quest_begin_no", "talk.unique.loyter.quest.begin.choices.no"}
          },
          default_choice = "quest_begin_no"
       },
       quest_begin_yes = {
-         text = {
-            GUI.show_journal_update_message,
-            {"quest.begin.yes"},
-         },
-         on_finish = function()
+         on_begin = function()
+            Sidequest.update_journal()
+         end,
+         text = "talk.unique.loyter.quest.begin.yes",
+         on_finish = function(t)
             Sidequest.set_progress("elona.nightmare", 2)
-            Internal.go_to_quest_map("core.vernis", 5)
+            local map = t.speaker:current_map()
+            common.go_to_quest_map(map, 5)
          end
       },
       quest_begin_no = {
-         text = {
-            {"quest.begin.no"},
-         }
+         text = "talk.unique.loyter.quest.begin.no",
       },
       quest_finish = {
-         text = {
-            function()
-               local item = Item.create(Chara.player().position, {id = "core.material_kit", nostack = true})
-               item:change_material("core.rubynus")
-               Item.create(Chara.player().position, "core.gold_piece", 100000)
-               Item.create(Chara.player().position, "core.platinum_coin", 5)
+         on_start = function()
+            local player = Chara.player()
+            local map = player:current_map()
+            local material_kit = Item.create("elona.material_kit", player.x, player.y, {no_stack = true}, map)
+            ItemMaterial.change_item_material(material_kit, "elona.rubynus")
+            Item.create("elona.gold_piece", player.x, player.y, {amount=100000}, map)
+            Item.create("elona.platinum_coin", player.x, player.y, {amount=5}, map)
 
-               common.quest_completed()
-            end,
-            {"quest.end"}
-         },
+            common.quest_completed()
+         end,
+         text = "talk.unique.loyter.quest.end",
          on_finish = function()
             Sidequest.set_progress("elona.nightmare", 1000)
          end

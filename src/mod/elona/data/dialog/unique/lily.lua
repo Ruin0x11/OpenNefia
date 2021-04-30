@@ -7,7 +7,6 @@ local Effect = require("mod.elona.api.Effect")
 local Area = require("api.Area")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local DeferredEvents = require("mod.elona.api.DeferredEvents")
-local Event = require("api.Event")
 
 local function give_potion()
    local player = Chara.player()

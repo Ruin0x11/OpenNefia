@@ -72,10 +72,16 @@ do
          local map = Elona122Map.generate("sqSewer")
          map:set_archetype("elona.the_sewer", { set_properties = true })
 
-         -- TODO hardcoded position
-         util.connect_stair_at(map, 2, 3, area, 1, 18, 45)
-
          return map
+      end,
+
+      on_map_entered = function(map)
+         local map_uid, start_x, start_y = map:previous_map_and_location()
+         if map_uid then
+            local area, floor = Area.for_map(map_uid)
+            -- TODO hardcoded position
+            util.connect_stair_at(map, 2, 3, area, floor, start_x, start_y)
+         end
       end,
 
       starting_pos = MapEntrance.stairs_up,
@@ -222,9 +228,9 @@ do
             name = "Sidequest: nightmare",
 
             callback = function(map)
-               if Sidequest.progress("elona.nightmare") < 2 then
+               if Sidequest.progress("elona.nightmare") < 3 then
                   if Sidequest.no_targets_remaining(map) then
-                     Sidequest.set_progress("elona.nightmare", 2)
+                     Sidequest.set_progress("elona.nightmare", 3)
                      Sidequest.update_journal()
                   end
                end
@@ -239,31 +245,23 @@ do
 
    function test_site.on_generate_map(area, floor)
       local map = Elona122Map.generate("sqNightmare")
-      map:set_archetype("elona.shelter", { set_properties = true })
+      map:set_archetype("elona.test_site", { set_properties = true })
 
       Sidequest.set_quest_targets(map)
 
       return map
    end
 
+   function test_site.on_map_entered(map)
+      local map_uid, start_x, start_y = map:previous_map_and_location()
+      if map_uid then
+         local area, floor = Area.for_map(map_uid)
+         -- TODO hardcoded position
+         util.connect_stair_at(map, 15, 4, area, floor, start_x, start_y)
+      end
+   end
+
    data:add(test_site)
-
-   data:add {
-      _type = "base.area_archetype",
-      _id = "test_site",
-
-      floors = {
-         [1] = "elona.test_site"
-      },
-
-      --parent_area = {
-      --   _id = "elona.north_tyris",
-      --   on_floor = 1,
-      --   x = 20,
-      --   y = 20,
-      --   starting_floor = 1
-      --}
-   }
 end
 
 local doom_ground = {

@@ -190,7 +190,8 @@ do
       types = { "town" },
       image = "elona.feat_area_city",
       floors = {
-         [1] = "elona.vernis"
+         [1] = "elona.vernis",
+         [5] = "elona.test_site"
       },
 
       metadata = {
