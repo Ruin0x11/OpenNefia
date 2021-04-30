@@ -134,3 +134,16 @@ data:add {
       [1000] = "",
    },
 }
+
+data:add {
+   _type = "elona_sys.sidequest",
+   _id = "minotaur_king",
+   elona_id = 222,
+   ordering = order(222),
+
+   progress = {
+      [1] = "sidequest._.elona.minotaur_king.progress._0",
+      [2] = "sidequest._.elona.minotaur_king.progress._1",
+      [1000] = "",
+   },
+}

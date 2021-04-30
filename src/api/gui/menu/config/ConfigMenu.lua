@@ -7,6 +7,7 @@ local Draw = require("api.Draw")
 local UiWindow = require("api.gui.UiWindow")
 local ConfigMenuList = require("api.gui.menu.config.ConfigMenuList")
 local data = require("internal.data")
+local I18N = require("api.I18N")
 
 local ConfigMenu = class.class("ConfigMenu", IUiLayer)
 
@@ -35,6 +36,7 @@ end
 function ConfigMenu:on_query()
    self.canceled = false
    self.list:refresh_localized_text()
+   self.win:set_title("config.menu." .. self.config_menu._id .. ".name")
 end
 
 function ConfigMenu:relayout()

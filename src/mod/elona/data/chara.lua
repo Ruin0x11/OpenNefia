@@ -2734,6 +2734,25 @@ local chara = {
       initial_equipment = {
          ["elona.primary_weapon"] = { _id = "elona.axe_of_destruction", is_two_handed = true },
       },
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Set sidequest flag: Minotaur King",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+
+               -- >>>>>>>> shade2/chara_func.hsp:1714 			if cId(tc)=300:if sqMinotaur<1000:sqMinotaur=2: ...
+               if Sidequest.progress("elona.minotaur_king") < 1000 then
+                  Sidequest.set_progress("elona.minotaur_king", 2)
+                  Sidequest.update_journal()
+               end
+               -- <<<<<<<< shade2/chara_func.hsp:1714 			if cId(tc)=300:if sqMinotaur<1000:sqMinotaur=2: ..
+            end
+         }
+      }
    },
    {
       _id = "troll",

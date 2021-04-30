@@ -290,11 +290,12 @@ Event.register("base.on_calc_kill_exp",
 
 local function calc_exp_modifier(target)
    -- >>>>>>>> shade2/action.hsp:1251 	expModifer=1+cBit(cSandBag,tc)*15+cBit(cSplit,tc) ..
+   -- BUG: might be nil if this character was removed from the current map?
    local map = target:current_map()
    return 1 + ((target:calc(ICharaSandBag, "is_hung_on_sand_bag") and 15) or 0)
       + ((target:calc("splits") and 1) or 0)
       + ((target:calc("splits2") and 1) or 0)
-      + (map:calc("exp_modifier") or 0)
+      + (map and map:calc("exp_modifier") or 0)
    -- <<<<<<<< shade2/action.hsp:1251 	expModifer=1+cBit(cSandBag,tc)*15+cBit(cSplit,tc) ..
 end
 

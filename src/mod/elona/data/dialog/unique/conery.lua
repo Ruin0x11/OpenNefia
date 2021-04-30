@@ -1,13 +1,13 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local common = require("mod.elona.data.dialog.common")
+local Item = require("api.Item")
+local Chara = require("api.Chara")
+local ItemMaterial = require("mod.elona.api.ItemMaterial")
 
-local common = require_relative("data/dialog/common")
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "conery",
 
-return {
-   id = "conery",
-   root = "core.talk.unique.conery",
    nodes = {
       __start = function()
          local flag = Sidequest.progress("elona.minotaur_king")
@@ -24,48 +24,42 @@ return {
          return "elona_sys.ignores_you:__start"
       end,
       quest_completed = {
-         text = {
-            {"complete"}
-         }
+         text = "talk.unique.conery.complete"
       },
       quest_ask = {
-         text = {
-            {"quest.dialog"}
-         },
+         text = "talk.unique.conery.quest.dialog",
          choices = {
-            {"quest_yes", "quest.choices.do_it"},
-            {"quest_no", "quest.choices.bye"}
+            {"quest_yes", "talk.unique.conery.quest.choices.do_it"},
+            {"quest_no", "talk.unique.conery.quest.choices.bye"}
          },
          default_choice = "quest_no"
       },
       quest_yes = {
-         text = {
-            GUI.show_journal_update_message,
-            {"quest.do_it"},
-         },
+         on_start = function()
+            Sidequest.update_journal()
+         end,
+         text = "talk.unique.conery.quest.do_it",
          on_finish = function()
             Sidequest.set_progress("elona.minotaur_king", 1)
          end
       },
       quest_no = {
          text = {
-            {"quest.bye", args = common.args_name},
+            {"talk.unique.conery.quest.bye", args = common.args_name},
          }
       },
       quest_waiting = {
-         text = {
-            {"quest.waiting"},
-         }
+         text = "talk.unique.conery.quest.waiting",
       },
       quest_finish = {
-         text = {
-            {"quest.end"},
-         },
+         text = "talk.unique.conery.quest.end",
          on_finish = function()
-            local material_kit = Item.create(Chara.player().position, {id = "core.material_kit", nostack = true})
-            material_kit:change_material("core.adamantium")
-            Item.create(Chara.player().position, "core.gold_piece", 50000)
-            Item.create(Chara.player().position, "core.platinum_coin", 4)
+            local player = Chara.player()
+            local map = player:current_map()
+            local material_kit = Item.create("elona.material_kit", player.x, player.y, {no_stack = true}, map)
+            ItemMaterial.change_item_material(material_kit, "elona.adamantium")
+            Item.create("elona.gold_piece", player.x, player.y, {amount=50000}, map)
+            Item.create("elona.platinum_coin", player.x, player.y, {amount=4}, map)
 
             common.quest_completed()
 
