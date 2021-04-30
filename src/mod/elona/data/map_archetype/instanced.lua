@@ -43,7 +43,7 @@ local the_mine = {
          end
       },
       {
-         id = "base.on_map_generated",
+         id = "base.on_map_generated_from_archetype",
          name = "Sidequest: putit_attacks",
 
          callback = function(map)
@@ -63,12 +63,20 @@ data:add {
    }
 }
 
-
 local the_sewer = {
    _type = "base.map_archetype",
    _id = "the_sewer",
 
-   on_generate_map = util.generate_122("sqSewer"),
+   on_generate_map = function(area, floor)
+      local map = Elona122Map.generate("sqSewer")
+      map:set_archetype("elona.the_sewer", { set_properties = true })
+
+      -- TODO hardcoded position
+      util.connect_stair_at(map, 2, 3, area, 1, 18, 45)
+
+      return map
+   end,
+
    starting_pos = MapEntrance.stairs_up,
 
    properties = {
@@ -97,7 +105,7 @@ local the_sewer = {
          end
       },
       {
-         id = "base.on_map_generated",
+         id = "base.on_map_generated_from_archetype",
          name = "Sidequest: sewer_sweeping",
 
          callback = function(map)
@@ -107,15 +115,6 @@ local the_sewer = {
    }
 }
 data:add(the_sewer)
-
-data:add {
-   _type = "base.area_archetype",
-   _id = "the_sewer",
-
-   floors = {
-      [1] = "elona.the_sewer"
-   }
-}
 
 do
    local test_site = {

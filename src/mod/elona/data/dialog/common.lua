@@ -1,11 +1,16 @@
 local Chara = require("api.Chara")
 local Gui = require("api.Gui")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Feat = require("api.Feat")
+local Area = require("api.Area")
 
 local common = {}
 
-function common.create_downstairs(x, y, dungeon_level)
-   error("downstairs")
+function common.create_downstairs(x, y, floor, map)
+   local downstairs = assert(Feat.create("elona.stairs_down", x, y, {force=true}, map))
+   local area = assert(Area.for_map(map))
+   downstairs.params.area_uid = area.uid
+   downstairs.params.area_floor = floor
 end
 
 function common.quest_completed()

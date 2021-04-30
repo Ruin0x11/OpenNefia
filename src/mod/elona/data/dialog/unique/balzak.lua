@@ -1,13 +1,13 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Item = require("api.Item")
+local Chara = require("api.Chara")
+local common = require("mod.elona.data.dialog.common")
+local IItemMonsterBall = require("mod.elona.api.aspect.IItemMonsterBall")
 
-local common = require_relative("data/dialog/common")
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "balzak",
 
-return {
-   id = "balzak",
-   root = "core.talk.unique.balzak",
    nodes = {
       __start = function()
          local flag = Sidequest.progress("elona.sewer_sweeping")
@@ -23,54 +23,46 @@ return {
          return "__END__"
       end,
       quest_completed = {
-         text = {
-            {"complete"}
-         }
+         text = "talk.unique.balzak.complete"
       },
       quest_ask = {
          text = {
-            {"quest.dialog._0"},
-            {"quest.dialog._1"}
+            {"talk.unique.balzak.quest.dialog._0"},
+            {"talk.unique.balzak.quest.dialog._1"}
          },
          choices = {
-            {"quest_yes", "quest.choices.yes"},
-            {"quest_no", "quest.choices.no"}
+            {"quest_yes", "talk.unique.balzak.quest.choices.yes"},
+            {"quest_no", "talk.unique.balzak.quest.choices.no"}
          },
          default_choice = "quest_no"
       },
       quest_yes = {
-         text = {
-            GUI.show_journal_update_message,
-            {"quest.yes"},
-         },
-         on_finish = function()
+         on_start = function()
+            Sidequest.update_journal()
+         end,
+         text = "talk.unique.balzak.quest.yes",
+         on_finish = function(t)
             Sidequest.set_progress("elona.sewer_sweeping", 1)
-            common.create_downstairs(18, 45, 20)
+            common.create_downstairs(18, 45, 20, t.speaker:current_map())
          end
       },
       quest_no = {
-         text = {
-            {"quest.no"},
-         }
+         text = "talk.unique.balzak.quest.no",
       },
       quest_waiting = {
-         text = {
-            {"quest.waiting"},
-         }
+         text = "talk.unique.balzak.quest.waiting",
       },
       quest_finish = {
-         text = {
-            function()
-               Item.create(Chara.player().position, "core.statue_of_jure", 0)
-               local monster_ball = Item.create(Chara.player().position, {id = "core.monster_ball", nostack = true})
-               monster_ball.param2 = 30
-               Item.create(Chara.player().position, "core.gold_piece", 15000)
-               Item.create(Chara.player().position, "core.platinum_coin", 4)
-
-               common.quest_completed()
-            end,
-            {"quest.end"},
-         },
+         on_start = function()
+            local player = Chara.player()
+            local map = player:current_map()
+            Item.create("elona.statue_of_jure", player.x, player.y, {}, map)
+            Item.create("elona.monster_ball", player.x, player.y, {no_stack = true, aspects = {[IItemMonsterBall] = { max_level = 30 }}}, map)
+            Item.create("elona.gold_piece", player.x, player.y, {amount=15000}, map)
+            Item.create("elona.platinum_coin", player.x, player.y, {amount=4}, map)
+            common.quest_completed()
+         end,
+         text = "talk.unique.balzak.quest.end",
          on_finish = function()
             Sidequest.set_progress("elona.sewer_sweeping", 1000)
          end

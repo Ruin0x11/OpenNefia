@@ -151,6 +151,11 @@ function PicViewer.start(asset, _type)
          drawable = Draw.make_chip_batch("tile")
          drawable:add(asset, 0, 0, width, height)
          drawable = drawable_to_image(drawable, width, height)
+      elseif is_type("base.portrait", _type, asset) then
+         local width, height = Draw.get_chip_size("portrait", asset)
+         drawable = Draw.make_chip_batch("portrait")
+         drawable:add(asset, 0, 0, width, height)
+         drawable = drawable_to_image(drawable, width, height)
       else
          error(("unknown type %s"):format(_type))
       end

@@ -1546,7 +1546,8 @@ do
 
       floors = {
          [1] = "elona.lumiest",
-         [3] = "elona.mages_guild"
+         [3] = "elona.mages_guild",
+         [20] = "elona.the_sewer"
       },
 
       metadata = {
