@@ -103,7 +103,9 @@ function Feat.create(id, x, y, params, where)
    if params.ownerless then
       where = nil
    else
-      Log.debug("Implicit global map used in Feat.create().")
+      if where == nil then
+         Log.warn("Implicit global map used in Feat.create().")
+      end
       where = where or field.map
    end
 

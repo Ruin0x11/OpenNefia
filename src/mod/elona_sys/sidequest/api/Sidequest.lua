@@ -137,6 +137,10 @@ end
 function Sidequest.localize_progress_text(sidequest_id, progress)
    local sidequest_data = data["elona_sys.sidequest"]:ensure(sidequest_id)
 
+   if sidequest_data.progress == nil then
+      return nil
+   end
+
    progress = progress or Sidequest.progress(sidequest_id)
    assert(type(progress) == "number")
 

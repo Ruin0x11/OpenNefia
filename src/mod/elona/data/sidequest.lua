@@ -179,3 +179,10 @@ data:add {
       [1000] = "",
    },
 }
+
+data:add {
+   _type = "elona_sys.sidequest",
+   _id = "blue_capsule_drug",
+   elona_id = 224,
+   ordering = order(224),
+}
