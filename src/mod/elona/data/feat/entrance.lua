@@ -114,11 +114,8 @@ local function get_travel_map(feat, area_uid, area_floor, prev_map, params)
    if result.area then
       assert(class.is_an(InstancedArea, result.area))
       area = result.area
-   end
-
-   if area == nil then
-      Log.error("Missing area, requested area UID '%d'", area_uid)
-      return nil
+   else
+      area = nil
    end
 
    local map
@@ -126,6 +123,11 @@ local function get_travel_map(feat, area_uid, area_floor, prev_map, params)
       assert(class.is_an(InstancedMap, result.map))
       map = result.map
    else
+      if area == nil then
+         Log.error("Missing area, requested area UID '%d'", area_uid)
+         return nil
+      end
+
       local ok
       ok, map = area:load_or_generate_floor(area_floor)
       if not ok then
