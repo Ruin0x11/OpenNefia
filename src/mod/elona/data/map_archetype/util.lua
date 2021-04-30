@@ -8,6 +8,7 @@ local Area = require("api.Area")
 local Map = require("api.Map")
 local InstancedArea = require("api.InstancedArea")
 local Log = require("api.Log")
+local InstancedMap = require("api.InstancedMap")
 
 local util = {}
 
@@ -107,6 +108,31 @@ function util.connect_stair_at_to_prev_map(map, x, y, prev_map, prev_x, prev_y)
    local prev_area = Area.for_map(prev_map)
    if prev_area then
       local prev_floor = assert(prev_area:floor_of_map(prev_map.uid))
+      util.connect_stair_at(map, x, y, prev_area, prev_floor, prev_x, prev_y)
+   else
+      Log.error("Previous map did not have an area, so the stairs will not be connected.")
+   end
+end
+
+function util.connect_stair_at_to_prev_map(map, x, y, prev_map, prev_x, prev_y)
+   if prev_map == nil then
+      prev_map, prev_x, prev_y = map:previous_map_and_location()
+      if prev_map == nil then
+         error(("No previous map available for generated map %s"):format(map))
+      end
+   end
+
+   local prev_map_uid
+   if type(prev_map) == "number" then
+      prev_map_uid = prev_map
+   else
+      class.assert_is_an(InstancedMap, prev_map)
+      prev_map_uid = prev_map.uid
+   end
+
+   local prev_area = Area.for_map(prev_map)
+   if prev_area then
+      local prev_floor = assert(prev_area:floor_of_map(prev_map_uid))
       util.connect_stair_at(map, x, y, prev_area, prev_floor, prev_x, prev_y)
    else
       Log.error("Previous map did not have an area, so the stairs will not be connected.")

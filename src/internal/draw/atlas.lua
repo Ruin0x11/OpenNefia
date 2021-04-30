@@ -134,7 +134,7 @@ function atlas:insert_tile(id, anim_id, frame_id, spec, load_tile_cb, offset_x, 
    end
 end
 
-local DEFAULT_ANIM_TIME = 0.10
+local DEFAULT_ANIM_TIME = 0.25
 
 function atlas:insert_anim(proto, images)
    local id = proto._id
@@ -146,7 +146,8 @@ function atlas:insert_anim(proto, images)
       local frames = {}
       for frame_id=1,spec.count_x do
          local full_id = ("%s#%s:%d"):format(id, anim_id, frame_id)
-         frames[frame_id] = { image = full_id, time = DEFAULT_ANIM_TIME }
+         local frame_time = spec.frame_time or DEFAULT_ANIM_TIME
+         frames[frame_id] = { image = full_id, time = frame_time }
       end
       anims[anim_id] = { frames = frames }
    end

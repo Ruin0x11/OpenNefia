@@ -110,6 +110,9 @@ function InstancedArea:iter_maps()
 end
 
 function InstancedArea:floor_of_map(map_uid)
+   if type(map_uid) == "table" then
+      map_uid = map_uid.uid
+   end
    local pred = function(floor_no, map_meta)
       return map_meta.uid == map_uid
    end

@@ -9,59 +9,56 @@ local Chara = require("api.Chara")
 local Enum = require("api.Enum")
 local Area = require("api.Area")
 
-local the_mine = {
-   _type = "base.map_archetype",
-   _id = "the_mine",
+do
+   local the_mine = {
+      _type = "base.map_archetype",
+      _id = "the_mine",
 
-   on_generate_map = util.generate_122("puti"),
-   starting_pos = MapEntrance.stairs_up,
+      on_generate_map = util.generate_122("puti"),
+      starting_pos = MapEntrance.stairs_up,
 
-   properties = {
-      music = "elona.puti",
-      types = { "dungeon" },
-      level = 3,
-      is_indoor = true,
-      is_temporary = true,
-      has_anchored_npcs = true,
-      default_ai_calm = 1,
-      max_crowd_density = 0,
-      material_spot_type = "elona.dungeon"
-   },
+      on_map_entered = function(map, params)
+         util.connect_stair_at_to_prev_map(map, 4, 9, params.previous_map, params.previous_x, params.previous_y)
+      end,
 
-   events = {
-      {
-         id = "elona_sys.on_quest_check",
-         name = "Sidequest: putit_attacks",
+      properties = {
+         music = "elona.puti",
+         types = { "dungeon" },
+         level = 3,
+         is_indoor = true,
+         is_temporary = true,
+         has_anchored_npcs = true,
+         default_ai_calm = 1,
+         max_crowd_density = 0,
+         material_spot_type = "elona.dungeon"
+      },
 
-         callback = function(map)
-            if Sidequest.progress("elona.putit_attacks") < 2 then
-               if Sidequest.no_targets_remaining(map) then
-                  Sidequest.set_progress("elona.putit_attacks", 2)
-                  Sidequest.update_journal()
+      events = {
+         {
+            id = "elona_sys.on_quest_check",
+            name = "Sidequest: putit_attacks",
+
+            callback = function(map)
+               if Sidequest.progress("elona.putit_attacks") < 2 then
+                  if Sidequest.no_targets_remaining(map) then
+                     Sidequest.set_progress("elona.putit_attacks", 2)
+                     Sidequest.update_journal()
+                  end
                end
             end
-         end
-      },
-      {
-         id = "base.on_map_generated_from_archetype",
-         name = "Sidequest: putit_attacks",
+         },
+         {
+            id = "base.on_map_generated_from_archetype",
+            name = "Sidequest: putit_attacks",
 
-         callback = function(map)
-            Sidequest.set_quest_targets(map)
-         end
+            callback = function(map)
+               Sidequest.set_quest_targets(map)
+            end
+         }
       }
    }
-}
-data:add(the_mine)
-
-data:add {
-   _type = "base.area_archetype",
-   _id = "the_mine",
-
-   floors = {
-      [1] = "elona.the_mine"
-   }
-}
+   data:add(the_mine)
+end
 
 do
    local the_sewer = {
@@ -76,12 +73,7 @@ do
       end,
 
       on_map_entered = function(map)
-         local map_uid, start_x, start_y = map:previous_map_and_location()
-         if map_uid then
-            local area, floor = Area.for_map(map_uid)
-            -- TODO hardcoded position
-            util.connect_stair_at(map, 2, 3, area, floor, start_x, start_y)
-         end
+         util.connect_stair_at_to_prev_map(map, 2, 3)
       end,
 
       starting_pos = MapEntrance.stairs_up,
@@ -195,11 +187,7 @@ do
    end
 
    function battle_field.on_map_entered(map)
-      local map_uid, start_x, start_y = map:previous_map_and_location()
-      if map_uid then
-         local area, floor = Area.for_map(map_uid)
-         util.connect_stair_at(map, 2, 2, area, floor, start_x, start_y)
-      end
+      util.connect_stair_at_to_prev_map(map, 2, 2)
    end
 
    data:add(battle_field)
@@ -253,12 +241,7 @@ do
    end
 
    function test_site.on_map_entered(map)
-      local map_uid, start_x, start_y = map:previous_map_and_location()
-      if map_uid then
-         local area, floor = Area.for_map(map_uid)
-         -- TODO hardcoded position
-         util.connect_stair_at(map, 15, 4, area, floor, start_x, start_y)
-      end
+      util.connect_stair_at_to_prev_map(map, 15, 4)
    end
 
    data:add(test_site)

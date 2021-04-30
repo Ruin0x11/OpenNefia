@@ -158,11 +158,11 @@ do
          MapgenUtils.generate_chara(map)
       end
 
-      -- TODO only if sidequest
-      --local stair = Feat.at(28, 9, map):nth(1)
-      --assert(stair)
-      --stair.generator_params = { generator = "base.map_template", params = { id = "elona.the_mine" }}
-      --stair.area_params = { outer_map_id = map._id }
+      util.connect_stair_at(map, 28, 9, area, 3)
+
+      if Sidequest.progress("elona.thieves_hideout") > 0 then
+         util.connect_stair_at(map, 48, 5, area, 4)
+      end
 
       return map
    end
@@ -191,6 +191,7 @@ do
       image = "elona.feat_area_city",
       floors = {
          [1] = "elona.vernis",
+         [3] = "elona.the_mine",
          [5] = "elona.test_site"
       },
 

@@ -61,6 +61,19 @@ data:add {
 
 data:add {
    _type = "elona_sys.sidequest",
+   _id = "thieves_hideout",
+   elona_id = 201,
+   ordering = order(201),
+
+   progress = {
+      [1] = "sidequest._.elona.thieves_hideout.progress._0",
+      [2] = "sidequest._.elona.thieves_hideout.progress._1",
+      [1000] = "",
+   },
+}
+
+data:add {
+   _type = "elona_sys.sidequest",
    _id = "nightmare",
    elona_id = 202,
    ordering = order(202),
@@ -103,18 +116,6 @@ data:add {
    progress = {
       [1] = "sidequest._.elona.puppys_cave.progress._0",
       [2] = "sidequest._.elona.puppys_cave.progress._1",
-      [1000] = "",
-   },
-}
-
-data:add {
-   _type = "elona_sys.sidequest",
-   _id = "mias_dream",
-   elona_id = 206,
-   ordering = order(206),
-
-   progress = {
-      [1] = "sidequest._.elona.mias_dream.progress._0",
       [1000] = "",
    },
 }

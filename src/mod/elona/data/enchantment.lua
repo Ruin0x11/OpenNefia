@@ -392,8 +392,13 @@ data:add {
          sampler:add(cand._id, cand.rarity)
       end
 
-      self.params.enchantment_skill_id = sampler:sample()
+      local enc_skill_id = sampler:sample()
 
+      if enc_skill_id == nil then
+         return { skip = true }
+      end
+
+      self.params.enchantment_skill_id = enc_skill_id
       return true
       -- <<<<<<<< shade2/item_data.hsp:594 			} ..
    end,
