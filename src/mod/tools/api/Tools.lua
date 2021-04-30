@@ -32,6 +32,8 @@ local Shortcut = require("mod.elona.api.Shortcut")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 local IFeatLockedHatch = require("mod.elona.api.aspect.feat.IFeatLockedHatch")
+local Text = require("mod.elona.api.Text")
+local I18N = require("api.I18N")
 
 local Tools = {}
 
@@ -1132,6 +1134,20 @@ function Tools.goto_chara(_id)
          player:set_pos(x, y)
       end
    end
+end
+
+function Tools.find_release_name(starting_letter)
+   assert(I18N.language_id() == "base.english", "Must have language set to English.")
+   assert(type(starting_letter) == "string", "Argument must be a single letter string.")
+   assert(utf8.len(starting_letter) == 1, "Must be single letter.")
+
+   local letter_pattern = ("[%s%s]"):format(starting_letter:lower(), starting_letter:upper())
+   local pattern = ("^%s[^ ]+ %s[^ ]+$"):format(letter_pattern, letter_pattern)
+   local filter = function(s)
+      return s:match(pattern)
+   end
+
+   return fun.tabulate(Text.random_title):take(10000):filter(filter)
 end
 
 return Tools
