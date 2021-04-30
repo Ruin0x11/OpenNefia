@@ -150,7 +150,7 @@ function Sidequest.localize_progress_text(sidequest_id, progress)
    assert(progress == 0 or text, ("Invalid sidequest progress %d (%s)"):format(progress, sidequest_id))
 
    if type(text) == "function" then
-      text = text()
+      text = text(progress)
    elseif text then
       text = I18N.get_optional(text)
    else

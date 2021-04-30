@@ -18,6 +18,7 @@ local IItemCookingTool = require("mod.elona.api.aspect.IItemCookingTool")
 local IItemGaroksHammer = require("mod.elona.api.aspect.IItemGaroksHammer")
 local IItemFishingPole = require("mod.elona.api.aspect.IItemFishingPole")
 local IItemMoneyBox = require("mod.elona.api.aspect.IItemMoneyBox")
+local IItemMonsterBall = require("mod.elona.api.aspect.IItemMonsterBall")
 
 --
 -- Tool
@@ -896,6 +897,10 @@ data:add {
 
    categories = {
       "elona.misc_item"
+   },
+
+   _ext = {
+      IItemMonsterBall
    }
 }
 

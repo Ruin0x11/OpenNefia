@@ -1,3 +1,5 @@
+local I18N = require("api.I18N")
+
 local function order(elona_id)
    return 100000 + elona_id * 10000
 end
@@ -132,6 +134,21 @@ data:add {
       [1] = "sidequest._.elona.kamikaze_attack.progress._0",
       [2] = "sidequest._.elona.kamikaze_attack.progress._1",
       [3] = "sidequest._.elona.kamikaze_attack.progress._2",
+      [1000] = "",
+   },
+}
+
+data:add {
+   _type = "elona_sys.sidequest",
+   _id = "ambitious_scientist",
+   elona_id = 214,
+   ordering = order(214),
+
+   progress = {
+      [1] = function(flag)
+         local required = flag - 1
+         return I18N.get("sidequest._.elona.ambitious_scientist.progress._0", required - remaining)
+      end,
       [1000] = "",
    },
 }

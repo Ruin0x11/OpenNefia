@@ -31,12 +31,15 @@ end
 
 function IAspectHolder:normal_build(params)
    local params = params and params.aspects
+   local seen = table.set {}
    local _ext = self.proto._ext
    if _ext then
       for k, v in pairs(_ext) do
          if type(k) == "number" and is_aspect(v) then
+            seen[v] = true
             default_aspect(self, v, (params and params[v]) or {})
          elseif is_aspect(k) then
+            seen[k] = true
             local _params = (params and params[k]) or {}
             if type(v) == "table" then
                _params = table.merge_ex(table.deepcopy(v), _params)
@@ -47,6 +50,14 @@ function IAspectHolder:normal_build(params)
                end
             end
             default_aspect(self, k, _params)
+         end
+      end
+   end
+
+   if params then
+      for k, v in pairs(params) do
+         if is_aspect(k) and not seen[k] then
+            Log.error("Aspect arguments recieved for %s, but prototype '%s:%s' does not declare that aspect in its _ext table.", k, self._type, self._id)
          end
       end
    end
