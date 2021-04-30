@@ -26,6 +26,11 @@ function util.reload_122_map_geometry(current, elona122_map_id)
    for _, x, y, tile in temp:iter_tiles() do
       current:set_tile(x, y, tile)
    end
+   for _, obj in temp:iter() do
+      local x = obj.x
+      local y = obj.y
+      assert(current:take_object(obj, x, y))
+   end
    -- <<<<<<<< shade2/map_func.hsp:263 		}  ..
 end
 

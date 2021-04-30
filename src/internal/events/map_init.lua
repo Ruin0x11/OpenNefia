@@ -92,9 +92,13 @@ end
 local function prepare_savable_map(map, load_type)
    local is_first_renewal = map.renew_major_date == 0
 
+   local debug_renew = config.base.debug_always_renew_map
+
    -- >>>>>>>> shade2/map.hsp:1896 		if dateID>=mRenew:if mNoRenew=false:if mRenew!0: .
    if not map.is_temporary then
-      if World.date_hours() > map.renew_major_date and not is_first_renewal then
+      if (World.date_hours() > map.renew_major_date and not is_first_renewal)
+         or debug_renew == "major"
+      then
          map:emit("base.on_map_renew_geometry")
       end
    end
