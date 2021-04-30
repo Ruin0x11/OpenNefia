@@ -18,6 +18,7 @@ local Enum = require("api.Enum")
 local Event = require("api.Event")
 local Charagen = require("mod.elona.api.Charagen")
 local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
+local Area = require("api.Area")
 
 do
    local vernis = {
@@ -1013,131 +1014,19 @@ do
       end
    )
 
-   function noyel.on_generate_map()
-      local map = Elona122Map.generate("noyel")
-      map:set_archetype("elona.noyel", { set_properties = true })
-
-      local chara = Chara.create("elona.ebon", 46, 18, {}, map)
-      chara:add_role("elona.special")
-      save.elona.fire_giant_uid = chara.uid
-
-      chara = Chara.create("elona.moyer_the_crooked", 47, 18, {}, map)
-      chara:add_role("elona.shopkeeper", {inventory_id = "elona.moyer"})
-
-      chara = Chara.create("elona.town_child", 47, 20, {}, map)
-      chara:add_role("elona.special")
-
-      chara = Chara.create("elona.town_child", 15, 19, {}, map)
-      chara:add_role("elona.special")
-
-      chara = Chara.create("elona.town_child", 49, 20, {}, map)
-      chara:add_role("elona.special")
-
-      chara = Chara.create("elona.bard", 28, 22, {}, map)
-      chara:add_role("elona.special")
-
-      chara = Chara.create("elona.pael", 19, 3, {}, map)
-      chara:add_role("elona.special")
-
-      -- TODO sidequest
-      if true then
-         chara = Chara.create("elona.lily", 19, 2, {}, map)
-         chara:add_role("elona.special")
-      end
-
-      chara = Chara.create("elona.bartender", 40, 33, {}, map)
-      chara:add_role("elona.bartender")
-
-      chara = Chara.create("elona.healer", 44, 6, {}, map)
-      chara:add_role("elona.healer")
-
-      chara = Chara.create("elona.healer", 44, 3, {}, map)
-      chara:add_role("elona.sister")
-
-      chara = Chara.create("elona.shopkeeper", 19, 31, nil, map)
-      chara:add_role("elona.shopkeeper", {inventory_id = "elona.blacksmith"})
-      chara.shop_rank = 12
-      chara.name = I18N.get("chara.job.blacksmith", chara.name)
-
-      chara = Chara.create("elona.shopkeeper", 11, 31, nil, map)
-      chara:add_role("elona.shopkeeper", {inventory_id="elona.general_vendor"})
-      chara.shop_rank = 10
-      chara.name = I18N.get("chara.job.general_vendor", chara.name)
-
-      chara = Chara.create("elona.shopkeeper", 38, 34, nil, map)
-      chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
-      chara:add_role("elona.innkeeper")
-      chara.shop_rank = 8
-      chara.name = I18N.get("chara.job.innkeeper", chara.name)
-
-      chara = Chara.create("elona.shopkeeper", 5, 27, nil, map)
-      chara:add_role("elona.shopkeeper", { inventory_id = "elona.bakery" })
-      chara.shop_rank = 9
-      chara.image = "elona.chara_baker"
-      chara.name = I18N.get("chara.job.baker", chara.name)
-
-      chara = Chara.create("elona.wizard", 56, 5, nil, map)
-      chara:add_role("elona.shopkeeper", { inventory_id = "elona.magic_vendor" })
-      chara.shop_rank = 11
-      chara.name = I18N.get("chara.job.magic_vendor", chara.name)
-
-      chara = Chara.create("elona.shopkeeper", 39, 35, nil, map)
-      chara:add_role("elona.shopkeeper", { inventory_id = "elona.trader" })
-      chara.shop_rank = 12
-      chara.name = I18N.get("chara.job.trader", chara.name)
-
-      chara = Chara.create("elona.elder", 5, 18, nil, map)
-      chara:add_role("elona.elder")
-      chara.name = I18N.get("chara.job.of_noyel", chara.name)
-
-      chara = Chara.create("elona.trainer", 18, 20, nil, map)
-      chara:add_role("elona.trainer")
-      chara.name = I18N.get("chara.job.trainer", chara.name)
-
-      chara = Chara.create("elona.wizard", 4, 33, nil, map)
-      chara:add_role("elona.identifier")
-
-      chara = Chara.create("elona.informer", 6, 33, nil, map)
-      chara:add_role("elona.informer")
-
-      for _ = 1, 3 do
-         chara = Chara.create("elona.citizen", Rand.rnd(32), Rand.rnd(map:height()), nil, map)
-         chara:add_role("elona.citizen")
-
-         chara = Chara.create("elona.citizen2", Rand.rnd(32), Rand.rnd(map:height()), nil, map)
-         chara:add_role("elona.citizen")
-      end
-
-      for _ = 1, 3 do
-         chara = Chara.create("elona.guard", Rand.rnd(32), Rand.rnd(map:height()), nil, map)
-         chara:add_role("elona.guard")
-      end
-
-      for _ = 1, 8 do
-         chara = MapgenUtils.generate_chara(map, Rand.rnd(11) + 25, Rand.rnd(5) + 15, { id = "elona.town_child" })
-         chara:add_role("elona.special")
-      end
-
-      for _ = 1, 20 do
-         MapgenUtils.generate_chara(map, Rand.rnd(55), Rand.rnd(map:height()))
-      end
-
-      return map
-   end
-
    local function reload_noyel_christmas(map)
       local item = Item.create("elona.pedestal", 29, 16, nil, map)
-      item.own_state = "not_owned"
+      item.own_state = Enum.OwnState.NotOwned
 
       item = Item.create("elona.statue_of_jure", 29, 16, nil, map)
-      item.own_state = "not_owned"
+      item.own_state = Enum.OwnState.NotOwned
 
       item = Item.create("elona.altar", 29, 17, nil, map)
-      item.own_state = "not_owned"
+      item.own_state = Enum.OwnState.NotOwned
       item.params = { god_id = "elona.jure" }
 
       item = Item.create("elona.mochi", 29, 17, nil, map)
-      item.own_state = "unobtainable"
+      item.own_state = Enum.OwnState.Unobtainable
 
       local chara = Chara.create("elona.kaneda_bike", 48, 19, nil, map)
       chara:add_role("elona.special")
@@ -1250,11 +1139,154 @@ do
       end
    end
 
+   function noyel.on_generate_map()
+      local map = Elona122Map.generate("noyel")
+      map:set_archetype("elona.noyel", { set_properties = true })
+
+      local chara = Chara.create("elona.ebon", 46, 18, {}, map)
+      chara:add_role("elona.special")
+      save.elona.fire_giant_uid = chara.uid
+
+      chara = Chara.create("elona.moyer_the_crooked", 47, 18, {}, map)
+      chara:add_role("elona.shopkeeper", {inventory_id = "elona.moyer"})
+
+      chara = Chara.create("elona.town_child", 47, 20, {}, map)
+      chara:add_role("elona.special")
+
+      chara = Chara.create("elona.town_child", 15, 19, {}, map)
+      chara:add_role("elona.special")
+
+      chara = Chara.create("elona.town_child", 49, 20, {}, map)
+      chara:add_role("elona.special")
+
+      chara = Chara.create("elona.bard", 28, 22, {}, map)
+      chara:add_role("elona.special")
+
+      chara = Chara.create("elona.pael", 19, 3, {}, map)
+      chara:add_role("elona.special")
+
+      -- TODO sidequest
+      if true then
+         chara = Chara.create("elona.lily", 19, 2, {}, map)
+         chara:add_role("elona.special")
+      end
+
+      chara = Chara.create("elona.bartender", 40, 33, {}, map)
+      chara:add_role("elona.bartender")
+
+      chara = Chara.create("elona.healer", 44, 6, {}, map)
+      chara:add_role("elona.healer")
+
+      chara = Chara.create("elona.healer", 44, 3, {}, map)
+      chara:add_role("elona.sister")
+
+      chara = Chara.create("elona.shopkeeper", 19, 31, nil, map)
+      chara:add_role("elona.shopkeeper", {inventory_id = "elona.blacksmith"})
+      chara.shop_rank = 12
+      chara.name = I18N.get("chara.job.blacksmith", chara.name)
+
+      chara = Chara.create("elona.shopkeeper", 11, 31, nil, map)
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.general_vendor"})
+      chara.shop_rank = 10
+      chara.name = I18N.get("chara.job.general_vendor", chara.name)
+
+      chara = Chara.create("elona.shopkeeper", 38, 34, nil, map)
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
+      chara:add_role("elona.innkeeper")
+      chara.shop_rank = 8
+      chara.name = I18N.get("chara.job.innkeeper", chara.name)
+
+      chara = Chara.create("elona.shopkeeper", 5, 27, nil, map)
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.bakery" })
+      chara.shop_rank = 9
+      chara.image = "elona.chara_baker"
+      chara.name = I18N.get("chara.job.baker", chara.name)
+
+      chara = Chara.create("elona.wizard", 56, 5, nil, map)
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.magic_vendor" })
+      chara.shop_rank = 11
+      chara.name = I18N.get("chara.job.magic_vendor", chara.name)
+
+      chara = Chara.create("elona.shopkeeper", 39, 35, nil, map)
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.trader" })
+      chara.shop_rank = 12
+      chara.name = I18N.get("chara.job.trader", chara.name)
+
+      chara = Chara.create("elona.elder", 5, 18, nil, map)
+      chara:add_role("elona.elder")
+      chara.name = I18N.get("chara.job.of_noyel", chara.name)
+
+      chara = Chara.create("elona.trainer", 18, 20, nil, map)
+      chara:add_role("elona.trainer")
+      chara.name = I18N.get("chara.job.trainer", chara.name)
+
+      chara = Chara.create("elona.wizard", 4, 33, nil, map)
+      chara:add_role("elona.identifier")
+
+      chara = Chara.create("elona.informer", 6, 33, nil, map)
+      chara:add_role("elona.informer")
+
+      for _ = 1, 3 do
+         chara = Chara.create("elona.citizen", Rand.rnd(32), Rand.rnd(map:height()), nil, map)
+         chara:add_role("elona.citizen")
+
+         chara = Chara.create("elona.citizen2", Rand.rnd(32), Rand.rnd(map:height()), nil, map)
+         chara:add_role("elona.citizen")
+      end
+
+      for _ = 1, 3 do
+         chara = Chara.create("elona.guard", Rand.rnd(32), Rand.rnd(map:height()), nil, map)
+         chara:add_role("elona.guard")
+      end
+
+      for _ = 1, 8 do
+         chara = MapgenUtils.generate_chara(map, Rand.rnd(11) + 25, Rand.rnd(5) + 15, { id = "elona.town_child" })
+         chara:add_role("elona.special")
+      end
+
+      for _ = 1, 20 do
+         MapgenUtils.generate_chara(map, Rand.rnd(55), Rand.rnd(map:height()))
+      end
+
+      return map
+   end
+
    local function reload_noyel(map)
       Chara.iter_others(map)
       :filter(function(c) return c.is_only_in_christmas end)
          :each(IChara.vanquish)
    end
+
+   local function proc_noyel_christmas_festival(map, area)
+      if not area then
+         return
+      end
+
+      -- >>>>>>>> shade2/map.hsp:1904 				if gMonth=12{ ...
+      if World.date().month == 12 then
+         if not area.metadata.is_noyel_christmas_festival then
+            area.metadata.is_noyel_christmas_festival = true
+            reload_noyel_christmas(map)
+         end
+         util.reload_122_map_geometry(map, "noyel_fest")
+      else
+         if area.metadata.is_noyel_christmas_festival then
+            area.metadata.is_noyel_christmas_festival = false
+            reload_noyel(map)
+         end
+         util.reload_122_map_geometry(map, "noyel")
+      end
+   end
+
+   noyel.events = noyel.events or {}
+   noyel.events[#noyel.events+1] = {
+      id = "base.on_map_generated_from_archetype",
+      name = "Proc Noyel Christmas festival",
+
+      callback = function(map, params)
+         proc_noyel_christmas_festival(map, params.area)
+      end
+   }
 
    function noyel.on_map_renew_geometry(map)
       -- >>>>>>>> shade2/map.hsp:3395 	inv_getHeader -1 ...
@@ -1265,20 +1297,8 @@ do
       end
       -- <<<<<<<< shade2/map.hsp:3400 	loop ..
 
-      -- >>>>>>>> shade2/map.hsp:1904 				if gMonth=12{ ...
-      if World.date().month == 12 then
-         if not map.is_noyel_christmas_festival then
-            map.is_noyel_christmas_festival = true
-            reload_noyel_christmas(map)
-         end
-         util.reload_122_map_geometry(map, "noyel_fest")
-      else
-         if map.is_noyel_christmas_festival then
-            map.is_noyel_christmas_festival = false
-            reload_noyel(map)
-         end
-         util.reload_122_map_geometry(map, "noyel")
-      end
+      local area = Area.for_map(map)
+      proc_noyel_christmas_festival(map, area)
 
       save.elona.is_fire_giant_released = false
       -- <<<<<<<< shade2/map.hsp:1911 				flagFireGiant=false ..

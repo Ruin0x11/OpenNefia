@@ -146,7 +146,8 @@ data:add {
 
    progress = {
       [1] = function(flag)
-         local required = flag - 1
+         local required = 5
+         local remaining = flag - 1
          return I18N.get("sidequest._.elona.ambitious_scientist.progress._0", required - remaining)
       end,
       [1000] = "",

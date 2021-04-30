@@ -44,7 +44,7 @@ local function get_random_text(t)
       id = "talk.random.slavekeeper"
    elseif speaker:calc("impression") >= Const.IMPRESSION_FRIEND and Rand.one_in(3) then
       id = "talk.random.rumor.loot"
-   elseif map and map.is_noyel_christmas_festival then
+   elseif area and area.metadata.is_noyel_christmas_festival then
       id = "talk.random.christmas_festival"
    elseif Rand.one_in(2) then
       id = "talk.random.personality." .. tostring(speaker:calc("personality") or 0)

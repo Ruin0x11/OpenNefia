@@ -1,13 +1,21 @@
-local Chara = require("game.Chara")
-local Map = require("game.Map")
-local Item = require("game.Item")
+local Area = require("api.Area")
+local God = require("mod.elona.api.God")
+local Chara = require("api.Chara")
+local Item = require("api.Item")
 
-return {
-   id = "part_time_worker",
-   root = "core.talk.unique.part_time_worker",
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "part_time_worker",
+
    nodes = {
-      __start = function()
-         if not (Map.id() == "core.noyel" and Map.area().christmas_festival) then
+      __start = function(t)
+         local map = t.speaker:current_map()
+         local area = Area.for_map(map)
+
+         if not (map._archetype == "elona.noyel"
+                    and area
+                    and area.metadata.is_noyel_christmas_festival)
+         then
             return "__END__"
          end
          if Chara.player().god == "elona.jure" then
@@ -17,43 +25,35 @@ return {
          return "dialog"
       end,
       already_believe_in_jure = {
-         text = {
-            {"already_believe_in_jure"},
-         },
+         text = "talk.unique.part_time_worker.already_believe_in_jure",
       },
       dialog = {
-         text = {
-            {"dialog"},
-         },
+         text = "talk.unique.part_time_worker.dialog",
          choices = {
-            {"confirm", "choices.yes"},
-            {"no", "choices.no"}
+            {"confirm", "talk.unique.part_time_worker.choices.yes"},
+            {"no", "talk.unique.part_time_worker.choices.no"}
          },
          default_choice = "no"
       },
       confirm = {
-         text = {
-            {"yes.dialog"},
-         },
+         text = "talk.unique.part_time_worker.yes.dialog",
          choices = {
-            {"convert_to_jure", "yes.choices.yes"},
-            {"no", "yes.choices.no"}
+            {"convert_to_jure", "talk.unique.part_time_worker.yes.choices.yes"},
+            {"no", "talk.unique.part_time_worker.yes.choices.no"}
          },
          default_choice = "no"
       },
       convert_to_jure = {
-         text = {
-            {"yes.yes"},
-         },
+         text = "talk.unique.part_time_worker.yes.yes",
          on_finish = function()
-            Item.create(Chara.player().position, "core.jures_body_pillow", 0)
-            Chara.player():switch_religion("core.jure")
+            local player = Chara.player()
+            local map = player:current_map()
+            Item.create("elona.jures_body_pillow", player.x, player.y, {}, map)
+            God.switch_religion(player, "elona.jure")
          end
       },
       no = {
-         text = {
-            {"no"},
-         },
+         text = "talk.unique.part_time_worker.no",
       },
    }
 }
