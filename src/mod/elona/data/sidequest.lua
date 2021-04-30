@@ -162,6 +162,18 @@ data:add {
 
 data:add {
    _type = "elona_sys.sidequest",
+   _id = "pyramid_trial",
+   elona_id = 212,
+   ordering = order(212),
+
+   progress = {
+      [1] = "sidequest._.elona.pyramid_trial.progress._0",
+      [1000] = "",
+   },
+}
+
+data:add {
+   _type = "elona_sys.sidequest",
    _id = "ambitious_scientist",
    elona_id = 214,
    ordering = order(214),

@@ -511,14 +511,8 @@ function ElonaCommand.ammo(player)
 end
 
 function ElonaCommand.enter_field_map(player)
-   local stood_tile = Map.tile(player.x, player.y)
-   local map = FieldMap.generate(stood_tile, 34, 22, Map.current())
-
-   -- >>>>>>>> shade2/map.hsp:1586 		if encounter=0{ ...
-   for _ = 1, map:calc("max_crowd_density") do
-      MapgenUtils.generate_chara(map)
-   end
-   -- <<<<<<<< shade2/map.hsp:1591 			} ..
+   local stood_tile = Map.tile(player.x, player.y, Map.current())
+   local map = FieldMap.generate_default(stood_tile, Map.current())
 
    map:set_previous_map_and_location(Map.current(), player.x, player.y)
 

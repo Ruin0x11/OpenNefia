@@ -4679,6 +4679,27 @@ local chara = {
       skills = {
          "elona.buff_death_word",
          "elona.action_touch_of_weakness"
+      },
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Set sidequest flag: Pyramid Trial",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+
+               -- >>>>>>>> shade2/chara_func.hsp:1713 			if cId(tc)=257:if sqPyramid<1000:sqPyramid=1000 ...
+               if Sidequest.progress("elona.pyramid_trial") < 1000 then
+                  Sidequest.set_progress("elona.pyramid_trial", 1000)
+                  Sidequest.update_journal()
+                  Gui.mes_c("quest.completed", "Green")
+                  Gui.play_sound("base.complete1")
+               end
+               -- <<<<<<<< shade2/chara_func.hsp:1713 			if cId(tc)=257:if sqPyramid<1000:sqPyramid=1000 ..
+            end
+         }
       }
    },
    {

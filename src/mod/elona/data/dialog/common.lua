@@ -23,7 +23,7 @@ function common.go_to_quest_map(current_map, floor)
 end
 
 function common.quest_completed()
-   Gui.mes("quest.completed", "Green")
+   Gui.mes_c("quest.completed", "Green")
    Gui.play_sound("base.complete1")
    Gui.mes("common.something_is_put_on_the_ground")
    Sidequest.update_journal()

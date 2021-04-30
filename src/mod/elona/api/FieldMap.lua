@@ -47,4 +47,16 @@ function FieldMap.generate(stood_tile, width, height, outer_map)
    -- <<<<<<<< shade2/map.hsp:1576 		map_placePlayer	 ..
 end
 
+function FieldMap.generate_default(stood_tile, prev_map)
+   local map = FieldMap.generate(stood_tile, 34, 22, prev_map)
+
+   -- >>>>>>>> shade2/map.hsp:1586 		if encounter=0{ ...
+   for _ = 1, map:calc("max_crowd_density") do
+      MapgenUtils.generate_chara(map)
+   end
+   -- <<<<<<<< shade2/map.hsp:1591 			} ..
+
+   return map
+end
+
 return FieldMap

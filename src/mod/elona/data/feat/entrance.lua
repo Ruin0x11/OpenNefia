@@ -10,6 +10,8 @@ local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local ExHelp = require("mod.elona.api.ExHelp")
 local NefiaCompletionDrawable = require("mod.elona.api.gui.NefiaCompletionDrawable")
 local IFeatLockedHatch = require("mod.elona.api.aspect.feat.IFeatLockedHatch")
+local InstancedMap = require("api.InstancedMap")
+local InstancedArea = require("api.InstancedArea")
 
 local function get_map_display_name(area, description)
    if area.metadata.is_hidden then
@@ -97,6 +99,56 @@ local function rebuild_map(map, params)
    return true, new_map
 end
 
+local function get_travel_map(feat, area_uid, area_floor, prev_map, params)
+   local area = Area.get(area_uid)
+
+   local event_params = {
+      area_uid = area_uid,
+      area_floor = area_floor,
+      prev_map = prev_map,
+      prev_map_x = feat.x,
+      prev_map_y = feat.y
+   }
+   local result = feat:emit("elona.on_travel_using_feat", event_params, { area = area, map = nil, travel_params = params })
+
+   if result.area then
+      assert(class.is_an(InstancedArea, result.area))
+      area = result.area
+   end
+
+   if area == nil then
+      Log.error("Missing area, requested area UID '%d'", area_uid)
+      return nil
+   end
+
+   local map
+   if result.map then
+      assert(class.is_an(InstancedMap, result.map))
+      map = result.map
+   else
+      local ok
+      ok, map = area:load_or_generate_floor(area_floor)
+      if not ok then
+         local err = map
+         if err == "no_archetype" then
+            Log.error("Area does not specify an archetype, so there is no way to know what kind of map should be generated. Use InstancedArea:set_archetype(archetype_id) to set one.")
+         else
+            error(("Missing map with floor number '%d' in area '%d' (%s)"):format(area_floor, area.uid, err))
+         end
+         return nil
+      end
+   end
+
+   if map.visit_times > 0 and map.is_generated_every_time then
+      local ok, new_map = rebuild_map(map, params)
+      if ok then
+         map = new_map
+      end
+   end
+
+   return area, map
+end
+
 local function travel(start_pos_fn, set_prev_map)
    return function(self, params)
       local chara = params.chara
@@ -116,29 +168,9 @@ local function travel(start_pos_fn, set_prev_map)
       local area, map
 
       if self.params.area_uid then
-         area = Area.get(self.params.area_uid)
-         if area == nil then
-            Log.error("Missing area with UID '%d'", self.params.area_uid)
+         area, map = get_travel_map(self, self.params.area_uid, self.params.area_floor, prev_map, params)
+         if area == nil and map == nil then
             return "player_turn_query"
-         end
-
-         local ok
-         ok, map = area:load_or_generate_floor(self.params.area_floor)
-         if not ok then
-            local err = map
-            if err == "no_archetype" then
-               Log.error("Area does not specify an archetype, so there is no way to know what kind of map should be generated. Use InstancedArea:set_archetype(archetype_id) to set one.")
-            else
-               error(("Missing map with floor number '%d' in area '%d' (%s)"):format(self.params.area_floor, area.uid, err))
-            end
-            return "player_turn_query"
-         end
-
-         if map.visit_times > 0 and map.is_generated_every_time then
-            local ok, new_map = rebuild_map(map, params)
-            if ok then
-               map = new_map
-            end
          end
 
          local starting_pos
@@ -164,7 +196,7 @@ local function travel(start_pos_fn, set_prev_map)
          if self.params.area_starting_x and self.params.area_starting_y then
             starting_pos = { x = self.params.area_starting_x, y = self.params.area_starting_y }
          else
-            if area.uid ~= prev_area.uid then
+            if area and area.uid ~= prev_area.uid then
                -- If the area we're trying to travel to is the parent of this area, then
                -- put the player directly on the area's entrance.
                if parent_area == area then
@@ -182,7 +214,7 @@ local function travel(start_pos_fn, set_prev_map)
                   -- if not fall back to the archetype.
                   starting_pos = start_pos_or_archetype(map, chara, prev_map, self)
 
-                  if prev_area:has_child_area(area) then
+                  if area and prev_area:has_child_area(area) then
                      -- `prev_area` contains the entrance to this area.
                      local floor = assert(Map.floor_number(prev_map))
                      prev_area:set_child_area_position(area, chara.x, chara.y, floor)

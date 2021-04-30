@@ -1,15 +1,14 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local I18N = require("game.I18N")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
-local table = require("game.table")
+local Chara = require("api.Chara")
+local Item = require("api.Item")
+local Gui = require("api.Gui")
+local IItemBook = require("mod.elona.api.aspect.IItemBook")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local common = require("mod.elona.data.dialog.common")
 
-local common = require_relative("data/dialog/common")
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "marks",
 
-return {
-   id = "marks",
-   root = "core.talk.unique.marks",
    nodes = {
       __start = function()
          local flag = Sidequest.progress("elona.pyramid_trial")
@@ -24,24 +23,20 @@ return {
          return "elona_sys.ignores_you:__start"
       end,
       quest_completed = {
-         text = {
-            {"complete"},
-         },
+         text = "talk.unique.marks.complete",
       },
       quest_fame_too_low = {
-         text = {
-            {"fame_too_low"},
-         },
+         text = "talk.unique.marks.fame_too_low",
       },
       quest_ask = {
          text = {
-            {"quest.dialog._0", args = common.args_title},
-            {"quest.dialog._1"},
+            {"talk.unique.marks.quest.dialog._0", args = common.args_title},
+            "talk.unique.marks.quest.dialog._1",
          },
          choices = function()
             local choices = {}
             if Chara.player().gold >= 20000 then
-               table.insert(choices, {"quest_yes", "quest.choices.pay"})
+               table.insert(choices, {"quest_yes", "talk.unique.marks.quest.choices.pay"})
             end
             table.insert(choices, {"quest_no", "ui.bye"})
 
@@ -50,26 +45,28 @@ return {
          default_choice = "quest_no"
       },
       quest_yes = {
-         text = {
-            function()
-               GUI.show_journal_update_message()
-               GUI.txt(I18N.get("core.common.something_is_put_on_the_ground"))
+         on_start = function()
+            Sidequest.update_journal()
+            Gui.mes("common.something_is_put_on_the_ground")
 
-               Chara.player().gold = Chara.player().gold - 20000
-               GUI.play_sound("core.paygold1")
-               local book = Item.create(Chara.player().position, "core.book", 0)
-               book.param1 = 13
-            end,
-            {"quest.pay"},
-         },
+            local player = Chara.player()
+            local map = player:current_map()
+            player.gold = player.gold - 20000
+            Gui.play_sound("base.paygold1")
+            local aspects = {
+               [IItemBook] = {
+                  book_id = "elona.pyramid_invitation"
+               }
+            }
+            Item.create("elona.book", player.x, player.y, {aspects=aspects}, map)
+         end,
+         text = "talk.unique.marks.quest.pay",
          on_finish = function()
             Sidequest.set_progress("elona.pyramid_trial", 1)
          end
       },
       quest_no = {
-         text = {
-            {"quest.bye"},
-         },
+         text = "talk.unique.marks.quest.bye",
       },
    }
 }
