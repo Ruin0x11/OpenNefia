@@ -528,6 +528,13 @@ local function gen_require(chunk_loader, can_load_path)
                fn_to_module[v] = { module = package.loaded[req_path], identifier = k }
             end
          end
+
+         if class.is_class(result) or class.is_interface(result) then
+            local ok, on_require = pcall(function() return result.__on_require end)
+            if type(on_require) == "function" then
+               on_require(package.loaded[req_path], result)
+            end
+         end
       end
 
       paths_loaded_by_hooked_require[req_path] = true
