@@ -114,6 +114,7 @@ function DungeonTemplate.nefia_dungeon(floor, params)
    params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.dungeon"
    -- >>>>>>>> shade2/proc.hsp:18 	if mType=mTypeDungeon	: atxSpot=atxDungeon1 ...
+   params.map_archetype_id = "elona.nefia"
    Dungeon.set_template_property(params, "material_spot", "elona.dungeon")
    -- <<<<<<<< shade2/proc.hsp:18 	if mType=mTypeDungeon	: atxSpot=atxDungeon1 ...
 
@@ -144,6 +145,7 @@ function DungeonTemplate.nefia_forest(floor, params)
    params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.dungeon_forest"
    -- >>>>>>>> shade2/proc.hsp:20 	if mType=mTypeForest	: atxSpot=atxForest1 ...
+   params.map_archetype_id = "elona.nefia"
    Dungeon.set_template_property(params, "material_spot", "elona.forest")
    -- <<<<<<<< shade2/proc.hsp:20 	if mType=mTypeForest	: atxSpot=atxForest1 ..
 
@@ -171,6 +173,7 @@ function DungeonTemplate.nefia_tower(floor, params)
    params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.tower_1"
    -- >>>>>>>> shade2/proc.hsp:19 	if mType=mTypeTower	: atxSpot=atxBuilding1 ...
+   params.map_archetype_id = "elona.nefia"
    Dungeon.set_template_property(params, "material_spot", "elona.building")
    -- <<<<<<<< shade2/proc.hsp:19 	if mType=mTypeTower	: atxSpot=atxBuilding1 ..
 
@@ -198,6 +201,7 @@ function DungeonTemplate.nefia_fort(floor, params)
    params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.dungeon_castle"
    -- >>>>>>>> shade2/proc.hsp:21 	if mType=mTypeFort	: atxSpot=atxBuilding1	 ...
+   params.map_archetype_id = "elona.nefia"
    Dungeon.set_template_property(params, "material_spot", "elona.building")
    -- <<<<<<<< shade2/proc.hsp:21 	if mType=mTypeFort	: atxSpot=atxBuilding1	 ..
 

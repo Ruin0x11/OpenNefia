@@ -21,6 +21,7 @@ end
 function JANDungeonTemplate.nefia_mazey(floor, params)
    params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.dungeon_castle"
+   params.map_archetype_id = "elona.nefia"
    Dungeon.set_template_property(params, "material_spot", "elona.dungeon")
 
    local gen = JANDungeon.gen_maze
@@ -35,6 +36,7 @@ end
 function JANDungeonTemplate.nefia_putit(floor, params)
    params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.tower_1"
+   params.map_archetype_id = "elona.nefia"
    Dungeon.set_template_property(params, "material_spot", "elona.dungeon")
 
    return wrap(JANDungeon.gen_putit), params
@@ -43,6 +45,7 @@ end
 function JANDungeonTemplate.nefia_weird(floor, params)
    params.level = Nefia.calc_nefia_map_level(floor, params.level)
    params.tileset = "elona.dungeon_castle"
+   params.map_archetype_id = "elona.nefia"
    Dungeon.set_template_property(params, "material_spot", "elona.dungeon")
 
    local gen = JANDungeon.gen_roomed
