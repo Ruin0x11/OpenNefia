@@ -1,10 +1,8 @@
-local GUI = require("game.GUI")
-local Map = require("game.Map")
-local I18N = require("game.I18N")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
-
-local common = require_relative("data/dialog/common")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local common = require("mod.elona.data.dialog.common")
+local Area = require("api.Area")
+local Chara = require("api.Chara")
+local Gui = require("api.Gui")
 
 local function prompt_give_potion(prompt)
    return {
@@ -12,20 +10,23 @@ local function prompt_give_potion(prompt)
          prompt
       },
       choices = {
-         {"give_check", "give.choice"},
+         {"give_check", "talk.unique.pael.give.choice"},
          {"__END__", "ui.bye"}
       }
    }
 end
 
-return {
-   id = "pael",
-   root = "core.talk.unique.pael",
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "pael",
+
    nodes = {
-      __start = function()
+      __start = function(t)
          local flag = Sidequest.progress("elona.pael_and_her_mom")
          if flag == 1000 then
-            if Map.id() == "core.noyel" and Map.area().christmas_festival then
+            local map = t.speaker:current_map()
+            local area = map and Area.for_map(map)
+            if map._archetype == "elona.noyel" and area.metadata.is_noyel_christmas_festival then
                return "festival"
             end
             return "after_face"
@@ -54,7 +55,7 @@ return {
          return "elona_sys.ignores_you:__start"
       end,
       give_check = function()
-         local potion = Item.find("core.potion_of_cure_corruption", "PlayerInventory")
+         local potion = Chara.player():find_item("elona.potion_of_cure_corruption")
          if potion == nil then
             return "do_not_have_potion"
          end
@@ -62,73 +63,63 @@ return {
          return "give_potion"
       end,
       do_not_have_potion = {
-         text = {
-          {"give.do_not_have"}
-         },
+         text = "talk.unique.pael.give.do_not_have",
          choices = {
             {"__END__", "ui.more"}
          }
       },
       give_potion = {
-         text = {
-            function()
-               local potion = Item.find("core.potion_of_cure_corruption", "PlayerInventory")
-               potion.number = potion.number - 1
-               GUI.txt(I18N.get("core.talk.unique.pael.give.you_give"))
-               GUI.play_sound("core.equip1")
-            end,
-            {"give.dialog"}
-         },
+         on_start = function()
+            local potion = Chara.player():find_item("elona.potion_of_cure_corruption")
+            potion.amount = potion.amount - 1
+            Gui.mes("talk.unique.pael.give.you_give")
+            Gui.play_sound("base.equip1")
+         end,
+         text = "talk.unique.pael.give.dialog",
          choices = {
             {"__END__", "ui.more"}
          },
          on_finish = function()
-            GUI.show_journal_update_message()
-            Sidequest.set_progress("elona.pael_and_her_mom", Sidequest.progress("elona.pael_and_her_mom") + 1)
+            Sidequest.update_journal()
+            local flag = Sidequest.progress("elona.pael_and_her_mom")
+            Sidequest.set_progress("elona.pael_and_her_mom", flag + 1)
          end
       },
       after_face = {
-         text = {
-            {"after_face"},
-         }
+         text = "talk.unique.pael.after_face",
+
       },
       after_sold = {
-         text = {
-            {"after_sold"},
-         }
+         text = "talk.unique.pael.after_sold",
+
       },
       after_death = {
-         text = {
-            {"after_death"},
-         }
+         text = "talk.unique.pael.after_death",
+
       },
       festival = {
-         text = {
-            {"festival"}
-         }
+         text = "talk.unique.pael.festival"
+
       },
-      before = prompt_give_potion({"before"}),
+      before = prompt_give_potion({"talk.unique.pael.before"}),
       progress_0 = {
-         text = {
-            {"progress._0"},
-         }
+         text = "talk.unique.pael.progress._0",
+
       },
       progress_1 = {
          text = {
-            {"progress._1", args = common.args_name},
+            {"talk.unique.pael.progress._1", args = common.args_name},
          }
       },
-      progress_2 = prompt_give_potion({"progress._2", args = common.args_name}),
-      progress_3 = prompt_give_potion({"progress._3"}),
-      progress_4 = prompt_give_potion({"progress._4", args = common.args_name}),
+      progress_2 = prompt_give_potion({"talk.unique.pael.progress._2", args = common.args_name}),
+      progress_3 = prompt_give_potion({"talk.unique.pael.progress._3"}),
+      progress_4 = prompt_give_potion({"talk.unique.pael.progress._4", args = common.args_name}),
       progress_5 = {
-         text = {
-            {"progress._5"},
-         }
+         text = "talk.unique.pael.progress._5",
       },
       progress_6 = {
          text = {
-            {"progress._6", args = common.args_name},
+            {"talk.unique.pael.progress._6", args = common.args_name}
          }
       },
    }

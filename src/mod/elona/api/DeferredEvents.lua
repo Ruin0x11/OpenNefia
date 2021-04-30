@@ -23,6 +23,7 @@ local WinMenu = require("mod.elona.api.gui.WinMenu")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local UiTheme = require("api.gui.UiTheme")
 local Draw = require("api.Draw")
+local Item = require("api.Item")
 
 local DeferredEvents = {}
 
@@ -217,6 +218,29 @@ function DeferredEvents.nefia_boss_defeated(map)
    -- >>>>>>>> shade2/main.hsp:1771 	}else{ ...
    Nefia.set_boss_uid(area, -1) -- No more bosses in this map.
    -- <<<<<<<< shade2/main.hsp:1773 	} ..
+end
+
+function DeferredEvents.lily_end_life(chara)
+   -- >>>>>>>> shade2/main.hsp:1808 	case evKillMother ...
+   local x, y = chara.x, chara.y
+   local map = chara:current_map()
+   chara:damage_hp(math.max(chara.hp, 9999), "elona.unknown")
+   chara.state = "Dead"
+   chara:remove_ownership()
+
+   Item.create("elona.platinum_coin", x, y, {amount=4}, map)
+
+   Sidequest.set_progress("elona.pael_and_her_mom", 1001)
+   local pael = Chara.find("elona.pael", "others", map)
+   if pael then
+      if Chara.is_alive(pael) and not pael:is_player() then
+         Gui.mes_c("event.pael", "Blue")
+         local player = Chara.player()
+         pael:set_relation_towards(player, Enum.Relation.Enemy)
+         pael:set_target(player, 1000)
+      end
+   end
+   -- <<<<<<<< shade2/main.hsp:1817  ..
 end
 
 function DeferredEvents.proc_guild_intruder(guild_id, chara, map)

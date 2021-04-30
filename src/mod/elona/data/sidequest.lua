@@ -74,6 +74,27 @@ data:add {
 
 data:add {
    _type = "elona_sys.sidequest",
+   _id = "pael_and_her_mom",
+   elona_id = 203,
+   ordering = order(203),
+
+   progress = {
+      [1] = "sidequest._.elona.pael_and_her_mom.progress._0",
+      [2] = "sidequest._.elona.pael_and_her_mom.progress._1",
+      [3] = "sidequest._.elona.pael_and_her_mom.progress._0",
+      [4] = "sidequest._.elona.pael_and_her_mom.progress._1",
+      [5] = "sidequest._.elona.pael_and_her_mom.progress._0",
+      [6] = "sidequest._.elona.pael_and_her_mom.progress._1",
+      [7] = "sidequest._.elona.pael_and_her_mom.progress._0",
+      [8] = "sidequest._.elona.pael_and_her_mom.progress._1",
+      [9] = "sidequest._.elona.pael_and_her_mom.progress._0",
+      [10] = "sidequest._.elona.pael_and_her_mom.progress._1",
+      [1000] = "",
+   },
+}
+
+data:add {
+   _type = "elona_sys.sidequest",
    _id = "puppys_cave",
    elona_id = 205,
    ordering = order(205),
@@ -182,7 +203,7 @@ data:add {
 
 data:add {
    _type = "elona_sys.sidequest",
-   _id = "blue_capsule_drug",
+   _id = "kaneda_bike",
    elona_id = 224,
    ordering = order(224),
 }

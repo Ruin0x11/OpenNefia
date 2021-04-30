@@ -10,7 +10,7 @@ data:add {
    nodes = {
       __start = function(t)
          local map = t.speaker:current_map()
-         local area = Area.for_map(map)
+         local area = map and Area.for_map(map)
 
          if not (map._archetype == "elona.noyel"
                     and area

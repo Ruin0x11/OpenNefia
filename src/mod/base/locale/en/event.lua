@@ -17,7 +17,7 @@ end,
   :format(name(_1), s(_1))
 end,
     okaeri = { "Welcome home!", "Hey, dear.", "You're back!", "I was waiting for you.", "Nice to see you again." },
-    pael = "M-mom...!!",
+    pael = "\"M-mom...!!\"",
     ragnarok = "Let's Ragnarok!",
     reached_deepest_level = "It seems you have reached the deepest level of this dungeon.",
     seal_broken = "The seal of this level is now broken!",

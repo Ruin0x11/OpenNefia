@@ -8,7 +8,7 @@ data:add {
 
    nodes = {
       __start = function()
-         local flag = Sidequest.progress("elona.blue_capsule_drug")
+         local flag = Sidequest.progress("elona.kaneda_bike")
          if flag >= 3 then
             return "query_join"
          end
@@ -41,7 +41,7 @@ data:add {
          text = "talk.unique.kaneda_bike.after_drug.yes.dialog",
          on_finish = function(t)
             Chara.player():recruit_as_ally(t.speaker)
-            Sidequest.set_progress("elona.blue_capsule_drug", 0)
+            Sidequest.set_progress("elona.kaneda_bike", 0)
             t.speaker.dialog = nil
          end
       },
@@ -70,8 +70,8 @@ data:add {
          end,
          text = "talk.unique.kaneda_bike.before_drug.yes.dialog",
          on_finish = function()
-            local flag = Sidequest.progress("elona.blue_capsule_drug") + 1
-            Sidequest.set_progress("elona.blue_capsule_drug", flag)
+            local flag = Sidequest.progress("elona.kaneda_bike")
+            Sidequest.set_progress("elona.kaneda_bike", flag + 1)
          end
       },
       do_not_have_drug = {

@@ -322,7 +322,7 @@ local chara_chips = {
    { elona_id = 357, _id = "town_child_female" },
    { elona_id = 358, _id = "pael" },
    { elona_id = 359, _id = "lily" },
-   { elona_id = 360, _id = "_360" },
+   { elona_id = 360, _id = "lily_sick" },
    { elona_id = 361, _id = "raphael" },
    { elona_id = 362, _id = "ainc" },
    { elona_id = 363, _id = "guard_port_kapul" },

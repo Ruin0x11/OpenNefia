@@ -1165,8 +1165,7 @@ do
       chara = Chara.create("elona.pael", 19, 3, {}, map)
       chara:add_role("elona.special")
 
-      -- TODO sidequest
-      if true then
+      if Sidequest.progress("elona.pael_and_her_mom") ~= 1001 then
          chara = Chara.create("elona.lily", 19, 2, {}, map)
          chara:add_role("elona.special")
       end
