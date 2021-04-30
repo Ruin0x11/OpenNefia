@@ -115,7 +115,10 @@ data:add {
 
       local success = Rand.rnd(params.power / 15 + 5) >= target:calc("level")
 
-      if target:calc("quality") >= Enum.Quality.Good then
+      if target:calc("quality") >= Enum.Quality.Great
+         or target:calc("is_precious")
+         or target:has_any_roles()
+      then
          Gui.mes("magic.domination.cannot_be_charmed", target)
       elseif success then
          source:recruit_as_ally(target)

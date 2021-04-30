@@ -338,7 +338,10 @@ data:add
                ExHelp.show("elona.nefia")
             end
             -- <<<<<<<< shade2/action.hsp:758 			if feat(1)=objArea		:txt mapName(feat(2)+feat(3 ..
-            Gui.mes(get_map_display_name(area, true))
+            local name = get_map_display_name(area, true)
+            if name and name ~= "" then
+               Gui.mes(name)
+            end
          end
       end
    end,

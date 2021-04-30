@@ -1,13 +1,13 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Chara = require("api.Chara")
+local Item = require("api.Item")
+local common = require("mod.elona.data.dialog.common")
+local Enum = require("api.Enum")
 
-local common = require_relative("data/dialog/common")
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "mia",
 
-return {
-   id = "mia",
-   root = "core.talk.unique.mia",
    nodes = {
       __start = function()
          local flag = Sidequest.progress("elona.mias_dream")
@@ -22,65 +22,64 @@ return {
          return "elona_sys.ignores_you:__start"
       end,
       quest_completed = {
-         text = {
-            {"complete"},
-         },
+         text = "talk.unique.mia.complete",
       },
       quest_ask = {
-         text = {
-            {"quest.dialog"},
-         },
+         text = "talk.unique.mia.quest.dialog",
          choices = {
-            {"quest_yes", "quest.choices.yes"},
-            {"quest_no", "quest.choices.no"}
+            {"quest_yes", "talk.unique.mia.quest.choices.yes"},
+            {"quest_no", "talk.unique.mia.quest.choices.no"}
          },
          default_choice = "quest_no"
       },
       quest_yes = {
-         text = {
-            GUI.show_journal_update_message,
-            {"quest.yes"},
-         },
+         on_start = function()
+            Sidequest.update_journal()
+         end,
+         text = "talk.unique.mia.quest.yes",
          on_finish = function()
             Sidequest.set_progress("elona.mias_dream", 1)
          end
       },
       quest_no = {
-         text = {
-            {"quest.no"},
-         },
+         text = "talk.unique.mia.quest.no",
       },
-      quest_check = function()
-         if Chara.find("core.silver_cat", "Allies") == nil then
+      quest_check = function(t)
+         local map = Chara.player():current_map()
+         if Chara.find("elona.silver_cat", "allies", map) == nil then
             return "quest_waiting"
          end
 
          return "quest_finish"
       end,
       quest_waiting = {
-         text = {
-            {"quest.waiting"}
-         }
+         text = "talk.unique.mia.quest.waiting"
       },
       quest_finish = {
          text = {
-            {"quest.end._0"},
-            {"quest.end._1"},
+            "talk.unique.mia.quest.end._0",
+            "talk.unique.mia.quest.end._1",
          },
          on_finish = function()
-            Item.create(Chara.player().position, "core.monster_heart", 0)
-            Item.create(Chara.player().position, "core.gold_piece", 5000)
-            Item.create(Chara.player().position, "core.platinum_coin", 3)
+            -- >>>>>>>> shade2/chat.hsp:1435 		flt : item_create -1,idMonsterHeart,cX(pc),cY(pc ...
+            local player = Chara.player()
+            local map = player:current_map()
+
+            Item.create("elona.monster_heart", player.x, player.y, {}, map)
+            Item.create("elona.gold_piece", player.x, player.y, {amount=5000}, map)
+            Item.create("elona.platinum_coin", player.x, player.y, {amount=3}, map)
 
             common.quest_completed()
 
             Sidequest.set_progress("elona.mias_dream", 1000)
 
-            local silver_cat = Chara.find("core.silver_cat", "Allies")
-            Chara.remove_from_party(silver_cat)
-            silver_cat.relationship = "Unconcerned"
-            silver_cat.original_relationship = "Unconcerned"
-            silver_cat.role = 3
+            local silver_cat = Chara.find("elona.silver_cat", "allies", map)
+            silver_cat:leave_party()
+            silver_cat.relation = Enum.Relation.Dislike
+            silver_cat:reset_all_relations()
+            silver_cat:remove_all_roles()
+            silver_cat:add_role("elona.special")
+            -- <<<<<<<< shade2/chat.hsp:1441 		goto *chat_end ..
          end
       }
    }
