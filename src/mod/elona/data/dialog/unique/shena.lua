@@ -1,13 +1,13 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local common = require("mod.elona.data.dialog.common")
+local Item = require("api.Item")
+local Chara = require("api.Chara")
+local IItemMonsterBall = require("mod.elona.api.aspect.IItemMonsterBall")
 
-local common = require_relative("data/dialog/common")
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "shena",
 
-return {
-   id = "shena",
-   root = "core.talk.unique.shena",
    nodes = {
       __start = function()
          local flag = Sidequest.progress("elona.thieves_hideout")
@@ -23,55 +23,57 @@ return {
          return "__END__"
       end,
       quest_completed = {
-         text = {
-            {"complete"}
-         }
+         text = "talk.unique.shena.complete"
       },
       quest_ask = {
          text = {
-            {"quest.dialog._0"},
-            {"quest.dialog._1"}
+            "talk.unique.shena.quest.dialog._0",
+            "talk.unique.shena.quest.dialog._1"
          },
          choices = {
-            {"quest_yes", "quest.choices.yes"},
-            {"quest_no", "quest.choices.no"}
+            {"quest_yes", "talk.unique.shena.quest.choices.yes"},
+            {"quest_no", "talk.unique.shena.quest.choices.no"}
          },
          default_choice = "quest_no"
       },
       quest_yes = {
-         text = {
-            GUI.show_journal_update_message,
-            {"quest.yes"},
-         },
-         on_finish = function()
+         on_start = function()
+            Sidequest.update_journal()
+         end,
+         text = "talk.unique.shena.quest.yes",
+         on_finish = function(t)
             Sidequest.set_progress("elona.thieves_hideout", 1)
-            common.create_downstairs(48, 5, 4)
+            common.create_downstairs(48, 5, 4, t.speaker:current_map())
          end
       },
       quest_no = {
-         text = {
-            {"quest.no"},
-         }
+         text = "talk.unique.shena.quest.no",
+
       },
       quest_waiting = {
-         text = {
-            {"quest.waiting"},
-         }
+         text = "talk.unique.shena.quest.waiting",
+
       },
       quest_finish = {
-         text = {
-            function()
-               local rod_of_identify = Item.create(Chara.player().position, "core.rod_of_identify", 0)
-               rod_of_identify.count = 12
-               local monster_ball = Item.create(Chara.player().position, {id = "core.monster_ball", nostack = true})
-               monster_ball.param2 = 5
-               Item.create(Chara.player().position, "core.gold_piece", 1500)
-               Item.create(Chara.player().position, "core.platinum_coin", 2)
+         on_start = function()
+            local player = Chara.player()
+            local map = player:current_map()
 
-               common.quest_completed()
-            end,
-            {"quest.end"},
-         },
+            local rod_of_identify = Item.create("elona.rod_of_identify", player.x, player.y, {}, map)
+            rod_of_identify.charges = 12
+
+            local aspects = {
+               [IItemMonsterBall] = {
+                  max_level = 5
+               }
+            }
+            Item.create("elona.monster_ball", player.x, player.y, {no_stack = true, aspects = aspects}, map)
+            Item.create("elona.gold_piece", player.x, player.y, {amount = 1500}, map)
+            Item.create("elona.platinum_coin", player.x, player.y, {amount = 2}, map)
+
+            common.quest_completed()
+         end,
+         text = "talk.unique.shena.quest.end",
          on_finish = function()
             Sidequest.set_progress("elona.thieves_hideout", 1000)
          end

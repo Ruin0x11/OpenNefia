@@ -19,6 +19,7 @@ local Event = require("api.Event")
 local Charagen = require("mod.elona.api.Charagen")
 local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
 local Area = require("api.Area")
+local Feat = require("api.Feat")
 
 do
    local vernis = {
@@ -166,7 +167,9 @@ do
       util.connect_stair_at(map, 28, 9, area, 3)
 
       if Sidequest.progress("elona.thieves_hideout") > 0 then
-         util.connect_stair_at(map, 48, 5, area, 4)
+         local stairs = assert(Feat.create("elona.stairs_down", 48, 5, {force=true}, map))
+         stairs.params.area_uid = area.uid
+         stairs.params.area_floor = 4
       end
 
       return map
@@ -197,6 +200,7 @@ do
       floors = {
          [1] = "elona.vernis",
          [3] = "elona.the_mine",
+         [4] = "elona.robbers_hideout",
          [5] = "elona.test_site"
       },
 

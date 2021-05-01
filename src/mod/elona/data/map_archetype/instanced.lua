@@ -26,10 +26,12 @@ do
          types = { "dungeon" },
          level = 3,
          is_indoor = true,
-         is_temporary = true,
+         is_temporary = false,
+         is_not_renewable = true,
          has_anchored_npcs = true,
          default_ai_calm = 1,
          max_crowd_density = 0,
+         tileset = "elona.dungeon",
          material_spot_type = "elona.dungeon"
       },
 
@@ -61,6 +63,57 @@ do
 end
 
 do
+   local robbers_hideout = {
+      _type = "base.map_archetype",
+      _id = "robbers_hideout",
+
+      on_generate_map = util.generate_122("sqRogue"),
+      starting_pos = MapEntrance.stairs_up,
+
+      on_map_entered = function(map, params)
+         util.connect_stair_at_to_prev_map(map, 3, 9, params.previous_map, params.previous_x, params.previous_y)
+      end,
+
+      properties = {
+         music = "elona.puti",
+         types = { "dungeon" },
+         level = 4,
+         is_indoor = true,
+         is_temporary = false,
+         is_not_renewable = true,
+         max_crowd_density = 0,
+         tileset = "elona.dungeon",
+         material_spot_type = "elona.dungeon"
+      },
+
+      events = {
+         {
+            id = "elona_sys.on_quest_check",
+            name = "Sidequest: Thieves' Hideout",
+
+            callback = function(map)
+               if Sidequest.progress("elona.thieves_hideout") < 2 then
+                  if Sidequest.no_targets_remaining(map) then
+                     Sidequest.set_progress("elona.thieves_hideout", 2)
+                     Sidequest.update_journal()
+                  end
+               end
+            end
+         },
+         {
+            id = "base.on_map_generated_from_archetype",
+            name = "Sidequest: Thieves' Hideout",
+
+            callback = function(map)
+               Sidequest.set_quest_targets(map)
+            end
+         }
+      }
+   }
+   data:add(robbers_hideout)
+end
+
+do
    local the_sewer = {
       _type = "base.map_archetype",
       _id = "the_sewer",
@@ -83,9 +136,11 @@ do
          types = { "dungeon" },
          level = 20,
          is_indoor = true,
-         is_temporary = true,
+         is_temporary = false,
+         is_not_renewable = true,
          default_ai_calm = 1,
          max_crowd_density = 0,
+         tileset = "elona.dungeon",
          material_spot_type = "elona.dungeon"
       },
 
@@ -129,6 +184,7 @@ do
          level = 4,
          is_indoor = false,
          is_temporary = true,
+         is_not_renewable = true,
          max_crowd_density = 0,
          tileset = "elona.dungeon",
          material_spot_type = "elona.dungeon"
@@ -208,6 +264,7 @@ do
          is_not_renewable = true,
          max_crowd_density = 0,
          default_ai_calm = 0,
+         tileset = "elona.dungeon",
          material_spot_type = "elona.dungeon"
       },
       events = {
@@ -259,7 +316,9 @@ local doom_ground = {
       level = 25,
       is_indoor = false,
       is_temporary = true,
+      is_not_renewable = true,
       max_crowd_density = 0,
+      tileset = "elona.dungeon",
       material_spot_type = "elona.dungeon"
    },
 }
