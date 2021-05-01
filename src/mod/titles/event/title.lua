@@ -25,3 +25,15 @@ local function proc_title_earned_player()
    end
 end
 Event.register("base.on_map_entered", "Proc title earned", proc_title_earned_player)
+
+local function apply_temporary_title_effects(chara)
+   if chara:is_player() then
+      for _, title_id, title_state in Title.iter_earned() do
+         local proto = data["titles.title"]:ensure(title_id)
+         if proto.on_refresh then
+            proto.on_refresh(chara, title_state == "effect_on")
+         end
+      end
+   end
+end
+Event.register("base.on_refresh", "Apply temporary title effects", apply_temporary_title_effects)

@@ -409,14 +409,14 @@ function ElonaBuilding.update_ranch(map, days_passed)
             if not Rand.one_in(10) then
                filter.race_filter = breeder.race
             end
-            -- BUG does not filter out randomly selected ID
-            if breeder._id == "elona.little_sister" then
-               filter.id = "elona.younger_sister"
-            end
-            local chara = Charagen.create(4 + Rand.rnd(11), 4 + Rand.rnd(8), filter, map)
-            if chara then
-               chara.is_livestock = true
-               total_livestock = total_livestock + 1
+            local result = breeder:emit("elona.on_chara_ranch_breed", {breed_power=breed_power}, {filter=filter})
+            filter = result.filter
+            if filter then
+               local chara = Charagen.create(4 + Rand.rnd(11), 4 + Rand.rnd(8), filter, map)
+               if chara then
+                  chara.is_livestock = true
+                  total_livestock = total_livestock + 1
+               end
             end
          end
 

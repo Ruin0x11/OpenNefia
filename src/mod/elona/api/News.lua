@@ -4,7 +4,7 @@ local Gui = require("api.Gui")
 local News = {}
 
 function News.iter()
-   return fun.wrap(save.elona.news_buffer:iter())
+   return fun.wrap(save.elona.news_buffer:iter_reverse())
 end
 
 local function add_topic(topic, buff)

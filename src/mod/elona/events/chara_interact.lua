@@ -10,6 +10,7 @@ local ChangeAppearanceMenu = require("api.gui.menu.ChangeAppearanceMenu")
 local Item = require("api.Item")
 local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
 local ChangeToneMenu = require("api.gui.menu.ChangeToneMenu")
+local ICharaElonaFlags = require("mod.elona.api.aspect.chara.ICharaElonaFlags")
 
 --
 -- Interact Actions
@@ -131,10 +132,6 @@ end
 -- Event Handler
 --
 
-local function is_temporary_ally(chara)
-   return chara.is_being_escorted or chara.is_being_escorted_poppy
-end
-
 local function add_interact_actions(chara, params, actions)
    local function add_option(text, callback)
       table.insert(actions, { text = text, callback = callback })
@@ -149,7 +146,7 @@ local function add_interact_actions(chara, params, actions)
          add_option("action.interact.choices.attack", interact_attack)
       end
 
-      if not is_temporary_ally(chara) then
+      if not Effect.is_temporary_ally(chara) then
          if chara:is_in_player_party() then
             add_option("action.interact.choices.inventory", interact_inventory)
          else

@@ -115,7 +115,10 @@ data:add {
 
       local success = Rand.rnd(params.power / 15 + 5) >= target:calc("level")
 
-      if target:calc("quality") >= Enum.Quality.Good then
+      if target:calc("quality") >= Enum.Quality.Great
+         or target:calc("is_precious")
+         or target:has_any_roles()
+      then
          Gui.mes("magic.domination.cannot_be_charmed", target)
       elseif success then
          source:recruit_as_ally(target)
@@ -343,7 +346,7 @@ data:add {
       pocket:set_max_capacity(math.clamp(math.floor(params.power / 10 + 10), 10, 300))
       pocket:set_max_item_weight(params.power * 100)
 
-      Input.query_inventory(source, "elona.inv_get_four_dimensional_pocket", { container = pocket }, "elona.container_four_dimensional_pocket")
+      Input.query_inventory(source, "elona.inv_take_four_dimensional_pocket", { container = pocket }, "elona.container_four_dimensional_pocket")
 
       return false
    end

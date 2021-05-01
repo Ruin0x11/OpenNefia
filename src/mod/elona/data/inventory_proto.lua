@@ -899,9 +899,35 @@ local inv_take_food_container = {
 }
 data:add(inv_take_food_container)
 
-local inv_get_four_dimensional_pocket = {
+local inv_take_strange_scientist = {
    _type = "elona_sys.inventory_proto",
-   _id = "inv_get_four_dimensional_pocket",
+   _id = "inv_take_strange_scientist",
+   elona_id = 22,
+   elona_sub_id = 4,
+
+   sources = { "container" },
+   icon = 17,
+   show_money = false,
+   query_amount = true,
+   window_title = "ui.inventory_command.take",
+   query_text = "ui.inv.title.take",
+
+   on_select = function(ctxt, item, amount)
+      local result = Action.take_from_container(ctxt.chara, item, amount)
+
+      if result then
+         save.elona.strange_scientist_gifts_given = save.elona.strange_scientist_gifts_given + 1
+         return "turn_end"
+      end
+
+      return "inventory_continue"
+   end
+}
+data:add(inv_take_strange_scientist)
+
+local inv_take_four_dimensional_pocket = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_take_four_dimensional_pocket",
    elona_id = 22,
    elona_sub_id = 5,
 
@@ -932,7 +958,7 @@ local inv_get_four_dimensional_pocket = {
       return "inventory_continue"
    end
 }
-data:add(inv_get_four_dimensional_pocket)
+data:add(inv_take_four_dimensional_pocket)
 
 local inv_put_food_container = {
    _type = "elona_sys.inventory_proto",

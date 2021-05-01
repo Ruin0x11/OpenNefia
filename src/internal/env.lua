@@ -156,7 +156,7 @@ function env.find_calling_mod(offset)
             if funcinfo then
                local funcenv = getfenv(funcinfo.func)
                if funcenv then
-                  local mn = rawget(funcenv, "_MOD_NAME")
+                  local mn = rawget(funcenv, "_MOD_ID")
                   if mn then
                      mod_name = mn
                      loc = info
@@ -528,6 +528,13 @@ local function gen_require(chunk_loader, can_load_path)
                fn_to_module[v] = { module = package.loaded[req_path], identifier = k }
             end
          end
+
+         if class.is_class(result) or class.is_interface(result) then
+            local ok, on_require = pcall(function() return result.__on_require end)
+            if type(on_require) == "function" then
+               on_require(package.loaded[req_path], result)
+            end
+         end
       end
 
       paths_loaded_by_hooked_require[req_path] = true
@@ -691,7 +698,7 @@ function env.generate_sandbox(mod_name, is_strict)
       sandbox[k] = _G[k]
    end
 
-   sandbox["_MOD_NAME"] = mod_name
+   sandbox["_MOD_ID"] = mod_name
 
    sandbox["require"] = mod_require
    sandbox["dofile"] = function(path) return env.load_sandboxed_chunk(path, mod_name) end

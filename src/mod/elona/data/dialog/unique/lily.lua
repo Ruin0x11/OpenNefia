@@ -1,34 +1,37 @@
-local World = require("game.World")
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local Map = require("game.Map")
-local I18N = require("game.I18N")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
-local table = require("game.table")
-
-local common = require_relative("data/dialog/common")
+local Item = require("api.Item")
+local Gui = require("api.Gui")
+local Chara = require("api.Chara")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local common = require("mod.elona.data.dialog.common")
+local Effect = require("mod.elona.api.Effect")
+local Area = require("api.Area")
+local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local DeferredEvents = require("mod.elona.api.DeferredEvents")
 
 local function give_potion()
-   local potion = Item.find("core.potion_of_cure_corruption", "PlayerInventory")
-   potion.number = potion.number - 1
-   GUI.txt(I18N.get("core.talk.unique.lily.progress.end_life.give.you_hand_her"))
-   GUI.play_sound("core.equip1")
-   Chara.player():modify_karma(20)
+   local player = Chara.player()
+   local potion = player:find_item("elona.potion_of_cure_corruption")
+   potion.amount = potion.amount - 1
+   Gui.mes("talk.unique.lily.progress.end_life.give.you_hand_her")
+   Gui.play_sound("base.equip1")
+   Effect.modify_karma(player, 20)
 end
 
-return {
-   id = "lily",
-   root = "core.talk.unique.lily",
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "lily",
+
    nodes = {
-      __start = function()
-         local flag = Internal.get_quest_flag("pael_and_her_mom")
+      __start = function(t)
+         local flag = Sidequest.progress("elona.pael_and_her_mom")
          if flag == 1002 then
             return "after_sold"
          elseif flag == 10 then
             return "last"
          elseif flag == 1000 then
-            if Map.id() == "core.noyel" and Map.area().christmas_festival then
+            local map = t.speaker:current_map()
+            local area = map and Area.for_map(map)
+            if map._archetype == "elona.noyel" and area.metadata.is_noyel_christmas_festival then
                return "festival"
             end
             return "end_life"
@@ -44,116 +47,101 @@ return {
       end,
 
       after_sold = {
-         text = {
-            {"after_sold"}
-         }
+         text = "talk.unique.lily.after_sold"
       },
 
       last = {
          text = {
-            {"progress.last._0", args = common.args_name},
-            {"progress.last._1"},
+            {"talk.unique.lily.progress.last._0", args = common.args_name},
+            "talk.unique.lily.progress.last._1",
             function()
-               Item.create(Chara.player().position, "core.happy_apple", 0)
-               Item.create(Chara.player().position, "core.gold_piece", 20000)
-               Item.create(Chara.player().position, "core.platinum_coin", 4)
+               local player = Chara.player()
+               local map = player:current_map()
 
-               GUI.play_sound("core.complete1")
+               Item.create("elona.happy_apple", player.x, player.y, {}, map)
+               Item.create("elona.gold_piece", player.x, player.y, {amount=20000}, map)
+               Item.create("elona.platinum_coin", player.x, player.y, {amount=4}, map)
+
+               Gui.play_sound("base.complete1")
                common.quest_completed()
             end,
-            {"progress.last._2"},
+            "talk.unique.lily.progress.last._2",
          },
          on_finish = function(t)
-            Internal.set_quest_flag("pael_and_her_mom", 1000)
-            t.speaker:set_flag("IsSilent", true)
+            Sidequest.set_progress("elona.pael_and_her_mom", 1000)
+            t.speaker.is_talk_silenced = true
          end
       },
 
       festival = {
-         text = {
-            {"progress.festival.dialog"},
-         },
+         text = "talk.unique.lily.progress.festival.dialog",
          choices = function()
             local choices = {}
-            local potion = Item.find("core.potion_of_cure_corruption", "PlayerInventory")
-            if potion ~= nil then
-               table.insert(choices, {"festival_give", "progress.festival.choices.give"})
+            local potion = Chara.player():find_item("elona.potion_of_cure_corruption")
+            if Item.is_alive(potion) then
+               table.insert(choices, {"festival_give", "talk.unique.lily.progress.festival.choices.give"})
             end
-            table.insert(choices, {"festival_take_care", "progress.festival.choices.take_care"})
+            table.insert(choices, {"festival_take_care", "talk.unique.lily.progress.festival.choices.take_care"})
 
             return choices
          end,
          default_choice = "festival_take_care"
       },
       festival_give = {
-         text = {
-            give_potion,
-            {"progress.festival.give.dialog"},
-         }
+         on_start = give_potion,
+         text = "talk.unique.lily.progress.festival.give.dialog",
       },
       festival_take_care = {
-         text = {
-            {"progress.festival.take_care"},
-         }
+         text = "talk.unique.lily.progress.festival.take_care",
       },
 
       end_life = {
          text = {
-            {"progress.end_life.dialog._0", args = common.args_name},
-            {"progress.end_life.dialog._1"},
+            {"talk.unique.lily.progress.end_life.dialog._0", args = common.args_name},
+            "talk.unique.lily.progress.end_life.dialog._1",
          },
          choices = function()
             local choices = {}
-            local potion = Item.find("core.potion_of_cure_corruption", "PlayerInventory")
+            local potion = Chara.player():find_item("elona.potion_of_cure_corruption")
             if potion ~= nil then
-               table.insert(choices, {"end_life_give", "progress.end_life.choices.give"})
+               table.insert(choices, {"end_life_give", "talk.unique.lily.progress.end_life.choices.give"})
             end
-            table.insert(choices, {"end_life_end", "progress.end_life.choices.end"})
-            table.insert(choices, {"end_life_leave", "progress.end_life.choices.leave"})
+            table.insert(choices, {"end_life_end", "talk.unique.lily.progress.end_life.choices.end"})
+            table.insert(choices, {"end_life_leave", "talk.unique.lily.progress.end_life.choices.leave"})
 
             return choices
          end,
          default_choice = "end_life_leave"
       },
       end_life_give = {
-         text = {
-            give_potion,
-            {"progress.end_life.give.dialog"},
-         }
+         on_start = give_potion,
+         text = "talk.unique.lily.progress.end_life.give.dialog",
+
       },
       end_life_end = {
-         text = {
-            {"progress.end_life.end"},
-         },
+         text = "talk.unique.lily.progress.end_life.end",
          on_finish = function(t)
-            World.add_deferred_event(20, t.speaker.index)
+            DeferredEvent.add(function() DeferredEvents.lily_end_life(t.speaker) end)
          end
       },
       end_life_leave = {
-         text = {
-            {"progress.end_life.leave"},
-         }
+         text = "talk.unique.lily.progress.end_life.leave",
       },
 
       very_late = {
-         text = {
-            {"progress.very_late"},
-         }
+         text = "talk.unique.lily.progress.very_late",
       },
       late = {
          text = {
-            {"progress.late", args = common.args_name},
+            {"talk.unique.lily.progress.late", args = common.args_name},
          }
       },
       mid = {
-         text = {
-            {"progress.mid"},
-         }
+         text = "talk.unique.lily.progress.mid",
+
       },
       early = {
-         text = {
-            {"progress.early"},
-         },
+         text = "talk.unique.lily.progress.early",
       },
    }
 }

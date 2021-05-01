@@ -14,6 +14,8 @@ local Const = require("api.Const")
 local IItemPotion = require("mod.elona.api.aspect.IItemPotion")
 local Item = require("api.Item")
 local Aspect = require("api.Aspect")
+local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local DeferredEvents = require("mod.elona.api.DeferredEvents")
 
 data:add {
    _type = "base.mef",
@@ -141,7 +143,7 @@ data:add {
             if map:is_floor(x, y) then
                local duration = Rand.rnd(15) + 20
                local origin = self:get_origin()
-               Mef.create("elona.fire", x, y, { origin = origin, duration = duration, power = 50 } )
+               Mef.create("elona.fire", x, y, { origin = origin, duration = duration, power = 50 }, map)
                Effect.damage_map_fire(x, y, origin, map)
             else
                -- Destroy walls.
@@ -255,13 +257,23 @@ data:add {
    _id = "nuke",
    elona_id = 7,
 
-   image = "elona.mef_web",
+   image = "elona.item_mine",
 
    on_updated = function(self, params)
+      -- >>>>>>>> shade2/main.hsp:512 	if mefExist(cnt)=mefNuke{ ...
       Gui.mes_c("action.use.nuke.countdown", "Red", self.turns)
+      -- <<<<<<<< shade2/main.hsp:514 	} ..
    end,
 
    on_removed = function(self, params)
-      Gui.mes("Nuke effect.")
+      -- >>>>>>>> shade2/module.hsp:393 	if mefExist(id)=mefNuke :evAdd evNuke,mefX(id),me ...
+
+      -- The deferred event will be run after the mef is removed from the map,
+      -- so place it in an upvalue.
+      local map = self:current_map()
+      local origin = self:get_origin()
+      DeferredEvent.add(function() DeferredEvents.nuke(self.x, self.y, map, origin) end)
+
+      -- <<<<<<<< shade2/module.hsp:393 	if mefExist(id)=mefNuke :evAdd evNuke,mefX(id),me ..
    end
 }

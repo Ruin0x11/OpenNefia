@@ -1,15 +1,14 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local I18N = require("game.I18N")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Chara = require("api.Chara")
+local Gui = require("api.Gui")
 
-return {
-   id = "kaneda_bike",
-   root = "core.talk.unique.kaneda_bike",
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "kaneda_bike",
+
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("blue_capsule_drug")
+         local flag = Sidequest.progress("elona.kaneda_bike")
          if flag >= 3 then
             return "query_join"
          end
@@ -18,12 +17,10 @@ return {
       end,
 
       query_join = {
-         text = {
-            {"after_drug.dialog"},
-         },
+         text = "talk.unique.kaneda_bike.after_drug.dialog",
          choices = {
-            {"query_join_yes", "after_drug.choices.yes"},
-            {"query_join_no", "after_drug.choices.no"}
+            {"query_join_yes", "talk.unique.kaneda_bike.after_drug.choices.yes"},
+            {"query_join_no", "talk.unique.kaneda_bike.after_drug.choices.no"}
          },
          default_choice = "query_join_no"
       },
@@ -35,60 +32,50 @@ return {
          return "join_party"
       end,
       query_join_no = {
-         text = {
-            {"after_drug.no"},
-         },
+         text = "talk.unique.kaneda_bike.after_drug.no",
       },
       party_full = {
-         text = {
-            {"after_drug.yes.party_full"},
-         },
+         text = "talk.unique.kaneda_bike.after_drug.yes.party_full",
       },
       join_party = {
-         text = {
-            {"after_drug.yes.dialog"},
-         },
+         text = "talk.unique.kaneda_bike.after_drug.yes.dialog",
          on_finish = function(t)
             Chara.player():recruit_as_ally(t.speaker)
-            Internal.set_quest_flag("blue_capsule_drug", 0)
+            Sidequest.set_progress("elona.kaneda_bike", 0)
+            t.speaker.dialog = nil
          end
       },
 
       check_drug = function()
-         if Item.find("core.blue_capsule_drug", "PlayerInventory") ~= nil then
+         if Chara.player():find_item("elona.blue_capsule_drug") ~= nil then
             return "query_give_drug"
          end
 
          return "do_not_have_drug"
       end,
       query_give_drug = {
-         text = {
-            {"before_drug.dialog"},
-         },
+         text = "talk.unique.kaneda_bike.before_drug.dialog",
          choices = {
-            {"give_drug", "before_drug.choices.yes"},
-            {"do_not_have_drug", "before_drug.choices.no"}
+            {"give_drug", "talk.unique.kaneda_bike.before_drug.choices.yes"},
+            {"do_not_have_drug", "talk.unique.kaneda_bike.before_drug.choices.no"}
          },
          default_choice = "do_not_have_drug"
       },
       give_drug = {
-         text = {
-            function()
-               local drug = Item.find("core.blue_capsule_drug", "PlayerInventory")
-               drug.number = drug.number - 1
-               GUI.txt(I18N.get("core.talk.unique.kaneda_bike.before_drug.yes.you_hand_him"))
-               GUI.play_sound("core.equip1")
-            end,
-            {"before_drug.yes.dialog"},
-         },
+         on_start = function()
+            local drug = Chara.player():find_item("elona.blue_capsule_drug")
+            drug.amount = drug.amount - 1
+            Gui.mes("talk.unique.kaneda_bike.before_drug.yes.you_hand_him")
+            Gui.play_sound("base.equip1")
+         end,
+         text = "talk.unique.kaneda_bike.before_drug.yes.dialog",
          on_finish = function()
-            Internal.set_quest_flag("blue_capsule_drug", Internal.get_quest_flag("blue_capsule_drug") + 1)
+            local flag = Sidequest.progress("elona.kaneda_bike")
+            Sidequest.set_progress("elona.kaneda_bike", flag + 1)
          end
       },
       do_not_have_drug = {
-         text = {
-            {"do_not_have_drug"},
-         },
+         text = "talk.unique.kaneda_bike.do_not_have_drug",
       },
    }
 }

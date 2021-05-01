@@ -1,74 +1,84 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local I18N = require("game.I18N")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
-
-local common = require_relative("data/dialog/common")
+local Chara = require("api.Chara")
+local IItemBookOfRachel = require("mod.elona.api.aspect.IItemBookOfRachel")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Item = require("api.Item")
+local common = require("mod.elona.data.dialog.common")
+local Gui = require("api.Gui")
 
 local function take_books()
    local taken_books = {}
-   for _, item in Item.iter(0, 200) do
-      if item.number ~= 0 and item.id == "core.book_of_rachel" and item.param2 >= 1 and item.param2 <= 4 then
-         if not taken_books[item.param2] then
-            item.number = item.number - 1
-            taken_books[item.param2] = true
+   for _, item in Chara.player():iter_inventory() do
+      if item.amount ~= 0 then
+         local aspect = item:get_aspect(IItemBookOfRachel)
+         if aspect then
+            local book_number = aspect:calc(item, "book_number")
+            if book_number >= 1 and book_number <= 4 then
+               if not taken_books[book_number] then
+                  item.amount = item.amount - 1
+                  taken_books[book_number] = true
+               end
+            end
          end
       end
    end
 end
 
-return {
-   id = "renton",
-   root = "core.talk.unique.renton",
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "renton",
+
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("rare_books")
+         local flag = Sidequest.progress("elona.rare_books")
          if flag == 1000 then
             return "quest_completed"
          elseif flag == 0 or flag == 1 then
             return "quest_dialog"
          end
 
-         return "__IGNORED__"
+         return "elona_sys.ignores_you:__start"
       end,
       quest_completed = {
-         text = {
-            {"complete"},
-         },
+         text = "talk.unique.renton.complete",
       },
       quest_dialog = {
          text = {
-            {"quest.dialog._0"},
-            {"quest.dialog._1"},
-            {"quest.dialog._2"},
-            {"quest.dialog._3"},
+            "talk.unique.renton.quest.dialog._0",
+            "talk.unique.renton.quest.dialog._1",
+            "talk.unique.renton.quest.dialog._2",
+            "talk.unique.renton.quest.dialog._3",
          },
          choices = {
-            {"quest_check", "__MORE__"},
+            {"quest_check", "ui.more"},
          },
       },
       quest_check = function()
-         if Internal.get_quest_flag("rare_books") == 0 then
-            GUI.show_journal_update_message()
-            Internal.set_quest_flag("rare_books", 1)
+         if Sidequest.progress("elona.rare_books") == 0 then
+            Sidequest.update_journal()
+            Sidequest.set_progress("elona.rare_books", 1)
             return "__END__"
          end
 
          local found_books = {}
          local total_books = 0
-         for _, item in Item.iter(0, 200) do
-            if item.number ~= 0 and item.id == "core.book_of_rachel" and item.param2 >= 1 and item.param2 <= 4 then
-               if not found_books[item.param2] then
-                  total_books = total_books + 1
-                  found_books[item.param2] = true
+         for _, item in Chara.player():iter_inventory() do
+            if item.amount ~= 0 then
+               local aspect = item:get_aspect(IItemBookOfRachel)
+               if aspect then
+                  local book_number = aspect:calc(item, "book_number")
+                  if book_number >= 1 and book_number <= 4 then
+                     if not found_books[book_number] then
+                        total_books = total_books + 1
+                        found_books[book_number] = true
+                     end
+                  end
                end
             end
          end
 
          if total_books > 0 then
             if total_books ~= 4 then
-               return {choice = "quest_brought_some", opts = {total_books}}
+               return { node_id = "quest_brought_some", params = {total_books=total_books} }
             else
                return "quest_finish"
             end
@@ -76,31 +86,34 @@ return {
       end,
       quest_brought_some = {
          text = {
-            {"quest.brought", args = function(_, _, opts) return opts end},
+            {"talk.unique.renton.quest.brought", args = function(_, _, params) return {params.total_books} end},
          },
       },
       quest_finish = {
+         on_start = take_books,
          text = {
-            take_books,
-            {"quest.brought_all.dialog._0"},
-            {"quest.brought_all.dialog._1"},
-            {"quest.brought_all.dialog._2"},
-            {"quest.brought_all.dialog._3"},
-            {"quest.brought_all.dialog._4"},
+            "talk.unique.renton.quest.brought_all.dialog._0",
+            "talk.unique.renton.quest.brought_all.dialog._1",
+            "talk.unique.renton.quest.brought_all.dialog._2",
+            "talk.unique.renton.quest.brought_all.dialog._3",
+            "talk.unique.renton.quest.brought_all.dialog._4",
             function(t)
-               GUI.txt(I18N.get(t.dialog.root .. ".quest.brought_all.ehekatl"), "Yellow")
+               Gui.mes_c("talk.unique.renton.quest.brought_all.ehekatl", "Yellow")
             end,
-            {"quest.brought_all.dialog._5"},
+            "talk.unique.renton.quest.brought_all.dialog._5",
          },
          on_finish = function()
-            Item.create(Chara.player().position, "core.statue_of_lulwy", 0)
-            Item.create(Chara.player().position, "core.hero_cheese", 0)
-            Item.create(Chara.player().position, "core.gold_piece", 20000)
-            Item.create(Chara.player().position, "core.platinum_coin", 5)
+            local player = Chara.player()
+            local map = player:current_map()
+
+            Item.create("elona.statue_of_lulwy", player.x, player.y, {}, map)
+            Item.create("elona.hero_cheese", player.x, player.y, {}, map)
+            Item.create("elona.gold_piece", player.x, player.y, {amount=20000}, map)
+            Item.create("elona.platinum_coin", player.x, player.y, {amount=5}, map)
 
             common.quest_completed()
 
-            Internal.set_quest_flag("rare_books", 1000)
+            Sidequest.set_progress("elona.rare_books", 1000)
          end
       },
    }

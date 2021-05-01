@@ -3,6 +3,7 @@ local I18N = require("api.I18N")
 local Ui = require("api.Ui")
 local MapObjectBatch = require("api.draw.MapObjectBatch")
 local Gui = require("api.Gui")
+local ICharaElonaFlags = require("mod.elona.api.aspect.chara.ICharaElonaFlags")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local InputHandler = require("api.gui.InputHandler")
@@ -52,7 +53,7 @@ function ChooseNpcMenu.generate_list(charas, topic)
          return false
       end
 
-      if chara.is_being_escorted_poppy then
+      if chara:calc_aspect_base(ICharaElonaFlags, "is_being_escorted_sidequest") then
          return false
       end
       -- <<<<<<<< shade2/command.hsp:1186 	if cBit(cGuardTemp,cnt)=true:continue ..

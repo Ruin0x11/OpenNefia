@@ -114,10 +114,8 @@ function Sidequest.iter_active_sub_quests()
 end
 
 function Sidequest.set_quest_targets(map)
-   map = map or Map.current()
-
    for _, v in Chara.iter_others(map) do
-      if Chara.is_alive(v, map) then
+      if Chara.is_alive(v) then
          v.is_quest_target = true
          v.relation = Enum.Relation.Enemy
       end
@@ -128,7 +126,7 @@ function Sidequest.no_targets_remaining(map)
    map = map or Map.current()
 
    for _, v in Chara.iter(map) do
-      if Chara.is_alive(v, map) and v.is_quest_target then
+      if Chara.is_alive(v) and v.is_quest_target then
          return false
       end
    end
@@ -138,6 +136,10 @@ end
 
 function Sidequest.localize_progress_text(sidequest_id, progress)
    local sidequest_data = data["elona_sys.sidequest"]:ensure(sidequest_id)
+
+   if sidequest_data.progress == nil then
+      return nil
+   end
 
    progress = progress or Sidequest.progress(sidequest_id)
    assert(type(progress) == "number")
@@ -152,7 +154,7 @@ function Sidequest.localize_progress_text(sidequest_id, progress)
    assert(progress == 0 or text, ("Invalid sidequest progress %d (%s)"):format(progress, sidequest_id))
 
    if type(text) == "function" then
-      text = text()
+      text = text(progress)
    elseif text then
       text = I18N.get_optional(text)
    else

@@ -22,6 +22,7 @@ local Log = require("api.Log")
 local Weather = require("mod.elona.api.Weather")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
+local ICharaElonaFlags = require("mod.elona.api.aspect.chara.ICharaElonaFlags")
 
 local Effect = {}
 
@@ -1161,6 +1162,15 @@ function Effect.spoil_items(map)
       end
    end
    -- <<<<<<<< shade2/item.hsp:433 	return ..
+end
+
+-- True if this character should be treated as an ally added by an
+-- escort/similar errand quest, or a character added to the party as part of a
+-- sub quest like Poppy. This will prevent certain interact actions
+-- ("Inventory", "Give", etc.) and also prevent using them as Riding mounts.
+function Effect.is_temporary_ally(chara)
+   local aspect = chara:get_aspect_or_default(ICharaElonaFlags)
+   return chara.is_being_escorted or aspect.is_being_escorted_sidequest
 end
 
 return Effect

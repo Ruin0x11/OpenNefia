@@ -38,7 +38,7 @@ end
 function InstancedArea:add_floor(map, floor, force)
    floor = floor or (self:deepest_floor() + 1)
 
-   assert(class.is_an(InstancedMap, map))
+   class.assert_is_an(InstancedMap, map)
    assert(math.type(floor) == "integer")
 
    assert(self.maps[floor] == nil, ("Map already exists at floor '%d'"):format(floor))
@@ -81,8 +81,13 @@ function InstancedArea:deepest_floor()
    end
 
    local archetype = self:archetype()
-   if archetype and archetype.floors then
-      return fun.iter(table.keys(archetype.floors)):max()
+   if archetype then
+      if archetype.deepest_floor then
+         return archetype.deepest_floor
+      end
+      if archetype.floors then
+         return fun.iter(table.keys(archetype.floors)):max()
+      end
    end
 
    return 1
@@ -105,6 +110,9 @@ function InstancedArea:iter_maps()
 end
 
 function InstancedArea:floor_of_map(map_uid)
+   if type(map_uid) == "table" then
+      map_uid = map_uid.uid
+   end
    local pred = function(floor_no, map_meta)
       return map_meta.uid == map_uid
    end
@@ -196,7 +204,7 @@ function InstancedArea:generate_map_for_floor(floor, map_archetype_id, params)
       map = archetype.on_generate_floor(self, floor, params)
    end
 
-   assert(class.is_an(InstancedMap, map))
+   class.assert_is_an(InstancedMap, map)
 
    return true, map
 end
@@ -234,7 +242,7 @@ function InstancedArea:load_or_generate_starting_floor()
 end
 
 function InstancedArea:add_child_area(child)
-   assert(class.is_an(InstancedArea, child))
+   class.assert_is_an(InstancedArea, child)
    if self._children[child.uid] then
       error(("Area %d is already a child of area %d"):format(child.uid, self.uid))
    end
@@ -247,12 +255,12 @@ function InstancedArea:add_child_area(child)
 end
 
 function InstancedArea:has_child_area(child)
-   assert(class.is_an(InstancedArea, child))
+   class.assert_is_an(InstancedArea, child)
    return self._children[child.uid] ~= nil
 end
 
 function InstancedArea:child_area_position(child)
-   assert(class.is_an(InstancedArea, child))
+   class.assert_is_an(InstancedArea, child)
    local meta = self._children[child.uid]
    if not meta then
       return nil, nil, nil
@@ -266,7 +274,7 @@ function InstancedArea:child_area_position(child)
 end
 
 function InstancedArea:set_child_area_position(child, x, y, floor)
-   assert(class.is_an(InstancedArea, child))
+   class.assert_is_an(InstancedArea, child)
    local meta = self._children[child.uid]
    if not meta then
       error(("Area %d is not a child of area %d"):format(child.uid, self.uid))
@@ -285,7 +293,7 @@ function InstancedArea:set_child_area_position(child, x, y, floor)
 end
 
 function InstancedArea:remove_child_area(child)
-   assert(class.is_an(InstancedArea, child))
+   class.assert_is_an(InstancedArea, child)
    self._children[child.uid] = nil
 end
 

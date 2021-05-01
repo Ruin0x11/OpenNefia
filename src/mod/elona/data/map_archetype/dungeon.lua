@@ -11,8 +11,6 @@ local Chara = require("api.Chara")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local DungeonTemplate = require("mod.elona.api.DungeonTemplate")
 local Dungeon = require("mod.elona.api.Dungeon")
-local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
-local DeferredEvents = require("mod.elona.api.DeferredEvents")
 local Gui = require("api.Gui")
 
 do
@@ -104,8 +102,8 @@ do
          map = last_boss_map(area, floor)
       else
          local gen, params = DungeonTemplate.lesimas(floor, { level = 1 })
+         params.map_archetype_id = "elona.lesimas"
          map = DungeonMap.generate(area, floor, gen, params)
-         map:set_archetype("elona.lesimas", { set_properties = true })
       end
 
       return map
@@ -166,8 +164,8 @@ do
 
    function area_the_void.on_generate_floor(area, floor)
       local gen, params = DungeonTemplate.nefia_dungeon(floor, { level = 50 })
+      params.map_archetype_id = "elona.the_void"
       local map = DungeonMap.generate(area, floor, gen, params)
-      map:set_archetype("elona.the_void", { set_properties = true })
 
       -- TODO void boss
 
@@ -253,8 +251,8 @@ do
          util.connect_existing_stairs(map, area, floor)
       else
          local gen, params = DungeonTemplate.tower_of_fire(floor, { level = 15 })
+         params.map_archetype_id = "elona.tower_of_fire"
          map = DungeonMap.generate(area, floor, gen, params)
-         map:set_archetype("elona.tower_of_fire", { set_properties = true })
       end
 
       return map
@@ -325,8 +323,8 @@ do
          util.connect_existing_stairs(map, area, floor)
       else
          local gen, params = DungeonTemplate.crypt_of_the_damned(floor, { level = 25 })
+         params.map_archetype_id = "elona.crypt_of_the_damned"
          map = DungeonMap.generate(area, floor, gen, params)
-         map:set_archetype("elona.crypt_of_the_damned", { set_properties = true })
       end
 
       return map
@@ -402,8 +400,8 @@ do
          util.connect_existing_stairs(map, area, floor)
       else
          local gen, params = DungeonTemplate.ancient_castle(floor, { level = 17 })
+         params.map_archetype_id = "elona.ancient_castle"
          map = DungeonMap.generate(area, floor, gen, params)
-         map:set_archetype("elona.ancient_castle", { set_properties = true })
       end
 
       return map
@@ -461,8 +459,8 @@ do
 
    function area_dragons_nest.on_generate_floor(area, floor)
       local gen, params = DungeonTemplate.nefia_dungeon(floor, { level = 30 })
+      params.map_archetype = "elona.dragons_nest"
       local map = DungeonMap.generate(area, floor, gen, params)
-      map:set_archetype("elona.dragons_nest", { set_properties = true })
       return map
    end
 
@@ -510,8 +508,8 @@ do
 
    function area_mountain_pass.on_generate_floor(area, floor)
       local gen, params = DungeonTemplate.type_long(floor, { level = 25 })
+      params.map_archetype_id = "elona.mountain_pass"
       local map = DungeonMap.generate(area, floor, gen, params)
-      map:set_archetype("elona.mountain_pass", { set_properties = true })
 
       if floor == area:archetype().deepest_floor then
          -- create up stairs, set to area of Larna
@@ -566,8 +564,8 @@ do
 
    function area_puppy_cave.on_generate_floor(area, floor)
       local gen, params = DungeonTemplate.type_puppy_cave(floor, { level = 2 })
+      params.map_archetype_id = "elona.puppy_cave"
       local map = DungeonMap.generate(area, floor, gen, params)
-      map:set_archetype("elona.puppy_cave", { set_properties = true })
 
       if floor == area:archetype().deepest_floor
          and Sidequest.progress("elona.puppys_cave") < 2
@@ -638,8 +636,17 @@ do
 
    function area_minotaurs_nest.on_generate_floor(area, floor)
       local gen, params = DungeonTemplate.type_maze(floor, { level = 23 })
+      params.map_archetype_id = "elona.minotaurs_nest"
       local map =  DungeonMap.generate(area, floor, gen, params)
-      map:set_archetype("elona.minotaurs_nest", { set_properties = true })
+
+      -- >>>>>>>> shade2/map.hsp:1747 	if gArea=areaMinotaur{ ...
+      if area and floor == area:archetype().deepest_floor then
+         if Sidequest.progress("elona.minotaur_king") < 2 then
+            Chara.create("elona.ungaga", nil, nil, {}, map)
+         end
+      end
+      -- <<<<<<<< shade2/map.hsp:1752 		} ..
+
       return map
    end
 
@@ -704,6 +711,27 @@ do
       local gen, params = DungeonTemplate.nefia_dungeon(floor, { level = 5 })
       local map = DungeonMap.generate(area, floor, gen, params)
       map:set_archetype("elona.yeeks_nest", { set_properties = true })
+
+      -- >>>>>>>> shade2/map.hsp:1754 	if gArea=areaYeekDungeon{ ...
+      if area and floor == area:archetype().deepest_floor then
+         if Sidequest.progress("elona.novice_knight") < 2 then
+            local rodlob = Chara.create("elona.rodlob", nil, nil, {}, map)
+            if Chara.is_alive(rodlob) then
+               local x = rodlob.x
+               local y = rodlob.y
+
+               for _ = 1, 5 do
+                  Chara.create("elona.master_yeek", x, y, {}, map)
+               end
+               for _ = 1, 10 do
+                  Chara.create("elona.yeek_warrior", x, y, {}, map)
+                  Chara.create("elona.kamikaze_yeek", x, y, {}, map)
+               end
+            end
+         end
+      end
+      -- <<<<<<<< shade2/map.hsp:1769 		} ..
+
       return map
    end
 

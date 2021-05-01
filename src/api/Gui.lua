@@ -82,7 +82,10 @@ function Gui.start_draw_callback(cb, async, tag)
 
    field:add_async_draw_callback(cb, tag)
 
-   if not async and config.base.anime_wait_type == "always_wait" then
+   local wait = (not async and config.base.anime_wait_type == "always_wait")
+      or async == "must_wait"
+
+   if wait then
       Gui.wait_for_draw_callbacks()
    end
 end
@@ -364,7 +367,7 @@ function Gui.mes_c(text, color, ...)
    local t = I18N.get_optional(text, ...) or text or tostring(text)
    if t then text = t end
 
-   if I18N.is_quoted(text) then
+   if color == nil and I18N.is_quoted(text) then
       color = "Talk"
    end
 

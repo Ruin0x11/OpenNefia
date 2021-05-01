@@ -125,6 +125,11 @@ return {
                name = "Hide Auto-Identify"
             },
 
+            skip_random_event_popups = {
+               doc = "Skip displaying random event popup windows.\nRandom events will still occur. In most cases, a default option will be chosen.\n",
+               name = "Skip Random Events"
+            },
+
             --
             -- Menu: screen
             --
@@ -185,11 +190,6 @@ return {
                doc = "Render shadows at higher quality.",
                name = "Shadow Quality",
                yes_no = "config.common.yes_no.high_low"
-            },
-
-            skip_random_event_popups = {
-               doc = "Skip displaying random event popup windows.\nRandom events will still occur. In most cases, a default option will be chosen.\n",
-               name = "Skip Random Events"
             },
 
             heartbeat = {

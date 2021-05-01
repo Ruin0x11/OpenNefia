@@ -42,7 +42,6 @@ end
 
 function JANDungeonTemplate.nefia_weird(floor, params)
    params.level = Nefia.calc_nefia_map_level(floor, params.level)
-   params.tileset = "elona.dungeon_castle"
    Dungeon.set_template_property(params, "material_spot", "elona.dungeon")
 
    local gen = JANDungeon.gen_roomed

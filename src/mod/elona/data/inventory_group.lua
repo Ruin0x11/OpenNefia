@@ -63,7 +63,7 @@ data:add {
    _id = "container_four_dimensional_pocket",
 
    protos = {
-      "elona.inv_get_four_dimensional_pocket",
+      "elona.inv_take_four_dimensional_pocket",
       "elona.inv_put_four_dimensional_pocket"
    }
 }

@@ -214,11 +214,16 @@ function DungeonMap.generate(area, floor, generator, opts)
    local attempts = opts.attempts
    local has_monster_houses = opts.has_monster_houses
    local chara_filter = opts.chara_filter
+   local map_archetype_id = opts.map_archetype_id or nil
 
    local map, gen_params = DungeonMap.generate_raw(generator, area, floor, width, height, attempts, opts.on_generate_params, chara_filter)
 
    if map == nil then
       return nil
+   end
+
+   if map_archetype_id then
+      map:set_archetype(map_archetype_id, { set_properties = true })
    end
 
    map.level = opts.level or map.level
@@ -318,12 +323,7 @@ function DungeonMap.add_mobs_and_traps(dungeon, crowd_density, mob_density, item
       end
    end
 
-   if not dungeon.is_temporary then
-      local kill_count = 0
-      if Rand.one_in(15 + kill_count * 2) then
-         Chara.create("elona.little_sister", nil, nil, {}, dungeon)
-      end
-   end
+   dungeon:emit("elona.on_populate_dungeon_map", {crowd_density=crowd_density,mob_density=mob_density,item_density=item_density,chara_filter=chara_filter})
 end
 
 return DungeonMap

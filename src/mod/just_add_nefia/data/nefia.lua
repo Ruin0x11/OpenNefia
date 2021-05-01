@@ -31,12 +31,12 @@ data:add {
    color = { 150, 200, 255 },
 
    on_generate_floor = function(area, floor)
-      Advice.set_enabled("api.Chara", "create", _MOD_NAME, "Putitify during initial nefia mapgen", true)
+      Advice.set_enabled("api.Chara", "create", _MOD_ID, "Putitify during initial nefia mapgen", true)
       local ok, map = xpcall(function()
          local gen, params = JANDungeonTemplate.nefia_putit(floor, { level = Nefia.get_level(area) })
          return DungeonMap.generate(area, floor, gen, params)
       end, debug.traceback)
-      Advice.set_enabled("api.Chara", "create", _MOD_NAME, "Putitify during initial nefia mapgen", false)
+      Advice.set_enabled("api.Chara", "create", _MOD_ID, "Putitify during initial nefia mapgen", false)
 
       if not ok then
          error(map)

@@ -74,6 +74,7 @@ end
 ---   Defaults to the current map.
 --- @treturn[opt] IMef
 --- @treturn[opt] string error
+--- @hsp addMef x, y, id, pic, params.duration, params.power, params.origin, ref, ref2, color
 function Mef.create(id, x, y, params, where)
    params = params or {}
    params.allow_stacking = params.allow_stacking or true
@@ -82,6 +83,12 @@ function Mef.create(id, x, y, params, where)
    if params.ownerless then
       where = nil
    else
+      if where == nil then
+         Log.warn("Implicit global map used in Mef.create().")
+         if Log.has_level("debug") then
+            Log.debug("%s", debug.traceback())
+         end
+      end
       where = where or field.map
    end
 

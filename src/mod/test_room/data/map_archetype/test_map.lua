@@ -36,7 +36,7 @@ local function add_test_maps(proto)
    end
 
    data:add(map)
-   state.is_test_map[_MOD_NAME .. "." .. proto._id] = true
+   state.is_test_map[_MOD_ID .. "." .. proto._id] = true
 end
 
 local path = "mod/test_room/data/map_archetype/test_map/"

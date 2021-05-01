@@ -13,7 +13,7 @@ local LANGS = {
 local function decode_lang(txt)
    local result = {}
    for elona_txt_id, cands in pairs(txt) do
-      local talk_event_id = Compat.convert_122_talk_event(elona_txt_id) or ("%%%s"):format(elona_txt_id)
+      local talk_event_id = assert(Compat.convert_122_talk_event(elona_txt_id), "Unknown txt event " .. elona_txt_id)
       result[talk_event_id] = fun.iter(cands):map(TalkTxtEntryDecoder.decode):to_list()
    end
    return result

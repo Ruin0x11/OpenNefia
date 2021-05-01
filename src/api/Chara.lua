@@ -226,6 +226,12 @@ function Chara.create(id, x, y, params, where)
    if params.ownerless then
       where = nil
    else
+      if where == nil then
+         Log.warn("Implicit global map used in Chara.create().")
+         if Log.has_level("debug") then
+            Log.debug("%s", debug.traceback())
+         end
+      end
       where = where or field.map
    end
 

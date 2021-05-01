@@ -112,9 +112,9 @@ function ICharaSkills:skill_experience(skill_id)
    return self.skills[skill_id] and self.skills[skill_id].experience or 0
 end
 
-function ICharaSkills:mod_skill_level(skill_id, amount, op)
+function ICharaSkills:mod_skill_level(skill_id, amount, op, force)
    data["base.skill"]:ensure(skill_id)
-   if not self:has_skill(skill_id) then
+   if not self:has_skill(skill_id) and not force then
       return
    end
    self.temp.skills = self.temp.skills or {}

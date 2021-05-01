@@ -710,7 +710,7 @@ end
             _1 = "It's so simple, we live by feeding off of others. Spite, hatred, wickedness, and unrelenting cutthroat vigor are the only strengths you can rely on in this town. The outside world looks down on our lot, so we will make the outside world recognize our might. Say, stranger, why don't you join me in my world?"
           },
           ["end"] = "I can feel it already... the suffering... the misery... the pain... You've killed many people this day, you should be proud. Little kids, girls, women, old men, the sick, the feeble, even those neither born nor conceived yet. My body's hot, excited, I can hardly breathe... I won't be able to sleep tonight. My thanks, these are for you. ",
-          of_course = "Looks like you're one of us after all. I can't give you a welcome feast, but I can tell you a delicious little story. When I imagine others suffering, whimpering in pain and misery, I get goose bumps. How divine! At the inn in Palmia, there's a stuffed toy laying on the floor of the private room. Stick this bomb inside that toy for me. If you can drown those mindless ants in blood for me, I'll reward you well ",
+          of_course = "Looks like you're one of us after all. I can't give you a welcome feast, but I can tell you a delicious little story. When I imagine others suffering, whimpering in pain and misery, I get goose bumps. How divine! At the inn in Palmia, there's a stuffed toy laying on the floor of the private room. Stick this bomb inside that toy for me. If you can drown those mindless ants in blood for me, I'll reward you well.",
           waiting = "Go, make the brilliant blood red roses bloom."
         }
       },

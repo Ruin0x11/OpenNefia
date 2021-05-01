@@ -69,14 +69,24 @@ function sparse_batch:set_tile_image(ind, tile)
       if self.tiles[ind] and self.tiles[ind].tile_id == tile then
          return
       end
-
-      local the_anim = table.remove(self.free_anims)
-      if the_anim == nil then
-         the_anim = self.atlas:make_anim(tile)
-      else
-         self.atlas:update_anim(the_anim, tile)
+      if not self.tiles[ind] and tile == "" then
+         return
       end
-      tile = the_anim
+
+      if tile == "" then
+         tile = nil
+      else
+         local the_anim = self.tiles[ind]
+         if the_anim == nil then
+            the_anim = table.remove(self.free_anims)
+         end
+         if the_anim == nil then
+            the_anim = self.atlas:make_anim(tile)
+         else
+            self.atlas:update_anim(the_anim, tile)
+         end
+         tile = the_anim
+      end
    end
 
    self.tiles[ind] = tile
@@ -97,7 +107,8 @@ function sparse_batch:add_tile(ind, params)
       return
    end
 
-   if self.tiles[ind] then
+   local the_anim = self.tiles[ind]
+   if the_anim then
       self:remove_tile(ind)
    end
 
@@ -105,11 +116,17 @@ function sparse_batch:add_tile(ind, params)
 
    local tile = params.tile
    if type(params.tile) == "string" then
-      local the_anim = table.remove(self.free_anims)
-      if the_anim == nil then
-         the_anim = self.atlas:make_anim(params.tile)
+      if params.tile == "" then
+         the_anim = nil
       else
-         self.atlas:update_anim(the_anim, params.tile)
+         if the_anim == nil then
+            the_anim = table.remove(self.free_anims)
+         end
+         if the_anim == nil then
+            the_anim = self.atlas:make_anim(params.tile)
+         else
+            self.atlas:update_anim(the_anim, params.tile)
+         end
       end
       tile = the_anim
    end

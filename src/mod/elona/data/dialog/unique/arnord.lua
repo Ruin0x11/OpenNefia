@@ -1,16 +1,17 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
+local Chara = require("api.Chara")
+local Item = require("api.Item")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local common = require("mod.elona.data.dialog.common")
+local Area = require("api.Area")
+local Map = require("api.Map")
 
-local common = require_relative("data/dialog/common")
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "arnord",
 
-return {
-   id = "arnord",
-   root = "core.talk.unique.arnord",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("kamikaze_attack")
+         local flag = Sidequest.progress("elona.kamikaze_attack")
          if flag == 1000 then
             return "quest_completed"
          elseif flag == 0 then
@@ -21,75 +22,68 @@ return {
             return "quest_finish"
          end
 
-         return "__IGNORED__"
+         return "elona_sys.ignores_you:__start"
       end,
       quest_completed = {
          text = {
-            {"complete", args = common.args_name},
+            {"talk.unique.arnord.complete", args = common.args_name},
          },
       },
       quest_ask = {
-         text = {
-            {"quest.dialog"},
-         },
+         text = "talk.unique.arnord.quest.dialog",
          choices = {
-            {"quest_yes", "quest.choices.yes"},
-            {"quest_no", "quest.choices.no"}
+            {"quest_yes", "talk.unique.arnord.quest.choices.yes"},
+            {"quest_no", "talk.unique.arnord.quest.choices.no"}
          },
          default_choice = "quest_no"
       },
       quest_yes = {
-         text = {
-            GUI.show_journal_update_message,
-            {"quest.yes"},
-         },
+         on_start = function()
+            Sidequest.update_journal()
+         end,
+         text = "talk.unique.arnord.quest.yes",
          on_finish = function()
-            Internal.set_quest_flag("kamikaze_attack", 1)
+            Sidequest.set_progress("elona.kamikaze_attack", 1)
          end
       },
       quest_no = {
-         text = {
-            {"quest.no"},
-         },
+         text = "talk.unique.arnord.quest.no",
       },
       quest_begin = {
-         text = {
-            {"quest.begin.dialog"}
-         },
+         text = "talk.unique.arnord.quest.begin.dialog",
          choices = {
-            {"quest_begin_yes", "quest.begin.choices.yes"},
-            {"quest_begin_no", "quest.begin.choices.no"}
+            {"quest_begin_yes", "talk.unique.arnord.quest.begin.choices.yes"},
+            {"quest_begin_no", "talk.unique.arnord.quest.begin.choices.no"}
          },
          default_choice = "quest_begin_no"
       },
       quest_begin_yes = {
-         text = {
-            GUI.show_journal_update_message,
-            {"quest.begin.yes"},
-         },
-         on_finish = function()
-            Internal.set_quest_flag("kamikaze_attack", 2)
-            Internal.go_to_quest_map("core.port_kapul", 25)
+         on_start = function()
+            Sidequest.update_journal()
+         end,
+         text = "talk.unique.arnord.quest.begin.yes",
+         on_finish = function(t)
+            Sidequest.set_progress("elona.kamikaze_attack", 2)
+            common.go_to_quest_map(t.speaker:current_map(), 25)
          end
       },
       quest_begin_no = {
-         text = {
-            {"quest.begin.no"},
-         },
+         text = "talk.unique.arnord.quest.begin.no",
       },
       quest_finish = {
-         text = {
-            function()
-               Item.create(Chara.player().position, "core.magic_fruit", 0)
-               Item.create(Chara.player().position, "core.gold_piece", 7500)
-               Item.create(Chara.player().position, "core.platinum_coin", 3)
+         on_start = function()
+            local player = Chara.player()
+            local map = player:current_map()
 
-               common.quest_completed()
-            end,
-            {"quest.end"},
-         },
+            Item.create("elona.magic_fruit", player.x, player.y, {}, map)
+            Item.create("elona.gold_piece", player.x, player.y, {amount=7500}, map)
+            Item.create("elona.platinum_coin", player.x, player.y, {amount=3}, map)
+
+            common.quest_completed()
+         end,
+         text = "talk.unique.arnord.quest.end",
          on_finish = function()
-            Internal.set_quest_flag("kamikaze_attack", 1000)
+            Sidequest.set_progress("elona.kamikaze_attack", 1000)
          end
       }
    }

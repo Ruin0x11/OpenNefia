@@ -182,4 +182,19 @@ function ICharaParty:recruit_as_ally(target, no_message)
    return true
 end
 
+function ICharaParty:leave_party()
+   if self:is_player() then
+      error("Player cannot leave their own party.")
+   end
+
+   local party_uid = self:get_party()
+   if party_uid == nil then
+      return false
+   end
+
+   save.base.parties:remove_member(party_uid, self)
+
+   return true
+end
+
 return ICharaParty

@@ -2311,6 +2311,25 @@ local chara = {
          "elona.action_curse"
       },
       tone = "elona.rodlob",
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Set sidequest flag: Novice Knight",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+
+               -- >>>>>>>> shade2/chara_func.hsp:1712 			if cId(tc)=242:if sqYeek<1000:sqYeek=2:updateJo ...
+               if Sidequest.progress("elona.novice_knight") < 1000 then
+                  Sidequest.set_progress("elona.novice_knight", 2)
+                  Sidequest.update_journal()
+               end
+               -- <<<<<<<< shade2/chara_func.hsp:1712 			if cId(tc)=242:if sqYeek<1000:sqYeek=2:updateJo ..
+            end
+         }
+      }
    },
    {
       _id = "hot_spring_maniac",
@@ -2715,6 +2734,25 @@ local chara = {
       initial_equipment = {
          ["elona.primary_weapon"] = { _id = "elona.axe_of_destruction", is_two_handed = true },
       },
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Set sidequest flag: Minotaur King",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+
+               -- >>>>>>>> shade2/chara_func.hsp:1714 			if cId(tc)=300:if sqMinotaur<1000:sqMinotaur=2: ...
+               if Sidequest.progress("elona.minotaur_king") < 1000 then
+                  Sidequest.set_progress("elona.minotaur_king", 2)
+                  Sidequest.update_journal()
+               end
+               -- <<<<<<<< shade2/chara_func.hsp:1714 			if cId(tc)=300:if sqMinotaur<1000:sqMinotaur=2: ..
+            end
+         }
+      }
    },
    {
       _id = "troll",
@@ -4641,6 +4679,27 @@ local chara = {
       skills = {
          "elona.buff_death_word",
          "elona.action_touch_of_weakness"
+      },
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Set sidequest flag: Pyramid Trial",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+
+               -- >>>>>>>> shade2/chara_func.hsp:1713 			if cId(tc)=257:if sqPyramid<1000:sqPyramid=1000 ...
+               if Sidequest.progress("elona.pyramid_trial") < 1000 then
+                  Sidequest.set_progress("elona.pyramid_trial", 1000)
+                  Sidequest.update_journal()
+                  Gui.mes_c("quest.completed", "Green")
+                  Gui.play_sound("base.complete1")
+               end
+               -- <<<<<<<< shade2/chara_func.hsp:1713 			if cId(tc)=257:if sqPyramid<1000:sqPyramid=1000 ..
+            end
+         }
       }
    },
    {
@@ -6132,7 +6191,7 @@ local chara = {
       tone = "elona.yerles_machine_infantry",
    },
    {
-      _id = "gilbert_the_colonel",
+      _id = "gilbert",
       elona_id = 231,
       loot_type = "elona.humanoid",
       tags = { "man" },
@@ -6144,7 +6203,7 @@ local chara = {
       race = "elona.juere",
       class = "elona.gunner",
       gender = "male",
-      image = "elona.chara_gilbert_the_colonel",
+      image = "elona.chara_gilbert",
       quality = Enum.Quality.Unique,
       fltselect = Enum.FltSelect.SpUnique,
       coefficient = 400,
@@ -6152,7 +6211,7 @@ local chara = {
       ai_calm_action = "elona.calm_dull",
       ai_distance = 3,
       ai_move_chance = 40,
-      tone = "elona.gilbert_the_colonel",
+      tone = "elona.gilbert",
    },
    {
       _id = "yerles_self_propelled_gun",
@@ -8713,6 +8772,24 @@ local chara = {
       },
       effect_immunities = { "elona.fear" },
       tone = "elona.big_daddy",
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Spawn Little Sister",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+               -- >>>>>>>> shade2/chara_func.hsp:1715 			if cId(tc)=318:evAdd evLittleSister,cX(tc),cY(t ...
+               local x = self.x
+               local y = self.y
+               local map = self:current_map()
+               DeferredEvent.add(function() DeferredEvents.little_sister(x, y, map) end)
+               -- <<<<<<<< shade2/chara_func.hsp:1715 			if cId(tc)=318:evAdd evLittleSister,cX(tc),cY(t ..
+            end
+         }
+      }
    },
    {
       _id = "little_sister",
@@ -8732,6 +8809,32 @@ local chara = {
       ai_distance = 5,
       ai_move_chance = 100,
       tone = "elona.little_sister",
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Increment Little Sister kill count",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+               -- >>>>>>>> shade2/chara_func.hsp:1716 			if cId(tc)=319:gSisterKilled++:txtEf coRed : tx ...
+               save.elona.little_sisters_killed = save.elona.little_sisters_killed + 1
+               Gui.mes_c("talk.unique.strange_scientist.saved_count", "Red", save.elona.little_sisters_saved, save.elona.little_sisters_killed)
+               -- <<<<<<<< shade2/chara_func.hsp:1716 			if cId(tc)=319:gSisterKilled++:txtEf coRed : tx ..
+            end
+         },
+         {
+            id = "elona.on_chara_ranch_breed",
+            name = "Set bred character to younger sister",
+
+            callback = function(self, params, result)
+               -- >>>>>>>> shade2/map_user.hsp:781 	if cId(worker)=319:dbId=176 ...
+               result.filter.id = "elona.younger_sister"
+               -- <<<<<<<< shade2/map_user.hsp:781 	if cId(worker)=319:dbId=176 ..
+            end
+         }
+      }
    },
    {
       _id = "strange_scientist",

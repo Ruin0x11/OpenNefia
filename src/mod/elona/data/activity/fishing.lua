@@ -198,12 +198,16 @@ data:add {
                if Rand.one_in(5) then
                   if not p.no_animation then
                      local cb = function()
-                        local dt = 0
-                        for _ = 1, 4 + Rand.rnd(4) do
+                        local _
+                        local dt, frames_passed
+                        local times = 4 + Rand.rnd(4)
+                        local i = 1
+                        while i < times do
                            p.animation = 1
                            p.animation_frame = 3 + Rand.rnd(3)
                            Gui.add_effect_map("base.effect_map_splash", p.x, p.y, 2)
-                           _, _, _, dt = Draw.yield(config.base.general_wait * 2)
+                           _, _, frames_passed, dt = Draw.yield(config.base.general_wait * 2)
+                           i = i + frames_passed
                            Gui.step_effect_map()
                            Gui.update_screen(dt)
                         end
@@ -227,9 +231,13 @@ data:add {
 
                if not p.no_animation then
                   local cb = function()
-                     local dt = 0
-                     for _ = 1, 8 + Rand.rnd(10) do
-                        _, _, _, dt = Draw.yield(config.base.general_wait * 2)
+                     local _
+                     local dt, frames_passed
+                     local times = 8 + Rand.rnd(10)
+                     local i = 1
+                     while i < times do
+                        _, _, frames_passed, dt = Draw.yield(config.base.general_wait * 2)
+                        i = i + frames_passed
                         Gui.update_screen(dt)
                         Gui.step_effect_map()
                      end
@@ -250,10 +258,16 @@ data:add {
                if not p.no_animation then
                   local cb = function()
                      local _
-                     local dt = 0
-                     for i = 1, 28 + Rand.rnd(15) do
-                        if (i-1) % 7 == 0 then
+                     local dt, frames_passed
+                     local times = 28 + Rand.rnd(15)
+                     local i = 1
+                     local played_this_frame = false
+                     while i < times do
+                        if (i-1) % 7 == 0 and not played_this_frame then
                            Gui.play_sound("base.fish_fight", p.x, p.y)
+                           played_this_frame = true
+                        else
+                           played_this_frame = false
                         end
                         p.animation_frame = i - 1
 
@@ -266,7 +280,8 @@ data:add {
                         -- <<<<<<<< shade2/module.hsp:825 					if fishAnime@=3:if fishAnime@(1)¥8<4:py-=(fis ..
 
                         Gui.add_effect_map("base.effect_map_splash_2", p.x, p.y, 2)
-                        _, _, _, dt = Draw.yield(config.base.general_wait * 2)
+                        _, _, frames_passed, dt = Draw.yield(config.base.general_wait * 2)
+                        i = i + frames_passed
                         Gui.update_screen(dt)
                         Gui.step_effect_map()
                      end
@@ -285,17 +300,20 @@ data:add {
                p.animation = 4
                p.animation_frame = 0
                Gui.play_sound("base.fish_get", params.chara.x, params.chara.y)
+               params.chara.y_offset = self.params.chara_y_offset
 
                if not p.no_animation then
                   local cb = function()
                      local _
-                     local dt = 0
-                     for i = 1, 21 do
+                     local dt, frames_passed
+                     local i = 1
+                     while i < 21 do
                         p.animation_frame = i - 1
                         if i == 2 then
                            Gui.add_effect_map("base.effect_map_ripple", p.x, p.y, 3)
                         end
-                        _, _, _, dt = Draw.yield(config.base.general_wait * 2)
+                        _, _, frames_passed, dt = Draw.yield(config.base.general_wait * 2)
+                        i = i + frames_passed
                         Gui.update_screen(dt)
                         Gui.step_effect_map()
                      end

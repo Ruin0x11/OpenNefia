@@ -11,13 +11,13 @@ return {
 end,
     guest_already_left = "It seems the guest has already left your house.",
     guest_lost_his_way = "The guest lost his way.",
-    little_sister_slips = "The little sister slips from Big daddy's shoulder, Mr.Bubbles!",
+    little_sister = "The little sister slips from Big daddy's shoulder, \"Mr.Bubbles!\"",
     my_eyes = function(_1)
   return ("%s shout%s \"Eyes! My eyes!\"")
   :format(name(_1), s(_1))
 end,
     okaeri = { "Welcome home!", "Hey, dear.", "You're back!", "I was waiting for you.", "Nice to see you again." },
-    pael = "M-mom...!!",
+    pael = "\"M-mom...!!\"",
     ragnarok = "Let's Ragnarok!",
     reached_deepest_level = "It seems you have reached the deepest level of this dungeon.",
     seal_broken = "The seal of this level is now broken!",

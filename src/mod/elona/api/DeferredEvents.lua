@@ -16,13 +16,18 @@ local StayingCharas = require("api.StayingCharas")
 local Area = require("api.Area")
 local Nefia = require("mod.elona.api.Nefia")
 local Rank = require("mod.elona.api.Rank")
-local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local I18N = require("api.I18N")
 local Prompt = require("api.gui.Prompt")
 local WinMenu = require("mod.elona.api.gui.WinMenu")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local UiTheme = require("api.gui.UiTheme")
 local Draw = require("api.Draw")
+local Item = require("api.Item")
+local ElonaPos = require("mod.elona.api.ElonaPos")
+local MapObject = require("api.MapObject")
+local Filters = require("mod.elona.api.Filters")
+local Itemgen = require("mod.elona.api.Itemgen")
+local Save = require("api.Save")
 
 local DeferredEvents = {}
 
@@ -163,6 +168,39 @@ function DeferredEvents.welcome_home(map)
    -- <<<<<<<< shade2/main.hsp:1932 	swbreak ..
 end
 
+function DeferredEvents.marry(target, origin)
+   -- >>>>>>>> shade2/main.hsp:1712 	case evMarry ...
+   Gui.play_music("elona.wedding")
+
+   local prompt = RandomEventPrompt:new(
+      "random_event._.elona.marriage.title",
+      I18N.get("random_event._.elona.marriage.text", target, origin),
+      "base.bg_re14",
+      {
+         "random_event._.elona.marriage.choices._1"
+      })
+
+   prompt:query()
+
+   local map = target:current_map()
+   for _ = 1, 5 do
+      local filter = {
+         level = Calc.calc_object_level(target:calc("level"), map),
+         quality = Calc.calc_object_quality(Enum.Quality.Good),
+         categories = {Rand.choice(Filters.fsetchest)}
+      }
+
+      Itemgen.create(origin.x, origin.y, filter, map)
+   end
+
+   Item.create("elona.potion_of_cure_corruption", origin.x, origin.y, {}, map)
+   Item.create("elona.platinum_coin", origin.x, origin.y, {amount=Rand.rnd(3)+2}, map)
+   Gui.mes("common.something_is_put_on_the_ground")
+
+   Save.queue_autosave()
+   -- <<<<<<<< shade2/main.hsp:1730 	swbreak ..
+end
+
 function DeferredEvents.nefia_boss(map, boss_uid)
    local area = Area.for_map(map)
    if area == nil then
@@ -217,6 +255,220 @@ function DeferredEvents.nefia_boss_defeated(map)
    -- >>>>>>>> shade2/main.hsp:1771 	}else{ ...
    Nefia.set_boss_uid(area, -1) -- No more bosses in this map.
    -- <<<<<<<< shade2/main.hsp:1773 	} ..
+end
+
+function DeferredEvents.lily_end_life(chara)
+   -- >>>>>>>> shade2/main.hsp:1808 	case evKillMother ...
+   local x, y = chara.x, chara.y
+   local map = chara:current_map()
+   chara:damage_hp(math.max(chara.hp, 9999), "elona.unknown")
+   chara.state = "Dead"
+   chara:remove_ownership()
+
+   Item.create("elona.platinum_coin", x, y, {amount=4}, map)
+
+   Sidequest.set_progress("elona.pael_and_her_mom", 1001)
+   local pael = Chara.find("elona.pael", "others", map)
+   if pael then
+      if Chara.is_alive(pael) and not pael:is_player() then
+         Gui.mes_c("event.pael", "Blue")
+         local player = Chara.player()
+         pael:set_relation_towards(player, Enum.Relation.Enemy)
+         pael:set_target(player, 1000)
+      end
+   end
+   -- <<<<<<<< shade2/main.hsp:1817  ..
+end
+
+function DeferredEvents.anim_cb_nuke(draw_x, draw_y)
+   local _
+   local i = 0
+   local frames_passed = 0
+   local shake0 = 0
+   local shake1 = 0
+   local shake2 = 0
+   local shake3 = 0
+   local played_sound = false
+   local offset_x = 0
+   local offset_y = 0
+
+   local t = UiTheme.load()
+
+   while i <= 40 do
+      if frames_passed > 0 then
+         if i >= 14 and not played_sound then
+            Gui.play_sound("base.atk_fire")
+            played_sound = true
+         end
+         if i < 16 then
+            offset_x = 0
+            offset_y = 0
+         else
+            offset_x = 5 - Rand.rnd(10)
+            offset_y = 5 - Rand.rnd(10)
+         end
+         if i > 8 then
+            shake0 = shake0 - 1
+         else
+            shake0 = shake0 + 1
+         end
+         if i > 14 then
+            shake1 = shake1 + 1
+         elseif i < 12 then
+            shake1 = math.floor(i / 2) % 2
+         elseif i >= 12 then
+            shake1 = i % 3
+         end
+         if i > 4 then
+            shake2 = shake2 + 1
+            shake3 = shake3 + 1
+         end
+      end
+
+      local sw = Draw.get_width()
+      local sh = Draw.get_height()
+
+      local dx = math.floor(sw / 2 - 1) + offset_x
+      local dy = math.floor(sh / 2 - 1) + offset_y
+
+      Draw.set_color(0, 0, 0)
+      Draw.filled_rect(0, 0, sw, sh)
+
+      Draw.set_color(255, 255, 255)
+      t.base.bg22:draw(offset_x, offset_y, sw, sh)
+
+      -- Ring
+      local alpha = 255 - (shake0 * 5)
+      Draw.set_color(255, 255, 255, alpha)
+      local x = dx
+      local y = dy
+      local w = math.clamp(shake0 * 32, 0, 192)
+      local h = math.clamp(shake0 * 8, 0, 48)
+      local frame = math.floor(i / 2) % 2 + 1
+      t.base.anim_nuke_ring:draw_region(frame, x, y, w, h, nil, true)
+
+      -- Explosion
+      Draw.set_color(255, 255, 255, 255)
+      local x = dx
+      local y = dy - math.clamp(math.floor(i * 3 / 2), 0, 18) - 16
+      local w = math.clamp(i * 12, 0, 144)
+      local h = math.clamp(i * 6, 0, 72)
+      local frame = shake1 + 1
+      if frame < 8 then
+         t.base.anim_nuke_explosion:draw_region(frame, x, y, w, h, nil, true)
+      end
+
+      -- Lower smoke trail
+      local alpha = math.clamp(shake2 * 6, 0, 100)
+      Draw.set_color(255, 255, 255, alpha)
+      local x = dx
+      local y = dy - math.clamp(shake2 * 2, 0, 40)
+      local w = math.clamp(shake2 * 8, 0, 240)
+      local h = math.clamp(shake2 * 5, 0, 96)
+      t.base.anim_nuke_smoke_1:draw(x, y, w, h, nil, true)
+
+      -- Upper smoke trail
+      alpha = shake3 * 10
+      Draw.set_color(255, 255, 255, alpha)
+      local x = dx
+      local y = dy - math.clamp(shake3 * 2, 0, 160) - 6
+      local w = math.clamp(shake2 * 10, 0, 96)
+      local h = math.clamp(shake2 * 10, 0, 96)
+      t.base.anim_nuke_smoke_2:draw(x, y, w, h, nil, true)
+
+      -- Lower cloud
+      alpha = math.clamp(shake3 * 5, 0, 100)
+      Draw.set_color(255, 255, 255, alpha)
+      local x = dx
+      local y = dy - 4
+      local w = math.clamp(shake2 * 8, 0, 400)
+      local h = math.clamp(shake2, 0, 48)
+      local frame = (math.floor(i/4) % 2) + 1
+      t.base.anim_nuke_cloud:draw_region(frame, x, y, w, h, nil, true)
+
+      -- Upper cloud
+      alpha = shake3 * 10
+      Draw.set_color(255, 255, 255, alpha)
+      local x = dx
+      local y = dy - 48 - math.clamp(shake3 * 2, 0, 148)
+      local frame = (math.floor(i/3) % 2) + 1
+      t.base.anim_nuke_cloud:draw_region(frame, x, y, nil, nil, nil, true)
+
+      _, _, frames_passed = Draw.yield(config.base.anime_wait + 50)
+      i = i + frames_passed
+   end
+end
+
+function DeferredEvents.nuke(x, y, map, origin)
+   -- >>>>>>>> shade2/main.hsp:1934 	case evNuke ...
+   if map:has_type("world_map") then
+      return
+   end
+
+   Gui.mes_c("event.bomb", "Red")
+   Input.query_more()
+
+   Gui.start_draw_callback(DeferredEvents.anim_cb_nuke, "must_wait", "elona.nuke")
+
+   Gui.update_screen()
+
+   local range = 31
+   local element_id = "elona.chaos"
+
+   -- Ignore LOS when making ball affected positions
+   local function test_los(map, x, y, tx, ty)
+      return true
+   end
+   local positions = ElonaPos.make_ball(x, y, range, map, test_los)
+
+   local element = data["base.element"]:ensure(element_id)
+   local color = element.color
+   local sound = element.sound
+
+   local cb = Anim.ball(positions, color, sound, x, y, map)
+   Gui.start_draw_callback(cb)
+
+   for _, pos in ipairs(positions) do
+      local tx = pos[1]
+      local ty = pos[2]
+
+      local demolish = false
+      if not map:can_access(tx, ty) then
+         demolish = true
+      end
+      if not Rand.one_in(4) or demolish then
+         map:set_tile(tx, ty, "elona.destroyed")
+      end
+      if Rand.one_in(10) or demolish then
+         Mef.create("elona.fire", tx, ty, { duration = Rand.rnd(15) + 20, power = 50, origin = origin }, map)
+      end
+
+      local target = Chara.at(tx, ty, map)
+
+      if target then
+         local damage = 1000
+         target:damage_hp(damage, "elona.nuke")
+      end
+
+      Effect.damage_map_fire(tx, ty, origin, map)
+   end
+
+   if x == 33 and y == 16 and map._archetype == "elona.palmia" then
+      if Sidequest.progress("elona.red_blossom_in_palmia") == 1 then
+         Sidequest.set_progress("elona.red_blossom_in_palmia", 2)
+         Sidequest.update_journal()
+      end
+   end
+
+   if MapObject.is_map_object(origin, "base.chara") then
+      if map:has_type("town") or map:has_type("village") then
+         local karma_delta = -80 + origin:trait_level("elona.perm_evil") * 60
+         Effect.modify_karma(origin, karma_delta)
+      else
+         Effect.modify_karma(origin, -10)
+      end
+   end
+   -- <<<<<<<< shade2/main.hsp:1997 	swbreak ..
 end
 
 function DeferredEvents.proc_guild_intruder(guild_id, chara, map)
@@ -339,6 +591,16 @@ function DeferredEvents.win()
    local player = Chara.player()
    Chara.create("elona.orphe", player.x, player.y, {}, player:current_map())
    -- <<<<<<<< shade2/main.hsp:1652 	flt :chara_create -1,23,cX(pc),cY(pc) ..
+end
+
+function DeferredEvents.little_sister(x, y, map)
+   -- >>>>>>>> shade2/main.hsp:1656 	case evLittleSister ...
+   -- TODO show house
+   local little_sister = Chara.create("elona.little_sister", x, y, {}, map)
+   if little_sister then
+      Gui.mes_c("event.little_sister", "SkyBlue", little_sister)
+   end
+   -- <<<<<<<< shade2/main.hsp:1659 	swbreak ..
 end
 
 return DeferredEvents

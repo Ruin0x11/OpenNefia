@@ -19,6 +19,7 @@ local Save = require("api.Save")
 local state = require("internal.global.field_logic_state")
 local fs = require("util.fs")
 local SaveFs = require("api.SaveFs")
+local Rand = require("api.Rand")
 
 local DeathMenu = require("api.gui.menu.DeathMenu")
 
@@ -71,18 +72,24 @@ function field_logic.quickstart()
    assert(save.base.scenario)
 
    -- We will want to act as if the character making GUI is active, because that
-   -- will force the player's equipment to be generated uncursed.
+   -- will force the player's equipment to be generated uncursed, along with
+   -- some other special behaviors (search for CharaMake.is_active()).
    chara_make.set_is_active_override(true)
    local ok, err = xpcall(function()
-         local me = Chara.create(config.base.quickstart_chara_id, nil, nil, {ownerless=true})
-         me:emit("base.on_finalize_player")
-         me:emit("base.on_initialize_player")
+         local me = Chara.create(config.base.quickstart_chara_id, nil, nil, {no_build=true, ownerless=true})
+         me.gender = Rand.choice { "female", "male" }
 
          -- HACK: We have to apply race/class ourselves as the charamake process
          -- will assume the GUI will do so
          local Skill = require("mod.elona_sys.api.Skill")
          Skill.apply_race_params(me, me.race)
          Skill.apply_class_params(me, me.class)
+
+         me:emit("base.on_finalize_player")
+         me:emit("base.on_initialize_player")
+
+         me:build()
+
          return me
    end, debug.traceback)
    chara_make.set_is_active_override(false)

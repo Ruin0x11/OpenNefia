@@ -23,7 +23,7 @@ function ItemFunction.proc_fall_into_well(item, chara)
    end
 
    Gui.mes("action.drink.well.effect.falls.text", chara)
-   chara:say("action.drink.well.effect.falls.dialog", chara)
+   chara:mes("action.drink.well.effect.falls.dialog")
 
    if SkillCheck.is_floating(chara) then
       Gui.mes("action.drink.well.effect.falls.floats", chara)

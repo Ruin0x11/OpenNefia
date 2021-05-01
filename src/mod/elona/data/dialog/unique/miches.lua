@@ -1,7 +1,7 @@
 local Chara = require("api.Chara")
 local Item = require("api.Item")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
-local Calc = require("mod.elona.api.Calc")
+local Enum = require("api.Enum")
 
 local common = require("mod.elona.data.dialog.common")
 
@@ -25,53 +25,48 @@ data:add {
          return "__END__"
       end,
       quest_completed = {
-         text = {
-            {"complete"}
-         }
+         text = "talk.unique.miches.complete"
+
       },
       quest_ask = {
          text = {
-            {"quest.dialog._0"},
-            {"quest.dialog._1"}
+            "talk.unique.miches.quest.dialog._0",
+            "talk.unique.miches.quest.dialog._1"
          },
          choices = {
-            {"quest_yes", "quest.choices.yes"},
-            {"quest_no", "quest.choices.no"}
+            {"quest_yes", "talk.unique.miches.quest.choices.yes"},
+            {"quest_no", "talk.unique.miches.quest.choices.no"}
          },
          default_choice = "quest_no"
       },
       quest_yes = {
-         text = {
-            common.show_journal_update_message,
-            {"quest.yes"},
-         },
+         on_start = function()
+            Sidequest.update_journal()
+         end,
+         text = "talk.unique.miches.quest.yes",
          on_finish = function()
             Sidequest.set_progress("elona.putit_attacks", 1)
          end
       },
       quest_no = {
-         text = {
-            {"quest.no"},
-         }
+         text = "talk.unique.miches.quest.no",
       },
       quest_waiting = {
-         text = {
-            {"quest.waiting"},
-         }
+         text = "talk.unique.miches.quest.waiting",
       },
       quest_finish = {
-         text = {
-            function()
-               local cx, cy = Chara.player().x, Chara.player().y
-               Item.create("elona.small_shield", cx, cy, Calc.filter(10, "good"))
-               Item.create("elona.girdle", cx, cy, Calc.filter(10, "good"))
-               Item.create("elona.gold_piece", cx, cy, { amount = 3000 })
-               Item.create("elona.platinum_coin", cx, cy, { amount = 2 })
+         on_start = function()
+            local player = Chara.player()
+            local map = player:current_map()
 
-               common.quest_completed()
-            end,
-            {"quest.end"},
-         },
+            Item.create("elona.small_shield", player.x, player.y, {level = 10, quality = Enum.Quality.Good}, map)
+            Item.create("elona.girdle", player.x, player.y, {level = 10, quality = Enum.Quality.Good}, map)
+            Item.create("elona.gold_piece", player.x, player.y, { amount = 3000 }, map)
+            Item.create("elona.platinum_coin", player.x, player.y, { amount = 2 }, map)
+
+            common.quest_completed()
+         end,
+         text = "talk.unique.miches.quest.end",
          on_finish = function()
             Sidequest.set_progress("elona.putit_attacks", 1000)
          end

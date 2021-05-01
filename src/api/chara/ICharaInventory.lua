@@ -126,7 +126,7 @@ function ICharaInventory:take_item(item, amount)
 end
 
 function ICharaInventory:find_items(_id)
-   return self:iter_inventory():filter(function(i) return i._id == _id end)
+   return self:iter_inventory():filter(function(i) return i.amount > 0 and i._id == _id end)
 end
 
 function ICharaInventory:find_item(_id)

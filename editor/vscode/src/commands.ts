@@ -255,7 +255,7 @@ export async function createNewMod() {
                     `-- Load this mod in-game with Ctrl+Shift+R.
 local Log = require ("api.Log")
 
-Log.info("Hello from %s!", _MOD_NAME)`;
+Log.info("Hello from %s!", _MOD_ID)`;
                 createFile(workspaceEdit, initFile, initFileContent);
 
                 await vscode.workspace.applyEdit(workspaceEdit);
