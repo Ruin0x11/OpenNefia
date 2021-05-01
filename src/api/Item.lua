@@ -108,6 +108,9 @@ function Item.create(id, x, y, params, where)
    else
       if where == nil then
          Log.warn("Implicit global map used in Item.create().")
+         if Log.has_level("debug") then
+            Log.debug("%s", debug.traceback())
+         end
       end
       where = where or field.map
    end

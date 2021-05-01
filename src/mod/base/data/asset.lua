@@ -442,12 +442,12 @@ local assets = {
       height = 25,
       regions = function(width, height)
          local quad = {}
-         quad[1] =  { 0, 0, 128, 3 }
-         quad[2] =  { 0, 3, 128, 22 }
-         quad[3] =  { 0, 0, 128, 2 }
-         quad[4] =  { 0, 0, width % 128, 3 }
-         quad[5] =  { 0, 3, width % 128, 22 }
-         quad[6] =  { 0, 0, width % 128, 2 }
+         quad[1] = { 0, 0, 128, 3 }
+         quad[2] = { 0, 3, 128, 22 }
+         quad[3] = { 0, 0, 128, 2 }
+         quad[4] = { 0, 0, width % 128, 3 }
+         quad[5] = { 0, 3, width % 128, 22 }
+         quad[6] = { 0, 0, width % 128, 2 }
          return quad
       end
    },
@@ -740,6 +740,11 @@ local assets = {
    {
       _id = "bg13",
       image = "graphic/bg13.bmp",
+      key_color = "none"
+   },
+   {
+      _id = "bg22",
+      image = "graphic/bg22.bmp",
       key_color = "none"
    },
    {
@@ -1101,6 +1106,49 @@ local assets = {
       _id = "anim_smoke",
       image = "graphic/anime8.bmp",
       count_x = 5
+   },
+   {
+      _id = "anim_nuke_smoke_1",
+      source = "graphic/anime9.bmp",
+      x = 0,
+      y = 0,
+      width = 96,
+      height = 96
+   },
+   {
+      _id = "anim_nuke_smoke_2",
+      source = "graphic/anime9.bmp",
+      x = 96,
+      y = 0,
+      width = 96,
+      height = 96
+   },
+   {
+      _id = "anim_nuke_cloud",
+      source = "graphic/anime9.bmp",
+      count_x = 2,
+      x = 0,
+      y = 96,
+      width = 192 * 2,
+      height = 96
+   },
+   {
+      _id = "anim_nuke_explosion",
+      source = "graphic/anime9.bmp",
+      count_x = 7,
+      x = 0,
+      y = 288,
+      width = 96 * 7,
+      height = 48
+   },
+   {
+      _id = "anim_nuke_ring",
+      source = "graphic/anime9.bmp",
+      count_x = 2,
+      x = 0,
+      y = 408,
+      width = 192 * 2,
+      height = 48
    },
    {
       _id = "anim_sparkle",

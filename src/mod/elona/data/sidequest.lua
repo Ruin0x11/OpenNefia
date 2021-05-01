@@ -187,6 +187,19 @@ data:add {
 
 data:add {
    _type = "elona_sys.sidequest",
+   _id = "red_blossom_in_palmia",
+   elona_id = 213,
+   ordering = order(213),
+
+   progress = {
+      [1] = "sidequest._.elona.red_blossom_in_palmia.progress._0",
+      [2] = "sidequest._.elona.red_blossom_in_palmia.progress._1",
+      [1000] = "",
+   },
+}
+
+data:add {
+   _type = "elona_sys.sidequest",
    _id = "ambitious_scientist",
    elona_id = 214,
    ordering = order(214),

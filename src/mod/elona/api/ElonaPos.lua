@@ -82,8 +82,14 @@ function ElonaPos.make_route(start_x, start_y, end_x, end_y, map)
    return route, true
 end
 
-function ElonaPos.make_ball(x, y, range, map)
+local function test_los(map, x, y, tx, ty)
+   return map:has_los(x, y, tx, ty)
+end
+
+function ElonaPos.make_ball(x, y, range, map, test_cb)
    local positions = {}
+
+   test_cb = test_cb or test_los
 
    for i = 0, range * 2 do
       local ty = y - range + i
@@ -91,7 +97,7 @@ function ElonaPos.make_ball(x, y, range, map)
          for j = 0, range * 2 do
             local tx = x - range + j
             if tx >= 0 and tx < map:width() then
-               if Pos.dist(x, y, tx, ty) <= range and map:has_los(x, y, tx, ty) then
+               if Pos.dist(x, y, tx, ty) <= range and test_cb(map, x, y, tx, ty) then
                   positions[#positions+1] = { tx, ty }
                end
             end

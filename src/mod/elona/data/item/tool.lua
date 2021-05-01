@@ -19,6 +19,8 @@ local IItemGaroksHammer = require("mod.elona.api.aspect.IItemGaroksHammer")
 local IItemFishingPole = require("mod.elona.api.aspect.IItemFishingPole")
 local IItemMoneyBox = require("mod.elona.api.aspect.IItemMoneyBox")
 local IItemMonsterBall = require("mod.elona.api.aspect.IItemMonsterBall")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Mef = require("api.Mef")
 
 --
 -- Tool
@@ -724,13 +726,40 @@ data:add {
    image = "elona.item_mine",
    value = 10000,
    weight = 120000,
-   on_use = function() end,
    level = 10,
    fltselect = 3,
    rarity = 250000,
    coefficient = 0,
 
-   elona_function = 28,
+   on_use = function(self, params)
+      -- >>>>>>>> shade2/action.hsp:2027 	case effNuke ...
+      local map = self:containing_map()
+      if not map or map:has_type("world_map") then
+         Gui.mes("action.use.mine.cannot_place_here")
+         return "player_turn_query"
+      end
+
+      local chara = params.chara
+
+      if Sidequest.progress("elona.red_blossom_in_palmia") == 1
+         and (map._archetype ~= "elona.palmia" or chara.x ~= 33 or chara.y ~= 16)
+      then
+         Gui.mes("action.use.nuke.not_quest_goal")
+         if not Input.yes_no() then
+            return "player_turn_query"
+         end
+      end
+
+      self.amount = self.amount - 1
+      Gui.mes("action.use.nuke.set_up")
+      Gui.play_sound("base.build1", chara.x, chara.y)
+      Mef.create("elona.nuke", chara.x, chara.y, { duration = 10, power = 100, origin = chara }, map)
+
+      return "turn_end"
+   -- <<<<<<<< shade2/action.hsp:2037 	swbreak ..
+   end,
+
+
    is_precious = true,
    quality = Enum.Quality.Unique,
    categories = {
@@ -750,6 +779,7 @@ data:add {
    rarity = 800000,
    coefficient = 100,
 
+   -- TODO implement everywhere in the code (see: Noel's dialog)
    params = { secret_treasure_trait = "elona.perm_good" },
 
    elona_function = 29,

@@ -16,7 +16,6 @@ local StayingCharas = require("api.StayingCharas")
 local Area = require("api.Area")
 local Nefia = require("mod.elona.api.Nefia")
 local Rank = require("mod.elona.api.Rank")
-local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local I18N = require("api.I18N")
 local Prompt = require("api.gui.Prompt")
 local WinMenu = require("mod.elona.api.gui.WinMenu")
@@ -24,6 +23,8 @@ local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local UiTheme = require("api.gui.UiTheme")
 local Draw = require("api.Draw")
 local Item = require("api.Item")
+local ElonaPos = require("mod.elona.api.ElonaPos")
+local MapObject = require("api.MapObject")
 
 local DeferredEvents = {}
 
@@ -362,7 +363,7 @@ function DeferredEvents.anim_cb_nuke(draw_x, draw_y)
    end
 end
 
-function DeferredEvents.nuke(x, y, map)
+function DeferredEvents.nuke(x, y, map, origin)
    -- >>>>>>>> shade2/main.hsp:1934 	case evNuke ...
    if map:has_type("world_map") then
       return
@@ -372,6 +373,65 @@ function DeferredEvents.nuke(x, y, map)
    Input.query_more()
 
    Gui.start_draw_callback(DeferredEvents.anim_cb_nuke, "must_wait", "elona.nuke")
+
+   Gui.update_screen()
+
+   local range = 31
+   local element_id = "elona.chaos"
+
+   -- Ignore LOS when making ball affected positions
+   local function test_los(map, x, y, tx, ty)
+      return true
+   end
+   local positions = ElonaPos.make_ball(x, y, range, map, test_los)
+
+   local element = data["base.element"]:ensure(element_id)
+   local color = element.color
+   local sound = element.sound
+
+   local cb = Anim.ball(positions, color, sound, x, y, map)
+   Gui.start_draw_callback(cb)
+
+   for _, pos in ipairs(positions) do
+      local tx = pos[1]
+      local ty = pos[2]
+
+      local demolish = false
+      if not map:can_access(tx, ty) then
+         demolish = true
+      end
+      if not Rand.one_in(4) or demolish then
+         map:set_tile(tx, ty, "elona.destroyed")
+      end
+      if Rand.one_in(10) or demolish then
+         Mef.create("elona.fire", tx, ty, { duration = Rand.rnd(15) + 20, power = 50, origin = origin }, map)
+      end
+
+      local target = Chara.at(tx, ty, map)
+
+      if target then
+         local damage = 1000
+         target:damage_hp(damage, "elona.nuke")
+      end
+
+      Effect.damage_map_fire(tx, ty, origin, map)
+   end
+
+   if x == 33 and y == 16 and map._archetype == "elona.palmia" then
+      if Sidequest.progress("elona.red_blossom_in_palmia") == 1 then
+         Sidequest.set_progress("elona.red_blossom_in_palmia", 2)
+         Sidequest.update_journal()
+      end
+   end
+
+   if MapObject.is_map_object(origin, "base.chara") then
+      if map:has_type("town") or map:has_type("village") then
+         local karma_delta = -80 + origin:trait_level("elona.perm_evil") * 60
+         Effect.modify_karma(origin, karma_delta)
+      else
+         Effect.modify_karma(origin, -10)
+      end
+   end
    -- <<<<<<<< shade2/main.hsp:1997 	swbreak ..
 end
 
