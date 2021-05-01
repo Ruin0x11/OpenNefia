@@ -13,16 +13,6 @@ local Home = require("mod.elona.api.Home")
 local Log = require("api.Log")
 local Item = require("api.Item")
 local Input = require("api.Input")
-local IItemSeed = require("mod.elona.api.aspect.IItemSeed")
-
-local function day_passes()
-   local guests = save.elona.waiting_guests
-   if guests < 3 and Rand.one_in(8 + guests * 5) then
-      save.elona.waiting_guests = guests + 1
-   end
-end
-
-Event.register("base.on_day_passed", "Day passing message/update guests", day_passes, 100000)
 
 -- >>>>>>>> shade2/main.hsp:641 		gosub *shop_turn ..
 Event.register("base.on_day_passed", "Update shop every day", function() ElonaBuilding.update_shops() end, 110000)

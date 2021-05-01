@@ -362,13 +362,13 @@ local random = {
    },
 
    maid = {
-      function(npc, player, params)
+      function(npc, player, ref)
          return ("おかえり、%s♪%sのいない間に、来客が%s人あった%s。今すぐ会う%s？")
-            :format(player.name, kimi(npc), params.ref, yo(npc), kana(npc))
+            :format(name(player), kimi(npc), ref, yo(npc), kana(npc))
       end,
-      function(npc, player, params)
+      function(npc, player, ref)
          return ("%s、%s！お客さんが%s人待ってる%s。会う%s？")
-            :format(player.name, player.name, params.ref, yo(npc), daro(npc))
+            :format(name(player), player.name, ref, yo(npc), daro(npc))
       end
    },
 

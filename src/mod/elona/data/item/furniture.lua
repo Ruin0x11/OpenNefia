@@ -1,5 +1,4 @@
 local light = require("mod.elona.data.item.light")
-local ProductionMenu = require("mod.elona.api.gui.ProductionMenu")
 local Magic = require("mod.elona_sys.api.Magic")
 local Log = require("api.Log")
 local Rand = require("api.Rand")
@@ -7,13 +6,12 @@ local Area = require("api.Area")
 local Map = require("api.Map")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
-local ElonaMagic = require("mod.elona.api.ElonaMagic")
 local Item = require("api.Item")
 local Enum = require("api.Enum")
 local IItemCookingTool = require("mod.elona.api.aspect.IItemCookingTool")
 local IItemWell = require("mod.elona.api.aspect.IItemWell")
-local ItemWellAspect = require("mod.elona.api.aspect.ItemWellAspect")
 local ItemHolyWellAspect = require("mod.elona.api.aspect.ItemHolyWellAspect")
+local IItemChair = require("mod.elona.api.aspect.IItemChair")
 
 --
 -- Furniture
@@ -28,7 +26,9 @@ data:add {
    weight = 900,
    coefficient = 100,
 
-   elona_function = 44,
+   _ext = {
+      IItemChair
+   },
 
    categories = {
       "elona.furniture"
@@ -74,7 +74,9 @@ data:add {
    weight = 350,
    coefficient = 100,
 
-   elona_function = 44,
+   _ext = {
+      IItemChair
+   },
 
    tags = { "fest" },
    random_color = "Furniture",
@@ -235,7 +237,9 @@ data:add {
    rarity = 600000,
    coefficient = 100,
 
-   elona_function = 44,
+   _ext = {
+      IItemChair
+   },
 
    tags = { "sf" },
    random_color = "Furniture",
@@ -375,7 +379,9 @@ data:add {
    coefficient = 100,
    random_color = "Furniture",
 
-   elona_function = 44,
+   _ext = {
+      IItemChair
+   },
 
    categories = {
       "elona.furniture"
@@ -392,7 +398,9 @@ data:add {
    coefficient = 100,
    random_color = "Furniture",
 
-   elona_function = 44,
+   _ext = {
+      IItemChair
+   },
 
    categories = {
       "elona.furniture"
@@ -1726,7 +1734,9 @@ data:add {
    rarity = 500000,
    coefficient = 100,
 
-   elona_function = 44,
+   _ext = {
+      IItemChair
+   },
 
    categories = {
       "elona.furniture"
@@ -1810,7 +1820,9 @@ data:add {
    rarity = 150000,
    coefficient = 100,
 
-   elona_function = 44,
+   _ext = {
+      IItemChair
+   },
 
    categories = {
       "elona.furniture"
@@ -2456,7 +2468,9 @@ data:add {
    rarity = 10000,
    coefficient = 100,
 
-   elona_function = 44,
+   _ext = {
+      IItemChair
+   },
    is_precious = true,
    medal_value = 20,
    categories = {
@@ -2711,7 +2725,9 @@ data:add {
    coefficient = 100,
    random_color = "Furniture",
 
-   elona_function = 44,
+   _ext = {
+      IItemChair
+   },
 
    categories = {
       "elona.furniture"
@@ -3178,7 +3194,9 @@ data:add {
    coefficient = 100,
    random_color = "Furniture",
 
-   elona_function = 44,
+   _ext = {
+      IItemChair
+   },
 
    categories = {
       "elona.furniture"

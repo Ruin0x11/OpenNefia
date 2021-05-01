@@ -566,7 +566,7 @@ data:add {
 
             if self.params.is_host then
                Gui.mes_visible("activity.sex.take_clothes_off", params.chara.x, params.chara.y, params.chara)
-               self.params.partner:start_activity("elona.sex", {partner=params.chara,is_host=false}, self.params.turns * 2)
+               self.params.partner:start_activity("elona.sex", {partner=params.chara,is_host=false}, self.turns * 2)
             end
          end
       },

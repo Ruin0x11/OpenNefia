@@ -6,6 +6,7 @@ return {
           free_chair = "It's free to use.",
           guest_chair = "It's for my guest.",
           my_chair = "It's my chair.",
+          ally_chair = "It's for my allies.",
           relax = "Relax."
         },
         free_chair = function(_1)
@@ -18,6 +19,10 @@ end,
 end,
         my_chair = function(_1)
   return ("%s is your seat now.")
+  :format(_1)
+end,
+        ally_chair = function(_1)
+  return ("%s is used by your allies now.")
   :format(_1)
 end,
         needs_place_on_ground = "You need to put it on the ground.",

@@ -28,6 +28,11 @@ local MapObject = require("api.MapObject")
 local Filters = require("mod.elona.api.Filters")
 local Itemgen = require("mod.elona.api.Itemgen")
 local Save = require("api.Save")
+local Adventurer = require("mod.elona.api.Adventurer")
+local Const = require("api.Const")
+local ICharaElonaFlags = require("mod.elona.api.aspect.chara.ICharaElonaFlags")
+local Pos = require("api.Pos")
+local IItemChair = require("mod.elona.api.aspect.IItemChair")
 
 local DeferredEvents = {}
 
@@ -137,6 +142,294 @@ function DeferredEvents.first_ally()
    player:recruit_as_ally(ally)
 end
 
+function DeferredEvents.find_adventurer_guest()
+   local advs = Adventurer.iter_staying():to_list()
+   local found_adv = nil
+   local tries = 0
+   for _ = 1, 100 do
+      local adv = Rand.choice(advs)
+      if Chara.is_alive(adv) then
+         local role = adv:find_role("elona.adventurer")
+         if role.state == "Alive" and not adv.is_hired and adv:relation_towards(Chara.player()) >= Enum.Relation.Neutral then
+            if Rand.rnd(25) < tries then
+               break
+            end
+            if found_adv == nil then
+               found_adv = adv
+               tries = tries + 1
+               if adv:calc("impression") < Const.IMPRESSION_HATE and Rand.one_in(12) then
+                  break
+               elseif adv:calc("impression") < Const.IMPRESSION_ENEMY and not Rand.one_in(4) then
+                  break
+               end
+            elseif adv:calc("impression") < found_adv:calc("impression") then
+               found_adv = adv
+               tries = tries + 1
+            end
+         end
+      end
+   end
+
+   return found_adv
+end
+
+function DeferredEvents.generate_regular_guest(player)
+   -- >>>>>>>> shade2/main.hsp:1862 		flt 0,fixNormal ...
+   local params = {
+      quality = Enum.Quality.Normal,
+      ownerless = true
+   }
+
+   local guest
+
+   if (save.elona.date_of_last_guest_trainer_visit.month ~= save.base.date.month or Rand.one_in(5))
+      and not Rand.one_in(3)
+   then
+      guest = Chara.create("elona.guild_trainer", nil, nil, params)
+      if guest then
+         guest:add_role("elona.guest_trainer")
+      end
+   elseif Rand.one_in(10) then
+      guest = Chara.create("elona.mysterious_producer", nil, nil, params)
+      if guest then
+         guest:add_role("elona.guest_producer")
+      end
+   elseif Rand.one_in(10) then
+      guest = Chara.create("elona.shopkeeper", nil, nil, params)
+      if guest then
+         guest:add_role("elona.shopkeeper", { inventory_id = "elona.visiting_merchant" })
+         if player then
+            guest.shop_rank = math.clamp(player:calc("fame") / 100, 20, 100)
+         else
+            guest.shop_rank = 20
+         end
+      end
+   elseif Rand.one_in(4) then
+      guest = Chara.create("elona.beggar", nil, nil, params)
+      if guest then
+         guest:add_role("elona.guest_beggar")
+      end
+   elseif Rand.one_in(4) then
+      guest = Chara.create("elona.punk", nil, nil, params)
+      if guest then
+         guest:add_role("elona.guest_punk")
+      end
+   else
+      guest = Chara.create("elona.citizen", nil, nil, params)
+      if guest then
+         guest:add_role("elona.guest_citizen")
+      end
+   end
+
+   if guest then
+      guest.is_summoned = true
+      if player then
+         guest:set_relation_towards(player, Enum.Relation.Neutral)
+      end
+   end
+
+   return guest
+   -- <<<<<<<< shade2/main.hsp:1871 		tc=rc:relation tc,cNeutral:cBitMod cSummoned,tc, ..
+end
+
+function DeferredEvents.meet_house_guest(map)
+   -- >>>>>>>> shade2/main.hsp:1840 	case evVisitor ...
+   local chara = nil
+   local player = Chara.player()
+
+   if not Rand.one_in(3) then
+      local found_adv = DeferredEvents.find_adventurer_guest()
+
+      if Chara.is_alive(found_adv) then
+         found_adv.state = "Alive"
+         local role = assert(found_adv:find_role("elona.adventurer"))
+         role.state = "Alive"
+         local x, y = Map.find_free_position(player.x, player.y, {}, map)
+         if x and y and map:take_object(found_adv, x, y) then
+            chara = found_adv
+            assert(save.elona.staying_adventurers:get_staying_area_for(found_adv))
+         end
+      end
+   else
+      local guest = DeferredEvents.generate_regular_guest(player)
+      if guest then
+         local x, y = Map.find_free_position(player.x, player.y, {}, map)
+         if x and y and map:take_object(guest, x, y) then
+            chara = guest
+         end
+      end
+      if chara == nil then
+         pause()
+      end
+   end
+
+   if not Chara.is_alive(chara) then
+      Gui.mes("event.guest_already_left")
+      return nil
+   end
+
+   local guests = { chara }
+   DeferredEvents.place_guests_on_chair(guests, player)
+   Gui.update_screen()
+
+   local dialog_id = DeferredEvents.guest_dialog_id(chara, player)
+   return Effect.try_to_chat(chara, player, false, dialog_id)
+   -- <<<<<<<< shade2/main.hsp:1872 		} ..
+end
+
+function DeferredEvents.place_guests_on_chair(guests)
+   -- >>>>>>>> shade2/main.hsp:1878 	i=0 ...
+   local guest = guests[1]
+   local map = guest:current_map()
+   local player = nil
+   local charas = {}
+   for _, ally in Chara.iter_allies(map) do
+      -- Includes player.
+      if ally:is_player() then
+         table.insert(charas, 1, ally)
+         player = ally
+      else
+         charas[#charas+1] = ally
+      end
+   end
+   for _, guest in ipairs(guests) do
+      charas[#charas+1] = guest
+   end
+   guests = table.set(guests)
+
+   local is_chair = function(i)
+      return i:get_aspect(IItemChair)
+   end
+   local chairs = Item.iter(map):filter(is_chair):to_list()
+
+   local function place_on_chair(chara, chair)
+      local on_cell = Chara.at(chair.x, chair.y)
+      if on_cell then
+         on_cell:swap_places(chara)
+      else
+         chara:set_pos(chair.x, chair.y)
+      end
+   end
+
+   for _, chara in ipairs(charas) do
+      local dead = nil
+      if Chara.is_alive(chara) then
+         for i, chair in ipairs(chairs) do
+            local aspect = assert(chair:get_aspect(IItemChair))
+            if aspect.chair_type == "my" and chara:is_player() then
+               place_on_chair(chara, chair)
+               dead = i
+            elseif aspect.chair_type == "guest" and guests[chara] then
+               place_on_chair(chara, chair)
+               dead = i
+            elseif aspect.chair_type == "ally" and not chara:is_player() and not guests[chara] then
+               place_on_chair(chara, chair)
+               dead = i
+            end
+
+            if dead then
+               break
+            end
+         end
+
+         if dead then
+            table.remove(chairs, dead)
+         end
+      end
+   end
+
+   for _, chara in ipairs(charas) do
+      if chara ~= guest then
+         local dx, dy = Pos.direction_in(chara.x, chara.y, guest.x, guest.y)
+         chara.direction = Pos.pack_direction(dx, dy)
+      end
+   end
+   -- <<<<<<<< shade2/main.hsp:1894 	loop ..
+end
+
+function DeferredEvents.guest_dialog_id(chara, player)
+   local dialog_id = "elona.guest_citizen"
+
+   if chara:find_role("elona.adventurer") then
+      if save.base.date.month == 1 and not Rand.one_in(4) then
+         return "elona.adventurer:guest_new_years"
+      end
+
+      local impression = chara:calc("impression")
+
+      if impression < Const.IMPRESSION_HATE then
+         return "elona.adventurer:guest_hate"
+      end
+
+      if impression >= Const.IMPRESSION_FRIEND
+         and not chara:calc_aspect(ICharaElonaFlags, "has_given_token_of_friendship")
+         and not player:is_inventory_full()
+      then
+         return "elona.adventurer:guest_token_of_friendship"
+      end
+
+      if Rand.one_in(4) and impression >= Const.IMPRESSION_FELLOW then
+         return "elona.adventurer:guest_train"
+      end
+
+      if Rand.one_in(5) and impression >= Const.IMPRESSION_FELLOW then
+         return "elona.adventurer:guest_friendship"
+      end
+
+      if Rand.one_in(4) and impression >= Const.IMPRESSION_FRIEND then
+         return "elona.adventurer:guest_souvenir"
+      end
+
+      if Rand.one_in(5) and impression >= Const.IMPRESSION_FRIEND then
+         return "elona.adventurer:guest_materials"
+      end
+
+      if Rand.one_in(8) then
+         return "elona.adventurer:guest_favorite_skill"
+      end
+
+      if Rand.one_in(10) then
+         return "elona.adventurer:guest_favorite_stat"
+      end
+
+      if Rand.one_in(3) and impression >= Const.IMPRESSION_AMIABLE then
+         return "elona.adventurer:guest_conversation"
+      end
+
+      if Rand.one_in(3) then
+         return "elona.adventurer:guest_drinking_party"
+      end
+
+      return "elona.guest_citizen"
+   end
+
+   if chara:find_role("elona.guest_trainer") then
+      return "elona.guest_trainer"
+   end
+
+   if chara:find_role("elona.guest_citizen") then
+      return "elona.guest_citizen"
+   end
+
+   if chara:find_role("elona.guest_beggar") then
+      return "elona.guest_beggar"
+   end
+
+   if chara:find_role("elona.guest_punk") then
+      return "elona.guest_punk"
+   end
+
+   if chara:find_role("elona.guest_producer") then
+      return "elona.guest_producer"
+   end
+
+   if chara:find_role("elona.shopkeeper") then
+      return "elona.guest_merchant"
+   end
+
+   return dialog_id
+end
+
 function DeferredEvents.welcome_home(map)
    -- >>>>>>>> shade2/main.hsp:1910 	case evWelcome ...
    local can_welcome = function(chara)
@@ -164,7 +457,16 @@ function DeferredEvents.welcome_home(map)
       Gui.mes_c("event.okaeri", "SkyBlue")
    end
 
-   -- TODO maid guests
+   if save.elona.waiting_guests > 0 then
+      local is_maid = function(chara)
+         return Servant.is_servant(chara)
+            and chara:find_role("elona.maid")
+      end
+      local maid = Chara.iter(map):filter(is_maid):nth(1)
+      if Chara.is_alive(maid) then
+         Effect.try_to_chat(maid, Chara.player(), false, "elona.maid:meet_guest_prompt")
+      end
+   end
    -- <<<<<<<< shade2/main.hsp:1932 	swbreak ..
 end
 

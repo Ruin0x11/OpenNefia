@@ -27,7 +27,7 @@ local function init_save()
    s.turns_until_weather_changes = 0
    s.date_of_last_etherwind = DateTime:new()
    s.next_train_date = 0
-   s.next_guest_trainer_date = 0
+   s.date_of_last_guest_trainer_visit = DateTime:new()
    s.lost_wallets_reported = 0
    s.labor_expenses = 0
    s.unpaid_bill_count = 0

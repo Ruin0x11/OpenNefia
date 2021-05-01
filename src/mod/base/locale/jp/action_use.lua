@@ -6,6 +6,7 @@ return {
           free_chair = "誰でも座っていい",
           guest_chair = "お客用のチェアにする",
           my_chair = "マイチェアにする",
+          ally_chair = "仲間用のチェアにする",
           relax = "くつろぐ"
         },
         free_chair = function(_1)
@@ -18,6 +19,10 @@ end,
 end,
         my_chair = function(_1)
   return ("%sはあなた専用の席になった！")
+  :format(_1)
+end,
+        ally_chair = function(_1)
+  return ("%sは仲間の席になった！")
   :format(_1)
 end,
         needs_place_on_ground = "床に置かないと使えない。",

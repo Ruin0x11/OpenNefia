@@ -54,6 +54,9 @@ return {
                   _100000000 = "500M GP"
                }
             },
+            IItemChair = {
+               action_name = "Chair"
+            },
 
             IItemReadable = {
                prompt = function(_1) return ("How do you want to read %s?"):format(_1) end,
