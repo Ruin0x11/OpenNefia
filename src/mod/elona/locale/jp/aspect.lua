@@ -54,6 +54,10 @@ return {
                   _100000000 = "1億金貨"
                }
             },
+
+            IItemReadable = {
+               prompt = function(_1) return ("どうやって%sを読む？"):format(_1) end,
+            },
             IItemTextbook = {
                action_name = "学習書",
 

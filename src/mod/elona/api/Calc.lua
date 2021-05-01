@@ -637,4 +637,20 @@ function Calc.calc_cargo_limit_upgrade_amount(chara)
    return 10000
 end
 
+function Calc.calc_slave_value(chara)
+   -- >>>>>>>> shade2/calculation.hsp:821 #defcfunc calcSlaveValue int c ...
+   local value = chara:skill_level("elona.stat_strength")
+      * chara:skill_level("elona.stat_constitution")
+      + chara:calc("level") ^ 2
+      + 1000
+
+   value = math.clamp(value, 0, 50000)
+   if chara:calc("splits") or chara:calc("splits2") then
+      value = math.min(value, 10)
+   end
+
+   return value
+   -- <<<<<<<< shade2/calculation.hsp:825 	return value ..
+end
+
 return Calc

@@ -126,7 +126,13 @@ data:add_multi(
 
          type = "boolean",
          default = true
-      }
+      },
+      {
+         _id = "skip_random_event_popups",
+
+         type = "boolean",
+         default = false
+      },
    }
 )
 
@@ -138,7 +144,8 @@ data:add {
       "base.attack_neutral_npcs",
       "base.hide_shop_updates",
       "base.hide_autoidentify",
-      "base.extra_help"
+      "base.extra_help",
+      "base.skip_random_event_popups"
    }
 }
 
@@ -201,12 +208,6 @@ data:add_multi(
 
          type = "boolean",
          default = true
-      },
-      {
-         _id = "skip_random_event_popups",
-
-         type = "boolean",
-         default = false
       },
       {
          _id = "heartbeat",
@@ -319,7 +320,6 @@ data:add {
       "base.positional_audio",
       "base.screen_mode",
       "base.screen_resolution",
-      "base.skip_random_event_popups",
       "base.heartbeat",
       "base.heartbeat_threshold",
       "base.weather_effect",

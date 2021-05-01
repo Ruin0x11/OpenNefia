@@ -134,6 +134,11 @@ return {
                name = "自然鑑定ﾒｯｾｰｼﾞの非表示"
             },
 
+            skip_random_event_popups = {
+               doc = "ランダムイベントのポップアップウィンドウをスキップします。\nスキップされた場合デフォルトの選択肢が選ばれます。\n",
+               name = "イベントの短縮"
+            },
+
             --
             -- Menu: screen
             --
@@ -191,11 +196,6 @@ return {
                doc = "影の描写品質を設定します。\n高画質は描写速度がやや低下しますが、影がより綺麗に表示されます。\n",
                name = "光源の描写",
                yes_no = "config.common.yes_no.kougashitsu_teigashitsu"
-            },
-
-            skip_random_event_popups = {
-               doc = "ランダムイベントのポップアップウィンドウをスキップします。\nスキップされた場合デフォルトの選択肢が選ばれます。\n",
-               name = "イベントの短縮"
             },
 
             heartbeat = {

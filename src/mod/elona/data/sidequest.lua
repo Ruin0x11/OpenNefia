@@ -109,6 +109,18 @@ data:add {
 
 data:add {
    _type = "elona_sys.sidequest",
+   _id = "wife_collector",
+   elona_id = 204,
+   ordering = order(204),
+
+   progress = {
+      [1] = "sidequest._.elona.wife_collector.progress._0",
+      [1000] = "",
+   },
+}
+
+data:add {
+   _type = "elona_sys.sidequest",
    _id = "puppys_cave",
    elona_id = 205,
    ordering = order(205),

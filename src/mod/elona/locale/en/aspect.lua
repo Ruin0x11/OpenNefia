@@ -54,6 +54,10 @@ return {
                   _100000000 = "500M GP"
                }
             },
+
+            IItemReadable = {
+               prompt = function(_1) return ("How do you want to read %s?"):format(_1) end,
+            },
             IItemTextbook = {
                action_name = "Textbook",
 

@@ -25,6 +25,9 @@ local Draw = require("api.Draw")
 local Item = require("api.Item")
 local ElonaPos = require("mod.elona.api.ElonaPos")
 local MapObject = require("api.MapObject")
+local Filters = require("mod.elona.api.Filters")
+local Itemgen = require("mod.elona.api.Itemgen")
+local Save = require("api.Save")
 
 local DeferredEvents = {}
 
@@ -163,6 +166,39 @@ function DeferredEvents.welcome_home(map)
 
    -- TODO maid guests
    -- <<<<<<<< shade2/main.hsp:1932 	swbreak ..
+end
+
+function DeferredEvents.marry(target, origin)
+   -- >>>>>>>> shade2/main.hsp:1712 	case evMarry ...
+   Gui.play_music("elona.wedding")
+
+   local prompt = RandomEventPrompt:new(
+      "random_event._.elona.marriage.title",
+      I18N.get("random_event._.elona.marriage.text", target, origin),
+      "base.bg_re14",
+      {
+         "random_event._.elona.marriage.choices._1"
+      })
+
+   prompt:query()
+
+   local map = target:current_map()
+   for _ = 1, 5 do
+      local filter = {
+         level = Calc.calc_object_level(target:calc("level"), map),
+         quality = Calc.calc_object_quality(Enum.Quality.Good),
+         categories = {Rand.choice(Filters.fsetchest)}
+      }
+
+      Itemgen.create(origin.x, origin.y, filter, map)
+   end
+
+   Item.create("elona.potion_of_cure_corruption", origin.x, origin.y, {}, map)
+   Item.create("elona.platinum_coin", origin.x, origin.y, {amount=Rand.rnd(3)+2}, map)
+   Gui.mes("common.something_is_put_on_the_ground")
+
+   Save.queue_autosave()
+   -- <<<<<<<< shade2/main.hsp:1730 	swbreak ..
 end
 
 function DeferredEvents.nefia_boss(map, boss_uid)
