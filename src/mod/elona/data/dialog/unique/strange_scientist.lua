@@ -1,34 +1,115 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local I18N = require("game.I18N")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
-local table = require("game.table")
+local I18N = require("api.I18N")
+local Chara = require("api.Chara")
+local Item = require("api.Item")
+local Gui = require("api.Gui")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Inventory = require("api.Inventory")
+local Rand = require("api.Rand")
+local ItemMemory = require("mod.elona_sys.api.ItemMemory")
+local Calc = require("mod.elona.api.Calc")
+local Enum = require("api.Enum")
+local Itemgen = require("mod.elona.api.Itemgen")
+local Input = require("api.Input")
 
 local function can_receive_reward()
-   local count = Sidequest.progress("elona.kill_count_of_little_sister")
+   local saved_count = save.elona.little_sisters_saved
+   local gifts_given = save.elona.strange_scientist_gifts_given
 
-   for i=1,Sidequest.progress("elona.gift_count_of_little_sister")+1 do
-      count = count + i
+   local required_saved = save.elona.little_sisters_killed
+   for i=1,gifts_given+1 do
+      required_saved = required_saved + i
    end
 
-    return Sidequest.progress("elona.save_count_of_little_sister") >= count
+   return saved_count >= required_saved
 end
 
 local function turn_over_little_sister()
-    GUI.txt(I18N.get("core.talk.unique.strange_scientist.turn_over.text"))
-    Sidequest.set_progress("elona.save_count_of_little_sister",
-                            Sidequest.progress("elona.save_count_of_little_sister") + 1)
-    GUI.txt(I18N.get("core.talk.unique.strange_scientist.saved_count",
-                     Sidequest.progress("elona.save_count_of_little_sister"),
-                     Sidequest.progress("elona.kill_count_of_little_sister")), "Green")
-    Chara.find("core.little_sister", "Allies"):vanquish()
-    GUI.play_sound("core.complete1")
+   Gui.mes("talk.unique.strange_scientist.turn_over.text")
+   save.elona.little_sisters_saved = save.elona.little_sisters_saved + 1
+
+   Gui.mes_c("talk.unique.strange_scientist.saved_count", "Green",
+             save.elona.little_sisters_saved,
+             save.elona.little_sisters_killed)
+   Chara.find("elona.little_sister", "allies"):vanquish()
+   Gui.play_sound("base.complete1")
 end
 
-return {
-   id = "strange_scientist",
-   root = "core.talk.unique.strange_scientist",
+local function can_pick_reward_even_if_unknown(item_id)
+   if item_id == "elona.magic_fruit" then
+      return Sidequest.is_complete("elona.kamikaze_attack")
+   end
+   if item_id == "elona.hero_cheese" then
+      return Sidequest.is_complete("elona.rare_books")
+   end
+   if item_id == "elona.happy_apple" then
+      return Sidequest.is_complete("elona.pael_and_her_mom")
+   end
+
+   return false
+end
+
+local function pick_reward()
+   -- >>>>>>>> shade2/chat.hsp:2014 				beginTempInv:mode=mode_shop ...
+   local inv = Inventory:new(math.huge)
+
+   Item.create("elona.suitcase", nil, nil, {}, inv)
+   Item.create("elona.wallet", nil, nil, {}, inv)
+
+   local day = save.base.date.day
+
+   local is_known = function(i, proto)
+      if proto._id == "elona.secret_treasure" then
+         return false
+      end
+
+      if ItemMemory.is_known(proto._id) then
+         return true
+      end
+
+      if can_pick_reward_even_if_unknown(proto._id) then
+         return true
+      end
+   end
+
+   local gen_filter = {
+      level = Chara.player():calc("level") * 3 / 2,
+      ownerless = true
+   }
+   local function gen_item(i, item_proto)
+      local seed = day + i - 1
+      Rand.set_seed(seed)
+
+      gen_filter.id = item_proto._id
+      gen_filter.quality = Calc.calc_object_quality(Enum.Quality.Good)
+      return Itemgen.create(nil, nil, gen_filter)
+   end
+
+   local function is_great_quality_or_better(item)
+      return item and item.quality >= Enum.Quality.Great
+   end
+
+   local function put_in_inv(inv_, item)
+      inv_:take_object(item)
+      return inv_
+   end
+
+   inv = data["base.item"]:iter():enumerate()
+      :filter(is_known)
+      :map(gen_item)
+      :filter(is_great_quality_or_better)
+      :foldl(put_in_inv, inv)
+
+   Rand.set_seed()
+
+   local player = Chara.player()
+   Input.query_inventory(player, "elona.inv_take_strange_scientist", { container = inv }, nil)
+   -- <<<<<<<< shade2/chat.hsp:2033 				exitTempInv:mode=mode_main ..
+end
+
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "strange_scientist",
+
    nodes = {
       __start = function()
          local flag = Sidequest.progress("elona.little_sister")
@@ -42,34 +123,32 @@ return {
       end,
 
       first = {
-         text = {
-            {"first"},
-         },
+         text = "talk.unique.strange_scientist.first",
          choices = {
             {"__END__", "ui.more"},
          },
          on_finish = function()
-            Item.create(Chara.player().position, "core.little_ball", 0)
+            local player = Chara.player()
+            local map = player:current_map()
 
-            GUI.txt(I18N.get("core.common.something_is_put_on_the_ground"))
-            GUI.show_journal_update_message()
+            Item.create("elona.little_ball", player.x, player.y, {}, map)
 
+            Gui.mes("common.something_is_put_on_the_ground")
+            Sidequest.update_journal()
             Sidequest.set_progress("elona.little_sister", 1)
          end
       },
 
       dialog = {
-         text = {
-            {"dialog"}
-         },
+         text = "talk.unique.strange_scientist.dialog",
          choices = function()
             local choices = {
-               {"reward_check", "choices.reward"},
-               {"replenish", "choices.replenish"}
+               {"reward_check", "talk.unique.strange_scientist.choices.reward"},
+               {"replenish", "talk.unique.strange_scientist.choices.replenish"}
             }
 
-            if Chara.find("core.little_sister", "Allies") ~= nil then
-               table.insert(choices, {"turn_over", "choices.turn_over"})
+            if Chara.find("elona.little_sister", "allies") ~= nil then
+               table.insert(choices, {"turn_over", "talk.unique.strange_scientist.choices.turn_over"})
             end
             table.insert(choices, {"__END__", "ui.bye"})
 
@@ -86,32 +165,28 @@ return {
       end,
       reward_pick = {
          text = {
-            {"reward.dialog"},
-            Internal.strange_scientist_pick_reward,
-            {"reward.find"},
+            "talk.unique.strange_scientist.reward.dialog",
+            pick_reward,
+            "talk.unique.strange_scientist.reward.find",
          },
       },
       reward_not_enough = {
-         text = {
-            {"reward.not_enough"},
-         },
+         text = "talk.unique.strange_scientist.reward.not_enough",
       },
 
       replenish = {
-         text = {
-            {"replenish"},
-         },
+         text = "talk.unique.strange_scientist.replenish",
          on_finish = function()
-            Item.create(Chara.player().position, "core.little_ball", 0)
-            GUI.txt(I18N.get("core.common.something_is_put_on_the_ground"))
+            local player = Chara.player()
+            local map = player:current_map()
+            Item.create("elona.little_ball", player.x, player.y, {}, map)
+            Gui.mes("common.something_is_put_on_the_ground")
          end
       },
 
       turn_over = {
-         text = {
-            turn_over_little_sister,
-            {"turn_over.dialog"},
-         },
+         on_start = turn_over_little_sister,
+         text = "talk.unique.strange_scientist.turn_over.dialog",
          choices = {
             {"__END__", "ui.more"},
          }

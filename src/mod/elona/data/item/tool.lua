@@ -1070,8 +1070,6 @@ data:add {
 
          Chara.player():recruit_as_ally(target)
          -- <<<<<<<< shade2/action.hsp:47 				rc=tc:gosub *add_ally ..
-
-         map:emit("elona_sys.on_quest_check") -- TODO move to IChara:recruit_as_ally()
       end
       -- <<<<<<<< shade2/action.hsp:31 			txtMore:txt lang(name(tc)+"に見事に命中した！","It hits  ..
 

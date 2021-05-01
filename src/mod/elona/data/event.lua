@@ -40,6 +40,8 @@ local event = {
    { _id = "on_chara_changed_guild" },
    { _id = "on_item_rot" },
    { _id = "on_travel_using_feat" },
+   { _id = "on_populate_dungeon_map" },
+   { _id = "on_chara_ranch_breed" },
 }
 
 data:add_multi("base.event", event)

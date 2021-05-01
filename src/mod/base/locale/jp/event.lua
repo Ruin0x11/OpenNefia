@@ -11,7 +11,7 @@ return {
 end,
     guest_already_left = "ゲストはすでに居なくなっていた。",
     guest_lost_his_way = "ゲストは行方不明になった。",
-    little_sister_slips = "ビッグダディの肩から、リトルシスターが滑り落ちた。「Mr Bubbles！！」",
+    little_sister = "ビッグダディの肩から、リトルシスターが滑り落ちた。「Mr Bubbles！！」",
     my_eyes = function(_1)
   return ("%s「目が！目がー！！」")
   :format(name(_1))

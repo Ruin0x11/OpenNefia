@@ -45,6 +45,9 @@ local function init_save()
    s.ex_help_shown = {}
    s.shortcuts = {}
    s.flag_kamikaze_attack = 0
+   s.little_sisters_killed = 0
+   s.little_sisters_saved = 0
+   s.strange_scientist_gifts_given = 0
 end
 
 Event.register("base.on_init_save", "Init save (elona)", init_save)

@@ -266,6 +266,18 @@ data:add {
 
 data:add {
    _type = "elona_sys.sidequest",
+   _id = "little_sister",
+   elona_id = 223,
+   ordering = order(223),
+
+   progress = {
+      [1] = "sidequest._.elona.little_sister.progress._0",
+      [1000] = "",
+   },
+}
+
+data:add {
+   _type = "elona_sys.sidequest",
    _id = "kaneda_bike",
    elona_id = 224,
    ordering = order(224),

@@ -97,16 +97,18 @@ function MapTileset.get(tile_id, map_or_tileset, no_fallback)
       tileset_id = map_or_tileset:calc("tileset")
    end
 
-   local tileset = data["elona_sys.map_tileset"]:ensure(tileset_id)
-   local match = tileset.tiles[tile_id]
-
    local id
 
-   if match then
-      if type(match) == "string" then
-         id = match
-      elseif type(match) == "function" then
-         id = match()
+   local tileset = data["elona_sys.map_tileset"]:ensure(tileset_id)
+   if tileset.tiles ~= nil then
+      local match = tileset.tiles[tile_id]
+
+      if match then
+         if type(match) == "string" then
+            id = match
+         elseif type(match) == "function" then
+            id = match()
+         end
       end
    end
 

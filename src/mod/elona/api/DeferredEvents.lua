@@ -593,4 +593,14 @@ function DeferredEvents.win()
    -- <<<<<<<< shade2/main.hsp:1652 	flt :chara_create -1,23,cX(pc),cY(pc) ..
 end
 
+function DeferredEvents.little_sister(x, y, map)
+   -- >>>>>>>> shade2/main.hsp:1656 	case evLittleSister ...
+   -- TODO show house
+   local little_sister = Chara.create("elona.little_sister", x, y, {}, map)
+   if little_sister then
+      Gui.mes_c("event.little_sister", "SkyBlue", little_sister)
+   end
+   -- <<<<<<<< shade2/main.hsp:1659 	swbreak ..
+end
+
 return DeferredEvents

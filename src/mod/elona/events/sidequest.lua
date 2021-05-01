@@ -80,3 +80,15 @@ local function check_sidequest_chara_killed(chara)
 end
 Event.register("base.on_chara_killed", "Remove Poppy/sidequest chara from party if killed", check_sidequest_chara_killed)
 Event.register("base.on_chara_place_failure", "Remove Poppy/sidequest chara from party on place failure", check_sidequest_chara_killed)
+
+local function spawn_big_daddy(map)
+   if map.is_temporary then
+      return
+   end
+
+   local kill_count = save.elona.little_sisters_killed
+   if Rand.one_in(15 + kill_count * 2) then
+      Chara.create("elona.big_daddy", nil, nil, {}, map)
+   end
+end
+Event.register("elona.on_populate_dungeon_map", "Spawn Big Daddy based on Little Sister kill count", spawn_big_daddy)

@@ -8772,6 +8772,24 @@ local chara = {
       },
       effect_immunities = { "elona.fear" },
       tone = "elona.big_daddy",
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Spawn Little Sister",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+               -- >>>>>>>> shade2/chara_func.hsp:1715 			if cId(tc)=318:evAdd evLittleSister,cX(tc),cY(t ...
+               local x = self.x
+               local y = self.y
+               local map = self:current_map()
+               DeferredEvent.add(function() DeferredEvents.little_sister(x, y, map) end)
+               -- <<<<<<<< shade2/chara_func.hsp:1715 			if cId(tc)=318:evAdd evLittleSister,cX(tc),cY(t ..
+            end
+         }
+      }
    },
    {
       _id = "little_sister",
@@ -8791,6 +8809,32 @@ local chara = {
       ai_distance = 5,
       ai_move_chance = 100,
       tone = "elona.little_sister",
+
+      events = {
+         {
+            id = "base.on_chara_killed",
+            name = "Increment Little Sister kill count",
+
+            callback = function(self, params)
+               -- TODO show house
+               -- TODO void
+               -- >>>>>>>> shade2/chara_func.hsp:1716 			if cId(tc)=319:gSisterKilled++:txtEf coRed : tx ...
+               save.elona.little_sisters_killed = save.elona.little_sisters_killed + 1
+               Gui.mes_c("talk.unique.strange_scientist.saved_count", "Red", save.elona.little_sisters_saved, save.elona.little_sisters_killed)
+               -- <<<<<<<< shade2/chara_func.hsp:1716 			if cId(tc)=319:gSisterKilled++:txtEf coRed : tx ..
+            end
+         },
+         {
+            id = "elona.on_chara_ranch_breed",
+            name = "Set bred character to younger sister",
+
+            callback = function(self, params, result)
+               -- >>>>>>>> shade2/map_user.hsp:781 	if cId(worker)=319:dbId=176 ...
+               result.filter.id = "elona.younger_sister"
+               -- <<<<<<<< shade2/map_user.hsp:781 	if cId(worker)=319:dbId=176 ..
+            end
+         }
+      }
    },
    {
       _id = "strange_scientist",
