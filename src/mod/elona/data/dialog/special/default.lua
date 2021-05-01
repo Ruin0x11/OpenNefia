@@ -28,11 +28,7 @@ local function get_random_text(t)
          :any(function(role) return role.inventory_id == inv_id end)
    end
 
-   -- TODO move role-related talk
-   if speaker:find_role("elona.maid") and save.elona.waiting_guests > 0 then
-      id = "talk.random.maid"
-      params.ref = I18N.get("talk.random.params.maid", save.elona.waiting_guests)
-   elseif speaker:calc("interest") <= 0 then
+   if speaker:calc("interest") <= 0 then
       id = "talk.random.bored"
    elseif speaker:is_in_player_party() then
       id = "talk.random.ally_default"

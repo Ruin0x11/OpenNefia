@@ -153,6 +153,11 @@ return {
                }
             },
 
+            default_return_to_title = {
+               name = "「タイトルに戻る」のデフォルト",
+               yes_no = "config.common.yes_no.shiyou_suru_shinai"
+            },
+
             --
             -- Menu: screen
             --
@@ -310,9 +315,18 @@ return {
                name = "背景エフェクトウェイト",
             },
 
+            update_unfocused_ui_layers = {
+               name = "背景UIの更新",
+            },
+
             scroll_when_run = {
                doc = "走っているときもスクロールアニメーションを表示します。\nこれを切ることで若干の高速化が望めます。\n",
                name = "走り時スクロール"
+            },
+
+            skip_sleep_animation = {
+               doc = "眠るときのアニメーションをスキップします。",
+               name = "眠りの短縮"
             },
 
             --

@@ -141,6 +141,11 @@ return {
                }
             },
 
+            default_return_to_title = {
+               doc = "If enabled, sets 'Return to Title' as the default option for the quit menu.",
+               name = "Default Return to Title",
+            },
+
             --
             -- Menu: screen
             --
@@ -303,9 +308,22 @@ return {
                name = "Background Effect Wait",
             },
 
+            update_unfocused_ui_layers = {
+               doc = [[
+Updates things like the UI/weather/animations in the background if another window is active.
+NOTE: This is an experimental feature which may lead to errors or lockups.
+]],
+               name = "Redraw Background Layers",
+            },
+
             scroll_when_run = {
                doc = "Show scrolling animations when running.\nTurning this off can speed up running somewhat.\n",
                name = "Scroll When Run"
+            },
+
+            skip_sleep_animation = {
+               doc = "Skip playing the fading animation when sleeping.",
+               name = "Skip Sleep Animation"
             },
 
             --

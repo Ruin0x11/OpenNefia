@@ -50,18 +50,6 @@ data:add_multi(
          default = false
       },
       {
-         _id = "default_return_to_title",
-
-         type = "boolean",
-         default = false
-      },
-      {
-         _id = "skip_sleep_animation",
-
-         type = "boolean",
-         default = false
-      },
-      {
          _id = "_save_id", -- TODO move to private state
 
          type = "string",
@@ -134,6 +122,12 @@ data:add_multi(
          choices = { "always", "sometimes", "rarely", "almost_never" },
          default = "always"
       },
+      {
+         _id = "default_return_to_title",
+
+         type = "boolean",
+         default = false
+      },
    }
 )
 
@@ -147,7 +141,8 @@ data:add {
       "base.hide_autoidentify",
       "base.extra_help",
       "base.skip_random_event_popups",
-      "base.autosave"
+      "base.autosave",
+      "base.default_return_to_title"
    }
 }
 
@@ -443,12 +438,6 @@ data:add_multi(
          default = "always_wait",
       },
       {
-         _id = "update_unfocused_ui_layers",
-
-         type = "boolean",
-         default = false
-      },
-      {
          _id = "background_effect_wait",
 
          type = "integer",
@@ -457,10 +446,22 @@ data:add_multi(
          max_value = 100,
       },
       {
+         _id = "update_unfocused_ui_layers",
+
+         type = "boolean",
+         default = false
+      },
+      {
          _id = "scroll_when_run",
 
          type = "boolean",
          default = true
+      },
+      {
+         _id = "skip_sleep_animation",
+
+         type = "boolean",
+         default = false
       }
    }
 )
@@ -478,10 +479,12 @@ data:add {
       "base.always_center",
       "base.alert_wait",
       "base.screen_refresh",
-      "base.background_effect_wait",
       "base.anime_wait",
       "base.anime_wait_type",
-      "base.scroll_when_run"
+      "base.background_effect_wait",
+      "base.update_unfocused_ui_layers",
+      "base.scroll_when_run",
+      "base.skip_sleep_animation"
    }
 }
 
