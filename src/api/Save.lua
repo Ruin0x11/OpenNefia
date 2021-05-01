@@ -1,4 +1,5 @@
 --- @module Save
+local Enum = require("api.Enum")
 
 local Chara = require("api.Chara")
 local Event = require("api.Event")
@@ -132,9 +133,25 @@ function Save.load_game(save_id)
    Event.trigger("base.on_game_initialize")
 end
 
-function Save.queue_autosave()
+local autosave = Enum.new("autosave",
+                          {
+                             always = 0,
+                             sometimes = 1,
+                             rarely = 2,
+                             almost_never = 3
+                          })
+
+-- Queues an autosave to run when the player regains control, based on the
+-- frequency of autosaving configured.
+--
+-- As an example, if "sometimes" is passed as a `frequency`, then the autosave
+-- will run only if the `autosave` option is set to "always" or "sometimes".
+function Save.queue_autosave(frequency)
+   local val = autosave:try_get(frequency) or autosave.always
+   local configured = autosave:ensure_get(config.base.autosave)
+
    -- TODO show house
-   if config.base.autosave then
+   if val >= configured then
       -- More than one place could call `Save.queue_autosave()` before the
       -- player's turn is reached, but we want to make sure we only save one
       -- time. The save will actually get executed right before control is

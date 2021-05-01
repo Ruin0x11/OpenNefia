@@ -130,6 +130,17 @@ return {
                name = "Skip Random Events"
             },
 
+            autosave = {
+               doc = "Frequency of autosaving.",
+               name = "Autosave",
+               variants = {
+                  always = "Always",
+                  sometimes = "Sometimes",
+                  rarely = "Rarely",
+                  almost_never = "Almost never"
+               }
+            },
+
             --
             -- Menu: screen
             --

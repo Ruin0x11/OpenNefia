@@ -139,6 +139,20 @@ return {
                name = "イベントの短縮"
             },
 
+            autosave = {
+               doc = [[
+特定の行動/イベントの後に行われる自動的な*保存*を制限します。
+[ほぼなし]にするとほぼ全ての*保存*を行いません。
+]],
+               name = "オートセーブ頻度",
+               variants = {
+                  always = "いつも",
+                  sometimes = "大抵",
+                  rarely = "希に",
+                  almost_never = "ほぼなし"
+               }
+            },
+
             --
             -- Menu: screen
             --

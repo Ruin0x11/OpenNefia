@@ -44,12 +44,6 @@ data:add_multi(
          default = "kochi-gothic-subst.ttf"
       },
       {
-         _id = "autosave",
-
-         type = "boolean",
-         default = true
-      },
-      {
          _id = "quickstart_on_startup",
 
          type = "boolean",
@@ -133,6 +127,13 @@ data:add_multi(
          type = "boolean",
          default = false
       },
+      {
+         _id = "autosave",
+
+         type = "enum",
+         choices = { "always", "sometimes", "rarely", "almost_never" },
+         default = "always"
+      },
    }
 )
 
@@ -145,7 +146,8 @@ data:add {
       "base.hide_shop_updates",
       "base.hide_autoidentify",
       "base.extra_help",
-      "base.skip_random_event_popups"
+      "base.skip_random_event_popups",
+      "base.autosave"
    }
 }
 
