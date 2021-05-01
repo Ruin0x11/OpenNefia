@@ -187,6 +187,18 @@ data:add {
 
 data:add {
    _type = "elona_sys.sidequest",
+   _id = "rare_books",
+   elona_id = 211,
+   ordering = order(211),
+
+   progress = {
+      [1] = "sidequest._.elona.rare_books.progress._0",
+      [1000] = "",
+   },
+}
+
+data:add {
+   _type = "elona_sys.sidequest",
    _id = "pyramid_trial",
    elona_id = 212,
    ordering = order(212),
