@@ -311,7 +311,7 @@ return {
             update_unfocused_ui_layers = {
                doc = [[
 Updates things like the UI/weather/animations in the background if another window is active.
-NOTE: This is an experimental feature which may lead to errors or lockups.
+WARNING: This is an experimental feature which may lead to errors or lockups.
 ]],
                name = "Redraw Background Layers",
             },

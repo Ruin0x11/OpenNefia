@@ -112,7 +112,7 @@ local function cleanup_globals()
    Env.clear_ui_results()
    env.unload_transient_paths()
 
-   config_store.proxy().base.autosave = false
+   config_store.proxy().base.autosave = "almost_never"
 end
 
 local function print_result(result)
