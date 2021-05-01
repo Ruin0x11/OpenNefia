@@ -22,12 +22,12 @@ data:add {
          return "elona_sys.ignores_you:__start"
       end,
       quest_completed = {
-         text = "talk.unique.rillian.complete",
+         text = "talk.unique.rilian.complete",
       },
       quest_ask = {
-         text = "talk.unique.rillian.quest.dialog",
+         text = "talk.unique.rilian.quest.dialog",
          choices = {
-            {"quest_yes", "talk.unique.rillian.quest.choices.do_it"},
+            {"quest_yes", "talk.unique.rilian.quest.choices.do_it"},
             {"quest_no", "ui.bye"}
          },
          default_choice = "quest_no"
@@ -36,36 +36,39 @@ data:add {
          on_start = function()
             Sidequest.update_journal()
          end,
-         text = "talk.unique.rillian.quest.do_it",
+         text = "talk.unique.rilian.quest.do_it",
          on_finish = function()
             Sidequest.set_progress("elona.puppys_cave", 1)
          end
       },
       quest_no = {
-         text = "talk.unique.rillian.quest.bye",
+         text = "talk.unique.rilian.quest.bye",
       },
       quest_check = function()
-         if Chara.find("elona.poppy", "allies") == nil then
+         local map = Chara.player():current_map()
+         if Chara.find("elona.poppy", "allies", map) == nil then
             return "quest_waiting"
          end
 
          return "quest_finish"
       end,
       quest_waiting = {
-         text = "talk.unique.rillian.quest.waiting"
+         text = "talk.unique.rilian.quest.waiting"
       },
       quest_finish = {
-         text = "talk.unique.rillian.quest.end",
+         text = "talk.unique.rilian.quest.end",
          on_finish = function()
-            Item.create("elona.cooler_box", Chara.player().x, Chara.player().y)
-            Item.create("elona.gold_piece", Chara.player().x, Chara.player().y, {amount=2500})
-            Item.create("elona.platinum_coin", Chara.player().x, Chara.player().y, {amount=2})
+            local player = Chara.player()
+            local map = player:current_map()
+            Item.create("elona.cooler_box", player.x, player.y, {}, map)
+            Item.create("elona.gold_piece", player.x, player.y, {amount=2500}, map)
+            Item.create("elona.platinum_coin", player.x, player.y, {amount=2}, map)
 
             common.quest_completed()
 
             Sidequest.set_progress("elona.puppys_cave", 1000)
 
-            Chara.find("elona.poppy", "allies"):vanquish()
+            Chara.find("elona.poppy", "allies", map):vanquish()
             local poppy = Chara.create("elona.poppy", 31, 4)
             poppy:add_role("elona.special")
          end

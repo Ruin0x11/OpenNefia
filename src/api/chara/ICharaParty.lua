@@ -189,10 +189,12 @@ function ICharaParty:leave_party()
 
    local party_uid = self:get_party()
    if party_uid == nil then
-      return
+      return false
    end
 
    save.base.parties:remove_member(party_uid, self)
+
+   return true
 end
 
 return ICharaParty

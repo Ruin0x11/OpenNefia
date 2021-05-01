@@ -84,6 +84,11 @@ do
       chara = Chara.create("elona.bard", 42, 24, nil, map)
       chara:add_role("elona.special")
 
+      if Sidequest.progress("elona.puppys_cave") == 1000 then
+         chara = Chara.create("elona.poppy", 31, 4, nil, map)
+         chara:add_role("elona.special")
+      end
+
       chara = Chara.create("elona.shopkeeper", 47, 9, nil, map)
       chara:add_role("elona.shopkeeper", { inventory_id = "elona.fisher" })
       chara.shop_rank = 5

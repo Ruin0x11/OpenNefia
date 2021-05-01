@@ -7,6 +7,7 @@ local Map = require("api.Map")
 local Gui = require("api.Gui")
 local FieldMap = require("mod.elona.api.FieldMap")
 local Input = require("api.Input")
+local ICharaElonaFlags = require("mod.elona.api.aspect.chara.ICharaElonaFlags")
 
 local function change_chip_lily(map)
    -- >>>>>>>> shade2/map.hsp:2019 	if areaId(gArea)=areaNoyel{ ...
@@ -62,3 +63,20 @@ local function proc_prevent_enter_pyramid(feat, params, result)
    -- <<<<<<<< shade2/map.hsp:160 					if areaId(gArea)=areaPyramid    : if sqPyrami ..
 end
 Event.register("elona.on_travel_using_feat", "Prevent entering pyramid if sidequest not accepted", proc_prevent_enter_pyramid)
+
+local function check_sidequest_chara_killed(chara)
+   -- >>>>>>>> shade2/chara_func.hsp:1680 			if cBit(cGuardTemp,tc)=true{ ...
+   if chara:is_player() or not chara:is_in_player_party() then
+      return
+   end
+
+   local aspect = chara:get_aspect_or_default(ICharaElonaFlags)
+   if aspect.is_being_escorted_sidequest then
+      assert(chara:leave_party())
+      chara.state = "Dead"
+      chara:remove_ownership()
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:1682 				} ..
+end
+Event.register("base.on_chara_killed", "Remove Poppy/sidequest chara from party if killed", check_sidequest_chara_killed)
+Event.register("base.on_chara_place_failure", "Remove Poppy/sidequest chara from party on place failure", check_sidequest_chara_killed)

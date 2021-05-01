@@ -14,11 +14,11 @@ data:add {
             {"talk.unique.orphe.dialog._0", args = function()
                 return {I18N.get("ui.sex." .. Chara.player():calc("gender"))}
             end},
-            {"talk.unique.orphe.dialog._1"},
-            {"talk.unique.orphe.dialog._2"},
-            {"talk.unique.orphe.dialog._3"},
-            {"talk.unique.orphe.dialog._4"},
-            {"talk.unique.orphe.dialog._5"},
+            "talk.unique.orphe.dialog._1",
+            "talk.unique.orphe.dialog._2",
+            "talk.unique.orphe.dialog._3",
+            "talk.unique.orphe.dialog._4",
+            "talk.unique.orphe.dialog._5",
          }
       }
    }

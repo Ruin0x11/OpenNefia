@@ -9,6 +9,7 @@ local Input = require("api.Input")
 local Map = require("api.Map")
 local ElonaQuest = require("mod.elona.api.ElonaQuest")
 local Enum = require("api.Enum")
+local ICharaElonaFlags = require("mod.elona.api.aspect.chara.ICharaElonaFlags")
 
 local function set_return_restriction(map)
    if map:has_type("quest") then
@@ -16,6 +17,10 @@ local function set_return_restriction(map)
    end
 end
 Event.register("base.on_map_entered", "Set return restriction", set_return_restriction)
+
+local function is_being_escorted_in_sidequest(chara)
+   return chara:calc_aspect_base(ICharaElonaFlags, "is_being_escorted_sidequest")
+end
 
 local function proc_return(chara)
    if not chara:is_player() then
@@ -38,10 +43,14 @@ local function proc_return(chara)
       end
 
       if s.turns_until_cast_return <= 0 and not DeferredEvent.is_pending() then
+         -- Errand quests with escorted characters will allow you to cast Return
+         -- and will make the player commit a crime as a result.
+         --
+         -- Characters temporarily added to your party as part of a sub quest
+         -- (Poppy) will prevent casting Return instead.
          local has_escort = Chara.iter_allies()
             :filter(Chara.is_alive)
-            :extract("is_being_escorted")
-            :any(fun.op.truth)
+            :any(is_being_escorted_in_sidequest)
 
          if has_escort then
             Gui.mes("magic.return.prevented.normal")
