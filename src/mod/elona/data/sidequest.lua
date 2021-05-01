@@ -134,6 +134,19 @@ data:add {
 
 data:add {
    _type = "elona_sys.sidequest",
+   _id = "cat_house",
+   elona_id = 206,
+   ordering = order(206),
+
+   progress = {
+      [1] = "sidequest._.elona.cat_house.progress._0",
+      [2] = "sidequest._.elona.cat_house.progress._1",
+      [1000] = "",
+   },
+}
+
+data:add {
+   _type = "elona_sys.sidequest",
    _id = "defense_line",
    elona_id = 207,
    ordering = order(207),

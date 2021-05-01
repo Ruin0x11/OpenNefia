@@ -406,3 +406,54 @@ function doom_ground.on_map_pass_turn(map)
 end
 
 data:add(doom_ground)
+
+do
+   local cat_mansion = {
+      _type = "base.map_archetype",
+      _id = "cat_mansion",
+
+      on_generate_map = util.generate_122("sqcat"),
+      starting_pos = MapEntrance.stairs_up,
+
+      on_map_entered = function(map, params)
+         util.connect_stair_at_to_prev_map(map, 3, 7, params.previous_map, params.previous_x, params.previous_y)
+      end,
+
+      properties = {
+         music = "elona.puti",
+         types = { "dungeon" },
+         level = 3,
+         is_indoor = true,
+         is_temporary = false,
+         is_not_renewable = true,
+         max_crowd_density = 0,
+         tileset = "elona.dungeon",
+         material_spot_type = "elona.dungeon"
+      },
+
+      events = {
+         {
+            id = "elona_sys.on_quest_check",
+            name = "Sidequest: Cat House",
+
+            callback = function(map)
+               if Sidequest.progress("elona.cat_house") < 2 then
+                  if Sidequest.no_targets_remaining(map) then
+                     Sidequest.set_progress("elona.cat_house", 2)
+                     Sidequest.update_journal()
+                  end
+               end
+            end
+         },
+         {
+            id = "base.on_map_generated_from_archetype",
+            name = "Sidequest: Cat House",
+
+            callback = function(map)
+               Sidequest.set_quest_targets(map)
+            end
+         }
+      }
+   }
+   data:add(cat_mansion)
+end

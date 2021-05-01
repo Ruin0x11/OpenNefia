@@ -1,13 +1,13 @@
-local Chara = require("game.Chara")
-local Map = require("game.Map")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
+local Chara = require("api.Chara")
+local Item = require("api.Item")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local common = require("mod.elona.data.dialog.common")
+local ItemMaterial = require("mod.elona.api.ItemMaterial")
 
-local common = require_relative("data/dialog/common")
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "tam",
 
-return {
-   id = "tam",
-   root = "core.talk.unique.tam",
    nodes = {
       __start = function()
          local flag = Sidequest.progress("elona.cat_house")
@@ -24,51 +24,45 @@ return {
          return "elona_sys.ignores_you:__start"
       end,
       quest_completed = {
-         text = {
-            {"complete"},
-         },
+         text = "talk.unique.tam.complete",
       },
       quest_ask = {
-         text = {
-            {"quest.dialog"},
-         },
+         text = "talk.unique.tam.quest.dialog",
          choices = {
-            {"quest_yes", "quest.choices.yes"},
-            {"quest_no", "quest.choices.no"}
+            {"quest_yes", "talk.unique.tam.quest.choices.yes"},
+            {"quest_no", "talk.unique.tam.quest.choices.no"}
          },
          default_choice = "quest_no"
       },
       quest_yes = {
-         text = {
-            {"quest.yes"},
-         },
-         on_finish = function()
+         on_start = function()
+            Sidequest.update_journal()
+         end,
+         text = "talk.unique.tam.quest.yes",
+         on_finish = function(t)
             Sidequest.set_progress("elona.cat_house", 1)
-            Map.set_feat(23, 22, 231, 11, 3)
+            common.create_downstairs(23, 22, 3, t.speaker:current_map())
          end
       },
       quest_no = {
-         text = {
-            {"quest.no"},
-         },
+         text = "talk.unique.tam.quest.no",
       },
       quest_waiting = {
-         text = {
-            {"quest.waiting"}
-         }
+         text = "talk.unique.tam.quest.waiting"
       },
       quest_finish = {
-         text = {
-            function()
-               local item = Item.create(Chara.player().position, "core.material_kit", 0)
-               item:change_material("core.dragon_scale")
-               Item.create(Chara.player().position, "core.gold_piece", 25500)
-               Item.create(Chara.player().position, "core.platinum_coin", 4)
+         on_start = function()
+            local player = Chara.player()
+            local map = player:current_map()
 
-               common.quest_completed()
-            end,
-            {"quest.end"},
-         },
+            local material_kit = Item.create("elona.material_kit", player.x, player.y, {}, map)
+            ItemMaterial.change_item_material(material_kit, "elona.dragon_scale")
+            Item.create("elona.gold_piece", player.x, player.y, {amount=25500}, map)
+            Item.create("elona.platinum_coin", player.x, player.y, {amount=4}, map)
+
+            common.quest_completed()
+         end,
+         text = "talk.unique.tam.quest.end",
          on_finish = function()
             Sidequest.set_progress("elona.cat_house", 1000)
          end
