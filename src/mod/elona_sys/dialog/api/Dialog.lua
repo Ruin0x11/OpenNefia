@@ -1,5 +1,6 @@
 --- @module Dialog
 local Enum = require("api.Enum")
+local MapObject = require("api.MapObject")
 
 local Chara = require("api.Chara")
 local Event = require("api.Event")
@@ -375,12 +376,16 @@ local function step_dialog(node_data, talk, state, prev_node_id)
 
                -- Change speaking character.
                if text.speaker ~= nil then
-                  local found = Chara.find(text.speaker, "others")
-                  if found == nil then
-                     found = Chara.find(text.speaker, "allies")
-                  end
-                  if found ~= nil then
-                     talk.speaker = found
+                  if MapObject.is_map_object(text.speaker, "base.chara") then
+                     talk.speaker = text.speaker
+                  else
+                     local found = Chara.find(text.speaker, "others")
+                     if found == nil then
+                        found = Chara.find(text.speaker, "allies")
+                     end
+                     if found ~= nil then
+                        talk.speaker = found
+                     end
                   end
                end
 
