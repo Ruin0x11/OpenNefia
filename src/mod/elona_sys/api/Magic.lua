@@ -396,6 +396,8 @@ function Magic.get_dice(magic_id, chara, power)
       dice.element_power = math.floor(dice.element_power or 0)
    end
 
+   dice = Event.trigger("elona_sys.calc_magic_dice", {magic_id=magic_id,chara=chara,power=power}, dice) or dice
+
    return dice
 end
 
