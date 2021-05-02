@@ -1619,7 +1619,7 @@ data:add {
       local object_level = self.level
       self.params.ancient_book_difficulty = Rand.rnd(Rand.rnd(math.floor(math.clamp(object_level / 2, 0, MAX_LEVEL))) + 1)
       self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
-      self.has_charges = true
+      self.has_charge = true
       self.can_be_recharged = false
       -- <<<<<<<< shade2/item.hsp:675 		} ..
    end,

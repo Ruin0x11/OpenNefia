@@ -89,6 +89,13 @@ return {
                action_name = "井戸"
             },
 
+            IItemZappable = {
+               prompt = function(_1) return ("どうやって%sを振る？"):format(_1) end,
+            },
+            IItemRod = {
+               action_name = "杖"
+            },
+
             IFeatActivatable = {
                prompt = function(_1) return ("どうやって%sを使う？"):format(_1) end,
             },

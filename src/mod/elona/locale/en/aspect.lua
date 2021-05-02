@@ -89,6 +89,13 @@ return {
                action_name = "Well"
             },
 
+            IItemZappable = {
+               prompt = function(_1) return ("How do you want to zap %s?"):format(_1) end,
+            },
+            IItemRod = {
+               action_name = "Rod"
+            },
+
             IFeatActivatable = {
                prompt = function(_1) return ("How do you want to use %s?"):format(_1) end,
             },

@@ -42,6 +42,18 @@ local function fairy_trait(chara)
 end
 Event.register("base.on_refresh", "Fairy trait force unequip", fairy_trait, { priority = 30000 })
 
+local function trait_ether_staff(item, params, result)
+   -- >>>>>>>> shade2/action.hsp:180 		if trait(traitEtherStaff)!0:if iType(ci)=fltStaf ...
+   local chara = params.chara
+   if not chara:has_trait("elona.ether_staff") then
+      return
+   end
+
+
+   -- <<<<<<<< shade2/action.hsp:189 			} ..
+end
+Event.register("base.on_get_item", "Proc ether disease staff trait", trait_ether_staff, { priority = 50000 })
+
 local ETHER_POISON_EXCLUDE_ITEMS = table.set {
    "elona.poison",
    "elona.potion_of_cure_corruption"
@@ -51,7 +63,7 @@ local function trait_ether_poison(item, params, result)
    -- >>>>>>>> shade2/action.hsp:190 		if trait(traitEtherPoison)!0:if iType(ci)=fltPot ...
    local chara = params.chara
    if not chara:has_trait("elona.ether_poison") then
-      return false
+      return
    end
 
    if item:has_category("elona.drink") and not ETHER_POISON_EXCLUDE_ITEMS[item._id] then
@@ -63,4 +75,4 @@ local function trait_ether_poison(item, params, result)
    end
    -- <<<<<<<< shade2/action.hsp:193 			} ..
 end
-Event.register("base.on_get_item", "Proc ether disease poison trait", trait_ether_poison, { priority = 50000 })
+Event.register("base.on_get_item", "Proc ether disease poison trait", trait_ether_poison, { priority = 60000 })
