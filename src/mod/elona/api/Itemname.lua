@@ -25,8 +25,8 @@ local IItemDice = require("mod.elona.api.aspect.IItemDice")
 local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
 local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
 local IItemAmmo = require("mod.elona.api.aspect.IItemAmmo")
-local IItemMusicDisc = require("mod.elona.api.aspect.IItemMusicDisc")
 local IItemLocalizableExtra = require("mod.elona.api.aspect.IItemLocalizableExtra")
+local IChargeable = require("mod.elona.api.aspect.IChargeable")
 
 local Itemname = {}
 
@@ -65,8 +65,19 @@ local function item_known_info(item)
    if bonus ~= 0 then
       s = s .. number_string(bonus)
    end
-   if item.has_charge and item.charges then
-      s = s .. I18N.get("item.charges", item.charges)
+
+   -- TODO remove once everything is ported to aspects
+   local charges
+   if item.has_charge then
+      charges = item.charges or 0
+   else
+      local aspect = item:iter_aspects(IChargeable):nth(1)
+      if aspect then
+         charges = aspect.charges
+      end
+   end
+   if charges then
+      s = s .. I18N.get("item.charges", charges)
    end
 
    local equip = item:get_aspect(IItemEquipment)

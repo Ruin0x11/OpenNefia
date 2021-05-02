@@ -2,6 +2,7 @@ local Item = require("api.Item")
 local Gui = require("api.Gui")
 local Log = require("api.Log")
 local ElonaMagic = require("mod.elona.api.ElonaMagic")
+local IChargeable = require("mod.elona.api.aspect.IChargeable")
 
 local Shortcut = {}
 
@@ -78,7 +79,13 @@ local function shortcut_item(player, sc)
          end
       end
 
-      if (item.proto.charge_level or 0) > 0 and item.charges <= 0 then
+      local chargeables = item:iter_aspects(IChargeable):to_list()
+      if #chargeables > 0 then
+         for _, chargeable in ipairs(chargeables) do
+            if chargeable:is_charged(item) then
+               return true
+            end
+         end
          return false
       end
 

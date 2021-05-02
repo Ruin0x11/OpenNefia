@@ -4,7 +4,8 @@ local IChargeable = require("mod.elona.api.aspect.IChargeable")
 
 local IItemRod = class.interface("IItemRod",
                                   {
-                                     effects = "table"
+                                     effect_id = "string",
+                                     effect_power = "number"
                                   },
                                   { IAspect, IChargeable, IItemZappable })
 
@@ -15,8 +16,10 @@ function IItemRod:localize_action()
 end
 
 function IItemRod:on_zap(item, params)
-
-   return "turn_end"
+   local effect_id = self:calc(item, "effect_id")
+   local effect_power = self:calc(item, "effect_power")
+   local ElonaMagic = require("mod.elona.api.ElonaMagic")
+   return ElonaMagic.zap_rod(item, effect_id, effect_power, params)
 end
 
 return IItemRod

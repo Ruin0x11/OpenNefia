@@ -4,20 +4,15 @@ local Chara = require("api.Chara")
 local Item = require("api.Item")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
-local Event = require("api.Event")
 local Effect = require("mod.elona.api.Effect")
-local IItem = require("api.item.IItem")
 local Skill = require("mod.elona_sys.api.Skill")
 local Input = require("api.Input")
 local Anim = require("mod.elona_sys.api.Anim")
 local Action = require("api.Action")
 local Magic = require("mod.elona_sys.api.Magic")
 local Enum = require("api.Enum")
-local SkillCheck = require("mod.elona.api.SkillCheck")
-local Log = require("api.Log")
-local Hunger = require("mod.elona.api.Hunger")
-local Const = require("api.Const")
 local I18N = require("api.I18N")
+local IItemRod = require("mod.elona.api.aspect.IItemRod")
 
 local ElonaMagic = {}
 
@@ -128,7 +123,8 @@ function ElonaMagic.zap_rod(item, magic_id, power, params)
    local skill_data = Magic.skills_for_magic(magic_id)[1] or nil
    local chara = params.chara or item:get_owning_chara()
 
-   if item.charges <= 0 then
+   local aspect = item:get_aspect(IItemRod)
+   if aspect and not aspect:is_charged(item) then
       Gui.mes("action.zap.execute", item:build_name(1))
       Gui.mes("common.nothing_happens")
       return "turn_end"
@@ -177,7 +173,10 @@ function ElonaMagic.zap_rod(item, magic_id, power, params)
       end
 
       local sep = item:separate()
-      sep.charges = sep.charges - 1
+      local sep_aspect = sep:get_aspect(IItemRod)
+      if sep_aspect then
+         sep_aspect.charges = sep_aspect.charges - 1
+      end
 
       return "turn_end"
    end
@@ -232,7 +231,10 @@ function ElonaMagic.zap_rod(item, magic_id, power, params)
       item:refresh_cell_on_map()
 
       local sep = item:separate()
-      sep.charges = sep.charges - 1
+      local sep_aspect = sep:get_aspect(IItemRod)
+      if sep_aspect then
+         sep_aspect.charges = sep_aspect.charges - 1
+      end
    end
 
    return "turn_end"

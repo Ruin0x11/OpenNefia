@@ -1064,7 +1064,8 @@ data:add {
       local source = params.source
       local map = params.source:current_map()
 
-      if not source:is_player() then
+      if true or not source:is_player() then
+         Gui.mes_c("TODO draw charge", "Yellow")
          Gui.mes("common.nothing_happens")
          return true, { obvious = false }
       end
@@ -1176,6 +1177,11 @@ data:add {
 
    cast = function(self, params)
       local source = params.source
+
+      if true then
+         Gui.mes_c("TODO fill charge", "Yellow")
+         return true
+      end
 
       if not source:is_player() then
          Gui.mes("common.nothing_happens")

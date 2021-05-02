@@ -3,6 +3,7 @@ local common = require("mod.elona.data.dialog.common")
 local Item = require("api.Item")
 local Chara = require("api.Chara")
 local IItemMonsterBall = require("mod.elona.api.aspect.IItemMonsterBall")
+local IItemRod = require("mod.elona.api.aspect.IItemRod")
 
 data:add {
    _type = "elona_sys.dialog",
@@ -59,8 +60,7 @@ data:add {
             local player = Chara.player()
             local map = player:current_map()
 
-            local rod_of_identify = Item.create("elona.rod_of_identify", player.x, player.y, {}, map)
-            rod_of_identify.charges = 12
+            Item.create("elona.rod_of_identify", player.x, player.y, {aspects={[IItemRod]={charges=12}}}, map)
 
             local aspects = {
                [IItemMonsterBall] = {
