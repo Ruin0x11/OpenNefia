@@ -6,6 +6,13 @@ return {
                individual = "個別設定",
                default = "吹き出しデフォルト設定"
             },
+            hint = {
+               action = {
+                  reset = "設定初期化",
+                  individual_settings = "吹き出し個別設定",
+                  default_settings = "吹き出しデフォルト設定"
+               }
+            },
             options = {
                talk_type = {
                   title = "会話タイプ",
@@ -66,10 +73,6 @@ return {
                      strikethrough = "S",
                   }
                },
-            },
-            key_actions = {
-               individual_config = "吹き出し個別設定",
-               default_config = "吹き出しデフォルト設定"
             },
             topic = {
                category = "項目"

@@ -6,6 +6,13 @@ return {
                individual = "Individual Settings",
                default = "Default Settings"
             },
+            hint = {
+               action = {
+                  reset = "Reset",
+                  individual_settings = "Indiv. Settings",
+                  default_settings = "Default Settings"
+               }
+            },
             options = {
                talk_type = {
                   title = "Talk Type",
