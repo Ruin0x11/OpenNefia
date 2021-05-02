@@ -57,6 +57,15 @@ function VisualAIBlockList:make_keymap()
    }
 end
 
+function VisualAIBlockList:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.page",
+         keys = { "previous_page", "next_page" }
+      }
+   }
+end
+
 function VisualAIBlockList:_recalc_layout()
    self.offset_y = 0
    local selected_y = self:selected_index() * self.item_height + 10

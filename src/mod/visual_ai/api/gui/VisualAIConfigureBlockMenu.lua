@@ -22,8 +22,10 @@ function VisualAIConfigureBlockMenu:init(proto, var_defs)
    local icon = utils.get_block_icon(self.proto, self.t)
 
    self.card = VisualAIBlockCard:new("", color, icon)
-   self.win = UiWindow:new("Configure Block", true)
    self.list = VisualAIConfigureBlockList:new(var_defs)
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("Configure Block", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
@@ -38,6 +40,17 @@ function VisualAIConfigureBlockMenu:make_keymap()
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
    }
+end
+
+function VisualAIConfigureBlockMenu:make_key_hints()
+   local hints = self.list:make_key_hints()
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.back",
+      keys = { "cancel", "escape" }
+   }
+
+   return hints
 end
 
 function VisualAIConfigureBlockMenu:on_query()

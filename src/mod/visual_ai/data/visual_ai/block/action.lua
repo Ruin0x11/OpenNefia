@@ -342,6 +342,7 @@ data:add {
    end
 }
 
+--[[
 data:add {
    _type = "visual_ai.block",
    _id = "action_equip",
@@ -371,7 +372,9 @@ data:add {
       return Action.equip(chara, target)
    end
 }
+--]]
 
+--[[
 data:add {
    _type = "visual_ai.block",
    _id = "action_change_ammo",
@@ -390,6 +393,7 @@ data:add {
       return true
    end
 }
+--]]
 
 data:add {
    _type = "visual_ai.block",
@@ -417,6 +421,7 @@ data:add {
    end
 }
 
+--[[
 data:add {
    _type = "visual_ai.block",
    _id = "action_throw_monster_ball",
@@ -443,8 +448,10 @@ data:add {
       end
    end
 }
+--]]
 
-data:add {
+--[[
+   data:add {
    _type = "visual_ai.block",
    _id = "action_store_target",
 
@@ -459,12 +466,13 @@ data:add {
    applies_to = "map_object",
 
    action = function(self, chara, target)
-      local ext = chara:get_aspect(ICharaVisualAI)
-      ext.stored_target = target
+   local ext = chara:get_aspect(ICharaVisualAI)
+   ext.stored_target = target
 
-      return true
+   return true
    end
-}
+   }
+--]]
 
 data:add {
    _type = "visual_ai.block",

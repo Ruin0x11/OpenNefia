@@ -34,7 +34,7 @@ function VisualAIPlanTrail:_recalc_layout()
    local selected_y = self.selected_idx * self.item_height + 10
 
    if selected_y + self.item_height > self.height then
-      self.offset_y = math.max(self.height - (selected_y + self.item_height), math.floor(#self.trail - (self.height / self.item_height)) * -self.item_height - 80)
+      self.offset_y = math.max(self.height - (selected_y + self.item_height), math.floor(#self.trail - (self.height / self.item_height)) * -self.item_height - 100)
    end
 
    local x = self.x + 10
@@ -42,7 +42,7 @@ function VisualAIPlanTrail:_recalc_layout()
 
    Draw.set_font(14)
    for i, entry in ipairs(self.trail) do
-      entry:relayout(x, y, self.width - 40, self.item_height)
+      entry:relayout(x, y, self.width - 30, self.item_height)
       entry.selected = i == self.selected_idx
 
       y = y + entry.height
@@ -69,7 +69,7 @@ function VisualAIPlanTrail:draw()
    Draw.set_color(255, 255, 255)
    self.win:draw()
 
-   Draw.set_scissor(self.x + 10, self.y + 10 + 8, self.width, self.height - 28 - 16)
+   Draw.set_scissor(self.x + 10, self.y + 10 + 8, self.width, self.height - 54)
    for _, entry in ipairs(self.trail) do
       if entry.y > self.y - entry.height and self.y and entry.y < self.y + self.height then
          entry:draw()

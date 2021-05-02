@@ -221,6 +221,7 @@ data:add {
    end
 }
 
+--[[
 data:add {
    _type = "visual_ai.block",
    _id = "target_stored",
@@ -238,6 +239,7 @@ data:add {
       return Chara.is_alive(target) and candidate == target
    end
 }
+--]]
 
 data:add {
    _type = "visual_ai.block",
@@ -283,6 +285,7 @@ data:add {
    end
 }
 
+--[[
 data:add {
    _type = "visual_ai.block",
    _id = "target_player_targeting_position",
@@ -309,3 +312,4 @@ data:add {
       return candidate.x == loc.x and candidate.y == loc.y
    end
 }
+--]]

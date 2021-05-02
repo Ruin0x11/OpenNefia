@@ -76,6 +76,19 @@ function VisualAIConfigureBlockList:make_keymap()
    return keys
 end
 
+function VisualAIConfigureBlockList:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.change",
+         key_name ="ui.key_hint.key.left_right"
+      },
+      {
+         action = "visual_ai.gui.menu.hint.action.confirm",
+         keys = "enter"
+      }
+   }
+end
+
 function VisualAIConfigureBlockList:init(var_items, item_height)
    local list = gen_list(var_items)
 
