@@ -109,7 +109,7 @@ function IAspectHolder:iter_aspects(iface)
 end
 
 function IAspectHolder:calc_aspect(iface, prop)
-   local aspect = self:get_aspect_or_default(iface, true)
+   local aspect = self:get_aspect(iface)
    if aspect == nil then
       return nil
    end
@@ -117,7 +117,7 @@ function IAspectHolder:calc_aspect(iface, prop)
 end
 
 function IAspectHolder:calc_aspect_base(iface, prop)
-   local aspect = self:get_aspect_or_default(iface, true)
+   local aspect = self:get_aspect(iface)
    if aspect == nil then
       return nil
    end
@@ -125,7 +125,7 @@ function IAspectHolder:calc_aspect_base(iface, prop)
 end
 
 function IAspectHolder:mod_aspect(iface, prop, v, method, params)
-   local aspect = self:get_aspect_or_default(iface, true)
+   local aspect = self:get_aspect(iface)
    if aspect == nil then
       error("Aspect is nil")
    end
@@ -133,7 +133,7 @@ function IAspectHolder:mod_aspect(iface, prop, v, method, params)
 end
 
 function IAspectHolder:mod_aspect_base(iface, prop, v, method, params)
-   local aspect = self:get_aspect_or_default(iface, true)
+   local aspect = self:get_aspect(iface)
    if aspect == nil then
       error("Aspect is nil")
    end
