@@ -89,8 +89,10 @@ function CharacterFinalizeMenu:reroll(play_sound)
    chara.skills = {}
    chara.height = nil
    chara.age = nil
+   local gender = chara.gender
    Skill.apply_race_params(chara, chara.race)
    Skill.apply_class_params(chara, chara.class)
+   chara.gender = gender
 
    chara.name = "????"
    chara.level = 1

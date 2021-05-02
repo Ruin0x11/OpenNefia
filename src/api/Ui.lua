@@ -247,11 +247,11 @@ function Ui.format_key_hints(key_hints)
    assert(type(key_hints) == "table", "Key help must be a list or string")
 
    --[[
-      {
+   {
       action_name = "ui.action.back",
-    key_name = "ui.key_hint.key.cursor",
+      key_name = "ui.key_hint.key.cursor",
       keys = { "cancel", "escape" }
-      }
+   }
    --]]
 
    local function get_bound_keys(keybind_id)

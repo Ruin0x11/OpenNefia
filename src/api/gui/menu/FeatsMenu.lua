@@ -204,10 +204,18 @@ function FeatsMenu:init(chara, chara_make)
 end
 
 function FeatsMenu:make_keymap()
-   return {
+   local keymap = {
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
    }
+
+   if not self.chara_make then
+      -- TODO ally
+      keymap.mode = function() self.canceled = true end
+      keymap.identify = function() self.canceled = true end
+   end
+
+   return keymap
 end
 
 function FeatsMenu:make_key_hints()
@@ -228,10 +236,12 @@ function FeatsMenu:make_key_hints()
       keys = { "cancel", "escape" }
    }
 
-   hints[#hints+1] = {
-      action = "trait.window.hint.action.ally",
-      keys = { "mode", "identify" }
-   }
+   if not self.chara_make then
+      hints[#hints+1] = {
+         action = "trait.window.hint.action.ally",
+         keys = { "mode", "identify" }
+      }
+   end
 
    return hints
 end

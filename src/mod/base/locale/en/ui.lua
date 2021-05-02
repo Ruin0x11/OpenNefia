@@ -220,6 +220,15 @@ end,
       },
       extra_info = "Extra Info",
       hint = {
+         action = {
+            blessing_and_hex = "Blessing/Curse Info",
+            final_confirmation = "Confirm",
+            hint = "Hint",
+            learn_skill = "Learn Skill",
+            spend_bonus = "Spend Bonus",
+            track_skill = "Track Skill",
+            train_skill = "Train Skill"
+         },
         blessing_info = "Cursor [Blessing/Curse Info] ",
         confirm = "Shift,Esc [Confirm]",
         hint = "Cursor [Hint]  ",
@@ -751,7 +760,7 @@ end,
     key_hint = {
        key = {
           cursor = "Cursor",
-          enter_key = "Enter key",
+          enter_key = "Enter Key",
           left_right = "Right,left",
           shortcut = "0~9",
        },

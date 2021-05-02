@@ -97,6 +97,9 @@ local function on_game_start(self, player)
    Adventurer.initialize()
 
    Tools.powerup(player)
+
+   player.gold = 10^8
+   player.platinum = 1000
 end
 
 data:add {

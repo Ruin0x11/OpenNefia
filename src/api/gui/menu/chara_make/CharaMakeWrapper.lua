@@ -78,6 +78,7 @@ function CharaMakeWrapper:proceed()
    -- Get the result returned from the last menu, or a blank one if
    -- still on the first menu.
    local in_progress_result = self:get_in_progress_result()
+   in_progress_result.is_chara_make = true
 
    local submenu
    success, submenu = xpcall(function()

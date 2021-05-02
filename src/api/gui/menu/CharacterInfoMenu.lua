@@ -58,41 +58,14 @@ end
 
 function CharacterInfoMenu:refresh()
    -- >>>>>>>> shade2/command.hsp:2452 	if csCtrl=0:if page=0:s=lang("ｶｰｿﾙ [祝福と呪いの情報]  ", ..
-   local title_string
+   local sublayer = self.sublayers:current_sublayer()
+   local key_hints = sublayer:make_key_hints()
+   local text = Ui.format_key_hints(key_hints)
 
-   -- TODO
-   if self.mode == "chara_make" then
-         title_string = I18N.get("ui.chara_sheet.hint.reroll")
-            .. I18N.get("ui.hint.portrait")
-            .. I18N.get("ui.chara_sheet.hint.confirm")
-   elseif self.mode == "chara_status" then
-      if self.sublayers.page == 1 then
-         title_string = I18N.get("ui.chara_sheet.hint.hint")
-      else
-         title_string = I18N.get("ui.chara_sheet.hint.spend_bonus")
-      end
-   elseif self.mode == "trainer_train" then
-      if self.sublayers.page == 1 then
-         title_string = I18N.get("ui.hint.portrait")
-      else
-         title_string = I18N.get("ui.chara_sheet.hint.train_skill")
-      end
-   elseif self.mode == "trainer_learn" then
-      if self.sublayers.page == 1 then
-         title_string = I18N.get("ui.hint.portrait")
-      else
-         title_string = I18N.get("ui.chara_sheet.hint.learn_skill")
-      end
-   end
-
-   if self.mode ~= "trainer_learn" then
-      -- title_string = title_string .. I18N.get("ui.chara_sheet.hint.track_skill")
-   end
-
-   self.title:set_data(title_string)
+   self.title:set_data(text)
    -- <<<<<<<< shade2/command.hsp:2457 	if csCtrl!1:if page!0:s+=""+key_mode2+" ["+lang(" ..
 
-   self.input:forward_to(self.sublayers:current_sublayer())
+   self.input:forward_to(sublayer)
 end
 
 function CharacterInfoMenu:set_data(chara)

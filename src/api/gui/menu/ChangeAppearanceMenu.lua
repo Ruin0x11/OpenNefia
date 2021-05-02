@@ -55,11 +55,7 @@ function ChangeAppearanceMenu:init(charamake_data)
 
    local chara = self.charamake_data.chara
 
-   if CharaMake.is_active() then
-      -- Apply race/class properties to make sure we have the default character
-      -- image provided by race/class
-      Skill.apply_race_params(chara, chara.race)
-      Skill.apply_class_params(chara, chara.class)
+   if charamake_data.is_chara_make then
       chara.use_pcc = true
    end
 

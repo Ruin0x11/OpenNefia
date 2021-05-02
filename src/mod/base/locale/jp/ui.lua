@@ -217,6 +217,15 @@ return {
          },
          extra_info = "その他",
          hint = {
+            action = {
+               blessing_and_hex = "祝福と呪いの情報",
+               final_confirmation = "最終確認",
+               hint = "祝福と呪いの情報",
+               learn_skill = "スキルを習得",
+               spend_bonus = "ボーナスの分配",
+               track_skill = "スキルトラック",
+               train_skill = "スキルを訓練"
+            },
             blessing_info = "ｶｰｿﾙ [祝福と呪いの情報] ",
             confirm = "Shift,Esc [最終確認]",
             hint = "ｶｰｿﾙ [祝福と呪いの情報]  ",
