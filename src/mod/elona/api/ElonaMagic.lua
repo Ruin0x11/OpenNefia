@@ -120,7 +120,7 @@ end
 --- @tparam uint power
 --- @tparam table params
 --- @treturn string
-function ElonaMagic.zap_wand(item, magic_id, power, params)
+function ElonaMagic.zap_rod(item, magic_id, power, params)
    -- >>>>>>>> shade2/proc.hsp:1491 *zapStaff ..
    params = params or {}
 

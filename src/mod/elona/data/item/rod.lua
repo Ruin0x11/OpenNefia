@@ -22,7 +22,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.identify", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.identify", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -50,7 +50,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.teleport_other", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.teleport_other", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 12 + Rand.rnd(12) - Rand.rnd(12)
@@ -79,7 +79,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.heal_light", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.heal_light", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -108,7 +108,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.magic_dart", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.magic_dart", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 10 + Rand.rnd(10) - Rand.rnd(10)
@@ -136,7 +136,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.summon_monsters", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.summon_monsters", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -165,7 +165,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.ice_bolt", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.ice_bolt", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -194,7 +194,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.fire_bolt", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.fire_bolt", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 10 + Rand.rnd(10) - Rand.rnd(10)
@@ -224,7 +224,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.cure_of_eris", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.cure_of_eris", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -253,7 +253,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.lightning_bolt", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.lightning_bolt", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 10 + Rand.rnd(10) - Rand.rnd(10)
@@ -282,7 +282,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.buff_slow", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.buff_slow", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -311,7 +311,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.magic_map", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.magic_map", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 9 + Rand.rnd(9) - Rand.rnd(9)
@@ -341,7 +341,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.heal_critical", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.heal_critical", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -369,7 +369,7 @@ data:add {
    has_random_name = true,
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.wish", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.wish", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 1 + Rand.rnd(1) - Rand.rnd(1)
@@ -404,7 +404,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.buff_mist_of_silence", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.buff_mist_of_silence", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 7 + Rand.rnd(7) - Rand.rnd(7)
@@ -433,7 +433,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.buff_speed", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.buff_speed", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -463,7 +463,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.vanquish_hex", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.vanquish_hex", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 6 + Rand.rnd(6) - Rand.rnd(6)
@@ -493,7 +493,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.harvest_mana", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.harvest_mana", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -523,7 +523,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.uncurse", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.uncurse", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -553,7 +553,7 @@ data:add {
    has_random_name = true,
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.dominate", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.dominate", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
@@ -588,7 +588,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.web", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.web", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -618,7 +618,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.change", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.change", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -648,7 +648,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.effect_alchemy", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.effect_alchemy", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -678,7 +678,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.wall_creation", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.wall_creation", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 7 + Rand.rnd(7) - Rand.rnd(7)
@@ -708,7 +708,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.healing_touch", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.healing_touch", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -738,7 +738,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.acid_ground", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.acid_ground", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -768,7 +768,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.fire_wall", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.fire_wall", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -797,7 +797,7 @@ data:add {
    random_color = "Random",
 
    on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.door_creation", 100, params)
+      return ElonaMagic.zap_rod(self, "elona.door_creation", 100, params)
    end,
    on_init_params = function(self)
       self.charges = 6 + Rand.rnd(6) - Rand.rnd(6)
