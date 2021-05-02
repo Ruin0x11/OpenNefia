@@ -124,7 +124,7 @@ function SpellsMenu:make_key_hints()
 
    hints[#hints+1] = {
       action = "ui.key_hint.action.shortcut",
-      text = "ui.key_hint.key.shortcut"
+      key_name = "ui.key_hint.key.shortcut"
    }
 
    return hints

@@ -65,14 +65,15 @@ function ChangeAppearanceMenu:init(charamake_data)
 
    chara.pcc = chara.pcc or make_default_pcc()
 
-   self.win = UiWindow:new("ui.appearance.basic.title", true, "key_help")
-
    self.list = ChangeAppearanceList:new()
    self.list:set_appearance_from_chara(chara)
 
    self.preview = ChangeAppearancePreview:new(chara)
 
    table.merge(self.list, ChangeAppearanceListExt(self))
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("ui.appearance.basic.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
@@ -88,6 +89,20 @@ function ChangeAppearanceMenu:make_keymap()
    return {
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
+   }
+end
+
+function ChangeAppearanceMenu:make_key_hints()
+   return {
+      {
+         action = "ui.appearance.hint.action.change",
+         key_name = "ui.appearance.hint.key.left_right"
+      },
+      {
+         action = "ui.key_hint.action.close",
+         key_name = "ui.key_hint.key.cancel",
+         keys = { "cancel", "escape" }
+      }
    }
 end
 

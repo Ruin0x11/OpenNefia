@@ -110,7 +110,14 @@ end,
         part = "Part",
         title = "Parts to hide"
       },
-      hint = "Right,left [Change]  Shift,Esc [Close]"
+      hint = {
+         key = {
+            left_right = "Right,left"
+         },
+         action = {
+            change = "Change"
+         }
+      }
     },
     article = function(_1)
   return ("[%s]")

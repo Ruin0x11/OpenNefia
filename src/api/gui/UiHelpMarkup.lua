@@ -26,6 +26,7 @@ function UiHelpMarkup:relayout(x, y, width, height)
 end
 
 function UiHelpMarkup:set_data(str)
+   assert(type(str) == "string")
    self.text = str
    self.dirty = true
 end
@@ -55,8 +56,6 @@ local TAGS = {
 }
 
 function UiHelpMarkup.parse_elona_markup(text, width, color, font_size)
-   assert(type(text) == "string")
-   assert(type(width) == "number")
    color = color or {0, 0, 0}
    font_size = font_size or 14 -- 14 - en * 2
 
@@ -100,7 +99,6 @@ function UiHelpMarkup.parse_elona_markup(text, width, color, font_size)
          wait_to_break_line = true
       elseif c == "<" then
          -- Parse a markup tag. (This isn't HTML.)
-         x = 0
          push_result(x, y)
          append = false
 
@@ -155,11 +153,9 @@ function UiHelpMarkup.parse_elona_markup(text, width, color, font_size)
          append = false
       elseif c == "\n" then
          append = false
-         if current_text ~= "" then
-            x = 0
-            y = y + Draw.text_height() + 2
-            push_result(x, y)
-         end
+         x = 0
+         y = y + Draw.text_height() + 2
+         push_result(x, y)
       end
 
       if append then

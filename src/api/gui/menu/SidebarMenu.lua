@@ -7,11 +7,10 @@ local UiTheme = require("api.gui.UiTheme")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 local UiList = require("api.gui.UiList")
-local ISettable = require("api.gui.ISettable")
 local IUiLayer = require("api.gui.IUiLayer")
 local ISidebarView = require("api.gui.menu.ISidebarView")
 
-local SidebarMenu = class.class("SidebarMenu", {IUiLayer, ISettable})
+local SidebarMenu = class.class("SidebarMenu", {IUiLayer})
 
 SidebarMenu:delegate("list", "focus")
 SidebarMenu:delegate("input", IInput)
@@ -30,10 +29,11 @@ function SidebarMenu:init(view, in_game, select_on_chosen)
    self.in_game = in_game or false
    self.select_on_chosen = select_on_chosen or false
 
-   self.win = UiWindow:new(view.title or "Elona In-Game Help", true, "key_help")
-
    self.pages = UiList:new_paged({}, 18)
    table.merge(self.pages, UiListExt(self))
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new(view.title or "Elona In-Game Help", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -44,7 +44,6 @@ function SidebarMenu:init(view, in_game, select_on_chosen)
 
    local data = self.view:get_sidebar_entries()
    self.pages:set_data(data)
-   self:set_data(data)
    self:on_select_item()
 end
 
@@ -53,6 +52,17 @@ function SidebarMenu:make_keymap()
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end
    }
+end
+
+function SidebarMenu:make_key_hints()
+   local hints = self.pages:make_key_hints()
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.back",
+      keys = { "cancel", "escape" }
+   }
+
+   return hints
 end
 
 function SidebarMenu:on_select_item()
@@ -70,7 +80,7 @@ function SidebarMenu:relayout(x, y, width, height)
 
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.pages:relayout(self.x + 38, self.y + 66, 120, self.height - 66)
-   self.view:relayout(self.x + 188, self.y + 6, self.width - 216, self.height - 66)
+   self.view:relayout(self.x + 208, self.y + 66, self.width - 246, self.height - 66)
 
    self:on_select_item()
 end
@@ -79,13 +89,14 @@ function SidebarMenu:draw()
    self.win:draw()
    Ui.draw_topic("ui.manual.topic", self.x + 34, self.y + 36)
 
+   Draw.set_color(255, 255, 255, 50)
    local bg = self.t.base["g" .. ((self.pages.page) % 4 + 1)]
    bg:draw(
       self.x + self.width / 4,
       self.y + self.height / 2,
       self.width / 5 * 2,
       self.height - 80,
-      {255, 255, 255, 50},
+      nil,
       true)
 
    self.pages:draw()

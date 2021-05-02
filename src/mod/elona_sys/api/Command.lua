@@ -242,7 +242,7 @@ function Command.help()
    local SidebarMenu = require("api.gui.menu.SidebarMenu")
 
    local view = HelpMenuView:new()
-   SidebarMenu:new(view:get_sections(), view):query()
+   SidebarMenu:new(view, true):query()
 
    return "player_turn_query"
 end

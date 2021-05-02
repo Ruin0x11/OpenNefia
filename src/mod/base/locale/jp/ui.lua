@@ -107,7 +107,14 @@ return {
             part = "項目",
             title = "装備表示の変更"
          },
-         hint = "左右キー [変更]  ｷｬﾝｾﾙ [閉じる]"
+         hint = {
+            key = {
+               left_right = "左右キー"
+            },
+            action = {
+               change = "変更"
+            }
+         }
       },
       article = function(_1)
          return ("%s")
@@ -751,16 +758,7 @@ return {
 
       key_hint = {
          key = {
-            cursor = "ｶｰｿﾙ",
-            shortcut = "0〜9"
-         },
-         action = {
-
-         }
-      },
-
-      key_hint = {
-         key = {
+            cancel = "ｷｬﾝｾﾙ",
             cursor = "ｶｰｿﾙ",
             shortcut = "0〜9"
          },

@@ -281,9 +281,11 @@ function Ui.format_key_hints(key_hints)
       local action_name = I18N.get_optional(entry.action) or entry.action
 
       local keybind_names
-      if entry.text then
-         keybind_names = I18N.get_optional(entry.text) or entry.text
-      else
+      if entry.key_name then
+         keybind_names = I18N.get_optional(entry.key_name)
+      end
+
+      if keybind_names == nil then
          local keys = {}
          if type(entry.keys) == "string" then
             keys[1] = entry.keys
