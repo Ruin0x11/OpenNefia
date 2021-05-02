@@ -179,8 +179,12 @@ end
 local function connect_stairs(map, area, floor)
    local down = find_feat(map, "elona.stairs_down")
    if down then
-      down.params.area_uid = area.uid
-      down.params.area_floor = floor + 1
+      if floor >= area:deepest_floor() then
+         down:remove_ownership()
+      else
+         down.params.area_uid = area.uid
+         down.params.area_floor = floor + 1
+      end
    end
 
    local up = find_feat(map, "elona.stairs_up")
