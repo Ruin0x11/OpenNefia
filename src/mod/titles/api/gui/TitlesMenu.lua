@@ -85,12 +85,13 @@ end
 function TitlesMenu:init(chara)
    self.chara = chara
 
-   self.win = UiWindow:new("titles.ui.menu.title", true, I18N.get("titles.ui.menu.note"), 55, 40)
-
    self.data = TitlesMenu.generate_list(self.chara)
 
    self.pages = UiList:new_paged(self.data, 15)
    table.merge(self.pages, UiListExt(self))
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("titles.ui.menu.title", true, key_hints, 55, 40)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -102,6 +103,21 @@ function TitlesMenu:make_keymap()
       identify = function() self:show_title_information() end,
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
+   }
+end
+
+function TitlesMenu:make_key_hints()
+   return {
+      {
+         action = "titles.ui.menu.hint.action.effect_on_off",
+         key_name = "titles.ui.menu.hint.key.enter_key",
+         keys = "enter"
+      },
+      {
+         action = "ui.key_hint.action.known_info" ,
+         keys = "identify"
+      },
+      "titles.ui.menu.hint.note"
    }
 end
 

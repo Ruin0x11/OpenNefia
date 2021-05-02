@@ -2,8 +2,16 @@ return {
    titles = {
       ui = {
          menu = {
+            hint = {
+               key = {
+                  enter_key = "決定キー"
+               },
+               action = {
+                  effect_on_off = "効果オン/オフ"
+               },
+               note = "条件を満たすことで称号を獲得できる",
+            },
             title = "称号",
-            note = "条件を満たすことで称号を獲得できる",
             header = {
                title_name =  "称号名",
                conditions =  "条件"
