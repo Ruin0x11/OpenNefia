@@ -103,6 +103,15 @@ function IObject:change_prototype(new_id, opts)
    if class.is_an(IEventEmitter, self) then
       self:emit("base.on_object_prototype_changed", {old_id=old_id})
    end
+
+   local instantiate = opts and opts.instantiate
+   if replace_aspects then
+      instantiate = true
+   end
+
+   if instantiate then
+      self:instantiate()
+   end
 end
 
 return IObject
