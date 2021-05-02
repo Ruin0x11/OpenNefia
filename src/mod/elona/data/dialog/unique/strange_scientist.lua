@@ -50,13 +50,6 @@ end
 
 local function pick_reward()
    -- >>>>>>>> shade2/chat.hsp:2014 				beginTempInv:mode=mode_shop ...
-   local inv = Inventory:new(math.huge)
-
-   Item.create("elona.suitcase", nil, nil, {}, inv)
-   Item.create("elona.wallet", nil, nil, {}, inv)
-
-   local day = save.base.date.day
-
    local is_known = function(i, proto)
       if proto._id == "elona.secret_treasure" then
          return false
@@ -69,7 +62,11 @@ local function pick_reward()
       if can_pick_reward_even_if_unknown(proto._id) then
          return true
       end
+
+      return false
    end
+
+   local day = save.base.date.day
 
    local gen_filter = {
       level = Chara.player():calc("level") * 3 / 2,
@@ -88,16 +85,19 @@ local function pick_reward()
       return item and item.quality >= Enum.Quality.Great
    end
 
-   local function put_in_inv(inv_, item)
-      inv_:take_object(item)
-      return inv_
+   local function put_in_inv(inv, item)
+      inv:take_object(item)
+      return inv
    end
 
-   inv = data["base.item"]:iter():enumerate()
+   local inv = data["base.item"]:iter():enumerate()
       :filter(is_known)
       :map(gen_item)
       :filter(is_great_quality_or_better)
-      :foldl(put_in_inv, inv)
+      :foldl(put_in_inv, Inventory:new(math.huge))
+
+   Item.create("elona.suitcase", nil, nil, {}, inv)
+   Item.create("elona.wallet", nil, nil, {}, inv)
 
    Rand.set_seed()
 

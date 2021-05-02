@@ -155,6 +155,10 @@ function IUiLayer:is_querying()
    return self == current
 end
 
+function IUiLayer:make_key_help()
+   return {}
+end
+
 function IUiLayer:release()
 end
 

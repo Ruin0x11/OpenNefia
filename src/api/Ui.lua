@@ -7,6 +7,7 @@ local Rand = require("api.Rand")
 local Draw = require("api.Draw")
 local I18N = require("api.I18N")
 local Gui = require("api.Gui")
+local config = require("internal.config")
 local data = require("internal.data")
 
 -- Commonly used functions for UI rendering.
@@ -144,6 +145,167 @@ function Ui.format_date(date, with_hour)
       date = DateTime:from_hours(date)
    end
    return date:format_localized(with_hour)
+end
+
+--- `key_id` is a raw key name like `a` or `ctrl_c`, not a `base.keybind` ID.
+function Ui.localize_key_name(raw_key, include_joypad)
+   local function get_key_name(key, is_shift)
+      -- First see if this key has an explicit name.
+      local key_name = I18N.get_optional("keyboard." .. key)
+      if key_name then
+         return key_name
+      end
+
+      -- If this key is a keypad key (kp1, kpenter, etc.), prefix it with
+      -- "Numpad".
+      if key:match("^kp") then
+         key = key:gsub("^kp", "")
+
+         local keypad = I18N.get("keyboard.keypad")
+         return keypad .. I18N.space() .. get_key_name(key)
+      end
+
+      -- Check for function keys.
+      if key:match("^f[0-9]+$") then
+         return I18N.capitalize(key)
+      end
+
+      -- Check for joystick keys.
+      if key:match("^joystick_") then
+         if not include_joypad then
+            return nil
+         end
+
+         key = key:gsub("^joystick_", "")
+
+         local joypad = I18N.get("keyboard.joypad")
+
+         local axis_no, dir = key:match("^axis_[0-9]+_[+-]$")
+         if axis_no and dir then
+            local axis = I18N.get("keyboard.axis")
+
+            return ("%s %s %s%s"):format(joypad, axis, axis_no, dir)
+         end
+
+         return joypad .. I18N.space() .. key
+      end
+
+      if key:match("^[a-zA-Z]$") then
+         local hide_shift_prefix = key:match("^[A-Z]")
+         return key, hide_shift_prefix
+      end
+
+      return key
+   end
+
+   local ctrl = raw_key:match("ctrl_")
+   raw_key = raw_key:gsub("ctrl_", "")
+   local shift = raw_key:match("shift_")
+   raw_key = raw_key:gsub("shift_", "")
+   local alt = raw_key:match("alt_")
+   raw_key = raw_key:gsub("alt_", "")
+   local gui = raw_key:match("gui_")
+   raw_key = raw_key:gsub("gui_", "")
+
+   local key_name, hide_shift_prefix = get_key_name(raw_key, shift ~= nil)
+   if key_name == nil then
+      return nil
+   end
+
+   local final = {}
+
+   if ctrl then
+      final[#final+1] = I18N.get("keyboard.ctrl")
+   end
+   if shift and not hide_shift_prefix then
+      final[#final+1] = I18N.get("keyboard.shift")
+   end
+   if alt then
+      final[#final+1] = I18N.get("keyboard.alt")
+   end
+   if gui then
+      final[#final+1] = I18N.get("keyboard.gui")
+   end
+
+   final[#final+1] = key_name
+
+   return table.concat(final, "+")
+end
+
+function Ui.format_key_help(key_help)
+   if type(key_help) == "string" then
+      return key_help
+   end
+
+   assert(type(key_help) == "table", "Key help must be a table or string")
+
+   --[[
+      {
+      action_name = "ui.action.back",
+      keys = { "escape", "cancel" }
+      }
+   --]]
+
+   local function get_bound_keys(keybind_id)
+      if keybind_id:match("^raw_") then
+         return {keybind_id:gsub("^raw_", "")}
+      end
+
+      local keybinds = config.base.keybinds
+      local keybind = keybinds[keybind_id]
+      if not keybind then
+         return {}
+      end
+
+      -- TODO keybinds should not be separated by primary/alternate
+      local key_ids = {}
+      if keybind.primary then
+         key_ids[#key_ids+1] = keybind.primary
+      end
+      if keybind.alternate then
+         for _, key in ipairs(keybind.alternate) do
+            key_ids[#key_ids+1] = key
+         end
+      end
+
+      return key_ids
+   end
+
+   local result = {}
+
+   for _, entry in ipairs(key_help) do
+      local action_name = I18N.get_optional(entry.action_name) or entry.action_name
+
+      local keys = {}
+      if type(entry.keys) == "string" then
+         keys[1] = entry.keys
+      elseif type(entry.keys) == "table" then
+         keys = entry.keys
+      else
+         error("Unknown `keys` field in key help entry")
+      end
+      local key_ids = {}
+      for _, keybind_id in ipairs(keys) do
+         local bound_key_ids = get_bound_keys(keybind_id)
+         table.append(key_ids, bound_key_ids)
+      end
+
+      local keybind_names
+      if #key_ids > 0 then
+         keybind_names = fun.iter(key_ids):map(Ui.localize_key_name):filter(fun.op.truth):to_list()
+         if #keybind_names > 0 then
+            keybind_names = table.concat(keybind_names, ",")
+         else
+            keybind_names = "???"
+         end
+      else
+         keybind_names = "???"
+      end
+
+      result[#result+1] = ("%s [%s]"):format(keybind_names, action_name)
+   end
+
+   return table.concat(result, " " .. I18N.space())
 end
 
 return Ui

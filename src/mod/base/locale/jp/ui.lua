@@ -375,18 +375,6 @@ return {
          _11 = "世界最高の"
       },
       gold = " gold",
-      hint = {
-         back = "Shift,Esc [戻る]  ",
-         close = "Shift,Esc [閉じる]  ",
-         cursor = "ｶｰｿﾙ [選択]  ",
-         enter = "決定、",
-         help = " [説明]  ",
-         known_info = " [既知の情報]  ",
-         mode = " [情報切替]  ",
-         page = " [ページ切替]  ",
-         portrait = "p [ポートレイト変更]  ",
-         shortcut = "0〜9 [ショートカット]  "
-      },
       home = {
          elona = {
             cave = "洞窟",
@@ -754,6 +742,46 @@ return {
 
       sense_quality = function(_1, _2)
          return (" (%s)[%s製]"):format(_1, _2)
-      end
+      end,
+
+      key_hint = {
+         key = {
+            cursor = "ｶｰｿﾙ",
+            shortcut = "0〜9"
+         },
+         action = {
+
+         }
+      },
+
+      key_hint = {
+         key = {
+            cursor = "ｶｰｿﾙ",
+            shortcut = "0〜9"
+         },
+         action = {
+            back = "戻る",
+            close = "閉じる",
+            help = "説明",
+            known_info = "既知の情報",
+            mode = "情報切替",
+            page = "ページ切替",
+            portrait = "ポートレイト変更",
+            select = "選択",
+            shortcut = "ショートカット",
+         },
+      },
+      hint = {
+         back = "Shift,Esc [戻る]  ",
+         close = "Shift,Esc [閉じる]  ",
+         cursor = "ｶｰｿﾙ [選択]  ",
+         enter = "決定、",
+         help = " [説明]  ",
+         known_info = " [既知の情報]  ",
+         mode = " [情報切替]  ",
+         page = " [ページ切替]  ",
+         portrait = "p [ポートレイト変更]  ",
+         shortcut = "0〜9 [ショートカット]  "
+      },
    }
 }

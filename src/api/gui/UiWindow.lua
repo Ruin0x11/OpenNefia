@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local I18N = require("api.I18N")
+local Ui = require("api.Ui")
 
 local Window = require("api.gui.Window")
 local TopicWindow = require("api.gui.TopicWindow")
@@ -13,8 +14,15 @@ function UiWindow:init(title, shadow, key_help, x_offset, y_offset)
    self.x_offset = x_offset or 0
    self.y_offset = y_offset or 0
    self.title = I18N.get_optional(title) or title or ""
-   self.key_help = key_help or ""
-   self.key_help = I18N.get_optional(self.key_help) or self.key_help
+
+   if type(key_help) == "string" then
+      self.key_help = key_help
+   elseif type(key_help) == "table" then
+      self.key_help = Ui.format_key_help(key_help)
+   else
+      self.key_help = ""
+   end
+
    self.page = 0
    self.page_max = 0
    self.show_page = false

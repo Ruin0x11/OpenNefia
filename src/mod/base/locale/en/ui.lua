@@ -375,18 +375,6 @@ end
       _11 = "godly"
     },
     gold = " gold pieces",
-    hint = {
-      back = "Shift,Esc [Back]  ",
-      close = "Shift,Esc [Close]  ",
-      cursor = "Cursor [Select]  ",
-      enter = "Enter,",
-      help = " [Help]  ",
-      known_info = " [Known info]  ",
-      mode = " [Mode]  ",
-      page = " [Page]  ",
-      portrait = "p [Portrait]  ",
-      shortcut = "0~9 [Shortcut]  "
-    },
     home = {
        elona = {
           cave = "cave",
@@ -754,6 +742,36 @@ end,
 
     sense_quality = function(_1, _2)
        return (" (%s)[%s]"):format(capitalize(_1), capitalize(_2))
-    end
+    end,
+
+    key_hint = {
+       key = {
+          cursor = "Cursor",
+          shortcut = "0~9"
+       },
+       action = {
+          back = "Back",
+          close = "Close",
+          help = "Help",
+          known_info = "Known info",
+          mode = "Mode",
+          page = "Page",
+          portrait = "Portrait",
+          select = "Select",
+          shortcut = "Shortcut",
+       },
+    },
+    hint = {
+       back = "Shift,Esc [Back]  ",
+       close = "Shift,Esc [Close]  ",
+       cursor = "Cursor [Select]  ",
+       enter = "Enter,",
+       help = " [Help]  ",
+       known_info = " [Known info]  ",
+       mode = " [Mode]  ",
+       page = " [Page]  ",
+       portrait = "p [Portrait]  ",
+       shortcut = "0~9 [Shortcut]  "
+    },
   }
 }
