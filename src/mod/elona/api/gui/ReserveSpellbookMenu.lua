@@ -79,12 +79,14 @@ function ReserveSpellbookMenu.make_list()
 end
 
 function ReserveSpellbookMenu:init()
-   self.win = UiWindow:new("ui.reserve.title", true, "key help")
    local list = ReserveSpellbookMenu.make_list()
    self.pages = UiList:new_paged(list, 16)
    table.merge(self.pages, UiListExt(self))
 
    self.chip_batch = nil
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("ui.reserve.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -96,6 +98,17 @@ function ReserveSpellbookMenu:make_keymap()
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end,
    }
+end
+
+function ReserveSpellbookMenu:make_key_hints()
+   local hints = self.pages:make_key_hints()
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.close",
+      keys = { "cancel", "escape" }
+   }
+
+   return hints
 end
 
 function ReserveSpellbookMenu:on_query()

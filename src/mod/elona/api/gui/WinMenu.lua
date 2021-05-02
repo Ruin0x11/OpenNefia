@@ -23,7 +23,8 @@ function WinMenu:init(chara, win_comment)
    -- <<<<<<<< shade2/main.hsp:1443 	gosub *screen_drawMsg2 ..
 
    -- >>>>>>>> shade2/main.hsp:1445 	s=lang("*勝利*","*Win*"),""+strHint3 ...
-   self.window = UiWindow:new("win.window.title", true, "key help")
+   local key_hints = self:make_key_hints()
+   self.window = UiWindow:new("win.window.title", true, key_hints)
    -- <<<<<<<< shade2/main.hsp:1447 	display_window 60,70,680,488 ..
 
    self.input = InputHandler:new()
@@ -42,6 +43,15 @@ function WinMenu:make_keymap()
    return {
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
+   }
+end
+
+function WinMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.close",
+         keys = { "cancel", "escape" }
+      }
    }
 end
 

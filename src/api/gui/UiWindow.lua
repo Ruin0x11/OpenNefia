@@ -65,6 +65,10 @@ function UiWindow:set_title(title)
    end
 end
 
+function UiWindow:set_key_hints(key_hints)
+   self.key_hints = Ui.format_key_hints(key_hints)
+end
+
 function UiWindow:draw()
    if self.shadow then
       Draw.set_color(255, 255, 255, 80)

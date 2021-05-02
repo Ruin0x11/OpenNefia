@@ -107,14 +107,6 @@ return {
             part = "項目",
             title = "装備表示の変更"
          },
-         hint = {
-            key = {
-               left_right = "左右キー"
-            },
-            action = {
-               change = "変更"
-            }
-         }
       },
       article = function(_1)
          return ("%s")
@@ -762,10 +754,12 @@ return {
             cursor = "ｶｰｿﾙ",
             shortcut = "0〜9",
             enter_key = "決定ｷｰ",
+            left_right = "左右キー"
          },
          action = {
             back = "戻る",
-            change = "メニュー切替",
+            change = "変更",
+            switch_menu = "メニュー切替",
             close = "閉じる",
             confirm = "決定",
             help = "説明",

@@ -68,7 +68,7 @@ end
 function CharacterInfoWrapper:make_key_hints()
    return {
       {
-         action = "ui.key_hint.action.change",
+         action = "ui.key_hint.action.switch_menu",
          keys = { "previous_page", "next_page", "raw_tab", "raw_ctrl_tab" }
       }
    }

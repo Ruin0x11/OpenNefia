@@ -110,14 +110,6 @@ end,
         part = "Part",
         title = "Parts to hide"
       },
-      hint = {
-         key = {
-            left_right = "Right,left"
-         },
-         action = {
-            change = "Change"
-         }
-      }
     },
     article = function(_1)
   return ("[%s]")
@@ -759,12 +751,14 @@ end,
     key_hint = {
        key = {
           cursor = "Cursor",
-          shortcut = "0~9",
           enter_key = "Enter key",
+          left_right = "Right,left",
+          shortcut = "0~9",
        },
        action = {
           back = "Back",
           change = "Change",
+          switch_menu = "Change",
           close = "Close",
           help = "Help",
           known_info = "Known info",

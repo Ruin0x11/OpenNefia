@@ -283,49 +283,52 @@ function Ui.format_key_hints(key_hints)
    local result = {}
 
    for _, entry in ipairs(key_hints) do
-      assert(type(entry.action) == "string", "Must specify 'action' in key help")
-      local action_name = I18N.get_optional(entry.action) or entry.action
+      if type(entry) == "string" then
+         result[#result+1] = I18N.get_optional(entry) or entry
+      else
+         assert(type(entry.action) == "string", "Must specify 'action' in key help")
+         local action_name = I18N.get_optional(entry.action) or entry.action
 
-      local keybind_names
-      if entry.key_name then
-         keybind_names = I18N.get_optional(entry.key_name)
-      end
-
-      if keybind_names == nil then
-         local keys = {}
-         if type(entry.keys) == "string" then
-            keys[1] = entry.keys
-         elseif type(entry.keys) == "table" then
-            keys = entry.keys
-         else
-            error("Unknown `keys` field in key help entry")
+         local keybind_names
+         if entry.key_name then
+            keybind_names = I18N.get_optional(entry.key_name)
          end
 
-         local key_ids = {}
-         for _, keybind_id in ipairs(keys) do
-            if type(keybind_id) == "table" then
-               assert(keybind_id.name)
-               key_ids[#key_ids+1] = I18N.get(keybind_id.name)
+         if keybind_names == nil then
+            local keys = {}
+            if type(entry.keys) == "string" then
+               keys[1] = entry.keys
+            elseif type(entry.keys) == "table" then
+               keys = entry.keys
             else
-               local bound_key_ids = get_bound_keys(keybind_id)
-               table.append(key_ids, bound_key_ids)
+               error("Unknown `keys` field in key help entry")
             end
-         end
 
-         if #key_ids > 0 then
-            print(inspect(key_ids))
-            keybind_names = fun.iter(key_ids):map(Ui.localize_key_name):filter(fun.op.truth):to_list()
-            if #keybind_names > 0 then
-               keybind_names = table.concat(keybind_names, ",")
+            local key_ids = {}
+            for _, keybind_id in ipairs(keys) do
+               if type(keybind_id) == "table" then
+                  assert(keybind_id.name)
+                  key_ids[#key_ids+1] = I18N.get(keybind_id.name)
+               else
+                  local bound_key_ids = get_bound_keys(keybind_id)
+                  table.append(key_ids, bound_key_ids)
+               end
+            end
+
+            if #key_ids > 0 then
+               keybind_names = fun.iter(key_ids):map(Ui.localize_key_name):filter(fun.op.truth):to_list()
+               if #keybind_names > 0 then
+                  keybind_names = table.concat(keybind_names, ",")
+               else
+                  keybind_names = "???"
+               end
             else
                keybind_names = "???"
             end
-         else
-            keybind_names = "???"
          end
-      end
 
-      result[#result+1] = ("%s [%s]"):format(keybind_names, action_name)
+         result[#result+1] = ("%s [%s]"):format(keybind_names, action_name)
+      end
    end
 
    return table.concat(result, " " .. I18N.space())

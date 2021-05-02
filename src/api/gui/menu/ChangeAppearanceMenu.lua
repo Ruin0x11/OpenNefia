@@ -95,8 +95,8 @@ end
 function ChangeAppearanceMenu:make_key_hints()
    return {
       {
-         action = "ui.appearance.hint.action.change",
-         key_name = "ui.appearance.hint.key.left_right"
+         action = "ui.key_hint.action.change",
+         key_name = "ui.key_hint.key.left_right"
       },
       {
          action = "ui.key_hint.action.close",
