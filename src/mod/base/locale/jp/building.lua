@@ -33,7 +33,6 @@ end,
   return ("家具(%s点) 家宝(%s点) ランク変動(%s %s位 → %s位 )《%s》")
   :format(_1, _2, _6, _3, _4, _5)
 end,
-        enter_key = "決定ｷｰ,",
         heirloom_rank = "家宝ランク",
         place = function(_1)
   return ("%s位.")

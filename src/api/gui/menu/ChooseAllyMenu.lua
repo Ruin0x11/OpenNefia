@@ -94,6 +94,8 @@ function ChooseAllyMenu:init(charas, topic)
    self.pages = UiList:new_paged({}, 16)
    self.topic = self.topic or nil
 
+   table.merge(self.pages, UiListExt(self))
+
    self.multi_select = false
    self.multi_select_count = 2
    self.multi_select_selected = {}
@@ -103,11 +105,11 @@ function ChooseAllyMenu:init(charas, topic)
       "sell.value"
    }
 
-   local title = (self.topic and self.topic.window_title) or "ui.ally_list.title"
-   self.window = UiWindow:new(title, true, "key help")
-   table.merge(self.pages, UiListExt(self))
-
    self.map_object_batch = nil
+
+   local title = (self.topic and self.topic.window_title) or "ui.ally_list.title"
+   local key_hints = self:make_key_hints()
+   self.window = UiWindow:new(title, true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -141,6 +143,17 @@ function ChooseAllyMenu:make_keymap()
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end
    }
+end
+
+function ChooseAllyMenu:make_key_hints()
+   local hints = self.pages:make_key_hints()
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.close",
+      keys = { "cancel", "escape" }
+   }
+
+   return hints
 end
 
 function ChooseAllyMenu:relayout()

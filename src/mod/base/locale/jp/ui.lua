@@ -760,7 +760,8 @@ return {
          key = {
             cancel = "ｷｬﾝｾﾙ",
             cursor = "ｶｰｿﾙ",
-            shortcut = "0〜9"
+            shortcut = "0〜9",
+            enter_key = "決定ｷｰ",
          },
          action = {
             back = "戻る",

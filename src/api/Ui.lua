@@ -161,8 +161,13 @@ function Ui.localize_key_name(raw_key, include_joypad)
       if key:match("^kp") then
          key = key:gsub("^kp", "")
 
-         local keypad = I18N.get("keyboard.keypad")
-         return keypad .. get_key_name(key)
+         -- TODO this causes the hint text to go off the window in a lot of
+         -- cases, since everything is based on fixed offsets. Maybe an
+         -- autoscrolling key hint thing is in order.
+         -- local keypad = I18N.get("keyboard.keypad")
+         -- return keypad .. get_key_name(key)
+
+         return get_key_name(key)
       end
 
       -- Check for function keys.
@@ -244,6 +249,7 @@ function Ui.format_key_hints(key_hints)
    --[[
       {
       action_name = "ui.action.back",
+    key_name = "ui.key_hint.key.cursor",
       keys = { "cancel", "escape" }
       }
    --]]
@@ -297,8 +303,13 @@ function Ui.format_key_hints(key_hints)
 
          local key_ids = {}
          for _, keybind_id in ipairs(keys) do
-            local bound_key_ids = get_bound_keys(keybind_id)
-            table.append(key_ids, bound_key_ids)
+            if type(keybind_id) == "table" then
+               assert(keybind_id.name)
+               key_ids[#key_ids+1] = I18N.get(keybind_id.name)
+            else
+               local bound_key_ids = get_bound_keys(keybind_id)
+               table.append(key_ids, bound_key_ids)
+            end
          end
 
          if #key_ids > 0 then

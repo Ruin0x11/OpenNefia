@@ -33,7 +33,6 @@ end,
   return ("Furniture Value:%s Heirloom Value:%s Home Rank:%s->%s Your home is now known as <%s>.")
   :format(_1, _2, _3, _4, _5)
 end,
-        enter_key = "Enter key,",
         heirloom_rank = "Heirloom Rank",
         place = function(_1)
   return ("%s")

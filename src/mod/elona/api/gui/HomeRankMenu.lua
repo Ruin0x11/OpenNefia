@@ -36,10 +36,11 @@ function HomeRankMenu:init(most_valuable, base_value, home_value, furniture_valu
    self.furniture_value = furniture_value
    self.total_value = Home.calc_total_value(base_value, home_value, furniture_value)
 
-   self.win = UiWindow:new("building.home.rank.title", true, "building.home.rank.enter_key")
-
    self.star = nil
    self.map_object_batch = nil
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("building.home.rank.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
@@ -55,7 +56,13 @@ function HomeRankMenu:make_keymap()
    }
 end
 
-function HomeRankMenu:on_query()
+function HomeRankMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.close",
+         keys = {{ name = "ui.key_hint.key.enter_key" }, "cancel", "escape" }
+      }
+   }
 end
 
 function HomeRankMenu:relayout(x, y)

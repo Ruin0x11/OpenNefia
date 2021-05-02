@@ -38,9 +38,11 @@ function SelectGenderMenu:init(charamake_data)
           end)
       :to_list()
 
-   self.win = UiWindow:new("chara_make.select_gender.title")
    self.list = UiList:new(self.genders)
    table.merge(self.list, UiListExt())
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("chara_make.select_gender.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
@@ -54,6 +56,15 @@ function SelectGenderMenu:make_keymap()
    return {
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
+   }
+end
+
+function SelectGenderMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.back",
+         keys = { "cancel", "escape" }
+      },
    }
 end
 

@@ -66,10 +66,11 @@ end
 function RestoreSaveMenu:init()
    local saves = read_saves()
 
-   local key_hint = I18N.get("main_menu.continue.key_hint") .. I18N.get("ui.hint.back")
-   self.win = UiWindow:new("main_menu.continue.title", true, key_hint)
    self.pages = UiList:new_paged(saves, 4)
    table.merge(self.pages, UiListExt())
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("main_menu.continue.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input.keys:forward_to(self.pages)
@@ -95,9 +96,21 @@ function RestoreSaveMenu:make_keymap()
     return {
         cancel = function() self.canceled = true end,
         escape = function() self.canceled = true end,
-        raw_f2 = function() self.action = "quickstart" end,
         raw_backspace = function() self:query_deletion() end
     }
+end
+
+function RestoreSaveMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.back",
+         keys = { "cancel", "escape" }
+      },
+      {
+         action = "main_menu.continue.hint.action.delete",
+         keys = "raw_backspace"
+      }
+   }
 end
 
 function RestoreSaveMenu:on_hotload_layer()

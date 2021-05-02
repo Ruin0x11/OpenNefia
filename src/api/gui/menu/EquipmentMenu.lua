@@ -78,12 +78,15 @@ end
 function EquipmentMenu:init(chara)
    self.width = 690
    self.height = 428
-
    self.chara = chara
-   self.win = UiWindow:new("ui.equip.title")
+
    self.pages = UiList:new_paged({}, 14)
    table.merge(self.pages, UiListExt(self))
+
    self.detail_view = nil
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("ui.equip.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -117,6 +120,23 @@ function EquipmentMenu:make_keymap()
    }
 end
 
+function EquipmentMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.known_info" ,
+         keys = "identify"
+      },
+      {
+         action = "ui.key_hint.action.mode",
+         keys = "mode"
+      },
+      {
+         action = "ui.key_hint.action.close",
+         keys = { "cancel", "escape" }
+      }
+   }
+end
+
 function EquipmentMenu:on_hotload_layer()
    table.merge(self.pages, UiListExt(self))
 end
@@ -136,7 +156,16 @@ function EquipmentMenu:show_item_description()
    end
    local rest = self.pages:iter_all_pages():extract("item"):to_list()
    local index = ItemDescriptionMenu:new(item, rest):query()
-   self.pages:select(index)
+
+   item = rest[index]
+   if item then
+      for i, other in self.pages:iter() do
+         if item == other.item then
+            self.pages:select(i)
+            break
+         end
+      end
+   end
 end
 
 function EquipmentMenu.build_list(chara)

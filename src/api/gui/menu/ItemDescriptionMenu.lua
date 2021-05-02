@@ -34,7 +34,10 @@ function ItemDescriptionMenu:init(item, list)
    end
 
    self.model = PagedListModel:new({}, 15)
-   self.win = UiWindow:new("item.desc.window.title")
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("item.desc.window.title", true, key_hints)
+
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
 
@@ -60,6 +63,15 @@ function ItemDescriptionMenu:make_keymap()
          Gui.play_sound("base.pop1")
       end,
       enter = function() self.finished = true end,
+   }
+end
+
+function ItemDescriptionMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.close",
+         keys = { "enter", "cancel", "escape" }
+      }
    }
 end
 

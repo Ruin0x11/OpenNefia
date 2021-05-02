@@ -759,7 +759,8 @@ end,
     key_hint = {
        key = {
           cursor = "Cursor",
-          shortcut = "0~9"
+          shortcut = "0~9",
+          enter_key = "Enter key",
        },
        action = {
           back = "Back",

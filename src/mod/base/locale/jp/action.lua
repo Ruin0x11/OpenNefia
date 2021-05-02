@@ -369,8 +369,13 @@ end
     hit_key_for_help = "?キーを押すと、コマンドの一覧が見られる。",
     interact = {
       change_tone = {
+         hint = {
+            action = {
+               show_hidden = "全部表示",
+               change_tone = "口調の変更"
+            }
+         },
         default_tone = "デフォルトの口調",
-        hint = "決定 [口調の変更]  ",
         is_somewhat_different = function(_1)
   return ("%sの口調が変わった気がする。")
   :format(name(_1))
