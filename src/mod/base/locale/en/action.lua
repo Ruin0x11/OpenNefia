@@ -691,7 +691,10 @@ return {
             return ("%s pick%s up %s.")
                :format(name(_1), s(_1), _2)
          end,
-         poison_drips = "Poison drips from your hands.",
+         poison_drips = function(_1)
+            return ("Poison drips from %s%s hands.")
+               :format(name(_1), his_owned(_1))
+         end,
          put_in_container = function(_1)
             return ("You put %s in the container.")
                :format(_1)

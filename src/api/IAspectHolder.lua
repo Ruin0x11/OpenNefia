@@ -1,8 +1,5 @@
 local AspectHolder = require("api.AspectHolder")
-local IAspect = require("api.IAspect")
 local Aspect = require("api.Aspect")
-local IAspectModdable = require("api.IAspectModdable")
-local Log = require("api.Log")
 
 local IAspectHolder = class.interface("IAspectHolder")
 
@@ -10,56 +7,13 @@ function IAspectHolder:init()
    self._aspects = AspectHolder:new()
 end
 
-local function is_aspect(v)
-   return class.is_interface(v) and class.is_an(IAspect, v)
-end
-
-local function default_aspect(obj, iface, params)
-   local klass
-   if params._impl then
-      class.assert_implements(iface, params._impl)
-      klass = params._impl
-      params._impl = nil
-   else
-      klass = Aspect.get_default_impl(iface)
-   end
-   Log.trace("Default iface for aspect %s: %s", iface, klass)
-   local aspect = klass:new(obj, params)
-   IAspectModdable.init(aspect)
-   obj:set_aspect(iface, aspect)
-end
-
 function IAspectHolder:normal_build(params)
-   local params = params and params.aspects
-   local seen = table.set {}
-   local _ext = self.proto._ext
-   if _ext then
-      for k, v in pairs(_ext) do
-         if type(k) == "number" and is_aspect(v) then
-            seen[v] = true
-            default_aspect(self, v, (params and params[v]) or {})
-         elseif is_aspect(k) then
-            seen[k] = true
-            local _params = (params and params[k]) or {}
-            if type(v) == "table" then
-               _params = table.merge_ex(table.deepcopy(v), _params)
+   local aspect_opts = params and params.aspects
 
-               -- HACK it shouldn't be possible to deepcopy class tables
-               if v._impl then
-                  _params._impl = v._impl
-               end
-            end
-            default_aspect(self, k, _params)
-         end
-      end
-   end
+   local defaults = Aspect.build_defaults_for(self, aspect_opts)
 
-   if params then
-      for k, v in pairs(params) do
-         if is_aspect(k) and not seen[k] then
-            Log.error("Aspect arguments recieved for %s, but prototype '%s:%s' does not declare that aspect in its _ext table.", k, self._type, self._id)
-         end
-      end
+   for iface, aspect in pairs(defaults) do
+      self:set_aspect(iface, aspect)
    end
 end
 
@@ -79,6 +33,10 @@ end
 
 function IAspectHolder:set_aspect(iface, aspect)
    self._aspects:set_aspect(self, iface, aspect)
+end
+
+function IAspectHolder:remove_all_aspects()
+   self._aspects:remove_all_aspects()
 end
 
 function IAspectHolder:get_aspect_proto(iface)

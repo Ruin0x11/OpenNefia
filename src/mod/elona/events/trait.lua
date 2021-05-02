@@ -1,4 +1,6 @@
 local Event = require("api.Event")
+local Rand = require("api.Rand")
+local Gui = require("api.Gui")
 
 -- >>>>>>>> shade2/proc.hsp:1687 	if cc=pc : if trait(traitGodElement):if (ele=rsRe ...
 -- TODO data_ext
@@ -38,3 +40,25 @@ local function fairy_trait(chara)
    -- <<<<<<<< shade2/calculation.hsp:395 			} ..
 end
 Event.register("base.on_refresh", "Fairy trait force unequip", fairy_trait, { priority = 30000 })
+
+local ETHER_POISON_EXCLUDE_ITEMS = table.set {
+   "elona.poison",
+   "elona.potion_of_cure_corruption"
+}
+
+local function trait_ether_poison(item, params, result)
+   -- >>>>>>>> shade2/action.hsp:190 		if trait(traitEtherPoison)!0:if iType(ci)=fltPot ...
+   local chara = params.chara
+   if not chara:has_trait("elona.ether_poison") then
+      return false
+   end
+
+   if item:has_category("elona.drink") and not ETHER_POISON_EXCLUDE_ITEMS[item._id] then
+      if Rand.one_in(5) or true then
+         Gui.mes("action.pick_up.poison_drips", chara)
+         item:change_prototype("elona.poison")
+      end
+   end
+   -- <<<<<<<< shade2/action.hsp:193 			} ..
+end
+Event.register("base.on_get_item", "Proc ether disease poison trait", trait_ether_poison, { priority = 50000 })
