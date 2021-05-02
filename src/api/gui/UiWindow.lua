@@ -10,19 +10,11 @@ local UiTheme = require("api.gui.UiTheme")
 
 local UiWindow = class.class("UiWindow", IUiElement)
 
-function UiWindow:init(title, shadow, key_help, x_offset, y_offset)
+function UiWindow:init(title, shadow, key_hints, x_offset, y_offset)
    self.x_offset = x_offset or 0
    self.y_offset = y_offset or 0
    self.title = I18N.get_optional(title) or title or ""
-
-   if type(key_help) == "string" then
-      self.key_help = key_help
-   elseif type(key_help) == "table" then
-      self.key_help = Ui.format_key_help(key_help)
-   else
-      self.key_help = ""
-   end
-
+   self.key_hints = Ui.format_key_hints(key_hints)
    self.page = 0
    self.page_max = 0
    self.show_page = false
@@ -117,7 +109,7 @@ function UiWindow:draw()
 
    Draw.set_color(0, 0, 0)
    Draw.set_font(12) -- 12 + sizefix - en * 2
-   Draw.text(self.key_help, x + 58 + x_offset, y + height - 43 - height % 8)
+   Draw.text(self.key_hints, x + 58 + x_offset, y + height - 43 - height % 8)
 
    if self.show_page then
       Draw.set_font(12, "bold") -- 12 + sizefix - en * 2

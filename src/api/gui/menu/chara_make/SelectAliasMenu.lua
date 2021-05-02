@@ -45,7 +45,7 @@ function SelectAliasMenu:init(charamake_data)
    self.width = 400
    self.height = 458
 
-   self.win = UiWindow:new("chara_make.select_alias.title", true, self:make_key_help())
+   self.win = UiWindow:new("chara_make.select_alias.title", true, self:make_key_hints())
 
    local items = {
       { text = I18N.get("chara_make.common.reroll"), type = "reroll", on_choose = function() self:reroll(true) end }
@@ -77,14 +77,14 @@ function SelectAliasMenu:make_keymap()
    }
 end
 
-function SelectAliasMenu:make_key_help()
+function SelectAliasMenu:make_key_hints()
    return {
       {
-         action_name = "ui.key_hint.action.back",
+         action = "ui.key_hint.action.back",
          keys = { "escape", "cancel" }
       },
       {
-         action_name = "chara_make.select_alias.hint.action.lock_alias",
+         action = "chara_make.select_alias.hint.action.lock_alias",
          keys = "mode2"
       }
    }

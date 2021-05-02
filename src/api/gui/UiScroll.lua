@@ -1,5 +1,5 @@
 local Draw = require("api.Draw")
-local I18N = require("api.I18N")
+local Ui = require("api.Ui")
 
 local Scroll = require("api.gui.Scroll")
 local IUiElement = require("api.gui.IUiElement")
@@ -8,11 +8,10 @@ local UiTheme = require("api.gui.UiTheme")
 
 local UiScroll = class.class("UiScroll", IUiElement)
 
-function UiScroll:init(shadow, key_help, x_offset, y_offset)
+function UiScroll:init(shadow, key_hints, x_offset, y_offset)
    self.x_offset = x_offset or 0
    self.y_offset = y_offset or 0
-   self.key_help = key_help or ""
-   self.key_help = I18N.get_optional(self.key_help) or self.key_help
+   self.key_hints = Ui.format_key_hints(key_hints)
    self.page = 0
    self.page_max = 0
    self.show_page = false
@@ -58,7 +57,7 @@ function UiScroll:draw()
    local x_offset = self.x_offset
    local y_offset = self.y_offset
 
-   if self.key_help ~= "" then
+   if self.key_hints ~= "" then
       self.t.base.tip_icons:draw_region(1, x + 40, y + height - 67 - (height % 8))
 
       Draw.set_color(194, 173, 161)
@@ -68,7 +67,7 @@ function UiScroll:draw()
 
       Draw.set_font(12) -- 12 + sizefix
       Draw.set_color(0, 0, 0)
-      Draw.text(self.key_help, x + 68, y + height - 63 - (height % 8))
+      Draw.text(self.key_hints, x + 68, y + height - 63 - (height % 8))
    end
 
    if self.show_page then

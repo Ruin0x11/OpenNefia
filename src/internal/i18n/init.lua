@@ -301,9 +301,13 @@ function i18n.search(prefix)
    end
    local results = i18n.index:search(prefix)
    local final = {}
+   local seen = table.set {}
    for _, t in ipairs(results) do
       for _, id in ipairs(t) do
-         final[#final+1] = id
+         if not seen[id] then
+            final[#final+1] = id
+            seen[id] = true
+         end
       end
    end
    return final

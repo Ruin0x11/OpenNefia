@@ -41,6 +41,12 @@ function CharacterFinalizeMenu:make_keymap()
    }
 end
 
+function CharacterFinalizeMenu:make_key_hint()
+   return {
+      enter = function() self:reroll(true) end,
+   }
+end
+
 function CharacterFinalizeMenu:on_query()
    Gui.play_sound("base.chara")
    self.canceled = false

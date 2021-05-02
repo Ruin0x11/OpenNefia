@@ -23,7 +23,7 @@ function SpellsWrapper:init(player, starting_menu)
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
    self.submenu = nil
-   self.icon_bar = IconBar:new("inventory_icons")
+   self.icon_bar = IconBar:new("inventory_icons", self:make_key_hints())
 
    self.icon_bar:set_data {
       { icon = 13, text = "ui.menu.spell.spell" },
@@ -56,6 +56,15 @@ function SpellsWrapper:make_keymap()
       next_page = function() self:next_menu() end,
       raw_ctrl_tab = function() self:previous_menu() end,
       raw_tab = function() self:next_menu() end,
+   }
+end
+
+function SpellsWrapper:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.change",
+         keys = { "previous_page", "next_page", "raw_tab", "raw_ctrl_tab" }
+      }
    }
 end
 

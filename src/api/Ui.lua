@@ -162,7 +162,7 @@ function Ui.localize_key_name(raw_key, include_joypad)
          key = key:gsub("^kp", "")
 
          local keypad = I18N.get("keyboard.keypad")
-         return keypad .. I18N.space() .. get_key_name(key)
+         return keypad .. get_key_name(key)
       end
 
       -- Check for function keys.
@@ -232,12 +232,14 @@ function Ui.localize_key_name(raw_key, include_joypad)
    return table.concat(final, "+")
 end
 
-function Ui.format_key_help(key_help)
-   if type(key_help) == "string" then
-      return key_help
+function Ui.format_key_hints(key_hints)
+   if type(key_hints) == "nil" then
+      return ""
+   elseif type(key_hints) == "string" then
+      return key_hints
    end
 
-   assert(type(key_help) == "table", "Key help must be a table or string")
+   assert(type(key_hints) == "table", "Key help must be a list or string")
 
    --[[
       {
@@ -248,7 +250,8 @@ function Ui.format_key_help(key_help)
 
    local function get_bound_keys(keybind_id)
       if keybind_id:match("^raw_") then
-         return {keybind_id:gsub("^raw_", "")}
+         local key_name = keybind_id:gsub("^raw_", "")
+         return {key_name}
       end
 
       local keybinds = config.base.keybinds
@@ -273,8 +276,9 @@ function Ui.format_key_help(key_help)
 
    local result = {}
 
-   for _, entry in ipairs(key_help) do
-      local action_name = I18N.get_optional(entry.action_name) or entry.action_name
+   for _, entry in ipairs(key_hints) do
+      assert(type(entry.action) == "string", "Must specify 'action' in key help")
+      local action_name = I18N.get_optional(entry.action) or entry.action
 
       local keys = {}
       if type(entry.keys) == "string" then
@@ -292,6 +296,7 @@ function Ui.format_key_help(key_help)
 
       local keybind_names
       if #key_ids > 0 then
+         print(inspect(key_ids))
          keybind_names = fun.iter(key_ids):map(Ui.localize_key_name):filter(fun.op.truth):to_list()
          if #keybind_names > 0 then
             keybind_names = table.concat(keybind_names, ",")

@@ -751,6 +751,7 @@ end,
        },
        action = {
           back = "Back",
+          change = "Change",
           close = "Close",
           help = "Help",
           known_info = "Known info",
@@ -759,6 +760,7 @@ end,
           portrait = "Portrait",
           select = "Select",
           shortcut = "Shortcut",
+          window = "Window"
        },
     },
     hint = {

@@ -761,6 +761,7 @@ return {
          },
          action = {
             back = "戻る",
+            change = "メニュー切替",
             close = "閉じる",
             help = "説明",
             known_info = "既知の情報",
