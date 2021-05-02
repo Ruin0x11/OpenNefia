@@ -5,6 +5,7 @@ local Weather = require("mod.elona.api.Weather")
 local Calc = require("mod.elona.api.Calc")
 local I18N = require("api.I18N")
 local Quest = require("mod.elona_sys.api.Quest")
+local Chara = require("api.Chara")
 
 local role = {
    {
@@ -176,7 +177,11 @@ local role = {
       elona_id = 1020,
 
       dialog_choices = {
-         {"elona.spell_writer:reserve", "talk.npc.spell_writer.choices.reserve"},
+         function()
+            if Chara.player():calc("guild") == "elona.mage" then
+               return {{"elona.spell_writer:reserve", "talk.npc.spell_writer.choices.reserve"}}
+            end
+         end
       }
    },
 }
