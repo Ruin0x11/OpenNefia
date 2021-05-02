@@ -1,8 +1,9 @@
 local IAspect = require("api.IAspect")
 
 local flags = {
-   is_married = "boolean",                 -- cMarry
-   is_being_escorted_sidequest = "boolean" -- cGuardTemp
+   is_married = "boolean",                    -- cMarry
+   is_being_escorted_sidequest = "boolean",   -- cGuardTemp
+   has_given_token_of_friendship = "boolean", -- cTokenFriend
 }
 
 local ICharaElonaFlags = class.interface("ICharaElonaFlags",

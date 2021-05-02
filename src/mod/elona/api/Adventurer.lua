@@ -176,6 +176,37 @@ function Adventurer.calc_respawn_hours()
    -- <<<<<<<< shade2/chara_func.hsp:1668 				cRespawn(tc)=dateId+respawnTimeAdv+rnd(respawn ..
 end
 
+function Adventurer.favorite_skill_ids(adv)
+   -- >>>>>>>> shade2/chara_func.hsp:1841 #module ...
+   Rand.set_seed(adv.uid)
+
+   local found = 0
+   local result = table.set {}
+   while found < 2 do
+      -- Excludes weapon proficiencies.
+      local skill_id = Skill.random_normal_skill()
+      if not result[skill_id] then
+         result[skill_id] = true
+         found = found + 1
+      end
+   end
+
+   Rand.set_seed()
+
+   return table.keys(result)
+   -- <<<<<<<< shade2/chara_func.hsp:1850 	return i ..
+end
+
+function Adventurer.favorite_stat_id(adv)
+-- >>>>>>>> shade2/chara_func.hsp:1852 #deffunc advFavoriteStat int c ...
+   Rand.set_seed(adv.uid)
+   -- Excludes speed and luck.
+   local skill_id = Skill.random_base_attribute()
+   Rand.set_seed()
+   return skill_id
+-- <<<<<<<< shade2/chara_func.hsp:1857 #global ..
+end
+
 function Adventurer.generate()
    -- >>>>>>>> shade2/adv.hsp:29 *adv_generate ...
    local filter = {
@@ -193,7 +224,14 @@ function Adventurer.generate()
    adv.image = ElonaChara.random_human_image(adv)
    adv.name = Text.random_name()
    adv.title = Text.random_title()
-   adv:add_role("elona.adventurer", { state = "Alive", contract_expiry_date = nil, times_contracted = 0 })
+   local role_state = {
+      state = "Alive",
+      contract_expiry_date = nil,
+      times_contracted = 0,
+      favorite_skill_ids = Adventurer.favorite_skill_ids(adv),
+      favorite_stat_id = Adventurer.favorite_stat_id(adv),
+   }
+   adv:add_role("elona.adventurer", role_state)
    adv.fame = Adventurer.calc_starting_fame(adv)
 
    -- In vanilla, adventurers were treated differently than mobs/villagers in

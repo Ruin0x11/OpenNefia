@@ -83,7 +83,7 @@ end,
 end,
           throws = function(_1, _2)
   return ("%sは%sを置いていった。")
-  :format(name(_1), itemname(_2, 1))
+  :format(name(_1), _2)
 end
         },
         souvenir = {
@@ -94,7 +94,7 @@ end,
           inventory_is_full = "所持品が一杯で受け取れなかった…",
           receive = function(_1)
   return ("%sを受け取った。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
         },
         train = {
@@ -150,9 +150,7 @@ end
       },
       merchant = {
         choices = {
-          buy = "買いたい",
           not_now = "今はいい",
-          sell = "売りたい"
         },
         dialog = function(_1)
   return ("今日は%sの幸運な日%s普段は一般の客には売らない格安の品を、特別に見せてあげ%s覚えておいて%s、今日だけだ%s")
@@ -182,7 +180,7 @@ end,
       },
       receive = function(_1, _2)
   return ("%sに%sをもらった！")
-  :format(name(_2), itemname(_1, 1))
+  :format(name(_2), _1)
 end,
       trainer = {
         after = function(_1)
@@ -219,7 +217,7 @@ end,
   :format(yo(_1, 2))
 end
       },
-      wanted_to_say_hi = function(_1)
+      just_visiting = function(_1)
   return ("まあ、とくに用もないんだけど%s")
   :format(na(_1))
 end

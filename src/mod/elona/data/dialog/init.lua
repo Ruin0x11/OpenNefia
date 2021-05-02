@@ -36,6 +36,8 @@ require("mod.elona.data.dialog.role.innkeeper")
 require("mod.elona.data.dialog.role.spell_writer")
 require("mod.elona.data.dialog.role.informer")
 require("mod.elona.data.dialog.role.adventurer")
+require("mod.elona.data.dialog.role.maid")
+require("mod.elona.data.dialog.role.guest")
 
 require("mod.elona.data.dialog.unique.abyss")
 require("mod.elona.data.dialog.unique.ainc")

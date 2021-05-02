@@ -34,7 +34,7 @@ end
         },
         hate = {
           dialog = "You scum! You won't get away from me now!",
-          text = "Eat this!",
+          text = "\"Eat this!\"",
           throws = function(_1)
   return ("%s throws molotov.")
   :format(name(_1))
@@ -56,7 +56,7 @@ end
           happy_new_year = "Happy new year!",
           throws = function(_1, _2)
   return ("%s throws you %s.")
-  :format(name(_1), itemname(_2, 1))
+  :format(name(_1), _2)
 end
         },
         souvenir = {
@@ -64,7 +64,7 @@ end
           inventory_is_full = "Your inventory is full...",
           receive = function(_1)
   return ("You receive %s.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
         },
         train = {
@@ -95,8 +95,8 @@ end
         cheap = "You're so cheap!",
         dialog = "I got no money to buy food. Will you spare me some coins?",
         spare = function(_1, _2)
-  return ("You spare %s %s gold pieces.")
-  :format(him(_2), _1)
+  return ("You spare %s %s gold piece%s.")
+  :format(him(_2), _1, plural(_1))
 end
       },
       choices = {
@@ -105,9 +105,7 @@ end
       },
       merchant = {
         choices = {
-          buy = "I want to buy something.",
           not_now = "Not now.",
-          sell = "I want to sell something."
         },
         dialog = "This is your lucky day. I wouldn't normally show my discounted goods to commoners but since I feel so good today...",
         regret = "I hope you won't regret it later."
@@ -122,7 +120,7 @@ end
       },
       receive = function(_1, _2)
   return ("You receive %s from %s!")
-  :format(itemname(_1, 1), name(_2))
+  :format(_1, name(_2))
 end,
       trainer = {
         after = "Good. You show a lot of potential.",
@@ -150,7 +148,7 @@ end
 end,
         regret = "You'll regret this!"
       },
-      wanted_to_say_hi = "I just wanted to say hi."
+      just_visiting = "I just wanted to say hi."
     }
   }
 }

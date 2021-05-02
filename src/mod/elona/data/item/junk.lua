@@ -4,6 +4,7 @@ local Rand = require("api.Rand")
 local Enum = require("api.Enum")
 local IItemFishingPole = require("mod.elona.api.aspect.IItemFishingPole")
 local IItemBait = require("mod.elona.api.aspect.IItemBait")
+local IItemChair = require("mod.elona.api.aspect.IItemChair")
 
 --
 -- Junk
@@ -195,7 +196,9 @@ data:add {
    category = 64000,
    coefficient = 100,
 
-   elona_function = 44,
+   _ext = {
+      IItemChair
+   },
 
    categories = {
       "elona.junk"

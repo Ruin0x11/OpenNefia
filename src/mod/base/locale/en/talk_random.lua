@@ -212,9 +212,9 @@ local random = {
    },
 
    maid = {
-      function(npc, player, params)
+      function(npc, player, ref)
          return ("Welcome home, %s. You have %s waiting for you. Do you want to meet a guest now?")
-            :format(player.name, params.ref)
+            :format(basename(player), ref)
       end
    },
 
@@ -328,7 +328,7 @@ local random = {
    params = {
       maid = function(_1)
          return ("%s guest%s")
-            :format(_1, s(_1))
+            :format(_1, plural(_1))
       end
    },
 }

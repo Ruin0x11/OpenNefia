@@ -98,7 +98,7 @@ function CharacterSheetMenu:text_level()
    local guild = self.chara:calc("guild")
    local guild_name
    if guild then
-      guild_name = I18N.get("guild._." .. guild .. ".name")
+      guild_name = I18N.localize("elona.guild", guild, "name")
    else
       guild_name = I18N.get("guild.none")
    end

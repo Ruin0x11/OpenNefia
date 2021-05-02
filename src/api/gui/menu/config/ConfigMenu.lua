@@ -87,7 +87,7 @@ function ConfigMenu:update(dt)
       return self.list:selected_item().menu
    end
    if self.list.changed then
-      if self.list.page_max > 1 then
+      if self.list.page_max > 0 then
          self.win:set_pages(self.list)
       end
    end

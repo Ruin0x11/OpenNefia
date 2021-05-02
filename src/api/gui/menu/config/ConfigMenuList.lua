@@ -84,6 +84,13 @@ function ConfigMenuList:make_keymap()
       enter = function() self:choose(self.model:selected_index()) end,
       west = function() self:change(self.model:selected_item(), -1) end,
       east = function() self:change(self.model:selected_item(), 1) end,
+      previous_page = function() self:previous_page() end,
+      next_page = function() self:next_page() end,
+
+      -- HACK until the page can be changed more ergonomically inside the config
+      -- menu
+      mode = function() self:previous_page() end,
+      identify = function() self:next_page() end,
    }
 
    for i=1,#UiList.KEYS do
@@ -111,10 +118,8 @@ function ConfigMenuList:change(item, delta)
    if item.menu then
       if delta < 0 then
          self:previous_page()
-         Gui.play_sound("base.pop1")
       elseif delta > 0 then
          self:next_page()
-         Gui.play_sound("base.pop1")
       end
 
       return
@@ -165,6 +170,28 @@ function ConfigMenuList:choose(i)
    self:run_on_changed(item)
 end
 
+function ConfigMenuList:previous_page()
+   if self.model.page_max == 0 then
+      return
+   end
+
+   Gui.play_sound("base.pop1")
+   self.model:previous_page()
+
+   self:update_from_config()
+end
+
+function ConfigMenuList:next_page()
+   if self.model.page_max == 0 then
+      return
+   end
+
+   Gui.play_sound("base.pop1")
+   self.model:next_page()
+
+   self:update_from_config()
+end
+
 function ConfigMenuList:run_on_changed(item)
    local mod_id, data_id = item.proto._id:match("([^.]+)%.([^.]+)")
    config[mod_id][data_id] = item.widget:get_value()
@@ -203,10 +230,11 @@ function ConfigMenuList:relayout(x, y, width, height)
 
    self.t = UiTheme.load(self)
 
-   for i, item in self.model:iter() do
+   for idx, item in self.model:iter_all_pages() do
+      local i = math.floor((idx-1) % self.model.page_size)
       if item.widget then
          local ix = self.x + 194
-         local iy = (i - 1) * self.item_height + self.y + 1
+         local iy = i * self.item_height + self.y + 1
          item.widget:relayout(ix, iy)
       end
    end

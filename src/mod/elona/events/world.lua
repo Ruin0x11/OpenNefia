@@ -12,6 +12,7 @@ local RandomEvent = require("mod.elona.api.RandomEvent")
 local Rank = require("mod.elona.api.Rank")
 local Home = require("mod.elona.api.Home")
 local Adventurer = require("mod.elona.api.Adventurer")
+local DateTime = require("api.DateTime")
 
 local function hourly_events()
    -- >>>>>>>> shade2/main.hsp:627 	if mType=mTypeWorld{ ...
@@ -150,7 +151,7 @@ Event.register("base.on_month_passed", "Update holy well count", update_holy_wel
 
 local function update_well_wish_count_trainer_wallet(_, params)
    -- >>>>>>>> shade2/main.hsp:659 		if gMonth>=13		:gYear++:gMonth=1:gGuildTrainer=0 ...
-   save.elona.next_guest_trainer_date = 0
+   save.elona.date_of_last_guest_trainer_visit = DateTime:new()
    save.elona.well_wish_count = math.clamp(save.elona.well_wish_count - 1, 0, 10)
    save.elona.lost_wallets_reported = math.clamp(save.elona.lost_wallets_reported - 1, 0, 999999)
    -- <<<<<<<< shade2/main.hsp:659 		if gMonth>=13		:gYear++:gMonth=1:gGuildTrainer=0 ..

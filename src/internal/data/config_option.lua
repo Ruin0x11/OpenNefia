@@ -44,25 +44,7 @@ data:add_multi(
          default = "kochi-gothic-subst.ttf"
       },
       {
-         _id = "autosave",
-
-         type = "boolean",
-         default = true
-      },
-      {
          _id = "quickstart_on_startup",
-
-         type = "boolean",
-         default = false
-      },
-      {
-         _id = "default_return_to_title",
-
-         type = "boolean",
-         default = false
-      },
-      {
-         _id = "skip_sleep_animation",
 
          type = "boolean",
          default = false
@@ -133,6 +115,19 @@ data:add_multi(
          type = "boolean",
          default = false
       },
+      {
+         _id = "autosave",
+
+         type = "enum",
+         choices = { "always", "sometimes", "rarely", "almost_never" },
+         default = "always"
+      },
+      {
+         _id = "default_return_to_title",
+
+         type = "boolean",
+         default = false
+      },
    }
 )
 
@@ -145,7 +140,9 @@ data:add {
       "base.hide_shop_updates",
       "base.hide_autoidentify",
       "base.extra_help",
-      "base.skip_random_event_popups"
+      "base.skip_random_event_popups",
+      "base.autosave",
+      "base.default_return_to_title"
    }
 }
 
@@ -441,12 +438,6 @@ data:add_multi(
          default = "always_wait",
       },
       {
-         _id = "update_unfocused_ui_layers",
-
-         type = "boolean",
-         default = false
-      },
-      {
          _id = "background_effect_wait",
 
          type = "integer",
@@ -455,10 +446,22 @@ data:add_multi(
          max_value = 100,
       },
       {
+         _id = "update_unfocused_ui_layers",
+
+         type = "boolean",
+         default = false
+      },
+      {
          _id = "scroll_when_run",
 
          type = "boolean",
          default = true
+      },
+      {
+         _id = "skip_sleep_animation",
+
+         type = "boolean",
+         default = false
       }
    }
 )
@@ -476,10 +479,12 @@ data:add {
       "base.always_center",
       "base.alert_wait",
       "base.screen_refresh",
-      "base.background_effect_wait",
       "base.anime_wait",
       "base.anime_wait_type",
-      "base.scroll_when_run"
+      "base.background_effect_wait",
+      "base.update_unfocused_ui_layers",
+      "base.scroll_when_run",
+      "base.skip_sleep_animation"
    }
 }
 

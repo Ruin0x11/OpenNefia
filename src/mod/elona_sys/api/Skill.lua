@@ -58,6 +58,10 @@ function Skill.random_skill()
    return Rand.choice(Skill.iter_skills())._id
 end
 
+function Skill.random_normal_skill()
+   return Rand.choice(Skill.iter_normal_skills())._id
+end
+
 function Skill.random_resistance()
    return Rand.choice(Skill.iter_resistances())._id
 end
