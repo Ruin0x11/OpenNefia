@@ -11,6 +11,7 @@ local Rand = require("api.Rand")
 local Magic = require("mod.elona_sys.api.Magic")
 local Item = require("api.Item")
 local ElonaAction = require("mod.elona.api.ElonaAction")
+local ICharaElonaFlags = require("mod.elona.api.aspect.chara.ICharaElonaFlags")
 
 local trait = {
    {
@@ -196,7 +197,7 @@ local trait = {
       end,
 
       on_refresh = function(self, chara)
-         -- cBitMod cPowerBash,pc,true
+         chara:mod_aspect(ICharaElonaFlags, "has_shield_bash", true, "set")
       end
    },
    {

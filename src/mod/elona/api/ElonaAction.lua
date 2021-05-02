@@ -18,15 +18,16 @@ local EquipRules = require("api.chara.EquipRules")
 local ICharaEquipStyle = require("api.chara.aspect.ICharaEquipStyle")
 local IItemMeleeWeapon = require("mod.elona.api.aspect.IItemMeleeWeapon")
 local IItemRangedWeapon = require("mod.elona.api.aspect.IItemRangedWeapon")
+local ICharaElonaFlags = require("mod.elona.api.aspect.chara.ICharaElonaFlags")
 
 local ElonaAction = {}
 
 local function proc_shield_bash(chara, target)
    -- >>>>>>>> shade2/action.hsp:1213         if sync(cc):txt lang(name(cc)+"は盾で"+name(t ..
    local shield = chara:skill_level("elona.shield")
-   local do_bash = math.clamp(math.sqrt(shield) - 3, 1, 5) + ((chara:calc("has_shield_bash") and 5) or 0)
+   local do_bash = math.clamp(math.sqrt(shield) - 3, 1, 5) + ((chara:calc_aspect(ICharaElonaFlags, "has_shield_bash") and 5) or 0)
    if Rand.percent_chance(do_bash) then
-      Gui.mes_visible("action.melee.shield_bash", chara)
+      Gui.mes_visible("action.melee.shield_bash", chara, target)
       target:damage_hp(Rand.rnd(shield) + 1, chara)
       target:apply_effect("elona.dimming", 50 + math.floor(math.sqrt(shield)) * 15)
       target:add_effect_turns("elona.paralysis", Rand.rnd(3))
