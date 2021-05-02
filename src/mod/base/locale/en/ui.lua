@@ -10,8 +10,13 @@ return {
       unknown = "Unknown"
     },
     alias = {
+      hint = {
+         action = {
+            lock_alias = "Lock Alias",
+            reroll = "Reroll",
+         }
+      },
       list = "Alias List",
-      reroll = "Reroll",
       title = "Alias Selection"
     },
     ally_list = {

@@ -81,10 +81,10 @@ function SelectAliasMenu:make_key_hints()
    return {
       {
          action = "ui.key_hint.action.back",
-         keys = { "escape", "cancel" }
+         keys = { "cancel", "escape" }
       },
       {
-         action = "chara_make.select_alias.hint.action.lock_alias",
+         action = "ui.alias.hint.action.lock_alias",
          keys = "mode2"
       }
    }

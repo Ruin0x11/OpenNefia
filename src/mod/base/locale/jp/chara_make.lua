@@ -28,11 +28,6 @@ return {
       attributes = "能力"
     },
     select_alias = {
-       hint = {
-          action = {
-             lock_alias = "異名のロック",
-          }
-       },
       alias_list = "異名の候補",
       caption = "有名になると、名前とは別の通り名で呼ばれることがあるらしい。",
       title = "異名の選択"

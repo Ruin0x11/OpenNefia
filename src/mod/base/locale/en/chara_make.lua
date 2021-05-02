@@ -28,11 +28,6 @@ return {
       attributes = "Attributes"
     },
     select_alias = {
-       hint = {
-          action = {
-             lock_alias = "Lock Alias",
-          }
-       },
       alias_list = "Alias List",
       caption = "Choose your Alias.",
       title = "Alias Selection"

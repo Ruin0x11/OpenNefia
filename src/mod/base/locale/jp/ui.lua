@@ -10,8 +10,13 @@ return {
          unknown = "不明"
       },
       alias = {
+         hint = {
+            action = {
+               lock_alias = "異名のロック",
+               reroll = "別の名前を考える",
+            }
+         },
          list = "異名の候補",
-         reroll = "別の名前を考える",
          title = "異名の選択"
       },
       ally_list = {

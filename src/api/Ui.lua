@@ -244,7 +244,7 @@ function Ui.format_key_hints(key_hints)
    --[[
       {
       action_name = "ui.action.back",
-      keys = { "escape", "cancel" }
+      keys = { "cancel", "escape" }
       }
    --]]
 
@@ -280,31 +280,36 @@ function Ui.format_key_hints(key_hints)
       assert(type(entry.action) == "string", "Must specify 'action' in key help")
       local action_name = I18N.get_optional(entry.action) or entry.action
 
-      local keys = {}
-      if type(entry.keys) == "string" then
-         keys[1] = entry.keys
-      elseif type(entry.keys) == "table" then
-         keys = entry.keys
-      else
-         error("Unknown `keys` field in key help entry")
-      end
-      local key_ids = {}
-      for _, keybind_id in ipairs(keys) do
-         local bound_key_ids = get_bound_keys(keybind_id)
-         table.append(key_ids, bound_key_ids)
-      end
-
       local keybind_names
-      if #key_ids > 0 then
-         print(inspect(key_ids))
-         keybind_names = fun.iter(key_ids):map(Ui.localize_key_name):filter(fun.op.truth):to_list()
-         if #keybind_names > 0 then
-            keybind_names = table.concat(keybind_names, ",")
+      if entry.text then
+         keybind_names = I18N.get_optional(entry.text) or entry.text
+      else
+         local keys = {}
+         if type(entry.keys) == "string" then
+            keys[1] = entry.keys
+         elseif type(entry.keys) == "table" then
+            keys = entry.keys
+         else
+            error("Unknown `keys` field in key help entry")
+         end
+
+         local key_ids = {}
+         for _, keybind_id in ipairs(keys) do
+            local bound_key_ids = get_bound_keys(keybind_id)
+            table.append(key_ids, bound_key_ids)
+         end
+
+         if #key_ids > 0 then
+            print(inspect(key_ids))
+            keybind_names = fun.iter(key_ids):map(Ui.localize_key_name):filter(fun.op.truth):to_list()
+            if #keybind_names > 0 then
+               keybind_names = table.concat(keybind_names, ",")
+            else
+               keybind_names = "???"
+            end
          else
             keybind_names = "???"
          end
-      else
-         keybind_names = "???"
       end
 
       result[#result+1] = ("%s [%s]"):format(keybind_names, action_name)
