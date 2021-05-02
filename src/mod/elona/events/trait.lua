@@ -1,6 +1,7 @@
 local Event = require("api.Event")
 local Rand = require("api.Rand")
 local Gui = require("api.Gui")
+local ElonaItem = require("mod.elona.api.ElonaItem")
 
 -- >>>>>>>> shade2/proc.hsp:1687 	if cc=pc : if trait(traitGodElement):if (ele=rsRe ...
 -- TODO data_ext
@@ -54,9 +55,10 @@ local function trait_ether_poison(item, params, result)
    end
 
    if item:has_category("elona.drink") and not ETHER_POISON_EXCLUDE_ITEMS[item._id] then
-      if Rand.one_in(5) or true then
+      if Rand.one_in(5) then
          Gui.mes("action.pick_up.poison_drips", chara)
          item:change_prototype("elona.poison")
+         item.image = ElonaItem.default_item_image(item) or item.image
       end
    end
    -- <<<<<<<< shade2/action.hsp:193 			} ..

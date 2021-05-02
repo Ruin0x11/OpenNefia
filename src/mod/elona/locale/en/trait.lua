@@ -982,6 +982,14 @@ return {
                on_gain_level = "You are no longer a living mana battery.",
                on_lose_level = "You are a living mana battery."
             },
+
+            ether_poison = {
+               ["-1"] = {
+                  desc = "Poison drips from your hands. [Poison potions RES Poison+]"
+               },
+               on_gain_level = "Your hands are clean now.",
+               on_lose_level = "Poison starts to drip from your hands."
+            },
          }
       }
    }
