@@ -766,6 +766,7 @@ return {
             back = "戻る",
             change = "メニュー切替",
             close = "閉じる",
+            confirm = "決定",
             help = "説明",
             known_info = "既知の情報",
             mode = "情報切替",

@@ -251,6 +251,10 @@ function i18n.capitalize(text)
    return cap(text)
 end
 
+-- Some strings like the ones for the in-game manual will cause the dawg index
+-- to explode.
+local MAX_LOOKUP_LEN = 1000
+
 function i18n.make_prefix_lookup()
    local d = dawg:new()
    local corpus = {}
@@ -285,8 +289,10 @@ function i18n.make_prefix_lookup()
    table.sort(keys)
 
    for _, str in pairs(keys) do
-      local ids = corpus[str]
-      d:insert(str, ids)
+      if str:len() < MAX_LOOKUP_LEN then
+         local ids = corpus[str]
+         d:insert(str, ids)
+      end
    end
 
    d:finish()

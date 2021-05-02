@@ -118,7 +118,7 @@ function SpellsMenu:make_key_hints()
    local hints = self.pages:make_key_hints()
 
    hints[#hints+1] = {
-      action = "ui.key_hint.action.back",
+      action = "ui.key_hint.action.close",
       keys = { "cancel", "escape" }
    }
 

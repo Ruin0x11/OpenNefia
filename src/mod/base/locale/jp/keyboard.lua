@@ -120,7 +120,7 @@ return {
       ["backspace"] = "Backspace",
       ["tab"] = "Tab",
       ["clear"] = "Clear",
-      ["return"] = "決定",
+      ["return"] = "Enter",
       ["delete"] = "Delete",
 
       --

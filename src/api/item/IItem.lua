@@ -313,19 +313,19 @@ function IItem:calc_ui_color()
    if color then return color end
 
    if self:calc("is_no_drop") then
-        return {120, 80, 0}
+      return {120, 80, 0}
    end
 
    if self:calc("identify_state") == Enum.IdentifyState.Full then
       local curse_state = self:calc("curse_state")
       if     curse_state == Enum.CurseState.Doomed  then return {100, 10, 100}
       elseif curse_state == Enum.CurseState.Cursed  then return {150, 10, 10}
-      elseif curse_state == Enum.CurseState.Normal    then return {10, 40, 120}
+      elseif curse_state == Enum.CurseState.Normal  then return {10, 40, 120}
       elseif curse_state == Enum.CurseState.Blessed then return {10, 110, 30}
       end
    end
 
-    return {0, 0, 0}
+   return {0, 0, 0}
 end
 
 function IItem:remove(amount)

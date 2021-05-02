@@ -122,6 +122,13 @@ function InventoryWrapper:previous_menu()
    self:switch_context()
 end
 
+function InventoryWrapper:selected_item_object()
+   if self.submenu then
+      return self.submenu:selected_item_object()
+   end
+   return nil
+end
+
 function InventoryWrapper:switch_context(ctxt_params)
    if self.group then
       self.proto_id = self.group.protos[self.selected_index]

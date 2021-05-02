@@ -211,11 +211,26 @@ function FeatsMenu:make_keymap()
 end
 
 function FeatsMenu:make_key_hints()
-   local hints = self.pages:make_key_hints()
+   local hints = {
+      {
+         action = "trait.window.hint.action.gain_feat",
+         key_name = "ui.key_hint.action.confirm",
+         keys = "enter"
+      }
+   }
+
+   for _, hint in ipairs(self.pages:make_key_hints()) do
+      hints[#hints+1] = hint
+   end
 
    hints[#hints+1] = {
-      action = "ui.key_hint.action.back",
+      action = "ui.key_hint.action.close",
       keys = { "cancel", "escape" }
+   }
+
+   hints[#hints+1] = {
+      action = "trait.window.hint.action.ally",
+      keys = { "mode", "identify" }
    }
 
    return hints
