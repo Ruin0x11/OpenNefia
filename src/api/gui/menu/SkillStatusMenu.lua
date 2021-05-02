@@ -174,12 +174,22 @@ function SkillStatusMenu:make_key_hints()
       }
    elseif self.mode == "trainer_learn" then
       return {
+         {
+            action = "ui.chara_sheet.hint.action.learn_skill",
+            key_name = "ui.key_hint.action.confirm",
+            keys = "enter"
+         },
          page,
          close,
          track_skill
       }
    elseif self.mode == "trainer_train" then
       return {
+         {
+            action = "ui.chara_sheet.hint.action.train_skill",
+            key_name = "ui.key_hint.action.confirm",
+            keys = "enter"
+         },
          page,
          close,
          track_skill

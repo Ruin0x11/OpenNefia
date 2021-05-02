@@ -225,15 +225,7 @@ return {
                spend_bonus = "ボーナスの分配",
                track_skill = "スキルトラック",
                train_skill = "スキルを訓練"
-            },
-            blessing_info = "ｶｰｿﾙ [祝福と呪いの情報] ",
-            confirm = "Shift,Esc [最終確認]",
-            hint = "ｶｰｿﾙ [祝福と呪いの情報]  ",
-            learn_skill = "決定 [スキルを習得]  ",
-            reroll = "決定ｷｰ [リロール]  ",
-            spend_bonus = "決定 [ボーナスの分配]  ",
-            track_skill = "スキルトラック",
-            train_skill = "決定 [スキルを訓練]  "
+            }
          },
          history = "冒険の軌跡",
          personal = {
@@ -779,18 +771,6 @@ return {
             select = "選択",
             shortcut = "ショートカット",
          },
-      },
-      hint = {
-         back = "Shift,Esc [戻る]  ",
-         close = "Shift,Esc [閉じる]  ",
-         cursor = "ｶｰｿﾙ [選択]  ",
-         enter = "決定、",
-         help = " [説明]  ",
-         known_info = " [既知の情報]  ",
-         mode = " [情報切替]  ",
-         page = " [ページ切替]  ",
-         portrait = "p [ポートレイト変更]  ",
-         shortcut = "0〜9 [ショートカット]  "
       },
    }
 }

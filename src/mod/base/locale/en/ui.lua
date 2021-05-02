@@ -228,15 +228,7 @@ end,
             spend_bonus = "Spend Bonus",
             track_skill = "Track Skill",
             train_skill = "Train Skill"
-         },
-        blessing_info = "Cursor [Blessing/Curse Info] ",
-        confirm = "Shift,Esc [Confirm]",
-        hint = "Cursor [Hint]  ",
-        learn_skill = "Enter [Learn Skill]  ",
-        reroll = "Enter Key [Reroll]  ",
-        spend_bonus = "Enter [Spend Bonus]  ",
-        track_skill = "Track Skill",
-        train_skill = "Enter [Train Skill]  "
+         }
       },
       history = "Trace",
       personal = {
@@ -778,18 +770,6 @@ end,
           shortcut = "Shortcut",
           window = "Window"
        },
-    },
-    hint = {
-       back = "Shift,Esc [Back]  ",
-       close = "Shift,Esc [Close]  ",
-       cursor = "Cursor [Select]  ",
-       enter = "Enter,",
-       help = " [Help]  ",
-       known_info = " [Known info]  ",
-       mode = " [Mode]  ",
-       page = " [Page]  ",
-       portrait = "p [Portrait]  ",
-       shortcut = "0~9 [Shortcut]  "
-    },
+    }
   }
 }
