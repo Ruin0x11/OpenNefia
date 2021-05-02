@@ -9,17 +9,32 @@ return {
       },
       option = {
          cheat = {
-            easy_start = {
-               name = "簡単な序盤",
+            easy_new_game = {
+               name = "簡単なニューゲーム",
             },
             max_attributes = {
-               name = "すべての能力MAX",
+               name = "全ての能力MAX",
             },
             max_skills = {
-               name = "すべてのスキルMAX",
+               name = "全てのスキルMAX",
+            },
+            max_spells = {
+               name = "全てのスペルMAX",
             },
             max_resistances = {
-               name = "すべての耐性MAX",
+               name = "全ての耐性MAX",
+            },
+            invincibility = {
+               name = "無敵"
+            },
+            infinite_skill_points = {
+               name = "無限のスキルポイント"
+            },
+            no_spell_failure = {
+               name = "スペルの成功率100%"
+            },
+            no_inventory_burden = {
+               name = "重荷の無視"
             },
             show_stair_locations = {
                name = "ミニマップで階段の検出",

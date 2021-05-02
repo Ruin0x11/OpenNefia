@@ -72,7 +72,7 @@ Event.register("base.on_chara_turn_end", "Proc effect on_turn_end", proc_effects
 local function proc_chara_turn_end(chara, params)
    -- >>>>>>>> shade2/main.hsp:880 	if cc=pc{ ...
    if chara:is_player() then
-      if chara:calc("inventory_weight_type") >= Enum.Burden.Heavy and not config.base.debug_no_weight then
+      if chara:calc("inventory_weight_type") >= Enum.Burden.Heavy then
          if Rand.one_in(20) then
             Gui.mes("action.backpack_squashing", chara)
             local damage = chara:calc("max_hp") * (chara:calc("inventory_weight") * 10 / chara:calc("max_inventory_weight") + 10) / 200 + 1

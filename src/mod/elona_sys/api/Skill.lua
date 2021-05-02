@@ -608,10 +608,6 @@ local function refresh_weight(chara)
       chara.inventory_weight_type = Enum.Burden.None
    end
 
-   if config.base.debug_no_weight then
-      chara.inventory_weight_type = Enum.Burden.None
-   end
-
    Skill.refresh_speed(chara)
    -- <<<<<<<< shade2/calculation.hsp:1326 	return ..
 end

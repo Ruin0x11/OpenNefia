@@ -350,7 +350,7 @@ Event.register("base.on_chara_pass_turn", "Proc drunk effect behavior", proc_dru
 
 local function proc_overweight_prevent_movement(player, params, result)
    -- >>>>>>>> shade2/action.hsp:534 	if cBurden(pc)>=burdenMax:if dbg_noWeight=false : ...
-   if player:calc("inventory_weight_type") >= Enum.Burden.Max and not config.base.debug_no_weight then
+   if player:calc("inventory_weight_type") >= Enum.Burden.Max then
       Gui.mes_duplicate()
       Gui.mes("action.move.carry_too_much")
       result.result = "player_turn_query"
