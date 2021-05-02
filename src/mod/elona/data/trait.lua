@@ -711,7 +711,12 @@ local trait = {
 
       level_min = 0,
       level_max = 1,
-      type = "race"
+      type = "race",
+
+      on_refresh = function(self, chara)
+         chara:add_effect_immunity("elona.dimming")
+      end
+
    },
    {
       _id = "perm_material",
@@ -1007,7 +1012,6 @@ local ether_trait = {
 
       on_turn_begin = function(self, chara)
          -- >>>>>>>> shade2/main.hsp:987 	if trait(traitEtherPotion)!0{ ...
-         local map = chara:current_map()
          if Rand.one_in(5) then
             local item = Rand.choice(chara:iter_inventory())
             if Item.is_alive(item) and item:has_category("elona.drink") then
