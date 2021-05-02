@@ -383,4 +383,20 @@ function Magic.skills_for_magic(magic_id)
    return data["base.skill"]:iter():filter(function(s) return s.effect_id == magic_id end):to_list()
 end
 
+function Magic.get_dice(magic_id, chara, power)
+   local dice = nil
+
+   local effect_entry = data["elona_sys.magic"]:ensure(magic_id)
+   if effect_entry.dice then
+      dice = effect_entry:dice({ source = chara, power = power })
+      dice.x = math.floor(dice.x or 0)
+      dice.y = math.floor(dice.y or 0)
+      dice.bonus = math.floor(dice.bonus or 0)
+      dice.element = dice.element or nil
+      dice.element_power = math.floor(dice.element_power or 0)
+   end
+
+   return dice
+end
+
 return Magic

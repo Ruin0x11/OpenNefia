@@ -181,7 +181,7 @@ data:add {
 
       Gui.mes_c("magic.insanity", "Purple", source, target)
 
-      local dice = self:dice(params)
+      local dice = Magic.get_dice(self._id, params.source, params.power)
       local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
 
       Effect.damage_insanity(target, damage)
@@ -264,7 +264,7 @@ data:add {
       local source = params.source
       local target = params.target
 
-      local dice = self:dice(params)
+      local dice = Magic.get_dice(self._id, params.source, params.power)
 
       target:heal_mp(Rand.roll_dice(dice.x, dice.y, dice.bonus))
 
@@ -333,9 +333,9 @@ data:add {
          end
       end
 
-      local dice = self:dice(params)
-
+      local dice = Magic.get_dice(self._id, params.source, params.power)
       local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
+
       target:damage_hp(damage, source,
                        {
                           element = dice.element,
@@ -418,7 +418,7 @@ local function make_touch(opts)
 
          local tense = "enemy"
 
-         local dice = self:dice(params)
+         local dice = Magic.get_dice(self._id, params.source, params.power)
          local element = dice.element
 
          local cast_style = source:calc("cast_style")

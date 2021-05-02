@@ -728,17 +728,13 @@ end
 function Skill.get_dice(skill_id, chara, power)
    local skill_entry = data["base.skill"]:ensure(skill_id)
 
-   local dice = { x = 0, y = 0, bonus = 0, element_power = 0 }
+   local dice
    if skill_entry.effect_id then
-      local effect_entry = data["elona_sys.magic"]:ensure(skill_entry.effect_id)
-      if effect_entry.dice then
-         dice = effect_entry:dice({ source = chara, power = power })
-         dice.x = math.floor(dice.x or 0)
-         dice.y = math.floor(dice.y or 0)
-         dice.bonus = math.floor(dice.bonus or 0)
-         dice.element_power = math.floor(dice.element_power or 0)
-      end
+      local Magic = require("mod.elona_sys.api.Magic")
+      dice = Magic.get_dice(skill_entry.effect_id, chara, power)
    end
+
+   dice = dice or { x = 0, y = 0, bonus = 0, element_power = 0 }
 
    return dice
 end
