@@ -9,7 +9,7 @@ function test_IObject_change_prototype__replace_aspects()
    Assert.is_truthy(aspect)
    Assert.same({{_id = "elona.buff_hero", power = 250}}, aspect.effects)
 
-   potion:change_prototype("elona.poison")
+   potion:change_prototype("elona.poison", { replace_aspects = true })
 
    aspect = potion:get_aspect(IItemPotion)
    Assert.is_truthy(aspect)
@@ -23,7 +23,7 @@ function test_IObject_change_prototype__replace_aspects_false()
    Assert.is_truthy(aspect)
    Assert.same({{_id = "elona.buff_hero", power = 250}}, aspect.effects)
 
-   potion:change_prototype("elona.poison", { replace_aspects = false })
+   potion:change_prototype("elona.poison")
 
    aspect = potion:get_aspect(IItemPotion)
    Assert.is_truthy(aspect)

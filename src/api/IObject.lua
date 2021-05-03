@@ -85,10 +85,6 @@ function IObject:change_prototype(new_id, opts)
    mt._id = new_id
 
    local replace_aspects = opts and opts.replace_aspects
-   if replace_aspects == nil then
-      replace_aspects = true
-   end
-
    if replace_aspects then
       self:remove_all_aspects()
 

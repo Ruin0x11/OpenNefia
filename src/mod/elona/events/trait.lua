@@ -94,7 +94,7 @@ local function trait_ether_poison(item, params, result)
    if item:has_category("elona.drink") and not ETHER_POISON_EXCLUDE_ITEMS[item._id] then
       if Rand.one_in(5) then
          Gui.mes("action.pick_up.poison_drips", chara)
-         item:change_prototype("elona.poison")
+         item:change_prototype("elona.poison", { replace_aspects = true })
          item.image = ElonaItem.default_item_image(item) or item.image
       end
    end
