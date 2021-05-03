@@ -2,6 +2,8 @@ local Event = require("api.Event")
 local Rand = require("api.Rand")
 local Gui = require("api.Gui")
 local ElonaItem = require("mod.elona.api.ElonaItem")
+local IItemRod = require("mod.elona.api.aspect.IItemRod")
+local Magic = require("mod.elona_sys.api.Magic")
 
 -- >>>>>>>> shade2/proc.hsp:1687 	if cc=pc : if trait(traitGodElement):if (ele=rsRe ...
 -- TODO data_ext
@@ -49,10 +51,33 @@ local function trait_ether_staff(item, params, result)
       return
    end
 
+   local rod = item:get_aspect(IItemRod)
+   if not rod then
+      return
+   end
 
+   Gui.mes("action.pick_up.you_absorb_magic", item:build_name(), chara)
+
+   local charges = rod.charges
+   local effect_id = rod:calc(item, "effect_id")
+   local skills = Magic.skills_for_magic(effect_id)
+
+   local absorbed = false
+   for _, skill_data in ipairs(skills) do
+      if skill_data.type == "spell" then
+         absorbed = true
+         chara.spell_stocks[skill_data._id] = (chara.spell_stocks[skill_data._id] or 0) + (charges * 5 + item.amount)
+      end
+   end
+
+   if not absorbed then
+      chara:heal_mp(charges * 5 * item.amount)
+   end
+
+   rod:set_charges(item, 0)
    -- <<<<<<<< shade2/action.hsp:189 			} ..
 end
-Event.register("base.on_get_item", "Proc ether disease staff trait", trait_ether_staff, { priority = 50000 })
+Event.register("base.on_get_item", "Proc ether disease staff trait", trait_ether_staff, { priority = 200000 })
 
 local ETHER_POISON_EXCLUDE_ITEMS = table.set {
    "elona.poison",

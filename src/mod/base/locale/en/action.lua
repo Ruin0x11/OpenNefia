@@ -708,9 +708,9 @@ return {
             return ("%s %s using it.")
                :format(name(_1), is(_1))
          end,
-         you_absorb_magic = function(_1)
-            return ("You absorb magic from %s.")
-               :format(_1)
+         you_absorb_magic = function(_1, _2)
+            return ("%s absorb%s magic from %s.")
+               :format(name(_2), s(_2), _1)
          end,
          you_buy = function(_1)
             return ("You buy %s.")

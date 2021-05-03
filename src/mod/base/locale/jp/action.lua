@@ -717,9 +717,9 @@ end,
   return ("それは%sが使用中だ。")
   :format(name(_1))
 end,
-      you_absorb_magic = function(_1)
-  return ("あなたは%sから魔力を吸い取った。")
-  :format(_1)
+      you_absorb_magic = function(_1, _2)
+  return ("%sは%sから魔力を吸い取った。")
+  :format(name(_2), _1)
 end,
       you_buy = function(_1)
   return ("%sを買った。")
