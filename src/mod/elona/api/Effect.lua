@@ -588,7 +588,7 @@ end
 
 function Effect.damage_chara_items_fire(chara)
    -- >>>>>>>> shade2/chara_func.hsp:1174 #deffunc item_fire int tc,int ciRef ...
-   if chara:resist_level("elona.fire") >= 6 or chara:calc("quality") >= Enum.Quality.Great then
+   if chara:resist_grade("elona.fire") >= 6 or chara:calc("quality") >= Enum.Quality.Great then
       return false
    end
 
@@ -704,7 +704,7 @@ end
 
 function Effect.damage_chara_items_cold(chara)
    -- >>>>>>>> shade2/chara_func.hsp:1252 	if tc!-1{ ...
-   if chara:resist_level("elona.cold") >= 6 or chara:calc("quality") >= Enum.Quality.Great then
+   if chara:resist_grade("elona.cold") >= 6 or chara:calc("quality") >= Enum.Quality.Great then
       return false
    end
 

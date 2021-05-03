@@ -137,6 +137,10 @@ return {
             },
             IFeatLockedHatch = {
                action_name = "Hatch"
+            },
+
+            IItemChargeable = {
+               action_name = "Chargeable"
             }
          }
       }

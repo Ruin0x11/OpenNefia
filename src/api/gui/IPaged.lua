@@ -7,5 +7,4 @@ return class.interface("IPaged",
                     page_max = "number",
                     page_size = "number",
                     changed_page = "boolean",
-                    get_current_page = "function",
                  })

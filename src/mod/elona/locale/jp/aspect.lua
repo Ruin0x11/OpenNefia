@@ -137,6 +137,10 @@ return {
             },
             IFeatLockedHatch = {
                action_name = "ハッチ"
+            },
+
+            IItemChargeable = {
+               action_name = "充填可のアイテム"
             }
          }
       }

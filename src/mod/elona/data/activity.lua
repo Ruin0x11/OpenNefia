@@ -1257,7 +1257,7 @@ data:add {
             Effect.identify_item(ancient_book, Enum.IdentifyState.Full)
             Gui.mes("action.read.book.finished_decoding", ancient_book:build_name(1))
             aspect.is_decoded = true
-            aspect:set_charges(0)
+            aspect:set_charges(ancient_book, 0)
 
             -- TODO: shade2/proc.hsp:3118 ((iId(ci)=idMageBook)&(iParam2(ci)!0))
 

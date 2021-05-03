@@ -140,6 +140,9 @@ data:add {
          charges = 20,
          max_charges = 4,
       },
+      ["elona.spellbook"] = {
+         can_be_reserved = false,
+      },
       IItemAncientBook,
       [IItemChargeable] = {
          charges = 10,
