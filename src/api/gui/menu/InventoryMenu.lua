@@ -266,15 +266,11 @@ function InventoryMenu:on_select()
       return nil, canceled
    end
 
-   -- BUG: have some way of hiding the inventory window conditionally inside
-   -- on_select(). when the window was shown in vanilla and a prompt appeared
-   -- over it, the screen was not redrawn, which caused the window to be kept in
-   -- the screen's drawing buffer. if a directional prompt or similar which puts
-   -- the focus back on the tilemap was shown instead, the screen was refreshed
-   -- and the menu would not be redrawn, so it would become hidden.
-   self.is_drawing = false
    local result = self.ctxt:on_select(item, amount, self.pages:iter_all_pages():extract("item"))
-   self.is_drawing = true
+
+   -- Reset the visibility of the inventory menu if it was disabled by the
+   -- inventory_proto callbacks.
+   self.ctxt:set_menu_visible(true)
 
    return result
 end
@@ -463,7 +459,7 @@ function InventoryMenu:update_filtering(play_sound)
 end
 
 function InventoryMenu:draw()
-   if not self.is_drawing then
+   if not self.ctxt:is_menu_visible() then
       return
    end
 

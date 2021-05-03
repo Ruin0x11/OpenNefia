@@ -48,6 +48,10 @@ local function get_proto_kind(ctxt)
 end
 
 function InventoryMenu_weight_graph.after:draw(...)
+   if not self.ctxt:is_menu_visible() then
+      return
+   end
+
    local ext = Extend.get(self, "weight_graph")
    if config.weight_graph.show_weight_graph ~= "disabled" and ext.enabled then
       ext.weight_graph:draw()
