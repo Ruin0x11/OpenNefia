@@ -25,9 +25,11 @@ function VisualAIEditor:init(plan, opts)
    self.last_category = nil
    self.interactive = opts.interactive
 
-   self.win = UiWindow:new("visual_ai.gui.menu.title", true)
    self.grid = VisualAIPlanGrid:new(self.plan)
    self.trail = VisualAIPlanTrail:new(self.plan)
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("visual_ai.gui.menu.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.grid)
@@ -46,6 +48,64 @@ function VisualAIEditor:make_keymap()
       ["visual_ai.delete_to_right"]   = function() self:delete_to_right() end,
       ["visual_ai.swap_branches"]     = function() self:swap_branches() end,
    }
+end
+
+function VisualAIEditor:make_key_hints()
+   local hints = {}
+
+   local tile = self.grid:selected_tile()
+   if tile ~= nil then
+      if tile.type == "empty" then
+         hints[#hints+1] = {
+            action = "visual_ai.gui.menu.hint.action.append",
+            keys = "enter"
+         }
+      elseif tile.type == "block" then
+         hints[#hints+1] = {
+            action = "visual_ai.gui.menu.hint.action.replace",
+            keys = "enter"
+         }
+
+         hints[#hints+1] = {
+            action ="visual_ai.gui.menu.hint.action.insert",
+            keys = "visual_ai.insert"
+         }
+
+         hints[#hints+1] = {
+            action ="visual_ai.gui.menu.hint.action.insert_down",
+            keys = "visual_ai.insert_down"
+         }
+
+         hints[#hints+1] = {
+            action ="visual_ai.gui.menu.hint.action.delete",
+            keys = "visual_ai.delete"
+         }
+
+         hints[#hints+1] = {
+            action ="visual_ai.gui.menu.hint.action.delete_merge_down",
+            keys = "visual_ai.delete_merge_down"
+         }
+
+         hints[#hints+1] = {
+            action ="visual_ai.gui.menu.hint.action.delete_to_right",
+            keys = "visual_ai.delete_to_right"
+         }
+
+         if tile.block.proto.type == "condition" then
+            hints[#hints+1] = {
+               action ="visual_ai.gui.menu.hint.action.swap_branches",
+               keys = "visual_ai.swap_branches"
+            }
+         end
+      end
+   end
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.close",
+      keys = "escape"
+   }
+
+   return hints
 end
 
 function VisualAIEditor:on_query()
@@ -94,7 +154,7 @@ end
 
 function VisualAIEditor:insert(split_type)
    local tile = self.grid:selected_tile()
-   if tile == nil then
+   if tile == nil or tile.type ~= "block" then
       return
    end
 
@@ -144,7 +204,6 @@ function VisualAIEditor:swap_branches()
 
    tile.plan:swap_branches(tile.block)
    self:refresh_grid()
-   self:halt_input()
 end
 
 function VisualAIEditor:relayout(x, y, width, height)
@@ -168,7 +227,7 @@ function VisualAIEditor:relayout(x, y, width, height)
    self.trail:relayout(self.x + grid_w,
                        self.y + 20,
                        320,
-                       self.height - 40)
+                       self.height - 50)
 end
 
 function VisualAIEditor:draw()
@@ -189,6 +248,9 @@ function VisualAIEditor:update(dt)
    if changed then
       local trail, selected_idx = self.grid:get_trail_and_index()
       self.trail:set_trail(trail, selected_idx)
+
+      local key_hints = self:make_key_hints()
+      self.win:set_key_hints(key_hints)
    end
 
    if canceled then

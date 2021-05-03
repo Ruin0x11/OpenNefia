@@ -136,4 +136,35 @@ function ElonaChara.random_human_image(adv)
    return Rand.choice(HUMAN_IMAGES[gender])
 end
 
+function ElonaChara.default_chara_image(chara)
+   if chara.proto.image then
+      return chara.proto.image
+   end
+
+   if chara.male_image and chara.gender == "male" then
+      return chara.male_image
+   end
+   if chara.female_image and chara.gender == "female" then
+      return chara.female_image
+   end
+
+   local race_id = chara.race or chara.proto.race
+   if race_id then
+      local race = data["base.race"][race_id]
+      if race and race.properties then
+         if race.properties.male_image and chara.gender == "male" then
+            return race.properties.male_image
+         end
+         if race.properties.female_image and chara.gender == "female" then
+            return race.properties.female_image
+         end
+         if race.properties.image then
+            return race.properties.image
+         end
+      end
+   end
+
+   return nil
+end
+
 return ElonaChara

@@ -81,11 +81,12 @@ local last_index
 function SkillsMenu:init(chara)
    self.chara = chara
 
-   self.win = UiWindow:new("ui.skill.title", true, "key help", 0, 60)
-
    local list = SkillsMenu.generate_list(self.chara)
    self.pages = UiList:new_paged(list, 16)
    table.merge(self.pages, UiListExt(self))
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("ui.skill.title", true, key_hints, 0, 60)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -114,6 +115,22 @@ function SkillsMenu:make_keymap()
    end
 
    return keymap
+end
+
+function SkillsMenu:make_key_hints()
+   local hints = self.pages:make_key_hints()
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.close",
+      keys = { "cancel", "escape" }
+   }
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.shortcut",
+      key_name = "ui.key_hint.key.shortcut"
+   }
+
+   return hints
 end
 
 function SkillsMenu:assign_shortcut(index)

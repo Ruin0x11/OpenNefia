@@ -134,6 +134,76 @@ function SkillStatusMenu:make_keymap()
    }
 end
 
+function SkillStatusMenu:make_key_hints()
+   -- >>>>>>>> shade2/command.hsp:2452 	if csCtrl=0:if page=0:s=lang("ｶｰｿﾙ [祝福と呪いの情報]  ", ...
+   local page = {
+      action = "ui.key_hint.action.page",
+      keys = { "previous_page", "next_page" }
+   }
+   local close = {
+      action = "ui.key_hint.action.close",
+      keys = { "cancel", "escape" }
+   }
+   local track_skill = {
+      action = "ui.chara_sheet.hint.action.track_skill",
+      keys = "mode2"
+   }
+
+   if self.mode == "chara_status" then
+      return {
+         {
+            action = "ui.chara_sheet.hint.action.spend_bonus",
+            key_name = "ui.key_hint.action.confirm",
+            keys = "enter"
+         },
+         page,
+         close,
+         track_skill
+      }
+   elseif self.mode == "chara_make" then
+      -- NOTE: This is intended to be unreachable.
+      return {
+         {
+            action = "chara_make.common.reroll",
+            key_name = "ui.key_hint.key.enter_key"
+         },
+         {
+            action = "ui.chara_sheet.hint.action.final_confirmation",
+            keys = { "cancel", "escape" },
+         },
+      }
+   elseif self.mode == "trainer_learn" then
+      return {
+         {
+            action = "ui.chara_sheet.hint.action.learn_skill",
+            key_name = "ui.key_hint.action.confirm",
+            keys = "enter"
+         },
+         page,
+         close,
+         track_skill
+      }
+   elseif self.mode == "trainer_train" then
+      return {
+         {
+            action = "ui.chara_sheet.hint.action.train_skill",
+            key_name = "ui.key_hint.action.confirm",
+            keys = "enter"
+         },
+         page,
+         close,
+         track_skill
+      }
+   else
+      return {
+         page,
+         close,
+         track_skill
+      }
+   end
+   -- <<<<<<<< shade2/command.hsp:2457 	if csCtrl!1:if page!0:s+=""+key_mode2+" ["+lang(" ..
+end
+
 function SkillStatusMenu:set_data(chara)
    self.chara = chara or self.chara
 

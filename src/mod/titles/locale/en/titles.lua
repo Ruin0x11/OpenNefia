@@ -2,8 +2,13 @@ return {
    titles = {
       ui = {
          menu = {
+            hint ={
+               action = {
+                  effect_on_off = "Effect On/Off"
+               },
+               note = "Earn titles after fulfilling their conditions",
+            },
             title = "Titles",
-            note = "Earn titles after fulfilling their conditions",
             header = {
                title_name = "Title Name",
                conditions = "Conditions"

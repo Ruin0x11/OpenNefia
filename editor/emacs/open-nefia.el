@@ -348,11 +348,15 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (let ((bounds (open-nefia--bounds-of-last-defun pos)))
     (open-nefia-send-region (car bounds) (cdr bounds))))
 
+(defun open-nefia--project-root ()
+  (let ((root (projectile-project-root)))
+    (projectile-locate-dominating-file root "OpenNefia")))
+
 (defun open-nefia--require-path-of-file (file)
   (let* ((prefix
           (file-relative-name
            (file-name-sans-extension file)
-           (string-join (list (projectile-project-root)))))
+           (string-join (list (open-nefia--project-root)))))
          (lua-path (string-trim-left
                     (replace-regexp-in-string "/" "." prefix)
                     "\\(src\\)?\\.+"))
@@ -394,7 +398,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
          (file (projectile-completing-read "File: " files)))
     (when file
       (open-nefia--require-file
-       (string-join (list (projectile-project-root) file))))))
+       (string-join (list (open-nefia--project-root) file))))))
 
 (defun open-nefia--require-path (file)
   (let* ((pair (open-nefia--require-path-of-file file))
@@ -414,14 +418,14 @@ removed.  Return the new string.  If STRING is nil, return nil."
     (kill-new src)))
 
 (defun open-nefia-insert-require-for-file (file)
-  (let ((project-root (projectile-ensure-project (projectile-project-root))))
+  (let ((project-root (projectile-ensure-project (open-nefia--project-root))))
     (beginning-of-line)
     (insert (open-nefia--require-path
              (string-join (list project-root file))))
     (indent-region (point-at-bol) (point-at-eol))))
 
 (defun open-nefia--api-dir-cands (&optional mod-name)
-  (let ((project-root (projectile-ensure-project (projectile-project-root))))
+  (let ((project-root (projectile-ensure-project (open-nefia--project-root))))
     (-filter (lambda (f)
                (and (or
                      (string-prefix-p "src/api" f)
@@ -431,7 +435,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
              (projectile-project-dirs project-root))))
 
 (defun open-nefia--api-file-cands (&optional mod-name)
-  (let ((project-root (projectile-ensure-project (projectile-project-root))))
+  (let ((project-root (projectile-ensure-project (open-nefia--project-root))))
     (-filter (lambda (f)
                (and (not (string-prefix-p "lib/" f))
                     (string-equal "lua" (file-name-extension f))
@@ -584,7 +588,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (if (eq system-type 'windows-nt) "luajit.exe" "luajit"))
 
 (defun open-nefia--repl-file (file)
-  (string-join (list (projectile-project-root) file)))
+  (string-join (list (open-nefia--project-root) file)))
 
 (defun open-nefia--test-repl (file)
   (with-current-buffer (get-buffer-create open-nefia--repl-errors-buffer)
@@ -694,7 +698,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
 (defun open-nefia-make-scratch-buffer ()
   (interactive)
   (let* ((filename (format-time-string "%Y-%m-%d_%H-%M-%S.lua"))
-         (dest-path (string-join (list (projectile-project-root) "src/scratch/" filename))))
+         (dest-path (string-join (list (open-nefia--project-root) "src/scratch/" filename))))
     (find-file dest-path)
     (newline)
     (setq open-nefia-always-send-to-repl t)
@@ -705,26 +709,26 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (interactive "P")
   (let* ((path (file-relative-name
                 (buffer-file-name)
-                (string-join (list (projectile-project-root) "src"))))
+                (string-join (list (open-nefia--project-root) "src"))))
          (script (open-nefia--executable-name))
          (cmd (format "%s exec %s %s" script path (if arg "-m" "")))
-         (default-directory (projectile-project-root)))
+         (default-directory (open-nefia--project-root)))
     (compile cmd)))
 
 (defun open-nefia-run-headlessly-repl (arg)
   (interactive "P")
   (let* ((path (file-relative-name
                 (buffer-file-name)
-                (string-join (list (projectile-project-root) "src"))))
+                (string-join (list (open-nefia--project-root) "src"))))
          (script (open-nefia--executable-name))
          (cmd (format "%s exec %s -r %s" script path (if arg "-m" "")))
-         (default-directory (projectile-project-root)))
+         (default-directory (open-nefia--project-root)))
     (compile cmd)))
 
 (defun open-nefia-start-game ()
   (interactive)
   (let* ((cmd (open-nefia--executable-name))
-         (default-directory (projectile-project-root)))
+         (default-directory (open-nefia--project-root)))
     (setq compilation-search-path (list nil "src"))
     (compile cmd)))
 
@@ -743,7 +747,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
 (defun open-nefia--containing-mod-id-this-file ()
   (let* ((path (file-relative-name
                 (buffer-file-name)
-                (string-join (list (projectile-project-root) "src")))))
+                (string-join (list (open-nefia--project-root) "src")))))
     (if (string-match "^mod/\\([a-z0-9][a-z0-9_]+\\)/" path)
         (match-string 1 path)
       "@base@")))

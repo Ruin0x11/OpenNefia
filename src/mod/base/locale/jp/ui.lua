@@ -10,8 +10,13 @@ return {
          unknown = "不明"
       },
       alias = {
+         hint = {
+            action = {
+               lock_alias = "異名のロック",
+               reroll = "別の名前を考える",
+            }
+         },
          list = "異名の候補",
-         reroll = "別の名前を考える",
          title = "異名の選択"
       },
       ally_list = {
@@ -102,7 +107,6 @@ return {
             part = "項目",
             title = "装備表示の変更"
          },
-         hint = "左右キー [変更]  ｷｬﾝｾﾙ [閉じる]"
       },
       article = function(_1)
          return ("%s")
@@ -213,14 +217,15 @@ return {
          },
          extra_info = "その他",
          hint = {
-            blessing_info = "ｶｰｿﾙ [祝福と呪いの情報] ",
-            confirm = "Shift,Esc [最終確認]",
-            hint = "ｶｰｿﾙ [祝福と呪いの情報]  ",
-            learn_skill = "決定 [スキルを習得]  ",
-            reroll = "決定ｷｰ [リロール]  ",
-            spend_bonus = "決定 [ボーナスの分配]  ",
-            track_skill = "スキルトラック",
-            train_skill = "決定 [スキルを訓練]  "
+            action = {
+               blessing_and_hex = "祝福と呪いの情報",
+               final_confirmation = "最終確認",
+               hint = "祝福と呪いの情報",
+               learn_skill = "スキルを習得",
+               spend_bonus = "ボーナスの分配",
+               track_skill = "スキルトラック",
+               train_skill = "スキルを訓練"
+            }
          },
          history = "冒険の軌跡",
          personal = {
@@ -375,18 +380,6 @@ return {
          _11 = "世界最高の"
       },
       gold = " gold",
-      hint = {
-         back = "Shift,Esc [戻る]  ",
-         close = "Shift,Esc [閉じる]  ",
-         cursor = "ｶｰｿﾙ [選択]  ",
-         enter = "決定、",
-         help = " [説明]  ",
-         known_info = " [既知の情報]  ",
-         mode = " [情報切替]  ",
-         page = " [ページ切替]  ",
-         portrait = "p [ポートレイト変更]  ",
-         shortcut = "0〜9 [ショートカット]  "
-      },
       home = {
          elona = {
             cave = "洞窟",
@@ -754,6 +747,30 @@ return {
 
       sense_quality = function(_1, _2)
          return (" (%s)[%s製]"):format(_1, _2)
-      end
+      end,
+
+      key_hint = {
+         key = {
+            cancel = "ｷｬﾝｾﾙ",
+            cursor = "ｶｰｿﾙ",
+            shortcut = "0〜9",
+            enter_key = "決定ｷｰ",
+            left_right = "左右キー"
+         },
+         action = {
+            back = "戻る",
+            change = "変更",
+            switch_menu = "メニュー切替",
+            close = "閉じる",
+            confirm = "決定",
+            help = "説明",
+            known_info = "既知の情報",
+            mode = "情報切替",
+            page = "ページ切替",
+            portrait = "ポートレイト変更",
+            select = "選択",
+            shortcut = "ショートカット",
+         },
+      },
    }
 }

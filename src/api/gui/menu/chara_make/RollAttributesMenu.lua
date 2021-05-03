@@ -88,11 +88,12 @@ function RollAttributesMenu:init(charamake_data)
    self.alist = UiList:new(self.data, 23)
    table.merge(self.alist, UiListExt(self))
 
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("chara_make.roll_attributes.title", true, key_hints)
+
    self.input = InputHandler:new()
    self.input:forward_to(self.alist)
    self.input:bind_keys(self:make_keymap())
-
-   self.win = UiWindow:new("chara_make.roll_attributes.title")
 
    self.caption = "chara_make.roll_attributes.caption"
    self.intro_sound = "base.skill"
@@ -105,6 +106,19 @@ function RollAttributesMenu:make_keymap()
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end,
       mode2 = function() self:reroll(true, true) end
+   }
+end
+
+function RollAttributesMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.back",
+         keys = { "cancel", "escape" }
+      },
+      {
+         action = "chara_make.common.reroll",
+         keys = "mode2"
+      }
    }
 end
 

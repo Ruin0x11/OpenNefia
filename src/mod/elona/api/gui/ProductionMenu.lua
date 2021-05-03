@@ -92,9 +92,11 @@ function ProductionMenu:init(chara, skill_id)
 
    self.data = ProductionMenu.generate_list(self.chara, self.skill_id)
 
-   self.win = UiWindow:new("production.menu.title", false, "key help")
    self.pages = UiList:new_paged(self.data, 10)
    table.merge(self.pages, UiListExt(self))
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("production.menu.title", false, key_hints)
 
    self.chip_batch = nil
    self.recipe_info = nil
@@ -113,6 +115,17 @@ function ProductionMenu:make_keymap()
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
    }
+end
+
+function ProductionMenu:make_key_hints()
+   local hints = self.pages:make_key_hints()
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.back",
+      keys = { "cancel", "escape" }
+   }
+
+   return hints
 end
 
 function ProductionMenu:on_query()

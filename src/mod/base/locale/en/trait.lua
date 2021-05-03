@@ -12,7 +12,12 @@ return {
       incognito = "You are disguising yourself.",
       pregnant = "You are pregnant.",
       window = {
-         ally = "Ally",
+         hint = {
+            action = {
+               ally = "Ally",
+               gain_feat = "Gain Feat",
+            }
+         },
          already_maxed = "You already have maxed out the feat.",
          available_feats = "[Available feats]",
          category = {
@@ -23,7 +28,6 @@ return {
             race = "Race"
          },
          detail = "Detail",
-         enter = "Enter [Gain Feat]",
          feats_and_traits = "[Feats and traits]",
          his_equipment = function(_1, _2)
             return ("%s equipment %s")

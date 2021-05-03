@@ -383,7 +383,7 @@ local function calc_raw_damage_for_skills(result, chara, weapon, target, is_rang
          local effective_range = weapon:get_aspect(IItemRangedWeapon):calc_effective_range(weapon, dist)
          result.multiplier = result.multiplier * effective_range / 100
       end
-   elseif chara:calc_aspect(ICharaEquipStyle, "is_wielding_two_handed") then
+   elseif chara:calc_aspect(ICharaEquipStyle, "is_wielding_two_handed") and weapon then
       if weapon:calc("weight") >= 4000 then
          result.multiplier = result.multiplier * 1.5
       else

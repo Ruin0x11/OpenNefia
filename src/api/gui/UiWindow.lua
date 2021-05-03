@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local I18N = require("api.I18N")
+local Ui = require("api.Ui")
 
 local Window = require("api.gui.Window")
 local TopicWindow = require("api.gui.TopicWindow")
@@ -9,12 +10,11 @@ local UiTheme = require("api.gui.UiTheme")
 
 local UiWindow = class.class("UiWindow", IUiElement)
 
-function UiWindow:init(title, shadow, key_help, x_offset, y_offset)
+function UiWindow:init(title, shadow, key_hints, x_offset, y_offset)
    self.x_offset = x_offset or 0
    self.y_offset = y_offset or 0
    self.title = I18N.get_optional(title) or title or ""
-   self.key_help = key_help or ""
-   self.key_help = I18N.get_optional(self.key_help) or self.key_help
+   self.key_hints = Ui.format_key_hints(key_hints)
    self.page = 0
    self.page_max = 0
    self.show_page = false
@@ -65,6 +65,10 @@ function UiWindow:set_title(title)
    end
 end
 
+function UiWindow:set_key_hints(key_hints)
+   self.key_hints = Ui.format_key_hints(key_hints)
+end
+
 function UiWindow:draw()
    if self.shadow then
       Draw.set_color(255, 255, 255, 80)
@@ -109,7 +113,7 @@ function UiWindow:draw()
 
    Draw.set_color(0, 0, 0)
    Draw.set_font(12) -- 12 + sizefix - en * 2
-   Draw.text(self.key_help, x + 58 + x_offset, y + height - 43 - height % 8)
+   Draw.text(self.key_hints, x + 58 + x_offset, y + height - 43 - height % 8)
 
    if self.show_page then
       Draw.set_font(12, "bold") -- 12 + sizefix - en * 2

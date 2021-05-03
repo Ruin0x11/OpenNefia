@@ -74,12 +74,14 @@ function MaterialsMenu:init(chara, can_choose)
 
    self.data = MaterialsMenu.generate_list(self.chara)
 
-   self.scroll = UiScroll:new(true, "key help")
    self.pages = UiList:new_paged(self.data, 15)
    table.merge(self.pages, UiListExt(self))
    self.can_choose = (can_choose ~= nil and can_choose) or false
 
    self.chip_batch = nil
+
+   local key_hints = self:make_key_hints()
+   self.scroll = UiScroll:new(true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -91,6 +93,17 @@ function MaterialsMenu:make_keymap()
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
    }
+end
+
+function MaterialsMenu:make_keymap()
+   local hints = self.pages:make_key_hints()
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.back",
+      keys = { "cancel", "escape" }
+   }
+
+   return hints
 end
 
 function MaterialsMenu:on_query()

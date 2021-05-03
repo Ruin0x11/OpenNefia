@@ -42,7 +42,7 @@ data:add {
          text = function(t, state)
             local skill_name = I18N.localize("base.skill", state.skill_id, "name")
             return {
-               I18N.get("talk.npc.trainer.cost.training", skill_name, state.cost)
+               I18N.get("talk.npc.trainer.cost.training", skill_name, state.cost, t.speaker)
             }
          end,
          choices = function(t, state)
@@ -77,7 +77,7 @@ data:add {
          text = function(t, state)
             local skill_name = I18N.localize("base.skill", state.skill_id, "name")
             return {
-               I18N.get("talk.npc.trainer.cost.learning", skill_name, state.cost)
+               I18N.get("talk.npc.trainer.cost.learning", skill_name, state.cost, t.speaker)
             }
          end,
          choices = function(t, state)

@@ -197,7 +197,7 @@ end
 --
 -- {
 --   "success":true,
---   "results":["action.ranged.equip.need_ammo"]
+--   "results":[["action.ranged.equip.need_ammo", "You need to equip ammos or arrows."]]
 -- }
 function commands.locale_search(args)
    local results = fun.iter(i18n.search(args.query))

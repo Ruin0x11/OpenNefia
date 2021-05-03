@@ -48,12 +48,30 @@ local inv_examine = {
 
    keybinds = function(ctxt)
       return {
-         mode2 = function(wrapper, item)
-            -- item.flags.no_drop = not item.flags.no_drop
-            Gui.mes("TODO nodrop toggle")
+         mode2 = function(wrapper)
+            -- >>>>>>>> shade2/command.hsp:4001 			ci=list(0,pageSize*page+cs) ...
+            local item = wrapper:selected_item_object()
+            if item then
+               Gui.play_sound("base.ok1")
+               if not item.is_no_drop then
+                  item.is_no_drop = true
+                  Gui.mes("ui.inv.examine.no_drop.set", item:build_name())
+               else
+                  item.is_no_drop = false
+                  Gui.mes("ui.inv.examine.no_drop.unset", item:build_name())
+               end
+            end
+            -- <<<<<<<< shade2/command.hsp:4002 			if iBit(iNoDrop,ci)=false:iBitMod iNoDrop,ci,tr ..
          end
       }
    end,
+
+   key_hints = {
+      {
+         action = "ui.inv.window.tag.no_drop",
+         keys = "mode2",
+      }
+   },
 
    sources = { "chara", "equipment", "ground" },
    shortcuts = true,
@@ -75,14 +93,31 @@ local inv_drop = {
    elona_id = 2,
 
    params = { is_multi_drop = { type = "boolean", optional = true } },
+
    keybinds = function(ctxt)
       return {
          mode2 = function(wrapper)
-            if not ctxt.params.multi_drop then
+            -- >>>>>>>> shade2/command.hsp:4005 			txt lang("続けてアイテムを置くことができる。","You can continuou ...
+            if not ctxt.params.is_multi_drop then
+               Gui.mes("ui.inv.drop.multi")
                wrapper:set_inventory_group("elona.multi_drop", "elona.inv_drop", { is_multi_drop = true })
             end
+            -- <<<<<<<< shade2/command.hsp:4006 			dropContinue=1:snd seInv:screenUpdate=-1:gosub  ..
          end
       }
+   end,
+
+   key_hints = function(ctxt)
+      if not ctxt.params.is_multi_drop then
+         return {
+            {
+               action = "ui.inv.window.tag.multi_drop",
+               keys = "mode2"
+            }
+         }
+      end
+
+      return {}
    end,
 
    sources = { "chara" },

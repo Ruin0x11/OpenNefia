@@ -13,8 +13,10 @@ local ColorEditorMenu = class.class("ColorEditorMenu", IUiLayer)
 ColorEditorMenu:delegate("input", IInput)
 
 function ColorEditorMenu:init(color)
-   self.win = UiWindow:new("extra_config_options:ui.menu.color_editor.title", true)
    self.list = ColorEditorMenuList:new(color)
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("extra_config_options:ui.menu.color_editor.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
@@ -23,6 +25,10 @@ end
 
 function ColorEditorMenu:make_keymap()
    return {}
+end
+
+function ColorEditorMenu:make_key_hints()
+   return self.list:make_key_hints()
 end
 
 function ColorEditorMenu:on_query()

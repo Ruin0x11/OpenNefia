@@ -20,7 +20,11 @@ end,
   return ("Are you sure you really want to delete %s ?")
   :format(_1)
 end,
-      key_hint = "BackSpace [Delete]  ",
+      hint = {
+         action = {
+            delete = "Delete"
+         }
+      },
       no_save = "No save files found",
       title = "Game Selection",
       which_save = "Which save game do you want to continue?"

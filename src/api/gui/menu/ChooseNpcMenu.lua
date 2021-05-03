@@ -99,8 +99,10 @@ function ChooseNpcMenu:init(charas, topic)
       assert(type(self.custom_topic.formatter) == "function")
    end
 
-   self.window = UiWindow:new("ui.npc_list.title", true, "key help")
    table.merge(self.pages, UiListExt(self))
+
+   local key_hints = self:make_key_hints()
+   self.window = UiWindow:new("ui.npc_list.title", true, key_hints)
 
    self.map_object_batch = nil
 
@@ -118,6 +120,17 @@ function ChooseNpcMenu:make_keymap()
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end,
    }
+end
+
+function ChooseNpcMenu:make_key_hints()
+   local hints = self.pages:make_key_hints()
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.close",
+      keys = { "cancel", "escape" }
+   }
+
+   return hints
 end
 
 function ChooseNpcMenu:relayout()

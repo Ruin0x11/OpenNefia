@@ -30,7 +30,6 @@ return {
     select_alias = {
       alias_list = "Alias List",
       caption = "Choose your Alias.",
-      lock_alias = "Lock Alias",
       title = "Alias Selection"
     },
     select_class = {

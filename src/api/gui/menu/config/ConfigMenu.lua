@@ -18,8 +18,10 @@ function ConfigMenu:init(config_menu_id)
 
    self.config_menu = config_menu
 
-   self.win = UiWindow:new("config.menu." .. config_menu_id .. ".name", true)
    self.list = ConfigMenuList:new(config_menu.items)
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("config.menu." .. config_menu_id .. ".name", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
@@ -31,6 +33,17 @@ function ConfigMenu:make_keymap()
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
    }
+end
+
+function ConfigMenu:make_key_hints()
+   local hints = self.list:make_key_hints()
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.close",
+      keys = { "cancel", "escape" }
+   }
+
+   return hints
 end
 
 function ConfigMenu:on_query()

@@ -366,8 +366,13 @@ return {
       hit_key_for_help = "Hit ? key to display help.",
       interact = {
          change_tone = {
+            hint = {
+               action = {
+                  show_hidden = "Show Hidden",
+                  change_tone = "Change Tone"
+               }
+            },
             default_tone = "Default Tone",
-            hint = "Enter [Change Tone] ",
             is_somewhat_different = function(_1)
                return ("%s is somewhat different.")
                   :format(name(_1))

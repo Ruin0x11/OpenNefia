@@ -47,8 +47,6 @@ function AliasPrompt:init(kind, seed)
    self.width = 400
    self.height = 458
 
-   self.win = UiWindow:new("ui.alias.title", true)
-
    local items = {
       { text = I18N.get("ui.alias.reroll"), type = "reroll", on_choose = function() self:reroll(true) end }
    }
@@ -58,6 +56,9 @@ function AliasPrompt:init(kind, seed)
    table.merge(self.list, UiListExt(self))
 
    self.bg_index = 0
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("ui.alias.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
@@ -73,6 +74,19 @@ function AliasPrompt:make_keymap()
       end,
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
+   }
+end
+
+function AliasPrompt:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.back",
+         keys = { "cancel", "escape" }
+      },
+      {
+         action = "ui.alias.hint.action.lock_alias",
+         keys = "mode2"
+      }
    }
 end
 

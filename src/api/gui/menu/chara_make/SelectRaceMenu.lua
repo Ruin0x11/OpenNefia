@@ -54,12 +54,14 @@ function SelectRaceMenu:init(charamake_data)
 
    table.sort(races, function(a, b) return a.proto.ordering < b.proto.ordering end)
 
-   self.win = UiWindow:new("chara_make.select_race.title")
    self.pages = UiList:new_paged(races, 16)
    table.merge(self.pages, UiListExt())
    self.bg = Ui.random_cm_bg()
 
    self.race_info = UiRaceInfo:new(races[1])
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("chara_make.select_race.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -73,6 +75,15 @@ function SelectRaceMenu:make_keymap()
    return {
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
+   }
+end
+
+function SelectRaceMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.back",
+         keys = { "cancel", "escape" }
+      },
    }
 end
 

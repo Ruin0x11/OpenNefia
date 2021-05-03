@@ -22,14 +22,17 @@ function ChatBubbleConfigMenu:init(chara, default)
       self.default = true
    end
 
+   self.list = ChatBubbleConfigMenuList:new(self.chara, self.default)
+
    local title
    if self.default then
       title = "chat_bubbles:ui.menu.config.title.default"
    else
       title = "chat_bubbles:ui.menu.config.title.individual"
    end
-   self.win = UiWindow:new(title, true)
-   self.list = ChatBubbleConfigMenuList:new(self.chara, self.default)
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new(title, true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
@@ -43,6 +46,38 @@ function ChatBubbleConfigMenu:make_keymap()
       mode2 = function() self:initialize_settings() end,
       message_log = function() if self.chara then self:switch_mode(not self.default) end end,
    }
+end
+
+function ChatBubbleConfigMenu:make_key_hints()
+   local hints = {
+      {
+         action = "ui.key_hint.action.change",
+         key_name = "ui.key_hint.key.left_right"
+      },
+      {
+         action = "ui.key_hint.action.close",
+         key_name = "ui.key_hint.key.cancel",
+         keys = { "cancel", "escape" }
+      },
+      {
+         action = "chat_bubbles:ui.menu.config.hint.action.reset",
+         keys = "mode2"
+      }
+   }
+
+   local switch_action
+   if self.default then
+      switch_action = "chat_bubbles:ui.menu.config.hint.action.individual_settings"
+   else
+      switch_action = "chat_bubbles:ui.menu.config.hint.action.default_settings"
+   end
+
+   hints[#hints+1] = {
+      action = switch_action,
+      keys = "message_log"
+   }
+
+   return hints
 end
 
 function ChatBubbleConfigMenu:on_query()
@@ -65,6 +100,7 @@ function ChatBubbleConfigMenu:switch_mode(default)
    end
 
    self.win:set_title(title)
+   self.win:set_key_hints(self:make_key_hints())
    self.list:switch_mode(default)
 end
 

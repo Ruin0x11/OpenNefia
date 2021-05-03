@@ -10,8 +10,13 @@ return {
       unknown = "Unknown"
     },
     alias = {
+      hint = {
+         action = {
+            lock_alias = "Lock Alias",
+            reroll = "Reroll",
+         }
+      },
       list = "Alias List",
-      reroll = "Reroll",
       title = "Alias Selection"
     },
     ally_list = {
@@ -105,7 +110,6 @@ end,
         part = "Part",
         title = "Parts to hide"
       },
-      hint = "Right,left [Change]  Shift,Esc [Close]"
     },
     article = function(_1)
   return ("[%s]")
@@ -216,14 +220,15 @@ end,
       },
       extra_info = "Extra Info",
       hint = {
-        blessing_info = "Cursor [Blessing/Curse Info] ",
-        confirm = "Shift,Esc [Confirm]",
-        hint = "Cursor [Hint]  ",
-        learn_skill = "Enter [Learn Skill]  ",
-        reroll = "Enter Key [Reroll]  ",
-        spend_bonus = "Enter [Spend Bonus]  ",
-        track_skill = "Track Skill",
-        train_skill = "Enter [Train Skill]  "
+         action = {
+            blessing_and_hex = "Blessing/Curse Info",
+            final_confirmation = "Confirm",
+            hint = "Hint",
+            learn_skill = "Learn Skill",
+            spend_bonus = "Spend Bonus",
+            track_skill = "Track Skill",
+            train_skill = "Train Skill"
+         }
       },
       history = "Trace",
       personal = {
@@ -375,18 +380,6 @@ end
       _11 = "godly"
     },
     gold = " gold pieces",
-    hint = {
-      back = "Shift,Esc [Back]  ",
-      close = "Shift,Esc [Close]  ",
-      cursor = "Cursor [Select]  ",
-      enter = "Enter,",
-      help = " [Help]  ",
-      known_info = " [Known info]  ",
-      mode = " [Mode]  ",
-      page = " [Page]  ",
-      portrait = "p [Portrait]  ",
-      shortcut = "0~9 [Shortcut]  "
-    },
     home = {
        elona = {
           cave = "cave",
@@ -754,6 +747,29 @@ end,
 
     sense_quality = function(_1, _2)
        return (" (%s)[%s]"):format(capitalize(_1), capitalize(_2))
-    end
+    end,
+
+    key_hint = {
+       key = {
+          cursor = "Cursor",
+          enter_key = "Enter Key",
+          left_right = "Right,left",
+          shortcut = "0~9",
+       },
+       action = {
+          back = "Back",
+          change = "Change",
+          switch_menu = "Change",
+          close = "Close",
+          help = "Help",
+          known_info = "Known info",
+          mode = "Mode",
+          page = "Page",
+          portrait = "Portrait",
+          select = "Select",
+          shortcut = "Shortcut",
+          window = "Window"
+       },
+    }
   }
 }

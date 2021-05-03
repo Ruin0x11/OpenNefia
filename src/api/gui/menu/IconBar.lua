@@ -1,5 +1,6 @@
 local I18N = require("api.I18N")
 local Draw = require("api.Draw")
+local Ui = require("api.Ui")
 
 local TopicWindow = require("api.gui.TopicWindow")
 local IUiElement = require("api.gui.IUiElement")
@@ -8,11 +9,12 @@ local UiTheme = require("api.gui.UiTheme")
 
 local IconBar = class.class("IconBar", {IUiElement, ISettable})
 
-function IconBar:init(icon_set)
+function IconBar:init(icon_set, key_hints)
    self.icon_set = icon_set
    self.icon_order = {}
    self.index = 1
    self.bar = TopicWindow:new(5, 5)
+   self.key_hints = Ui.format_key_hints(key_hints)
 end
 
 function IconBar:set_data(icon_order)
@@ -74,8 +76,7 @@ function IconBar:do_redraw()
       end
    end
 
-   local key_help = "Tab,Ctrl+Tab [Window]"
-   Draw.text_shadowed(key_help, x + self.width - Draw.text_width(key_help) - 6, y + 32)
+   Draw.text_shadowed(self.key_hints, x + self.width - Draw.text_width(self.key_hints) - 6, y + 32)
 end
 
 function IconBar:draw()

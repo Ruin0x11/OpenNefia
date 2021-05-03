@@ -78,11 +78,12 @@ local last_index
 function SpellsMenu:init(chara)
    self.chara = chara
 
-   self.win = UiWindow:new("ui.spell.title", true, "key help")
-
    local list = SpellsMenu.generate_list(self.chara)
    self.pages = UiList:new_paged(list, 16)
    table.merge(self.pages, UiListExt(self))
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("ui.spell.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -111,6 +112,22 @@ function SpellsMenu:make_keymap()
    end
 
    return keymap
+end
+
+function SpellsMenu:make_key_hints()
+   local hints = self.pages:make_key_hints()
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.close",
+      keys = { "cancel", "escape" }
+   }
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.shortcut",
+      key_name = "ui.key_hint.key.shortcut"
+   }
+
+   return hints
 end
 
 function SpellsMenu:assign_shortcut(index)

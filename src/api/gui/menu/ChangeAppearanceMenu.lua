@@ -55,17 +55,11 @@ function ChangeAppearanceMenu:init(charamake_data)
 
    local chara = self.charamake_data.chara
 
-   if CharaMake.is_active() then
-      -- Apply race/class properties to make sure we have the default character
-      -- image provided by race/class
-      Skill.apply_race_params(chara, chara.race)
-      Skill.apply_class_params(chara, chara.class)
+   if charamake_data.is_chara_make then
       chara.use_pcc = true
    end
 
    chara.pcc = chara.pcc or make_default_pcc()
-
-   self.win = UiWindow:new("ui.appearance.basic.title", true, "key_help")
 
    self.list = ChangeAppearanceList:new()
    self.list:set_appearance_from_chara(chara)
@@ -73,6 +67,9 @@ function ChangeAppearanceMenu:init(charamake_data)
    self.preview = ChangeAppearancePreview:new(chara)
 
    table.merge(self.list, ChangeAppearanceListExt(self))
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("ui.appearance.basic.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
@@ -88,6 +85,20 @@ function ChangeAppearanceMenu:make_keymap()
    return {
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
+   }
+end
+
+function ChangeAppearanceMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.change",
+         key_name = "ui.key_hint.key.left_right"
+      },
+      {
+         action = "ui.key_hint.action.close",
+         key_name = "ui.key_hint.key.cancel",
+         keys = { "cancel", "escape" }
+      }
    }
 end
 

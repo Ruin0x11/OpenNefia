@@ -20,7 +20,11 @@ end,
   return ("本当の本当に%sを削除していいのかい？")
   :format(_1)
 end,
-      key_hint = "BackSpace [削除]  ",
+      hint = {
+         action = {
+            delete = "削除"
+         }
+      },
       no_save = "No save files found",
       title = "冒険者の選択",
       which_save = "どの冒険を再開するんだい？"

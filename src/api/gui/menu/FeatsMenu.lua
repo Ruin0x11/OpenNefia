@@ -190,12 +190,13 @@ function FeatsMenu:init(chara, chara_make)
    self.chara = chara
    self.chara_make = chara_make
 
-   self.win = UiWindow:new("trait.window.title", true, "key help", 55, 40)
-
    self.data = FeatsMenu.generate_list(self.chara)
 
    self.pages = UiList:new_paged(self.data, 15)
    table.merge(self.pages, UiListExt(self))
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("trait.window.title", true, key_hints, 55, 40)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -203,10 +204,46 @@ function FeatsMenu:init(chara, chara_make)
 end
 
 function FeatsMenu:make_keymap()
-   return {
+   local keymap = {
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
    }
+
+   if not self.chara_make then
+      -- TODO ally
+      keymap.mode = function() self.canceled = true end
+      keymap.identify = function() self.canceled = true end
+   end
+
+   return keymap
+end
+
+function FeatsMenu:make_key_hints()
+   local hints = {
+      {
+         action = "trait.window.hint.action.gain_feat",
+         key_name = "ui.key_hint.action.confirm",
+         keys = "enter"
+      }
+   }
+
+   for _, hint in ipairs(self.pages:make_key_hints()) do
+      hints[#hints+1] = hint
+   end
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.close",
+      keys = { "cancel", "escape" }
+   }
+
+   if not self.chara_make then
+      hints[#hints+1] = {
+         action = "trait.window.hint.action.ally",
+         keys = { "mode", "identify" }
+      }
+   end
+
+   return hints
 end
 
 function FeatsMenu:on_query()

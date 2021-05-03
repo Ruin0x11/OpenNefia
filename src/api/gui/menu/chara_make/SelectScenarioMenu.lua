@@ -44,10 +44,13 @@ function SelectScenarioMenu:init(charamake_data)
 
    self.scenario_id = nil
 
-   self.win = UiWindow:new("select_scenario.title")
    self.list = UiList:new(scenarios)
    table.merge(self.list, UiListExt(self))
+
    self.text = UiTextGroup:new({}, 14, {0, 0, 0}, nil, nil, 15)
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("select_scenario.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
@@ -61,6 +64,15 @@ function SelectScenarioMenu:make_keymap()
    return {
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
+   }
+end
+
+function SelectScenarioMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.back",
+         keys = { "cancel", "escape" }
+      }
    }
 end
 

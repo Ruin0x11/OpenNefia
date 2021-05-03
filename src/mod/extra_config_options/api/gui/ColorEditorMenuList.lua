@@ -16,6 +16,19 @@ ColorEditorMenuList:delegate("model", IList)
 ColorEditorMenuList:delegate("model", IPaged)
 ColorEditorMenuList:delegate("input", IInput)
 
+function ColorEditorMenuList:init(color)
+   self.color = color or { 255, 255, 255, 255 }
+   for i = 1, 4 do
+      self.color[i] = self.color[i] or 255
+   end
+   self.item_height = 21
+
+   self.model = ListModel:new(self.color)
+
+   self.input = InputHandler:new()
+   self.input:bind_keys(self:make_keymap())
+end
+
 function ColorEditorMenuList:make_keymap()
    return {
       north = function()
@@ -34,17 +47,13 @@ function ColorEditorMenuList:make_keymap()
    }
 end
 
-function ColorEditorMenuList:init(color)
-   self.color = color or { 255, 255, 255, 255 }
-   for i = 1, 4 do
-      self.color[i] = self.color[i] or 255
-   end
-   self.item_height = 21
-
-   self.model = ListModel:new(self.color)
-
-   self.input = InputHandler:new()
-   self.input:bind_keys(self:make_keymap())
+function ColorEditorMenuList:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.back",
+         keys = { "cancel", "escape" }
+      }
+   }
 end
 
 function ColorEditorMenuList:change(index, delta)

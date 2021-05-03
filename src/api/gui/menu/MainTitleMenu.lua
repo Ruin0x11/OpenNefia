@@ -42,15 +42,12 @@ function MainTitleMenu:init()
    self.time = 0
    self.version = Env.version()
 
-   local title_str, key_help
+   local title_str
    if I18N.language() == "jp" then
       title_str = "冒険の道標"
    else
       title_str = "Starting Menu"
    end
-   key_help = I18N.get("ui.hint.cursor")
-
-   self.win = UiWindow:new(title_str, true, key_help)
 
    local data = {
       { action = "restore",   text = "main_menu.title_menu.restore", subtext = "Restore an Adventurer" },
@@ -73,6 +70,9 @@ function MainTitleMenu:init()
    self.list = UiList:new(data, 35)
    table.merge(self.list, UiListExt())
 
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new(title_str, true, key_hints)
+
    self.input = InputHandler:new()
    self.input.keys:forward_to(self.list)
    self.input:bind_keys(self:make_keymap())
@@ -83,6 +83,15 @@ end
 function MainTitleMenu:make_keymap()
    return {
       raw_f3 = function() self.action = "quickstart" end
+   }
+end
+
+function MainTitleMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.select",
+         key_name = "ui.key_hint.key.cursor",
+      }
   }
 end
 

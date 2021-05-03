@@ -251,6 +251,10 @@ function i18n.capitalize(text)
    return cap(text)
 end
 
+-- Some strings like the ones for the in-game manual will cause the dawg index
+-- to explode.
+local MAX_LOOKUP_LEN = 1000
+
 function i18n.make_prefix_lookup()
    local d = dawg:new()
    local corpus = {}
@@ -261,11 +265,13 @@ function i18n.make_prefix_lookup()
          full_id = namespace .. ":" .. id
       end
       if type(item) == "string" then
-         corpus[#corpus+1] = { item, full_id }
+         corpus[item] = corpus[item] or {}
+         table.insert(corpus[item], full_id)
       elseif type(item) == "function" then
          local ok, result = pcall(item, {}, {}, {}, {}, {})
          if ok and type(result) == "string" then
-            corpus[#corpus+1] = { result, full_id }
+            corpus[result] = corpus[result] or {}
+            table.insert(corpus[result], full_id)
          end
       elseif type(item) == "table" then
          for _, v in ipairs(item) do
@@ -279,10 +285,14 @@ function i18n.make_prefix_lookup()
       end
    end
 
-   table.sort(corpus, function(a, b) return a[1] < b[1] end)
+   local keys = table.keys(corpus)
+   table.sort(keys)
 
-   for _, pair in ipairs(corpus) do
-      d:insert(pair[1], pair[2])
+   for _, str in pairs(keys) do
+      if str:len() < MAX_LOOKUP_LEN then
+         local ids = corpus[str]
+         d:insert(str, ids)
+      end
    end
 
    d:finish()
@@ -295,7 +305,18 @@ function i18n.search(prefix)
       Log.warn("Building i18n search index.")
       i18n.index = i18n.make_prefix_lookup()
    end
-   return i18n.index:search(prefix)
+   local results = i18n.index:search(prefix)
+   local final = {}
+   local seen = table.set {}
+   for _, t in ipairs(results) do
+      for _, id in ipairs(t) do
+         if not seen[id] then
+            final[#final+1] = id
+            seen[id] = true
+         end
+      end
+   end
+   return final
 end
 
 function i18n.make_key_prefix_lookup()

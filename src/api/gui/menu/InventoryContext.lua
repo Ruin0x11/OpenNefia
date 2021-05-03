@@ -237,6 +237,15 @@ function InventoryContext:additional_keybinds()
    return {}
 end
 
+function InventoryContext:additional_key_hints()
+   if type(self.proto.key_hints) == "table" then
+      return self.proto.key_hints
+   elseif type(self.proto.key_hints) == "function" then
+      return self.proto.key_hints(self)
+   end
+   return {}
+end
+
 function InventoryContext:can_select(item)
    if self.proto.can_select then
       return self.proto.can_select(self, item)

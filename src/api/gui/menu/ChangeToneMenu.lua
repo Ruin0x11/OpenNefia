@@ -65,7 +65,8 @@ function ChangeToneMenu:init(show_hidden)
    self.data = ChangeToneMenu.generate_list(self.show_hidden)
    self.pages = UiList:new_paged(self.data, 16)
 
-   self.window = UiWindow:new("action.interact.change_tone.title", true, "key help")
+   local key_hints = self:make_key_hints()
+   self.window = UiWindow:new("action.interact.change_tone.title", true, key_hints)
    table.merge(self.pages, UiListExt(self))
 
    self.input = InputHandler:new()
@@ -83,6 +84,31 @@ function ChangeToneMenu:make_keymap()
       escape = function() self.canceled = true end,
       identify = function() self:toggle_hidden(not self.show_hidden) end,
    }
+end
+
+function ChangeToneMenu:make_key_hints()
+   local hints = self.pages:make_key_hints()
+
+   table.insert(
+      hints, 1,
+      {
+         action = "action.interact.change_tone.hint.action.change_tone",
+         key_name = "ui.key_hint.action.confirm",
+         keys = "enter"
+      }
+   )
+
+   hints[#hints+1] = {
+      action = "action.interact.change_tone.hint.action.show_hidden",
+      keys =  "identify"
+   }
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.close",
+      keys = { "cancel", "escape" }
+   }
+
+   return hints
 end
 
 function ChangeToneMenu:toggle_hidden(show_hidden)

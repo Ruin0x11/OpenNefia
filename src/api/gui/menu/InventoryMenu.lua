@@ -77,7 +77,6 @@ function InventoryMenu:init(ctxt, returns_item)
    self.ctxt = ctxt
    self.returns_item = returns_item
 
-   self.win = UiWindow:new(self.ctxt.proto.window_title, true, "key help")
    self.target_equip = InventoryTargetEquipWindow:new()
    self.pages = UiList:new_paged({}, 16)
    table.merge(self.pages, UiListExt(self))
@@ -95,6 +94,9 @@ function InventoryMenu:init(ctxt, returns_item)
    self.result = nil
 
    self.map_object_batch = nil
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new(self.ctxt.proto.window_title, true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -132,6 +134,41 @@ function InventoryMenu:make_keymap()
    return keymap
 end
 
+function InventoryMenu:make_key_hints()
+   local hints = {
+      {
+         action = "ui.key_hint.action.page",
+         keys = { "previous_page", "next_page" }
+      },
+      {
+         action = "ui.key_hint.action.known_info" ,
+         keys = "identify"
+      },
+      {
+         action = "ui.key_hint.action.mode",
+         keys = "mode"
+      },
+      {
+         action = "ui.key_hint.action.close",
+         keys = { "cancel", "escape" }
+      }
+   }
+
+   if self.ctxt.proto.shortcuts then
+      hints[#hints+1] = {
+         action = "ui.key_hint.action.shortcut",
+         key_name = "ui.key_hint.key.shortcut"
+      }
+   end
+
+   local add = self.ctxt:additional_key_hints()
+   for _, hint in ipairs(add) do
+      hints[#hints+1] = hint
+   end
+
+   return hints
+end
+
 function InventoryMenu:additional_keybinds()
    return self.ctxt:additional_keybinds()
 end
@@ -153,6 +190,7 @@ function InventoryMenu:show_query_text()
       if self.ctxt.proto.locale_params then
          params = {self.ctxt.proto:locale_params()}
       end
+
       Gui.mes_newline()
 
       local text = self.ctxt.proto.query_text

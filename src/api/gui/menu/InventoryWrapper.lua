@@ -34,7 +34,7 @@ function InventoryWrapper:init(proto_id, params, returns_item, group_id)
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
    self.submenu = nil
-   self.icon_bar = IconBar:new("inventory_icons")
+   self.icon_bar = IconBar:new("inventory_icons", self:make_key_hints())
 
    self:set_inventory_group(group_id, proto_id)
 end
@@ -45,6 +45,15 @@ function InventoryWrapper:make_keymap()
       next_page = function() self:next_menu() end,
       raw_ctrl_tab = function() self:previous_menu() end,
       raw_tab = function() self:next_menu() end,
+   }
+end
+
+function InventoryWrapper:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.switch_menu",
+         keys = { "previous_page", "next_page", "raw_tab", "raw_ctrl_tab" }
+      }
    }
 end
 
@@ -111,6 +120,13 @@ function InventoryWrapper:previous_menu()
    end
 
    self:switch_context()
+end
+
+function InventoryWrapper:selected_item_object()
+   if self.submenu then
+      return self.submenu:selected_item_object()
+   end
+   return nil
 end
 
 function InventoryWrapper:switch_context(ctxt_params)

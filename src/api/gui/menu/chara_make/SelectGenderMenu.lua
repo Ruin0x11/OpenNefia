@@ -1,5 +1,6 @@
 local I18N = require("api.I18N")
 local Ui = require("api.Ui")
+local Log = require("api.Log")
 
 local IInput = require("api.gui.IInput")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
@@ -38,9 +39,11 @@ function SelectGenderMenu:init(charamake_data)
           end)
       :to_list()
 
-   self.win = UiWindow:new("chara_make.select_gender.title")
    self.list = UiList:new(self.genders)
    table.merge(self.list, UiListExt())
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("chara_make.select_gender.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
@@ -54,6 +57,15 @@ function SelectGenderMenu:make_keymap()
    return {
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
+   }
+end
+
+function SelectGenderMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.back",
+         keys = { "cancel", "escape" }
+      },
    }
 end
 
@@ -85,7 +97,19 @@ function SelectGenderMenu:draw()
 end
 
 function SelectGenderMenu:get_charamake_result(charamake_data, retval)
-   charamake_data.chara.gender = retval
+   local chara = charamake_data.chara
+   chara.gender = retval
+
+   if chara.image == nil or chara.image == "base.default" then
+      local ElonaChara = require("mod.elona.api.ElonaChara")
+      local image = ElonaChara.default_chara_image(chara)
+      if image then
+         chara.image = image
+      else
+         Log.error("No chara image for %s", chara)
+      end
+   end
+
    return charamake_data
 end
 

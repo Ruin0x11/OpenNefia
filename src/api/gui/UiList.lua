@@ -70,6 +70,19 @@ function UiList:make_keymap()
    return keys
 end
 
+function UiList:make_key_hints()
+   local hints = {}
+
+   if class.is_an(IPaged, self.model) then
+      hints[#hints+1] = {
+         action = "ui.key_hint.action.page",
+         keys = { "previous_page", "next_page" }
+      }
+   end
+
+   return hints
+end
+
 function UiList:new_paged(items, page_max, item_height, item_offset_x, item_offset_y)
    return UiList:new(PagedListModel:new(items, page_max), item_height, item_offset_x, item_offset_y)
 end

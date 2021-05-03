@@ -56,9 +56,9 @@ function SelectClassMenu:init(charamake_result)
 
    classes = classes:to_list()
 
-   self.win = UiWindow:new("chara_make.select_class.title")
    self.pages = UiList:new_paged(classes, 16)
    table.merge(self.pages, UiListExt())
+
    self.bg = Ui.random_cm_bg()
 
    self.chip_batch = nil
@@ -73,13 +73,16 @@ function SelectClassMenu:init(charamake_result)
       self.chip_male = props.image
       self.chip_female = props.image
    else
-      Log.warn("No image defined in race.properties")
+      Log.error("No image defined in race.properties")
    end
 
    self.chip_male_height = 0
    self.chip_female_height = 0
 
    self.race_info = UiRaceInfo:new(classes[1])
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("chara_make.select_class.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -93,6 +96,15 @@ function SelectClassMenu:make_keymap()
    return {
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
+   }
+end
+
+function SelectClassMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.back",
+         keys = { "cancel", "escape" }
+      }
    }
 end
 

@@ -619,6 +619,7 @@ function env.hotload_path(path, also_deps)
          i18n.load_single_translation(filepath, i18n.db[lang][namespace], i18n.data[lang], namespace)
 
          i18n.index = nil
+         i18n.key_index = nil
 
          return nil
       end

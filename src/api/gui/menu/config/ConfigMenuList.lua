@@ -103,6 +103,19 @@ function ConfigMenuList:make_keymap()
    return keys
 end
 
+function ConfigMenuList:make_key_hints()
+   local hints = {}
+
+   if self.model.page_max > 0 then
+      hints[#hints+1] = {
+         action = "ui.key_hint.action.page",
+         keys = { "previous_page", "next_page", "mode", "identify" }
+      }
+   end
+
+   return hints
+end
+
 function ConfigMenuList:init(config_menu_items, item_height)
    local list = gen_list(config_menu_items)
 

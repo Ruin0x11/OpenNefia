@@ -80,10 +80,12 @@ function ListAdventurersMenu:init(advs)
    self.data = ListAdventurersMenu.generate_list(advs)
    self.pages = UiList:new_paged(self.data, 16)
 
-   self.window = UiWindow:new("ui.adventurers.title", true, "key help")
    table.merge(self.pages, UiListExt(self))
 
    self.map_object_batch = nil
+
+   local key_hints = self:make_key_hints()
+   self.window = UiWindow:new("ui.adventurers.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -95,6 +97,17 @@ function ListAdventurersMenu:make_keymap()
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end,
    }
+end
+
+function ListAdventurersMenu:make_key_hints()
+   local hints = self.pages:make_key_hints()
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.close",
+      keys = { "cancel", "escape" }
+   }
+
+   return hints
 end
 
 function ListAdventurersMenu:relayout()

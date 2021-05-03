@@ -10,46 +10,6 @@ local Feat = require("api.Feat")
 local Item = require("api.Item")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 
-local arc = {
-   _type = "base.map_archetype",
-   _id = "test_room",
-
-   properties = {
-      music = "elona.lonely"
-   }
-}
-
-function arc.on_map_renew_minor(map)
-   for _=1, 50 do
-      local x = Rand.rnd(map:width())
-      local y = Rand.rnd(map:height())
-      map:set_tile(x, y, "elona.brick_1")
-   end
-end
-
-function arc.on_map_renew_major(map)
-   for _=1, 50 do
-      local x = Rand.rnd(map:width())
-      local y = Rand.rnd(map:height())
-      map:set_tile(x, y, "elona.cobble_caution")
-   end
-end
-
-function arc.on_map_loaded(map)
-   local to_minor = map.renew_minor_date - World.date_hours()
-   local to_major = map.renew_major_date - World.date_hours()
-   Gui.mes_c("Time to minor renew: " .. to_minor .. " hours", "Yellow")
-   Gui.mes_c("Time to major renew: " .. to_major .. " hours", "Yellow")
-end
-
-function arc.on_map_renew_geometry(map)
-   for _, x, y in Pos.iter_rect(10, 10, 20, 20) do
-      map:set_tile(x, y, "elona.wall_dirt_dark_top")
-   end
-end
-
-data:add(arc)
-
 
 local putit_room = {
    _type = "base.map_archetype",
@@ -257,6 +217,48 @@ data:add {
    }
 }
 
+
+local arc = {
+   _type = "base.map_archetype",
+   _id = "test_room",
+
+   starting_pos = MapEntrance.center,
+
+   properties = {
+      music = "elona.lonely"
+   }
+}
+
+function arc.on_map_renew_minor(map)
+   for _=1, 50 do
+      local x = Rand.rnd(map:width())
+      local y = Rand.rnd(map:height())
+      map:set_tile(x, y, "elona.brick_1")
+   end
+end
+
+function arc.on_map_renew_major(map)
+   for _=1, 50 do
+      local x = Rand.rnd(map:width())
+      local y = Rand.rnd(map:height())
+      map:set_tile(x, y, "elona.cobble_caution")
+   end
+end
+
+function arc.on_map_loaded(map)
+   local to_minor = map.renew_minor_date - World.date_hours()
+   local to_major = map.renew_major_date - World.date_hours()
+   Gui.mes_c("Time to minor renew: " .. to_minor .. " hours", "Yellow")
+   Gui.mes_c("Time to major renew: " .. to_major .. " hours", "Yellow")
+end
+
+function arc.on_map_renew_geometry(map)
+   for _, x, y in Pos.iter_rect(10, 10, 20, 20) do
+      map:set_tile(x, y, "elona.wall_dirt_dark_top")
+   end
+end
+
+data:add(arc)
 
 local test_room = {
    _type = "base.area_archetype",

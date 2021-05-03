@@ -17,7 +17,6 @@ function SelectBalanceMenu:init(charamake_data)
    self.width = 680
    self.height = 500
 
-   self.win = UiWindow:new("select_balance.title")
    self.list = UiList:new({"Normal", "Overdose"})
 
    self.text = UiTextGroup:new({}, nil, nil, nil, 15)
@@ -25,6 +24,9 @@ function SelectBalanceMenu:init(charamake_data)
       {"Normal mode is normal.", "It is a normal mode."},
       {"Overdose is another mode.", "Stats are gained by 3."},
    }
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("select_balance.title", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
@@ -37,6 +39,15 @@ function SelectBalanceMenu:make_keymap()
    return {
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
+   }
+end
+
+function SelectBalanceMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.back",
+         keys = { "cancel", "escape" }
+      }
    }
 end
 

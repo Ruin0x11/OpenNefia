@@ -35,7 +35,10 @@ function TitleInformationMenu:init(entry, list)
    end
 
    self.model = PagedListModel:new({}, 15)
-   self.win = UiWindow:new("titles.ui.info_menu.title")
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new("titles.ui.info_menu.title", true, key_hints)
+
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
 
@@ -66,6 +69,16 @@ function TitleInformationMenu:make_keymap()
       east = next_page,
       previous_page = previous_page,
       next_page = next_page
+   }
+end
+
+function TitleInformationMenu:make_key_hints()
+   return {
+      {
+         action = "ui.key_hint.action.close",
+         key_name = "ui.key_hint.key.cancel",
+         keys = { "cancel", "escape" }
+      }
    }
 end
 

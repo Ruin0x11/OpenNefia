@@ -55,6 +55,69 @@ function CharacterSheetMenu:make_keymap()
    }
 end
 
+function CharacterSheetMenu:make_key_hints()
+   -- >>>>>>>> shade2/command.hsp:2452 	if csCtrl=0:if page=0:s=lang("ｶｰｿﾙ [祝福と呪いの情報]  ", ...
+   local portrait ={
+      action = "ui.key_hint.action.portrait",
+      keys = "portrait"
+   }
+   local page = {
+      action = "ui.key_hint.action.page",
+      keys = { "previous_page", "next_page" }
+   }
+   local close = {
+      action = "ui.key_hint.action.close",
+      keys = { "cancel", "escape" }
+   }
+
+   if self.mode == "chara_status" then
+      return {
+         {
+            action = "ui.chara_sheet.hint.action.hint",
+            key_name = "ui.key_hint.key.cursor",
+         },
+         portrait,
+         page,
+         close
+      }
+   elseif self.mode == "chara_make" then
+      return {
+         {
+            action = "chara_make.common.reroll",
+            key_name = "ui.key_hint.key.enter_key"
+         },
+         portrait,
+         {
+            action = "ui.chara_sheet.hint.action.final_confirmation",
+            keys = { "cancel", "escape" },
+         },
+      }
+   elseif self.mode == "trainer_learn" then
+      return {
+         portrait,
+         page,
+         close
+      }
+   elseif self.mode == "trainer_train" then
+      return {
+         portrait,
+         page,
+         close
+      }
+   else
+      return {
+         {
+            action = "ui.chara_sheet.hint.action.blessing_and_hex",
+            key_name = "ui.key_hint.key.cursor",
+         },
+         portrait,
+         page,
+         close
+      }
+   end
+   -- <<<<<<<< shade2/command.hsp:2457 	if csCtrl!1:if page!0:s+=""+key_mode2+" ["+lang(" ..
+end
+
 function CharacterSheetMenu:set_data(chara)
    self.chara = chara or self.chara
    self.x = self.x or 0

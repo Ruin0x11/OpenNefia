@@ -17,10 +17,12 @@ local VisualAIInsertMenu = class.class("VisualAIInsertMenu", IUiLayer)
 VisualAIInsertMenu:delegate("input", IInput)
 
 function VisualAIInsertMenu:init(title, category_idx, item_id)
-   self.win = UiWindow:new(title or "", true)
    self.list = VisualAIBlockList:new()
    self.category_win = TopicWindow:new(1, 1)
    self.category_text = ""
+
+   local key_hints = self:make_key_hints()
+   self.win = UiWindow:new(title or "", true, key_hints)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
@@ -40,6 +42,18 @@ function VisualAIInsertMenu:make_keymap()
    }
 end
 
+function VisualAIInsertMenu:make_key_hints()
+   local hints = self.list:make_key_hints()
+
+   hints[#hints+1] = {
+      action = "ui.key_hint.action.close",
+      key_name = "ui.key_hint.key.cancel",
+      keys = { "cancel", "escape" }
+   }
+
+   return hints
+end
+
 function VisualAIInsertMenu:on_query()
    Gui.play_sound("base.pop2")
    self.canceled = false
@@ -53,7 +67,7 @@ function VisualAIInsertMenu:relayout(x, y, width, height)
    self.t = UiTheme.load(self)
 
    self.win:relayout(self.x, self.y, self.width, self.height)
-   self.list:relayout(self.x + 10, self.y + 10 + 50, self.width - 20, self.height - 20 - 40)
+   self.list:relayout(self.x + 15, self.y + 10 + 50, self.width - 20, self.height - 20 - 40 - 30)
    self.category_win:relayout(self.x + 10 + 50, self.y + 32, self.width - 20 - 100, 40)
 end
 
