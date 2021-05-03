@@ -991,27 +991,14 @@ function Tools.powerup(chara, levels)
       Skill.grow_primary_skills(chara)
    end
 
-   chara:mod_base_skill_level("elona.stat_magic", 10000)
-   chara:mod_base_skill_level("elona.stat_mana", 10000)
-
-   Skill.iter_skills()
+   Skill.iter_actions()
       :each(function(m)
-            Skill.gain_skill(chara, m._id, 2000, 1000)
+            Skill.gain_skill(chara, m._id, 100, 1000)
            end)
 
    Skill.iter_spells()
       :each(function(m)
-            Skill.gain_skill(chara, m._id, 2000, 1000)
-           end)
-
-   Skill.iter_actions()
-      :each(function(m)
-            Skill.gain_skill(chara, m._id, 2000, 1000)
-           end)
-
-   Skill.iter_resistances()
-      :each(function(m)
-            chara:mod_base_resist_level(m._id, 2000, "set")
+            Skill.gain_skill(chara, m._id, 10, 1000)
            end)
 
    chara:refresh()

@@ -77,6 +77,7 @@ local function make_bolt(opts)
             x = (opts.dice_x and opts.dice_x(params.power, level)) or 0,
             y = ((opts.dice_y and opts.dice_y(params.power, level)) or 0) + 1,
             bonus = (opts.dice_bonus and opts.dice_bonus(params.power, level)) or 0,
+            element = opts.element_id or nil,
             element_power = (opts.dice_element_power and opts.dice_element_power(params.power, level)) or 0
          }
       end,
@@ -123,7 +124,7 @@ local function make_bolt(opts)
                   local target = Chara.at(tx, ty, map)
                   if target and target ~= source then
                      -- TODO riding
-                     local dice = self:dice(params)
+                     local dice = Magic.get_dice(self._id, params.source, params.power)
                      local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
 
                      local success, damage = SkillCheck.handle_control_magic(source, target, damage)
@@ -254,6 +255,7 @@ local function make_arrow(opts)
             x = (opts.dice_x and opts.dice_x(params.power, level)) or 0,
             y = ((opts.dice_y and opts.dice_y(params.power, level)) or 0) + 1,
             bonus = (opts.dice_bonus and opts.dice_bonus(params.power, level)) or 0,
+            element = opts.element_id or nil,
             element_power = (opts.dice_element_power and opts.dice_element_power(params.power, level)) or 0
          }
       end,
@@ -275,7 +277,7 @@ local function make_arrow(opts)
             Gui.start_draw_callback(cb)
          end
 
-         local dice = self:dice(params)
+         local dice = Magic.get_dice(self._id, params.source, params.power)
          local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
 
          local tense = "enemy"
@@ -411,6 +413,7 @@ local function make_ball(opts)
             x = (opts.dice_x and opts.dice_x(params.power, level)) or 0,
             y = ((opts.dice_y and opts.dice_y(params.power, level)) or 0) + 1,
             bonus = (opts.dice_bonus and opts.dice_bonus(params.power, level)) or 0,
+            element = opts.element_id or nil,
             element_power = (opts.dice_element_power and opts.dice_element_power(params.power, level)) or 0
          }
       end,
@@ -459,7 +462,7 @@ local function ball_cb_elemental(self, x, y, tx, ty, source, target, element, pa
       element:on_damage_tile(tx, ty, source)
    end
 
-   local dice = self:dice(params)
+   local dice = Magic.get_dice(self._id, params.source, params.power)
    local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus) * 100 / (75 + Pos.dist(tx, ty, x, y) * 25)
 
    local passed_through
@@ -585,7 +588,7 @@ local function ball_cb_healing_rain(self, x, y, tx, ty, source, target, element,
       local cb = Anim.heal(tx, ty, "base.heal_effect", "base.heal1", 5)
       Gui.start_draw_callback(cb)
       Gui.mes_visible("damage.is_healed", target.x, target.y, target)
-      local dice = self:dice(params)
+      local dice = Magic.get_dice(self._id, params.source, params.power)
       Effect.heal(target, dice.x, dice.y, dice.bonus)
    end
    -- <<<<<<<< shade2/proc.hsp:1753 			} ..
@@ -690,7 +693,7 @@ data:add {
                mes_if_can_see(source, "magic.explosion.chain", source)
             end
 
-            params.source = source -- to ensure self:dice(params) is correct
+            params.source = source -- to ensure Magic.get_dice(...) is correct
             local x = source.x
             local y = source.y
 
@@ -710,7 +713,7 @@ data:add {
                if target then
                   if x ~= tx or y ~= ty then
                      -- TODO riding
-                     local dice = self:dice(params)
+                     local dice = Magic.get_dice(self._id, params.source, params.power)
                      local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus) * 100 / (75 + Pos.dist(tx, ty, x, y) * 25)
 
                      local success, damage = SkillCheck.handle_control_magic(source, target, damage)
@@ -802,6 +805,7 @@ local function make_heal(opts)
             x = (opts.dice_x and opts.dice_x(params.power, level)) or 0,
             y = ((opts.dice_y and opts.dice_y(params.power, level)) or 0) + 1,
             bonus = (opts.dice_bonus and opts.dice_bonus(params.power, level)) or 0,
+            element = opts.element_id or nil,
             element_power = (opts.dice_element_power and opts.dice_element_power(params.power, level)) or 0
          }
       end,
@@ -811,7 +815,7 @@ local function make_heal(opts)
 
          Gui.mes_visible(opts.message, target.x, target.y, target)
 
-         local dice = self:dice(params)
+         local dice = Magic.get_dice(self._id, params.source, params.power)
          return do_heal(target, params.curse_state, dice)
       end
    }
@@ -908,7 +912,7 @@ data:add {
    cast = function(self, params)
       local target = params.target
 
-      local dice = self:dice(params)
+      local dice = Magic.get_dice(self._id, params.source, params.power)
       do_heal(target, params.curse_state, dice)
    end
 }
@@ -1346,7 +1350,7 @@ local function make_breath(element_id, elona_id, dice_x, dice_y, bonus, cost)
                   end
                   local chara = Chara.at(tx, ty, map)
                   if chara then
-                     local dice = self:dice(params)
+                     local dice = Magic.get_dice(self._id, params.source, params.power)
                      local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
 
                      local tense = "enemy"
@@ -1434,7 +1438,7 @@ local function make_remove_hex(opts)
             return Magic.cast("elona.curse", params)
          end
 
-         local dice = self:dice(params)
+         local dice = Magic.get_dice(self._id, params.source, params.power)
 
          local remove = {}
 

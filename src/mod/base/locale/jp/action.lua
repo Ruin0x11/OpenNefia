@@ -700,7 +700,10 @@ end,
   return ("%sは%sを拾った。")
   :format(name(_1), _2)
 end,
-      poison_drips = "あなたの手から毒が滴った。",
+      poison_drips = function(_1)
+         return ("%の手から毒が滴った。")
+            :format(name(_1))
+      end,
       put_in_container = function(_1)
   return ("%sを保管した。")
   :format(_1)
@@ -714,9 +717,9 @@ end,
   return ("それは%sが使用中だ。")
   :format(name(_1))
 end,
-      you_absorb_magic = function(_1)
-  return ("あなたは%sから魔力を吸い取った。")
-  :format(_1)
+      you_absorb_magic = function(_1, _2)
+  return ("%sは%sから魔力を吸い取った。")
+  :format(name(_2), _1)
 end,
       you_buy = function(_1)
   return ("%sを買った。")

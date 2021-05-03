@@ -11,6 +11,13 @@ local Map = require("api.Map")
 local Charagen = require("mod.elona.api.Charagen")
 local Log = require("api.Log")
 local ElonaChara = require("mod.elona.api.ElonaChara")
+local ICharaElonaFlags = require("mod.elona.api.aspect.chara.ICharaElonaFlags")
+
+local function add_elona_flags(chara)
+   chara:get_aspect_or_default(ICharaElonaFlags, true)
+end
+
+Event.register("base.on_build_chara", "Add ICharaElonaFlags", add_elona_flags, { priority = 1000 })
 
 local function fix_name_gender_age(chara)
    if chara.proto.has_own_name then

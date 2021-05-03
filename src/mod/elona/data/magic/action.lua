@@ -18,6 +18,10 @@ local Feat = require("api.Feat")
 local Log = require("api.Log")
 local Hunger = require("mod.elona.api.Hunger")
 local Const = require("api.Const")
+local ICharaElonaFlags = require("mod.elona.api.aspect.chara.ICharaElonaFlags")
+local IChargeable = require("mod.elona.api.aspect.IChargeable")
+local Aspect = require("api.Aspect")
+local ElonaItem = require("mod.elona.api.ElonaItem")
 
 local RANGE_BOLT = 6
 
@@ -181,7 +185,7 @@ data:add {
 
       Gui.mes_c("magic.insanity", "Purple", source, target)
 
-      local dice = self:dice(params)
+      local dice = Magic.get_dice(self._id, params.source, params.power)
       local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
 
       Effect.damage_insanity(target, damage)
@@ -264,7 +268,7 @@ data:add {
       local source = params.source
       local target = params.target
 
-      local dice = self:dice(params)
+      local dice = Magic.get_dice(self._id, params.source, params.power)
 
       target:heal_mp(Rand.roll_dice(dice.x, dice.y, dice.bonus))
 
@@ -333,9 +337,9 @@ data:add {
          end
       end
 
-      local dice = self:dice(params)
-
+      local dice = Magic.get_dice(self._id, params.source, params.power)
       local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
+
       target:damage_hp(damage, source,
                        {
                           element = dice.element,
@@ -418,7 +422,7 @@ local function make_touch(opts)
 
          local tense = "enemy"
 
-         local dice = self:dice(params)
+         local dice = Magic.get_dice(self._id, params.source, params.power)
          local element = dice.element
 
          local cast_style = source:calc("cast_style")
@@ -1069,32 +1073,36 @@ data:add {
          return true, { obvious = false }
       end
 
-      local result, canceled = Input.query_item(source, "elona.inv_draw_charge")
+      local result, canceled = Input.query_item(source, "elona.inv_chargeable")
 
       if canceled then
          return true
       end
 
       local item = result.result
+      local item_name = item:build_name()
+      local item_charges, max_charges, _ = ElonaItem.get_item_charges(item)
 
       local charges = 1
-      local charge_level = item:calc("charge_level")
-      if charge_level == 1 then
+      if max_charges == 1 then
          charges = 100
-      elseif charge_level == 2 then
+      elseif max_charges == 2 then
          charges = 25
-      elseif charge_level <= 4 then
+      elseif max_charges <= 4 then
          charges = 5
-      elseif charge_level <= 6 then
+      elseif max_charges <= 6 then
          charges = 3
       end
 
       local cb = Anim.load("elona.anim_smoke", source.x, source.y)
       Gui.start_draw_callback(cb)
 
-      charges = charges * item.charges
-      source.absorbed_charges = source.absorbed_charges + charges
-      Gui.mes("magic.draw_charge", item, charges, source.absorbed_charges)
+      charges = charges * item_charges
+
+      local flags = source:get_aspect_or_default(ICharaElonaFlags, true)
+      flags.absorbed_charges = flags.absorbed_charges + charges
+      Gui.mes("magic.draw_charge", item_name, charges, flags.absorbed_charges)
+
       item:remove()
       source:refresh_weight()
 
@@ -1102,18 +1110,29 @@ data:add {
    end
 }
 
-local function do_recharge(source, item, power)
-   local charge_level = item:calc("charge_level")
+local function do_recharge(source, item, power, on_recharge_cb)
+   local mes = function(obj)
+      Gui.mes("magic.fill_charge.prompt", obj:build_name())
+   end
+   local chargeable = Aspect.query_aspect(item, IChargeable, nil, mes)
+   if not chargeable then
+      return false
+   end
 
-   -- TODO more special cases
-   if charge_level < 1 or item:calc("is_not_rechargable") then
+   local max_charges = chargeable:calc(item, "max_charges")
+
+   if not chargeable:is_rechargeable(item) then
       Gui.mes("magic.fill_charge.cannot_recharge")
       return true
    end
 
-   if item.charges > charge_level then
-      Gui.mes("magic.fill_charge.cannot_recharge_anymore", item)
+   if chargeable.charges >= max_charges then
+      Gui.mes("magic.fill_charge.cannot_recharge_anymore", item:build_name())
       return true
+   end
+
+   if on_recharge_cb then
+      on_recharge_cb()
    end
 
    local success = true
@@ -1126,27 +1145,27 @@ local function do_recharge(source, item, power)
       success = false
    end
 
-   if Rand.one_in(charge_level * charge_level + 1) then
+   if Rand.one_in(max_charges * max_charges + 1) then
       success = false
    end
 
    if success then
-      local charges = 1 + Rand.rnd(charge_level / 2 + 1)
+      local charges = 1 + Rand.rnd(max_charges / 2 + 1)
       if item:has_category("elona.spellbook") then
          charges = 1
       end
 
-      Gui.mes("magic.fill_charge.apply", item, charges)
-      item.charges = math.min(charges + item.charges, charge_level)
+      Gui.mes("magic.fill_charge.apply", item:build_name(), charges)
+      chargeable.charges = math.min(charges + chargeable.charges, max_charges)
       local cb = Anim.load("elona.anim_smoke", source.x, source.y)
       Gui.start_draw_callback(cb)
    else
       if Rand.one_in(4) then
-         Gui.mes("magic.fill_charge.explodes", item)
+         Gui.mes("magic.fill_charge.explodes", item:build_name())
          item.amount = item.amount - 1
          source:refresh_weight()
       end
-      Gui.mes("magic.fill_charge.fail", item)
+      Gui.mes("magic.fill_charge.fail", item:build_name())
    end
 
    return true
@@ -1182,21 +1201,26 @@ data:add {
          return true, { obvious = false }
       end
 
-      if source.absorbed_charges < 10 then
+      local flags = source:get_aspect_or_default(ICharaElonaFlags, true)
+
+      if flags.absorbed_charges < 10 then
          Gui.mes("magic.fill_charge.more_power_needed")
          return true, { obvious = false }
       end
 
-      source.absorbed_charges = math.max(source.absorbed_charges - 10, 0)
-      Gui.mes("magic.fill_charge.spend", source.absorbed_charges)
-
-      local result, canceled = Input.query_item(source, "elona.inv_draw_charge")
+      local result, canceled = Input.query_item(source, "elona.inv_chargeable")
       if canceled then
          return true, { obvious = false }
       end
 
+      -- Only spend the absorbed charges if the item can be recharged.
+      local on_recharge = function()
+         flags.absorbed_charges = math.max(math.floor(flags.absorbed_charges - 10), 0)
+         Gui.mes("magic.fill_charge.spend", flags.absorbed_charges)
+      end
+
       local item = result.result
-      return do_recharge(source, item, params.power)
+      return do_recharge(source, item, params.power, on_recharge)
    end
 }
 
@@ -1212,7 +1236,7 @@ data:add {
    cast = function(self, params)
       local source = params.source
 
-      local result, canceled = Input.query_item(source, "elona.inv_draw_charge")
+      local result, canceled = Input.query_item(source, "elona.inv_chargeable")
       if canceled then
          return true, { obvious = false }
       end

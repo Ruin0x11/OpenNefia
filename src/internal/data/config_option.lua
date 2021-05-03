@@ -693,12 +693,6 @@ data:add_multi(
          default = false
       },
       {
-         _id = "debug_no_weight",
-
-         type = "boolean",
-         default = false
-      },
-      {
          _id = "debug_default_seed",
 
          type = "integer",
@@ -707,24 +701,6 @@ data:add_multi(
       },
       {
          _id = "debug_show_all_skills",
-
-         type = "boolean",
-         default = false
-      },
-      {
-         _id = "debug_infinite_skill_points",
-
-         type = "boolean",
-         default = false
-      },
-      {
-         _id = "debug_no_spell_failure",
-
-         type = "boolean",
-         default = false
-      },
-      {
-         _id = "debug_hp_always_full",
 
          type = "boolean",
          default = false

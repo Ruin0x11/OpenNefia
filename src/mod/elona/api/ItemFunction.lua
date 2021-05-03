@@ -9,6 +9,7 @@ local Calc = require("mod.elona.api.Calc")
 local Enum = require("api.Enum")
 local Itemgen = require("mod.elona.api.Itemgen")
 local Charagen = require("mod.elona.api.Charagen")
+local IItemAncientBook = require("mod.elona.api.aspect.IItemAncientBook")
 
 local ItemFunction = {}
 
@@ -97,8 +98,10 @@ function ItemFunction.drink_from_well(item, chara)
 end
 
 function ItemFunction.read_ancient_book(item, params)
+   local aspect = assert(item:get_aspect(IItemAncientBook))
+
    -- >>>>>>>> shade2/proc.hsp:1168 *readSpellbook ..
-   if item.params.ancient_book_is_deciphered then
+   if aspect:calc(item, "is_decoded") then
       Gui.mes("action.read.book.already_decoded")
       return "turn_end"
    end
@@ -113,7 +116,7 @@ function ItemFunction.read_ancient_book(item, params)
    -- <<<<<<<< shade2/proc.hsp:1176 		cRowAct(cc)=rowActRead ..
 
    -- >>>>>>>> shade2/proc.hsp:1180 			if iId(ci)=idMageBook{ ..
-   local base_diff = item.params.ancient_book_difficulty
+   local base_diff = aspect:calc(item, "difficulty")
    local difficulty = 50 + base_diff * 50 + base_diff * base_diff * 20
    -- <<<<<<<< shade2/proc.hsp:1182 			}else{ ..
 

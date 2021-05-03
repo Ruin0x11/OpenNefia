@@ -21,6 +21,8 @@ local Item = require("api.Item")
 local God = require("mod.elona.api.God")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
+local IItemAncientBook = require("mod.elona.api.aspect.IItemAncientBook")
+local IChargeable = require("mod.elona.api.aspect.IChargeable")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
@@ -1098,7 +1100,8 @@ local inv_mages_guild_delivery_chest = {
 
    filter = function(ctxt, item)
       -- >>>>>>>> shade2/command.hsp:3410 			if gArea=areaLumiest{ ...
-      return item._id == "elona.ancient_book" and item.params.ancient_book_is_decoded == true
+      local aspect = item:get_aspect(IItemAncientBook)
+      return aspect and aspect:calc(item, "is_decoded")
       -- <<<<<<<< shade2/command.hsp:3412 				}else{ ..
    end,
 
@@ -1121,7 +1124,8 @@ local inv_mages_guild_delivery_chest = {
       -- >>>>>>>> shade2/command.hsp:3893 				snd seInv ...
       Gui.play_sound("base.inv")
 
-      local points_earned = (item.params.ancient_book_difficulty + 1) * amount
+      local aspect = assert(item:get_aspect(IItemAncientBook))
+      local points_earned = (aspect:calc(item, "difficulty") + 1) * amount
       save.elona.guild_mage_point_quota = math.max(save.elona.guild_mage_point_quota - points_earned, 0)
       if save.elona.guild_mage_point_quota == 0 then
          Gui.play_sound("base.complete1")
@@ -1384,6 +1388,29 @@ local inv_equipment_armor = {
    end
 }
 data:add(inv_equipment_armor)
+
+local inv_chargeable = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_chargeable",
+   elona_id = 23,
+   elona_sub_id = 3,
+
+   sources = { "chara", "equipment" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   window_title = "ui.inventory_command.target",
+   query_text = "ui.inv.title.target",
+
+   filter = function(ctxt, item)
+      return item:iter_aspects(IChargeable):length() > 0
+   end,
+
+   on_select = function(ctxt, item, amount)
+      return "inventory_continue"
+   end
+}
+data:add(inv_chargeable)
 
 local inv_equipment_alchemy = {
    _type = "elona_sys.inventory_proto",

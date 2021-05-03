@@ -11,6 +11,7 @@ local Rand = require("api.Rand")
 local Magic = require("mod.elona_sys.api.Magic")
 local Item = require("api.Item")
 local ElonaAction = require("mod.elona.api.ElonaAction")
+local ICharaElonaFlags = require("mod.elona.api.aspect.chara.ICharaElonaFlags")
 
 local trait = {
    {
@@ -196,7 +197,7 @@ local trait = {
       end,
 
       on_refresh = function(self, chara)
-         -- cBitMod cPowerBash,pc,true
+         chara:mod_aspect(ICharaElonaFlags, "has_shield_bash", true, "set")
       end
    },
    {
@@ -710,7 +711,12 @@ local trait = {
 
       level_min = 0,
       level_max = 1,
-      type = "race"
+      type = "race",
+
+      on_refresh = function(self, chara)
+         chara:add_effect_immunity("elona.dimming")
+      end
+
    },
    {
       _id = "perm_material",
@@ -1006,7 +1012,6 @@ local ether_trait = {
 
       on_turn_begin = function(self, chara)
          -- >>>>>>>> shade2/main.hsp:987 	if trait(traitEtherPotion)!0{ ...
-         local map = chara:current_map()
          if Rand.one_in(5) then
             local item = Rand.choice(chara:iter_inventory())
             if Item.is_alive(item) and item:has_category("elona.drink") then

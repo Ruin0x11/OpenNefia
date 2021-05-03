@@ -23,6 +23,7 @@ local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local IItemInittable = require("mod.elona.api.aspect.IItemInittable")
 local IItemEquipment = require("mod.elona.api.aspect.IItemEquipment")
+local IChargeable = require("mod.elona.api.aspect.IChargeable")
 
 local ElonaItem = {}
 
@@ -512,6 +513,17 @@ function ElonaItem.find_small_medals(chara)
       :filter(function(i) return i._id == "elona.small_medal" end)
       :into_sorted(function(a, b) return a.amount > b.amount end)
       :nth(1)
+end
+
+-- TODO remove once everything is ported to aspects
+function ElonaItem.get_item_charges(item)
+   local charges, max_charges, is_charged
+   for _, aspect in item:iter_aspects(IChargeable) do
+      charges = (charges or 0) + aspect.charges
+      max_charges = (max_charges or 0) + aspect:calc(item, "max_charges")
+      is_charged = is_charged or aspect:is_charged(item)
+   end
+   return charges, max_charges, is_charged
 end
 
 return ElonaItem

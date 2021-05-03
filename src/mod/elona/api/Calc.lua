@@ -180,14 +180,17 @@ function Calc.calc_item_value(item, mode, is_shop)
       end
    end
 
-   if item:calc("has_charge") and item.charges then
-      if item.charges < 0 then
+   local charges, max_charges, is_charged = ElonaItem.get_item_charges(item)
+   if charges then
+      -- NOTE: was `if item.charges < 0` in vanilla, but '0' counts for being unable
+      -- to zap rods.
+      if not is_charged then
          value = value / 10
       else
          if item:has_category("elona.spellbook") then
-            value = value / 5 + value * item.charges / (item:calc("charge_level") * 2 + 1)
+            value = value / 5 + value * charges / (max_charges * 2 + 1)
          else
-            value = value / 2 + value * item.charges / (item:calc("charge_level") * 3 + 1)
+            value = value / 2 + value * charges / (max_charges * 3 + 1)
          end
       end
    end

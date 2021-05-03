@@ -23,6 +23,7 @@ local Weather = require("mod.elona.api.Weather")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 local ICharaElonaFlags = require("mod.elona.api.aspect.chara.ICharaElonaFlags")
+local IItemChargeable = require("mod.elona.api.aspect.IItemChargeable")
 
 local Effect = {}
 
@@ -542,11 +543,12 @@ function Effect.damage_item_fire(item, fireproof_blanket)
    end
 
    if fireproof_blanket and Item.is_alive(fireproof_blanket) then
+      local aspect = fireproof_blanket:get_aspect_or_default(IItemChargeable, true)
       if owner then
          Gui.mes_visible("item.fireproof_blanket.protects_item", owner.x, owner.y, fireproof_blanket:build_name(1), owner)
       end
-      if fireproof_blanket.charges > 0 then
-         fireproof_blanket.charges = fireproof_blanket.charges - 1
+      if aspect:is_charged(fireproof_blanket) then
+         aspect:modify_charges(fireproof_blanket, -1)
       else
          if Rand.one_in(20) then
             fireproof_blanket.amount = fireproof_blanket.amount - 1
@@ -586,7 +588,7 @@ end
 
 function Effect.damage_chara_items_fire(chara)
    -- >>>>>>>> shade2/chara_func.hsp:1174 #deffunc item_fire int tc,int ciRef ...
-   if chara:resist_level("elona.fire") >= 6 or chara:calc("quality") >= Enum.Quality.Great then
+   if chara:resist_grade("elona.fire") >= 6 or chara:calc("quality") >= Enum.Quality.Great then
       return false
    end
 
@@ -664,11 +666,12 @@ function Effect.damage_item_ice(item, coldproof_blanket)
    end
 
    if coldproof_blanket and Item.is_alive(coldproof_blanket) then
+      local aspect = coldproof_blanket:get_aspect_or_default(IItemChargeable, true)
       if owner then
          Gui.mes_visible("item.coldproof_blanket.protects_item", owner.x, owner.y, coldproof_blanket:build_name(1), owner)
       end
-      if coldproof_blanket.charges > 0 then
-         coldproof_blanket.charges = coldproof_blanket.charges - 1
+      if aspect:is_charged(coldproof_blanket) then
+         aspect:modify_charges(coldproof_blanket, -1)
       else
          if Rand.one_in(20) then
             coldproof_blanket.amount = coldproof_blanket.amount - 1
@@ -701,7 +704,7 @@ end
 
 function Effect.damage_chara_items_cold(chara)
    -- >>>>>>>> shade2/chara_func.hsp:1252 	if tc!-1{ ...
-   if chara:resist_level("elona.cold") >= 6 or chara:calc("quality") >= Enum.Quality.Great then
+   if chara:resist_grade("elona.cold") >= 6 or chara:calc("quality") >= Enum.Quality.Great then
       return false
    end
 

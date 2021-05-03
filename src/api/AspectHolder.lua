@@ -65,6 +65,10 @@ function AspectHolder:set_aspect(target, iface, aspect, priority)
    end
 end
 
+function AspectHolder:remove_all_aspects()
+   self._store:clear()
+end
+
 local function find_iface(aspect, name)
    return fun.iter(aspect.__interfaces):filter(function(i) return i.__name == name end):nth(1)
 end

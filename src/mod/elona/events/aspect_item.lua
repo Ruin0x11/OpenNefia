@@ -9,6 +9,7 @@ local IItemReadable = require("mod.elona.api.aspect.IItemReadable")
 local IItemDippable = require("mod.elona.api.aspect.IItemDippable")
 local IItemDrinkable = require("mod.elona.api.aspect.IItemDrinkable")
 local Aspect = require("api.Aspect")
+local IItemZappable = require("mod.elona.api.aspect.IItemZappable")
 
 local function permit_item_actions(item)
    if item:get_aspect(IItemFood) then
@@ -37,6 +38,10 @@ local function permit_item_actions(item)
 
    if item:iter_aspects(IItemDrinkable):length() > 0 then
       item.can_drink = true
+   end
+
+   if item:iter_aspects(IItemZappable):length() > 0 then
+      item.can_zap = true
    end
 end
 Event.register("base.on_item_instantiated", "Permit item actions", permit_item_actions)
@@ -70,6 +75,9 @@ Event.register("elona_sys.on_item_use", "Aspect: IItemUseable", aspect_item_usea
 
 local aspect_item_readable = prompt_and_run_aspect(IItemReadable, "elona.IItemReadable", "on_read")
 Event.register("elona_sys.on_item_read", "Aspect: IItemReadable", aspect_item_readable)
+
+local aspect_item_zappable = prompt_and_run_aspect(IItemZappable, "elona.IItemZappable", "on_zap")
+Event.register("elona_sys.on_item_zap", "Aspect: IItemZapable", aspect_item_zappable)
 
 local function dippable_filter(aspect, item, params)
    return aspect:can_dip_into(item, params.target_item)

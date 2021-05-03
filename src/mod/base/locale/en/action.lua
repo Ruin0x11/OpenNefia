@@ -691,7 +691,10 @@ return {
             return ("%s pick%s up %s.")
                :format(name(_1), s(_1), _2)
          end,
-         poison_drips = "Poison drips from your hands.",
+         poison_drips = function(_1)
+            return ("Poison drips from %s%s hands.")
+               :format(name(_1), his_owned(_1))
+         end,
          put_in_container = function(_1)
             return ("You put %s in the container.")
                :format(_1)
@@ -705,9 +708,9 @@ return {
             return ("%s %s using it.")
                :format(name(_1), is(_1))
          end,
-         you_absorb_magic = function(_1)
-            return ("You absorb magic from %s.")
-               :format(_1)
+         you_absorb_magic = function(_1, _2)
+            return ("%s absorb%s magic from %s.")
+               :format(name(_2), s(_2), _1)
          end,
          you_buy = function(_1)
             return ("You buy %s.")

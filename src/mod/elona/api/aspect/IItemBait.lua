@@ -67,7 +67,6 @@ end
 function IItemBait:localize_extra(s, item)
    local bait_name = I18N.localize("elona.bait", self:calc(item, "bait_type"), "name")
    return I18N.get("base:aspect._.elona.IItemBait.title", s, bait_name)
-
 end
 
 return IItemBait

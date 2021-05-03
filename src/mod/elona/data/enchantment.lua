@@ -1032,7 +1032,7 @@ data:add {
    level = 99,
    value = 300,
    rarity = 10000,
-   filter = filter_categories { "elona.equip_melee" },"elona.equip_neck",
+   filter = filter_categories { "elona.equip_melee", "elona.equip_neck" },
    alignment = "positive",
    adjusted_power = function(power, params)
       -- >>>>>>>> shade2/item_data.hsp:442 	encDisp encCrit			,4,0,lang("クリティカルヒットの機会を増やす","i ...

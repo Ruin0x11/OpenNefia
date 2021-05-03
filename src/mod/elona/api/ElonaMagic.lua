@@ -4,20 +4,15 @@ local Chara = require("api.Chara")
 local Item = require("api.Item")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
-local Event = require("api.Event")
 local Effect = require("mod.elona.api.Effect")
-local IItem = require("api.item.IItem")
 local Skill = require("mod.elona_sys.api.Skill")
 local Input = require("api.Input")
 local Anim = require("mod.elona_sys.api.Anim")
 local Action = require("api.Action")
 local Magic = require("mod.elona_sys.api.Magic")
 local Enum = require("api.Enum")
-local SkillCheck = require("mod.elona.api.SkillCheck")
-local Log = require("api.Log")
-local Hunger = require("mod.elona.api.Hunger")
-local Const = require("api.Const")
 local I18N = require("api.I18N")
+local IItemRod = require("mod.elona.api.aspect.IItemRod")
 
 local ElonaMagic = {}
 
@@ -120,7 +115,7 @@ end
 --- @tparam uint power
 --- @tparam table params
 --- @treturn string
-function ElonaMagic.zap_wand(item, magic_id, power, params)
+function ElonaMagic.zap_rod(item, magic_id, power, params)
    -- >>>>>>>> shade2/proc.hsp:1491 *zapStaff ..
    params = params or {}
 
@@ -128,7 +123,8 @@ function ElonaMagic.zap_wand(item, magic_id, power, params)
    local skill_data = Magic.skills_for_magic(magic_id)[1] or nil
    local chara = params.chara or item:get_owning_chara()
 
-   if item.charges <= 0 then
+   local aspect = item:get_aspect(IItemRod)
+   if aspect and not aspect:is_charged(item) then
       Gui.mes("action.zap.execute", item:build_name(1))
       Gui.mes("common.nothing_happens")
       return "turn_end"
@@ -177,7 +173,10 @@ function ElonaMagic.zap_wand(item, magic_id, power, params)
       end
 
       local sep = item:separate()
-      sep.charges = sep.charges - 1
+      local sep_aspect = sep:get_aspect(IItemRod)
+      if sep_aspect then
+         sep_aspect:modify_charges(sep, -1)
+      end
 
       return "turn_end"
    end
@@ -232,7 +231,10 @@ function ElonaMagic.zap_wand(item, magic_id, power, params)
       item:refresh_cell_on_map()
 
       local sep = item:separate()
-      sep.charges = sep.charges - 1
+      local sep_aspect = sep:get_aspect(IItemRod)
+      if sep_aspect then
+         sep_aspect:modify_charges(sep, -1)
+      end
    end
 
    return "turn_end"
@@ -356,7 +358,7 @@ function ElonaMagic.do_cast_spell(skill_id, caster, use_mp)
    }
 
    if caster:is_player() then
-      if Skill.calc_spell_mp_cost(skill_id, caster) > caster.mp then
+      if Skill.calc_spell_mp_cost(skill_id, caster) > caster.mp and config.elona.warn_on_spell_overcast then
          Gui.mes("action.cast.overcast_warning")
          if not Input.yes_no() then
             return false
@@ -417,15 +419,13 @@ function ElonaMagic.do_cast_spell(skill_id, caster, use_mp)
       return true
    end
 
-   if not config.base.debug_no_spell_failure then
-      if Rand.rnd(100) >= Skill.calc_spell_success_chance(skill_id, caster) then
-         if caster:is_in_fov() then
-            Gui.mes("action.cast.fail", caster)
-            local cb = Anim.failure_to_cast(caster.x, caster.y)
-            Gui.start_draw_callback(cb)
-         end
-         return true
+   if Rand.rnd(100) >= Skill.calc_spell_success_chance(skill_id, caster) then
+      if caster:is_in_fov() then
+         Gui.mes("action.cast.fail", caster)
+         local cb = Anim.failure_to_cast(caster.x, caster.y)
+         Gui.start_draw_callback(cb)
       end
+      return true
    end
 
    if params.no_effect then

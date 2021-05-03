@@ -21,6 +21,7 @@ local IItemMoneyBox = require("mod.elona.api.aspect.IItemMoneyBox")
 local IItemMonsterBall = require("mod.elona.api.aspect.IItemMonsterBall")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local Mef = require("api.Mef")
+local IItemChargeable = require("mod.elona.api.aspect.IItemChargeable")
 
 --
 -- Tool
@@ -315,14 +316,17 @@ data:add {
    image = "elona.item_blanket",
    value = 2400,
    weight = 800,
-   charge_level = 12,
    rarity = 500000,
    coefficient = 0,
 
-   on_init_params = function(self)
-      self.charges = 12 + Rand.rnd(12) - Rand.rnd(12)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemChargeable] = {
+         charges = function(self)
+            return 12 + Rand.rnd(12) - Rand.rnd(12)
+         end,
+         max_charges = 12
+      }
+   },
 
    color = { 255, 155, 155 },
 
@@ -338,14 +342,17 @@ data:add {
    image = "elona.item_blanket",
    value = 2400,
    weight = 800,
-   charge_level = 12,
    rarity = 500000,
    coefficient = 0,
 
-   on_init_params = function(self)
-      self.charges = 12 + Rand.rnd(12) - Rand.rnd(12)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemChargeable] = {
+         charges = function(self)
+            return 12 + Rand.rnd(12) - Rand.rnd(12)
+         end,
+         max_charges = 12
+      }
+   },
 
    color = { 175, 175, 255 },
 
@@ -452,17 +459,22 @@ data:add {
    image = "elona.item_disguise_set",
    value = 7200,
    weight = 3500,
-   charge_level = 4,
    on_use = function() end,
    level = 5,
    rarity = 100000,
    coefficient = 0,
 
    elona_function = 20,
-   on_init_params = function(self)
-      self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
-   end,
-   has_charge = true,
+
+   _ext = {
+      [IItemChargeable] = {
+         charges = function(self)
+            return 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
+         max_charges = 4
+      }
+   },
+
    categories = {
       "elona.misc_item"
    }

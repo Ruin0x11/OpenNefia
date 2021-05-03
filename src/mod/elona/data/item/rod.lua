@@ -1,5 +1,6 @@
 local ElonaMagic = require("mod.elona.api.ElonaMagic")
 local Rand = require("api.Rand")
+local IItemRod = require("mod.elona.api.aspect.IItemRod")
 
 --
 -- Rod
@@ -13,7 +14,6 @@ data:add {
    image = "elona.item_rod",
    value = 1080,
    weight = 800,
-   charge_level = 8,
    level = 4,
    category = 56000,
    coefficient = 0,
@@ -21,13 +21,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.identify", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.identify",
+         effect_power = 100,
+         charges = function(self)
+            return 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
+         max_charges = 8,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -42,20 +45,22 @@ data:add {
    image = "elona.item_rod",
    value = 840,
    weight = 800,
-   charge_level = 12,
    category = 56000,
    coefficient = 0,
    originalnameref2 = "rod",
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.teleport_other", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 12 + Rand.rnd(12) - Rand.rnd(12)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.teleport_other",
+         effect_power = 100,
+         charges = function(self)
+            return 12 + Rand.rnd(12) - Rand.rnd(12)
+         end,
+         max_charges = 12,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -70,7 +75,6 @@ data:add {
    image = "elona.item_rod",
    value = 650,
    weight = 800,
-   charge_level = 8,
    level = 3,
    category = 56000,
    coefficient = 0,
@@ -78,13 +82,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.heal_light", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.heal_light",
+         effect_power = 100,
+         charges = function(self)
+            return 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
+         max_charges = 8,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -99,7 +106,6 @@ data:add {
    image = "elona.item_rod",
    value = 800,
    weight = 800,
-   charge_level = 10,
    level = 2,
    category = 56000,
    coefficient = 0,
@@ -107,13 +113,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.magic_dart", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 10 + Rand.rnd(10) - Rand.rnd(10)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.magic_dart",
+         effect_power = 100,
+         charges = function(self)
+            return 10 + Rand.rnd(10) - Rand.rnd(10)
+         end,
+         max_charges = 10,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -128,20 +137,22 @@ data:add {
    image = "elona.item_rod",
    value = 700,
    weight = 800,
-   charge_level = 8,
    category = 56000,
    coefficient = 0,
    originalnameref2 = "rod",
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.summon_monsters", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.summon_monsters",
+         effect_power = 100,
+         charges = function(self)
+            return 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
+         max_charges = 8,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -156,7 +167,6 @@ data:add {
    image = "elona.item_rod",
    value = 1460,
    weight = 800,
-   charge_level = 8,
    level = 8,
    category = 56000,
    coefficient = 0,
@@ -164,13 +174,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.ice_bolt", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.ice_bolt",
+         effect_power = 100,
+         charges = function(self)
+            return 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
+         max_charges = 8,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -185,7 +198,6 @@ data:add {
    image = "elona.item_rod",
    value = 1600,
    weight = 800,
-   charge_level = 10,
    level = 8,
    category = 56000,
    coefficient = 0,
@@ -193,13 +205,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.fire_bolt", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 10 + Rand.rnd(10) - Rand.rnd(10)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.fire_bolt",
+         effect_power = 100,
+         charges = function(self)
+            return 10 + Rand.rnd(10) - Rand.rnd(10)
+         end,
+         max_charges = 10,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -214,7 +229,6 @@ data:add {
    image = "elona.item_rod",
    value = 4800,
    weight = 800,
-   charge_level = 4,
    level = 15,
    category = 56000,
    rarity = 250000,
@@ -223,13 +237,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.cure_of_eris", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.cure_of_eris",
+         effect_power = 100,
+         charges = function(self)
+            return 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
+         max_charges = 4,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -244,7 +261,6 @@ data:add {
    image = "elona.item_rod",
    value = 1900,
    weight = 800,
-   charge_level = 10,
    level = 8,
    category = 56000,
    coefficient = 0,
@@ -252,13 +268,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.lightning_bolt", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 10 + Rand.rnd(10) - Rand.rnd(10)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.lightning_bolt",
+         effect_power = 100,
+         charges = function(self)
+            return 10 + Rand.rnd(10) - Rand.rnd(10)
+         end,
+         max_charges = 10,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -273,7 +292,6 @@ data:add {
    image = "elona.item_rod",
    value = 1500,
    weight = 800,
-   charge_level = 8,
    level = 3,
    category = 56000,
    coefficient = 0,
@@ -281,13 +299,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.buff_slow", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.buff_slow",
+         effect_power = 100,
+         charges = function(self)
+            return 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
+         max_charges = 8,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -302,7 +323,6 @@ data:add {
    image = "elona.item_rod",
    value = 3250,
    weight = 800,
-   charge_level = 9,
    level = 4,
    category = 56000,
    coefficient = 0,
@@ -310,13 +330,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.magic_map", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 9 + Rand.rnd(9) - Rand.rnd(9)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.magic_map",
+         effect_power = 100,
+         charges = function(self)
+            return 9 + Rand.rnd(9) - Rand.rnd(9)
+         end,
+         max_charges = 9,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -331,7 +354,6 @@ data:add {
    image = "elona.item_rod",
    value = 2600,
    weight = 800,
-   charge_level = 8,
    level = 10,
    category = 56000,
    rarity = 800000,
@@ -340,13 +362,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.heal_critical", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.heal_critical",
+         effect_power = 100,
+         charges = function(self)
+            return 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
+         max_charges = 8,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -368,16 +393,17 @@ data:add {
    originalnameref2 = "rod",
    has_random_name = true,
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.wish", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 1 + Rand.rnd(1) - Rand.rnd(1)
-   end,
-   has_charge = true,
-   can_be_recharged = false,
-
-   is_zap_always_successful = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.wish",
+         effect_power = 100,
+         charges = function(self)
+            return 1 + Rand.rnd(1) - Rand.rnd(1)
+         end,
+         can_be_recharged = false,
+         is_zap_always_successful = true,
+      }
+   },
 
    tags = { "noshop" },
    random_color = "Random",
@@ -395,7 +421,6 @@ data:add {
    image = "elona.item_rod",
    value = 1080,
    weight = 800,
-   charge_level = 7,
    level = 4,
    category = 56000,
    coefficient = 0,
@@ -403,13 +428,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.buff_mist_of_silence", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 7 + Rand.rnd(7) - Rand.rnd(7)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.buff_mist_of_silence",
+         effect_power = 100,
+         charges = function(self)
+            return 7 + Rand.rnd(7) - Rand.rnd(7)
+         end,
+         max_charges = 7,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -424,7 +452,6 @@ data:add {
    image = "elona.item_rod",
    value = 4200,
    weight = 800,
-   charge_level = 8,
    level = 8,
    category = 56000,
    coefficient = 0,
@@ -432,13 +459,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.buff_speed", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.buff_speed",
+         effect_power = 100,
+         charges = function(self)
+            return 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
+         max_charges = 8,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -453,7 +483,6 @@ data:add {
    image = "elona.item_rod",
    value = 3600,
    weight = 800,
-   charge_level = 6,
    level = 7,
    category = 56000,
    rarity = 400000,
@@ -462,13 +491,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.vanquish_hex", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 6 + Rand.rnd(6) - Rand.rnd(6)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.vanquish_hex",
+         effect_power = 100,
+         charges = function(self)
+            return 6 + Rand.rnd(6) - Rand.rnd(6)
+         end,
+         max_charges = 6,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -483,7 +515,6 @@ data:add {
    image = "elona.item_rod",
    value = 4100,
    weight = 800,
-   charge_level = 4,
    level = 11,
    category = 56000,
    rarity = 200000,
@@ -492,13 +523,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.harvest_mana", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.harvest_mana",
+         effect_power = 100,
+         charges = function(self)
+            return 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
+         max_charges = 4,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -513,7 +547,6 @@ data:add {
    image = "elona.item_rod",
    value = 3800,
    weight = 800,
-   charge_level = 3,
    level = 12,
    category = 56000,
    rarity = 500000,
@@ -522,14 +555,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.uncurse", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
-   end,
-
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.uncurse",
+         effect_power = 100,
+         charges = function(self)
+            return 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
+         max_charges = 3
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -544,7 +579,6 @@ data:add {
    image = "elona.item_rod",
    value = 16000,
    weight = 800,
-   charge_level = 2,
    level = 5,
    category = 56000,
    rarity = 100000,
@@ -552,14 +586,17 @@ data:add {
    originalnameref2 = "rod",
    has_random_name = true,
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.dominate", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
-   end,
-   has_charge = true,
-   can_be_recharged = false,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.dominate",
+         effect_power = 100,
+         charges = function(self)
+            return 2 + Rand.rnd(2) - Rand.rnd(2)
+         end,
+         max_charges = 2,
+         can_be_recharged = false,
+      }
+   },
 
    tags = { "noshop" },
    random_color = "Random",
@@ -578,7 +615,6 @@ data:add {
    image = "elona.item_rod",
    value = 3500,
    weight = 800,
-   charge_level = 8,
    level = 3,
    category = 56000,
    rarity = 700000,
@@ -587,13 +623,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.web", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.web",
+         effect_power = 100,
+         charges = function(self)
+            return 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
+         max_charges = 8,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -608,7 +647,6 @@ data:add {
    image = "elona.item_rod",
    value = 4500,
    weight = 800,
-   charge_level = 4,
    level = 5,
    category = 56000,
    rarity = 700000,
@@ -617,13 +655,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.change", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.change",
+         effect_power = 100,
+         charges = function(self)
+            return 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
+         max_charges = 4,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -638,7 +679,6 @@ data:add {
    image = "elona.item_rod",
    value = 6000,
    weight = 800,
-   charge_level = 3,
    level = 7,
    category = 56000,
    rarity = 450000,
@@ -647,13 +687,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.effect_alchemy", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.effect_alchemy",
+         effect_power = 100,
+         charges = function(self)
+            return 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
+         max_charges = 3,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -668,7 +711,6 @@ data:add {
    image = "elona.item_rod",
    value = 4000,
    weight = 800,
-   charge_level = 7,
    level = 5,
    category = 56000,
    rarity = 800000,
@@ -677,13 +719,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.wall_creation", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 7 + Rand.rnd(7) - Rand.rnd(7)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.wall_creation",
+         effect_power = 100,
+         charges = function(self)
+            return 7 + Rand.rnd(7) - Rand.rnd(7)
+         end,
+         max_charges = 7,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -698,7 +743,6 @@ data:add {
    image = "elona.item_rod",
    value = 5600,
    weight = 800,
-   charge_level = 3,
    level = 3,
    category = 56000,
    rarity = 800000,
@@ -707,13 +751,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.healing_touch", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.healing_touch",
+         effect_power = 100,
+         charges = function(self)
+            return 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
+         max_charges = 3,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -728,7 +775,6 @@ data:add {
    image = "elona.item_rod",
    value = 4400,
    weight = 800,
-   charge_level = 4,
    level = 8,
    category = 56000,
    rarity = 800000,
@@ -737,13 +783,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.acid_ground", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.acid_ground",
+         effect_power = 100,
+         charges = function(self)
+            return 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
+         max_charges = 4,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -758,7 +807,6 @@ data:add {
    image = "elona.item_rod",
    value = 3800,
    weight = 800,
-   charge_level = 4,
    level = 4,
    category = 56000,
    rarity = 700000,
@@ -767,13 +815,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.fire_wall", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.fire_wall",
+         effect_power = 100,
+         charges = function(self)
+            return 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
+         max_charges = 4,
+      }
+   },
 
    categories = {
       "elona.rod"
@@ -788,7 +839,6 @@ data:add {
    image = "elona.item_rod",
    value = 2000,
    weight = 800,
-   charge_level = 6,
    category = 56000,
    rarity = 500000,
    coefficient = 0,
@@ -796,13 +846,16 @@ data:add {
    has_random_name = true,
    random_color = "Random",
 
-   on_zap = function(self, params)
-      return ElonaMagic.zap_wand(self, "elona.door_creation", 100, params)
-   end,
-   on_init_params = function(self)
-      self.charges = 6 + Rand.rnd(6) - Rand.rnd(6)
-   end,
-   has_charge = true,
+   _ext = {
+      [IItemRod] = {
+         effect_id = "elona.door_creation",
+         effect_power = 100,
+         charges = function(self)
+            return 6 + Rand.rnd(6) - Rand.rnd(6)
+         end,
+         max_charges = 6,
+      }
+   },
 
    categories = {
       "elona.rod"

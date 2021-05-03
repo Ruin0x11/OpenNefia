@@ -11,6 +11,13 @@ function PriorityMap:init()
    self.dirty = true
 end
 
+function PriorityMap:clear()
+   self.map = {}
+   self.priority = {}
+   self.sorted_keys = {}
+   self.dirty = true
+end
+
 local function iter(state, index)
    local key = state.sorted_keys[index]
    if key == nil then

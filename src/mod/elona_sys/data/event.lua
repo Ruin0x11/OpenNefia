@@ -52,6 +52,7 @@ local event = {
       { _id = "on_cast_magic" },
       { _id = "on_chara_dialog_start" },
       { _id = "calc_chara_spell_mp_cost" },
+      { _id = "calc_magic_dice" },
 }
 
 data:add_multi("base.event", event)

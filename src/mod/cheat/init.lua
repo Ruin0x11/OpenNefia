@@ -1,54 +1,5 @@
 local Event = require("api.Event")
-local Chara = require("api.Chara")
-local Skill = require("mod.elona_sys.api.Skill")
 local Env = require("api.Env")
-
-data:add_multi(
-   "base.config_option",
-   {
-      { _id = "enabled", type = "boolean", default = false },
-      { _id = "show_stair_locations", type = "boolean", default = false },
-   }
-)
-
-local function level_up()
-   if not config.cheat.enabled then
-      return
-   end
-
-   local player = Chara.player()
-
-   local levels = 100
-   for _= 1, levels do
-      Skill.gain_level(player)
-      Skill.grow_primary_skills(player)
-   end
-
-   player:mod_base_skill_level("elona.stat_magic", 10000)
-   player:mod_base_skill_level("elona.stat_mana", 10000)
-
-   Skill.iter_attributes()
-      :each(function(m)
-            player:mod_base_skill_level(m._id, 100, "set")
-           end)
-
-   Skill.iter_skills()
-      :each(function(m)
-            Skill.gain_skill(player, m._id, 2000, 1000)
-           end)
-
-   Skill.gain_skill(player, "elona.mining", 10000)
-   player:mod_base_skill_level("elona.healing", 100, "set")
-   player:mod_base_skill_level("elona.meditation", 100, "set")
-
-   player.gold = 10000000
-   player.platinum = 10000
-
-   player:refresh()
-   player:heal_to_max()
-end
-
-Event.register("base.on_new_game", "Make player stronger", level_up)
 
 local function enable_themes()
    local themes = {}
@@ -75,16 +26,7 @@ local function enable_themes()
 
    config.base.themes = themes
 end
-
 Event.register("base.before_engine_init", "Enable non-redistributable themes if available", enable_themes)
 
-local function setup_dev_config()
-   if config.base.development_mode then
-      -- config.base.auto_turn_speed = "highest"
-      -- config.base.anime_wait = 0
-      config.base.quickstart_chara_id = "elona.citizen"
-   end
-end
-Event.register("base.on_engine_init", "Set some useful config options", setup_dev_config)
-
 require("mod.cheat.advice.init")
+require("mod.cheat.data.init")

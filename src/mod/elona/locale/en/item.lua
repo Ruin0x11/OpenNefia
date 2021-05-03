@@ -58,27 +58,6 @@ local item = {
       }
     },
     name = "ancient book",
-
-    title = function(title)
-       return (" titled <%s>"):format(title)
-    end,
-    titles = {
-      _0 = "Voynich Manuscript",
-      _1 = "Dhol Chants",
-      _2 = "Ponape Scripture",
-      _3 = "Revelations of Glaaki",
-      _4 = "G'harne Fragments",
-      _5 = "Liber Damnatus",
-      _6 = "Book of Dzyan",
-      _7 = "Book of Eibon",
-      _8 = "Grand Grimoire",
-      _9 = "Celaeno Fragments",
-      _10 = "Necronomicon",
-      _11 = "The R'lyeh Text",
-      _12 = "Eltdown Shards",
-      _13 = "The Golden Bough",
-      _14 = "Apocalypse"
-    },
   },
   ancient_tomb = {
     desc = {

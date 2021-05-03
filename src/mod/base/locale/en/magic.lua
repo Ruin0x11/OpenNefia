@@ -198,7 +198,7 @@ end,
     },
     draw_charge = function(_1, _2, _3)
   return ("You destroy %s and extract %s recharge powers. (Total:%s)")
-  :format(itemname(_1), _2, _3)
+  :format(_1, _2, _3)
 end,
     drop_mine = function(_1)
   return ("%s drop%s something on the ground.")
@@ -207,11 +207,11 @@ end,
     enchant = {
       apply = function(_1)
   return ("%s %s surrounded by a golden aura.")
-  :format(itemname(_1), is(_1))
+  :format(_1, is(_1))
 end,
       resist = function(_1)
   return ("%s resist%s.")
-  :format(itemname(_1), s(_1))
+  :format(_1, s(_1))
 end
     },
     escape = {
@@ -251,22 +251,26 @@ end,
       doubt = "Your god doubts your faith."
     },
     fill_charge = {
+       prompt = function(_1)
+          ("How will you fill %s?")
+             :format(_1)
+       end,
       apply = function(_1, _2)
   return ("%s %s recharged by %s.")
-  :format(itemname(_1), is(_1), _2)
+  :format(_1, is(_1), _2)
 end,
       cannot_recharge = "You can't recharge this item.",
       cannot_recharge_anymore = function(_1)
   return ("%s cannot be recharged anymore.")
-  :format(itemname(_1))
+  :format(_1)
 end,
       explodes = function(_1)
   return ("%s explode%s.")
-  :format(itemname(_1), s(_1))
+  :format(_1, s(_1))
 end,
       fail = function(_1)
   return ("You fail to recharge %s.")
-  :format(itemname(_1))
+  :format(_1)
 end,
       more_power_needed = "You need at least 10 recharge powers to recharge items.",
       spend = function(_1)

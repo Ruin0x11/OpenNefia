@@ -26,6 +26,8 @@ local Const = require("api.Const")
 local Weather = require("mod.elona.api.Weather")
 local Hunger = require("mod.elona.api.Hunger")
 local ItemMemory = require("mod.elona_sys.api.ItemMemory")
+local IItemAncientBook = require("mod.elona.api.aspect.IItemAncientBook")
+local IItemSpellbook = require("mod.elona.api.aspect.IItemSpellbook")
 
 local function sex_check_end(chara, partner)
    if not Chara.is_alive(partner)
@@ -1089,9 +1091,12 @@ data:add {
             -- >>>>>>>> shade2/proc.hsp:1193 	if cActionPeriod(cc)>0{ ..
             Skill.gain_skill_exp(params.chara, "elona.literacy", 15, 10, 100)
 
+            local spellbook = self.params.spellbook
+            local aspect = assert(spellbook:get_aspect(IItemSpellbook))
+
             local skill_data = data["base.skill"]:ensure(self.params.skill_id)
             local difficulty = skill_data.difficulty
-            local curse = self.params.spellbook:calc("curse_state")
+            local curse = spellbook:calc("curse_state")
 
             if curse == Enum.CurseState.Blessed then
                difficulty = difficulty * 100 / 120
@@ -1104,11 +1109,11 @@ data:add {
 
             if not success then
                params.chara:remove_activity()
-               self.params.spellbook.charges = math.max(self.params.spellbook.charges - 1, 0)
-               if self.params.spellbook.charges <= 0 then
-                  self.params.spellbook:remove(1)
+               aspect:modify_charges(spellbook, -1)
+               if not aspect:is_charged(spellbook) then
+                  spellbook:remove(1)
                   if params.chara:is_in_fov() then
-                     Gui.mes("action.read.book.falls_apart", self.params.spellbook:build_name(1))
+                     Gui.mes("action.read.book.falls_apart", spellbook:build_name(1))
                   end
                end
             end
@@ -1125,7 +1130,10 @@ data:add {
             -- >>>>>>>> shade2/proc.hsp:1230 		skillGain cc,efId,1,(rnd(defSpellStock/2+1)+defS ..
             local chara = params.chara
 
-            Gui.mes_visible("activity.read.finish", chara, self.params.spellbook:build_name(1))
+            local spellbook = self.params.spellbook
+            local aspect = assert(spellbook:get_aspect(IItemSpellbook))
+
+            Gui.mes_visible("activity.read.finish", chara, spellbook:build_name(1))
 
             local function calc_gained_stock(memorization, current_stock)
                local BASE_STOCK = 100
@@ -1142,15 +1150,15 @@ data:add {
 
             Skill.gain_skill(params.chara, self.params.skill_id, 1, calc_gained_stock(memorization, current_stock))
             Skill.gain_skill_exp(params.chara, "elona.memorization", 10 + difficulty / 5)
-            if ItemMemory.reserved_state(self.params.spellbook._id) == nil then
-               ItemMemory.set_reserved_state(self.params.spellbook._id, "not_reserved")
+            if ItemMemory.reserved_state(spellbook._id) == nil then
+               ItemMemory.set_reserved_state(spellbook._id, "not_reserved")
             end
 
-            Effect.identify_item(self.params.spellbook, Enum.IdentifyState.Name)
+            Effect.identify_item(spellbook, Enum.IdentifyState.Name)
 
-            self.params.spellbook.charges = math.max(self.params.spellbook.charges - 1, 0)
-            if self.params.spellbook.charges <= 0 then
-               self.params.spellbook:remove(1)
+            aspect:modify_charges(spellbook, -1)
+            if not aspect:is_charged(spellbook) then
+               spellbook:remove(1)
                if params.chara:is_in_fov() then
                   Gui.mes("action.read.book.falls_apart", self.params.spellbook:build_name(1))
                end
@@ -1182,7 +1190,8 @@ data:add {
 
          callback = function(self, params)
             -- >>>>>>>> shade2/proc.hsp:1171 		if iId(ci)=idMageBook : if iParam2(ci)!0 : txt l ...
-            if self.params.ancient_book.params.ancient_book_is_decoded then
+            local aspect = self.params.ancient_book:get_aspect(IItemAncientBook)
+            if not aspect or aspect:calc(self.params.ancient_book, "is_decoded") then
                Gui.mes("action.read.book.already_decoded")
                return "stop"
             end
@@ -1201,9 +1210,12 @@ data:add {
             -- >>>>>>>> shade2/proc.hsp:1193 	if cActionPeriod(cc)>0{ ..
             Skill.gain_skill_exp(params.chara, "elona.literacy", 15, 10, 100)
 
-            local base_diff = self.params.ancient_book.params.ancient_book_difficulty
+            local ancient_book = self.params.ancient_book
+            local aspect = assert(ancient_book:get_aspect(IItemAncientBook))
+
+            local base_diff = aspect:calc(ancient_book, "difficulty")
             local difficulty = 50 + base_diff * 50 + base_diff * base_diff * 20
-            local curse = self.params.ancient_book:calc("curse_state")
+            local curse = ancient_book:calc("curse_state")
 
             if curse == Enum.CurseState.Blessed then
                difficulty = difficulty * 100 / 120
@@ -1216,11 +1228,11 @@ data:add {
 
             if not success then
                params.chara:remove_activity()
-               self.params.ancient_book.charges = math.max(self.params.ancient_book.charges - 1, 0)
-               if self.params.ancient_book.charges <= 0 then
-                  self.params.ancient_book:remove(1)
+               aspect:modify_charges(ancient_book, -1)
+               if not aspect:is_charged(ancient_book) then
+                  ancient_book:remove(1)
                   if params.chara:is_in_fov() then
-                     Gui.mes("action.read.book.falls_apart", self.params.ancient_book:build_name(1))
+                     Gui.mes("action.read.book.falls_apart", ancient_book:build_name(1))
                   end
                end
             end
@@ -1237,13 +1249,15 @@ data:add {
             -- >>>>>>>> shade2/proc.hsp:1230 		skillGain cc,efId,1,(rnd(defSpellStock/2+1)+defS ..
             local chara = params.chara
 
-            Gui.mes_visible("activity.read.finish", chara, self.params.ancient_book:build_name(1))
+            local ancient_book = self.params.ancient_book
+            local aspect = assert(ancient_book:get_aspect(IItemAncientBook))
 
-            Effect.identify_item(self.params.ancient_book, Enum.IdentifyState.Full)
-            Gui.mes("action.read.book.finished_decoding", self.params.ancient_book:build_name(1))
-            self.params.ancient_book.params.ancient_book_is_decoded = true
-            self.params.ancient_book.has_charge = false
-            self.params.ancient_book.charges = 1
+            Gui.mes_visible("activity.read.finish", chara, ancient_book:build_name(1))
+
+            Effect.identify_item(ancient_book, Enum.IdentifyState.Full)
+            Gui.mes("action.read.book.finished_decoding", ancient_book:build_name(1))
+            aspect.is_decoded = true
+            aspect:set_charges(ancient_book, 0)
 
             -- TODO: shade2/proc.hsp:3118 ((iId(ci)=idMageBook)&(iParam2(ci)!0))
 

@@ -6,6 +6,7 @@ local schema = require("thirdparty.schema")
 local Enum = require("api.Enum")
 local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local Chara = require("api.Chara")
+local IItemRod = require("mod.elona.api.aspect.IItemRod")
 
 -- Generates a list to be used with "choices" which will set the
 -- provided field to one of the choices in "list".
@@ -443,7 +444,7 @@ data:add_multi(
             args.item.amount = 1
             args.item.curse_state = Enum.CurseState.Normal
             if args.item._id == "elona.rod_of_domination" then
-               args.item.charges = 4
+               args.item:get_aspect(IItemRod).charges = 4
             end
             -- <<<<<<<< shade2/chat.hsp:3501 		} ..
          end

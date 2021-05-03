@@ -82,11 +82,51 @@ return {
                   return ("第%s巻目の%s"):format(no, s)
                end
             },
+            IItemSpellbook = {
+               action_name = "魔法書",
+            },
+            IItemAncientBook = {
+               action_name = "古書物",
+
+               decoded = function(_1)
+                  return ("解読済みの%s"):format(_1)
+               end,
+               undecoded = nil,
+
+               title = function(title, name)
+                  return ("《%s》という題名の%s"):format(title, name)
+               end,
+               titles = {
+                  _0 = "ヴォイニッチ写本",
+                  _1 = "ドール賛歌",
+                  _2 = "ポナペ教教典",
+                  _3 = "グラーキ黙示録",
+                  _4 = "グ＝ハーン断章",
+                  _5 = "断罪の書",
+                  _6 = "ドジアンの書",
+                  _7 = "エイボンの書",
+                  _8 = "大いなる教書",
+                  _9 = "セラエノ断章",
+                  _10 = "ネクロノミコン",
+                  _11 = "ルルイエ異本",
+                  _12 = "エルトダウン・シャールズ",
+                  _13 = "金枝篇",
+                  _14 = "終焉の書"
+               },
+            },
+
             IItemPotion = {
                action_name = "ポーション"
             },
             IItemWell = {
                action_name = "井戸"
+            },
+
+            IItemZappable = {
+               prompt = function(_1) return ("どうやって%sを振る？"):format(_1) end,
+            },
+            IItemRod = {
+               action_name = "杖"
             },
 
             IFeatActivatable = {
@@ -97,6 +137,10 @@ return {
             },
             IFeatLockedHatch = {
                action_name = "ハッチ"
+            },
+
+            IItemChargeable = {
+               action_name = "充填可のアイテム"
             }
          }
       }

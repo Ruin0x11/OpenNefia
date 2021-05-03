@@ -605,19 +605,16 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (get-buffer (open-nefia--repl-buffer-name)))
 
 (defun open-nefia--run-lua (file switches)
-  ;; Windows blocks the process I/O preventing the buffer from ever showing.
-  (if (eq system-type 'windows-nt)
-      (with-current-buffer (get-buffer-create (open-nefia--repl-buffer-name))
-        (erase-buffer)
-        (apply 'call-process (open-nefia--lua-headless-executable-name) nil
-               (current-buffer)
-               nil
-               (append (list (open-nefia--repl-file file)) switches)))
-    (apply 'run-lua (append (list open-nefia--repl-name
-                                  (open-nefia--lua-headless-executable-name)
-                                  nil
-                                  (open-nefia--repl-file file))
-                            switches))))
+  (with-current-buffer (get-buffer-create (open-nefia--repl-buffer-name))
+    (erase-buffer)
+    (compilation-shell-minor-mode 1)
+    (let ((process (apply 'start-process (buffer-name)
+                          (current-buffer)
+                          (open-nefia--lua-headless-executable-name)
+                          (append (list (open-nefia--repl-file file)) switches))))
+      (ansi-color-for-comint-mode-on)
+      (comint-mode)
+      (set-process-filter process 'comint-output-filter))))
 
 (defun open-nefia--start-repl-1 (file &rest switches)
   (save-some-buffers (not compilation-ask-about-save)
@@ -636,7 +633,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
       (let ((result (open-nefia--test-repl file)))
         (if (eq result 0)
             (progn
-              (open-nefia--run-lua  file switches)
+              (open-nefia--run-lua file switches)
               (setq next-error-last-buffer (open-nefia--repl-buffer))
               (pop-to-buffer (open-nefia--repl-buffer))
               (setq-local company-backends '(company-etags)))
