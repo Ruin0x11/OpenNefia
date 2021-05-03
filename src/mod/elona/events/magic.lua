@@ -10,6 +10,7 @@ local Map = require("api.Map")
 local ElonaQuest = require("mod.elona.api.ElonaQuest")
 local Enum = require("api.Enum")
 local ICharaElonaFlags = require("mod.elona.api.aspect.chara.ICharaElonaFlags")
+local IItemRod = require("mod.elona.api.aspect.IItemRod")
 
 local function set_return_restriction(map)
    if map:has_type("quest") then
@@ -107,7 +108,7 @@ local function calc_wand_success(chara, params)
 
    local item = params.item
 
-   if not chara:is_player() or item:calc("is_zap_always_successful") then
+   if not chara:is_player() or item:calc_aspect(IItemRod, "is_zap_always_successful") then
       return true
    end
 

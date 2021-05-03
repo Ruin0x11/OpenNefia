@@ -140,13 +140,14 @@ function ReserveSpellbookMenu:draw()
 end
 
 function ReserveSpellbookMenu:choose(index)
-   local entry = self.pages:get(index)
+   local entry = self.pages:get_current_page(index)
 
    if entry == nil then
       return
    end
 
-   if entry.proto.can_be_reserved == false then
+   local ext = data["base.item"]:ext(entry.proto._id, "elona.spellbook")
+   if ext and ext.can_be_reserved == false then
       Gui.play_sound("base.fail1")
       Gui.mes("ui.reserve.unavailable")
       return

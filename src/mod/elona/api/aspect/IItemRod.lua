@@ -5,7 +5,8 @@ local IChargeable = require("mod.elona.api.aspect.IChargeable")
 local IItemRod = class.interface("IItemRod",
                                   {
                                      effect_id = "string",
-                                     effect_power = "number"
+                                     effect_power = "number",
+                                     is_zap_always_successful = { type = "boolean", optional = true }
                                   },
                                   { IAspect, IChargeable, IItemZappable })
 

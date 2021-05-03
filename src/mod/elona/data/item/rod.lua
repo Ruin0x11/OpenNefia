@@ -399,12 +399,11 @@ data:add {
          effect_power = 100,
          charges = function(self)
             return 1 + Rand.rnd(1) - Rand.rnd(1)
-         end
+         end,
+         can_be_recharged = false,
+         is_zap_always_successful = true,
       }
    },
-   can_be_recharged = false,
-
-   is_zap_always_successful = true,
 
    tags = { "noshop" },
    random_color = "Random",
@@ -595,9 +594,9 @@ data:add {
             return 2 + Rand.rnd(2) - Rand.rnd(2)
          end,
          max_charges = 2,
+         can_be_recharged = false,
       }
    },
-   can_be_recharged = false,
 
    tags = { "noshop" },
    random_color = "Random",

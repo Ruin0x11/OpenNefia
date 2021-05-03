@@ -74,7 +74,7 @@ local function max_attributes(chara)
    end
 
    local max_skill = function(skill)
-      chara:mod_skill_level(skill._id, Const.MAX_SKILL_LEVEL, "set")
+      chara:mod_skill_level(skill._id, Const.MAX_SKILL_LEVEL, "set", true)
    end
    Skill.iter_attributes():each(max_skill)
 end
@@ -101,9 +101,10 @@ local function max_skills(chara)
    end
 
    local max_skill = function(skill)
-      chara:mod_skill_level(skill._id, Const.MAX_SKILL_LEVEL, "set")
+      chara:mod_skill_level(skill._id, Const.MAX_SKILL_LEVEL, "set", true)
    end
    Skill.iter_skills():each(max_skill)
+   Skill.iter_actions():each(max_skill)
 end
 Event.register("base.on_refresh", "Cheat: config.cheat.max_skills", max_skills)
 
@@ -128,7 +129,7 @@ local function max_spells(chara)
    end
 
    local max_skill = function(skill)
-      chara:mod_skill_level(skill._id, Const.MAX_SKILL_LEVEL, "set")
+      chara:mod_skill_level(skill._id, Const.MAX_SKILL_LEVEL, "set", true)
    end
    Skill.iter_spells():each(max_skill)
 end
@@ -155,7 +156,7 @@ local function max_resistances(chara)
    end
 
    local max_resist = function(element)
-      chara:mod_resist_level(element._id, Const.MAX_SKILL_LEVEL, "set")
+      chara:mod_resist_level(element._id, Const.MAX_SKILL_LEVEL, "set", true)
    end
    Skill.iter_resistances():each(max_resist)
 end

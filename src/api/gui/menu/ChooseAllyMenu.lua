@@ -225,11 +225,17 @@ function ChooseAllyMenu:on_multi_select(entry)
 end
 
 function ChooseAllyMenu:on_select(index)
-   if self.multi_select then
-      return self:on_multi_select(index)
+   local entry = self.pages:get_current_page(index)
+
+   if not entry then
+      return nil
    end
 
-   return self.pages:get(index)
+   if self.multi_select then
+      return self:on_multi_select(entry)
+   end
+
+   return entry
 end
 
 function ChooseAllyMenu:update()

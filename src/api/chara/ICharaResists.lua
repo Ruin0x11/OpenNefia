@@ -67,9 +67,9 @@ function ICharaResists:resist_experience(element_id)
    return self.resistances[element_id] and self.resistances[element_id].experience or 0
 end
 
-function ICharaResists:mod_resist_level(element_id, amount, op)
+function ICharaResists:mod_resist_level(element_id, amount, op, force)
    data["base.element"]:ensure(element_id)
-   if not self:has_resist(element_id) then
+   if not self:has_resist(element_id) and not force then
       return
    end
    local result = self:mod("resistances", { [element_id] = { level = math.floor(amount) } }, op)

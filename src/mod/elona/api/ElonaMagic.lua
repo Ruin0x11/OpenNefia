@@ -175,7 +175,7 @@ function ElonaMagic.zap_rod(item, magic_id, power, params)
       local sep = item:separate()
       local sep_aspect = sep:get_aspect(IItemRod)
       if sep_aspect then
-         sep_aspect.charges = sep_aspect.charges - 1
+         sep_aspect:modify_charges(sep, -1)
       end
 
       return "turn_end"
@@ -233,7 +233,7 @@ function ElonaMagic.zap_rod(item, magic_id, power, params)
       local sep = item:separate()
       local sep_aspect = sep:get_aspect(IItemRod)
       if sep_aspect then
-         sep_aspect.charges = sep_aspect.charges - 1
+         sep_aspect:modify_charges(sep, -1)
       end
    end
 

@@ -518,16 +518,10 @@ end
 -- TODO remove once everything is ported to aspects
 function ElonaItem.get_item_charges(item)
    local charges, max_charges, is_charged
-   if item.has_charge then
-      charges = item.charges or 0
-      max_charges = item:calc("charge_level")
-      is_charged = charges > 0
-   else
-      for _, aspect in item:iter_aspects(IChargeable) do
-         charges = (charges or 0) + aspect.charges
-         max_charges = (max_charges or 0) + aspect:calc(item, "max_charges")
-         is_charged = is_charged or aspect:is_charged(item)
-      end
+   for _, aspect in item:iter_aspects(IChargeable) do
+      charges = (charges or 0) + aspect.charges
+      max_charges = (max_charges or 0) + aspect:calc(item, "max_charges")
+      is_charged = is_charged or aspect:is_charged(item)
    end
    return charges, max_charges, is_charged
 end

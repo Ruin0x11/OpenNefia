@@ -198,7 +198,7 @@ end,
     },
     draw_charge = function(_1, _2, _3)
   return ("%sを破壊して%sの魔力を抽出した(計%s)")
-  :format(itemname(_1), _2, _3)
+  :format(_1, _2, _3)
 end,
     drop_mine = function(_1)
   return ("%sは何かを投下した。")
@@ -207,11 +207,11 @@ end,
     enchant = {
       apply = function(_1)
   return ("%sは黄金の光に包まれた。")
-  :format(itemname(_1))
+  :format(_1)
 end,
       resist = function(_1)
   return ("%sは抵抗した。")
-  :format(itemname(_1))
+  :format(_1)
 end
     },
     escape = {
@@ -251,22 +251,26 @@ end,
       doubt = "あなたの神はあなたの信仰に疑問を抱いた。"
     },
     fill_charge = {
+       prompt = function(_1)
+          return ("どうやって%sを充填する？")
+             :format(_1)
+       end,
       apply = function(_1, _2)
   return ("%sは充填された(+%s)。")
-  :format(itemname(_1), _2)
+  :format(_1, _2)
 end,
       cannot_recharge = "それは充填ができないようだ。",
       cannot_recharge_anymore = function(_1)
   return ("%sはこれ以上充填できないようだ。")
-  :format(itemname(_1))
+  :format(_1)
 end,
       explodes = function(_1)
   return ("%sへの充填は失敗した。")
-  :format(itemname(_1))
+  :format(_1)
 end,
       fail = function(_1)
   return ("%sは破裂した。")
-  :format(itemname(_1))
+  :format(_1)
 end,
       more_power_needed = "充填するには最低でも魔力の貯蓄が10必要だ。",
       spend = function(_1)

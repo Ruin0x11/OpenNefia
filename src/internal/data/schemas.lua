@@ -401,8 +401,6 @@ Skills this character will already know on creation.
          feats_acquirable = 0,
          traits = {},
 
-         absorbed_charges = 0,
-
          emotion_icon = nil,
          emotion_icon_turns = 0,
 
@@ -555,21 +553,6 @@ A list of strings used for filtering during item generation.
          },
          {
             name = "count",
-            default = nil,
-            type = "number?"
-         },
-         {
-            name = "charges",
-            default = nil,
-            type = "number?"
-         },
-         {
-            name = "has_charge",
-            default = nil,
-            type = "boolean"
-         },
-         {
-            name = "charge_level",
             default = nil,
             type = "number?"
          },

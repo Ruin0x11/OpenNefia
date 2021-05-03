@@ -102,6 +102,7 @@ end
 -- Queries the player for an aspect action to use if there is more than one
 -- aspect on an item that fulfills a specific interface.
 function Aspect.query_aspect(obj, iface, filter, mes_cb)
+   filter = filter or fun.op.truth
    local aspects = obj:iter_aspects(iface):filter(function(a) return filter(a, obj) end):to_list()
 
    if #aspects == 0 then

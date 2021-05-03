@@ -82,6 +82,39 @@ return {
                   return ("%s of Rachel No.%s"):format(s, no)
                end
             },
+            IItemSpellbook = {
+               action_name = "Spellbook",
+            },
+            IItemAncientBook = {
+               action_name = "Ancient Book",
+
+               decoded = nil,
+               undecoded = function(_1)
+                  return ("undecoded %s"):format(_1)
+               end,
+
+               title = function(title, name)
+                  return ("%s titled <%s>"):format(name, title)
+               end,
+               titles = {
+                  _0 = "Voynich Manuscript",
+                  _1 = "Dhol Chants",
+                  _2 = "Ponape Scripture",
+                  _3 = "Revelations of Glaaki",
+                  _4 = "G'harne Fragments",
+                  _5 = "Liber Damnatus",
+                  _6 = "Book of Dzyan",
+                  _7 = "Book of Eibon",
+                  _8 = "Grand Grimoire",
+                  _9 = "Celaeno Fragments",
+                  _10 = "Necronomicon",
+                  _11 = "The R'lyeh Text",
+                  _12 = "Eltdown Shards",
+                  _13 = "The Golden Bough",
+                  _14 = "Apocalypse"
+               },
+            },
+
             IItemPotion = {
                action_name = "Potion"
             },

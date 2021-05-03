@@ -23,6 +23,11 @@ local IItemBook = require("mod.elona.api.aspect.IItemBook")
 local IItemMusicDisc = require("mod.elona.api.aspect.IItemMusicDisc")
 local IItemPotion = require("mod.elona.api.aspect.IItemPotion")
 local IItemWell = require("mod.elona.api.aspect.IItemWell")
+local IItemRod = require("mod.elona.api.aspect.IItemRod")
+local IItemAncientBook = require("mod.elona.api.aspect.IItemAncientBook")
+local IItemSpellbook = require("mod.elona.api.aspect.IItemSpellbook")
+local IItemChargeable = require("mod.elona.api.aspect.IItemChargeable")
+
 
 data:add {
    _type = "elona.plant",
@@ -121,6 +126,24 @@ data:add {
             { _id = "elona.mutation", power = 100 }
          }
       },
-      IItemWell
+      IItemWell,
+      [IItemRod] = {
+         effect_id = "elona.fire_bolt",
+         effect_power = 200,
+         charges = function(self)
+            return 10 + Rand.rnd(10) - Rand.rnd(10)
+         end,
+         max_charges = 10,
+      },
+      [IItemSpellbook] = {
+         skill_id = "elona.spell_magic_dart",
+         charges = 20,
+         max_charges = 4,
+      },
+      IItemAncientBook,
+      [IItemChargeable] = {
+         charges = 10,
+         max_charges = 100,
+      },
    }
 }

@@ -66,15 +66,11 @@ local function item_known_info(item)
       s = s .. number_string(bonus)
    end
 
-   -- TODO remove once everything is ported to aspects
+   -- TODO better way of displaying?
    local charges
-   if item.has_charge then
-      charges = item.charges or 0
-   else
-      local aspect = item:iter_aspects(IChargeable):nth(1)
-      if aspect then
-         charges = aspect.charges
-      end
+   local aspect = item:iter_aspects(IChargeable):nth(1)
+   if aspect and aspect:calc(item, "display_charge_count") then
+      charges = aspect.charges
    end
    if charges then
       s = s .. I18N.get("item.charges", charges)
@@ -124,19 +120,6 @@ end
 local function item_name_sub(s, item, jp)
    local _id = item._id
    local skip = false
-   local identify = item:calc("identify_state")
-
-   if _id == "elona.ancient_book" then
-      if jp and item.params.ancient_book_is_decoded then
-         s = s .. "解読済みの"
-      end
-      if identify >= IdentifyState.Full then
-         local title = I18N.localize("base.item", _id, "titles._" .. item.params.ancient_book_difficulty)
-         s = s .. I18N.localize("base.item", _id, "title", title)
-      end
-   elseif _id == "elona.recipe" then
-      -- TODO recipe
-   end
 
    if item._id == "elona.recipe" then
       -- TODO recipe
@@ -517,9 +500,6 @@ function itemname.en(item, amount, no_article)
    if (item.params.furniture_quality or 0) > 0 then
       s = s .. I18N.get("ui.furniture._" .. item.params.furniture_quality) .. " "
    end
-   if item.params.ancient_book_is_decoded == false then
-      s = s .. "undecoded "
-   end
    -- TODO recipe
    -- <<<<<<<< shade2/item_func.hsp:534 	} ..
 
@@ -594,18 +574,6 @@ function itemname.en(item, amount, no_article)
    end
    -- <<<<<<<< shade2/item_func.hsp:605 *skipName ..
    -- >>>>>>>> shade2/item_func.hsp:606 	if en@{ ..
-   if not no_article then
-      if identify >= IdentifyState.Full and quality >= Quality.Great and ElonaItem.is_equipment(item) then
-         s = "the " .. s
-      elseif amount == 1 then
-         if starts_with_vowel(s) then
-            s = "an " .. s
-         else
-            s = "a " .. s
-         end
-      end
-   end
-
    if s2 == "" and item._id ~= "elona.fish" and amount > 1 then
       s = s .. "s"
    end
@@ -677,6 +645,18 @@ function itemname.en(item, amount, no_article)
 
    for _, aspect in item:iter_aspects(IItemLocalizableExtra) do
       s = aspect:localize_extra(s, item) or s
+   end
+
+   if not no_article then
+      if identify >= IdentifyState.Full and quality >= Quality.Great and ElonaItem.is_equipment(item) then
+         s = "the " .. s
+      elseif amount == 1 then
+         if starts_with_vowel(s) then
+            s = "an " .. s
+         else
+            s = "a " .. s
+         end
+      end
    end
 
    return s
