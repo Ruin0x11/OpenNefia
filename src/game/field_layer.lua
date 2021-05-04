@@ -4,11 +4,12 @@ local Event = require("api.Event")
 local IInput = require("api.gui.IInput")
 local KeyHandler = require("api.gui.KeyHandler")
 local Env = require("api.Env")
+local DrawLayerSpec = require("api.draw.DrawLayerSpec")
 
 local draw = require("internal.draw")
 local draw_callbacks = require("internal.draw_callbacks")
-local draw_layer_spec = require("internal.draw_layer_spec")
 local field_renderer = require("internal.field_renderer")
+local sound_manager = require("internal.global.global_sound_manager")
 
 local field_layer = class.class("field_layer", IUiLayer)
 
@@ -42,7 +43,7 @@ function field_layer:init()
    -- keybinds
    self.keys:ignore_modifiers { "alt" }
 
-   self.draw_layer_spec = draw_layer_spec:new()
+   self.draw_layer_spec = DrawLayerSpec:new()
 
    self:register_draw_layer("tile_layer", "internal.layer.tile_layer")
    self:register_draw_layer("debris_layer", "internal.layer.debris_layer")
@@ -139,7 +140,10 @@ function field_layer:update_draw_pos(scroll_frames)
    end
 
    if center_x then
-      self.renderer:update_draw_pos(center_x + self.camera_dx, center_y + self.camera_dy, scroll_frames or 0)
+      local sx = center_x + self.camera_dx
+      local sy = center_y + self.camera_dy
+      self.renderer:update_draw_pos(sx, sy, scroll_frames or 0)
+      sound_manager:set_listener_pos(sx, sy)
    end
 end
 

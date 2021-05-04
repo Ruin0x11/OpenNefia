@@ -14,9 +14,9 @@ local Stopwatch = require("api.Stopwatch")
 local data = require("internal.data")
 local field_renderer = require("internal.field_renderer")
 local InstancedMap = require("api.InstancedMap")
-local draw_layer_spec = require("internal.draw_layer_spec")
 local MapObject = require("api.MapObject")
 local Event = require("api.Event")
+local DrawLayerSpec = require("api.draw.DrawLayerSpec")
 
 local Gui = {}
 
@@ -658,25 +658,9 @@ function Gui.update_minimap(map)
    Gui.hud_widget("hud_minimap"):widget():refresh_visible(map)
 end
 
-function Gui.render_tilemap_to_image(map, layers, map_object_types)
+function Gui.render_tilemap_to_image(map, spec, map_object_types)
    class.assert_is_an(InstancedMap, map)
-
-   local spec
-   if layers then
-      assert(type(layers) == "table")
-      spec = draw_layer_spec:new()
-
-      for tag, layer in pairs(layers) do
-         assert(type(layer.require_path) == "string")
-         assert(layer.z_order == nil or type(layer.z_order) == "number")
-         if layer.enabled == nil then
-            layer.enabled = true
-         end
-         spec:register_draw_layer(tag, layer.require_path, layer.z_order, not not layer.enabled)
-      end
-   else
-      spec = field.draw_layer_spec
-   end
+   class.assert_is_an(DrawLayerSpec, spec)
 
    -- Need to copy the map in order to memorize all the tiles without affecting
    -- the original map's memorization state.
@@ -721,6 +705,10 @@ function Gui.render_tilemap_to_image(map, layers, map_object_types)
    canvas:release()
 
    return image_data
+end
+
+function Gui.current_draw_layer_spec()
+   return field.draw_layer_spec:clone()
 end
 
 return Gui
