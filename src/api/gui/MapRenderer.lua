@@ -66,6 +66,7 @@ function MapRenderer:relayout(x, y, width, height)
    self.y = y
    self.width = width
    self.height = height
+
    self.canvas = Draw.create_canvas(self.width, self.height)
 end
 
@@ -77,7 +78,11 @@ function MapRenderer:draw()
    if self.map then
       Draw.with_canvas(self.canvas, self.renderer.draw, self.renderer, nil, nil, self.width, self.height)
       Draw.set_color(255, 255, 255)
+      local dx, dy = self:get_draw_pos()
+      local tw, th = Draw.get_coords():get_size()
+      Draw.set_scissor(dx, dy, self.map:width() * tw, self.map:height() * th)
       Draw.image(self.canvas, self.x, self.y)
+      Draw.set_scissor()
    end
 end
 
