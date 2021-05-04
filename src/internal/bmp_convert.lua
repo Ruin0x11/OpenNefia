@@ -209,12 +209,11 @@ local function vips_to_love_image(vips_image, filename)
    local memory_size = vips_image:width() * vips_image:height() * pixel_size
    local str = ffi.string(memory, memory_size)
 
-   local image_data = love.image.newImageData(vips_image:width(),
-                                              vips_image:height(),
-                                              image_format,
-                                              str)
+   return love.image.newImageData(vips_image:width(),
+                                  vips_image:height(),
+                                  image_format,
+                                  str)
 
-   return love.graphics.newImage(image_data)
 end
 
 local function convert_luajit(filepath, key_color)
@@ -244,6 +243,23 @@ end
 
 local image_cache = {}
 
+function bmp_convert.load_image_data(source, key_color)
+   if key_color == nil then
+      key_color = {0, 0, 0}
+   elseif key_color == "none" then
+      key_color = nil
+   end
+
+   local image_data
+   if string.match(source, "%.bmp$") and not Env.is_headless() then
+      image_data = bmp_convert.convert(source, key_color)
+   else
+      image_data = love.image.newImageData(source)
+   end
+
+   return image_data
+end
+
 --- Replacement for love.graphics.newImage that supports
 --- loading BMP files with an optional key color to replace with
 --- transparency.
@@ -264,18 +280,9 @@ function bmp_convert.load_image(source, key_color)
       return image_cache[source][key]
    end
 
-   if key_color == nil then
-      key_color = {0, 0, 0}
-   elseif key_color == "none" then
-      key_color = nil
-   end
+   local image_data = bmp_convert.load_image_data(source, key_color)
 
-   local image
-   if string.match(source, "%.bmp$") and not Env.is_headless() then
-      image = bmp_convert.convert(source, key_color)
-   else
-      image = love.graphics.newImage(source)
-   end
+   local image = love.graphics.newImage(image_data)
 
    image_cache[source] = image_cache[source] or {}
    image_cache[source][key] = image
