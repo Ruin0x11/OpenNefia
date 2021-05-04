@@ -39,10 +39,10 @@ Draw.run = draw.run
 
 
 --- @function Draw.get_width
-Draw.get_width = love.graphics.getWidth
+Draw.get_width = draw.get_width
 
 --- @function Draw.get_height
-Draw.get_height = love.graphics.getHeight
+Draw.get_height = draw.get_height
 
 --- @function Draw.create_canvas
 Draw.create_canvas = love.graphics.newCanvas

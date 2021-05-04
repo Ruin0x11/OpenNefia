@@ -15,13 +15,14 @@ local HEIGHT = 600
 
 local canvas = nil
 local canvas_last = nil
+local canvas_final = nil
 local error_canvas = nil
 local layers = {}
 local sorted_layers = {}
 local handler = nil
 local gamma_correct = nil
-
-local cur_width, cur_height
+local lx, ly, lw, lh
+local use_logical = false
 
 --
 --
@@ -58,21 +59,69 @@ local function set_window_mode(width, height, window_mode)
    draw.resize(width, height)
 end
 
+function draw.get_logical_viewport()
+   if use_logical then
+      return 0, 0, lw, lh
+   end
+   return 0, 0, love.graphics.getWidth(), love.graphics.getHeight()
+end
+
+function draw.set_logical_viewport(x, y, w, h)
+   lx = x or 0
+   ly = y or 0
+   lw = math.max(w or love.graphics.getWidth(), WIDTH)
+   lh = math.max(h or love.graphics.getHeight(), HEIGHT)
+end
+
+function draw.set_logical_viewport_enabled(enabled)
+   use_logical = not not enabled
+   draw.resize(love.graphics.getWidth(), love.graphics.getHeight())
+end
+
+function draw.is_logical_viewport_enabled()
+   return not not use_logical
+end
+
+function draw.get_width()
+   if use_logical then
+      return lw
+   end
+   return love.graphics.getWidth()
+end
+
+function draw.get_height()
+   if use_logical then
+      return lh
+   end
+   return love.graphics.getHeight()
+end
+
+function draw.get_actual_width()
+   return love.graphics.getWidth()
+end
+
+function draw.get_actual_height()
+   return love.graphics.getHeight()
+end
+
 function draw.init()
    love.window.setTitle("OpenNefia")
    set_window_mode(WIDTH, HEIGHT)
-   cur_width = love.graphics.getWidth()
-   cur_height = love.graphics.getHeight()
 
    love.graphics.setLineStyle("rough")
    love.graphics.setDefaultFilter("nearest", "nearest", 1)
    love.graphics.setBlendMode("alpha")
 
    gamma_correct = love.graphics.newShader("mod/base/graphic/shader/gamma.frag.glsl")
+
+   lx = 0
+   ly = 0
+   lw = draw.get_actual_width()
+   lh = draw.get_actual_height()
 end
 
 function draw.draw_start(c)
-   love.graphics.setCanvas(c or canvas)
+   love.graphics.setCanvas(c or canvas_final)
    love.graphics.clear()
 end
 
@@ -83,11 +132,11 @@ function draw.draw_end(c)
    love.graphics.setBlendMode("alpha", "premultiplied")
 
    love.graphics.setShader(gamma_correct)
-   love.graphics.draw(c or canvas)
+   love.graphics.draw(c or canvas_final)
    love.graphics.setShader()
 
    love.graphics.setCanvas(canvas_last)
-   love.graphics.draw(c or canvas)
+   love.graphics.draw(canvas)
    love.graphics.setCanvas()
 
    love.graphics.setBlendMode("alpha")
@@ -107,7 +156,7 @@ function draw.set_root(ui_layer, priority)
    class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
    layers = {{layer=ui_layer, priority=priority}}
    sort_layers()
-   ui_layer:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+   ui_layer:relayout(draw.get_logical_viewport())
    ui_layer:focus()
 end
 
@@ -121,7 +170,7 @@ end
 function draw.push_layer(ui_layer, priority)
    priority = priority or ui_layer:default_z_order()
    class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
-   ui_layer:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+   ui_layer:relayout(draw.get_logical_viewport())
    ui_layer:focus()
    table.insert(layers, {layer=ui_layer, priority=priority})
    sort_layers()
@@ -182,7 +231,7 @@ local function hotload_layer(layer)
    if layer.on_hotload_layer then
       layer:on_hotload_layer()
    end
-   layer:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+   layer:relayout(draw.get_logical_viewport())
 
    layer:bind_keys(layer:make_keymap())
 end
@@ -222,7 +271,7 @@ local global_widgets = WidgetContainer:new()
 
 function draw.add_global_widget(widget, tag, opts)
    global_widgets:add(widget, tag, opts)
-   global_widgets:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+   global_widgets:relayout(draw.get_logical_viewport())
 end
 
 function draw.remove_global_widget(tag)
@@ -317,20 +366,22 @@ function draw.set_coords(c)
 end
 
 function draw.get_tiled_width()
-   return coords:get_tiled_width(love.graphics.getWidth())
+   return coords:get_tiled_width(draw.get_width())
 end
 
 function draw.get_tiled_height()
-   return coords:get_tiled_height(love.graphics.getHeight() - (72 + 16))
+   return coords:get_tiled_height(draw.get_height() - (72 + 16))
 end
 
 function draw.with_canvas(other_canvas, f, ...)
+   local prev_canvas = love.graphics.getCanvas()
+
    love.graphics.setCanvas(other_canvas)
    love.graphics.setBlendMode("alpha")
 
    local ok, err = xpcall(f, debug.traceback, ...)
 
-   love.graphics.setCanvas(canvas)
+   love.graphics.setCanvas(prev_canvas)
 
    if not ok then
       error(err)
@@ -393,7 +444,7 @@ function draw.draw_error(err)
    end
    love.graphics.setScissor()
    draw.draw_start(error_canvas)
-   love.graphics.draw(canvas)
+   love.graphics.draw(canvas_final)
    love.graphics.setColor(0, 0, 0, 128/256)
    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 
@@ -420,7 +471,7 @@ end
 
 function draw.draw_low_power()
    draw.draw_start(error_canvas)
-   love.graphics.draw(canvas)
+   love.graphics.draw(canvas_final)
    love.graphics.setColor(0, 0, 0, 128/256)
    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
    draw.draw_end(error_canvas)
@@ -465,19 +516,27 @@ end
 --
 --
 
-function draw.resize(w, h)
-   cur_width = w or cur_width
-   cur_height = h or cur_height
-
-   canvas = create_canvas(cur_width, cur_height)
-   canvas_last = create_canvas(cur_width, cur_height)
-   error_canvas = create_canvas(cur_width, cur_height)
-
-   for _, entry in ipairs(layers) do
-      entry.layer:relayout(0, 0, cur_width, cur_height)
+function draw.resize(actual_width, actual_height)
+   local width, height
+   if use_logical then
+      width = lw
+      height = lh
+   else
+      width = actual_width
+      height = actual_height
    end
 
-   global_widgets:relayout(0, 0, cur_width, cur_height)
+   canvas = create_canvas(width, height)
+   canvas_last = create_canvas(width, height)
+
+   error_canvas = create_canvas(actual_width, actual_height)
+   canvas_final = create_canvas(actual_width, actual_height)
+
+   for _, entry in ipairs(layers) do
+      entry.layer:relayout(0, 0, width, height)
+   end
+
+   global_widgets:relayout(0, 0, actual_width, actual_height)
 
    require("api.Gui").update_screen()
 

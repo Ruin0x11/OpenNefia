@@ -173,7 +173,6 @@ function love.draw()
       start_halt()
       halt_error = tostring(err)
    end
-   draw.draw_global_draw_callbacks()
 
    draw.draw_end()
 
