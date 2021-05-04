@@ -75,7 +75,7 @@ end
 
 function MapRenderer:draw()
    if self.map then
-      Draw.with_canvas(self.canvas, self.renderer.draw, self.renderer, 0, 0, self.width, self.height)
+      Draw.with_canvas(self.canvas, self.renderer.draw, self.renderer, nil, nil, self.width, self.height)
       Draw.set_color(255, 255, 255)
       Draw.image(self.canvas, self.x, self.y)
    end

@@ -53,7 +53,9 @@ function MapViewer:on_query()
 end
 
 function MapViewer:update_draw_pos()
-   self.renderer:set_draw_pos(self.x + self.offset_x, self.y + self.offset_y)
+   local tx, ty = Gui.screen_to_tile(-self.offset_x + math.floor(self.width / 2), -self.offset_y + math.floor(self.height / 2))
+   self.map:calc_screen_sight(tx, ty, "all")
+   self.renderer:set_draw_pos(self.offset_x, self.offset_y)
 end
 
 function MapViewer:pan(dx, dy)
@@ -62,10 +64,9 @@ function MapViewer:pan(dx, dy)
    self:update_draw_pos()
 end
 
-function MapViewer:relayout()
-   local tw, th = Draw.get_coords():get_size()
-   self.width = self.map:width() * tw
-   self.height = self.map:height() * th
+function MapViewer:relayout(x, y, width, height)
+   self.width = width
+   self.height = height
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.y = self.y
 
@@ -83,9 +84,11 @@ function MapViewer:draw()
    local border_width = width + pad
    local border_height = height + pad
 
+   self.map._shadow_start_x = x
+   self.map._shadow_start_y = y
    self.renderer:relayout_inner(x, y, width, height)
-   self.renderer.x = x
-   self.renderer.y = y
+   -- self.renderer.x = x
+   -- self.renderer.y = y
 
    -- if self.draw_border then
    --    Draw.filled_rect(x-pad/2, y-pad/2, border_width, border_height, {0, 0, 0})
