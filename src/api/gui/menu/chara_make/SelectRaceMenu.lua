@@ -3,16 +3,16 @@ local I18N = require("api.I18N")
 local Ui = require("api.Ui")
 local data = require("internal.data")
 
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
 local UiRaceInfo = require("api.gui.menu.chara_make.UiRaceInfo")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
+local ICharaMakeMenu = require("api.gui.menu.chara_make.ICharaMakeMenu")
 
 local config = require("internal.config")
 
-local SelectRaceMenu = class.class("SelectRaceMenu", ICharaMakeSection)
+local SelectRaceMenu = class.class("SelectRaceMenu", ICharaMakeMenu)
 
 SelectRaceMenu:delegate("input", IInput)
 

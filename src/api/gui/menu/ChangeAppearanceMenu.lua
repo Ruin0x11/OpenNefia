@@ -1,19 +1,17 @@
 local Ui = require("api.Ui")
 local Pcc = require("api.gui.Pcc")
 local data = require("internal.data")
-local Skill = require("mod.elona_sys.api.Skill")
 local Gui = require("api.Gui")
-local CharaMake = require("api.CharaMake")
+local IUiLayer = require("api.gui.IUiLayer")
 
 local IInput = require("api.gui.IInput")
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiTheme = require("api.gui.UiTheme")
 local UiWindow = require("api.gui.UiWindow")
 local ChangeAppearanceList = require("api.gui.menu.ChangeAppearanceList")
 local ChangeAppearancePreview = require("api.gui.menu.ChangeAppearancePreview")
 local InputHandler = require("api.gui.InputHandler")
 
-local ChangeAppearanceMenu = class.class("ChangeAppearanceMenu", ICharaMakeSection)
+local ChangeAppearanceMenu = class.class("ChangeAppearanceMenu", IUiLayer)
 
 ChangeAppearanceMenu:delegate("list", "focus")
 ChangeAppearanceMenu:delegate("input", IInput)
@@ -48,17 +46,11 @@ local function make_default_pcc()
    return pcc
 end
 
-function ChangeAppearanceMenu:init(charamake_data)
-   self.charamake_data = charamake_data
+function ChangeAppearanceMenu:init(chara)
    self.width = 380
    self.height = 340
 
-   local chara = self.charamake_data.chara
-
-   if charamake_data.is_chara_make then
-      chara.use_pcc = true
-   end
-
+   self.chara = chara
    chara.pcc = chara.pcc or make_default_pcc()
 
    self.list = ChangeAppearanceList:new()
@@ -116,9 +108,9 @@ function ChangeAppearanceMenu:build_preview()
             pcc_parts[pcc_part_id] = { id = entry.value }
          end
       elseif value_ty == "portrait" then
-         self.charamake_data.chara.portrait = entry.value
+         self.chara.portrait = entry.value
       elseif value_ty == "custom" then
-         self.charamake_data.chara.use_pcc = entry.value
+         self.chara.use_pcc = entry.value
       end
    end
 
@@ -140,7 +132,7 @@ function ChangeAppearanceMenu:build_preview()
    pcc_parts = table.values(pcc_parts)
    local pcc = Pcc:new(pcc_parts)
    pcc:refresh()
-   self.charamake_data.chara.pcc = pcc
+   self.chara.pcc = pcc
 end
 
 function ChangeAppearanceMenu:relayout()
@@ -167,10 +159,6 @@ function ChangeAppearanceMenu:on_query()
    Gui.play_sound("base.port")
    self.canceled = false
    self.list:update()
-end
-
-function ChangeAppearanceMenu:get_charamake_result(charamake_data)
-   return charamake_data
 end
 
 function ChangeAppearanceMenu:update(dt)

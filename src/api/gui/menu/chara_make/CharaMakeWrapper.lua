@@ -4,6 +4,7 @@ local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local Log = require("api.Log")
 local MapObject = require("api.MapObject")
+local ICharaMakeMenu = require("api.gui.menu.chara_make.ICharaMakeMenu")
 
 local config = require("internal.config")
 local env = require("internal.env")
@@ -25,7 +26,8 @@ function CharaMakeWrapper:init(menus)
    self.width = Draw.get_width()
    self.height = Draw.get_height()
    self.menus = menus
-   self.submenu_trail = {}
+   self.section = nil
+   self.section_trail = {}
    self.results = {}
    self.gene_used = "gene"
 
@@ -45,7 +47,7 @@ function CharaMakeWrapper:make_keymap()
 end
 
 function CharaMakeWrapper:set_caption(text)
-   text = text or self.submenu.caption
+   text = text or self.section.caption
    self.caption:set_data(text)
 end
 
@@ -53,83 +55,107 @@ function CharaMakeWrapper:get_in_progress_result()
    return self.results[#self.results]
 end
 
-function CharaMakeWrapper:proceed()
-   local menu_id
-   if self.submenu then
-      menu_id = self.menus[#self.submenu_trail+2]
+function CharaMakeWrapper:has_next_section()
+   if self.section then
+      return self.menus[#self.section_trail+2] ~= nil
    else
-      menu_id = self.menus[#self.submenu_trail+1]
+      return #self.menus > 0
    end
+end
 
-   local success, layer_class = xpcall(env.safe_require, debug.traceback, menu_id)
+function CharaMakeWrapper:proceed()
+   repeat
+      local menu_id
+      if self.section then
+         -- previous sections + current section + 1
+         menu_id = self.menus[#self.section_trail+2]
+      else
+         menu_id = self.menus[1]
+      end
 
-   if not success then
-      local err = layer_class
-      -- TODO turn this into a log warning
-      Log.error("Error loading menu %s:\n\t%s", menu_id, err)
-      self:go_back()
-      return
-   elseif class == nil then
-      Log.error("Cannot find menu %s", menu_id)
-      self:go_back()
-      return
-   end
+      local success, layer_class = xpcall(env.safe_require, debug.traceback, menu_id)
 
-   -- Get the result returned from the last menu, or a blank one if
-   -- still on the first menu.
-   local in_progress_result = self:get_in_progress_result()
-   in_progress_result.is_chara_make = true
+      if not success then
+         local err = layer_class
+         -- TODO turn this into a log warning
+         Log.error("Error loading menu %s:\n\t%s", menu_id, err)
+         self:go_back()
+         return
+      elseif class == nil then
+         Log.error("Cannot find menu %s", menu_id)
+         self:go_back()
+         return
+      end
 
-   local submenu
-   success, submenu = xpcall(function()
+      -- Get the result returned from the last menu, or a blank one if
+      -- still on the first menu.
+      local in_progress_result = self:get_in_progress_result()
+
+      local make_layer = function()
          local sm = layer_class:new(in_progress_result)
          class.assert_is_an(ICharaMakeSection, sm)
          return sm
-   end, debug.traceback)
+      end
 
-   if not success then
-      local err = submenu
-      error(err)
+      local submenu
+      success, submenu = xpcall(make_layer, debug.traceback)
+
+      if not success then
+         local err = submenu
+         error(err)
+      end
+
+      if self.section then
+         table.insert(self.section_trail, self.section)
+      end
+      self.section = submenu
+   until class.is_an(ICharaMakeMenu, self.section)
+      or not self:has_next_section()
+
+   if class.is_an(ICharaMakeMenu, self.section) then
+      self:set_caption(self.section.caption)
+      self:relayout()
+
+      if self.section.intro_sound then
+         Gui.play_sound(self.section.intro_sound)
+      end
+
+      self.input:forward_to(self.section)
+   else
+      self.input:forward_to(nil)
    end
-
-   if self.submenu then
-      table.insert(self.submenu_trail, self.submenu)
-   end
-   self.submenu = submenu
-
-   self:set_caption(self.submenu.caption)
-   self:relayout()
-
-   if self.submenu.intro_sound then
-      Gui.play_sound(self.submenu.intro_sound)
-   end
-
-   self.input:forward_to(self.submenu)
    self.input:halt_input()
 end
 
 function CharaMakeWrapper:go_back()
-   if #self.submenu_trail == 0 then return end
+   if #self.section_trail == 0 then return end
 
-   self.submenu = table.remove(self.submenu_trail)
-   self.submenu:on_charamake_query_menu()
+   repeat
+      self.section = table.remove(self.section_trail)
+      self.section:on_charamake_query_menu()
 
-   table.remove(self.results)
+      table.remove(self.results)
+   until class.is_an(ICharaMakeMenu, self.section)
+      or #self.section_trail == 0
 
-   self.caption:set_data(self.submenu.caption)
-   self:relayout()
+   if class.is_an(ICharaMakeMenu, self.section) then
+      self.caption:set_data(self.section.caption)
+      self:relayout()
 
-   self.input:forward_to(self.submenu)
+      self.input:forward_to(self.section)
+   else
+      self.input:forward_to(nil)
+   end
    self.input:halt_input()
 end
 
 function CharaMakeWrapper:go_to_start()
-   while #self.submenu_trail > 0 do
+   while #self.section_trail > 0 do
       self:go_back()
    end
 
    -- call the constructor of the first menu again.
-   self.submenu = nil
+   self.section = nil
    self:proceed()
 end
 
@@ -141,8 +167,8 @@ function CharaMakeWrapper:relayout(x, y, width, height)
    self.t = UiTheme.load()
    self.caption:relayout(self.x + 20, self.y + 30)
 
-   if self.submenu then
-      self.submenu:relayout(self.x, self.y, self.width, self.height)
+   if self.section then
+      self.section:relayout(self.x, self.y, self.width, self.height)
    end
 end
 
@@ -158,8 +184,8 @@ function CharaMakeWrapper:draw()
       Draw.text("Gene from " .. self.gene_used, self.x + 20, self.height - 36)
    end
 
-   if self.submenu then
-      self.submenu:draw()
+   if self.section then
+      self.section:draw()
    end
 end
 
@@ -179,17 +205,17 @@ function CharaMakeWrapper:initialize_player(chara)
 end
 
 function CharaMakeWrapper:update(dt)
-   if not self.submenu then
+   if not self.section then
       return nil, "canceled"
    end
 
-   local result, canceled = self.submenu:update(dt)
+   local result, canceled = self.section:update(dt)
 
    if canceled then
       if type(result) == "table" and result.chara_make_action then
          self:handle_action(result.chara_make_action)
       else
-         if #self.submenu_trail == 0 then
+         if #self.section_trail == 0 then
             self.canceled = true
          else
             self:go_back()
@@ -203,30 +229,32 @@ function CharaMakeWrapper:update(dt)
       -- `MapObject.clone()` instead, since it has awareness of things like
       -- location reparenting and not trying to clone class definition tables.
       local new_cm_result = MapObject.deepcopy(in_progress_result, nil, nil, nil, { preserve_uid = true })
-      new_cm_result = self.submenu:get_charamake_result(new_cm_result, result) or in_progress_result
+      new_cm_result = self.section:get_charamake_result(new_cm_result, result) or in_progress_result
 
       assert(type(new_cm_result) == "table", "Charamake menu result must be table")
-      new_cm_result.menu_id = Env.get_require_path(self.submenu.__class)
+      new_cm_result.menu_id = Env.get_require_path(self.section.__class)
 
-      local has_next = self.menus[#self.submenu_trail+2] ~= nil
+      -- previous sections + current section + 1
+      local has_next = self:has_next_section()
+
       if has_next then
-         self.results[#self.submenu_trail+1] = new_cm_result
+         self.results[#self.section_trail+1] = new_cm_result
          self:proceed()
       else
          assert(MapObject.is_map_object(new_cm_result.chara, "base.chara"))
 
          local success, err = xpcall(
             function()
-               for _, menu in ipairs(self.submenu_trail) do
+               for _, menu in ipairs(self.section_trail) do
                   menu:on_charamake_finish(new_cm_result)
                end
-               self.submenu:on_charamake_finish(new_cm_result)
+               self.section:on_charamake_finish(new_cm_result)
             end,
             debug.traceback)
 
          if not success then
             Log.error("Error running final character making step:\n\t%s", err)
-            self.submenu:on_query() -- reset canceled
+            self.section:on_query() -- reset canceled
          else
             self:initialize_player(new_cm_result.chara)
             return new_cm_result

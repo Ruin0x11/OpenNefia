@@ -3,13 +3,13 @@ local Ui = require("api.Ui")
 local Log = require("api.Log")
 
 local IInput = require("api.gui.IInput")
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
 local UiTheme = require("api.gui.UiTheme")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
+local ICharaMakeMenu = require("api.gui.menu.chara_make.ICharaMakeMenu")
 
-local SelectGenderMenu = class.class("SelectGenderMenu", ICharaMakeSection)
+local SelectGenderMenu = class.class("SelectGenderMenu", ICharaMakeMenu)
 
 SelectGenderMenu:delegate("input", IInput)
 

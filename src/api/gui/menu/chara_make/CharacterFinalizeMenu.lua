@@ -11,10 +11,10 @@ local Prompt = require("api.gui.Prompt")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 local CharaMake = require("api.CharaMake")
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local CharacterInfoMenu = require("api.gui.menu.CharacterInfoMenu")
+local ICharaMakeMenu = require("api.gui.menu.chara_make.ICharaMakeMenu")
 
-local CharacterFinalizeMenu = class.class("CharacterFinalizeMenu", ICharaMakeSection)
+local CharacterFinalizeMenu = class.class("CharacterFinalizeMenu", ICharaMakeMenu)
 
 CharacterFinalizeMenu:delegate("input", IInput)
 

@@ -1,4 +1,3 @@
-local CharaMake = require("api.CharaMake")
 local Draw = require("api.Draw")
 local I18N = require("api.I18N")
 local Ui = require("api.Ui")
@@ -6,14 +5,14 @@ local config = require("internal.config")
 local data = require("internal.data")
 local Log = require("api.Log")
 
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
 local UiRaceInfo = require("api.gui.menu.chara_make.UiRaceInfo")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
+local ICharaMakeMenu = require("api.gui.menu.chara_make.ICharaMakeMenu")
 
-local SelectClassMenu = class.class("SelectClassMenu", ICharaMakeSection)
+local SelectClassMenu = class.class("SelectClassMenu", ICharaMakeMenu)
 
 SelectClassMenu:delegate("input", IInput)
 

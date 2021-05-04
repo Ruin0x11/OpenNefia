@@ -1,16 +1,9 @@
-local Chara = require("api.Chara")
-local Draw = require("api.Draw")
-local Ui = require("api.Ui")
-
-local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
-local UiWindow = require("api.gui.UiWindow")
-local UiList = require("api.gui.UiList")
 local FeatsMenu = require("api.gui.menu.FeatsMenu")
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
+local ICharaMakeMenu = require("api.gui.menu.chara_make.ICharaMakeMenu")
 
-local SelectFeatsMenu = class.class("SelectFeatsMenu", ICharaMakeSection)
+local SelectFeatsMenu = class.class("SelectFeatsMenu", ICharaMakeMenu)
 
 SelectFeatsMenu:delegate("input", IInput)
 

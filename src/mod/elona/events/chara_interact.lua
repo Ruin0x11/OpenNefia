@@ -65,7 +65,7 @@ end
 
 local function interact_appearance(chara, player)
    -- >>>>>>>> shade2/command.hsp:1897 	if p=8{ ...
-   ChangeAppearanceMenu:new({chara = chara}):query()
+   ChangeAppearanceMenu:new(chara):query()
 
    return "player_turn_query"
    -- <<<<<<<< shade2/command.hsp:1903 		} ..

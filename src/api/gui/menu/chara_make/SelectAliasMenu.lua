@@ -3,15 +3,15 @@ local Gui = require("api.Gui")
 local I18N = require("api.I18N")
 local Ui = require("api.Ui")
 
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local Event = require("api.Event")
 local UiList = require("api.gui.UiList")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
 local UiTheme = require("api.gui.UiTheme")
+local ICharaMakeMenu = require("api.gui.menu.chara_make.ICharaMakeMenu")
 
-local SelectAliasMenu = class.class("SelectAliasMenu", ICharaMakeSection)
+local SelectAliasMenu = class.class("SelectAliasMenu", ICharaMakeMenu)
 
 SelectAliasMenu:delegate("input", IInput)
 SelectAliasMenu:delegate("list", "items")

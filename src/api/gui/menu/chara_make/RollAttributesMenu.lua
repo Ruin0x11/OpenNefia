@@ -6,14 +6,14 @@ local Rand = require("api.Rand")
 local Ui = require("api.Ui")
 local Skill = require("mod.elona_sys.api.Skill")
 
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiWindow = require("api.gui.UiWindow")
 local UiTheme = require("api.gui.UiTheme")
 local UiList = require("api.gui.UiList")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
+local ICharaMakeMenu = require("api.gui.menu.chara_make.ICharaMakeMenu")
 
-local RollAttributesMenu = class.class("RollAttributesMenu", ICharaMakeSection)
+local RollAttributesMenu = class.class("RollAttributesMenu", ICharaMakeMenu)
 
 RollAttributesMenu:delegate("input", IInput)
 
