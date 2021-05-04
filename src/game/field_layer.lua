@@ -9,7 +9,6 @@ local DrawLayerSpec = require("api.draw.DrawLayerSpec")
 local draw = require("internal.draw")
 local draw_callbacks = require("internal.draw_callbacks")
 local field_renderer = require("internal.field_renderer")
-local sound_manager = require("internal.global.global_sound_manager")
 
 local field_layer = class.class("field_layer", IUiLayer)
 
@@ -143,7 +142,7 @@ function field_layer:update_draw_pos(scroll_frames)
       local sx = center_x + self.camera_dx
       local sy = center_y + self.camera_dy
       self.renderer:update_draw_pos(sx, sy, scroll_frames or 0)
-      sound_manager:set_listener_pos(sx, sy)
+      self.sound_manager:set_listener_pos(sx, sy)
    end
 end
 
