@@ -184,6 +184,7 @@ function InventoryContext:init(proto, params, ctxt_params)
    self.show_target_equip = self.proto.show_target_equip
    self.shortcuts = self.proto.shortcuts
    self.stack = {}
+   self._is_menu_visible = true
 
    -- Valid parameters to pass in the `params` table.
    self.chara = params.chara or nil
@@ -371,6 +372,14 @@ function InventoryContext:on_menu_exit()
    end
 
    return "player_turn_query"
+end
+
+function InventoryContext:is_menu_visible()
+   return self._is_menu_visible
+end
+
+function InventoryContext:set_menu_visible(visible)
+   self._is_menu_visible = not not visible
 end
 
 return InventoryContext

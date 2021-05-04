@@ -80,6 +80,7 @@ local inv_examine = {
    icon = 7,
    window_title = "ui.inventory_command.general",
    query_text = "ui.inv.title.general",
+
    on_select = function(ctxt, item, amount, rest)
       local list = rest and rest:to_list()
       ItemDescriptionMenu:new(item, list):query()
@@ -299,6 +300,7 @@ local inv_drink = {
       return item:calc("can_drink")
    end,
    on_select = function(ctxt, item)
+      ctxt:set_menu_visible(false)
       return ElonaAction.drink(ctxt.chara, item)
    end
 }
@@ -319,6 +321,7 @@ local inv_zap = {
    end,
    on_shortcut = fail_in_world_map,
    on_select = function(ctxt, item)
+      ctxt:set_menu_visible(false)
       return ElonaAction.zap(ctxt.chara, item)
    end
 }
@@ -609,6 +612,7 @@ local inv_use = {
       return item:calc("can_use")
    end,
    on_select = function(ctxt, item, amount, rest)
+      ctxt:set_menu_visible(false)
       return ElonaAction.use(ctxt.chara, item)
    end
 }
@@ -629,6 +633,7 @@ local inv_open = {
    end,
    on_shortcut = fail_in_world_map,
    on_select = function(ctxt, item, amount, rest)
+      ctxt:set_menu_visible(false)
       return ElonaAction.open(ctxt.chara, item)
    end
 }
@@ -702,6 +707,7 @@ local inv_dip = {
       return can_dip
    end,
    on_select = function(ctxt, item, amount, rest)
+      ctxt:set_menu_visible(false)
       return ElonaAction.dip(ctxt.chara, ctxt.params.dip_item, item)
    end
 }
@@ -808,6 +814,7 @@ local inv_throw = {
    end,
    on_select = function(ctxt, item, amount, rest)
       -- >>>>>>>> shade2/command.hsp:3957 		if invCtrl=26{	 ...
+      ctxt:set_menu_visible(false)
       local x, y, can_see = Input.query_position()
       if not can_see then
          Gui.mes("action.which_direction.cannot_see_location")
