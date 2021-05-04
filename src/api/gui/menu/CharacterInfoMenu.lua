@@ -1,14 +1,10 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local Ui = require("api.Ui")
-local save = require("internal.global.save")
-local config = require("internal.config")
 local Skill = require("mod.elona_sys.api.Skill")
 local Const = require("api.Const")
-local I18N = require("api.I18N")
 
 local IInput = require("api.gui.IInput")
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local InputHandler = require("api.gui.InputHandler")
 local UiPagedContainer = require("api.gui.UiPagedContainer")
 local CharacterSheetMenu = require("api.gui.menu.CharacterSheetMenu")
@@ -23,7 +19,7 @@ CharacterInfoMenu:delegate("input", IInput)
 
 function CharacterInfoMenu:init(chara, mode, opts)
    self.chara = chara
-   self.mode = mode or "chara_status"
+   self.mode = mode or "player_status"
 
    self.sublayers = UiPagedContainer:new {
       CharacterSheetMenu:new(self.chara, self.mode),
@@ -133,7 +129,7 @@ function CharacterInfoMenu:handle_select_skill(result)
    -- >>>>>>>> shade2/command.hsp:2733 	if p!-1:if csCtrl!4{ ..
    local sublayer = self.sublayers:current_sublayer()
 
-   if self.mode == "chara_status" then
+   if self.mode == "player_status" then
       if result.kind == "skill" and self.chara.skill_bonus > 0 then
          if not self.chara:has_skill(result._id) then
             Gui.play_sound("base.fail1")

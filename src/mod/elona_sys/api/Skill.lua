@@ -386,14 +386,14 @@ end
 function Skill.gain_random_body_part(chara, show_message)
    -- NOTE: is different in vanilla, checks for openness of slot?
 
-   local body_part = get_random_body_part();
+   local body_part = get_random_body_part()
    chara:add_body_part(body_part)
 
    if show_message then
       Gui.mes_c("chara_status.gain_new_body_part",
                 "Green",
                 chara,
-                I18N.get("ui.body_part." .. body_part))
+                I18N.localize("base.body_part", body_part, "name"))
    end
 
    refresh_speed_correction(chara)
@@ -785,6 +785,7 @@ function Skill.gain_skill(chara, skill_id, initial_level, initial_stock, initial
    end
 
    local new_level = math.max(chara:base_skill_level(skill_id) + (initial_level or 0), 1)
+   chara.skills[skill_id].level = new_level
    if initial_potential then
       chara:mod_skill_potential(skill_id, initial_potential, "set")
    else
@@ -794,7 +795,6 @@ function Skill.gain_skill(chara, skill_id, initial_level, initial_stock, initial
          Skill.modify_potential(chara, skill_id, 50)
       end
    end
-   chara.skills[skill_id].level = new_level
    chara:refresh()
 end
 

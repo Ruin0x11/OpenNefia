@@ -1,7 +1,6 @@
 local ProductionMenu = require("mod.elona.api.gui.ProductionMenu")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
-local Magic = require("mod.elona_sys.api.Magic")
 local light = require("mod.elona.data.item.light")
 local Rand = require("api.Rand")
 local Building = require("mod.elona.api.Building")
@@ -12,7 +11,6 @@ local Chara = require("api.Chara")
 local Anim = require("mod.elona_sys.api.Anim")
 local Weather = require("mod.elona.api.Weather")
 local IItemMusicDisc = require("mod.elona.api.aspect.IItemMusicDisc")
-local Aspect = require("api.Aspect")
 local ICharaSandBag = require("mod.elona.api.aspect.ICharaSandBag")
 local IItemCookingTool = require("mod.elona.api.aspect.IItemCookingTool")
 local IItemGaroksHammer = require("mod.elona.api.aspect.IItemGaroksHammer")
@@ -22,6 +20,7 @@ local IItemMonsterBall = require("mod.elona.api.aspect.IItemMonsterBall")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local Mef = require("api.Mef")
 local IItemChargeable = require("mod.elona.api.aspect.IItemChargeable")
+local GeneEngineering = require("mod.elona.api.GeneEngineering")
 
 --
 -- Tool
@@ -920,7 +919,11 @@ data:add {
    rarity = 10000,
    coefficient = 100,
 
-   elona_function = 32,
+   on_use = function(self, params)
+      GeneEngineering.use_gene_machine(params.chara, self)
+      return "turn_end"
+   end,
+
    is_precious = true,
    categories = {
       "elona.misc_item"

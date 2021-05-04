@@ -63,7 +63,7 @@ data:add {
          player.gold = player.gold - params.cost
          Gui.refresh_hud()
          Gui.play_sound("base.pop2")
-         CharacterInfoMenu:new(params.ally, "chara_status"):query()
+         CharacterInfoMenu:new(params.ally, "ally_status"):query()
          return "elona.default:talk"
       end,
    }

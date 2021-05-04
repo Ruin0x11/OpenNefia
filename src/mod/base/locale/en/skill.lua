@@ -415,7 +415,7 @@ return {
             },
             gene_engineer = {
                description = "Allows you to control genes.",
-               name = "Gene engineer"
+               name = "Gene Engineer"
             },
             spell_gravity = {
                description = "Create gravity",

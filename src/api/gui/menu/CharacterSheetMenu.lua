@@ -70,7 +70,7 @@ function CharacterSheetMenu:make_key_hints()
       keys = { "cancel", "escape" }
    }
 
-   if self.mode == "chara_status" then
+   if self.mode == "player_status" then
       return {
          {
             action = "ui.chara_sheet.hint.action.hint",
@@ -100,6 +100,16 @@ function CharacterSheetMenu:make_key_hints()
       }
    elseif self.mode == "trainer_train" then
       return {
+         portrait,
+         page,
+         close
+      }
+   elseif self.mode == "ally_status" then
+      return {
+         {
+            action = "ui.chara_sheet.hint.action.blessing_and_hex",
+            key_name = "ui.key_hint.key.cursor",
+         },
          portrait,
          page,
          close
@@ -153,9 +163,9 @@ function CharacterSheetMenu:on_query()
 end
 
 function CharacterSheetMenu:text_level()
-   local level = 10
-   local exp = 1000
-   local required_exp = 1000
+   local level = self.chara.level
+   local exp = self.chara.experience
+   local required_exp = self.chara.required_experience
    local god_name = self.chara:calc("god") or "elona.eyth"
 
    local guild = self.chara:calc("guild")

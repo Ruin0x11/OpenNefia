@@ -432,7 +432,7 @@ function InventoryMenu:update_filtering(play_sound)
 
       local map = function(slot)
          return {
-            text = I18N.get("ui.body_part." .. slot.body_part._id),
+            text = I18N.localize("base.body_part", slot.body_part._id, "name"),
             has_equipment = slot.equipped ~= nil
          }
       end

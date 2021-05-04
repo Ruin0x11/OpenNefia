@@ -10,6 +10,10 @@ local Enum = require("api.Enum")
 local Itemgen = require("mod.elona.api.Itemgen")
 local Charagen = require("mod.elona.api.Charagen")
 local IItemAncientBook = require("mod.elona.api.aspect.IItemAncientBook")
+local Chara = require("api.Chara")
+local ChooseAllyMenu = require("api.gui.menu.ChooseAllyMenu")
+local Input = require("api.Input")
+local Anim = require("mod.elona_sys.api.Anim")
 
 local ItemFunction = {}
 

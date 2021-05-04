@@ -175,7 +175,7 @@ function EquipmentMenu.build_list(chara)
       local entry = {}
 
       entry.body_part = i.body_part
-      entry.body_part_text = I18N.get("ui.body_part." .. i.body_part._id)
+      entry.body_part_text = I18N.localize("base.body_part", i.body_part._id, "name")
       entry.item = nil
       entry.color = {10, 10, 10}
       entry.name = "-    "

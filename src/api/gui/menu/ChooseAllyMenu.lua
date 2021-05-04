@@ -20,14 +20,20 @@ ChooseAllyMenu:delegate("input", IInput)
 local UiListExt = function(choose_ally_menu)
    local E = {}
 
+   local list_colorizer = choose_ally_menu.topic and choose_ally_menu.topic.list_colorizer
+
    function E:get_item_text(entry)
       return entry.text
    end
-   function E:draw_item_text(text, entry, i, x, y, x_offset)
+   function E:draw_item_text(text, entry, i, x, y, x_offset, color)
       if entry.kind == "ally" then
          choose_ally_menu.map_object_batch:add(entry.ally, x - 44, y + 8, nil, nil, entry.color, true)
       end
-      UiList.draw_item_text(self, text, entry, i, x, y, x_offset)
+
+      if list_colorizer then
+         color = list_colorizer(choose_ally_menu, entry.ally) or color
+      end
+      UiList.draw_item_text(self, text, entry, i, x, y, x_offset, color)
 
       -- TODO x offset can differ based on operation
       Draw.text(entry.info, x + 272, y + 2)
@@ -52,6 +58,28 @@ local function format_name_and_area(chara)
    -- <<<<<<<< shade2/command.hsp:546 		if cArea(i)!0:s=s+"("+mapName(cArea(i))+")" ..
 end
 
+local function format_hp(chara)
+   local percent = math.floor(chara.hp * 100 / chara:calc("max_hp"))
+   return ("(Hp: %d%%)"):format(percent)
+end
+
+local function default_info_formatter(chara)
+   -- >>>>>>>> shade2/command.hsp:551 			s="Lv."+cLevel(i)+" " ...
+   local status_text
+
+   -- allyCtrl=3
+   if chara.state == "PetDead" then
+      status_text = I18N.get("ui.ally_list.dead")
+   elseif chara.state == "PetWait" then
+      status_text = format_hp(chara) .. " " .. I18N.get("ui.ally_list.waiting")
+   elseif chara.state == "Alive" then
+      status_text = format_hp(chara)
+   end
+
+   return ("Lv.%d %s"):format(chara:calc("level"), status_text)
+   -- <<<<<<<< shade2/command.hsp:558 				} ..
+end
+
 function ChooseAllyMenu.make_list(charas, topic, multi_select)
    local result = {}
 
@@ -59,20 +87,12 @@ function ChooseAllyMenu.make_list(charas, topic, multi_select)
       result[#result+1] = { kind = "proceed", text = "Proceed" }
    end
 
-   for _, ally in ipairs(charas) do
-      local info
-      if topic and topic.info_formatter then
-         info = topic.info_formatter(ally)
-      else
-         info = ""
-      end
+   local info_formatter = (topic and topic.info_formatter) or default_info_formatter
+   local name_formatter = (topic and topic.name_formatter) or format_name_and_area
 
-      local name
-      if topic and topic.name_formatter then
-         name = topic.name_formatter(ally)
-      else
-         name = format_name_and_area(ally)
-      end
+   for _, ally in ipairs(charas) do
+      local info = info_formatter(ally)
+      local name = name_formatter(ally)
 
       result[#result+1] = {
          kind = "ally",
@@ -91,9 +111,9 @@ end
 
 function ChooseAllyMenu:init(charas, topic)
    charas = charas or Chara.iter_allies():filter(Chara.is_alive):to_list()
-   self.pages = UiList:new_paged({}, 16)
-   self.topic = self.topic or nil
+   self.topic = topic or nil
 
+   self.pages = UiList:new_paged({}, 16)
    table.merge(self.pages, UiListExt(self))
 
    self.multi_select = false
@@ -229,6 +249,12 @@ function ChooseAllyMenu:on_select(index)
 
    if not entry then
       return nil
+   end
+
+   if self.topic and self.topic.on_select then
+      if not self.topic.on_select(self, entry.ally) then
+         return  nil
+      end
    end
 
    if self.multi_select then
