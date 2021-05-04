@@ -1,19 +1,16 @@
-local Draw = require("api.Draw")
-local Map = require("api.Map")
+local I18N = require("api.I18N")
 local Ui = require("api.Ui")
+local data = require("internal.data")
+local save = require("internal.global.save")
 
 local IInput = require("api.gui.IInput")
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
-local I18N = require("api.I18N")
 local UiList = require("api.gui.UiList")
 local UiTextGroup = require("api.gui.UiTextGroup")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
+local ICharaMakeMenu = require("api.gui.menu.chara_make.ICharaMakeMenu")
 
-local data = require("internal.data")
-local save = require("internal.global.save")
-
-local SelectScenarioMenu = class.class("SelectScenarioMenu", ICharaMakeSection)
+local SelectScenarioMenu = class.class("SelectScenarioMenu", ICharaMakeMenu)
 
 SelectScenarioMenu:delegate("input", IInput)
 

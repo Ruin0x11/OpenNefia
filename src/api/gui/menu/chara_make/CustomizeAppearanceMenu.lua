@@ -1,9 +1,9 @@
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 local ChangeAppearanceMenu = require("api.gui.menu.ChangeAppearanceMenu")
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
+local ICharaMakeMenu = require("api.gui.menu.chara_make.ICharaMakeMenu")
 
-local CustomizeAppearanceMenu = class.class("CustomizeAppearanceMenu", ICharaMakeSection)
+local CustomizeAppearanceMenu = class.class("CustomizeAppearanceMenu", ICharaMakeMenu)
 
 CustomizeAppearanceMenu:delegate("input", IInput)
 

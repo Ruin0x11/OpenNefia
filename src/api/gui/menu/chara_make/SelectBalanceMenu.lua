@@ -2,13 +2,13 @@ local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
 local IInput = require("api.gui.IInput")
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
 local UiTextGroup = require("api.gui.UiTextGroup")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
+local ICharaMakeMenu = require("api.gui.menu.chara_make.ICharaMakeMenu")
 
-local SelectBalanceMenu = class.class("SelectBalanceMenu", ICharaMakeSection)
+local SelectBalanceMenu = class.class("SelectBalanceMenu", ICharaMakeMenu)
 
 SelectBalanceMenu:delegate("input", IInput)
 
