@@ -38,6 +38,14 @@ function EquipSlots:get(slot_index)
    return self.body_parts[slot_index]
 end
 
+function EquipSlots:body_part_count(body_part_id)
+   data["base.body_part"]:ensure(body_part_id)
+
+   local pred = function(part) return part.type == body_part_id end
+
+   return fun.iter(self.body_parts):filter(pred):length()
+end
+
 -- Returns true if there is a compatible slot for an item, even if
 -- something is already equipped at the slot.
 -- @tparam IItem item
@@ -45,7 +53,7 @@ end
 function EquipSlots:has_body_part_for(item)
    local pred = function(part) return item:can_equip_at(part) end
 
-   return fun.iter(self.body_parts):filter(pred):any()
+   return fun.iter(self.body_parts):any(pred)
 end
 
 -- @tparam IItem item

@@ -56,7 +56,7 @@ end,
         choose_subject = "Choose a gene. Once you extract a gene, the subject will be lost forever.",
         gains = {
           ability = function(_1, _2)
-  return ("%s learns%s skill!")
+  return ("%s learns %s skill!")
   :format(basename(_1), _2)
 end,
           body_part = function(_1, _2)
@@ -78,7 +78,7 @@ end,
 end,
         prompt = function(_1, _2)
   return ("Really add %s's gene to %s?")
-  :format(basename(_1), basename(_2))
+  :format(basename(_2), basename(_1))
 end
       },
       guillotine = {

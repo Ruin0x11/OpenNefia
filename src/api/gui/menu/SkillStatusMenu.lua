@@ -93,7 +93,7 @@ function SkillStatusMenu:init(chara, mode, opts)
    self.chara = chara
    self.width = 700
    self.height = 400
-   self.mode = mode or "chara_status"
+   self.mode = mode or "player_status"
 
    self.trainer_skills = opts.trainer_skills or {}
 
@@ -149,7 +149,7 @@ function SkillStatusMenu:make_key_hints()
       keys = "mode2"
    }
 
-   if self.mode == "chara_status" then
+   if self.mode == "player_status" then
       return {
          {
             action = "ui.chara_sheet.hint.action.spend_bonus",
@@ -190,6 +190,12 @@ function SkillStatusMenu:make_key_hints()
             key_name = "ui.key_hint.action.confirm",
             keys = "enter"
          },
+         page,
+         close,
+         track_skill
+      }
+   elseif self.mode == "ally_status" then
+      return {
          page,
          close,
          track_skill
@@ -333,7 +339,7 @@ function SkillStatusMenu.build_list(chara, mode, trainer_skills)
       end
    end
 
-   if mode == "chara_status" or mode == "informer" then
+   if mode == "player_status" or mode == "informer" then
       list[#list+1] = { name = I18N.get("ui.chara_sheet.category.resistance"), kind = "header", ordering = 300000 }
       for _, element_entry in Skill.iter_resistances() do
          if chara:has_resist(element_entry._id) then
@@ -386,7 +392,7 @@ function SkillStatusMenu:draw()
    self.t.base.ie_sheet:draw(self.x, self.y)
    Draw.set_color(0, 0, 0)
    Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
-   if self.mode == "chara_status" then
+   if self.mode == "player_status" then
       local tips = I18N.get("ui.chara_sheet.you_can_spend_bonus", self.chara.skill_bonus)
       Draw.text(tips, self.x + self.width - Draw.text_width(tips) - 140, self.y + self.height - 24 - self.height % 8)
    end

@@ -166,6 +166,10 @@ function ICharaEquip:iter_equipment()
    return self.equip:iter()
 end
 
+function ICharaEquip:body_part_count(body_part_id)
+   return self.equip:body_part_count(body_part_id)
+end
+
 function ICharaEquip:has_body_part_for(item)
    return self.equip:has_body_part_for(item)
 end

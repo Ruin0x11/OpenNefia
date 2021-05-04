@@ -78,7 +78,7 @@ end,
 end,
         prompt = function(_1, _2)
   return ("本当に%sに%sの遺伝子を組み込む？")
-  :format(basename(_2), basename(_1))
+  :format(basename(_1), basename(_2))
 end
       },
       guillotine = {

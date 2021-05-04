@@ -135,33 +135,10 @@ local function your_home_home_rank(map)
    HomeRankMenu:new(most_valuable, base_value, home_value, furniture_value):query()
 end
 
-local function format_hp(chara)
-   local percent = math.floor(chara.hp * 100 / chara:calc("max_hp"))
-   return ("(Hp: %d%%)"):format(percent)
-end
-
-local function format_info_status(chara)
-   -- >>>>>>>> shade2/command.hsp:551 			s="Lv."+cLevel(i)+" " ...
-   local status_text
-
-   -- allyCtrl=3
-   if chara.state == "PetDead" then
-      status_text = I18N.get("ui.ally_list.dead")
-   elseif chara.state == "PetWait" then
-      status_text = format_hp(chara) .. " " .. I18N.get("ui.ally_list.waiting")
-   elseif chara.state == "Alive" then
-      status_text = format_hp(chara)
-   end
-
-   return ("Lv.%d %s"):format(chara:calc("level"), status_text)
-   -- <<<<<<<< shade2/command.hsp:558 				} ..
-end
-
 local function your_home_allies(map)
    Gui.mes("ui.ally_list.stayer.prompt")
 
    local topic = {
-      info_formatter = format_info_status,
       window_title = "ui.ally_list.stayer.title",
       x_offset = 20
    }
