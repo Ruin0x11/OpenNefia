@@ -28,6 +28,8 @@ function field_layer:init()
    self.camera_dx = 0
    self.camera_dy = 0
 
+   self.view_centered = false
+
    self.loaded = false
    self.map_changed = false
    self.no_scroll = true
@@ -103,7 +105,11 @@ function field_layer:relayout(x, y, width, height)
    self.width = width or self.width
    self.height = height or self.height
    if self.renderer then
-      self.renderer:relayout(self.x, self.y, self.width, self.height)
+      local offset_y = -(72 + 16)
+      if self.view_centered then
+         offset_y = 0
+      end
+      self.renderer:relayout(self.x, self.y, self.width, self.height + offset_y)
    end
 end
 
@@ -126,6 +132,11 @@ end
 
 function field_layer:get_object(_type, uid)
    return self.map and self.map:get_object_of_type(_type, uid)
+end
+
+function field_layer:set_view_centered(centered)
+   self.view_centered = centered
+   self:relayout()
 end
 
 function field_layer:update_draw_pos(scroll_frames)
