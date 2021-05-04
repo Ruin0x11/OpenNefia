@@ -46,8 +46,7 @@ end
 function CharacterSheetMenu:make_keymap()
    return {
       portrait = function()
-         local charamake_data = { chara = self.chara }
-         ChangeAppearanceMenu:new(charamake_data):query()
+         ChangeAppearanceMenu:new(self.chara):query()
          self:set_data()
       end,
       cancel = function() self.canceled = true end,

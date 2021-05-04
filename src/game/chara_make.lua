@@ -13,7 +13,7 @@ chara_make.sections = {
    "api.gui.menu.chara_make.RollAttributesMenu",
    "api.gui.menu.chara_make.SelectFeatsMenu",
    "api.gui.menu.chara_make.SelectAliasMenu",
-   "api.gui.menu.ChangeAppearanceMenu",
+   "api.gui.menu.chara_make.CustomizeAppearanceMenu",
    "api.gui.menu.chara_make.CharacterFinalizeMenu"
 }
 
