@@ -354,9 +354,6 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
       end
    end
 
-   local fov_radius = gen_fov_radius(fov_size)
-   local radius = math.floor((fov_size + 2) / 2)
-
    -- The shadowmap has extra space at the edges, to make shadows at
    -- the edge of the map display correctly, so offset the start and
    -- end positions by 1.
@@ -365,14 +362,31 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
    local end_x = (start_x + stw) + 1 + 1
    local end_y = (start_y + sth) + 1 + 2
 
+   self._shadow_start_x = start_x
+   self._shadow_start_y = start_y
+
+   self._last_sight_id = self._last_sight_id + 1
+
+   if fov_size == "all" then
+      for j=start_y,end_y do
+         if j >= 0 and j < self._height then
+            for i=start_x,end_x do
+               self:memorize_tile(i, j)
+            end
+         end
+      end
+      return self._shadow_map, self._shadow_start_x, self._shadow_start_y
+   end
+
+   local fov_radius = gen_fov_radius(fov_size)
+   local radius = math.floor((fov_size + 2) / 2)
+
    local fov_y_start = player_y - math.floor(fov_size / 2)
    local fov_y_end = player_y + math.floor(fov_size / 2)
 
    local lx, ly
    lx = 1
    ly = 1
-
-   self._last_sight_id = self._last_sight_id + 1
 
    --
    -- Bits indicate directions that border a shadow.
@@ -447,9 +461,6 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
       end
       ly = ly + 1
    end
-
-   self._shadow_start_x = start_x
-   self._shadow_start_y = start_y
 
    return self._shadow_map, self._shadow_start_x, self._shadow_start_y
 end
