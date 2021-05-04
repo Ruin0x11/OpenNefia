@@ -24,6 +24,10 @@ local function enable_themes()
       themes[#themes+1] = "ffhp_matome.ffhp_matome"
    end
 
+   if Env.is_mod_loaded("tender_garden") then
+      themes[#themes+1] = "tender_garden.tender_garden"
+   end
+
    config.base.themes = themes
 end
 Event.register("base.before_engine_init", "Enable non-redistributable themes if available", enable_themes)

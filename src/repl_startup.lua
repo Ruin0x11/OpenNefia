@@ -23,6 +23,7 @@ TreemapViewer = require("mod.treemap.api.gui.TreemapViewer")
 MapEdit = require("mod.elona.api.MapEdit")
 UiTestPrompt = require("mod.tools.api.UiTestPrompt")
 Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+MapViewer = require("mod.tools.api.MapViewer")
 
 Log.set_level("info")
 

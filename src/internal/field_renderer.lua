@@ -2,8 +2,6 @@ local Draw = require("api.Draw")
 local Log = require("api.Log")
 local PriorityMap = require("api.PriorityMap")
 
-local sound_manager = require("internal.global.global_sound_manager")
-
 local field_renderer = class.class("field_renderer")
 
 function field_renderer:init(map_width, map_height, draw_layer_spec)
@@ -111,8 +109,6 @@ function field_renderer:update_draw_pos(sx, sy, scroll_frames)
    end
 
    self:set_draw_pos(draw_x, draw_y)
-
-   sound_manager:set_listener_pos(sx, sy)
 end
 
 function field_renderer:set_draw_pos(draw_x, draw_y)

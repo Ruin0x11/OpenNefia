@@ -454,6 +454,12 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
    return self._shadow_map, self._shadow_start_x, self._shadow_start_y
 end
 
+function InstancedMap:clear_screen_sight()
+   self._shadow_map = t()
+   self._shadow_start_x = 0
+   self._shadow_start_y = 0
+end
+
 function InstancedMap:memorize_tile(x, y)
    local ind = y * self._width + x + 1;
 

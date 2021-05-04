@@ -292,7 +292,7 @@ function shadow_batch:draw(x, y, width, height)
       local offset_tx, offset_ty = self.offset_tx, self.offset_ty
 
       self.scissor_x, self.scissor_y = self.coords:tile_to_screen(tx + 3, ty + 3)
-      self.scissor_width, self.scissor_height = self.coords:tile_to_screen(math.min(tdx-tx, self.width-3-1), math.min(tdy-ty, self.height-3-1))
+      self.scissor_width, self.scissor_height = self.coords:tile_to_screen(math.min(tdx-tx, self.width-1), math.min(tdy-ty, self.height-1))
 
       self.batch:clear()
       self.edge_batch:clear()
