@@ -147,13 +147,13 @@ function GeneEngineering.calc_gained_levels(target, donor)
       return 0
    end
 
-   return math.floor(donor.level - target.level / 2 + 1)
+   return math.floor((donor.level - target.level) / 2) + 1
    -- <<<<<<<< shade2/action.hsp:2143 		lv=(cLevel(tc)-cLevel(rc))/2+1 ..
 end
 
 function GeneEngineering.calc_gained_stat_experience(target, donor, level_diff)
    -- >>>>>>>> shade2/action.hsp:2149 		listMax=0 ...
-   if donor.level <= target.level then
+   if level_diff <= 0 then
       return {}
    end
 
@@ -165,15 +165,16 @@ function GeneEngineering.calc_gained_stat_experience(target, donor, level_diff)
    local sort = function(a, b)
       return a.level > b.level
    end
-   local highest_donor_skills = Skill.iter_base_attributes()
+   local highest_donor_stats = Skill.iter_base_attributes()
       :map(org_level)
       :into_sorted(sort)
       :take(3)
       :to_list()
 
-   for _, entry in ipairs(highest_donor_skills) do
+   for _, entry in ipairs(highest_donor_stats) do
       local target_level = target:base_skill_level(entry._id)
       if entry.level > target_level then
+         -- The target character can gain at most 5 levels for each stat.
          local experience = (entry.level - target_level) * 500
          experience = math.clamp(experience * 10 / math.clamp(level_diff, 2, 10), 1000, 10000)
 
@@ -204,6 +205,8 @@ function GeneEngineering.do_gene_engineer(target, donor)
    end
 
    local levels = GeneEngineering.calc_gained_levels(target, donor)
+   local stats = GeneEngineering.calc_gained_stat_experience(target, donor, levels)
+
    if levels > 0 then
       for _ = 1, levels do
          Skill.gain_level(target, false)
@@ -211,10 +214,9 @@ function GeneEngineering.do_gene_engineer(target, donor)
       Gui.mes_c("action.use.gene_machine.gains.level", "Green", target, target.level)
    end
 
-   local stats = GeneEngineering.calc_gained_stat_experience(target, donor, levels)
    if stats then
       for _, entry in ipairs(stats) do
-         Skill.gain_skill_exp(target, entry._id, entry.experience)
+         Skill.gain_fixed_skill_exp(target, entry._id, entry.experience)
       end
    end
 

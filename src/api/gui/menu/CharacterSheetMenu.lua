@@ -163,9 +163,9 @@ function CharacterSheetMenu:on_query()
 end
 
 function CharacterSheetMenu:text_level()
-   local level = 10
-   local exp = 1000
-   local required_exp = 1000
+   local level = self.chara.level
+   local exp = self.chara.experience
+   local required_exp = self.chara.required_experience
    local god_name = self.chara:calc("god") or "elona.eyth"
 
    local guild = self.chara:calc("guild")
