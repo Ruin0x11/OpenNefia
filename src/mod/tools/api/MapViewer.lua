@@ -25,7 +25,6 @@ function MapViewer:init(map)
    self.offset_x = 0
    self.offset_y = 0
    self.delta = 50
-   self.draw_border = true
 
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
@@ -41,7 +40,6 @@ function MapViewer:make_keymap()
       south = function() self:pan(0, self.delta) end,
       east = function() self:pan(self.delta, 0) end,
       west = function() self:pan(-self.delta, 0) end,
-      mode = function() self.draw_border = not self.draw_border end,
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end,
       enter = function() self.canceled = true end,
@@ -80,18 +78,8 @@ function MapViewer:draw()
 
    local width = math.floor(self.width)
    local height = math.floor(self.height)
-   local pad = 10
-   local border_width = width + pad
-   local border_height = height + pad
 
    self.renderer:relayout_inner(x, y, width, height)
-   -- self.renderer.x = x
-   -- self.renderer.y = y
-
-   -- if self.draw_border then
-   --    Draw.filled_rect(x-pad/2, y-pad/2, border_width, border_height, {0, 0, 0})
-   --    Draw.line_rect(x-pad/2, y-pad/2, border_width, border_height, {255, 255, 255})
-   -- end
 
    Draw.set_color(255, 255, 255)
    self.renderer:draw()
