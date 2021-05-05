@@ -8,6 +8,7 @@ local debug_server = require("internal.debug_server")
 local input = require("internal.input")
 local draw = require("internal.draw")
 local main_state = require("internal.global.main_state")
+local canvas_layer = require("internal.layer.global.canvas_layer")
 
 local loop_coro = nil
 local draw_coro = nil
@@ -29,6 +30,8 @@ function love.load(arg)
 
    loop_coro = coroutine.create(game.loop)
    draw_coro = coroutine.create(game.draw)
+
+   draw.register_global_layer("canvas", canvas_layer:new())
 end
 
 local halt = false

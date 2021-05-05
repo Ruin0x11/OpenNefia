@@ -176,20 +176,13 @@ function draw.draw_outer_end(c)
    love.graphics.setBlendMode("alpha")
 end
 
-local function do_sort(t, extra)
+local function sort_layers()
    local r = {}
-   for i, entry in ipairs(t) do
+   for i, entry in ipairs(layers) do
       r[i] = entry
    end
-   if extra then
-      r[#r+1] = extra
-   end
    table.sort(r, function(a, b) return a.priority < b.priority end)
-   return fun.iter(r):extract("layer"):to_list()
-end
-
-local function sort_layers()
-   sorted_layers = do_sort(layers)
+   sorted_layers = fun.iter(r):extract("layer"):to_list()
 end
 
 function draw.set_root(ui_layer, priority)
@@ -308,30 +301,47 @@ function draw.draw_layers()
    table.remove_indices(coroutines, dead)
 end
 
-local CANVAS_PRIORITY = 100000
-local canvas_ = { layer = "canvas", priority = CANVAS_PRIORITY }
 local function sort_global_layers()
-   sorted_global_layers = do_sort(global_layers, canvas_)
+   local r = {}
+   for tag, entry in pairs(global_layers) do
+      r[#r+1] = { layer = entry.layer, priority = entry.priority, enabled = entry.enabled }
+   end
+   table.sort(r, function(a, b) return a.priority < b.priority end)
+   sorted_global_layers = r
 end
-sort_global_layers()
 
-function draw.push_global_layer(layer, priority)
+function draw.register_global_layer(tag, layer, opts)
    class.assert_is_an(require("api.gui.ILayer"), layer)
-   priority = priority or layer:default_z_order()
+   local priority = (opts and opts.priority) or layer:default_z_order()
+   local enabled = opts and opts.enabled
+   if enabled == nil then
+      enabled = true
+   end
    layer:relayout(draw.get_logical_viewport())
-   table.insert(global_layers, {layer=layer, priority=priority})
+   global_layers[tag] = {layer=layer, priority=priority, enabled=enabled}
    sort_global_layers()
 end
 
-function draw.pop_global_layer()
-   global_layers[#global_layers] = nil
+function draw.unregister_global_layer(tag)
+   assert(global_layers[tag], "No layer with tag " .. tostring(tag) .. " found")
+   global_layers[tag] = nil
    sort_global_layers()
+end
+
+function draw.set_global_layer_enabled(tag, enabled)
+   assert(global_layers[tag], "No layer with tag " .. tostring(tag) .. " found")
+   global_layers[tag].enabled = not not enabled
+end
+
+function draw.get_global_layer(tag)
+   assert(global_layers[tag], "No layer with tag " .. tostring(tag) .. " found")
+   return global_layers[tag].layer
 end
 
 function draw.update_global_layers(dt)
-   for _, layer in ipairs(sorted_global_layers) do
-      if layer ~= "canvas" then
-         layer:update(dt)
+   for _, entry in ipairs(sorted_global_layers) do
+      if entry.enabled then
+         entry.layer:update(dt)
       end
    end
 end
@@ -345,11 +355,9 @@ function draw.draw_global_layers()
       end
    end
 
-   for _, layer in ipairs(sorted_global_layers) do
-      if layer == "canvas" then
-         draw.draw_inner_canvas()
-      else
-         layer:draw()
+   for _, entry in ipairs(sorted_global_layers) do
+      if entry.enabled then
+         entry.layer:draw()
       end
    end
 end
