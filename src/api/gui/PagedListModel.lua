@@ -57,7 +57,7 @@ function PagedListModel:selected_index()
 end
 
 function PagedListModel:update_selected_index()
-   self.selected_ = self.page_size * self.page + self.model:selected_index()
+   self.selected_ = math.clamp(self.page_size * self.page + self.model:selected_index(), 1, self:len())
 end
 
 function PagedListModel:select(i)
