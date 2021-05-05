@@ -78,6 +78,7 @@ function Pcc:refresh()
       self.image:release()
    end
    self.image = love.graphics.newImage(canvas:newImageData())
+   self.image:setFilter("nearest", "nearest", 1)
 
    canvas:release()
 

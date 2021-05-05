@@ -171,7 +171,7 @@ function sound_manager:play(id, x, y, volume, channel)
    local channel = channel or src
 
    if self.sources[channel] then
-      love.audio.stop()
+      love.audio.stop(src)
    end
 
    self.sources[channel] = src
