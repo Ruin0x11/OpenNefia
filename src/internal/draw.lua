@@ -345,6 +345,7 @@ end
 function draw.set_global_layer_enabled(tag, enabled)
    assert(global_layers[tag], "No layer with tag " .. tostring(tag) .. " found")
    global_layers[tag].enabled = not not enabled
+   sort_global_layers()
 end
 
 function draw.get_global_layer(tag)
