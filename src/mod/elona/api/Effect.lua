@@ -1132,7 +1132,7 @@ function Effect.love_miracle(chara)
          item.value = math.clamp(math.floor(weight * weight / 10000), 200, 40000)
       end
    else
-      local item = Item.create("elona.bottle_of_milk", chara.x, chara.y, params, chara:current_map())
+      Item.create("elona.bottle_of_milk", chara.x, chara.y, params, chara:current_map())
    end
 
    Gui.play_sound("base.atk_elec")
