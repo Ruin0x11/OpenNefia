@@ -174,7 +174,7 @@ function mod.scan_mod_dir(mod_ids)
       if mods[mod_id] == nil then
          local manifest_file = fs.find_loadable(MOD_DIR, mod_id, "mod")
          if not manifest_file then
-            error("Could not find mod " .. mod_id .. " in mods folder.")
+            error(("Could not find mod manifest for " .. mod_id .. " in folder %s."):format(fs.join(MOD_DIR, mod_id)))
          end
 
          local mod_info = mod.get_mod_info(manifest_file)

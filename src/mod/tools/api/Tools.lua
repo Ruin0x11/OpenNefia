@@ -34,6 +34,7 @@ local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 local IFeatLockedHatch = require("mod.elona.api.aspect.feat.IFeatLockedHatch")
 local Text = require("mod.elona.api.Text")
 local I18N = require("api.I18N")
+local DrawLayerSpec = require("api.draw.DrawLayerSpec")
 
 local Tools = {}
 
@@ -1085,13 +1086,12 @@ end
 
 -- Compatible with omake's camera functionality.
 function Tools.take_picture(map, kind)
-   local layers = {
-       tile_layer          = { require_path = "internal.layer.tile_layer" },
-       debris_layer        = { require_path = "internal.layer.debris_layer" },
-       chip_layer          = { require_path = "internal.layer.chip_layer" },
-       tile_overhang_layer = { require_path = "internal.layer.tile_overhang_layer" },
-       emotion_icon_layer  = { require_path = "internal.layer.emotion_icon_layer" },
-   }
+   local spec = DrawLayerSpec:new()
+   spec:register_draw_layer("tile_layer", "internal.layer.tile_layer")
+   spec:register_draw_layer("debris_layer", "internal.layer.debris_layer")
+   spec:register_draw_layer("chip_layer", "internal.layer.chip_layer")
+   spec:register_draw_layer("tile_overhang_layer", "internal.layer.tile_overhang_layer")
+   spec:register_draw_layer("emotion_icon_layer", "internal.layer.emotion_icon_layer")
 
    kind = kind or "all"
 
@@ -1108,7 +1108,7 @@ function Tools.take_picture(map, kind)
       map_object_types = nil
    end
 
-   return Gui.render_tilemap_to_image(map, layers, map_object_types)
+   return Gui.render_tilemap_to_image(map, spec, map_object_types)
 end
 
 function Tools.goto_chara(_id)

@@ -4,10 +4,10 @@ local Event = require("api.Event")
 local IInput = require("api.gui.IInput")
 local KeyHandler = require("api.gui.KeyHandler")
 local Env = require("api.Env")
+local DrawLayerSpec = require("api.draw.DrawLayerSpec")
 
 local draw = require("internal.draw")
 local draw_callbacks = require("internal.draw_callbacks")
-local draw_layer_spec = require("internal.draw_layer_spec")
 local field_renderer = require("internal.field_renderer")
 
 local field_layer = class.class("field_layer", IUiLayer)
@@ -28,6 +28,8 @@ function field_layer:init()
    self.camera_dx = 0
    self.camera_dy = 0
 
+   self.view_centered = false
+
    self.loaded = false
    self.map_changed = false
    self.no_scroll = true
@@ -42,7 +44,7 @@ function field_layer:init()
    -- keybinds
    self.keys:ignore_modifiers { "alt" }
 
-   self.draw_layer_spec = draw_layer_spec:new()
+   self.draw_layer_spec = DrawLayerSpec:new()
 
    self:register_draw_layer("tile_layer", "internal.layer.tile_layer")
    self:register_draw_layer("debris_layer", "internal.layer.debris_layer")
@@ -103,7 +105,11 @@ function field_layer:relayout(x, y, width, height)
    self.width = width or self.width
    self.height = height or self.height
    if self.renderer then
-      self.renderer:relayout(self.x, self.y, self.width, self.height)
+      local offset_y = -(72 + 16)
+      if self.view_centered then
+         offset_y = 0
+      end
+      self.renderer:relayout(self.x, self.y, self.width, self.height + offset_y)
    end
 end
 
@@ -128,6 +134,11 @@ function field_layer:get_object(_type, uid)
    return self.map and self.map:get_object_of_type(_type, uid)
 end
 
+function field_layer:set_view_centered(centered)
+   self.view_centered = centered
+   self:relayout()
+end
+
 function field_layer:update_draw_pos(scroll_frames)
    local player = self.player
    local center_x = self.camera_x or nil
@@ -139,7 +150,10 @@ function field_layer:update_draw_pos(scroll_frames)
    end
 
    if center_x then
-      self.renderer:update_draw_pos(center_x + self.camera_dx, center_y + self.camera_dy, scroll_frames or 0)
+      local sx = center_x + self.camera_dx
+      local sy = center_y + self.camera_dy
+      self.renderer:update_draw_pos(sx, sy, scroll_frames or 0)
+      self.sound_manager:set_listener_pos(sx, sy)
    end
 end
 

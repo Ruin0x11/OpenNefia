@@ -2,8 +2,6 @@ local Draw = require("api.Draw")
 local Log = require("api.Log")
 local PriorityMap = require("api.PriorityMap")
 
-local sound_manager = require("internal.global.global_sound_manager")
-
 local field_renderer = class.class("field_renderer")
 
 function field_renderer:init(map_width, map_height, draw_layer_spec)
@@ -101,7 +99,7 @@ function field_renderer:update_draw_pos(sx, sy, scroll_frames)
                                                    self.map_width,
                                                    self.map_height,
                                                    self.width,
-                                                   self.height - 72 - 16)
+                                                   self.height)
 
    if scroll_frames then
       self:set_scroll(self.draw_x - draw_x, self.draw_y - draw_y, scroll_frames)
@@ -111,8 +109,6 @@ function field_renderer:update_draw_pos(sx, sy, scroll_frames)
    end
 
    self:set_draw_pos(draw_x, draw_y)
-
-   sound_manager:set_listener_pos(sx, sy)
 end
 
 function field_renderer:set_draw_pos(draw_x, draw_y)
@@ -129,7 +125,7 @@ function field_renderer:draw(x, y, width, height)
    x = x or self.draw_x
    y = y or self.draw_y
    width = width or self.width
-   height = height or (self.height - 72 - 16)
+   height = height or self.height
 
    for _, l, tag in self.layers:iter() do
       if self.enabled[tag] ~= false then
