@@ -51,6 +51,8 @@ Draw.set_logical_viewport = draw.set_logical_viewport
 
 Draw.set_logical_viewport_enabled = draw.set_logical_viewport_enabled
 
+Draw.is_logical_viewport_enabled = draw.is_logical_viewport_enabled
+
 
 --- @function Draw.get_width
 Draw.get_width = draw.get_width
