@@ -86,7 +86,7 @@ function draw.get_actual_height()
 end
 
 function draw.get_logical_viewport()
-   return 0, 0, draw.get_width(), draw.get_height()
+   return lx, ly, lw, lh
 end
 
 function draw.set_logical_viewport(x, y, w, h)
@@ -200,7 +200,7 @@ function draw.set_root(ui_layer, priority)
    class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
    layers = {{layer=ui_layer, priority=priority}}
    sort_layers()
-   ui_layer:relayout(draw.get_logical_viewport())
+   ui_layer:relayout(0, 0, draw.get_width(), draw.get_height())
    ui_layer:focus()
 end
 
@@ -214,7 +214,7 @@ end
 function draw.push_layer(ui_layer, priority)
    class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
    priority = priority or ui_layer:default_z_order()
-   ui_layer:relayout(draw.get_logical_viewport())
+   ui_layer:relayout(0, 0, draw.get_width(), draw.get_height())
    ui_layer:focus()
    table.insert(layers, {layer=ui_layer, priority=priority})
    sort_layers()
@@ -275,7 +275,7 @@ local function hotload_layer(layer)
    if layer.on_hotload_layer then
       layer:on_hotload_layer()
    end
-   layer:relayout(draw.get_logical_viewport())
+   layer:relayout(0, 0, draw.get_width(), draw.get_height())
 
    layer:bind_keys(layer:make_keymap())
 end

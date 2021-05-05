@@ -245,8 +245,14 @@ function Input.clear_macro_queue()
    draw.get_current_layer().layer:clear_macro_queue()
 end
 
-function Input.mouse_pos()
+function Input.actual_mouse_pos()
    return love.mouse.getPosition()
+end
+
+function Input.mouse_pos()
+   local x, y = Input.actual_mouse_pos()
+   local lx, ly = draw.get_logical_viewport()
+   return x - lx, y - ly
 end
 
 return Input

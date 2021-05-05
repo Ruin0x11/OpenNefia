@@ -18,6 +18,7 @@ data:add_multi(
    "base.config_option",
    {
       { _id = "load_towns", type = "boolean", default = false },
+      { _id = "load_adventurers", type = "boolean", default = false },
    }
 )
 
@@ -94,7 +95,9 @@ local function on_game_start(self, player)
    Map.set_map(map)
    map:take_object(player, 25, 25)
 
-   Adventurer.initialize()
+   if config.test_room.load_adventurers then
+      Adventurer.initialize()
+   end
 
    Tools.powerup(player)
 
