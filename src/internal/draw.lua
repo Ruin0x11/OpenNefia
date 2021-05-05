@@ -117,7 +117,7 @@ function draw.init()
    set_window_mode(WIDTH, HEIGHT)
 
    love.graphics.setLineStyle("rough")
-   love.graphics.setDefaultFilter("nearest", "nearest", 1)
+   love.graphics.setDefaultFilter("linear", "linear", 1)
    love.graphics.setBlendMode("alpha")
 
    gamma_correct = love.graphics.newShader("mod/base/graphic/shader/gamma.frag.glsl")
@@ -527,8 +527,12 @@ function draw.set_font(size, style, filename)
    style = style or "normal"
    filename = filename or default_font
    if not font_cache[size] then font_cache[size] = setmetatable({}, { __mode = "v" }) end
-   font_cache[size][filename] = font_cache[size][filename]
-      or love.graphics.newFont(filename, size, "mono")
+   if not font_cache[size][filename] then
+      local font = love.graphics.newFont(filename, size, "mono")
+      font:setFilter("nearest", "nearest", 1)
+      font_cache[size][filename] = font
+   end
+
    love.graphics.setFont(font_cache[size][filename])
 end
 

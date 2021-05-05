@@ -451,7 +451,7 @@ function Draw.set_line_width(width)
 end
 
 function Draw.set_default_filter(min, mag, anisotropy)
-   love.graphics.setDefaultFilter(min or "nearest", mag or "nearest", anisotropy or 1)
+   love.graphics.setDefaultFilter(min or "linear", mag or "linear", anisotropy or 1)
 end
 
 function Draw.set_scissor(x, y, width, height)

@@ -38,15 +38,24 @@ local function crop(proto)
 end
 
 local function load_image_region(proto)
+   local image
    if proto.image then
-      return bmp_convert.load_image(proto.image, proto.key_color)
+      image = bmp_convert.load_image(proto.image, proto.key_color)
    end
 
    if proto.source then
-      return crop(proto)
+      image = crop(proto)
    end
 
-   error(("invalid image asset (%s): must contain {image} or {source,x,y,width,height}"):format(proto._id))
+   if image == nil then
+      error(("invalid image asset (%s): must contain {image} or {source,x,y,width,height}"):format(proto._id))
+   end
+
+   if proto.filter then
+      image:setFilter(proto.filter.min, proto.filter.mag, proto.filter.anisotropy)
+   end
+
+   return image
 end
 
 function asset_drawable:init(proto)
