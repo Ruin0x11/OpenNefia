@@ -3911,6 +3911,7 @@ data:add {
    skill = "elona.performer",
    on_use = function(self, params)
       Magic.cast("elona.performer", { source = params.chara, item = self })
+      return "turn_end"
    end,
    params = { instrument_quality = 110 },
 
@@ -3937,6 +3938,7 @@ data:add {
    skill = "elona.performer",
    on_use = function(self, params)
       Magic.cast("elona.performer", { source = params.chara, item = self })
+      return "turn_end"
    end,
    params = { instrument_quality = 150 },
 
@@ -3963,6 +3965,7 @@ data:add {
    skill = "elona.performer",
    on_use = function(self, params)
       Magic.cast("elona.performer", { source = params.chara, item = self })
+      return "turn_end"
    end,
    params = { instrument_quality = 130 },
 
@@ -3988,6 +3991,7 @@ data:add {
    skill = "elona.performer",
    on_use = function(self, params)
       Magic.cast("elona.performer", { source = params.chara, item = self })
+      return "turn_end"
    end,
    params = { instrument_quality = 70 },
 
@@ -4014,6 +4018,7 @@ data:add {
    skill = "elona.performer",
    on_use = function(self, params)
       Magic.cast("elona.performer", { source = params.chara, item = self })
+      return "turn_end"
    end,
    params = { instrument_quality = 175 },
 
@@ -4038,6 +4043,7 @@ data:add {
 
    on_use = function(self, params)
       Magic.cast("elona.performer", { source = params.chara, item = self })
+      return "turn_end"
    end,
    is_precious = true,
    params = { instrument_quality = 180 },
@@ -4072,6 +4078,7 @@ data:add {
 
    on_use = function(self, params)
       Magic.cast("elona.performer", { source = params.chara, item = self })
+      return "turn_end"
    end,
    is_precious = true,
    params = { instrument_quality = 200 },
