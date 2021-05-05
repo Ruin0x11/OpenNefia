@@ -38,6 +38,18 @@ Draw.set_font = draw.set_font
 Draw.run = draw.run
 
 
+Draw.set_canvas_background_color = draw.set_canvas_background_color
+
+Draw.get_canvas_background_color = draw.get_canvas_background_color
+
+
+Draw.get_logical_viewport = draw.get_logical_viewport
+
+Draw.set_logical_viewport = draw.set_logical_viewport
+
+Draw.set_logical_viewport_enabled = draw.set_logical_viewport_enabled
+
+
 --- @function Draw.get_width
 Draw.get_width = draw.get_width
 
@@ -55,6 +67,7 @@ Draw.create_canvas = love.graphics.newCanvas
 
 Draw.copy_to_canvas = draw.copy_to_canvas
 
+
 Draw.add_global_draw_callback = draw.add_global_draw_callback
 
 Draw.remove_global_draw_callback = draw.remove_global_draw_callback
@@ -62,6 +75,14 @@ Draw.remove_global_draw_callback = draw.remove_global_draw_callback
 Draw.wait_global_draw_callbacks = draw.wait_global_draw_callbacks
 
 Draw.has_active_global_draw_callbacks = draw.has_active_global_draw_callbacks
+
+
+Draw.register_global_layer = draw.register_global_layer
+
+Draw.unregister_global_layer = draw.unregister_global_layer
+
+Draw.set_global_layer_enabled = draw.set_global_layer_enabled
+
 
 --- Sets the current drawing color. You can provide a table of up to  four
 --- values or four separate integers.

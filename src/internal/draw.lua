@@ -90,22 +90,19 @@ function draw.get_logical_viewport()
 end
 
 function draw.set_logical_viewport(x, y, w, h)
-   local actual_width = love.graphics.getWidth()
-   local actual_height = love.graphics.getHeight()
-
    lx = x or 0
    ly = y or 0
-   lw = math.max(w or actual_width, WIDTH)
-   lh = math.max(h or actual_height, HEIGHT)
+   lw = math.max(w or math.huge, WIDTH)
+   lh = math.max(h or math.huge, HEIGHT)
 
    if use_logical then
-      draw.resize(actual_width, actual_height)
+      draw.resize_logical(draw.get_width(), draw.get_height())
    end
 end
 
 function draw.set_logical_viewport_enabled(enabled)
    use_logical = not not enabled
-   draw.resize(love.graphics.getWidth(), love.graphics.getHeight())
+   draw.resize_logical(draw.get_width(), draw.get_height())
 end
 
 function draw.is_logical_viewport_enabled()
@@ -124,13 +121,26 @@ function draw.init()
 
    lx = 0
    ly = 0
-   lw = draw.get_actual_width()
-   lh = draw.get_actual_height()
+   lw = math.huge
+   lh = math.huge
+end
+
+local bg_r, bg_g, bg_b, bg_a = 0, 0, 0, 1
+
+function draw.get_canvas_background_color(r, g, b, a)
+   return bg_r, bg_g, bg_b, bg_a
+end
+
+function draw.set_canvas_background_color(r, g, b, a)
+   bg_r = r or 0
+   bg_g = g or 0
+   bg_b = b or 0
+   bg_a = a or 1
 end
 
 function draw.draw_inner_start()
    love.graphics.setCanvas(canvas)
-   love.graphics.clear()
+   love.graphics.clear(bg_r, bg_g, bg_b, bg_a)
 end
 
 function draw.draw_inner_end()
@@ -317,7 +327,7 @@ function draw.register_global_layer(tag, layer, opts)
    if enabled == nil then
       enabled = true
    end
-   layer:relayout(draw.get_logical_viewport())
+   layer:relayout(0, 0, draw.get_actual_width(), draw.get_actual_height())
    global_layers[tag] = {layer=layer, priority=priority, enabled=enabled}
    sort_global_layers()
 end
@@ -338,7 +348,20 @@ function draw.get_global_layer(tag)
    return global_layers[tag].layer
 end
 
+local function hotload_global_layer(layer)
+   if layer.on_hotload_layer then
+      layer:on_hotload_layer()
+   end
+   layer:relayout(0, 0, draw.get_actual_width(), draw.get_actual_height())
+end
+
 function draw.update_global_layers(dt)
+   if env.hotloaded_this_frame() then
+      for tag, entry in pairs(global_layers) do
+         hotload_global_layer(entry.layer)
+      end
+   end
+
    for _, entry in ipairs(sorted_global_layers) do
       if entry.enabled then
          entry.layer:update(dt)
@@ -347,14 +370,6 @@ function draw.update_global_layers(dt)
 end
 
 function draw.draw_global_layers()
-   if env.hotloaded_this_frame() then
-      for _, entry in ipairs(global_layers) do
-         if entry.layer ~= "canvas" then
-            hotload_layer(entry.layer)
-         end
-      end
-   end
-
    for _, entry in ipairs(sorted_global_layers) do
       if entry.enabled then
          entry.layer:draw()
@@ -609,6 +624,15 @@ function draw.reload_window_mode()
    draw.set_fullscreen(mode, new_w, new_h)
 end
 
+function draw.resize_logical(width, height)
+   canvas = create_canvas(width, height)
+   canvas_last = create_canvas(width, height)
+
+   for _, entry in ipairs(layers) do
+      entry.layer:relayout(0, 0, width, height)
+   end
+end
+
 --
 --
 -- Event callbacks
@@ -616,23 +640,16 @@ end
 --
 
 function draw.resize(actual_width, actual_height)
-   local width, height
-   if use_logical then
-      width = draw.get_width()
-      height = draw.get_height()
-   else
-      width = actual_width
-      height = actual_height
-   end
+   local width = draw.get_width()
+   local height = draw.get_height()
 
-   canvas = create_canvas(width, height)
-   canvas_last = create_canvas(width, height)
+   draw.resize_logical(width, height)
 
    error_canvas = create_canvas(actual_width, actual_height)
    canvas_final = create_canvas(actual_width, actual_height)
 
-   for _, entry in ipairs(layers) do
-      entry.layer:relayout(0, 0, width, height)
+   for tag, entry in pairs(global_layers) do
+      entry.layer:relayout(0, 0, actual_width, actual_height)
    end
 
    global_widgets:relayout(0, 0, actual_width, actual_height)

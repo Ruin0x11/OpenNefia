@@ -17,6 +17,7 @@ local InstancedMap = require("api.InstancedMap")
 local MapObject = require("api.MapObject")
 local Event = require("api.Event")
 local DrawLayerSpec = require("api.draw.DrawLayerSpec")
+local main_state = require("internal.global.main_state")
 
 local Gui = {}
 
@@ -604,8 +605,14 @@ function Gui.bind_keys(keys)
    field:bind_keys(keys)
 end
 
-function Gui.field_is_active()
-   return field.is_active
+function Gui.get_active_state()
+   if field.is_active then
+      return "field"
+   elseif main_state.is_main_title_reached then
+      return "main_title"
+   else
+      return "initializing"
+   end
 end
 
 function Gui.add_hud_widget(widget, tag, opts)

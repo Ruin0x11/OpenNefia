@@ -105,15 +105,26 @@ function love.update(dt)
       return
    end
 
-   draw.update_global_layers(dt)
-
-   local ok, err = xpcall(draw.update_global_widgets, debug.traceback, dt)
+   local ok, err = xpcall(draw.update_global_layers, debug.traceback, dt)
    if not ok then
-      halt_error = err
-      print("Error in global widgets:\n\t" .. debug.traceback(loop_coro, halt_error))
+      halt_error = tostring(err)
+      print("Error in global layers (update):\n\t" .. debug.traceback(loop_coro, halt_error))
       start_halt()
    end
-   draw.update_global_draw_callbacks(dt)
+
+   ok, err = xpcall(draw.update_global_draw_callbacks, debug.traceback, dt)
+   if not ok then
+      halt_error = err
+      print("Error in global draw callbacks (update):\n\t" .. debug.traceback(loop_coro, halt_error))
+      start_halt()
+   end
+
+   ok, err = xpcall(draw.update_global_widgets, debug.traceback, dt)
+   if not ok then
+      halt_error = err
+      print("Error in global widgets (update):\n\t" .. debug.traceback(loop_coro, halt_error))
+      start_halt()
+   end
 
    ok, err = coroutine.resume(loop_coro, dt, pop_draw_layer)
    pop_draw_layer = false
@@ -181,13 +192,24 @@ function love.draw()
    do
       draw.draw_outer_start()
 
-      draw.draw_global_layers()
-
-      draw.draw_global_draw_callbacks()
-      local ok, err = xpcall(draw.draw_global_widgets, debug.traceback)
+      local ok, err = xpcall(draw.draw_global_layers, debug.traceback)
       if not ok then
          halt_error = tostring(err)
-         print("Error in global widgets:\n\t" .. debug.traceback(loop_coro, halt_error))
+         print("Error in global layers (draw):\n\t" .. debug.traceback(loop_coro, halt_error))
+         start_halt()
+      end
+
+      ok, err = xpcall(draw.draw_global_draw_callbacks, debug.traceback)
+      if not ok then
+         halt_error = tostring(err)
+         print("Error in global draw callbacks (draw):\n\t" .. debug.traceback(loop_coro, halt_error))
+         start_halt()
+      end
+
+      ok, err = xpcall(draw.draw_global_widgets, debug.traceback)
+      if not ok then
+         halt_error = tostring(err)
+         print("Error in global widgets (draw):\n\t" .. debug.traceback(loop_coro, halt_error))
          start_halt()
       end
 
