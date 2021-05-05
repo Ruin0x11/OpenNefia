@@ -15,7 +15,6 @@ function PlayerLightDrawable:init()
    self.offset_x = math.floor(tw / 2)
    self.offset_y = math.floor(th / 2)
    self.t = nil
-   self.dirty = true
 end
 
 function PlayerLightDrawable:is_drawable_in_ui()
@@ -27,7 +26,6 @@ function PlayerLightDrawable:serialize()
 end
 
 function PlayerLightDrawable:deserialize()
-   self.dirty = true
 end
 
 function PlayerLightDrawable:update(dt)
@@ -48,7 +46,7 @@ function PlayerLightDrawable:update(dt)
 end
 
 function PlayerLightDrawable:draw(x, y, w, h, centered, rot)
-   if self.dirty then
+   if self.t == nil then
       self.t = UiTheme.load(self)
    end
    Draw.set_blend_mode("add")
