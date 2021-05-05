@@ -85,6 +85,10 @@ function draw.get_actual_height()
    return love.graphics.getHeight()
 end
 
+function draw.get_logical_viewport_bounds()
+   return lx, ly, draw.get_width(), draw.get_height()
+end
+
 function draw.get_logical_viewport()
    return lx, ly, lw, lh
 end
@@ -344,7 +348,9 @@ function draw.set_global_layer_enabled(tag, enabled)
 end
 
 function draw.get_global_layer(tag)
-   assert(global_layers[tag], "No layer with tag " .. tostring(tag) .. " found")
+   if global_layers[tag] == nil then
+      return nil
+   end
    return global_layers[tag].layer
 end
 

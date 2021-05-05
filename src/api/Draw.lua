@@ -45,6 +45,8 @@ Draw.get_canvas_background_color = draw.get_canvas_background_color
 
 Draw.get_logical_viewport = draw.get_logical_viewport
 
+Draw.get_logical_viewport_bounds = draw.get_logical_viewport_bounds
+
 Draw.set_logical_viewport = draw.set_logical_viewport
 
 Draw.set_logical_viewport_enabled = draw.set_logical_viewport_enabled
@@ -82,6 +84,8 @@ Draw.register_global_layer = draw.register_global_layer
 Draw.unregister_global_layer = draw.unregister_global_layer
 
 Draw.set_global_layer_enabled = draw.set_global_layer_enabled
+
+Draw.get_global_layer = draw.get_global_layer
 
 
 --- Sets the current drawing color. You can provide a table of up to  four
