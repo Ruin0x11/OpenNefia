@@ -270,14 +270,14 @@ function atlas:load(protos, coords, cb)
    love.graphics.setCanvas(canvas)
    love.graphics.setBlendMode("alpha")
    love.graphics.setColor(1, 1, 1, 1)
+   Draw.set_default_filter(self.filter.min, self.filter.mag, self.filter.anisotropy)
 
    cb = cb or function(self, proto) self:load_one(proto) end
 
-   Draw.set_default_filter(self.filter.min, self.filter.mag, self.filter.anisotropy)
+
    for _, proto in ipairs(protos) do
       cb(self, proto)
    end
-   Draw.set_default_filter()
 
    Log.debug("%d/%d tiles filled.", count, self.tile_count_x * self.tile_count_y)
 
@@ -287,6 +287,8 @@ function atlas:load(protos, coords, cb)
    canvas:release()
 
    self.batch = love.graphics.newSpriteBatch(self.image)
+
+   Draw.set_default_filter()
 end
 
 function atlas:make_anim(tile_id)
