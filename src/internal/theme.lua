@@ -230,7 +230,7 @@ function theme.reload_all(log_cb)
       -- method, using "self.t = UiTheme.load()" or similar. Maybe this isn't a
       -- good way of standardizing things for modders, seeing as this is not
       -- handled automatically, but for now it works, so I won't complain...
-      draw.resize(nil, nil)
+      draw.resize(draw.get_actual_width(), draw.get_actual_height())
 
       -- Update each draw layer with the new tile/chip atlases.
       field:on_theme_switched()
