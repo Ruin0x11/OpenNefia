@@ -44,6 +44,12 @@ Draw.get_width = draw.get_width
 --- @function Draw.get_height
 Draw.get_height = draw.get_height
 
+--- @function Draw.get_actual_width
+Draw.get_actual_width = draw.get_actual_width
+
+--- @function Draw.get_actual_height
+Draw.get_actual_height = draw.get_actual_height
+
 --- @function Draw.create_canvas
 Draw.create_canvas = love.graphics.newCanvas
 

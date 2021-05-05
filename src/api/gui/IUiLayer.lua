@@ -1,22 +1,17 @@
 local Env = require("api.Env")
 local Log = require("api.Log")
-local IDrawable = require("api.gui.IDrawable")
 local IInput = require("api.gui.IInput")
 local config = require("internal.config")
 local IHud = require("api.gui.hud.IHud")
+local ILayer = require("api.gui.ILayer")
 
 local draw = require("internal.draw")
 
 local IUiLayer = class.interface("IUiLayer",
                                  {
-                                    relayout = "function",
                                     make_keymap = "function",
                                  },
-                                 { IDrawable, IInput })
-
-function IUiLayer:default_z_order()
-   return nil
-end
+                                 { ILayer, IInput })
 
 local function trimmed_traceback(err, regex)
    local lines = {}
@@ -155,13 +150,7 @@ function IUiLayer:is_querying()
    return self == current
 end
 
-function IUiLayer:release()
-end
-
 function IUiLayer:on_query()
-end
-
-function IUiLayer:on_hotload_layer()
 end
 
 return IUiLayer

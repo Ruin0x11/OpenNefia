@@ -19,6 +19,8 @@ local canvas_final = nil
 local error_canvas = nil
 local layers = {}
 local sorted_layers = {}
+local global_layers = {}
+local sorted_global_layers = {}
 local handler = nil
 local gamma_correct = nil
 local lx, ly, lw, lh
@@ -59,18 +61,46 @@ local function set_window_mode(width, height, window_mode)
    draw.resize(width, height)
 end
 
-function draw.get_logical_viewport()
+function draw.get_width()
+   local actual_width = love.graphics.getWidth()
    if use_logical then
-      return 0, 0, lw, lh
+      return math.clamp(lw, WIDTH, math.max(actual_width - lx, WIDTH))
    end
-   return 0, 0, love.graphics.getWidth(), love.graphics.getHeight()
+   return actual_width
+end
+
+function draw.get_height()
+   local actual_height = love.graphics.getHeight()
+   if use_logical then
+      return math.clamp(lh, HEIGHT, math.max(actual_height - ly, HEIGHT))
+   end
+   return actual_height
+end
+
+function draw.get_actual_width()
+   return love.graphics.getWidth()
+end
+
+function draw.get_actual_height()
+   return love.graphics.getHeight()
+end
+
+function draw.get_logical_viewport()
+   return 0, 0, draw.get_width(), draw.get_height()
 end
 
 function draw.set_logical_viewport(x, y, w, h)
+   local actual_width = love.graphics.getWidth()
+   local actual_height = love.graphics.getHeight()
+
    lx = x or 0
    ly = y or 0
-   lw = math.max(w or love.graphics.getWidth(), WIDTH)
-   lh = math.max(h or love.graphics.getHeight(), HEIGHT)
+   lw = math.max(w or actual_width, WIDTH)
+   lh = math.max(h or actual_height, HEIGHT)
+
+   if use_logical then
+      draw.resize(actual_width, actual_height)
+   end
 end
 
 function draw.set_logical_viewport_enabled(enabled)
@@ -80,28 +110,6 @@ end
 
 function draw.is_logical_viewport_enabled()
    return not not use_logical
-end
-
-function draw.get_width()
-   if use_logical then
-      return lw
-   end
-   return love.graphics.getWidth()
-end
-
-function draw.get_height()
-   if use_logical then
-      return lh
-   end
-   return love.graphics.getHeight()
-end
-
-function draw.get_actual_width()
-   return love.graphics.getWidth()
-end
-
-function draw.get_actual_height()
-   return love.graphics.getHeight()
 end
 
 function draw.init()
@@ -120,12 +128,42 @@ function draw.init()
    lh = draw.get_actual_height()
 end
 
-function draw.draw_start(c)
+function draw.draw_inner_start()
+   love.graphics.setCanvas(canvas)
+   love.graphics.clear()
+end
+
+function draw.draw_inner_end()
+   love.graphics.setCanvas()
+
+   love.graphics.setColor(1, 1, 1, 1)
+   love.graphics.setBlendMode("alpha", "premultiplied")
+
+   love.graphics.setCanvas(canvas_last)
+   love.graphics.draw(canvas)
+   love.graphics.setCanvas()
+
+   love.graphics.setBlendMode("alpha")
+end
+
+function draw.draw_inner_canvas()
+   local x = 0
+   local y = 0
+   if use_logical then
+      x = lx
+      y = ly
+   end
+
+   love.graphics.draw(canvas, x, y)
+end
+
+function draw.draw_outer_start(c)
+   love.graphics.setColor(1, 1, 1, 1)
    love.graphics.setCanvas(c or canvas_final)
    love.graphics.clear()
 end
 
-function draw.draw_end(c)
+function draw.draw_outer_end(c)
    love.graphics.setCanvas()
 
    love.graphics.setColor(1, 1, 1, 1)
@@ -135,20 +173,23 @@ function draw.draw_end(c)
    love.graphics.draw(c or canvas_final)
    love.graphics.setShader()
 
-   love.graphics.setCanvas(canvas_last)
-   love.graphics.draw(canvas)
-   love.graphics.setCanvas()
-
    love.graphics.setBlendMode("alpha")
 end
 
-local function sort_layers()
-   sorted_layers = {}
-   for i, entry in ipairs(layers) do
-      sorted_layers[i] = entry
+local function do_sort(t, extra)
+   local r = {}
+   for i, entry in ipairs(t) do
+      r[i] = entry
    end
-   table.sort(sorted_layers, function(a, b) return a.priority < b.priority end)
-   sorted_layers = fun.iter(sorted_layers):extract("layer"):to_list()
+   if extra then
+      r[#r+1] = extra
+   end
+   table.sort(r, function(a, b) return a.priority < b.priority end)
+   return fun.iter(r):extract("layer"):to_list()
+end
+
+local function sort_layers()
+   sorted_layers = do_sort(layers)
 end
 
 function draw.set_root(ui_layer, priority)
@@ -168,8 +209,8 @@ function draw.set_root_input_handler(input)
 end
 
 function draw.push_layer(ui_layer, priority)
-   priority = priority or ui_layer:default_z_order()
    class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
+   priority = priority or ui_layer:default_z_order()
    ui_layer:relayout(draw.get_logical_viewport())
    ui_layer:focus()
    table.insert(layers, {layer=ui_layer, priority=priority})
@@ -267,11 +308,57 @@ function draw.draw_layers()
    table.remove_indices(coroutines, dead)
 end
 
+local CANVAS_PRIORITY = 100000
+local canvas_ = { layer = "canvas", priority = CANVAS_PRIORITY }
+local function sort_global_layers()
+   sorted_global_layers = do_sort(global_layers, canvas_)
+end
+sort_global_layers()
+
+function draw.push_global_layer(layer, priority)
+   class.assert_is_an(require("api.gui.ILayer"), layer)
+   priority = priority or layer:default_z_order()
+   layer:relayout(draw.get_logical_viewport())
+   table.insert(global_layers, {layer=layer, priority=priority})
+   sort_global_layers()
+end
+
+function draw.pop_global_layer()
+   global_layers[#global_layers] = nil
+   sort_global_layers()
+end
+
+function draw.update_global_layers(dt)
+   for _, layer in ipairs(sorted_global_layers) do
+      if layer ~= "canvas" then
+         layer:update(dt)
+      end
+   end
+end
+
+function draw.draw_global_layers()
+   if env.hotloaded_this_frame() then
+      for _, entry in ipairs(global_layers) do
+         if entry.layer ~= "canvas" then
+            hotload_layer(entry.layer)
+         end
+      end
+   end
+
+   for _, layer in ipairs(sorted_global_layers) do
+      if layer == "canvas" then
+         draw.draw_inner_canvas()
+      else
+         layer:draw()
+      end
+   end
+end
+
 local global_widgets = WidgetContainer:new()
 
 function draw.add_global_widget(widget, tag, opts)
    global_widgets:add(widget, tag, opts)
-   global_widgets:relayout(draw.get_logical_viewport())
+   global_widgets:relayout(0, 0, draw.get_actual_width(), draw.get_actual_height())
 end
 
 function draw.remove_global_widget(tag)
@@ -443,7 +530,7 @@ function draw.draw_error(err)
       handler:halt_input()
    end
    love.graphics.setScissor()
-   draw.draw_start(error_canvas)
+   draw.draw_outer_start(error_canvas)
    love.graphics.draw(canvas_final)
    love.graphics.setColor(0, 0, 0, 128/256)
    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
@@ -466,15 +553,15 @@ function draw.draw_error(err)
       y = y + love.graphics.getFont():getHeight()
    end
 
-   draw.draw_end(error_canvas)
+   draw.draw_outer_end(error_canvas)
 end
 
 function draw.draw_low_power()
-   draw.draw_start(error_canvas)
+   draw.draw_outer_start(error_canvas)
    love.graphics.draw(canvas_final)
    love.graphics.setColor(0, 0, 0, 128/256)
    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-   draw.draw_end(error_canvas)
+   draw.draw_outer_end(error_canvas)
 end
 
 function draw.set_fullscreen(kind, width, height)
@@ -519,8 +606,8 @@ end
 function draw.resize(actual_width, actual_height)
    local width, height
    if use_logical then
-      width = lw
-      height = lh
+      width = draw.get_width()
+      height = draw.get_height()
    else
       width = actual_width
       height = actual_height

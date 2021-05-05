@@ -67,7 +67,7 @@ function WidgetContainer:relayout(x, y, width, height)
       local position = holder:position() or widget.default_widget_position
       local _x, _y, _width, _height = position(widget, x, y, width, height)
 
-      holder:widget():relayout(_x, _y, _width, _height)
+      holder:widget():relayout(_x or x, _y or y, _width or width, _height or height)
    end
 end
 
