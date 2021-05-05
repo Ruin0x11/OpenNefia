@@ -520,6 +520,7 @@ end
 --- @tparam[opt] int y
 --- @tparam[opt] number volume
 --- @tparam[opt] int channel
+--- @treturn number sound duration
 function Gui.play_sound(sound_id, x, y, volume, channel)
    if not config.base.sound then
       return
@@ -534,6 +535,36 @@ function Gui.play_sound(sound_id, x, y, volume, channel)
    else
       sound_manager:play(sound_id, nil, nil, volume, channel)
    end
+end
+
+function Gui.stop_sound_on(channel)
+   if not config.base.sound then
+      return
+   end
+
+   local sound_manager = require("internal.global.global_sound_manager")
+
+   return sound_manager:stop(channel)
+end
+
+function Gui.get_sound_duration(channel, unit)
+   if not config.base.sound then
+      return -1
+   end
+
+   local sound_manager = require("internal.global.global_sound_manager")
+
+   return sound_manager:get_sound_duration(channel, unit)
+end
+
+function Gui.is_sound_playing_on(channel)
+   if not config.base.sound then
+      return false
+   end
+
+   local sound_manager = require("internal.global.global_sound_manager")
+
+   return sound_manager:is_playing(channel)
 end
 
 --- Plays a sound looped in the background.
