@@ -231,6 +231,7 @@ local inv_eat = {
          return "player_turn_query"
       end
 
+      ctxt:set_menu_visible(false)
       return ElonaAction.eat(ctxt.chara, item)
       -- <<<<<<<< shade2/command.hsp:3736 			goto *act_eat ..
    end
@@ -281,6 +282,7 @@ local inv_read = {
       return item:calc("can_read")
    end,
    on_select = function(ctxt, item)
+      ctxt:set_menu_visible(false)
       return ElonaAction.read(ctxt.chara, item)
    end
 }
