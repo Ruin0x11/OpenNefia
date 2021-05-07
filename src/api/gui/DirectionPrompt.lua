@@ -96,6 +96,8 @@ function DirectionPrompt:relayout(x, y)
       self.x, self.y = x, y
    else
       self.x, self.y = Gui.tile_to_visible_screen(self.center_x, self.center_y)
+      self.x = self.x or 0
+      self.y = self.y or 0
    end
 
    local tw, th = Draw.get_coords():get_size()
@@ -136,6 +138,10 @@ function DirectionPrompt:draw()
    draw_arrow("Southeast", x + self.tile_width, y + self.tile_height, 135)
    draw_arrow("Southwest", x + self.tile_width, y - self.tile_height, 45)
    draw_arrow("Northeast", x - self.tile_width, y + self.tile_height, 225)
+end
+
+function DirectionPrompt:set_frame(frame)
+   self.frame = frame or 0
 end
 
 function DirectionPrompt:update(dt)

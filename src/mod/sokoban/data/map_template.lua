@@ -23,6 +23,12 @@ data:add {
       local dx = self.x - params.chara.x
       local dy = self.y - params.chara.y
 
+      if dx ~= 0 and dy ~= 0 then
+         Gui.mes_duplicate()
+         Gui.mes("sokoban.no_diagonal_movement")
+         return "turn_end"
+      end
+
       local new_x = self.x + dx
       local new_y = self.y + dy
 
