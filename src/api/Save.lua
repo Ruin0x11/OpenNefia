@@ -128,7 +128,6 @@ function Save.load_game(save_id)
    -- global_events:clear()
 
    Gui.mes_clear()
-   Gui.mes("Game loaded.")
 
    Event.trigger("base.on_game_initialize")
 end

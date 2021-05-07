@@ -333,6 +333,11 @@ function field_logic.player_turn()
    return "player_turn_query"
 end
 
+-- base.on_player_query_frame needs to be efficient as possible since it will
+-- get called on every frame, so don't allocate an event params table inside the
+-- loop.
+local EVENT_ARGS = {}
+
 function field_logic.player_turn_query()
    local result
    local going = true
@@ -391,6 +396,8 @@ function field_logic.player_turn_query()
          going = false
          break
       end
+
+      Event.trigger("base.on_player_turn_query_frame", EVENT_ARGS)
 
       dt = coroutine.yield()
    end

@@ -245,7 +245,7 @@ function arc.on_map_renew_major(map)
    end
 end
 
-function arc.on_map_loaded(map)
+function arc.on_map_entered(map)
    local to_minor = map.renew_minor_date - World.date_hours()
    local to_major = map.renew_major_date - World.date_hours()
    Gui.mes_c("Time to minor renew: " .. to_minor .. " hours", "Yellow")
