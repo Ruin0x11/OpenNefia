@@ -4,6 +4,7 @@ local asset_drawable = require("internal.draw.asset_drawable")
 local atlas_batch = require("internal.draw.atlas_batch")
 local binpack = require("thirdparty.binpack")
 local bmp_convert = require("internal.bmp_convert")
+local Draw = require("api.Draw")
 
 local atlas = class.class("atlas")
 
@@ -52,7 +53,7 @@ local function load_tile(spec, frame_id, offset_x, offset_y)
    return tile, quad
 end
 
-function atlas:init(tile_width, tile_height)
+function atlas:init(tile_width, tile_height, opts)
    self.tile_width = tile_width
    self.tile_height = tile_height
    self.tiles = {}
@@ -64,6 +65,11 @@ function atlas:init(tile_width, tile_height)
    self.anims = {}
    self.existing = {}
    self.rects = {}
+
+   self.filter = (opts and opts.filter) or {}
+   self.filter.min = self.filter.min or "nearest"
+   self.filter.mag = self.filter.mag or "nearest"
+   self.filter.anisotropy = self.filter.anisotropy or 1
 
    -- blank fallback in case of missing filepath.
    local fallback_data = love.image.newImageData(self.tile_width, self.tile_height)
@@ -264,8 +270,10 @@ function atlas:load(protos, coords, cb)
    love.graphics.setCanvas(canvas)
    love.graphics.setBlendMode("alpha")
    love.graphics.setColor(1, 1, 1, 1)
+   Draw.set_default_filter(self.filter.min, self.filter.mag, self.filter.anisotropy)
 
    cb = cb or function(self, proto) self:load_one(proto) end
+
 
    for _, proto in ipairs(protos) do
       cb(self, proto)
@@ -279,6 +287,8 @@ function atlas:load(protos, coords, cb)
    canvas:release()
 
    self.batch = love.graphics.newSpriteBatch(self.image)
+
+   Draw.set_default_filter()
 end
 
 function atlas:make_anim(tile_id)

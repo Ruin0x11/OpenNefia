@@ -126,7 +126,7 @@ function MapEditLayer:show_tiles()
 end
 
 function MapEditLayer:on_query()
-   assert(Gui.field_is_active(), "Can only start in-game")
+   assert(Gui.get_active_state() == "field", "Can only start in-game")
    assert(not Map.is_world_map(), "Can't start in world map")
 end
 

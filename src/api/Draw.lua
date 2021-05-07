@@ -38,16 +38,39 @@ Draw.set_font = draw.set_font
 Draw.run = draw.run
 
 
+Draw.set_canvas_background_color = draw.set_canvas_background_color
+
+Draw.get_canvas_background_color = draw.get_canvas_background_color
+
+
+Draw.get_logical_viewport = draw.get_logical_viewport
+
+Draw.get_logical_viewport_bounds = draw.get_logical_viewport_bounds
+
+Draw.set_logical_viewport = draw.set_logical_viewport
+
+Draw.set_logical_viewport_enabled = draw.set_logical_viewport_enabled
+
+Draw.is_logical_viewport_enabled = draw.is_logical_viewport_enabled
+
+
 --- @function Draw.get_width
-Draw.get_width = love.graphics.getWidth
+Draw.get_width = draw.get_width
 
 --- @function Draw.get_height
-Draw.get_height = love.graphics.getHeight
+Draw.get_height = draw.get_height
+
+--- @function Draw.get_actual_width
+Draw.get_actual_width = draw.get_actual_width
+
+--- @function Draw.get_actual_height
+Draw.get_actual_height = draw.get_actual_height
 
 --- @function Draw.create_canvas
 Draw.create_canvas = love.graphics.newCanvas
 
 Draw.copy_to_canvas = draw.copy_to_canvas
+
 
 Draw.add_global_draw_callback = draw.add_global_draw_callback
 
@@ -56,6 +79,16 @@ Draw.remove_global_draw_callback = draw.remove_global_draw_callback
 Draw.wait_global_draw_callbacks = draw.wait_global_draw_callbacks
 
 Draw.has_active_global_draw_callbacks = draw.has_active_global_draw_callbacks
+
+
+Draw.register_global_layer = draw.register_global_layer
+
+Draw.unregister_global_layer = draw.unregister_global_layer
+
+Draw.set_global_layer_enabled = draw.set_global_layer_enabled
+
+Draw.get_global_layer = draw.get_global_layer
+
 
 --- Sets the current drawing color. You can provide a table of up to  four
 --- values or four separate integers.
@@ -445,7 +478,7 @@ function Draw.set_line_width(width)
 end
 
 function Draw.set_default_filter(min, mag, anisotropy)
-   love.graphics.setDefaultFilter(min or "nearest", mag or "nearest", anisotropy or 1)
+   love.graphics.setDefaultFilter(min or "linear", mag or "linear", anisotropy or 1)
 end
 
 function Draw.set_scissor(x, y, width, height)

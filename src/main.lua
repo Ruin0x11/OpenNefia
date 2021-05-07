@@ -8,6 +8,7 @@ local debug_server = require("internal.debug_server")
 local input = require("internal.input")
 local draw = require("internal.draw")
 local main_state = require("internal.global.main_state")
+local canvas_layer = require("internal.layer.global.canvas_layer")
 
 local loop_coro = nil
 local draw_coro = nil
@@ -29,6 +30,8 @@ function love.load(arg)
 
    loop_coro = coroutine.create(game.loop)
    draw_coro = coroutine.create(game.draw)
+
+   draw.register_global_layer("canvas", canvas_layer:new())
 end
 
 local halt = false
@@ -102,12 +105,26 @@ function love.update(dt)
       return
    end
 
-   local ok, err = xpcall(draw.update_global_widgets, debug.traceback, dt)
+   local ok, err = xpcall(draw.update_global_layers, debug.traceback, dt)
    if not ok then
+      halt_error = tostring(err)
+      print("Error in global layers (update):\n\t" .. debug.traceback(loop_coro, halt_error))
       start_halt()
-      halt_error = err
    end
-   draw.update_global_draw_callbacks(dt)
+
+   ok, err = xpcall(draw.update_global_draw_callbacks, debug.traceback, dt)
+   if not ok then
+      halt_error = err
+      print("Error in global draw callbacks (update):\n\t" .. debug.traceback(loop_coro, halt_error))
+      start_halt()
+   end
+
+   ok, err = xpcall(draw.update_global_widgets, debug.traceback, dt)
+   if not ok then
+      halt_error = err
+      print("Error in global widgets (update):\n\t" .. debug.traceback(loop_coro, halt_error))
+      start_halt()
+   end
 
    ok, err = coroutine.resume(loop_coro, dt, pop_draw_layer)
    pop_draw_layer = false
@@ -145,37 +162,59 @@ function love.draw()
       return
    end
 
-   draw.draw_start()
-
-   local going = true
-   local ok, err = coroutine.resume(draw_coro, going)
-   if not ok or err then
-      -- we can throw anything, including non-string objects, so convert the
-      -- error to a string for when something tries to concat it
-      err = tostring(err)
-
-      print("Error in draw:\n\t" .. debug.traceback(draw_coro, err))
-      print()
-      if not ok then
-         -- Coroutine is dead. No choice but to throw.
-         error(err)
-      else
-         -- We can continue executing since game.loop is still alive.
-         start_halt()
-         halt_error = err
-      end
-   end
-
    love.graphics.getStats(main_state.draw_stats)
 
-   ok, err = xpcall(draw.draw_global_widgets, debug.traceback)
-   if not ok then
-      start_halt()
-      halt_error = tostring(err)
-   end
-   draw.draw_global_draw_callbacks()
+   do
+      draw.draw_inner_start()
 
-   draw.draw_end()
+      local going = true
+      local ok, err = coroutine.resume(draw_coro, going)
+      if not ok or err then
+         -- we can throw anything, including non-string objects, so convert the
+         -- error to a string for when something tries to concat it
+         err = tostring(err)
+
+         print("Error in draw:\n\t" .. debug.traceback(draw_coro, err))
+         print()
+         if not ok then
+            -- Coroutine is dead. No choice but to throw.
+            error(err)
+         else
+            -- We can continue executing since game.loop is still alive.
+            start_halt()
+            halt_error = err
+         end
+      end
+
+      draw.draw_inner_end()
+   end
+
+   do
+      draw.draw_outer_start()
+
+      local ok, err = xpcall(draw.draw_global_layers, debug.traceback)
+      if not ok then
+         halt_error = tostring(err)
+         print("Error in global layers (draw):\n\t" .. debug.traceback(loop_coro, halt_error))
+         start_halt()
+      end
+
+      ok, err = xpcall(draw.draw_global_draw_callbacks, debug.traceback)
+      if not ok then
+         halt_error = tostring(err)
+         print("Error in global draw callbacks (draw):\n\t" .. debug.traceback(loop_coro, halt_error))
+         start_halt()
+      end
+
+      ok, err = xpcall(draw.draw_global_widgets, debug.traceback)
+      if not ok then
+         halt_error = tostring(err)
+         print("Error in global widgets (draw):\n\t" .. debug.traceback(loop_coro, halt_error))
+         start_halt()
+      end
+
+      draw.draw_outer_end()
+   end
 
    env.set_hotloaded_this_frame(false)
 end

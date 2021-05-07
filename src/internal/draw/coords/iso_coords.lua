@@ -1,5 +1,6 @@
 local ICoords = require("internal.draw.coords.ICoords")
 local iso_coords = class.class("iso_coords", ICoords)
+local Draw = require("api.Draw")
 
 function iso_coords:get_size()
    return 64, 64
@@ -22,8 +23,8 @@ end
 function iso_coords:find_bounds(x, y, width, height)
    local tile_width = 64
    local tile_height = 64
-   local draw_width = love.graphics.getWidth()*2
-   local draw_height = love.graphics.getHeight()*2
+   local draw_width = Draw.get_width()*2
+   local draw_height = Draw.get_height()*2
    local tx = math.floor(x / tile_width) - 1
    local ty = math.floor(y / tile_height) - 1
    local tdx = math.min(math.ceil((x + draw_width) / tile_width), width*2)

@@ -67,6 +67,7 @@ end
 
 function LogWidget:draw()
    -- Draw.filled_rect(self.x, self.y, self.width, self.height, {17, 17, 65, 64})
+   Draw.set_font(12)
    local line = 1
    for i=-self.buffer:len(), -2 do
       local entry = self.buffer:get(i)

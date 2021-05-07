@@ -1,8 +1,7 @@
 local Draw = require("api.Draw")
 local IDrawLayer = require("api.gui.IDrawLayer")
 local Gui = require("api.Gui")
-
-local easing = require("mod.damage_popups.lib.easing")
+local Easing = require("mod.extlibs.api.Easing")
 
 local DamagePopupLayer = class.class("DamagePopupLayer", IDrawLayer)
 
@@ -39,7 +38,7 @@ function DamagePopupLayer:update(map, dt, screen_updated)
 
    for i, v in ipairs(popups) do
       v.frame = v.frame + dt * 50
-      local alpha = math.min(easing.outQuint(1 - (v.frame / max_frame), 0, 1, 1) * 255, 255)
+      local alpha = math.min(Easing.outQuint(1 - (v.frame / max_frame), 0, 1, 1) * 255, 255)
       v.color[4] = alpha
       v.shadow_color[4] = alpha
       if v.frame > max_frame then

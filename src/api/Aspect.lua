@@ -77,7 +77,7 @@ function Aspect.build_defaults_for(obj, aspect_opts)
          seen[k] = true
          local _params = (aspect_opts and aspect_opts[k]) or {}
          if type(v) == "table" then
-            _params = table.merge_ex(table.deepcopy(v), _params)
+            _params = table.merge(table.shallow_copy(v), _params)
 
             -- HACK it shouldn't be possible to deepcopy class tables
             if v._impl then
@@ -91,7 +91,7 @@ function Aspect.build_defaults_for(obj, aspect_opts)
    if aspect_opts then
       for iface, _opts in pairs(aspect_opts) do
          if is_aspect(iface) and not seen[iface] then
-            Log.error("Aspect arguments recieved for %s, but prototype '%s:%s' does not declare that aspect in its _ext table.", k, self._type, self._id)
+            Log.error("Aspect arguments received for %s, but prototype does not declare that aspect in its _ext table.", iface)
          end
       end
    end

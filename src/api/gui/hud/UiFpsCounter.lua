@@ -28,7 +28,7 @@ function UiFpsCounter:default_widget_position(x, y, width, height)
 end
 
 function UiFpsCounter:relayout(x, y, width, height)
-   self.x = Draw.get_width() - Draw.text_width(self.buff) - 20
+   self.x = width - Draw.text_width(self.buff) - 20
    self.y = y or self.y
 end
 
@@ -91,7 +91,7 @@ function UiFpsCounter:update()
       local x = self.x - 105
 
       if relayout then
-         self:relayout()
+         self:relayout(self.x, self.y, self.width, self.height)
       end
       self.fps_graph:relayout(x, 5, 100, 40)
       self.ram_graph:relayout(x, 5 + 45, 100, 40)

@@ -41,4 +41,4 @@ local function add_default_widgets()
    end
    Gui.add_hud_widget(UiBar:new("hud_mp_bar", 0, 0, true), "hud_mp_bar", { position = position, refresh = refresh })
 end
-Event.register("base.before_engine_init", "Add default_widgets", add_default_widgets, {priority = 10000})
+Event.register("base.before_engine_init", "Add default widgets", add_default_widgets, {priority = 10000})

@@ -7,6 +7,7 @@ local Effect = require("mod.elona.api.Effect")
 local Skill = require("mod.elona_sys.api.Skill")
 local light = require("mod.elona.data.item.light")
 local IItemPotion = require("mod.elona.api.aspect.IItemPotion")
+local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 
 --
 -- Potion
@@ -752,7 +753,8 @@ data:add {
          effects = {
             {_id = "elona.milk", power = 100}
          }
-      }
+      },
+      IItemFromChara
    }
 }
 

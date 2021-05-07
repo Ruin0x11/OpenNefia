@@ -1,6 +1,7 @@
 local IMouseInput = require("api.gui.IMouseInput")
 local IKeyInput = require("api.gui.IKeyInput")
 local config = require("internal.config")
+local draw = require("internal.draw")
 
 local input = {}
 
@@ -16,19 +17,22 @@ end
 
 function input.mousemoved(x, y, dx, dy, istouch)
    if mouse_handler then
-      mouse_handler:receive_mouse_movement(x, y, dx, dy)
+      local lx, ly = draw.get_logical_viewport()
+      mouse_handler:receive_mouse_movement(x - lx, y - ly, dx, dy)
    end
 end
 
 function input.mousepressed(x, y, button, istouch)
    if mouse_handler then
-      mouse_handler:receive_mouse_button(x, y, button, true)
+      local lx, ly = draw.get_logical_viewport()
+      mouse_handler:receive_mouse_button(x - lx, y - ly, button, true)
    end
 end
 
 function input.mousereleased(x, y, button, istouch)
    if mouse_handler then
-      mouse_handler:receive_mouse_button(x, y, button, false)
+      local lx, ly = draw.get_logical_viewport()
+      mouse_handler:receive_mouse_button(x - lx, y - ly, button, false)
    end
 end
 

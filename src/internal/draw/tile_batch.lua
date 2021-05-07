@@ -30,8 +30,8 @@ function tile_batch:on_theme_switched(atlas, coords)
 end
 
 function tile_batch:find_bounds(x, y)
-   local draw_width = love.graphics.getWidth()
-   local draw_height = love.graphics.getHeight()
+   local draw_width = Draw.get_width()
+   local draw_height = Draw.get_height()
    local tx = math.floor(x / self.tile_width) - 1
    local ty = math.floor(y / self.tile_height) - 1
    local tdx = math.min(math.ceil((x + draw_width) / self.tile_width), self.width)

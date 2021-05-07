@@ -19,6 +19,7 @@ love.graphics.getFont = function()
          getWidth = function(self, s) return #s * 8 end,
          getHeight = function() return 14 end,
          getWrap = function(text, width) return width, {text} end,
+         setFilter = function() end
       }
 end
 love.graphics.setFont = function() end
@@ -63,7 +64,12 @@ love.graphics.newCanvas = function()
 end
 love.graphics.newFont = function(path)
    check_path(path)
-   return {}
+   return {
+      getWidth = function(self, s) return #s * 8 end,
+      getHeight = function() return 14 end,
+      getWrap = function(text, width) return width, {text} end,
+      setFilter = function() end
+   }
 end
 love.graphics.newImage = function(path)
    check_path(path)
@@ -83,6 +89,7 @@ love.graphics.newShader = function()
    return {}
 end
 love.graphics.draw = function() end
+love.graphics.setDefaultFilter = function() end
 love.image.newImageData = function(path)
    check_path(path)
    return {

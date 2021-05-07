@@ -20,9 +20,9 @@ end
 
 function sound_manager:update()
    local remove = {}
-   for _, s in pairs(self.sources) do
+   for channel, s in pairs(self.sources) do
       if not s:isPlaying() then
-         remove[#remove + 1] = s
+         remove[#remove + 1] = channel
       end
    end
 
@@ -171,10 +171,26 @@ function sound_manager:play(id, x, y, volume, channel)
    local channel = channel or src
 
    if self.sources[channel] then
-      love.audio.stop()
+      love.audio.stop(src)
    end
 
    self.sources[channel] = src
+end
+
+function sound_manager:is_playing(channel)
+   local src = self.sources[channel]
+   if src == nil then
+      return false
+   end
+
+   return src:isPlaying()
+end
+
+function sound_manager:get_sound_duration(channel, unit)
+   local src = self.sources[channel]
+   if src == nil then return -1 end
+
+   return src:getDuration(unit)
 end
 
 function sound_manager:stop(channel)

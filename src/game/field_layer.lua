@@ -82,6 +82,14 @@ function field_layer:init_global_data()
    Event.trigger("base.on_init_save")
 end
 
+function field_layer:get_renderer_y_offset()
+   local y_offset = -(72 + 16)
+   if self.view_centered then
+      y_offset = 0
+   end
+   return y_offset
+end
+
 function field_layer:set_map(map)
    assert(type(map) == "table")
    assert(map.uid, "Map must have UID")
@@ -93,7 +101,9 @@ function field_layer:set_map(map)
    else
       self.renderer:set_map_size(map:width(), map:height(), self.draw_layer_spec)
    end
-   self.renderer:relayout(self.x, self.y, self.width, self.height)
+   if self.x then
+      self:relayout()
+   end
 
    self.map_changed = true
    self.no_scroll = true
@@ -105,11 +115,7 @@ function field_layer:relayout(x, y, width, height)
    self.width = width or self.width
    self.height = height or self.height
    if self.renderer then
-      local offset_y = -(72 + 16)
-      if self.view_centered then
-         offset_y = 0
-      end
-      self.renderer:relayout(self.x, self.y, self.width, self.height + offset_y)
+      self.renderer:relayout(self.x, self.y, self.width, self.height + self:get_renderer_y_offset())
    end
 end
 

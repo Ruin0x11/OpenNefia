@@ -231,6 +231,7 @@ local inv_eat = {
          return "player_turn_query"
       end
 
+      ctxt:set_menu_visible(false)
       return ElonaAction.eat(ctxt.chara, item)
       -- <<<<<<<< shade2/command.hsp:3736 			goto *act_eat ..
    end
@@ -281,6 +282,7 @@ local inv_read = {
       return item:calc("can_read")
    end,
    on_select = function(ctxt, item)
+      ctxt:set_menu_visible(false)
       return ElonaAction.read(ctxt.chara, item)
    end
 }
@@ -1077,7 +1079,7 @@ local inv_harvest_delivery_chest = {
       assert(quest._id == "elona.harvest", quest._id)
       quest.params.current_weight = quest.params.current_weight + item:calc("weight") * item.amount
       Gui.mes_c("ui.inv.put.harvest", "Green",
-                item,
+                item:build_name(amount),
                 Ui.display_weight(item:calc("weight") * item.amount),
                 Ui.display_weight(quest.params.current_weight),
                 Ui.display_weight(quest.params.required_weight))
@@ -1134,6 +1136,9 @@ local inv_mages_guild_delivery_chest = {
       local aspect = assert(item:get_aspect(IItemAncientBook))
       local points_earned = (aspect:calc(item, "difficulty") + 1) * amount
       save.elona.guild_mage_point_quota = math.max(save.elona.guild_mage_point_quota - points_earned, 0)
+      local mes = I18N.get("ui.inv.put.guild.you_deliver", item:build_name(amount))
+      mes = ("%s(%d Guild Point)"):format(mes, points_earned)
+      Gui.mes_c(mes, "Green")
       if save.elona.guild_mage_point_quota == 0 then
          Gui.play_sound("base.complete1")
          Gui.mes_c("ui.inv.put.guild.you_fulfill", "Green")
