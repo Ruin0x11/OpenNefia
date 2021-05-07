@@ -1,7 +1,7 @@
 local Draw = require("api.Draw")
-local field = require("game.field")
 local global_sound_manager = require("internal.global.global_sound_manager")
 local config = require("internal.config")
+local field = require("game.field")
 
 local ISoundHolder = class.interface("ISoundHolder", {})
 

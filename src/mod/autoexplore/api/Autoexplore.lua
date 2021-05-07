@@ -80,7 +80,7 @@ local function step_autoexplore()
       local chara = Chara.at(x, y)
       if Chara.is_alive(chara)
          and chara:relation_towards(Chara.player()) <= Enum.Relation.Enemy
-         and Effect.is_visible(chara)
+         and Effect.is_visible(chara, Chara.player())
       then
          Gui.mes("autoexplore.enemy_sighted", chara, I18N.get("autoexplore." .. pathing.type .. ".name"))
          Autoexplore.stop()

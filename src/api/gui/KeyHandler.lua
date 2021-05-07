@@ -161,6 +161,33 @@ function KeyHandler:ignore_modifiers(modifiers)
    self.keybinds:ignore_modifiers(modifiers)
 end
 
+-- The below is for compatibility with HSP's `stick` function, which combines
+-- multiple directional keys into a single bitfield.
+-- >>>>>>>> shade2/init.hsp:3664 	if p=1	:if key_alt@=false:key@=key_west@	:f=true ...
+local COMBINE_BLOCKED = "@blocked@"
+local COMBINES = {
+   north = {
+      west = "northwest",
+      east = "northeast"
+   },
+   south = {
+      west = "southwest",
+      east = "southeast"
+   },
+   -- Don't run the corresponding combined keybind twice (once for each of the
+   -- two keys being held) and also don't run the normal keybind either
+   -- (east/west in this case).
+   east = {
+      north = COMBINE_BLOCKED,
+      south = COMBINE_BLOCKED,
+   },
+   west = {
+      north = COMBINE_BLOCKED,
+      south = COMBINE_BLOCKED,
+   },
+}
+-- <<<<<<<< shade2/init.hsp:3672 	if mode=2:return ...
+
 function KeyHandler:run_key_action(key, ...)
    local it = self.repeat_delays[key]
    local can_shift = self:is_shift_delayed_key(key, self.modifiers)
@@ -195,6 +222,20 @@ function KeyHandler:run_key_action(key, ...)
    local keybind = self.keybinds:key_to_keybind(key, self.modifiers)
    if Log.has_level("trace") then
       Log.trace("Keybind: %s %s -> \"%s\" %s", key, inspect(self.modifiers), keybind, self)
+   end
+
+   local combined = COMBINES[keybind]
+   if combined then
+      for other_key, v in pairs(self.pressed) do
+         local other_keybind = self.keybinds:key_to_keybind(other_key, self.modifiers)
+         if other_keybind and combined[other_keybind] then
+            keybind = combined[other_keybind]
+            break
+         end
+      end
+      if keybind == COMBINE_BLOCKED then
+         return
+      end
    end
 
    if self.bindings[keybind] == nil then

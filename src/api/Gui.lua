@@ -248,6 +248,10 @@ end
 --- @tparam int tx Tile X coordinate
 --- @tparam int ty Tile Y coordinate
 function Gui.tile_to_visible_screen(tx, ty)
+   if not field.is_active or not field.renderer then
+      return nil, nil
+   end
+
   local x, y = Gui.tile_to_screen(tx, ty)
   local draw_x, draw_y = Gui.field_draw_pos()
   return x + draw_x, y + draw_y

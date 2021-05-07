@@ -100,6 +100,15 @@ local function on_game_start(self, player)
    end
 
    Tools.powerup(player)
+   player:mod_base_skill_level("elona.stat_dexterity", 100, "set")
+   player:mod_base_skill_level("elona.marksman", 100, "set")
+   player:mod_base_skill_level("elona.bow", 100, "set")
+   player:mod_base_skill_level("elona.spell_crystal_spear", 50, "set")
+   player:mod_base_skill_level("elona.spell_magic_storm", 50, "set")
+   player:mod_base_skill_level("elona.stat_mana", 250, "set")
+   player:mod_base_skill_level("elona.lock_picking", 250, "set")
+   player:refresh()
+   player:heal_to_max()
 
    player.gold = 10^8
    player.platinum = 1000

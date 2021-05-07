@@ -44,7 +44,14 @@ function Command.move(player, x, y)
       x, y = Pos.add_direction(x, player.x, player.y)
    end
 
-   player.direction = Pos.pack_direction(Pos.direction_in(player.x, player.y, x, y))
+   local dx, dy = Pos.direction_in(player.x, player.y, x, y)
+
+   -- Prevent diagonal movement if Alt is held.
+   if (dx == 0 or dy == 0) and Gui.is_modifier_held("alt") then
+      return "player_turn_query"
+   end
+
+   player.direction = Pos.pack_direction(dx, dy)
 
    -- Try to modify the final position or prevent movement. This is caused by
    -- status effects like confusion, or being overweight, respectively.

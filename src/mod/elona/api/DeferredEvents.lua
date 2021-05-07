@@ -459,7 +459,8 @@ function DeferredEvents.welcome_home(map)
 
    if save.elona.waiting_guests > 0 then
       local is_maid = function(chara)
-         return Servant.is_servant(chara)
+         return Chara.is_alive(chara)
+            and Servant.is_servant(chara)
             and chara:find_role("elona.maid")
       end
       local maid = Chara.iter(map):filter(is_maid):nth(1)

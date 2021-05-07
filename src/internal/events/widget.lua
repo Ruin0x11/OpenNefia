@@ -11,6 +11,7 @@ local UiStatsBar = require("api.gui.hud.UiStatsBar")
 local UiStatusEffects = require("api.gui.hud.UiStatusEffects")
 local UiSkillTracker = require("api.gui.hud.UiSkillTracker")
 local UiAutoTurn = require("api.gui.hud.UiAutoTurn")
+local UiDiagonalArrows = require("api.gui.hud.UiDiagonalArrows")
 
 local function add_default_widgets()
    Gui.add_hud_widget(UiMessageWindow:new(), "hud_message_window")
@@ -23,6 +24,7 @@ local function add_default_widgets()
    Gui.add_hud_widget(UiMinimap:new(), "hud_minimap")
    Gui.add_hud_widget(UiBuffs:new(), "hud_buffs")
    Gui.add_hud_widget(UiAutoTurn:new(), "hud_auto_turn")
+   Gui.add_hud_widget(UiDiagonalArrows:new(), "hud_diagonal_arrows")
 
    local position, refresh
    position = function(self, x, y, width, height)
