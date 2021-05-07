@@ -52,12 +52,14 @@ local function main_title()
 
       if choice == "quickstart" then
          field_logic.quickstart()
+         Event.trigger("base.on_game_initial_load")
          going = false
          action = "start"
       elseif choice == "restore" then
          local save = RestoreSaveMenu:new():query()
          if save then
             Save.load_game(save)
+            Event.trigger("base.on_game_initial_load")
             going = false
             action = "start"
          end
@@ -69,6 +71,7 @@ local function main_title()
             if result then
                local player = result.chara
                field_logic.setup_new_game(player)
+               Event.trigger("base.on_game_initial_load")
                action = "start"
             end
          end

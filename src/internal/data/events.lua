@@ -141,5 +141,7 @@ data:add_multi(
       { _id = "on_map_generated_from_archetype" },
       { _id = "on_hud_message" },
       { _id = "on_chara_say_text" },
+      { _id = "on_player_turn_query_frame" },
+      { _id = "on_game_initial_load" },
    }
 )

@@ -28,3 +28,4 @@ data:add_multi(
 )
 
 require("mod.omake_overhaul.data.init")
+require("mod.omake_overhaul.event.init")
