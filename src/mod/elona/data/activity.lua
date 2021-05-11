@@ -525,6 +525,7 @@ data:add {
          name = "pass turns",
 
          callback = function(self, params)
+            print("A!")
             params.chara:set_item_using(self.params.bed)
             return "turn_end"
          end

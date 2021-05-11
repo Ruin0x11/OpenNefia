@@ -7,7 +7,8 @@ local ILocation = require("api.ILocation")
 local Log = require("api.Log")
 local draw = require("internal.draw")
 local IUiLayer = require("api.gui.IUiLayer")
-local i18n = require("internal.i18n.init")
+local SaveFs = require("api.SaveFs")
+local env = require("internal.env")
 
 -- The following adds support for cleaning up missing events
 -- automatically if a chunk is hotloaded. It assumes only one chunk is
@@ -83,3 +84,27 @@ local function rebind_ui_layer_keys()
    end
 end
 Event.register("base.on_hotload_end", "Rebind keys of current UILayer", rebind_ui_layer_keys)
+
+local stats = { times_hotloaded = {} }
+local STATS_FILE = "data/hotload_stats"
+local function load_hotload_stats()
+   if SaveFs.exists(STATS_FILE, "global") then
+      local ok, stats_ = SaveFs.read(STATS_FILE, "global")
+      if ok then
+         stats = stats_
+      end
+   end
+end
+Event.register("base.on_engine_init", "Load hotload stats", load_hotload_stats)
+
+local function save_hotload_stats(_, params)
+   local path = params.path_or_class
+   if type(path) == "table" then
+      path = env.get_require_path(path)
+   end
+   if type(path) == "string" then
+      stats.times_hotloaded[path] = (stats.times_hotloaded[path] or 0) + 1
+      SaveFs.write(STATS_FILE, stats, "global")
+   end
+end
+Event.register("base.on_hotload_end", "Save hotload stats", save_hotload_stats)
