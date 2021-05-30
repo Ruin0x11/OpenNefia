@@ -46,6 +46,8 @@ function tile_overhang_layer:reset()
 end
 
 function tile_overhang_layer:update(map, dt, screen_updated)
+   self.overhang_batch:update(dt)
+
    if not screen_updated then return end
 
    assert(map ~= nil)
