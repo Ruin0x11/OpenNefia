@@ -10,12 +10,21 @@ local MapEditTileList = class.class("MapEditTileList", IUiLayer)
 
 MapEditTileList:delegate("input", IInput)
 
+local function is_selectable_tile(tile_id)
+   local tile_data = data["base.map_tile"]:ensure(tile_id)
+   if tile_data.wall_kind == 1 then
+      return false
+   end
+   return true
+end
+
 function MapEditTileList:init(tiles)
   self.finished = false
   self.canceled = false
 
   tiles = tiles or MapEdit.calc_selectable_tiles()
   self.tiles = fun.iter(tiles)
+     :filter(is_selectable_tile)
      :map(function(tile_id)
            local tile_data = data["base.map_tile"]:ensure(tile_id)
            return {

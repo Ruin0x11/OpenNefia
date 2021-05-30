@@ -1,5 +1,5 @@
 local IUiElement = require("api.gui.IUiElement")
-local IUiMouseButton = require("api.gui.IUiMouseButton")
+local IUiMouseButton = require("mod.mouse_ui.api.gui.IUiMouseButton")
 local UiTheme = require("api.gui.UiTheme")
 local IMouseElementProvider = require("api.gui.IMouseElementProvider")
 
