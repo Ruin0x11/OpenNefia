@@ -18,6 +18,7 @@ local UiMouseButton = require("mod.mouse_ui.api.gui.UiMouseButton")
 local MapEditorTileWidget = require("mod.map_editor.api.MapEditorTileWidget")
 local MapEditTileList = require("mod.elona.api.gui.MapEditTileList")
 local UiMouseMenu = require("mod.mouse_ui.api.gui.UiMouseMenu")
+local UiMouseManager = require("mod.mouse_ui.api.gui.UiMouseManager")
 local FuzzyFinderPrompt = require("mod.tools.api.FuzzyFinderPrompt")
 
 local MapEditor = class.class("MapEditor", IUiLayer)
@@ -84,10 +85,16 @@ function MapEditor:init(maps)
       self.plugins[#self.plugins+1] = plugin
    end
 
+   self.mouse_manager = UiMouseManager:new {
+      self.toolbar,
+      self.mouse_menu
+   }
+
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
    self.input:bind_mouse(self:make_mousemap())
    self.input:bind_mouse_elements(self:get_mouse_elements(true))
+   self.input:forward_to(self.mouse_manager)
 
    if maps then
       if class.is_an(InstancedMap, maps) then
@@ -112,7 +119,6 @@ function MapEditor:make_keymap()
       south = function() self:pan(0, self.renderer_offset_delta) end,
       east = function() self:pan(self.renderer_offset_delta, 0) end,
       west = function() self:pan(-self.renderer_offset_delta, 0) end,
-      repl_copy = function() self:pick_from_tile_list() end,
 
       ["map_editor.map_editor_new"] = function() self:act_new() end,
       ["map_editor.map_editor_open"] = function() self:act_open() end,
@@ -158,36 +164,17 @@ function MapEditor:show_mouse_menu(show)
    end
 end
 
-function MapEditor:unpress_mouse_elements()
-   for _, other in self:iter_mouse_elements(true) do
-      other:set_pressed(false)
-   end
-   self:show_mouse_menu(false)
-end
-
-function MapEditor:unpress_unfocused_mouse_elements(element)
-   local p = table.set {}
-   while element do
-      p[element] = true
-      element = element:get_parent()
-   end
-   for _, other in self:iter_mouse_elements(true) do
-      if not p[other] then
-         other:set_pressed(false)
-      end
-   end
-end
-
 function MapEditor:make_mousemap()
    return {
       element = function(element, pressed)
-         if pressed then
-            self:unpress_unfocused_mouse_elements(element)
-         else
+         if not pressed then
             if class.is_an(UiMouseButton, element) then
-               self:unpress_mouse_elements(element)
+               self:show_mouse_menu(false)
             end
          end
+         -- Pass `element` event to child UiMouseManager to unpress other
+         -- buttons
+         return true
       end,
       button_1 = function(x, y, pressed)
          self.placing_tile = pressed
@@ -223,7 +210,7 @@ function MapEditor:make_mousemap()
 end
 
 function MapEditor:get_mouse_elements(recursive)
-   return table.append(self.mouse_menu:get_mouse_elements(true), self.toolbar:get_mouse_elements(true))
+   return self.mouse_manager:get_mouse_elements(recursive)
 end
 
 function MapEditor.get_save_dir()
@@ -300,7 +287,8 @@ function MapEditor:select_tile(id)
 end
 
 function MapEditor:place_tile(tx, ty, tile_id)
-   self:unpress_mouse_elements()
+   self.mouse_manager:unpress_mouse_elements()
+   self:show_mouse_menu(false)
 
    local map = self.current_map.map
 
