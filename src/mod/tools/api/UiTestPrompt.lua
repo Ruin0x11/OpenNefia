@@ -1,9 +1,8 @@
 local Ui = require("api.Ui")
 local Gui = require("api.Gui")
-local Log = require("api.Log")
 local Draw = require("api.Draw")
-local MouseUi = require("mod.mouse_ui.api.MouseUi")
 
+local UiMouseMenu = require("mod.mouse_ui.api.gui.UiMouseMenu")
 local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
 local UiTheme = require("api.gui.UiTheme")
@@ -17,41 +16,13 @@ UiTestPrompt:delegate("input", IInput)
 function UiTestPrompt:init()
    self.autocenter = true
 
-   local menu = {
-      { text = "Test1", cb = function() Log.info("Dood") end },
-      { text = "Test2", cb = function() Log.warn("Dood") end },
-      { text = "Test3", cb = function() Log.error("Dood") end },
-      { text = "Test4", cb = function() Log.debug("Dood") end },
-      { text = "Asdfg", menu =
-        {
-           { text = "Test1", cb = function() Log.info("Dood") end },
-           { text = "Test2", cb = function() Log.warn("Dood") end },
-           { text = "Test3", cb = function() Log.error("Dood") end },
-           { text = "Test4", cb = function() Gui.play_sound("base.paygold1") end },
-           { text = "Asdfg", menu =
-             {
-                { text = "Test1", cb = function() Log.info("Dood") end },
-                { text = "Test2", cb = function() Log.warn("Dood") end },
-                { text = "Test3", cb = function() Log.error("Dood") end },
-                { text = "Test4", cb = function() Gui.play_sound("base.paygold1") end },
-                { text = "End", cb = function() self:unpress_mouse_elements() end },
-             }
-           }
-        }
-      }
-   }
-
-   self.mouse_menu = MouseUi.make_mouse_menu(menu)
+   self.mouse_menu = UiMouseMenu:new()
    self.menu_x = 0
    self.menu_y = 0
    self.menu_shown = false
    self:show_mouse_menu(false)
 
-   self.toolbar = MouseUi.make_toolbar {
-      { text = "File", menu = menu },
-      { text = "Edit", menu = menu },
-      { text = "Plugin", menu = menu },
-   }
+   self.toolbar = UiMouseMenu:new()
 
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())

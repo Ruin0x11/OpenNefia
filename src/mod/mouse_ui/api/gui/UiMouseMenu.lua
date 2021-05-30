@@ -1,38 +1,43 @@
-local IUiElement = require("api.gui.IUiElement")
 local IUiMouseButton = require("mod.mouse_ui.api.gui.IUiMouseButton")
 local UiTheme = require("api.gui.UiTheme")
 local IMouseElementProvider = require("api.gui.IMouseElementProvider")
+local IUiMouseElement = require("mod.mouse_ui.api.gui.IUiMouseElement")
+local IMouseElement = require("api.gui.IMouseElement")
 
-local UiMouseMenu = class.class("UiMouseMenu", {IUiElement, IMouseElementProvider})
+local UiMouseMenu = class.class("UiMouseMenu", IUiMouseElement)
 
-function UiMouseMenu:init(buttons, display_direction, button_width, button_height)
-   self.min_button_width = button_width
-   self.min_button_height = button_height
-   for _, button in ipairs(buttons) do
+function UiMouseMenu:init(opts)
+   self.min_child_width = opts.child_width or 96
+   self.min_child_height = opts.child_height or 48
+   opts.children = opts.children or {}
+   for _, button in ipairs(opts.children) do
       assert(class.is_an(IUiMouseButton, button))
    end
-   self.buttons = buttons
-   self.display_direction = display_direction or "vertical"
+   self.children = opts.children
+   self.display_direction = opts.display_direction or "vertical"
    self:_update_button_sizes()
 end
 
 
 function UiMouseMenu:_update_button_sizes()
-   self.button_width = self.min_button_width or 96
-   self.button_height = self.min_button_height or 48
-   for _, button in ipairs(self.buttons) do
+   self.child_width = self.min_child_width
+   self.child_height = self.min_child_height
+   for _, button in ipairs(self.children) do
       assert(class.is_an(IUiMouseButton, button))
-      self.button_width = math.max(self.button_width, button:get_minimum_width())
-      self.button_height = math.max(self.button_height, button:get_minimum_height())
+      self.child_width = math.max(self.child_width, button:get_minimum_width())
+      self.child_height = math.max(self.child_height, button:get_minimum_height())
+      button._parent = self
    end
 end
 
 function UiMouseMenu:get_mouse_elements(recursive)
    local regions = {}
-   for _, button in ipairs(self.buttons) do
-      regions[#regions+1] = button
-      if recursive and class.is_an(IMouseElementProvider, button) then
-         table.append(regions, button:get_mouse_elements(recursive))
+   for _, child in ipairs(self.children) do
+      if class.is_an(IMouseElement, child) then
+         regions[#regions+1] = child
+      end
+      if recursive then
+         table.append(regions, child:get_mouse_elements(recursive))
       end
    end
    return regions
@@ -48,7 +53,7 @@ end
 
 function UiMouseMenu:add_button(button)
    assert(class.is_an(IUiMouseButton, button))
-   self.buttons[#self.buttons+1] = button
+   self.children[#self.children+1] = button
    self:_update_button_sizes()
 end
 
@@ -60,24 +65,24 @@ function UiMouseMenu:relayout(x, y, width, height)
    self.t = UiTheme.load()
 
    if self.display_direction == "horizontal" then
-      for i, button in ipairs(self.buttons) do
-         button:relayout(self.x + (i-1) * self.button_width, self.y, self.button_width, self.button_height)
+      for i, button in ipairs(self.children) do
+         button:relayout(self.x + (i-1) * self.child_width, self.y, self.child_width, self.child_height)
       end
    else
-      for i, button in ipairs(self.buttons) do
-         button:relayout(self.x, self.y + (i-1) * self.button_height, self.button_width, self.button_height)
+      for i, button in ipairs(self.children) do
+         button:relayout(self.x, self.y + (i-1) * self.child_height, self.child_width, self.child_height)
       end
    end
 end
 
 function UiMouseMenu:draw()
-   for _, button in ipairs(self.buttons) do
+   for _, button in ipairs(self.children) do
       button:draw()
    end
 end
 
 function UiMouseMenu:update(dt)
-   for _, button in ipairs(self.buttons) do
+   for _, button in ipairs(self.children) do
       button:update(dt)
    end
 end

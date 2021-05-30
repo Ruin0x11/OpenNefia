@@ -1,10 +1,16 @@
+local IUiMouseElement = require("mod.mouse_ui.api.gui.IUiMouseElement")
 local IMouseElement = require("api.gui.IMouseElement")
 
-return class.interface("IUiMouseButton", {
-                          get_minimum_width = "function",
-                          get_minimum_height = "function",
+local IUiMouseButton = class.interface("IUiMouseButton", {
                           is_pressed = "function",
                           is_enabled = "function",
                           set_pressed = "function",
                           set_enabled = "function",
-                                         }, IMouseElement)
+                       },
+                       {IUiMouseElement, IMouseElement})
+
+function IUiMouseButton:get_mouse_elements(recursive)
+   return {}
+end
+
+return IUiMouseButton

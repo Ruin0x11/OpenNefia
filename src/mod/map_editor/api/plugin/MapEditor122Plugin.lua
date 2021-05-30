@@ -1,7 +1,8 @@
 local FuzzyFinderPrompt = require("mod.tools.api.FuzzyFinderPrompt")
 local Fs = require("api.Fs")
 local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
-local MouseUi = require("mod.mouse_ui.api.MouseUi")
+local UiMouseMenu = require("mod.mouse_ui.api.gui.UiMouseMenu")
+local UiMouseButton = require("mod.mouse_ui.api.gui.UiMouseButton")
 
 local IMapEditorPlugin = require("mod.map_editor.api.IMapEditorPlugin")
 local UiMouseMenuButton = require("mod.mouse_ui.api.gui.UiMouseMenuButton")
@@ -12,10 +13,12 @@ function MapEditor122Plugin:init()
 end
 
 function MapEditor122Plugin:on_install(map_editor)
-   local menu = MouseUi.make_mouse_menu {
-      { text = "Load...", cb = function() self:act_load(map_editor) end },
+   local menu = UiMouseMenu:new {
+      children = {
+         UiMouseButton:new { text = "Load...", callback = function() self:act_load(map_editor) end },
+      }
    }
-   local menu_button = UiMouseMenuButton:new("1.22", "tools.122", menu)
+   local menu_button = UiMouseMenuButton:new { text = "1.22", id = "tools.122", menu = menu }
    map_editor.toolbar:find_menu("menu_plugin"):add_button(menu_button)
 end
 

@@ -2,7 +2,8 @@ local Input = require("api.Input")
 local Layout = require("mod.tools.api.Layout")
 local WaveFunctionMap = require("mod.wfc.api.WaveFunctionMap")
 local FuzzyFinderPrompt = require("mod.tools.api.FuzzyFinderPrompt")
-local MouseUi = require("mod.mouse_ui.api.MouseUi")
+local UiMouseMenu = require("mod.mouse_ui.api.gui.UiMouseMenu")
+local UiMouseButton = require("mod.mouse_ui.api.gui.UiMouseButton")
 
 local IMapEditorPlugin = require("mod.map_editor.api.IMapEditorPlugin")
 local UiMouseMenuButton = require("mod.mouse_ui.api.gui.UiMouseMenuButton")
@@ -15,11 +16,13 @@ function MapEditorWfcPlugin:init()
 end
 
 function MapEditorWfcPlugin:on_install(map_editor)
-   local menu = MouseUi.make_mouse_menu {
-      { text = "Generate...", cb = function() self:act_generate(map_editor) end },
-      { text = "Template...", cb = function() self:act_template(map_editor) end }
+   local menu = UiMouseMenu:new {
+      children = {
+         UiMouseButton:new { text = "Generate...", callback = function() self:act_generate(map_editor) end },
+         UiMouseButton:new { text = "Template...", callback = function() self:act_template(map_editor) end }
+      }
    }
-   local menu_button = UiMouseMenuButton:new("WFC", "tools.wfc", menu)
+   local menu_button = UiMouseMenuButton:new { text = "WFC", id = "tools.wfc", menu = menu }
    map_editor.toolbar:find_menu("menu_plugin"):add_button(menu_button)
 end
 
