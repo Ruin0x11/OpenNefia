@@ -98,7 +98,9 @@ function MapRenderer:draw()
 end
 
 function MapRenderer:update(dt)
-   self.renderer:update(self.map, dt)
+   if self.map then
+      self.renderer:update(self.map, dt)
+   end
 end
 
 return MapRenderer

@@ -21,6 +21,14 @@ function UiMouseButton:relayout(x, y, width, height)
    self.t = UiTheme.load()
 end
 
+function UiMouseButton:get_minimum_width()
+   return self.text:text_width() + 6
+end
+
+function UiMouseButton:get_minimum_height()
+   return self.text:text_height() + 6
+end
+
 function UiMouseButton:is_mouse_region_enabled()
    return self.enabled
 end
@@ -28,16 +36,20 @@ end
 function UiMouseButton:on_mouse_pressed(x, y, button)
    if button == 1 then
       self.pressed = true
+      return true
    end
+   return false
 end
 
 function UiMouseButton:on_mouse_released(x, y, button)
-   local run = self.pressed and button == 1 and self:is_mouse_intersecting(x, y)
+   local run = button == 1 and self:is_mouse_intersecting(x, y)
    self.pressed = false
 
-   if run and self.callback and self.enabled then
+   if run and self.callback then
       self.callback(x, y, button)
+      return true
    end
+   return false
 end
 
 function UiMouseButton:is_pressed()

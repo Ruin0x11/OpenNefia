@@ -6,13 +6,16 @@ local IMouseElementProvider = require("api.gui.IMouseElementProvider")
 local UiMouseMenu = class.class("UiMouseMenu", {IUiElement, IMouseElementProvider})
 
 function UiMouseMenu:init(buttons, display_direction, button_width, button_height)
+   self.button_width = button_width or 96
+   self.button_height = button_height or 48
+
    for _, button in ipairs(buttons) do
       assert(class.is_an(IUiMouseButton, button))
+      self.button_width = math.max(self.button_width, button:get_minimum_width())
+      self.button_height = math.max(self.button_height, button:get_minimum_height())
    end
    self.buttons = buttons
    self.display_direction = display_direction or "vertical"
-   self.button_width = button_width or 96
-   self.button_height = button_height or 48
 end
 
 function UiMouseMenu:get_mouse_elements(recursive)

@@ -25,6 +25,14 @@ function UiMouseMenuButton:get_mouse_elements(recursive)
    return {}
 end
 
+function UiMouseMenuButton:get_minimum_width()
+   return self.text:text_width() + 6
+end
+
+function UiMouseMenuButton:get_minimum_height()
+   return self.text:text_height() + 6
+end
+
 function UiMouseMenuButton:relayout(x, y, width, height)
    self.x = x
    self.y = y
@@ -61,10 +69,13 @@ end
 function UiMouseMenuButton:on_mouse_pressed(x, y, button)
    if button == 1 then
       self:set_pressed(not self.pressed)
+      return true
    end
+   return false
 end
 
 function UiMouseMenuButton:on_mouse_released(x, y, button)
+   return true
 end
 
 function UiMouseMenuButton:is_mouse_region_enabled()
