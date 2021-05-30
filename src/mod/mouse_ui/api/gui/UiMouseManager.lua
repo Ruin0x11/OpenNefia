@@ -15,18 +15,24 @@ local UiMouseManager = class.class("UiMouseManager", {IInput, IMouseElementProvi
 UiMouseManager:delegate("input", IInput)
 
 function UiMouseManager:init(elements, forwards)
+   elements = elements or {}
    self.forwards = forwards or {}
-   self.elements = elements or {}
 
-   for _, element in ipairs(self.elements) do
-      assert(class.is_an(IMouseElement, element) or class.is_an(IMouseElementProvider, element))
-   end
    for _, forward in ipairs(self.forwards) do
       assert(class.is_an(IInput, forward))
    end
 
    self.input = InputHandler:new()
    self.input:bind_mouse(self:make_mousemap())
+
+   self:set_elements(elements)
+end
+
+function UiMouseManager:set_elements(elements)
+   for _, element in ipairs(elements) do
+      assert(class.is_an(IMouseElement, element) or class.is_an(IMouseElementProvider, element))
+   end
+   self.elements = elements
    self:_update_forwards()
 end
 

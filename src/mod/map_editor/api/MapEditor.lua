@@ -7,7 +7,6 @@ local Input = require("api.Input")
 local SaveFs = require("api.SaveFs")
 local Fs = require("api.Fs")
 local MapSerial = require("mod.tools.api.MapSerial")
-local MouseUi = require("mod.mouse_ui.api.MouseUi")
 
 local MapRenderer = require("api.gui.MapRenderer")
 local IUiLayer = require("api.gui.IUiLayer")
@@ -20,6 +19,7 @@ local MapEditTileList = require("mod.elona.api.gui.MapEditTileList")
 local UiMouseMenu = require("mod.mouse_ui.api.gui.UiMouseMenu")
 local UiMouseManager = require("mod.mouse_ui.api.gui.UiMouseManager")
 local FuzzyFinderPrompt = require("mod.tools.api.FuzzyFinderPrompt")
+local UiMouseMenuButton = require("mod.mouse_ui.api.gui.UiMouseMenuButton")
 
 local MapEditor = class.class("MapEditor", IUiLayer)
 
@@ -28,15 +28,15 @@ MapEditor:delegate("input", IInput)
 function MapEditor:init(maps)
    self.update_cursor = true
 
-   local menu = {
-      { text = "Pick tile...", cb = function() self:pick_from_tile_list() end },
-      { text = "Test1", cb = function() Log.info("Dood") end },
-      { text = "Test2", cb = function() Log.warn("Dood") end },
-      { text = "Test3", cb = function() Log.error("Dood") end },
-      { text = "Test4", cb = function() Log.debug("Dood") end },
+   self.mouse_menu = UiMouseMenu:new {
+      children = {
+         UiMouseButton:new { text = "Pick tile...", callback = function() self:pick_from_tile_list() end },
+         UiMouseButton:new { text = "Test1", callback = function() Log.info("Dood") end },
+         UiMouseButton:new { text = "Test2", callback = function() Log.warn("Dood") end },
+         UiMouseButton:new { text = "Test3", callback = function() Log.error("Dood") end },
+         UiMouseButton:new { text = "Test4", callback = function() Log.debug("Dood") end },
+      }
    }
-
-   self.mouse_menu = MouseUi.make_mouse_menu(menu)
    self.menu_x = 0
    self.menu_y = 0
    self.menu_shown = false
@@ -61,20 +61,27 @@ function MapEditor:init(maps)
    self.pan_x = 0
    self.pan_y = 0
 
-   self.toolbar = MouseUi.make_toolbar {
-      { text = "File", id = "menu_file", menu =
-          {
-              { text = "New...", cb = function() self:act_new() end },
-              { text = "Open...", cb = function() self:act_open() end },
-              { text = "Save", cb = function() self:act_save() end },
-              { text = "Save As...", cb = function() self:act_save_as() end },
-              { text = "Rename...", cb = function() self:act_rename() end },
-              { text = "Close", cb = function() self:act_close() end },
-              { text = "Quit", cb = function() self:act_quit() end },
-          }
-      },
-      { text = "Switch", id = "menu_switch", menu = {} },
-      { text = "Plugin", id = "menu_plugin", menu = {} },
+   self.toolbar = UiMouseMenu:new {
+      display_direction = "horizontal",
+      child_width = 96,
+      child_height = 32,
+      children = {
+         UiMouseMenuButton:new { text = "File", id = "menu_file", display_direction = "vertical", menu =
+              UiMouseMenu:new {
+                  children = {
+                     UiMouseButton:new { text = "New...", callback = function() self:act_new() end },
+                     UiMouseButton:new { text = "Open...", callback = function() self:act_open() end },
+                     UiMouseButton:new { text = "Save", callback = function() self:act_save() end },
+                     UiMouseButton:new { text = "Save As...", callback = function() self:act_save_as() end },
+                     UiMouseButton:new { text = "Rename...", callback = function() self:act_rename() end },
+                     UiMouseButton:new { text = "Close", callback = function() self:act_close() end },
+                     UiMouseButton:new { text = "Quit", callback = function() self:act_quit() end },
+                  }
+              }
+         },
+         UiMouseMenuButton:new { text = "Switch", id = "menu_switch", display_direction = "vertical" },
+         UiMouseMenuButton:new { text = "Plugin", id = "menu_plugin", display_direction = "vertical" },
+      }
    }
 
    self.plugins = {}
@@ -120,17 +127,17 @@ function MapEditor:make_keymap()
       east = function() self:pan(self.renderer_offset_delta, 0) end,
       west = function() self:pan(-self.renderer_offset_delta, 0) end,
 
-      ["map_editor.map_editor_new"] = function() self:act_new() end,
-      ["map_editor.map_editor_open"] = function() self:act_open() end,
-      ["map_editor.map_editor_save"] = function() self:act_save() end,
-      ["map_editor.map_editor_save_as"] = function() self:act_save_as() end,
-      ["map_editor.map_editor_rename"] = function() self:act_rename() end,
-      ["map_editor.map_editor_close"] = function() self:act_close() end,
-      ["map_editor.map_editor_quit"] = function() self:act_quit() end,
+      ["map_editor.new"] = function() self:act_new() end,
+      ["map_editor.open"] = function() self:act_open() end,
+      ["map_editor.save"] = function() self:act_save() end,
+      ["map_editor.save_as"] = function() self:act_save_as() end,
+      ["map_editor.rename"] = function() self:act_rename() end,
+      ["map_editor.close"] = function() self:act_close() end,
+      ["map_editor.quit"] = function() self:act_quit() end,
    }
 
-   for i = 1, 9 do
-      keymap[("map_editor.map_editor_switch_map_%d"):format(i)] = function() self:switch_to_map(i) end
+   for i = 1, 10 do
+      keymap[("map_editor.switch_map_%d"):format(i)] = function() self:switch_to_map(i) end
    end
 
    return keymap
@@ -231,7 +238,9 @@ end
 
 function MapEditor:quit()
    if self:cancel() then
-      self.quitting = true
+      if Input.yes_no() then
+         self.quitting = true
+      end
    end
 end
 
@@ -261,15 +270,15 @@ end
 
 function MapEditor:_refresh_switcher()
    local map = function(i, map)
-      return UiMouseButton:new(
-         ("(%d) %s"):format(i, map.map.name),
-         function() self:switch_to_map(i) end
-      )
+      return UiMouseButton:new {
+         text = ("(%d) %s"):format(i, map.map.name),
+         callback = function() self:switch_to_map(i) end
+      }
    end
 
    local buttons = fun.iter(self.opened_maps):enumerate():map(map):to_list()
-   local menu = UiMouseMenu:new(buttons)
-   self.toolbar.buttons[2]:set_menu(menu)
+   local menu = UiMouseMenu:new { children = buttons }
+   self.toolbar.children[2]:set_menu(menu)
    self.input:bind_mouse_elements(menu:get_mouse_elements(true))
 
    if self.x then
@@ -380,11 +389,15 @@ function MapEditor:flood_fill(tx, ty, tile_id)
 end
 
 function MapEditor:add_map(map)
+   local tw, th = Draw.get_coords():get_size()
+   local offset_x = Draw.get_width() / 2 - (tw * map:width()) / 2
+   local offset_y = Draw.get_height() / 2 - (th * map:height()) / 2
+
    local opened_map = {
       map = map,
       modified = false,
-      offset_x = 0,
-      offset_y = 0
+      offset_x = offset_x,
+      offset_y = offset_y
    }
 
    table.insert(self.opened_maps, opened_map)
