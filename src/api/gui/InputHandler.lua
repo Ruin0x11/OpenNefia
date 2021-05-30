@@ -1,8 +1,9 @@
 local IInput = require("api.gui.IInput")
+local IInputHandler = require("api.gui.IInputHandler")
 local KeyHandler = require("api.gui.KeyHandler")
 local MouseHandler = require("api.gui.MouseHandler")
 
-local InputHandler = class.class("InputHandler", IInput)
+local InputHandler = class.class("InputHandler", {IInput, IInputHandler})
 
 InputHandler:delegate("keys", {
                          "bind_keys",
@@ -22,7 +23,9 @@ InputHandler:delegate("mouse", {
                          "receive_mouse_movement",
                          "receive_mouse_button",
                          "run_mouse_action",
-                         "run_mouse_movement_action"
+                         "run_mouse_movement_action",
+                         "bind_mouse_elements",
+                         "unbind_mouse_elements"
 })
 
 function InputHandler:init(keys)

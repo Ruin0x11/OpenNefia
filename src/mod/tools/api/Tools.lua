@@ -1137,4 +1137,9 @@ function Tools.find_release_name(starting_letter)
    return fun.tabulate(Text.random_title):take(10000):filter(filter)
 end
 
+function Tools.serialized_size_kbs(t)
+   local binary = SaveFs.serialize(t)
+   return string.len(binary) / 1024
+end
+
 return Tools

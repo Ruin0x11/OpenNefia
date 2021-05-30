@@ -7,5 +7,7 @@ return class.interface("IMouseInput",
                     run_mouse_action = "function",
                     run_mouse_movement_action = "function",
                     bind_mouse = "function",
+                    bind_mouse_elements = "function",
+                    unbind_mouse_elements = "function"
                  },
                  IInputHandler)
