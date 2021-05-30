@@ -4,14 +4,16 @@ local IInput = require("api.gui.IInput")
 local config = require("internal.config")
 local IHud = require("api.gui.hud.IHud")
 local ILayer = require("api.gui.ILayer")
+local IMouseElementProvider = require("api.gui.IMouseElementProvider")
 
 local draw = require("internal.draw")
 
 local IUiLayer = class.interface("IUiLayer",
                                  {
                                     make_keymap = "function",
+                                    make_mousemap = "function",
                                  },
-                                 { ILayer, IInput })
+                                 { ILayer, IInput, IMouseElementProvider })
 
 local function trimmed_traceback(err, regex)
    local lines = {}
@@ -151,6 +153,14 @@ function IUiLayer:is_querying()
 end
 
 function IUiLayer:on_query()
+end
+
+function IUiLayer:make_mousemap()
+   return {}
+end
+
+function IUiLayer:get_mouse_elements(recursive)
+   return {}
 end
 
 return IUiLayer

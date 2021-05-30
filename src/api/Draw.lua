@@ -209,7 +209,7 @@ function Draw.line(x1, y1, x2, y2, color)
    if color then
       Draw.set_color(color[1], color[2], color[3], color[4])
    end
-   love.graphics.line(x1, y1 + 1, x2, y2 + 1)
+   love.graphics.line(x1, y1, x2, y2)
 end
 
 --- Returns the width of the provided text using the current font or a
