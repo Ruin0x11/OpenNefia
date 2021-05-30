@@ -8,8 +8,9 @@ local UiTheme = require("api.gui.UiTheme")
 
 local UiMouseMenuButton = class.class("UiMouseMenuButton", {IUiMouseButton, IMouseElementProvider})
 
-function UiMouseMenuButton:init(text, menu, display_direction)
+function UiMouseMenuButton:init(text, id, menu, display_direction)
    self.text = UiShadowedText:new(text)
+   self.id = id
    self.pressed = false
    self.enabled = true
    self:set_menu(menu)
@@ -31,6 +32,14 @@ end
 
 function UiMouseMenuButton:get_minimum_height()
    return self.text:text_height() + 6
+end
+
+function UiMouseMenuButton:add_button(button)
+   if self.menu == nil then
+      self.menu = UiMouseMenu:new({})
+   end
+   self.menu:add_button(button)
+   button._parent = self
 end
 
 function UiMouseMenuButton:relayout(x, y, width, height)

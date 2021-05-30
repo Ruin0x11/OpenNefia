@@ -64,7 +64,9 @@ function tile_layer:update(map, dt, screen_updated)
       end
    end
 
-   self.tile_batch.shadow = Map.calc_shadow(save.base.date.hour, map)
+   -- The shadow can only be applied once (inside tile_overhang_layer), because
+   -- it's a screen-global effect.
+   self.tile_batch.shadow = {0, 0, 0}
    self.tile_batch.updated = true
 end
 

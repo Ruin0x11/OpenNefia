@@ -352,10 +352,13 @@ function Ui.make_mouse_menu(spec, display_direction, button_width, button_height
       if entry.cb then
          element = UiMouseButton:new(text, entry.cb)
       elseif entry.menu then
+         if entry.id == nil then
+            error("Menu entry " .. i .. " missing 'id' property")
+         end
          local l_button_width = entry.button_width
          local l_button_height = entry.button_height
          local l_display_direction = entry.display_direction or "horizontal"
-         element = UiMouseMenuButton:new(text, Ui.make_mouse_menu(entry.menu, "vertical", l_button_width, l_button_height), l_display_direction)
+         element = UiMouseMenuButton:new(text, entry.id, Ui.make_mouse_menu(entry.menu, "vertical", l_button_width, l_button_height), l_display_direction)
       else
          element = UiMouseButton:new(text)
       end

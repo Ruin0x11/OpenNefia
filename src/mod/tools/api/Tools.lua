@@ -35,6 +35,7 @@ local IFeatLockedHatch = require("mod.elona.api.aspect.feat.IFeatLockedHatch")
 local Text = require("mod.elona.api.Text")
 local I18N = require("api.I18N")
 local DrawLayerSpec = require("api.draw.DrawLayerSpec")
+local MapSerial = require("mod.tools.api.MapSerial")
 
 local Tools = {}
 
@@ -1140,6 +1141,11 @@ end
 function Tools.serialized_size_kbs(t)
    local binary = SaveFs.serialize(t)
    return string.len(binary) / 1024
+end
+
+function Tools.load_onmap(path)
+   local ok, map = assert(SaveFs.read(path, "global"))
+   return MapSerial.serial_to_map(map)
 end
 
 return Tools

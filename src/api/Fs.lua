@@ -10,6 +10,8 @@ Fs.filename_part = fs.filename_part
 Fs.extension_part = fs.extension_part
 Fs.convert_to_require_path = paths.convert_to_require_path
 Fs.get_working_directory = fs.get_working_directory
+Fs.get_save_directory = fs.get_save_directory
+Fs.sanitize = fs.sanitize
 
 function Fs.open(filepath, mode)
    assert(mode, "mode is required")
