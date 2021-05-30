@@ -23,6 +23,7 @@ InputHandler:delegate("mouse", {
                          "receive_mouse_movement",
                          "receive_mouse_button",
                          "run_mouse_action",
+                         "run_mouse_element_action",
                          "run_mouse_movement_action",
                          "bind_mouse_elements",
                          "unbind_mouse_elements"

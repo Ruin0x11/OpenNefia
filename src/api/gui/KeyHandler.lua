@@ -57,7 +57,7 @@ function KeyHandler:receive_key(key, pressed, is_text, is_repeat)
 end
 
 function KeyHandler:forward_to(handlers)
-   if not handlers[1] then
+   if not handlers[1] and class.is_an(IKeyInput, handlers) then
       handlers = { handlers }
    end
    for _, handler in ipairs(handlers) do

@@ -122,6 +122,7 @@ function UiMouseMenuButton:set_menu(menu)
       assert(class.is_an(UiMouseMenu, menu))
       for _, ui_button in menu:iter_mouse_elements(false)  do
          ui_button._parent = self
+         ui_button.enabled = self.pressed
       end
    end
    self.menu = menu

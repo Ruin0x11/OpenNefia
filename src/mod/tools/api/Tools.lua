@@ -1148,4 +1148,8 @@ function Tools.load_onmap(path)
    return MapSerial.serial_to_map(map)
 end
 
+function Tools.id_list(_type)
+   return inspect(data[_type]:iter():extract("_id"):into_sorted():to_list(), { always_tabify = true })
+end
+
 return Tools
