@@ -24,19 +24,20 @@ function MouseHandler:receive_mouse_button(x, y, button, pressed)
          if region:is_mouse_intersecting(x, y, button, pressed) and region:is_mouse_region_enabled() then
             local other_region = self.active_regions[button]
             if other_region then
-               other_region:on_mouse_released(x, y, button)
+               self.regions_this_frame[other_region] = {x = x, y = y, button = button, pressed = false}
             end
 
-            region:on_mouse_pressed(x, y, button)
             self.active_regions[button] = region
             self.regions_this_frame[region] = {x = x, y = y, button = button, pressed = true}
+         else
+            self.regions_this_frame[region] = nil
          end
       end
    else
       local region = self.active_regions[button]
       if region then
-         region:on_mouse_released(x, y, button)
          self.regions_this_frame[region] = {x = x, y = y, button = button, pressed = false}
+         self.active_regions[button] = nil
       end
    end
 end
@@ -102,12 +103,27 @@ function MouseHandler:run_mouse_action(button, x, y, pressed)
 end
 
 function MouseHandler:run_mouse_element_action(element, pressed, x, y, button)
+   local ran = false
+
    local func = self.bindings["element"]
    if func then
       func(element, pressed, x, y, button)
+      ran = true
    elseif self.forwards then
       --self.forwards:run_mouse_element_action(element, pressed, x, y, button)
    end
+
+   if pressed then
+      if element:on_mouse_pressed(x, y, button) then
+         ran = true
+      end
+   else
+      if element:on_mouse_released(x, y, button) then
+         ran = true
+      end
+   end
+
+   return ran
 end
 
 function MouseHandler:run_mouse_movement_action(x, y, dx, dy)
@@ -120,11 +136,14 @@ function MouseHandler:run_mouse_movement_action(x, y, dx, dy)
 end
 
 function MouseHandler:run_actions()
-   for k, v in pairs(self.this_frame) do
-      self:run_mouse_action(k, v.x, v.y, v.pressed)
-   end
+   local ran = false
    for element, v in pairs(self.regions_this_frame) do
-      self:run_mouse_element_action(element, v.pressed, v.x, v.y, v.button)
+      ran = ran or self:run_mouse_element_action(element, v.pressed, v.x, v.y, v.button)
+   end
+   if not ran then
+      for k, v in pairs(self.this_frame) do
+         self:run_mouse_action(k, v.x, v.y, v.pressed)
+      end
    end
 
    if self.movement then

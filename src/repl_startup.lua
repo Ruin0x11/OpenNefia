@@ -24,6 +24,7 @@ MapEdit = require("mod.elona.api.MapEdit")
 UiTestPrompt = require("mod.tools.api.UiTestPrompt")
 Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 MapViewer = require("mod.tools.api.MapViewer")
+MapEditor = require("mod.tools.api.MapEditor")
 
 Log.set_level("info")
 
