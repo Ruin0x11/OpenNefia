@@ -1,10 +1,10 @@
 local Input = require("api.Input")
-local Ui = require("api.Ui")
 local FuzzyFinderPrompt = require("mod.tools.api.FuzzyFinderPrompt")
 local InstancedArea = require("api.InstancedArea")
+local MouseUi = require("mod.mouse_ui.api.MouseUi")
 
-local IMapEditorPlugin = require("mod.tools.api.IMapEditorPlugin")
-local UiMouseMenuButton = require("api.gui.UiMouseMenuButton")
+local IMapEditorPlugin = require("mod.map_editor.api.IMapEditorPlugin")
+local UiMouseMenuButton = require("mod.mouse_ui.api.gui.UiMouseMenuButton")
 
 local MapEditorNefiaPlugin = class.class("MapEditorNefiaPlugin", IMapEditorPlugin)
 
@@ -13,7 +13,7 @@ function MapEditorNefiaPlugin:init()
 end
 
 function MapEditorNefiaPlugin:on_install(map_editor)
-   local menu = Ui.make_mouse_menu {
+   local menu = MouseUi.make_mouse_menu {
       { text = "Generate...", cb = function() self:act_generate(map_editor) end },
    }
    local menu_button = UiMouseMenuButton:new("Nefia", "tools.nefia", menu)

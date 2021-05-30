@@ -1,6 +1,6 @@
 local Draw = require("api.Draw")
 
-local IUiMouseButton = require("api.gui.IUiMouseButton")
+local IUiMouseButton = require("mod.mouse_ui.api.gui.IUiMouseButton")
 local UiShadowedText = require("api.gui.UiShadowedText")
 local UiTheme = require("api.gui.UiTheme")
 

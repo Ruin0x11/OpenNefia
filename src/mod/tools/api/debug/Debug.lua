@@ -3,7 +3,7 @@ local Gui = require("api.Gui")
 local Env = require("api.Env")
 local DebugStatsHook = require("mod.tools.api.debug.DebugStatsHook")
 local FuzzyFinderPrompt = require("mod.tools.api.FuzzyFinderPrompt")
-local MapEditor = require("mod.tools.api.MapEditor")
+local MapEditor = require("mod.map_editor.api.MapEditor")
 
 local Debug = {}
 

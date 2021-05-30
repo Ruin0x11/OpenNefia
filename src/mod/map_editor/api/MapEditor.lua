@@ -1,4 +1,3 @@
-local Ui = require("api.Ui")
 local Gui = require("api.Gui")
 local Log = require("api.Log")
 local Draw = require("api.Draw")
@@ -8,16 +7,17 @@ local Input = require("api.Input")
 local SaveFs = require("api.SaveFs")
 local Fs = require("api.Fs")
 local MapSerial = require("mod.tools.api.MapSerial")
+local MouseUi = require("mod.mouse_ui.api.MouseUi")
 
 local MapRenderer = require("api.gui.MapRenderer")
 local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
 local UiTheme = require("api.gui.UiTheme")
 local InputHandler = require("api.gui.InputHandler")
-local UiMouseButton = require("api.gui.UiMouseButton")
-local MapEditorTileWidget = require("mod.tools.api.MapEditorTileWidget")
+local UiMouseButton = require("mod.mouse_ui.api.gui.UiMouseButton")
+local MapEditorTileWidget = require("mod.map_editor.api.MapEditorTileWidget")
 local MapEditTileList = require("mod.elona.api.gui.MapEditTileList")
-local UiMouseMenu = require("api.gui.UiMouseMenu")
+local UiMouseMenu = require("mod.mouse_ui.api.gui.UiMouseMenu")
 local FuzzyFinderPrompt = require("mod.tools.api.FuzzyFinderPrompt")
 
 local MapEditor = class.class("MapEditor", IUiLayer)
@@ -35,7 +35,7 @@ function MapEditor:init(maps)
       { text = "Test4", cb = function() Log.debug("Dood") end },
    }
 
-   self.mouse_menu = Ui.make_mouse_menu(menu)
+   self.mouse_menu = MouseUi.make_mouse_menu(menu)
    self.menu_x = 0
    self.menu_y = 0
    self.menu_shown = false
@@ -60,7 +60,7 @@ function MapEditor:init(maps)
    self.pan_x = 0
    self.pan_y = 0
 
-   self.toolbar = Ui.make_toolbar {
+   self.toolbar = MouseUi.make_toolbar {
       { text = "File", id = "menu_file", menu =
           {
               { text = "New...", cb = function() self:act_new() end },
@@ -77,7 +77,7 @@ function MapEditor:init(maps)
    }
 
    self.plugins = {}
-   for _, proto in data["tools.map_editor_plugin"]:iter() do
+   for _, proto in data["map_editor.plugin"]:iter() do
       local klass = proto.impl
       local plugin = klass:new()
       plugin:on_install(self)
@@ -114,17 +114,17 @@ function MapEditor:make_keymap()
       west = function() self:pan(-self.renderer_offset_delta, 0) end,
       repl_copy = function() self:pick_from_tile_list() end,
 
-      ["tools.map_editor_new"] = function() self:act_new() end,
-      ["tools.map_editor_open"] = function() self:act_open() end,
-      ["tools.map_editor_save"] = function() self:act_save() end,
-      ["tools.map_editor_save_as"] = function() self:act_save_as() end,
-      ["tools.map_editor_rename"] = function() self:act_rename() end,
-      ["tools.map_editor_close"] = function() self:act_close() end,
-      ["tools.map_editor_quit"] = function() self:act_quit() end,
+      ["map_editor.map_editor_new"] = function() self:act_new() end,
+      ["map_editor.map_editor_open"] = function() self:act_open() end,
+      ["map_editor.map_editor_save"] = function() self:act_save() end,
+      ["map_editor.map_editor_save_as"] = function() self:act_save_as() end,
+      ["map_editor.map_editor_rename"] = function() self:act_rename() end,
+      ["map_editor.map_editor_close"] = function() self:act_close() end,
+      ["map_editor.map_editor_quit"] = function() self:act_quit() end,
    }
 
    for i = 1, 9 do
-      keymap[("tools.map_editor_switch_map_%d"):format(i)] = function() self:switch_to_map(i) end
+      keymap[("map_editor.map_editor_switch_map_%d"):format(i)] = function() self:switch_to_map(i) end
    end
 
    return keymap
@@ -232,10 +232,6 @@ end
 
 function MapEditor:on_query()
    Gui.play_sound("base.pop2")
-
-   if #self.opened_maps == 0 then
-      self:act_new(20, 20)
-   end
 end
 
 function MapEditor:cancel()
@@ -417,6 +413,45 @@ function MapEditor:get_current_map()
    return self.current_map
 end
 
+function MapEditor.serial_to_editor(onmap)
+   local map = MapSerial.build_geometry(onmap)
+
+   return {
+      map = map,
+      modified = false,
+      offset_x = 0,
+      offset_y = 0
+   }
+end
+
+function MapEditor.editor_to_serial(opened_map)
+   local width = opened_map.map:width()
+   local height = opened_map.map:height()
+
+   local tiles = {}
+   local tileset = {}
+   local tile_index = 0
+   local seen = table.set {}
+
+   for _, x, y, tile in opened_map.map:iter_tiles() do
+      local index = seen[tile._id]
+      if index == nil then
+         tile_index = tile_index + 1
+         seen[tile._id] = tile_index
+         tileset[tile_index] = tile._id
+         index = tile_index
+      end
+      tiles[#tiles+1] = index
+   end
+
+   return {
+      width = width,
+      height = height,
+      tiles = tiles,
+      tileset = tileset
+   }
+end
+
 --
 -- Editor Actions
 --
@@ -461,7 +496,7 @@ function MapEditor:act_open()
    end
 
    raw = SaveFs.deserialize(raw)
-   local opened_map = MapSerial.serial_to_editor(raw)
+   local opened_map = MapEditor.serial_to_editor(raw)
    opened_map.filepath = filepath
 
    table.insert(self.opened_maps, opened_map)
@@ -478,7 +513,7 @@ function MapEditor:act_save()
       return self:act_save_as()
    end
 
-   local raw = MapSerial.editor_to_serial(self.current_map)
+   local raw = MapEditor.editor_to_serial(self.current_map)
    assert(SaveFs.write(self.current_map.filepath, raw, "global"))
 end
 
@@ -494,7 +529,7 @@ function MapEditor:act_save_as()
    local filepath = Fs.join(dir, ("%s.onmap"):format(filename))
    self.current_map.filepath = filepath
 
-   local raw = MapSerial.editor_to_serial(self.current_map)
+   local raw = MapEditor.editor_to_serial(self.current_map)
    assert(SaveFs.write(self.current_map.filepath, raw, "global"))
 end
 
@@ -578,11 +613,6 @@ function MapEditor:draw()
    Draw.set_color(255, 255, 255)
    self.tile_widget:draw()
 
-   if self.menu_shown then
-      self.mouse_menu:draw()
-   end
-   self.toolbar:draw()
-
    Draw.set_font(14)
    Draw.text_shadowed(("(%d, %d)"):format(self.target_tile_x, self.target_tile_y), self.x + 5, self.y + self.height - 5 - Draw.text_height())
 
@@ -590,6 +620,11 @@ function MapEditor:draw()
       local info = ("Map: %s (%d x %d)"):format(self.current_map.map.name, self.current_map.map:width(), self.current_map.map:height())
       Draw.text_shadowed(info, self.x + self.width / 2 - Draw.text_width(info) / 2, self.y + 50 - Draw.text_height() / 2)
    end
+
+   if self.menu_shown then
+      self.mouse_menu:draw()
+   end
+   self.toolbar:draw()
 end
 
 function MapEditor:update(dt)
