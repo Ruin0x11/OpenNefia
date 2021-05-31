@@ -36,6 +36,7 @@ local Text = require("mod.elona.api.Text")
 local I18N = require("api.I18N")
 local DrawLayerSpec = require("api.draw.DrawLayerSpec")
 local MapSerial = require("mod.tools.api.MapSerial")
+local Codegen = require("api.Codegen")
 
 local Tools = {}
 
@@ -1144,8 +1145,10 @@ function Tools.serialized_size_kbs(t)
 end
 
 function Tools.load_onmap(path)
-   local ok, map = assert(SaveFs.read(path, "global"))
-   return MapSerial.serial_to_map(map)
+   local ok, code = assert(SaveFs.read_raw(path, "global"))
+   local chunk, err = assert(Codegen.loadstring(code))
+   local onmap = chunk()
+   return MapSerial.serial_to_map(onmap)
 end
 
 function Tools.id_list(_type)
