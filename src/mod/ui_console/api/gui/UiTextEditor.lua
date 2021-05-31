@@ -1,6 +1,6 @@
-local Draw = require("api.Draw")
 local TextHandler = require("api.gui.TextHandler")
 local ConsoleConsts = require("mod.ui_console.api.gui.ConsoleConsts")
+local Env = require("api.Env")
 
 local IInput = require("api.gui.IInput")
 local IUiElement = require("api.gui.IUiElement")
@@ -54,6 +54,15 @@ function UiTextEditor:make_keymap()
       end,
       repl_last_char = function()
          self:move_cursor(#self:current_line() - self.cursor_x, 0)
+      end,
+      repl_cut = function()
+         self:cut()
+      end,
+      repl_copy = function()
+         self:copy()
+      end,
+      repl_paste = function()
+         self:paste()
       end,
       text_entered = function(t)
          self:put_char(t)
@@ -109,6 +118,31 @@ function UiTextEditor:move_cursor(dx, dy)
    end
 
    self.frames = 0
+end
+
+function UiTextEditor:paste()
+   local s = Env.clipboard_text()
+   local lines = fun.wrap(fun.dup(string.lines(s))):to_list()
+   for i, line in ipairs(lines) do
+      self:put_char(line)
+      if i < #lines then
+         self:move_cursor(#self:current_line() - self.cursor_x, 0)
+         self:newline()
+      end
+   end
+end
+
+function UiTextEditor:cut()
+   self:copy()
+   self.lines = { "" }
+   self:move_cursor(0, 0)
+   self.con:clear()
+   self.dirty = true
+end
+
+function UiTextEditor:copy()
+   local s = self:merge_lines()
+   Env.set_clipboard_text(s)
 end
 
 function UiTextEditor:put_char(t)
