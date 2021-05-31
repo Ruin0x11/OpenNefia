@@ -13,24 +13,24 @@ local UiMousePadding = require("mod.mouse_ui.api.gui.UiMousePadding")
 local UiMouseSlider = require("mod.mouse_ui.api.gui.UiMouseSlider")
 local UiMouseText = require("mod.mouse_ui.api.gui.UiMouseText")
 
-local MapEditorNewPanel = class.class("MapEditorNewPanel", IUiLayer)
+local MapEditorWfcGeneratePanel = class.class("MapEditorWfcGeneratePanel", IUiLayer)
 
-MapEditorNewPanel:delegate("input", IInput)
+MapEditorWfcGeneratePanel:delegate("input", IInput)
 
-function MapEditorNewPanel:init()
+function MapEditorWfcGeneratePanel:init(width, height)
    self.text_width = UiMouseText:new {}
    self.text_height = UiMouseText:new {}
 
    self.slider_width = UiMouseSlider:new {
-      value = 20,
+      value = width or 60,
       min_value = 1,
-      max_value = 100,
+      max_value = 200,
       on_changed = function(v) self.text_width:set_text(tostring(v)) end
    }
    self.slider_height = UiMouseSlider:new {
-      value = 20,
+      value = height or 60,
       min_value = 1,
-      max_value = 100,
+      max_value = 200,
       on_changed = function(v) self.text_height:set_text(tostring(v)) end
    }
 
@@ -79,22 +79,22 @@ function MapEditorNewPanel:init()
    self.input:forward_to(self.root)
 end
 
-function MapEditorNewPanel:make_keymap()
+function MapEditorWfcGeneratePanel:make_keymap()
    return {
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end,
    }
 end
 
-function MapEditorNewPanel:make_mousemap()
+function MapEditorWfcGeneratePanel:make_mousemap()
    return {}
 end
 
-function MapEditorNewPanel:get_mouse_elements(recursive)
+function MapEditorWfcGeneratePanel:get_mouse_elements(recursive)
    return self.root:get_mouse_elements(recursive)
 end
 
-function MapEditorNewPanel:relayout(x, y, width, height)
+function MapEditorWfcGeneratePanel:relayout(x, y, width, height)
    self.width = 600
    self.height = 400
 
@@ -104,11 +104,11 @@ function MapEditorNewPanel:relayout(x, y, width, height)
    self.root:relayout(self.x, self.y, self.width, self.height)
 end
 
-function MapEditorNewPanel:draw()
+function MapEditorWfcGeneratePanel:draw()
    self.root:draw()
 end
 
-function MapEditorNewPanel:update(dt)
+function MapEditorWfcGeneratePanel:update(dt)
    local canceled = self.canceled
    local finished = self.finished
 
@@ -125,4 +125,4 @@ function MapEditorNewPanel:update(dt)
    end
 end
 
-return MapEditorNewPanel
+return MapEditorWfcGeneratePanel

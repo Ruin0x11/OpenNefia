@@ -4,6 +4,7 @@ local Color = require("mod.extlibs.api.Color")
 local IUiMouseButton = require("mod.mouse_ui.api.gui.IUiMouseButton")
 local UiShadowedText = require("api.gui.UiShadowedText")
 local UiTheme = require("api.gui.UiTheme")
+local UiMouseStyle = require("mod.mouse_ui.api.UiMouseStyle")
 
 local UiMouseButton = class.class("UiMouseButton", IUiMouseButton)
 
@@ -17,8 +18,8 @@ end
 function UiMouseButton:relayout(x, y, width, height)
    self.x = x
    self.y = y
-   self.width = width
-   self.height = height
+   self.width = math.max(width, self:get_minimum_width())
+   self.height = math.max(height, self:get_minimum_height())
    self.t = UiTheme.load()
 
    self.color = {192, 192, 192}
@@ -82,24 +83,7 @@ function UiMouseButton:set_callback(callback)
 end
 
 function UiMouseButton:draw()
-   Draw.set_color(self.color)
-   Draw.filled_rect(self.x, self.y, self.width-1, self.height-1)
-
-   if self.pressed then
-      Draw.set_color(self.color_dark)
-   else
-      Draw.set_color(self.color_light)
-   end
-   Draw.line(self.x, self.y, self.x + self.width, self.y)
-   Draw.line(self.x, self.y, self.x, self.y + self.height)
-
-   if self.pressed then
-      Draw.set_color(self.color_light)
-   else
-      Draw.set_color(self.color_dark)
-   end
-   Draw.line(self.x, self.y + self.height-1, self.x + self.width, self.y + self.height-1)
-   Draw.line(self.x + self.width, self.y, self.x + self.width, self.y + self.height)
+   UiMouseStyle.draw_panel(self.x, self.y, self.width, self.height, 2, self.pressed, self.color, self.color_dark, self.color_light)
 
    local w = self.text:text_width()
    local h = self.text:text_height()

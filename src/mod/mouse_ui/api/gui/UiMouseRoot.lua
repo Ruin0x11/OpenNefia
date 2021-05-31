@@ -1,9 +1,7 @@
-local Ui = require("api.Ui")
 local IInput = require("api.gui.IInput")
 local UiMouseManager = require("mod.mouse_ui.api.gui.UiMouseManager")
 local InputHandler = require("api.gui.InputHandler")
-local UiMousePadding = require("mod.mouse_ui.api.gui.UiMousePadding")
-
+local UiMouseStyle = require("mod.mouse_ui.api.UiMouseStyle")
 local IUiMouseElement = require("mod.mouse_ui.api.gui.IUiMouseElement")
 local UiTheme = require("api.gui.UiTheme")
 
@@ -17,7 +15,7 @@ function UiMouseRoot:init(opts)
    self.input = InputHandler:new()
    self.input:forward_to(self.mouse_manager)
 
-   self.padding = opts.padding or UiMousePadding:new()
+   self.padding = opts.padding or UiMouseStyle.default_padding()
    self:set_child(opts.child)
 end
 
@@ -29,6 +27,14 @@ function UiMouseRoot:set_child(child)
    self.child = child
 
    self.mouse_manager:set_elements { self.child or nil }
+end
+
+function UiMouseRoot:get_minimum_width()
+   return math.max(self.width, self.child and self.child:get_minimum_width() or 0)
+end
+
+function UiMouseRoot:get_minimum_height()
+   return math.max(self.height, self.child and self.child:get_minimum_height() or 0)
 end
 
 function UiMouseRoot:get_mouse_elements(recursive)

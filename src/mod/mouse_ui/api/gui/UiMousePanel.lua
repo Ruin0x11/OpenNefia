@@ -1,14 +1,13 @@
-local Draw = require("api.Draw")
 local Color = require("mod.extlibs.api.Color")
 
-local UiMousePadding = require("mod.mouse_ui.api.gui.UiMousePadding")
 local IUiMouseElement = require("mod.mouse_ui.api.gui.IUiMouseElement")
 local UiTheme = require("api.gui.UiTheme")
+local UiMouseStyle = require("mod.mouse_ui.api.UiMouseStyle")
 
 local UiMousePanel = class.class("UiMousePanel", IUiMouseElement)
 
 function UiMousePanel:init(opts)
-   self.padding = opts.padding or UiMousePadding:new()
+   self.padding = opts.padding or UiMouseStyle.default_padding()
    self:set_child(opts.child)
 end
 
@@ -25,6 +24,14 @@ function UiMousePanel:set_child(child)
       child._parent = self
    end
    self.child = child
+end
+
+function UiMousePanel:get_minimum_width()
+   return math.max(self.width, self.child and self.child:get_minimum_width() or 0)
+end
+
+function UiMousePanel:get_minimum_height()
+   return math.max(self.height, self.child and self.child:get_minimum_height() or 0)
 end
 
 function UiMousePanel:relayout(x, y, width, height)
@@ -44,24 +51,7 @@ function UiMousePanel:relayout(x, y, width, height)
 end
 
 function UiMousePanel:draw()
-   Draw.set_color(self.color)
-   Draw.filled_rect(self.x, self.y, self.width-1, self.height-1)
-
-   if self.pressed then
-      Draw.set_color(self.color_dark)
-   else
-      Draw.set_color(self.color_light)
-   end
-   Draw.line(self.x, self.y, self.x + self.width, self.y)
-   Draw.line(self.x, self.y, self.x, self.y + self.height)
-
-   if self.pressed then
-      Draw.set_color(self.color_light)
-   else
-      Draw.set_color(self.color_dark)
-   end
-   Draw.line(self.x, self.y + self.height-1, self.x + self.width, self.y + self.height-1)
-   Draw.line(self.x + self.width, self.y, self.x + self.width, self.y + self.height)
+   UiMouseStyle.draw_panel(self.x, self.y, self.width, self.height, 2, self.pressed, self.color, self.color_dark, self.color_light)
 
    if self.child then
       self.child:draw()

@@ -43,6 +43,22 @@ function UiMouseMenu:get_mouse_elements(recursive)
    return regions
 end
 
+function UiMouseMenu:get_minimum_width()
+   if self.display_direction == "horizontal" then
+      return math.max(self.min_child_width * #self.children, fun.iter(self.children):map(IUiMouseElement.get_minimum_width):sum())
+   else
+      return self.min_child_width * #self.children
+   end
+end
+
+function UiMouseMenu:get_minimum_height()
+   if self.display_direction == "horizontal" then
+      return self.min_child_height * #self.children
+   else
+      return math.max(self.min_child_height * #self.children, fun.iter(self.children):map(IUiMouseElement.get_minimum_height):sum())
+   end
+end
+
 function UiMouseMenu:find_menu(id)
    for _, button in self:iter_mouse_elements(true) do
       if button.id == id and class.is_an(IMouseElementProvider, button) then

@@ -1,12 +1,14 @@
 local IUiMouseElement = require("mod.mouse_ui.api.gui.IUiMouseElement")
 local UiTheme = require("api.gui.UiTheme")
-local UiMousePadding = require("mod.mouse_ui.api.gui.UiMousePadding")
 local IMouseElement = require("api.gui.IMouseElement")
+local UiMouseStyle = require("mod.mouse_ui.api.UiMouseStyle")
 
 local UiMouseVBox = class.class("UiMouseVBox", IUiMouseElement)
 
 function UiMouseVBox:init(opts)
-   self.padding = opts.padding or UiMousePadding:new()
+   self.min_width = opts.width or 1
+   self.min_height = opts.height or 1
+   self.padding = opts.padding or UiMouseStyle.default_padding()
    self:set_children(opts.children)
 end
 
@@ -31,6 +33,14 @@ function UiMouseVBox:set_children(children)
    self.children = children
 end
 
+function UiMouseVBox:get_minimum_width()
+   return self.min_width
+end
+
+function UiMouseVBox:get_minimum_height()
+   return self.min_height + fun.iter(self.children):map(IUiMouseElement.get_minimum_height):sum()
+end
+
 function UiMouseVBox:relayout(x, y, width, height)
    self.x = x
    self.y = y
@@ -42,10 +52,13 @@ function UiMouseVBox:relayout(x, y, width, height)
    local element_height = self.height / child_count
 
    for i, child in ipairs(self.children) do
-      child:relayout(self.x,
-                     self.y + ((i-1) * element_height),
-                     self.width,
-                     element_height)
+      child:relayout(
+         self.padding:apply(
+            self.x,
+            self.y + ((i-1) * element_height),
+            self.width,
+            element_height)
+      )
    end
 end
 

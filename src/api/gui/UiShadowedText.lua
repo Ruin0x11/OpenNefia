@@ -21,6 +21,7 @@ end
 
 function UiShadowedText:set_data(str)
    Draw.set_font(self.font_width, self.font_style)
+   self._text = str
    self.text = Draw.make_text(str)
    self.width = Draw.text_width(str)
    self.height = Draw.text_height()

@@ -7,6 +7,8 @@ local Input = require("api.Input")
 local SaveFs = require("api.SaveFs")
 local Fs = require("api.Fs")
 local MapSerial = require("mod.tools.api.MapSerial")
+local CodeGenerator = require("api.CodeGenerator")
+local Codegen = require("api.Codegen")
 
 local MapRenderer = require("api.gui.MapRenderer")
 local IUiLayer = require("api.gui.IUiLayer")
@@ -20,6 +22,8 @@ local UiMouseMenu = require("mod.mouse_ui.api.gui.UiMouseMenu")
 local UiMouseManager = require("mod.mouse_ui.api.gui.UiMouseManager")
 local FuzzyFinderPrompt = require("mod.tools.api.FuzzyFinderPrompt")
 local UiMouseMenuButton = require("mod.mouse_ui.api.gui.UiMouseMenuButton")
+
+local MapEditorNewPanel = require("mod.map_editor.api.panel.MapEditorNewPanel")
 
 local MapEditor = class.class("MapEditor", IUiLayer)
 
@@ -56,6 +60,7 @@ function MapEditor:init(maps)
    self.tile_height = 0
    self.selected_tile = "elona.grass"
    self.placing_tile = false
+   self.selected_wall = false
    self.tile_widget = MapEditorTileWidget:new(self.selected_tile)
    self.panning = false
    self.pan_x = 0
@@ -293,6 +298,9 @@ end
 function MapEditor:select_tile(id)
    self.selected_tile = id
    self.tile_widget:set_tile(id)
+
+   local tile_data = data["base.map_tile"]:ensure(self.selected_tile)
+   self.placing_wall = tile_data.is_solid
 end
 
 function MapEditor:place_tile(tx, ty, tile_id)
@@ -305,8 +313,7 @@ function MapEditor:place_tile(tx, ty, tile_id)
       return
    end
 
-   local tile_data = data["base.map_tile"]:ensure(tile_id)
-   if tile_data.is_solid then
+   if self.placing_wall then
       Gui.play_sound("base.offer1", tx, ty)
    end
    map:set_tile(tx, ty, tile_id)
@@ -379,8 +386,7 @@ function MapEditor:flood_fill(tx, ty, tile_id)
       end
    end
 
-   local tile_data = data["base.map_tile"]:ensure(tile_id)
-   if tile_data.is_solid then
+   if self.placing_wall then
       Gui.play_sound("base.offer1", tx, ty)
    end
    flood(tx, ty, self.current_map.map)
@@ -463,21 +469,13 @@ function MapEditor:create_new_map(width, height)
    return map
 end
 
-function MapEditor:act_new(width, height)
-   if not width then
-      local canceled
-      width, canceled = Input.query_number(1000, 20)
-      if canceled then
-         return
-      end
-      height, canceled = Input.query_number(1000, 20)
-      if canceled then
-         return
-      end
+function MapEditor:act_new()
+   local size, canceled = MapEditorNewPanel:new():query()
+   if canceled then
+      return
    end
 
-
-   local map = self:create_new_map(width, height)
+   local map = self:create_new_map(size.width, size.height)
    local index = self:add_map(map)
    self:switch_to_map(index)
 end
@@ -491,12 +489,19 @@ function MapEditor:act_open()
       return
    end
 
-   local raw, err = Fs.read_all(filepath, "global")
-   if not raw then
+   local code, err = Fs.read_all(filepath, "global")
+   if not code then
       error(err)
    end
 
-   raw = SaveFs.deserialize(raw)
+   local chunk, err = Codegen.loadstring(code)
+   if err then
+      error(err)
+   end
+
+   local raw = chunk()
+   assert(type(raw) == "table" and type(raw.tiles) == "table")
+
    local opened_map = MapEditor.serial_to_editor(raw)
    opened_map.filepath = filepath
 
@@ -515,7 +520,8 @@ function MapEditor:act_save()
    end
 
    local raw = MapEditor.editor_to_serial(self.current_map)
-   assert(SaveFs.write(self.current_map.filepath, raw, "global"))
+   local str = "return " .. CodeGenerator.inspect(raw)
+   assert(SaveFs.write_raw(self.current_map.filepath, str, "global"))
 end
 
 function MapEditor:act_save_as()
@@ -527,11 +533,17 @@ function MapEditor:act_save_as()
    filename = Fs.sanitize(filename)
 
    local dir = MapEditor.get_save_dir()
-   local filepath = Fs.join(dir, ("%s.onmap"):format(filename))
+   local filepath = Fs.join(dir, ("%s.lua"):format(filename))
+
+   if SaveFs.exists(filepath, "global") then
+      if not Input.yes_no() then
+         return
+      end
+   end
+
    self.current_map.filepath = filepath
 
-   local raw = MapEditor.editor_to_serial(self.current_map)
-   assert(SaveFs.write(self.current_map.filepath, raw, "global"))
+   self:act_save()
 end
 
 function MapEditor:act_rename()

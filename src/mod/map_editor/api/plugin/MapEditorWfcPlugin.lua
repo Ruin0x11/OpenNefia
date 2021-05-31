@@ -1,12 +1,12 @@
-local Input = require("api.Input")
 local Layout = require("mod.tools.api.Layout")
 local WaveFunctionMap = require("mod.wfc.api.WaveFunctionMap")
+
 local FuzzyFinderPrompt = require("mod.tools.api.FuzzyFinderPrompt")
 local UiMouseMenu = require("mod.mouse_ui.api.gui.UiMouseMenu")
 local UiMouseButton = require("mod.mouse_ui.api.gui.UiMouseButton")
-
 local IMapEditorPlugin = require("mod.map_editor.api.IMapEditorPlugin")
 local UiMouseMenuButton = require("mod.mouse_ui.api.gui.UiMouseMenuButton")
+local MapEditorWfcGeneratePanel = require("mod.map_editor.api.plugin.MapEditorWfcGeneratePanel")
 
 local MapEditorWfcPlugin = class.class("MapEditorWfcPlugin", IMapEditorPlugin)
 
@@ -32,23 +32,19 @@ function MapEditorWfcPlugin:act_generate(map_editor)
       return
    end
 
-   local width, canceled = Input.query_number(1000, self.target_width)
+   local size, canceled = MapEditorWfcGeneratePanel:new(self.target_width, self.target_height):query()
    if canceled then
       return
    end
-   self.target_width = width
-   local height, canceled = Input.query_number(1000, self.target_height)
-   if canceled then
-      return
-   end
-   self.target_height = height
+   self.target_width = size.width
+   self.target_height = size.height
 
    local layout = Layout.from_map(map)
    local opts = {
       max_steps = 10000
    }
 
-   local new_map = WaveFunctionMap.generate_overlapping(layout, width, height, opts)
+   local new_map = WaveFunctionMap.generate_overlapping(layout, size.width, size.height, opts)
    if new_map == nil then
       return nil
    end
