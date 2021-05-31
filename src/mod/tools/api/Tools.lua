@@ -35,6 +35,8 @@ local IFeatLockedHatch = require("mod.elona.api.aspect.feat.IFeatLockedHatch")
 local Text = require("mod.elona.api.Text")
 local I18N = require("api.I18N")
 local DrawLayerSpec = require("api.draw.DrawLayerSpec")
+local MapSerial = require("mod.tools.api.MapSerial")
+local Codegen = require("api.Codegen")
 
 local Tools = {}
 
@@ -1135,6 +1137,22 @@ function Tools.find_release_name(starting_letter)
    end
 
    return fun.tabulate(Text.random_title):take(10000):filter(filter)
+end
+
+function Tools.serialized_size_kbs(t)
+   local binary = SaveFs.serialize(t)
+   return string.len(binary) / 1024
+end
+
+function Tools.load_onmap(path)
+   local ok, code = assert(SaveFs.read_raw(path, "global"))
+   local chunk, err = assert(Codegen.loadstring(code))
+   local onmap = chunk()
+   return MapSerial.serial_to_map(onmap)
+end
+
+function Tools.id_list(_type)
+   return inspect(data[_type]:iter():extract("_id"):into_sorted():to_list(), { always_tabify = true })
 end
 
 return Tools

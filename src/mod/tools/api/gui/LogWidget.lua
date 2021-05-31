@@ -5,7 +5,7 @@ local CircularBuffer = require("api.CircularBuffer")
 local LogWidget = class.class("LogWidget", IUiWidget)
 
 function LogWidget:init(message_duration, fade_duration)
-   self.max_lines = 10
+   self.max_lines = 20
    self.padding = 10
    self.buffer = CircularBuffer:new(self.max_lines)
    self.show_source = true

@@ -47,9 +47,9 @@ end
 
 local function start_halt()
    input.halt_input()
+   local KEYS = table.set {"return", "escape", "space"}
    love.keypressed = function(key, scancode, isrepeat)
-      local keys = table.set {"return", "escape", "space"}
-      if keys[key] then
+      if KEYS[key] then
          stop_halt()
       elseif key == "backspace" then
          pop_draw_layer = true
@@ -235,16 +235,26 @@ end
 --
 --
 
-love.resize = draw.resize
+local function wrap_error(f)
+   return function(...)
+      local ok, err = xpcall(f, debug.traceback, ...)
+      if not ok then
+         halt_error = tostring(err)
+         start_halt()
+      end
+   end
+end
 
-love.mousemoved = input.mousemoved
-love.mousepressed = input.mousepressed
-love.mousereleased = input.mousereleased
+love.resize = wrap_error(draw.resize)
 
-love.keypressed = input.keypressed
-love.keyreleased = input.keyreleased
+love.mousemoved = wrap_error(input.mousemoved)
+love.mousepressed = wrap_error(input.mousepressed)
+love.mousereleased = wrap_error(input.mousereleased)
 
-love.joystickpressed = input.joystickpressed
-love.joystickreleased = input.joystickreleased
+love.keypressed = wrap_error(input.keypressed)
+love.keyreleased = wrap_error(input.keyreleased)
 
-love.textinput = input.textinput
+love.joystickpressed = wrap_error(input.joystickpressed)
+love.joystickreleased = wrap_error(input.joystickreleased)
+
+love.textinput = wrap_error(input.textinput)

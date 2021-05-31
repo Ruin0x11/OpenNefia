@@ -134,7 +134,12 @@ function JANDungeon.connect_isolated_rooms(map, no_diagonal, tile)
    end
 end
 
-function JANDungeon.connect_mazey_rooms(map)
+--- Utility function to connect pockets of open space closed off on all sides in
+--- a map. This is useful for wave function collapse templates, which sometimes
+--- generate a lot of them.
+function JANDungeon.connect_mazey_rooms(map, tile_id)
+   tile_id = tile_id or "elona.mapgen_tunnel"
+
    local rooms = JANDungeon.detect_rooms(map)
    local room_map = {}
    for room_no, tiles in ipairs(rooms) do
@@ -163,7 +168,7 @@ function JANDungeon.connect_mazey_rooms(map)
                         local new_connection = math.min(other_room_connection, our_room_connection)
                         room_to_connection[room_no] = new_connection
                         room_to_connection[other_room_no] = new_connection
-                        map:set_tile(tx, ty, "elona.mapgen_tunnel")
+                        map:set_tile(tx, ty, tile_id)
                         room_map[ty] = room_map[ty] or {}
                         room_map[ty][tx] = new_connection
                         table.insert(rooms[new_connection], { x = tx, y = ty, can_access = true })

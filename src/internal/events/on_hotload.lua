@@ -79,7 +79,9 @@ local function rebind_ui_layer_keys()
    local current = draw.get_current_layer()
    if current and class.is_an(IUiLayer, current.layer) then
       local keymap = current.layer:make_keymap()
+      local mousemap = current.layer:make_mousemap()
       current.layer:bind_keys(keymap)
+      current.layer:bind_mouse(mousemap)
    end
 end
 Event.register("base.on_hotload_end", "Rebind keys of current UILayer", rebind_ui_layer_keys)

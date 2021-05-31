@@ -9,6 +9,7 @@ function UiShadowedText:init(str, font, color, shadow_color)
    self.color = color or {255, 255, 255}
    self.shadow_color = shadow_color or {0, 0, 0}
    self.width = 0
+   self.height = 0
 
    self:set_data(str)
 end
@@ -20,8 +21,10 @@ end
 
 function UiShadowedText:set_data(str)
    Draw.set_font(self.font_width, self.font_style)
+   self._text = str
    self.text = Draw.make_text(str)
    self.width = Draw.text_width(str)
+   self.height = Draw.text_height()
 end
 
 function UiShadowedText:set_color(color, shadow_color)
@@ -31,6 +34,10 @@ end
 
 function UiShadowedText:text_width()
    return self.width
+end
+
+function UiShadowedText:text_height()
+   return self.height
 end
 
 function UiShadowedText:draw()
