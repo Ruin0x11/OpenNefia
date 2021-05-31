@@ -5,6 +5,7 @@ local UiMouseMenu = require("mod.mouse_ui.api.gui.UiMouseMenu")
 local IUiMouseButton = require("mod.mouse_ui.api.gui.IUiMouseButton")
 local UiShadowedText = require("api.gui.UiShadowedText")
 local UiTheme = require("api.gui.UiTheme")
+local UiMouseStyle = require("mod.mouse_ui.api.UiMouseStyle")
 
 local UiMouseMenuButton = class.class("UiMouseMenuButton", IUiMouseButton)
 
@@ -37,27 +38,27 @@ end
 
 function UiMouseMenuButton:add_button(button)
    if self.menu == nil then
-      self.menu = UiMouseMenu:new {}
+      self:set_menu(UiMouseMenu:new {})
    end
    self.menu:add_button(button)
-   button._parent = self
 end
 
 function UiMouseMenuButton:relayout(x, y, width, height)
    self.x = x
    self.y = y
-   self.width = width
-   self.height = height
+   self.width = math.max(width, self:get_minimum_width())
+   self.height = math.max(height, self:get_minimum_height())
    self.t = UiTheme.load()
 
    self.color = {192, 192, 192}
    self.color_dark = {Color:new_rgb(self.color):lighten_by(0.5):to_rgb()}
    self.color_light = {Color:new_rgb(self.color):lighten_by(1.5):to_rgb()}
 
+   local thickness = 2
    self.label_vertices = {
-      self.x + self.width - 2, self.y + self.height - 2,
-      self.x + self.width - 2, self.y + self.height - 2 - 10,
-      self.x + self.width - 2 - 10, self.y + self.height - 2,
+      self.x + self.width - 2 - thickness, self.y + self.height - 2 - thickness,
+      self.x + self.width - 2 - thickness, self.y + self.height - 2 - thickness - 10,
+      self.x + self.width - 2 - thickness - 10, self.y + self.height - 2 - thickness,
    }
    self.label_vertices_pressed = fun.iter(self.label_vertices):map(function(i) return i + 2 end):to_list()
 
@@ -126,7 +127,7 @@ function UiMouseMenuButton:set_menu(menu)
    if menu then
       assert(class.is_an(UiMouseMenu, menu))
       menu._parent = self
-      for _, ui_button in menu:iter_mouse_elements(false)  do
+      for _, ui_button in menu:iter_mouse_elements(false) do
          ui_button.enabled = self.pressed
       end
    end
@@ -134,8 +135,8 @@ function UiMouseMenuButton:set_menu(menu)
 end
 
 function UiMouseMenuButton:draw()
-   Draw.set_color(self.color)
-   Draw.filled_rect(self.x, self.y, self.width-1, self.height-1)
+   local thickness = 2
+   UiMouseStyle.draw_panel(self.x, self.y, self.width, self.height, thickness, self.pressed, self.color, self.color_dark, self.color_light)
 
    Draw.set_color(self.color_dark)
    if self.pressed then
@@ -143,22 +144,6 @@ function UiMouseMenuButton:draw()
    else
       Draw.filled_polygon(self.label_vertices)
    end
-
-   if self.pressed then
-      Draw.set_color(self.color_dark)
-   else
-      Draw.set_color(self.color_light)
-   end
-   Draw.line(self.x, self.y, self.x + self.width, self.y)
-   Draw.line(self.x, self.y, self.x, self.y + self.height)
-
-   if self.pressed then
-      Draw.set_color(self.color_light)
-   else
-      Draw.set_color(self.color_dark)
-   end
-   Draw.line(self.x, self.y + self.height-1, self.x + self.width, self.y + self.height-1)
-   Draw.line(self.x + self.width, self.y, self.x + self.width, self.y + self.height)
 
    local w = self.text:text_width()
    local h = self.text:text_height()
