@@ -161,8 +161,8 @@ function MapEditor:update_draw_pos()
 end
 
 function MapEditor:pan(dx, dy)
-   self.renderer_offset_x = self.renderer_offset_x + dx
-   self.renderer_offset_y = self.renderer_offset_y + dy
+   self.renderer_offset_x = math.floor(self.renderer_offset_x + dx)
+   self.renderer_offset_y = math.floor(self.renderer_offset_y + dy)
    self:update_draw_pos()
 end
 
@@ -396,8 +396,8 @@ end
 
 function MapEditor:add_map(map)
    local tw, th = Draw.get_coords():get_size()
-   local offset_x = Draw.get_width() / 2 - (tw * map:width()) / 2
-   local offset_y = Draw.get_height() / 2 - (th * map:height()) / 2
+   local offset_x = math.floor(Draw.get_width() / 2 - (tw * map:width()) / 2)
+   local offset_y = math.floor(Draw.get_height() / 2 - (th * map:height()) / 2)
 
    local opened_map = {
       map = map,

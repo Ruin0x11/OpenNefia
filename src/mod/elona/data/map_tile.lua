@@ -372,6 +372,13 @@ local tiles = {
       kind = TileRole.Sand
    },
    {
+      _id = "world_desert_rocks_3",
+      elona_id = 122,
+      elona_atlas = 0,
+      is_feat = true,
+      kind = TileRole.Sand
+   },
+   {
       _id = "world_desert_rocks_4",
       elona_id = 123,
       elona_atlas = 0,
@@ -386,11 +393,24 @@ local tiles = {
       kind = TileRole.Sand
    },
    {
+      _id = "world_desert_plants_2",
+      elona_id = 125,
+      elona_atlas = 0,
+      is_feat = true,
+      kind = TileRole.Sand
+   },
+   {
       _id = "world_desert_plants_3",
       elona_id = 126,
       elona_atlas = 0,
       is_feat = true,
       kind = TileRole.Sand
+   },
+   {
+      _id = "world_dirt",
+      elona_id = 165,
+      elona_atlas = 0,
+      kind = TileRole.SandHard
    },
    {
       _id = "world_dirt_crater",
@@ -452,6 +472,13 @@ local tiles = {
    {
       _id = "world_dirt_border_s",
       elona_id = 176,
+      elona_atlas = 0,
+      kind = TileRole.SandHard,
+      kind2 = TileRole.Coast
+   },
+   {
+      _id = "world_dirt_border_corner_ne",
+      elona_id = 177,
       elona_atlas = 0,
       kind = TileRole.SandHard,
       kind2 = TileRole.Coast
