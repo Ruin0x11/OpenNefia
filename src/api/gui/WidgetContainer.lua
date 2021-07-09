@@ -42,9 +42,6 @@ function WidgetContainer:add(widget, tag, opts)
       end
    end
 
-   IEventEmitter.init(widget)
-   widget:bind_events()
-
    local holder = WidgetHolder:new(widget,
                                    tag,
                                    opts.z_order or widget:default_widget_z_order(),

@@ -9,7 +9,7 @@ local IUiWidget = class.interface("IUiWidget",
                                    set_transparency = "function",
                                    bind_events = "function"
                                 },
-                                {IUiElement, IEventEmitter})
+                                IUiElement)
 
 function IUiWidget:default_widget_position(x, y, width, height)
    return x, y, width, height
@@ -23,9 +23,6 @@ function IUiWidget:default_widget_z_order()
 end
 
 function IUiWidget:set_transparency(amount)
-end
-
-function IUiWidget:bind_events()
 end
 
 return IUiWidget

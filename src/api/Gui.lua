@@ -401,7 +401,7 @@ function Gui.mes_c(text, color, ...)
          print(ansicolors(mes))
       end
    else
-      Event.trigger("base.on_hud_message", {action="message",text=text,color=color_tbl})
+      Gui.hud_widget_with(IWidgetMessageWindow):widget():message(text, color_tbl)
    end
 end
 
@@ -469,7 +469,7 @@ end
 
 --- Clears the HUD message window.
 function Gui.mes_clear()
-   Event.trigger("base.on_hud_message", {action="clear"})
+   Gui.hud_widget_with(IWidgetMessageWindow):widget():clear()
    capitalize = true
    newline = true
 end
@@ -477,7 +477,7 @@ end
 --- Starts a new line in the HUD message window.
 -- TODO: just use \n inline
 function Gui.mes_newline()
-   Event.trigger("base.on_hud_message", {action="newline"})
+   Gui.hud_widget_with(IWidgetMessageWindow):widget():newline()
    newline = true
 end
 
@@ -486,7 +486,7 @@ function Gui.mes_continue_sentence()
 end
 
 function Gui.mes_duplicate()
-   Event.trigger("base.on_hud_message", {action="duplicate"})
+   Gui.hud_widget_with(IWidgetMessageWindow):widget():duplicate()
 end
 
 function Gui.mes_halt()
@@ -660,6 +660,10 @@ end
 
 function Gui.hud_widget(tag)
    return field.hud.widgets:get(tag)
+end
+
+function Gui.hud_widget_with(iface)
+   return field.hud.widgets:get_implementing(iface)
 end
 
 function Gui.add_global_widget(widget, tag, opts)

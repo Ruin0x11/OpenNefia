@@ -620,7 +620,7 @@ data:add_multi(
          -- <<<<<<<< shade2/help.hsp:1255 			if cs=1:configSelect cfg_msgTrans,"msg_trans.", ..
 
          on_changed = function()
-            Event.trigger("base.on_hud_message", {action="redraw"})
+            Gui.hud_widget_with(IWidgetMessageWindow):widget():redraw()
          end
       }
    }

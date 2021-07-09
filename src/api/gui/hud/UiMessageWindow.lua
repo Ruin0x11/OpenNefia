@@ -6,7 +6,7 @@ local save = require("internal.global.save")
 local config = require("internal.config")
 local IEventEmitter = require("api.IEventEmitter")
 
-local UiMessageWindow = class.class("UiMessageWindow", {IUiWidget, IEventEmitter})
+local UiMessageWindow = class.class("UiMessageWindow", IWidgetMessageWindow)
 
 function UiMessageWindow:init()
    self.width = 800
@@ -30,36 +30,12 @@ function UiMessageWindow:init()
    self:recalc_lines()
 end
 
-function UiMessageWindow:handle_on_hud_message(params)
-   local action = params.action
-
-   if action == "message" then
-      self:message(params.text, params.color)
-   elseif action == "newline" then
-      self:do_newline()
-   elseif action == "new_turn" then
-      self:new_turn()
-   elseif action == "duplicate" then
-      self:prevent_next_duplicate()
-   elseif action == "clear" then
-      self:clear()
-   elseif action == "redraw" then
-      self.redraw = true
-   end
-end
-
 function UiMessageWindow:default_widget_position(x, y, width, height)
    return x + 124, height - (72 + 16), width - 124, 72
 end
 
 function UiMessageWindow:default_widget_z_order()
    return 50000
-end
-
-function UiMessageWindow:bind_events()
-   self:connect_global("base.on_hud_message",
-                       "Handle HUD message",
-                       function(_, params) self:handle_on_hud_message(params) end)
 end
 
 function UiMessageWindow:relayout(x, y, width, height)
@@ -119,7 +95,7 @@ function UiMessageWindow:push_text(text, color)
    color = color or {255, 255, 255}
 
    if self.each_line:len() == 0 then
-      self:newline()
+      self:_do_newline()
    end
 
    local first = self.each_line:get(1)
@@ -133,7 +109,7 @@ function UiMessageWindow:push_text(text, color)
       local width = Draw.text_width(s)
       if first.width + width > self.width - self.padding then
          first.text[#first.text+1] = {color = color, text = work, width = first.width}
-         self:newline()
+         self:_do_newline()
          first = self.each_line:get(1)
          work = ""
       end
@@ -255,14 +231,14 @@ function UiMessageWindow:recalc_lines()
    for i=index_of_first_text,1,-1 do
       local t = self.history:get(i)
       if t.newline then
-         self:newline()
+         self:_do_newline()
       else
          self:push_text(t.text, t.color)
       end
    end
 end
 
-function UiMessageWindow:prevent_next_duplicate()
+function UiMessageWindow:duplicate()
    self.checking_for_duplicate = true
 end
 
@@ -295,16 +271,20 @@ function UiMessageWindow:redraw_window()
    end
 end
 
-function UiMessageWindow:do_newline()
+function UiMessageWindow:redraw()
+   self.redraw = true
+end
+
+function UiMessageWindow:newline()
    local first = self.history:get(-2)
    if first and first.newline then
       return
    end
    self.history:push({ newline = true, text = "", color = {255, 255, 255} })
-   self:newline()
+   self:_do_newline()
 end
 
-function UiMessageWindow:newline(text)
+function UiMessageWindow:_do_newline(text)
    text = text or ""
 
    Draw.set_font(14)
@@ -343,7 +323,7 @@ function UiMessageWindow:message(text, color)
       else
          text = string.format("  %s", text)
       end
-      self:do_newline()
+      self:_do_newline()
    end
 
    self.history:push({text = text, color = color})
