@@ -3,14 +3,7 @@ local Gui = require("api.Gui")
 local UiSkillTrackerEx = require("mod.skill_tracker_ex.api.gui.UiSkillTrackerEx")
 local Chara = require("api.Chara")
 
-data:add_multi(
-   "base.config_option",
-   {
-      { _id = "enabled", type = "boolean", default = true },
-   }
-)
-
-local function setup_skill_tracker_ex()
+local function setup_skill_tracker_ex(enable)
    save.base.tracked_skill_ids = table.set {
       "elona.bow",
       "elona.evasion",
@@ -22,7 +15,6 @@ local function setup_skill_tracker_ex()
       "elona.stat_learning",
    }
 
-   local enable = config.skill_tracker_ex.enabled
    Gui.hud_widget("hud_skill_tracker"):set_enabled(not enable)
    Gui.hud_widget("skill_tracker_ex.skill_tracker_ex"):set_enabled(enable)
    -- TODO hud
@@ -50,3 +42,10 @@ local function log_skill_exp_gain(chara, params)
 end
 
 Event.register("elona_sys.on_gain_skill_exp", "Log skill exp gain", log_skill_exp_gain)
+
+data:add_multi(
+   "base.config_option",
+   {
+      { _id = "enabled", type = "boolean", default = false, on_changed = setup_skill_tracker_ex },
+   }
+)

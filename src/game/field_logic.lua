@@ -20,6 +20,7 @@ local state = require("internal.global.field_logic_state")
 local fs = require("util.fs")
 local SaveFs = require("api.SaveFs")
 local Rand = require("api.Rand")
+local IWidgetMessageWindow = require("api.gui.hud.IWidgetMessageWindow")
 
 local DeathMenu = require("api.gui.menu.DeathMenu")
 
@@ -187,7 +188,6 @@ function field_logic.turn_begin()
    World.pass_time_in_seconds(starting_turn_time / 5 + 1)
 
    Gui.hud_widget_with(IWidgetMessageWindow):widget():new_turn()
-   Event.trigger("base.on_hud_message", {action="new_turn"})
 
    return "pass_turns"
 end

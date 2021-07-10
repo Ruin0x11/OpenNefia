@@ -7,6 +7,8 @@ local ISoundHolder = require("api.ISoundHolder")
 local midi = require("internal.midi")
 local global_sound_manager = require("internal.global.global_sound_manager")
 local Event = require("api.Event")
+local Gui = require("api.Gui")
+local IWidgetMessageWindow = require("api.gui.hud.IWidgetMessageWindow")
 
 data:add_multi(
    "base.config_option",

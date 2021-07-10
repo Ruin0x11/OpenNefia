@@ -1,4 +1,5 @@
 --- @module Gui
+local IWidgetMessageWindow = require("api.gui.hud.IWidgetMessageWindow")
 
 local Env = require("api.Env")
 local I18N = require("api.I18N")
@@ -662,8 +663,8 @@ function Gui.hud_widget(tag)
    return field.hud.widgets:get(tag)
 end
 
-function Gui.hud_widget_with(iface)
-   return field.hud.widgets:get_implementing(iface)
+function Gui.hud_widget_with(klass_or_iface)
+   return field.hud.widgets:get_by_type(klass_or_iface)
 end
 
 function Gui.add_global_widget(widget, tag, opts)

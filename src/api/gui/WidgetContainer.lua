@@ -15,8 +15,11 @@ function WidgetContainer:iter()
    return self.map:iter()
 end
 
-function WidgetContainer:iter_type(req_path)
-   return fun.wrap(self:iter()):filter(function(holder) return Env.get_require_path(holder:widget()) == req_path end)
+function WidgetContainer:iter_by_type(klass_or_iface)
+   local filter = function(holder)
+      return class.is_an(klass_or_iface, holder:widget())
+   end
+   return fun.wrap(self:iter()):filter(filter)
 end
 
 function WidgetContainer:get(tag)
@@ -24,13 +27,13 @@ function WidgetContainer:get(tag)
    return self.map:get(tag)
 end
 
-function WidgetContainer:get_by_type(req_path)
-   return self:iter_type(req_path):nth(1)
+function WidgetContainer:get_by_type(klass_or_iface)
+   return self:iter_by_type(klass_or_iface):nth(1)
 end
 
 function WidgetContainer:add(widget, tag, opts)
    opts = opts or {}
-   assert(class.is_an(IUiWidget, widget))
+   class.assert_is_an(IUiWidget, widget)
    assert(type(tag) == "string")
 
    -- TODO auto namespace by adding mod

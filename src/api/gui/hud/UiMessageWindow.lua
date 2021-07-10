@@ -1,10 +1,9 @@
 local Draw = require("api.Draw")
 local UiTheme = require("api.gui.UiTheme")
-local IUiWidget = require("api.gui.IUiWidget")
 local CircularBuffer = require("api.CircularBuffer")
 local save = require("internal.global.save")
 local config = require("internal.config")
-local IEventEmitter = require("api.IEventEmitter")
+local IWidgetMessageWindow = require("api.gui.hud.IWidgetMessageWindow")
 
 local UiMessageWindow = class.class("UiMessageWindow", IWidgetMessageWindow)
 
@@ -21,7 +20,7 @@ function UiMessageWindow:init()
    self.current_width = 0
    self.padding = 0
    self.canvas = nil
-   self.redraw = true
+   self._redraw = true
    self.is_new_turn = true
    self.checking_for_duplicate = false
    self.previous_text = nil
@@ -43,7 +42,7 @@ function UiMessageWindow:relayout(x, y, width, height)
       width = math.max(width, 1)
       height = math.max(height, 1)
       self.canvas = Draw.create_canvas(width, height)
-      self.redraw = true
+      self._redraw = true
    end
 
    self.x = x
@@ -245,7 +244,7 @@ end
 function UiMessageWindow:clear()
    self.history = CircularBuffer:new(self.max_log)
    self.each_line = CircularBuffer:new(self.max_lines)
-   self.redraw = true
+   self._redraw = true
 end
 
 function UiMessageWindow:redraw_window()
@@ -272,7 +271,7 @@ function UiMessageWindow:redraw_window()
 end
 
 function UiMessageWindow:redraw()
-   self.redraw = true
+   self._redraw = true
 end
 
 function UiMessageWindow:newline()
@@ -328,13 +327,13 @@ function UiMessageWindow:message(text, color)
 
    self.history:push({text = text, color = color})
    self:push_text(text, color)
-   self.redraw = true
+   self._redraw = true
 end
 
 function UiMessageWindow:draw()
-   if self.redraw then
+   if self._redraw then
       Draw.with_canvas(self.canvas, function() self:redraw_window() end)
-      self.redraw = false
+      self._redraw = false
    end
 
    Draw.set_color(255, 255, 255)

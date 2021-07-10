@@ -1,4 +1,3 @@
-local IEventEmitter = require("api.IEventEmitter")
 local IUiElement = require("api.gui.IUiElement")
 
 local IUiWidget = class.interface("IUiWidget",
@@ -6,8 +5,7 @@ local IUiWidget = class.interface("IUiWidget",
                                    default_widget_position = "function",
                                    default_widget_refresh = "function",
                                    default_widget_z_order = "function",
-                                   set_transparency = "function",
-                                   bind_events = "function"
+                                   set_transparency = "function"
                                 },
                                 IUiElement)
 
