@@ -22,10 +22,6 @@ end
 function MainHud:on_theme_switched()
 end
 
-function MainHud:make_keymap()
-   return {}
-end
-
 function MainHud:relayout(x, y, width, height)
    self.width = width or self.width
    self.height = height or self.height

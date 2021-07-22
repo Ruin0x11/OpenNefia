@@ -3,6 +3,7 @@ local Gui = require("api.Gui")
 local Env = require("api.Env")
 local DebugStatsHook = require("mod.tools.api.debug.DebugStatsHook")
 local FuzzyFinderPrompt = require("mod.tools.api.FuzzyFinderPrompt")
+local MapEditor = require("mod.map_editor.api.MapEditor")
 
 local Debug = {}
 
@@ -109,6 +110,7 @@ function Debug.query_debug_menu()
          { text = "debug.prompt.unwatch_api", index = 4 },
          { text = "debug.prompt.unwatch_all", index = 5 },
          { text = "debug.prompt.clear_stats", index = 6 },
+         { text = "debug.prompt.map_editor", index = 7 },
       }
       local result
       result, canceled = Prompt:new(options):query()
@@ -132,6 +134,8 @@ function Debug.query_debug_menu()
          Gui.mes("debug.mes.unwatched_all")
       elseif index == 6 then
          DebugStatsHook.clear_results()
+      elseif index == 7 then
+         MapEditor:new():query()
       end
    end
 end

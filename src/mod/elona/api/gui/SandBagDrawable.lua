@@ -19,16 +19,14 @@ function SandBagDrawable:serialize()
 end
 
 function SandBagDrawable:deserialize()
-   self.dirty = true
 end
 
 function SandBagDrawable:update(dt)
 end
 
 function SandBagDrawable:draw(x, y, w, h, centered, rot)
-   if self.dirty then
+   if self.batch == nil then
       self.batch = Draw.make_chip_batch("chip")
-      self.dirty = false
    end
 
    -- >>>>>>>> shade2/module.hsp:576 	:if %%1=528:gmode 2:pos 0,960:gcopy selItem,0,768, ...

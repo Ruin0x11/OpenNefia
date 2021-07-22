@@ -63,10 +63,14 @@ local function load_path(child_path, kind, save_name)
 end
 
 function SaveFs.write(path, obj, kind, save_name)
+   local str = SaveFs.serialize(obj)
+   return SaveFs.write_raw(path, str, kind, save_name)
+end
+
+function SaveFs.write_raw(path, str, kind, save_name)
    assert(type(kind) == "string")
    local full_path = SaveFs.save_path(path, kind, save_name)
 
-   local str = SaveFs.serialize(obj)
    local dirs = fs.parent(full_path)
    if dirs then
       fs.create_directory(dirs)
@@ -83,20 +87,27 @@ function SaveFs.write(path, obj, kind, save_name)
 end
 
 function SaveFs.read(path, kind, save)
+   local ok, str = SaveFs.read_raw(path, kind, save)
+   if not ok then
+      return ok, str
+   end
+
+   return ok, SaveFs.deserialize(str)
+end
+
+function SaveFs.read_raw(path, kind, save)
    local full_path = load_path(path, kind, save)
 
    if not fs.exists(full_path) then
       return false, ("file does not exist: %s"):format(full_path)
    end
    Log.trace("savefs read: %s", full_path)
-   local content, err = fs.read(full_path)
-   if not content then
+   local str, err = fs.read(full_path)
+   if not str then
       return false, err
    end
 
-   local result = SaveFs.deserialize(content)
-
-   return true, result
+   return true, str
 end
 
 function SaveFs.delete(path, kind, save)
