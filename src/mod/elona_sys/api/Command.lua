@@ -267,6 +267,7 @@ end
 
 function Command.load_game()
    Save.load_game()
+   Gui.mes("Game loaded.")
    return "turn_begin"
 end
 

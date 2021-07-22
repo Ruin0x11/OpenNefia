@@ -744,7 +744,7 @@ return {
       },
       playtime_report = function(_1)
          return ("You have been playing Elona for %s hour%s.")
-            :format(_1, s(_1))
+            :format(_1, plural(_1))
       end,
       quicksave = " *Save* ",
       ranged = {
