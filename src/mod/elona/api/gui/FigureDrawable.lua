@@ -34,7 +34,7 @@ function FigureDrawable:draw(x, y, w, h, centered, rot)
       local width, height = self.batch:tile_size(self.chip_id)
       Draw.set_color(255, 255, 255, 255)
       self.batch:clear()
-      self.batch:add(self.chip_id, x+8, y+2, width-16, height-8, self.color)
+      self.batch:add(self.chip_id, x+8, y+2 - (height-48), width-16, height-8, self.color)
       self.batch:draw()
    end
    -- <<<<<<<< shade2/module.hsp:577 	:if %%1=531:pos 8,1058-chipCh(%%2):gcopy selChr,chi ..
