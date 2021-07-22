@@ -188,7 +188,7 @@ local COMBINES = {
 }
 -- <<<<<<<< shade2/init.hsp:3672 	if mode=2:return ...
 
-function KeyHandler:run_key_action(key, ...)
+function KeyHandler:run_key_action(key, player)
    local it = self.repeat_delays[key]
    local can_shift = self:is_shift_delayed_key(key, self.modifiers)
 
@@ -201,6 +201,9 @@ function KeyHandler:run_key_action(key, ...)
             else
                it.delay = 20
             end
+         end
+         if it.fast then
+            it.repeating = true
          end
          it.fast = true
       elseif it.fast then
@@ -246,11 +249,11 @@ function KeyHandler:run_key_action(key, ...)
    self.keybinds_held[key] = self.keybinds_held[key] or {}
    table.insert(self.keybinds_held[key], keybind)
 
-   local ran, result = self:run_keybind_action(keybind, true, ...)
+   local ran, result = self:run_keybind_action(keybind, true, player, it.repeating)
 
    if not ran then
       for _, forward in ipairs(self.forwards) do
-         local did_something, first_result = forward:run_key_action(key, ...)
+         local did_something, first_result = forward:run_key_action(key, player)
          if did_something then
             return did_something, first_result
          end
@@ -260,19 +263,20 @@ function KeyHandler:run_key_action(key, ...)
    return ran, result
 end
 
-function KeyHandler:run_text_action(key, ...)
+function KeyHandler:run_text_action(key, player)
    for _, forward in ipairs(self.forwards) do
-      local did_something, first_result = forward:run_text_action(key, ...)
+      local did_something, first_result = forward:run_text_action(key, player)
       if did_something then
          return did_something, first_result
       end
    end
 end
 
-function KeyHandler:run_keybind_action(keybind, pressed, ...)
+function KeyHandler:run_keybind_action(keybind, pressed, player, is_key_repeating)
    local func = self.bindings[keybind]
    if func then
-      return true, func(pressed, ...)
+      Log.info("%s %s %s", pressed, player, is_key_repeating)
+      return true, func(pressed, player, is_key_repeating)
    end
 
    return false, nil
@@ -334,29 +338,29 @@ function KeyHandler:clear_macro_queue()
    self.macro_queue:clear()
 end
 
-function KeyHandler:release_key(key, ...)
+function KeyHandler:release_key(key, player)
    local keybinds = self.keybinds_held[key]
    if keybinds then
       for _, keybind in ipairs(keybinds) do
          if self.capture_released then
-            self:run_keybind_action(keybind, false, ...)
+            self:run_keybind_action(keybind, false, player)
          end
       end
       self.keybinds_held[key] = nil
    end
 
    for _, forward in ipairs(self.forwards) do
-      forward:release_key(key, ...)
+      forward:release_key(key, player)
    end
 end
 
-function KeyHandler:run_actions(dt, ...)
+function KeyHandler:run_actions(dt, player)
    local ran = false
    local result
 
    if self.macro_queue:len() > 0 then
       local keybind = self.macro_queue:pop()
-      return self:run_keybind_action(keybind, true, ...)
+      return self:run_keybind_action(keybind, true, player)
    end
 
    self:update_repeats(dt)
@@ -370,7 +374,7 @@ function KeyHandler:run_actions(dt, ...)
       -- two movement keys can form a diagonal, they should be fired
       -- instead of each one individually.
       if v.pressed then
-         ran, result = self:run_key_action(key, ...)
+         ran, result = self:run_key_action(key, player)
          if ran then
             -- only run the first action
             break

@@ -56,8 +56,8 @@ function InputHandler:update_repeats(dt)
    self.mouse:update_repeats(dt)
 end
 
-function InputHandler:run_actions(dt, ...)
-   local ran, result = self.keys:run_actions(dt, ...)
+function InputHandler:run_actions(dt, player)
+   local ran, result = self.keys:run_actions(dt, player)
    self.mouse:run_actions()
 
    return ran, result

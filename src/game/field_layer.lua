@@ -33,6 +33,7 @@ function field_layer:init()
    self.scroll_last_px = 0
    self.scroll_last_py = 0
    self.scrolling_objs = {}
+   self.no_scroll_this_update = false
 
    self.view_centered = false
 
@@ -203,15 +204,13 @@ local function msecs_to_frames(msecs, framerate)
 end
 
 function field_layer:update_scrolling()
-   if self.player == nil or not config.base.scroll or Env.is_headless() then
+   if self.player == nil
+      or not config.base.scroll
+      or Env.is_headless()
+      or self:player_is_running()
+      or self.no_scroll_this_update
+   then
       self.scrolling_mode = "none"
-      self.scroll_last_px = self.player.x
-      self.scroll_last_py = self.player.y
-      self.scrolling_objs = {}
-      return
-   end
-
-   if self:player_is_running() then
       self.scroll_last_px = self.player.x
       self.scroll_last_py = self.player.y
       self.scrolling_objs = {}

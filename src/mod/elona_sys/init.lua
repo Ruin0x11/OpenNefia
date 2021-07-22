@@ -300,7 +300,10 @@ Gui.bind_keys {
    search = function(_, me)
       return Command.search(me)
    end,
-   wait = function()
+   wait = function(_, me, is_key_repeating)
+      if is_key_repeating then
+         Gui.prevent_scrolling()
+      end
       return "turn_end"
    end,
    repl = function()

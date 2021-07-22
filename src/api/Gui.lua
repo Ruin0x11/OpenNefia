@@ -240,6 +240,10 @@ function Gui.update_scrolling()
    field:update_scrolling()
 end
 
+function Gui.prevent_scrolling()
+   field.no_scroll_this_update = true
+end
+
 --- Converts from map tile space to screen space.
 ---
 --- @tparam int tx Tile X coordinate
@@ -696,8 +700,8 @@ function Gui.get_draw_layer(tag)
    return field:get_draw_layer(tag)
 end
 
-function Gui.run_keybind_action(action, ...)
-   return field:run_keybind_action(action, true, ...)
+function Gui.run_keybind_action(action, player, is_key_repeating)
+   return field:run_keybind_action(action, true, player, is_key_repeating)
 end
 
 function Gui.update_minimap(map)
