@@ -10,7 +10,7 @@ function DrawLayerSpec:init()
 end
 
 function DrawLayerSpec:iter()
-   return next, self.layers, nil
+   return fun.wrap(next, self.layers, nil)
 end
 
 function DrawLayerSpec:register_draw_layer(tag, require_path, z_order, enabled)

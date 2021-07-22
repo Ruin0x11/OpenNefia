@@ -41,11 +41,11 @@ function MapRenderer:on_theme_switched()
 end
 
 function MapRenderer:iter_draw_layers()
-   return fun.wrap(self.draw_layer_spec:iter())
+   return self.draw_layer_spec:iter()
 end
 
 function MapRenderer:get_draw_layer(tag)
-   self.render:get_layer(tag)
+   return self.renderer:get_layer(tag)
 end
 
 function MapRenderer:set_draw_layer_enabled(tag, enabled)

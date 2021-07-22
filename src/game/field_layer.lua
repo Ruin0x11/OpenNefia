@@ -108,7 +108,7 @@ function field_layer:set_map(map)
       self.renderer:set_map(map)
    end
    if self.x then
-      self:relayout()
+      self:relayout(self.x, self.y, self.width, self.height)
    end
 
    self.scrolling_mode = "none"
@@ -165,8 +165,6 @@ function field_layer:update_draw_pos()
    if center_x == nil and player then
       local coords = draw.get_coords()
       center_x, center_y = coords:tile_to_screen(player.x, player.y)
-      self.scroll_last_px = self.player.x
-      self.scroll_last_py = self.player.y
    end
 
    if center_x then
@@ -208,10 +206,14 @@ end
 function field_layer:update_scrolling()
    if self.player == nil then
       self.scrolling_mode = "none"
+      self.scroll_last_px = self.player.x
+      self.scroll_last_py = self.player.y
       return
    end
 
    if self:player_is_running() then
+      self.scroll_last_px = self.player.x
+      self.scroll_last_py = self.player.y
       return
    end
 
@@ -247,6 +249,9 @@ function field_layer:update_scrolling()
                                                             self.map:height(),
                                                             self.renderer.renderer.width,
                                                             self.renderer.renderer.height)
+
+      local layer = self.renderer:get_draw_layer("base.chip_layer")
+
       repeat
          self.scroll_x = i * (dx / ms) * tw
          self.scroll_y = i * (dy / ms) * th
@@ -259,20 +264,21 @@ function field_layer:update_scrolling()
 
          self.renderer.x = -(draw_x - sx)
          self.renderer.y = -(draw_y - sy)
-         Log.info("%f %f %f %f", self.renderer.x, self.renderer.y, px, py)
 
          local dt, _, _ = coroutine.yield()
+
          i = i + dt
       until i >= ms
    else
       self.scrolling_mode = "none"
    end
 
-   self:update_draw_pos()
    self.scroll_x = 0
    self.scroll_y = 0
    self.renderer.x = self.x
    self.renderer.y = self.y
+   self.scroll_last_px = self.player.x
+   self.scroll_last_py = self.player.y
 end
 
 function field_layer:update_screen(dt, and_draw)
@@ -282,11 +288,12 @@ function field_layer:update_screen(dt, and_draw)
 
    local player = self.player
 
-   self:update_draw_pos()
-
    if player then
       self.map:calc_screen_sight(player.x, player.y, player:calc("fov") or 15)
    end
+
+   self:update_scrolling()
+   self:update_draw_pos()
 
    local dt = dt or 0
 
