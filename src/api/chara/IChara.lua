@@ -343,7 +343,7 @@ function IChara:swap_places(other)
    self:emit("base.on_chara_moved", {prev_x=sx, prev_y=sy, x=self.x, y=self.y})
    other:emit("base.on_chara_moved", {prev_x=ox, prev_y=oy, x=other.x, y=other.y})
 
-   Gui.update_scrolling()
+   Gui.update_screen()
 
    return true
 end

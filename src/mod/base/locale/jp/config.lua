@@ -268,7 +268,12 @@ return {
 
             scroll = {
                doc = "PCが動くときスクロールアニメーションを表示します。",
-               name = "スクロール"
+               name = "スクロール",
+               variants = {
+                  none = "しない",
+                  player = "PCのみ",
+                  all = "全キャラ"
+               }
             },
 
             window_anime = {

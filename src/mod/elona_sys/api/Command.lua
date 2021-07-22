@@ -39,8 +39,9 @@ local function travel_to_map_hook(source, params, result)
 end
 Event.register("elona_sys.on_travel_to_outer_map", "Hook when traveling to a new map.", travel_to_map_hook)
 
-function Command.move(player, x, y)
+function Command.move(player, x, y, is_repeat)
    if type(x) == "string" then
+      is_repeat = y
       x, y = Pos.add_direction(x, player.x, player.y)
    end
 
@@ -52,6 +53,12 @@ function Command.move(player, x, y)
    end
 
    player.direction = Pos.pack_direction(dx, dy)
+
+   if is_repeat then
+      Gui.set_scrolling("fast")
+   else
+      Gui.set_scrolling("normal")
+   end
 
    -- Try to modify the final position or prevent movement. This is caused by
    -- status effects like confusion, or being overweight, respectively.
@@ -290,7 +297,11 @@ function Command.quit_game()
       }
    end
 
-   local res = Input.prompt(choices)
+   local res, canceled = Input.prompt(choices)
+   if canceled then
+      return "player_turn_query"
+   end
+
    if res.index == 1 then
       local can_save = true -- TODO showroom
       if can_save then

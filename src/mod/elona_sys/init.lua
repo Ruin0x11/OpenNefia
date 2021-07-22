@@ -261,29 +261,29 @@ local Command = require("mod.elona_sys.api.Command")
 local Gui = require("api.Gui")
 local Repl = require("api.Repl")
 Gui.bind_keys {
-   north = function(_, me)
-      return Command.move(me, "North")
+   north = function(_, me, is_repeat)
+      return Command.move(me, "North", is_repeat)
    end,
-   south = function(_, me)
-      return Command.move(me, "South")
+   south = function(_, me, is_repeat)
+      return Command.move(me, "South", is_repeat)
    end,
-   west = function(_, me)
-      return Command.move(me, "West")
+   west = function(_, me, is_repeat)
+      return Command.move(me, "West", is_repeat)
    end,
-   east = function(_, me)
-      return Command.move(me, "East")
+   east = function(_, me, is_repeat)
+      return Command.move(me, "East", is_repeat)
    end,
-   northwest = function(_, me)
-      return Command.move(me, "Northwest")
+   northwest = function(_, me, is_repeat)
+      return Command.move(me, "Northwest", is_repeat)
    end,
-   northeast = function(_, me)
-      return Command.move(me, "Northeast")
+   northeast = function(_, me, is_repeat)
+      return Command.move(me, "Northeast", is_repeat)
    end,
-   southwest = function(_, me)
-      return Command.move(me, "Southwest")
+   southwest = function(_, me, is_repeat)
+      return Command.move(me, "Southwest", is_repeat)
    end,
-   southeast = function(_, me)
-      return Command.move(me, "Southeast")
+   southeast = function(_, me, is_repeat)
+      return Command.move(me, "Southeast", is_repeat)
    end,
    get = function(_, me)
       return Command.get(me)
@@ -300,9 +300,9 @@ Gui.bind_keys {
    search = function(_, me)
       return Command.search(me)
    end,
-   wait = function(_, me, is_key_repeating)
-      if is_key_repeating then
-         Gui.prevent_scrolling()
+   wait = function(_, me, is_repeat)
+      if is_repeat then
+         Gui.set_scrolling("disabled")
       end
       return "turn_end"
    end,

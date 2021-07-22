@@ -236,12 +236,13 @@ function Gui.scroll_object(obj, prev_x, prev_y)
    field.scrolling_objs[obj.uid] = { prev_x = prev_x, prev_y = prev_y }
 end
 
-function Gui.update_scrolling()
-   field:update_scrolling()
-end
-
-function Gui.prevent_scrolling()
-   field.no_scroll_this_update = true
+function Gui.set_scrolling(mode)
+   if mode == "disabled" then
+      field.no_scroll_this_update = true
+      field.scrolling_mode = "none"
+   else
+      field.scrolling_mode = mode or "none"
+   end
 end
 
 --- Converts from map tile space to screen space.

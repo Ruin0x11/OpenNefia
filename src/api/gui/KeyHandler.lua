@@ -191,6 +191,7 @@ local COMBINES = {
 function KeyHandler:run_key_action(key, player)
    local it = self.repeat_delays[key]
    local can_shift = self:is_shift_delayed_key(key, self.modifiers)
+   local repeating = false
 
    if it then
       it.wait_remain = it.wait_remain - 1
@@ -220,6 +221,7 @@ function KeyHandler:run_key_action(key, player)
          it.delay = 200
       end
       it.pressed = false
+      repeating = it.repeating
    end
 
    local keybind = self.keybinds:key_to_keybind(key, self.modifiers)
@@ -249,7 +251,7 @@ function KeyHandler:run_key_action(key, player)
    self.keybinds_held[key] = self.keybinds_held[key] or {}
    table.insert(self.keybinds_held[key], keybind)
 
-   local ran, result = self:run_keybind_action(keybind, true, player, it.repeating)
+   local ran, result = self:run_keybind_action(keybind, true, player, repeating)
 
    if not ran then
       for _, forward in ipairs(self.forwards) do
@@ -275,7 +277,6 @@ end
 function KeyHandler:run_keybind_action(keybind, pressed, player, is_key_repeating)
    local func = self.bindings[keybind]
    if func then
-      Log.info("%s %s %s", pressed, player, is_key_repeating)
       return true, func(pressed, player, is_key_repeating)
    end
 

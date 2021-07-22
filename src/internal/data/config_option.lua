@@ -387,8 +387,9 @@ data:add_multi(
       {
          _id = "scroll",
 
-         type = "boolean",
-         default = true
+         type = "enum",
+         choices = { "none", "player", "all" },
+         default = "all"
       },
       {
          _id = "window_anime",

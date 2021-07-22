@@ -203,9 +203,21 @@ local function msecs_to_frames(msecs, framerate)
    return frames
 end
 
+local function can_scroll_object(obj)
+   local scroll = config.base.scroll
+
+   if scroll == "all" then
+      return true
+   elseif scroll == "player" then
+      return obj:is_player()
+   end
+
+   return false
+end
+
 function field_layer:update_scrolling()
    if self.player == nil
-      or not config.base.scroll
+      or config.base.scroll == "none"
       or Env.is_headless()
       or self:player_is_running()
       or self.no_scroll_this_update
@@ -231,6 +243,7 @@ function field_layer:update_scrolling()
    local layer = self.renderer:get_draw_layer("base.chip_layer")
 
    local obj_scroll_offsets = {}
+
    for uid, pos in pairs(self.scrolling_objs) do
       local obj = objs_in_sight[uid]
       if obj then
@@ -238,16 +251,18 @@ function field_layer:update_scrolling()
          -- UID mapping from the previous screen update is still there. It will be
          -- rebuilt when self.renderer:update() is called. So the chip index
          -- returned below might also be removed after the scrolling is finished.
-         local index = layer.uid_to_index[uid]
-         if index then
-            local odx = (pos.prev_x - obj.x) * tw
-            local ody = (pos.prev_y - obj.y) * th
-            if odx ~= 0 or ody ~= 0 then
-               table.insert(obj_scroll_offsets, {
-                               index = index,
-                               dx = odx,
-                               dy = ody
-               })
+         if can_scroll_object(obj) then
+            local index = layer.uid_to_index[uid]
+            if index then
+               local odx = (pos.prev_x - obj.x) * tw
+               local ody = (pos.prev_y - obj.y) * th
+               if odx ~= 0 or ody ~= 0 then
+                  table.insert(obj_scroll_offsets, {
+                                  index = index,
+                                  dx = odx,
+                                  dy = ody
+                  })
+               end
             end
          end
       end
@@ -256,11 +271,6 @@ function field_layer:update_scrolling()
    if #obj_scroll_offsets > 0 then
       local dx = self.scroll_last_px - self.player.x
       local dy = self.scroll_last_py - self.player.y
-      if self.scrolling_mode == "normal" then
-         self.scrolling_mode = "fast"
-      elseif self.scrolling_mode == "none" then
-         self.scrolling_mode = "normal"
-      end
 
       local frames = 4
       if self.scrolling_mode == "fast" then
@@ -313,6 +323,7 @@ function field_layer:update_scrolling()
    self.renderer.y = self.y
    self.scroll_last_px = self.player.x
    self.scroll_last_py = self.player.y
+   self.scrolling_mode = "none"
    self.scrolling_objs = {}
 end
 

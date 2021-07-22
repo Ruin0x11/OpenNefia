@@ -260,7 +260,12 @@ return {
 
             scroll = {
                doc = "Enable scrolling animations.",
-               name = "Smooth Scroll"
+               name = "Smooth Scroll",
+               variants = {
+                  none = "No",
+                  player = "Player Only",
+                  all = "All Charas"
+               }
             },
 
             window_anime = {
