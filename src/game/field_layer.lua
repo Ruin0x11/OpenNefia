@@ -31,8 +31,6 @@ function field_layer:init()
    self.scrolling_mode = "none"
    self.scroll_last_px = 0
    self.scroll_last_py = 0
-   self.scroll_x = 0
-   self.scroll_y = 0
    self.scrolling_entities = {}
 
    self.view_centered = false
@@ -126,7 +124,7 @@ function field_layer:relayout(x, y, width, height)
    self.width = width or self.width
    self.height = height or self.height
    if self.renderer then
-      self.renderer:relayout(x + self.scroll_x, y + self.scroll_y, width, height)
+      self.renderer:relayout(x, y, width, height)
       self.renderer:relayout_inner(self.x, self.y, self.width, self.height + self:get_renderer_y_offset())
    end
 end
@@ -217,6 +215,8 @@ function field_layer:update_scrolling()
       return
    end
 
+   self.scrolling_entities[self.player.uid] = {}
+
    local dx = self.scroll_last_px - self.player.x
    local dy = self.scroll_last_py - self.player.y
    if dx ~= 0 or dy ~= 0 then
@@ -230,9 +230,9 @@ function field_layer:update_scrolling()
       local tw, th = coords:get_size()
       local px, py = coords:tile_to_screen(self.player.x, self.player.y)
 
-      local frames = 8
+      local frames = 4
       if self.scrolling_mode == "fast" then
-         frames = 8
+         frames = 2
       end
       -- TODO assumes 60 FPS
       local ms = msecs_to_frames(frames, 60)
@@ -252,33 +252,44 @@ function field_layer:update_scrolling()
 
       local layer = self.renderer:get_draw_layer("base.chip_layer")
 
+      -- The chip layer has not been updated at this point, so the old index ->
+      -- UID mapping from the previous screen update is still there. It will be
+      -- rebuilt when self.renderer:update() is called. So the chip index
+      -- returned below might also be removed after the scrolling is finished.
+      local index = layer.uid_to_index[self.player.uid]
+      Log.info("%s", index)
+
       repeat
-         self.scroll_x = i * (dx / ms) * tw
-         self.scroll_y = i * (dy / ms) * th
-         local sx, sy = draw.get_coords():get_draw_pos(px - self.scroll_x + tdx,
-                                                       py - self.scroll_y + tdy,
+         local scroll_x = i * (dx / ms) * tw
+         local scroll_y = i * (dy / ms) * th
+         local sx, sy = draw.get_coords():get_draw_pos(px - scroll_x + tdx,
+                                                       py - scroll_y + tdy,
                                                        self.map:width(),
                                                        self.map:height(),
                                                        self.renderer.renderer.width,
                                                        self.renderer.renderer.height)
 
+         if index then
+            layer:scroll_chip(index, scroll_x, scroll_y)
+         end
+
          self.renderer.x = -(draw_x - sx)
          self.renderer.y = -(draw_y - sy)
 
          local dt, _, _ = coroutine.yield()
-
+         self.keys:update_repeats(dt)
          i = i + dt
       until i >= ms
    else
       self.scrolling_mode = "none"
    end
 
-   self.scroll_x = 0
-   self.scroll_y = 0
    self.renderer.x = self.x
    self.renderer.y = self.y
    self.scroll_last_px = self.player.x
    self.scroll_last_py = self.player.y
+
+   self.scrolling_entities = {}
 end
 
 function field_layer:update_screen(dt, and_draw)
