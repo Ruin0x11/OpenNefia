@@ -248,11 +248,11 @@ function field_layer:update_scrolling()
    for uid, pos in pairs(self.scrolling_objs) do
       local obj = objs_in_sight[uid]
       if obj then
-         -- The chip layer has not been updated at this point, so the old index ->
-         -- UID mapping from the previous screen update is still there. It will be
-         -- rebuilt when self.renderer:update() is called. So the chip index
-         -- returned below might also be removed after the scrolling is finished.
          if can_scroll_object(obj) then
+            -- The chip layer has not been updated at this point, so the old index ->
+            -- UID mapping from the previous screen update is still there. It will be
+            -- rebuilt when self.renderer:update() is called. So the chip index
+            -- returned below might also be removed after the scrolling is finished.
             local index = layer.uid_to_index[uid]
             if index then
                local odx = (pos.prev_x - obj.x) * tw
@@ -341,7 +341,6 @@ function field_layer:update_scrolling()
          local i = 0
 
          repeat
-            -- BUG if no-wait mode, then assume updated positions, and scroll preemptively
             local scroll_x = i * (dx / ms) * tw
             local scroll_y = i * (dy / ms) * th
             local sx, sy = draw.get_coords():get_draw_pos(px - scroll_x + tdx,
