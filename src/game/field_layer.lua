@@ -5,10 +5,10 @@ local IInput = require("api.gui.IInput")
 local KeyHandler = require("api.gui.KeyHandler")
 local Env = require("api.Env")
 local DrawLayerSpec = require("api.draw.DrawLayerSpec")
+local MapRenderer = require("api.gui.MapRenderer")
 
 local draw = require("internal.draw")
 local draw_callbacks = require("internal.draw_callbacks")
-local field_renderer = require("internal.field_renderer")
 
 local field_layer = class.class("field_layer", IUiLayer)
 
@@ -27,6 +27,13 @@ function field_layer:init()
    self.camera_y = nil
    self.camera_dx = 0
    self.camera_dy = 0
+
+   self.scrolling_mode = "none"
+   self.scroll_last_px = 0
+   self.scroll_last_py = 0
+   self.scroll_x = 0
+   self.scroll_y = 0
+   self.scrolling_entities = {}
 
    self.view_centered = false
 
@@ -96,12 +103,18 @@ function field_layer:set_map(map)
    self.map = map
    self.map:redraw_all_tiles()
    if self.renderer == nil then
-      self.renderer = field_renderer:new(map:width(), map:height(), self.draw_layer_spec)
+      self.renderer = MapRenderer:new(map, self.draw_layer_spec)
    else
-      self.renderer:set_map_size(map:width(), map:height(), self.draw_layer_spec)
+      self.renderer:set_map(map)
    end
    if self.x then
       self:relayout()
+   end
+
+   self.scrolling_mode = "none"
+   if self.player then
+      self.scroll_last_px = self.player.x
+      self.scroll_last_py = self.player.y
    end
 
    self.map_changed = true
@@ -113,7 +126,8 @@ function field_layer:relayout(x, y, width, height)
    self.width = width or self.width
    self.height = height or self.height
    if self.renderer then
-      self.renderer:relayout(self.x, self.y, self.width, self.height + self:get_renderer_y_offset())
+      self.renderer:relayout(x + self.scroll_x, y + self.scroll_y, width, height)
+      self.renderer:relayout_inner(self.x, self.y, self.width, self.height + self:get_renderer_y_offset())
    end
 end
 
@@ -151,6 +165,8 @@ function field_layer:update_draw_pos()
    if center_x == nil and player then
       local coords = draw.get_coords()
       center_x, center_y = coords:tile_to_screen(player.x, player.y)
+      self.scroll_last_px = self.player.x
+      self.scroll_last_py = self.player.y
    end
 
    if center_x then
@@ -170,7 +186,7 @@ function field_layer:set_camera_pos(sx, sy)
       self.camera_y = nil
    end
    self:update_draw_pos()
-   self.renderer:update(self.map, 0)
+   self.renderer:update(0)
    self:refresh_hud()
 end
 
@@ -178,8 +194,85 @@ function field_layer:set_camera_offset(sdx, sdy)
    self.camera_dx = sdx or 0
    self.camera_dy = sdy or 0
    self:update_draw_pos()
-   self.renderer:update(self.map, 0)
+   self.renderer:update(0)
    self:refresh_hud()
+end
+
+local function msecs_to_frames(msecs, framerate)
+   framerate = framerate or 60
+   local msecs_per_frame = (1 / framerate) * 1000
+   local frames = msecs / msecs_per_frame
+   return frames
+end
+
+function field_layer:update_scrolling()
+   if self.player == nil then
+      self.scrolling_mode = "none"
+      return
+   end
+
+   if self:player_is_running() then
+      return
+   end
+
+   local dx = self.scroll_last_px - self.player.x
+   local dy = self.scroll_last_py - self.player.y
+   if dx ~= 0 or dy ~= 0 then
+      if self.scrolling_mode == "normal" then
+         self.scrolling_mode = "fast"
+      elseif self.scrolling_mode == "none" then
+         self.scrolling_mode = "normal"
+      end
+
+      local coords = draw.get_coords()
+      local tw, th = coords:get_size()
+      local px, py = coords:tile_to_screen(self.player.x, self.player.y)
+
+      local frames = 8
+      if self.scrolling_mode == "fast" then
+         frames = 8
+      end
+      -- TODO assumes 60 FPS
+      local ms = msecs_to_frames(frames, 60)
+      local i = 0
+
+      local Log = require("api.Log")
+
+      local tdx = tw * math.sign(dx)
+      local tdy = th * math.sign(dy)
+
+      local draw_x, draw_y = draw.get_coords():get_draw_pos(px + tdx,
+                                                            py + tdy,
+                                                            self.map:width(),
+                                                            self.map:height(),
+                                                            self.renderer.renderer.width,
+                                                            self.renderer.renderer.height)
+      repeat
+         self.scroll_x = i * (dx / ms) * tw
+         self.scroll_y = i * (dy / ms) * th
+         local sx, sy = draw.get_coords():get_draw_pos(px - self.scroll_x + tdx,
+                                                       py - self.scroll_y + tdy,
+                                                       self.map:width(),
+                                                       self.map:height(),
+                                                       self.renderer.renderer.width,
+                                                       self.renderer.renderer.height)
+
+         self.renderer.x = -(draw_x - sx)
+         self.renderer.y = -(draw_y - sy)
+         Log.info("%f %f %f %f", self.renderer.x, self.renderer.y, px, py)
+
+         local dt, _, _ = coroutine.yield()
+         i = i + dt
+      until i >= ms
+   else
+      self.scrolling_mode = "none"
+   end
+
+   self:update_draw_pos()
+   self.scroll_x = 0
+   self.scroll_y = 0
+   self.renderer.x = self.x
+   self.renderer.y = self.y
 end
 
 function field_layer:update_screen(dt, and_draw)
@@ -201,7 +294,7 @@ function field_layer:update_screen(dt, and_draw)
       local going = true
       while going do
          self.keys:update_repeats(dt)
-         going = self.renderer:update(self.map, dt)
+         going = self.renderer:update(dt)
          if and_draw then
             dt = coroutine.yield() or 0
          end
@@ -229,7 +322,7 @@ function field_layer:refresh_hud(relayout)
 end
 
 function field_layer:update(dt, ran_action, result)
-   self.renderer:update(self.map, dt)
+   self.renderer:update(dt)
 
    -- HACK the hud also gets tracked by the draw layer system, but since the hud
    -- will never technically get updated by the draw layer system since it's
@@ -302,14 +395,14 @@ function field_layer:get_draw_layer(tag)
       return nil
    end
 
-   return self.renderer:get_layer(tag)
+   return self.renderer:get_draw_layer(tag)
 end
 
 function field_layer:set_draw_layer_enabled(tag, enabled)
    self.draw_layer_spec:set_draw_layer_enabled(tag, enabled)
 
    if self.renderer then
-      return self.renderer:set_layer_enabled(tag, enabled)
+      return self.renderer:set_draw_layer_enabled(tag, enabled)
    end
 end
 

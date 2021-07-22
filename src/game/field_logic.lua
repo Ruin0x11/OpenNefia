@@ -342,6 +342,8 @@ function field_logic.player_turn_query()
       return "player_died", player
    end
 
+   field:update_scrolling()
+
    if state.about_to_autosave then
       state.about_to_autosave = false
       Save.save_game()

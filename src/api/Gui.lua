@@ -65,7 +65,7 @@ end
 
 --- Returns the screen coordinates of the tilemap renderer.
 function Gui.field_draw_pos()
-   return field.renderer:draw_pos()
+   return field.renderer:get_draw_pos()
 end
 
 --- Starts a draw callback to be run asynchronously.
@@ -282,8 +282,7 @@ end
 --- @treturn uint tdy lower-right y
 function Gui.visible_tile_bounds(x, y, width, height)
    if not (x and y) and field.renderer then
-      x = field.renderer.draw_x
-      y = field.renderer.draw_y
+      x, y = field.renderer:get_draw_pos()
    end
    width = width or Draw.get_width()
    height = height or Draw.get_height()
@@ -490,7 +489,7 @@ function Gui.mes_alert()
 end
 
 function Gui.add_effect_map(asset_id, tx, ty, max_frames, rotation, kind)
-   local layer = field.renderer:get_layer("base.effect_map_layer")
+   local layer = field.renderer:get_draw_layer("base.effect_map_layer")
    if layer == nil then
       return
    end
@@ -500,7 +499,7 @@ end
 
 function Gui.step_effect_map(frames)
    frames = frames or 1
-   local layer = field.renderer:get_layer("base.effect_map_layer")
+   local layer = field.renderer:get_draw_layer("base.effect_map_layer")
    if layer == nil then
       return
    end

@@ -2,13 +2,13 @@ local IUiElement = require("api.gui.IUiElement")
 local InstancedMap = require("api.InstancedMap")
 local DrawLayerSpec = require("api.draw.DrawLayerSpec")
 local field_renderer = require("internal.field_renderer")
-local Gui = require("api.Gui")
 local Draw = require("api.Draw")
 
 local MapRenderer = class.class("MapRenderer", IUiElement)
 
 function MapRenderer:init(map, draw_layers)
    if draw_layers == nil then
+      local Gui = require("api.Gui")
       draw_layers = Gui.current_draw_layer_spec()
    end
 
@@ -57,6 +57,10 @@ function MapRenderer:set_draw_pos(draw_x, draw_y)
    self.renderer:set_draw_pos(draw_x, draw_y)
 end
 
+function MapRenderer:update_draw_pos(sx, sy)
+   self.renderer:update_draw_pos(sx, sy)
+end
+
 function MapRenderer:get_draw_pos()
    return self.renderer:draw_pos()
 end
@@ -68,6 +72,10 @@ function MapRenderer:relayout(x, y, width, height)
    self.height = height
 
    self.canvas = Draw.create_canvas(self.width, self.height)
+end
+
+function MapRenderer:force_screen_update()
+   self.renderer:force_screen_update()
 end
 
 function MapRenderer:relayout_inner(x, y, width, height)

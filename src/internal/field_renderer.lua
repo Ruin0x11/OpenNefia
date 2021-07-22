@@ -102,6 +102,10 @@ function field_renderer:draw_pos()
    return self.draw_x, self.draw_y
 end
 
+function field_renderer:force_screen_update()
+   self.screen_updated = true
+end
+
 function field_renderer:draw(x, y, width, height)
    x = x or self.draw_x
    y = y or self.draw_y
