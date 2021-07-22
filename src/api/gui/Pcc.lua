@@ -7,7 +7,29 @@ local Log = require("api.Log")
 
 local Pcc = class.class("Pcc", IChipRenderable)
 
-local DEFAULT_Z_ORDER = {
+Pcc.COLORS = {
+   { 255, 255, 255 },
+   { 175, 255, 175 },
+   { 255, 155, 155 },
+   { 175, 175, 255 },
+   { 255, 215, 175 },
+   { 255, 255, 175 },
+   { 155, 154, 153 },
+   { 185, 155, 215 },
+   { 155, 205, 205 },
+   { 255, 195, 185 },
+   { 235, 215, 155 },
+   { 225, 215, 185 },
+   { 105, 235, 105 },
+   { 205, 205, 205 },
+   { 255, 225, 225 },
+   { 225, 225, 255 },
+   { 225, 195, 255 },
+   { 215, 255, 215 },
+   { 210, 250, 160 },
+}
+
+Pcc.DEFAULT_Z_ORDER = {
    mantle = 1000,
    hairbk = 2000,
    ridebk = 3000,
@@ -34,7 +56,7 @@ function Pcc:init(parts)
    for _, part in ipairs(parts) do
       local entry = data["base.pcc_part"]:ensure(part.id)
       assert(entry.image)
-      self.parts:insert(part.z_order or DEFAULT_Z_ORDER[entry.kind] or 100000,
+      self.parts:insert(part.z_order or Pcc.DEFAULT_Z_ORDER[entry.kind] or 100000,
                         {
                            _id = entry._id,
                            kind = entry.kind,

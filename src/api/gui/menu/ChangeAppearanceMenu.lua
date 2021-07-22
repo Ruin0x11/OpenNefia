@@ -3,6 +3,7 @@ local Pcc = require("api.gui.Pcc")
 local data = require("internal.data")
 local Gui = require("api.Gui")
 local IUiLayer = require("api.gui.IUiLayer")
+local Rand = require("api.Rand")
 
 local IInput = require("api.gui.IInput")
 local UiTheme = require("api.gui.UiTheme")
@@ -30,13 +31,30 @@ local ChangeAppearanceListExt = function(change_appearance_menu)
    return E
 end
 
+-- PCC parts whose color can be changed via the appearance menu.
+local COLORABLE_PARTS = table.set {
+   "body",
+   "eye",
+   "cloth",
+   "pants",
+   "hair",
+   "subhair"
+}
+
 local function make_default_pcc()
    local seen = table.set {}
    local defaults = {}
 
-   for _, pcc_part in data["base.pcc_part"]:iter() do
+   local parts = data["base.pcc_part"]:iter():to_list()
+   Rand.shuffle(parts)
+
+   for _, pcc_part in ipairs(parts) do
       if seen[pcc_part.kind] == nil then
-         defaults[#defaults+1] = { id = pcc_part._id }
+         local default = { id = pcc_part._id }
+         if COLORABLE_PARTS[pcc_part.kind] then
+            default.color = Rand.choice(Pcc.COLORS)
+         end
+         defaults[#defaults+1] = default
          seen[pcc_part.kind] = true
       end
    end
