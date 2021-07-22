@@ -100,6 +100,7 @@ local function step_autoexplore()
          return
       end
 
+      Gui.set_scrolling("disabled")
       Input.enqueue_macro(next_action)
       -- Input.ignore_keywait()
    else

@@ -365,8 +365,6 @@ function field_logic.player_turn_query()
       return result, player
    end
 
-   field.no_scroll_this_update = false
-
    while going do
       if field.map_changed then
          -- Game was loaded while we were querying for input; clear the list of
@@ -393,6 +391,8 @@ function field_logic.player_turn_query()
          going = false
          break
       end
+
+      field.no_scroll_this_update = false
 
       dt = coroutine.yield()
    end
