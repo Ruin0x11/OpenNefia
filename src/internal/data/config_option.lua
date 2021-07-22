@@ -389,7 +389,7 @@ data:add_multi(
 
          type = "enum",
          choices = { "none", "player", "all" },
-         default = "all"
+         default = "none"
       },
       {
          _id = "scroll_type",

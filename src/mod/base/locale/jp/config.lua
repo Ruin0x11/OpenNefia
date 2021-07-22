@@ -154,8 +154,9 @@ return {
             },
 
             default_return_to_title = {
-               name = "「タイトルに戻る」のデフォルト",
-               yes_no = "config.common.yes_no.shiyou_suru_shinai"
+               name = "「タイトルに戻る」",
+               yes = "優先",
+               no = "デフォルト"
             },
 
             --
@@ -312,7 +313,7 @@ return {
             },
 
             anime_wait_type = {
-               name = "アニメーションウェイト種類",
+               name = "アニメウェイトタイプ",
                variants = {
                   always_wait = "待つ",
                   at_turn_start = "ターン開始に待つ",
