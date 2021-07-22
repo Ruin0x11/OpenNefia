@@ -7,6 +7,7 @@ local Env = require("api.Env")
 local DrawLayerSpec = require("api.draw.DrawLayerSpec")
 local MapRenderer = require("api.gui.MapRenderer")
 
+local config = require("internal.config")
 local draw = require("internal.draw")
 local draw_callbacks = require("internal.draw_callbacks")
 
@@ -31,7 +32,7 @@ function field_layer:init()
    self.scrolling_mode = "none"
    self.scroll_last_px = 0
    self.scroll_last_py = 0
-   self.scrolling_entities = {}
+   self.scrolling_objs = {}
 
    self.view_centered = false
 
@@ -124,7 +125,7 @@ function field_layer:relayout(x, y, width, height)
    self.width = width or self.width
    self.height = height or self.height
    if self.renderer then
-      self.renderer:relayout(x, y, width, height)
+      self.renderer:relayout(self.x, self.y, self.width, self.height)
       self.renderer:relayout_inner(self.x, self.y, self.width, self.height + self:get_renderer_y_offset())
    end
 end
@@ -202,33 +203,65 @@ local function msecs_to_frames(msecs, framerate)
 end
 
 function field_layer:update_scrolling()
-   if self.player == nil then
+   if self.player == nil or not config.base.scroll or Env.is_headless() then
       self.scrolling_mode = "none"
       self.scroll_last_px = self.player.x
       self.scroll_last_py = self.player.y
+      self.scrolling_objs = {}
       return
    end
 
    if self:player_is_running() then
       self.scroll_last_px = self.player.x
       self.scroll_last_py = self.player.y
+      self.scrolling_objs = {}
       return
    end
 
-   self.scrolling_entities[self.player.uid] = {}
+   local objs_in_sight = {}
+   for _, obj in self.map:iter() do
+      if obj:is_in_fov() then
+         objs_in_sight[obj.uid] = obj
+      end
+   end
 
-   local dx = self.scroll_last_px - self.player.x
-   local dy = self.scroll_last_py - self.player.y
-   if dx ~= 0 or dy ~= 0 then
+   local coords = draw.get_coords()
+   local tw, th = coords:get_size()
+   local px, py = coords:tile_to_screen(self.player.x, self.player.y)
+
+   local layer = self.renderer:get_draw_layer("base.chip_layer")
+
+   local obj_scroll_offsets = {}
+   for uid, pos in pairs(self.scrolling_objs) do
+      local obj = objs_in_sight[uid]
+      if obj then
+         -- The chip layer has not been updated at this point, so the old index ->
+         -- UID mapping from the previous screen update is still there. It will be
+         -- rebuilt when self.renderer:update() is called. So the chip index
+         -- returned below might also be removed after the scrolling is finished.
+         local index = layer.uid_to_index[uid]
+         if index then
+            local odx = (pos.prev_x - obj.x) * tw
+            local ody = (pos.prev_y - obj.y) * th
+            if odx ~= 0 or ody ~= 0 then
+               table.insert(obj_scroll_offsets, {
+                               index = index,
+                               dx = odx,
+                               dy = ody
+               })
+            end
+         end
+      end
+   end
+
+   if #obj_scroll_offsets > 0 then
+      local dx = self.scroll_last_px - self.player.x
+      local dy = self.scroll_last_py - self.player.y
       if self.scrolling_mode == "normal" then
          self.scrolling_mode = "fast"
       elseif self.scrolling_mode == "none" then
          self.scrolling_mode = "normal"
       end
-
-      local coords = draw.get_coords()
-      local tw, th = coords:get_size()
-      local px, py = coords:tile_to_screen(self.player.x, self.player.y)
 
       local frames = 4
       if self.scrolling_mode == "fast" then
@@ -237,8 +270,6 @@ function field_layer:update_scrolling()
       -- TODO assumes 60 FPS
       local ms = msecs_to_frames(frames, 60)
       local i = 0
-
-      local Log = require("api.Log")
 
       local tdx = tw * math.sign(dx)
       local tdy = th * math.sign(dy)
@@ -250,15 +281,6 @@ function field_layer:update_scrolling()
                                                             self.renderer.renderer.width,
                                                             self.renderer.renderer.height)
 
-      local layer = self.renderer:get_draw_layer("base.chip_layer")
-
-      -- The chip layer has not been updated at this point, so the old index ->
-      -- UID mapping from the previous screen update is still there. It will be
-      -- rebuilt when self.renderer:update() is called. So the chip index
-      -- returned below might also be removed after the scrolling is finished.
-      local index = layer.uid_to_index[self.player.uid]
-      Log.info("%s", index)
-
       repeat
          local scroll_x = i * (dx / ms) * tw
          local scroll_y = i * (dy / ms) * th
@@ -269,14 +291,18 @@ function field_layer:update_scrolling()
                                                        self.renderer.renderer.width,
                                                        self.renderer.renderer.height)
 
-         if index then
-            layer:scroll_chip(index, scroll_x, scroll_y)
+         for _, offset in ipairs(obj_scroll_offsets) do
+            local obj_scroll_x = i * (offset.dx / ms)
+            local obj_scroll_y = i * (offset.dy / ms)
+            layer:scroll_chip(offset.index, obj_scroll_x, obj_scroll_y)
          end
 
          self.renderer.x = -(draw_x - sx)
          self.renderer.y = -(draw_y - sy)
 
          local dt, _, _ = coroutine.yield()
+         self.renderer:update(dt)
+         self.draw_callbacks:update(dt)
          self.keys:update_repeats(dt)
          i = i + dt
       until i >= ms
@@ -288,8 +314,7 @@ function field_layer:update_scrolling()
    self.renderer.y = self.y
    self.scroll_last_px = self.player.x
    self.scroll_last_py = self.player.y
-
-   self.scrolling_entities = {}
+   self.scrolling_objs = {}
 end
 
 function field_layer:update_screen(dt, and_draw)
@@ -383,7 +408,9 @@ function field_layer:draw()
    end
 
    self.renderer:draw()
-   self.draw_callbacks:draw(self.renderer.draw_x, self.renderer.draw_y)
+
+   local draw_x, draw_y = self.renderer:get_draw_pos()
+   self.draw_callbacks:draw(draw_x, draw_y)
 end
 
 function field_layer:query_repl()

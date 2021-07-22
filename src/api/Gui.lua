@@ -227,6 +227,19 @@ function Gui.fade_in(length)
    Draw.wait_global_draw_callbacks()
 end
 
+function Gui.scroll_object(obj, prev_x, prev_y)
+   if not obj:is_in_fov() then
+      return
+   end
+   assert(math.type(prev_x) == "integer")
+   assert(math.type(prev_y) == "integer")
+   field.scrolling_objs[obj.uid] = { prev_x = prev_x, prev_y = prev_y }
+end
+
+function Gui.update_scrolling()
+   field:update_scrolling()
+end
+
 --- Converts from map tile space to screen space.
 ---
 --- @tparam int tx Tile X coordinate

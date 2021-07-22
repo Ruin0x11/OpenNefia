@@ -295,6 +295,12 @@ function IChara:set_pos(x, y, force)
       return false
    end
 
+   local dx = math.abs(x - self.x)
+   local dy = math.abs(y - self.y)
+   if dx == 1 or dy == 1 then
+      Gui.scroll_object(self, self.x, self.y)
+   end
+
    return IMapObject.set_pos(self, x, y, force)
 end
 
@@ -328,11 +334,16 @@ function IChara:swap_places(other)
 
    local sx, sy = self.x, self.y
    local ox, oy = other.x, other.y
+
+   Gui.scroll_object(self, sx, sy)
+   Gui.scroll_object(other, ox, oy)
    location:move_object(self, ox, oy)
    location:move_object(other, sx, sy)
 
    self:emit("base.on_chara_moved", {prev_x=sx, prev_y=sy, x=self.x, y=self.y})
    other:emit("base.on_chara_moved", {prev_x=ox, prev_y=oy, x=other.x, y=other.y})
+
+   Gui.update_scrolling()
 
    return true
 end
