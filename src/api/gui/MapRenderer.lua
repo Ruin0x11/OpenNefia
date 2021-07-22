@@ -84,7 +84,10 @@ end
 
 function MapRenderer:draw()
    if self.map then
-      Draw.with_canvas(self.canvas, self.renderer.draw, self.renderer, nil, nil, self.width, self.height)
+      Draw.with_canvas(self.canvas, function()
+                          Draw.clear(0, 0, 0)
+                          self.renderer:draw(nil, nil, self.width, self.height)
+                       end)
       Draw.set_color(255, 255, 255)
       local dx, dy = self:get_draw_pos()
       local tw, th = Draw.get_coords():get_size()
