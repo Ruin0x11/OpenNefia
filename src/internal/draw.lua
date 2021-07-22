@@ -535,7 +535,7 @@ local default_font = FALLBACK_FONT
 function draw.set_default_font(font)
    local path = fs.join("data/font", font)
    assert(fs.exists(path), "Font file " .. path .. " does not exist")
-   default_font = default_font
+   default_font = path
 end
 
 local font_cache = setmetatable({}, { __mode = "v" })
