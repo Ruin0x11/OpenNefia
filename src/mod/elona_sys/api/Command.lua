@@ -54,10 +54,11 @@ function Command.move(player, x, y, is_repeat)
 
    player.direction = Pos.pack_direction(dx, dy)
 
-   if is_repeat then
+   local map = player:current_map()
+   if is_repeat and not map:has_type("world_map") then
       Gui.set_scrolling("fast")
    else
-      Gui.set_scrolling("normal")
+      Gui.set_scrolling("slow")
    end
 
    -- Try to modify the final position or prevent movement. This is caused by
@@ -81,7 +82,6 @@ function Command.move(player, x, y, is_repeat)
    end
 
    -- >>>>>>>> shade2/action.hsp:581 	if (gLevel=1)or(mType=mTypeField):if mType!mTypeW ..
-   local map = player:current_map()
    local prev_map_uid, prev_x, prev_y = map:previous_map_and_location()
 
    if not Map.is_in_bounds(next_pos.x, next_pos.y, map) then

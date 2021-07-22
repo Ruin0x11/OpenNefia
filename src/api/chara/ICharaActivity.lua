@@ -72,8 +72,10 @@ function ICharaActivity:pass_activity_turn()
             Gui.wait(anim_wait, true)
             auto_turn_widget:pass_turn()
          end
+         if not self.activity.proto.can_scroll then
+            Gui.set_scrolling("disabled")
+         end
       end
-      Gui.set_scrolling("disabled")
    end
 
    if self.activity and (self.activity.turns or 0) <= 0 then
