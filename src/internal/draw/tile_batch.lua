@@ -123,7 +123,6 @@ function tile_batch:draw(x, y, width, height)
    Draw.set_color(self.shadow[1], self.shadow[2], self.shadow[3], 108)
    Draw.filled_rect(0, 0, width, height)
    Draw.set_blend_mode("alpha")
-
 end
 
 return tile_batch

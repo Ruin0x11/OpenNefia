@@ -80,7 +80,7 @@ Event.register("base.on_hotload_end", "Hotload field renderer",
                function()
                   local field = require("game.field")
                   if field.is_active then
-                     field.renderer.screen_updated = true
+                     field.renderer:force_screen_update()
                      field:update(0, false, nil)
                   end
                end)

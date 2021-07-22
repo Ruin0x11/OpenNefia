@@ -238,7 +238,7 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
       local damage = raw_damage.damage
       local original_damage = raw_damage.original_damage
 
-      local play_animation = chara:is_player()
+      local play_animation = chara:is_player() and config.base.attack_anime
       if play_animation then
          local damage_percent = damage * 100 / target:calc("max_hp")
          local kind = data["base.skill"]:ensure(attack_skill).attack_animation or 0

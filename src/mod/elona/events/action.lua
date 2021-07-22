@@ -17,7 +17,6 @@ local function bump_into_chara(player, params, result)
          Gui.mes("action.move.displace.text", on_cell)
          if player:swap_places(on_cell) then
             on_cell:emit("elona.on_chara_displaced", {chara=player})
-            Gui.set_scroll()
          end
          return "turn_end"
       end
@@ -28,7 +27,6 @@ local function bump_into_chara(player, params, result)
          player:set_target(on_cell)
       end
       ElonaAction.melee_attack(player, on_cell)
-      Gui.set_scroll()
       return "turn_end"
    end
 

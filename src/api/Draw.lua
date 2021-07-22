@@ -420,10 +420,10 @@ end
 ---
 --- @tparam int msecs
 --- @tparam[opt] int framerate
-function Draw.msecs_to_frames(msecs)
+function Draw.msecs_to_frames(msecs, framerate)
    -- TODO: assumes 60 FPS
-   local framerate = 60
-   local msecs_per_frame = (1 / framerate or 60) * 1000
+   framerate = framerate or 60
+   local msecs_per_frame = (1 / framerate) * 1000
    local frames = msecs / msecs_per_frame
    return frames
 end

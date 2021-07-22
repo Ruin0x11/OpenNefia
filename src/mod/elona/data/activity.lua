@@ -171,6 +171,7 @@ local traveling = {
    params = { dest_x = "number", dest_y = "number" },
 
    animation_wait = 0,
+   can_scroll = true,
 
    -- >>>>>>>> shade2/chara_func.hsp:456 	if cRowAct(c)!0:if cRowAct(c)!rowActTravel:cRowAc ...
    on_interrupt = "ignore",

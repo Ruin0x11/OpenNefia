@@ -187,7 +187,7 @@ function TextHandler:ignore_modifiers(modifiers)
    self.keybinds:ignore_modifiers(modifiers)
 end
 
-function TextHandler:run_text_action(key, ...)
+function TextHandler:run_text_action(key, player)
    local keybind
 
    local special = false
@@ -206,18 +206,18 @@ function TextHandler:run_text_action(key, ...)
       and not special
       and self.bindings["text_entered"]
    then
-      return true, self.bindings["text_entered"](key, ...)
+      return true, self.bindings["text_entered"](key, player)
    end
 
    if Log.has_level("trace") then
       Log.trace("Text: %s %s -> \"%s\" %s", key, inspect(self.modifiers), keybind, self)
    end
 
-   local ran, result = self:run_keybind_action(keybind, true, ...)
+   local ran, result = self:run_keybind_action(keybind, true, player)
 
    if not ran then
       for _, forward in ipairs(self.forwards) do
-         local did_something, first_result = forward:run_text_action(key, ...)
+         local did_something, first_result = forward:run_text_action(key, player)
          if did_something then
             return did_something, first_result
          end
@@ -225,7 +225,7 @@ function TextHandler:run_text_action(key, ...)
    end
 end
 
-function TextHandler:run_key_action(key, ...)
+function TextHandler:run_key_action(key, player)
    local keybind = self.keybinds:key_to_keybind(key, self.modifiers)
    if Log.has_level("trace") then
       Log.trace("Keybind: %s %s -> \"%s\" %s", key, inspect(self.modifiers), keybind, self)
@@ -236,11 +236,11 @@ function TextHandler:run_key_action(key, ...)
       keybind = "raw_" .. with_modifiers
    end
 
-   local ran, result = self:run_keybind_action(keybind, true, ...)
+   local ran, result = self:run_keybind_action(keybind, true, player)
 
    if not ran then
       for _, forward in ipairs(self.forwards) do
-         local did_something, first_result = forward:run_key_action(key, ...)
+         local did_something, first_result = forward:run_key_action(key, player)
          if did_something then
             return did_something, first_result
          end
@@ -250,16 +250,16 @@ function TextHandler:run_key_action(key, ...)
    return ran, result
 end
 
-function TextHandler:run_keybind_action(keybind, pressed, ...)
+function TextHandler:run_keybind_action(keybind, pressed, player)
    local func = self.bindings[keybind]
    if func then
-      return true, func(pressed, ...)
+      return true, func(pressed, player)
    end
 
    return false, nil
 end
 
-function TextHandler:release_key(key, ...)
+function TextHandler:release_key(key, player)
 end
 
 function TextHandler:run_actions()

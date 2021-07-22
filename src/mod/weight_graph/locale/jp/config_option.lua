@@ -12,7 +12,7 @@ return {
             show_weight_graph = {
                name = "重量グラフの表示",
                variants = {
-                  disabled = "しない",
+                  disabled = "使用しない",
                   left = "左",
                   right = "右"
                }

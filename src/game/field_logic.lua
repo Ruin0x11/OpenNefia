@@ -392,6 +392,8 @@ function field_logic.player_turn_query()
          break
       end
 
+      field.no_scroll_this_update = false
+
       dt = coroutine.yield()
    end
 
