@@ -392,6 +392,13 @@ data:add_multi(
          default = "all"
       },
       {
+         _id = "scroll_type",
+
+         type = "enum",
+         choices = { "smooth", "classic" },
+         default = "smooth"
+      },
+      {
          _id = "window_anime",
 
          type = "boolean",
@@ -476,6 +483,7 @@ data:add {
       "base.title_effect",
       "base.auto_turn_speed",
       "base.scroll",
+      "base.scroll_type",
       "base.window_anime",
       "base.always_center",
       "base.alert_wait",

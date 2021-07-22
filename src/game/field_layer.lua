@@ -6,6 +6,7 @@ local KeyHandler = require("api.gui.KeyHandler")
 local Env = require("api.Env")
 local DrawLayerSpec = require("api.draw.DrawLayerSpec")
 local MapRenderer = require("api.gui.MapRenderer")
+local Stopwatch = require("api.Stopwatch")
 
 local config = require("internal.config")
 local draw = require("internal.draw")
@@ -219,7 +220,7 @@ function field_layer:update_scrolling()
    if self.player == nil
       or config.base.scroll == "none"
       or Env.is_headless()
-      or self:player_is_running()
+      or (self:player_is_running() and not config.base.scroll_when_run)
       or self.no_scroll_this_update
    then
       self.scrolling_mode = "none"
@@ -272,14 +273,6 @@ function field_layer:update_scrolling()
       local dx = self.scroll_last_px - self.player.x
       local dy = self.scroll_last_py - self.player.y
 
-      local frames = 4
-      if self.scrolling_mode == "fast" then
-         frames = 2
-      end
-      -- TODO assumes 60 FPS
-      local ms = msecs_to_frames(frames, 60)
-      local i = 0
-
       local tdx = tw * math.sign(dx)
       local tdy = th * math.sign(dy)
 
@@ -290,31 +283,89 @@ function field_layer:update_scrolling()
                                                             self.renderer.renderer.width,
                                                             self.renderer.renderer.height)
 
-      repeat
-         local scroll_x = i * (dx / ms) * tw
-         local scroll_y = i * (dy / ms) * th
-         local sx, sy = draw.get_coords():get_draw_pos(px - scroll_x + tdx,
-                                                       py - scroll_y + tdy,
-                                                       self.map:width(),
-                                                       self.map:height(),
-                                                       self.renderer.renderer.width,
-                                                       self.renderer.renderer.height)
-
-         for _, offset in ipairs(obj_scroll_offsets) do
-            local obj_scroll_x = i * (offset.dx / ms)
-            local obj_scroll_y = i * (offset.dy / ms)
-            layer:scroll_chip(offset.index, obj_scroll_x, obj_scroll_y)
+      if config.base.scroll_type == "classic" then
+         -- >>>>>>>> elona122/shade2/screen.hsp:1224 *screen_scroll ...
+         local frames = 5
+         if self.scrolling_mode == "fast" then
+            frames = 3
+         elseif self.scrolling_mode == "slow" then
+            frames = 6
+         end
+         if self:player_is_running() then
+            frames = 1
          end
 
-         self.renderer.x = -(draw_x - sx)
-         self.renderer.y = -(draw_y - sy)
+         for i = 0, frames-1 do
+            local scroll_x = dx * i * tw / frames
+            local scroll_y = dy * i * th / frames
 
-         local dt, _, _ = coroutine.yield()
-         self.renderer:update(dt)
-         self.draw_callbacks:update(dt)
-         self.keys:update_repeats(dt)
-         i = i + dt
-      until i >= ms
+            local sx, sy = draw.get_coords():get_draw_pos(px - scroll_x + tdx,
+                                                          py - scroll_y + tdy,
+                                                          self.map:width(),
+                                                          self.map:height(),
+                                                          self.renderer.renderer.width,
+                                                          self.renderer.renderer.height)
+
+            for _, offset in ipairs(obj_scroll_offsets) do
+               local obj_scroll_x = i * offset.dx / frames
+               local obj_scroll_y = i * offset.dy / frames
+               layer:scroll_chip(offset.index, obj_scroll_x, obj_scroll_y)
+            end
+
+            self.renderer.x = -(draw_x - sx)
+            self.renderer.y = -(draw_y - sy)
+
+            local ms = 0
+            repeat
+               local dt, _, _ = coroutine.yield()
+               self.renderer:update(dt)
+               self.draw_callbacks:update(dt)
+               self.keys:update_repeats(dt)
+               ms = ms + dt
+            until ms > 33.0 / 1000.0
+         end
+         -- <<<<<<<< elona122/shade2/screen.hsp:1267 	return ..
+      else
+         local frames = 3
+         if self.scrolling_mode == "fast" then
+            frames = 2
+         elseif self.scrolling_mode == "slow" then
+            frames = 3.5
+         end
+         if self:player_is_running() then
+            frames = 1
+         end
+
+         -- TODO assumes 60 FPS
+         local ms = msecs_to_frames(frames, 60)
+         local i = 0
+
+         repeat
+            local scroll_x = i * (dx / ms) * tw
+            local scroll_y = i * (dy / ms) * th
+            local sx, sy = draw.get_coords():get_draw_pos(px - scroll_x + tdx,
+                                                          py - scroll_y + tdy,
+                                                          self.map:width(),
+                                                          self.map:height(),
+                                                          self.renderer.renderer.width,
+                                                          self.renderer.renderer.height)
+
+            for _, offset in ipairs(obj_scroll_offsets) do
+               local obj_scroll_x = i * (offset.dx / ms)
+               local obj_scroll_y = i * (offset.dy / ms)
+               layer:scroll_chip(offset.index, obj_scroll_x, obj_scroll_y)
+            end
+
+            self.renderer.x = -(draw_x - sx)
+            self.renderer.y = -(draw_y - sy)
+
+            local dt, _, _ = coroutine.yield()
+            self.renderer:update(dt)
+            self.draw_callbacks:update(dt)
+            self.keys:update_repeats(dt)
+            i = i + dt
+         until i >= ms
+      end
    else
       self.scrolling_mode = "none"
    end

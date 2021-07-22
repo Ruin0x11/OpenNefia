@@ -276,6 +276,15 @@ return {
                }
             },
 
+            scroll_type = {
+               doc = "PCが動くときスクロールアニメーションの種類です。",
+               name = "スクロールタイプ",
+               variants = {
+                  smooth = "滑らか",
+                  classic = "旧式"
+               }
+            },
+
             window_anime = {
                doc = "ゲーム内でウィンドウが表示される際アニメーションが表示されます。",
                name = "ウィンドウアニメ"
