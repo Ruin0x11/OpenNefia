@@ -297,14 +297,6 @@ function Gui.message_window_y()
    return Draw.get_height() - 72
 end
 
-function Gui.scroll_screen()
-   --field:update_screen(true)
-end
-
-function Gui.set_scroll()
-   -- scroll = true
-end
-
 function Gui.key_held_frames()
    return field:key_held_frames()
 end

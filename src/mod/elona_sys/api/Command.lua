@@ -112,7 +112,6 @@ function Command.move(player, x, y)
 
       -- TODO maybe return turn action here
       Action.move(player, next_pos.x, next_pos.y)
-      Gui.set_scroll()
    end
 
    -- proc confusion text

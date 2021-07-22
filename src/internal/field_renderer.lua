@@ -18,12 +18,6 @@ function field_renderer:init(map_width, map_height, draw_layer_spec)
    self.layers = PriorityMap:new()
    self.enabled = {}
 
-   self.scroll = nil
-   self.scroll_frames = 0
-   self.scroll_max_frames = 0
-   self.scroll_x = 0
-   self.scroll_y = 0
-
    for tag, entry in draw_layer_spec:iter() do
       -- WARNING: This needs to be sanitized by moving all the layers
       -- to the public API, to prevent usage of the global require.
@@ -87,26 +81,13 @@ function field_renderer:set_map_size(map_width, map_height, layers)
    self:init(map_width, map_height, layers)
 end
 
-function field_renderer:set_scroll(dx, dy, scroll_frames)
-   self.scroll = { dx = dx, dy = dy }
-   self.scroll_max_frames = scroll_frames
-   self.scroll_frames = self.scroll_max_frames
-end
-
-function field_renderer:update_draw_pos(sx, sy, scroll_frames)
+function field_renderer:update_draw_pos(sx, sy)
    local draw_x, draw_y = self.coords:get_draw_pos(sx,
                                                    sy,
                                                    self.map_width,
                                                    self.map_height,
                                                    self.width,
                                                    self.height)
-
-   if scroll_frames then
-      self:set_scroll(self.draw_x - draw_x, self.draw_y - draw_y, scroll_frames)
-   else
-      self.scroll = nil
-      self.scroll_frames = 0
-   end
 
    self:set_draw_pos(draw_x, draw_y)
 end
@@ -118,7 +99,7 @@ function field_renderer:set_draw_pos(draw_x, draw_y)
 end
 
 function field_renderer:draw_pos()
-   return self.draw_x, self.draw_y, self.scroll_x, self.scroll_y
+   return self.draw_x, self.draw_y
 end
 
 function field_renderer:draw(x, y, width, height)
@@ -138,30 +119,10 @@ function field_renderer:draw(x, y, width, height)
 end
 
 function field_renderer:update(map, dt)
-   -- BUG: this really doesn't look like the original Elona's
-   -- scrolling. The issue is here it is based on dt. In vanilla
-   -- scrolling would always scroll by a fixed amount of pixels
-   -- between 40ms pauses, regardless of framerate. This meant the
-   -- framerate the game ran at affected the speed of scrolling, but
-   -- the effect ends up being different. There should be a
-   -- compatability option for vanilla.
-   if self.scroll then
-      self.scroll_frames = self.scroll_frames - Draw.msecs_to_frames(dt*1000)
-      if self.scroll_frames <= 0 then
-         self.scroll = nil
-         self.scroll_x = 0
-         self.scroll_y = 0
-      else
-         local p = 1 - (self.scroll_frames/self.scroll_max_frames)
-         self.scroll_x = (self.scroll.dx - (p * self.scroll.dx))
-         self.scroll_y = (self.scroll.dy - (p * self.scroll.dy))
-      end
-   end
-
    local going = false
    for _, l, tag in self.layers:iter() do
       if self.enabled[tag] ~= false then
-         local result = l:update(map, dt, self.screen_updated, self.scroll_frames)
+         local result = l:update(map, dt, self.screen_updated)
          if result then -- not nil or false
             going = true
          end

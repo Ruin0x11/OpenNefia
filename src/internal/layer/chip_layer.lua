@@ -377,15 +377,11 @@ function chip_layer:update_stacking(map)
    end
 end
 
-function chip_layer:update(map, dt, screen_updated, scroll_frames)
+function chip_layer:update(map, dt, screen_updated)
    self.chip_batch:update(dt)
    self.drop_shadow_batch:update(dt)
 
    if not screen_updated then return end
-
-   if scroll_frames > 0 then
-      return true
-   end
 
    assert(map ~= nil)
 

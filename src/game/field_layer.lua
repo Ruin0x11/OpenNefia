@@ -32,7 +32,6 @@ function field_layer:init()
 
    self.loaded = false
    self.map_changed = false
-   self.no_scroll = true
    self.waiting_for_draw_callbacks = false
    self.sound_manager = require("internal.global.global_sound_manager")
    self.draw_callbacks = draw_callbacks:new()
@@ -106,7 +105,6 @@ function field_layer:set_map(map)
    end
 
    self.map_changed = true
-   self.no_scroll = true
 end
 
 function field_layer:relayout(x, y, width, height)
@@ -145,7 +143,7 @@ function field_layer:set_view_centered(centered)
    self:relayout()
 end
 
-function field_layer:update_draw_pos(scroll_frames)
+function field_layer:update_draw_pos()
    local player = self.player
    local center_x = self.camera_x or nil
    local center_y = self.camera_y or nil
@@ -158,7 +156,7 @@ function field_layer:update_draw_pos(scroll_frames)
    if center_x then
       local sx = center_x + self.camera_dx
       local sy = center_y + self.camera_dy
-      self.renderer:update_draw_pos(sx, sy, scroll_frames or 0)
+      self.renderer:update_draw_pos(sx, sy)
       self.sound_manager:set_listener_pos(sx, sy)
    end
 end
@@ -184,22 +182,14 @@ function field_layer:set_camera_offset(sdx, sdy)
    self:refresh_hud()
 end
 
-function field_layer:update_screen(dt, and_draw, scroll)
+function field_layer:update_screen(dt, and_draw)
    if not self.is_active or not self.renderer then return end
-
-   if scroll == nil or self.no_scroll then
-      scroll = false
-   end
 
    assert(self.map ~= nil)
 
    local player = self.player
-   local scroll_frames = 0
-   if scroll then
-      scroll_frames = 3
-   end
 
-   self:update_draw_pos(scroll_frames)
+   self:update_draw_pos()
 
    if player then
       self.map:calc_screen_sight(player.x, player.y, player:calc("fov") or 15)
@@ -219,8 +209,6 @@ function field_layer:update_screen(dt, and_draw, scroll)
 
       self:refresh_hud()
    end
-
-   self.no_scroll = false
 end
 
 function field_layer:key_held_frames()
