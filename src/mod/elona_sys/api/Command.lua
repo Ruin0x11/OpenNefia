@@ -39,8 +39,9 @@ local function travel_to_map_hook(source, params, result)
 end
 Event.register("elona_sys.on_travel_to_outer_map", "Hook when traveling to a new map.", travel_to_map_hook)
 
-function Command.move(player, x, y)
+function Command.move(player, x, y, is_repeat)
    if type(x) == "string" then
+      is_repeat = y
       x, y = Pos.add_direction(x, player.x, player.y)
    end
 
@@ -52,6 +53,13 @@ function Command.move(player, x, y)
    end
 
    player.direction = Pos.pack_direction(dx, dy)
+
+   local map = player:current_map()
+   if is_repeat and not map:has_type("world_map") then
+      Gui.set_scrolling("fast")
+   else
+      Gui.set_scrolling("slow")
+   end
 
    -- Try to modify the final position or prevent movement. This is caused by
    -- status effects like confusion, or being overweight, respectively.
@@ -74,7 +82,6 @@ function Command.move(player, x, y)
    end
 
    -- >>>>>>>> shade2/action.hsp:581 	if (gLevel=1)or(mType=mTypeField):if mType!mTypeW ..
-   local map = player:current_map()
    local prev_map_uid, prev_x, prev_y = map:previous_map_and_location()
 
    if not Map.is_in_bounds(next_pos.x, next_pos.y, map) then
@@ -112,7 +119,6 @@ function Command.move(player, x, y)
 
       -- TODO maybe return turn action here
       Action.move(player, next_pos.x, next_pos.y)
-      Gui.set_scroll()
    end
 
    -- proc confusion text
@@ -292,7 +298,11 @@ function Command.quit_game()
       }
    end
 
-   local res = Input.prompt(choices)
+   local res, canceled = Input.prompt(choices)
+   if canceled then
+      return "player_turn_query"
+   end
+
    if res.index == 1 then
       local can_save = true -- TODO showroom
       if can_save then

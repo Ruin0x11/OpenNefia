@@ -209,7 +209,7 @@ function Draw.line(x1, y1, x2, y2, color)
    if color then
       Draw.set_color(color[1], color[2], color[3], color[4])
    end
-   love.graphics.line(x1, y1 + 1, x2, y2 + 1)
+   love.graphics.line(x1, y1, x2, y2)
 end
 
 --- Returns the width of the provided text using the current font or a
@@ -420,10 +420,10 @@ end
 ---
 --- @tparam int msecs
 --- @tparam[opt] int framerate
-function Draw.msecs_to_frames(msecs)
+function Draw.msecs_to_frames(msecs, framerate)
    -- TODO: assumes 60 FPS
-   local framerate = 60
-   local msecs_per_frame = (1 / framerate or 60) * 1000
+   framerate = framerate or 60
+   local msecs_per_frame = (1 / framerate) * 1000
    local frames = msecs / msecs_per_frame
    return frames
 end

@@ -110,7 +110,7 @@ function shadow_layer:update_light_flicker()
    end
 end
 
-function shadow_layer:update(map, dt, screen_updated, scroll_frames)
+function shadow_layer:update(map, dt, screen_updated)
    self.frames = self.frames + dt / (config.base.screen_refresh * (16.66 / 1000))
    if self.frames > 1 then
       self.frames = math.fmod(self.frames, 1)
@@ -127,12 +127,6 @@ function shadow_layer:update(map, dt, screen_updated, scroll_frames)
    end
 
    if not screen_updated then return false end
-
-   -- In vanilla, the shadow map is only updated after the screen
-   -- finishes scrolling. The following code simulates this.
-   if scroll_frames > 0 then
-      return true
-   end
 
    self.shadow_batch.updated = true
 

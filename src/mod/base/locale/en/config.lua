@@ -260,7 +260,21 @@ return {
 
             scroll = {
                doc = "Enable scrolling animations.",
-               name = "Smooth Scroll"
+               name = "Smooth Scroll",
+               variants = {
+                  none = "No",
+                  player = "Player Only",
+                  all = "All Charas"
+               }
+            },
+
+            scroll_type = {
+               doc = "Controls how the scrolling is rendered.\n'Smooth' will render at the monitor's refresh rate (usually 60Hz).\n'Classic' renders less smoothly, which is closer to how it looks in vanilla (HSP) Elona.",
+               name = "Scrolling Quality",
+               variants = {
+                  smooth = "Smooth",
+                  classic = "Classic"
+               }
             },
 
             window_anime = {

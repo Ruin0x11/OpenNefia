@@ -601,6 +601,7 @@ do
       properties = {
          types = { "shelter" },
          tileset = "elona.town",
+         music = "elona.ruin",
          level = 1,
          is_indoor = false,
          has_anchored_npcs = true,

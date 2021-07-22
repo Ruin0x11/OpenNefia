@@ -15,6 +15,8 @@ function sparse_batch:init(width, height, offset_x, offset_y)
    self.ycoords = {}
    self.xoffs = {}
    self.yoffs = {}
+   self.x_scroll_offs = {}
+   self.y_scroll_offs = {}
    self.rotations = {}
    self.colors_r = {}
    self.colors_g = {}
@@ -136,6 +138,8 @@ function sparse_batch:add_tile(ind, params)
    self.ycoords[ind] = params.y or 0
    self.xoffs[ind] = params.x_offset or 0
    self.yoffs[ind] = params.y_offset or 0
+   self.x_scroll_offs[ind] = params.x_scroll_offset or 0
+   self.y_scroll_offs[ind] = params.y_scroll_offset or 0
    self.rotations[ind] = params.rotation or 0
    if params.color then
       self.colors_r[ind] = (params.color[1] or 255) / 255
@@ -166,6 +170,8 @@ function sparse_batch:remove_tile(ind)
    self.ycoords[ind] = nil
    self.xoffs[ind] = nil
    self.yoffs[ind] = nil
+   self.x_scroll_offs[ind] = nil
+   self.y_scroll_offs[ind] = nil
    self.rotations[ind] = nil
    self.colors_r[ind] = nil
    self.colors_g[ind] = nil
@@ -190,6 +196,8 @@ function sparse_batch:clear()
    self.ycoords = {}
    self.xoffs = {}
    self.yoffs = {}
+   self.x_scroll_offs = {}
+   self.y_scroll_offs = {}
    self.rotations = {}
    self.colors_r = {}
    self.colors_g = {}
@@ -242,6 +250,8 @@ function sparse_batch:draw(x, y, width, height)
    local yc = self.ycoords
    local xo = self.xoffs
    local yo = self.yoffs
+   local xso = self.x_scroll_offs
+   local yso = self.y_scroll_offs
    local rots = self.rotations
 
    local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, width, height)
@@ -316,8 +326,8 @@ function sparse_batch:draw(x, y, width, height)
                local cy = yc[ind]
                if cx >= tx and cx < tdx and cy >= ty and cy < tdy then
                   local i, j = self.coords:tile_to_screen(cx, cy)
-                  local px = i + xo[ind]
-                  local py = j + yo[ind]
+                  local px = i + xo[ind] + xso[ind]
+                  local py = j + yo[ind] + yso[ind]
                   if cr[ind] then
                      batch:setColor(cr[ind], cg[ind], cb[ind])
                   else
@@ -366,8 +376,8 @@ function sparse_batch:draw(x, y, width, height)
       local drawable = self.to_draw_drawables[idx]
       local i, j = self.coords:tile_to_screen(xc[ind], yc[ind])
       if drawable.draw then
-         drawable:draw(x + offset_x + i + xo[ind],
-                       y + offset_y + j + yo[ind],
+         drawable:draw(x + offset_x + i + xo[ind] + xso[ind],
+                       y + offset_y + j + yo[ind] + yso[ind],
                        nil,
                        nil,
                        false,

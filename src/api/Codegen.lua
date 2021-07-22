@@ -17,7 +17,7 @@ function Codegen.loadstring(str)
    assert(mod_env.require ~= require)
    setfenv(f, mod_env)
 
-   return f
+   return f, nil
 end
 
 function Codegen.generate_object_getter(klass, name, _type)

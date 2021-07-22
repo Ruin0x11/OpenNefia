@@ -397,6 +397,9 @@ function field_logic.player_turn_query()
          break
       end
 
+      field.no_scroll_this_update = false
+    
+      table.clear(EVENT_ARGS)
       Event.trigger("base.on_player_turn_query_frame", EVENT_ARGS)
 
       dt = coroutine.yield()

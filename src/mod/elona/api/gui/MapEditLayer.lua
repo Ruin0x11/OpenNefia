@@ -116,10 +116,8 @@ function MapEditLayer:select_tile(id)
    self.selected_tile = id
 
    self.tile_batch:clear()
-   --TODO
-   local width = 48
-   local height = 48
-   self.tile_batch:add(self.selected_tile, self.width - 80, self.x + 20, width, height)
+   local width, height = Draw.get_coords:get_size()
+   self.tile_batch:add(self.selected_tile, self.width - 80, self.y + 20, width, height)
 end
 
 function MapEditLayer:show_tiles()

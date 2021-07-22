@@ -57,8 +57,8 @@ function MapViewer:update_draw_pos()
 end
 
 function MapViewer:pan(dx, dy)
-   self.offset_x = self.offset_x + dx
-   self.offset_y = self.offset_y + dy
+   self.offset_x = math.floor(self.offset_x + dx)
+   self.offset_y = math.floor(self.offset_y + dy)
    self:update_draw_pos()
 end
 

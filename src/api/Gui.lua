@@ -21,7 +21,6 @@ local main_state = require("internal.global.main_state")
 
 local Gui = {}
 
-local scroll = false
 local capitalize = true
 local newline = true
 
@@ -32,8 +31,7 @@ function Gui.update_screen(dt, and_draw)
       sw = Stopwatch:new()
    end
 
-   field:update_screen(dt, and_draw, scroll)
-   scroll = false
+   field:update_screen(dt, and_draw)
 
    if sw then
       sw:p("screen update")
@@ -48,7 +46,6 @@ end
 --- @tparam int sy screen Y
 function Gui.set_camera_pos(sx, sy)
    field:set_camera_pos(sx, sy)
-   scroll = false
 end
 
 --- @tparam int sdx screen delta X
@@ -65,7 +62,7 @@ end
 
 --- Returns the screen coordinates of the tilemap renderer.
 function Gui.field_draw_pos()
-   return field.renderer:draw_pos()
+   return field.renderer:get_draw_pos()
 end
 
 --- Starts a draw callback to be run asynchronously.
@@ -227,6 +224,28 @@ function Gui.fade_in(length)
    Draw.wait_global_draw_callbacks()
 end
 
+function Gui.scroll_object(obj, prev_x, prev_y)
+   if not obj:is_in_fov() then
+      field.scrolling_objs[obj.uid] = nil
+      return
+   end
+   assert(math.type(prev_x) == "integer")
+   assert(math.type(prev_y) == "integer")
+   local exist = field.scrolling_objs[obj.uid]
+   if exist == nil then
+      field.scrolling_objs[obj.uid] = { prev_x = prev_x, prev_y = prev_y }
+   end
+end
+
+function Gui.set_scrolling(mode)
+   if mode == "disabled" then
+      field.no_scroll_this_update = true
+      field.scrolling_mode = "none"
+   else
+      field.scrolling_mode = mode or "none"
+   end
+end
+
 --- Converts from map tile space to screen space.
 ---
 --- @tparam int tx Tile X coordinate
@@ -282,8 +301,7 @@ end
 --- @treturn uint tdy lower-right y
 function Gui.visible_tile_bounds(x, y, width, height)
    if not (x and y) and field.renderer then
-      x = field.renderer.draw_x
-      y = field.renderer.draw_y
+      x, y = field.renderer:get_draw_pos()
    end
    width = width or Draw.get_width()
    height = height or Draw.get_height()
@@ -295,14 +313,6 @@ end
 --- checking occlusion of a point with the message window.
 function Gui.message_window_y()
    return Draw.get_height() - 72
-end
-
-function Gui.scroll_screen()
-   --field:update_screen(true)
-end
-
-function Gui.set_scroll()
-   -- scroll = true
 end
 
 function Gui.key_held_frames()
@@ -498,7 +508,7 @@ function Gui.mes_alert()
 end
 
 function Gui.add_effect_map(asset_id, tx, ty, max_frames, rotation, kind)
-   local layer = field.renderer:get_layer("base.effect_map_layer")
+   local layer = field.renderer:get_draw_layer("base.effect_map_layer")
    if layer == nil then
       return
    end
@@ -508,7 +518,7 @@ end
 
 function Gui.step_effect_map(frames)
    frames = frames or 1
-   local layer = field.renderer:get_layer("base.effect_map_layer")
+   local layer = field.renderer:get_draw_layer("base.effect_map_layer")
    if layer == nil then
       return
    end
@@ -692,8 +702,8 @@ function Gui.get_draw_layer(tag)
    return field:get_draw_layer(tag)
 end
 
-function Gui.run_keybind_action(action, ...)
-   return field:run_keybind_action(action, true, ...)
+function Gui.run_keybind_action(action, player, is_key_repeating)
+   return field:run_keybind_action(action, true, player, is_key_repeating)
 end
 
 function Gui.update_minimap(map)

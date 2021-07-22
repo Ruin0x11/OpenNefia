@@ -6,7 +6,8 @@ return {
          watch_fn = "Watch API Function",
          unwatch_api = "Unwatch API",
          clear_stats = "Clear stats",
-         unwatch_all = "Unwatch all"
+         unwatch_all = "Unwatch all",
+         map_editor = "Map Editor",
       },
 
       mes = {

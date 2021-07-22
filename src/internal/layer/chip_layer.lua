@@ -20,6 +20,7 @@ function chip_layer:init(width, height)
    self.shadow_batch_inds = {}
    self.drop_shadow_batch_inds = {}
    self.stacking_inds = {}
+   self.uid_to_index = {}
 
    self.shadow_shader = love.graphics.newShader([[
 vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
@@ -61,6 +62,7 @@ function chip_layer:reset()
    self.shadow_batch_inds = {}
    self.drop_shadow_batch_inds = {}
    self.stacking_inds = {}
+   self.uid_to_index = {}
 
    self.chip_batch:clear()
    self.shadow_batch:clear()
@@ -184,6 +186,8 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, map_size, z_order)
          x = x,
          y = y,
          y_offset = y_offset,
+         x_scroll_offset = 0,
+         y_scroll_offset = 0,
          hp_ratio = i.hp_ratio,
          hp_bar = i.hp_bar,
          stack_height = i.stack_height
@@ -270,6 +274,20 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, map_size, z_order)
          self.shadow_batch_inds[index] = true
       end
    end
+end
+
+function chip_layer:scroll_chip(index, sx, sy)
+   self.chip_batch.x_scroll_offs[index] = -sx
+   self.chip_batch.y_scroll_offs[index] = -sy
+   self.chip_batch.updated = true
+
+   self.shadow_batch.x_scroll_offs[index] = -sx
+   self.shadow_batch.y_scroll_offs[index] = -sy
+   self.shadow_batch.updated = true
+
+   local batch_ind = self.chip_batch_inds[index]
+   batch_ind.x_scroll_offset = -sx
+   batch_ind.y_scroll_offset = -sy
 end
 
 function chip_layer:draw_normal(index, ind, map, mem, chip_type)
@@ -377,15 +395,11 @@ function chip_layer:update_stacking(map)
    end
 end
 
-function chip_layer:update(map, dt, screen_updated, scroll_frames)
+function chip_layer:update(map, dt, screen_updated)
    self.chip_batch:update(dt)
    self.drop_shadow_batch:update(dt)
 
    if not screen_updated then return end
-
-   if scroll_frames > 0 then
-      return true
-   end
 
    assert(map ~= nil)
 
@@ -426,8 +440,14 @@ function chip_layer:update(map, dt, screen_updated, scroll_frames)
    end
    table.clear(map._object_memory_added)
 
+   table.clear(self.uid_to_index)
    for index, ind in pairs(map._object_memory_pos) do
-      if map._in_sight[ind] ~= map._last_sight_id then -- if not map:is_in_fov(x, y) then
+      if map._in_sight[ind] == map._last_sight_id then -- if map:is_in_fov(x, y) then
+         local mem = map._object_memory[index]
+         if mem then
+            self.uid_to_index[mem.uid] = index
+         end
+      else
          local mem = map._object_memory[index]
          if mem and not CONFIG[mem._type].show_memory then
             local batch_ind = self.chip_batch_inds[index]
@@ -463,8 +483,8 @@ function chip_layer:draw_hp_bars(draw_x, draw_y, offx, offy)
          end
 
          local ratio = math.clamp(ind.hp_ratio or 1.0, 0.0, 1.0)
-         self["i_" .. ind.hp_bar]:draw_percentage_bar(draw_x + offx + ind.x * 48 + 9,
-                                                      draw_y + offy + ind.y * 48 + CONFIG["base.chara"].y_offset + 48,
+         self["i_" .. ind.hp_bar]:draw_percentage_bar(draw_x + offx + ind.x * 48 + ind.x_scroll_offset + 9,
+                                                      draw_y + offy + ind.y * 48 + ind.y_scroll_offset + CONFIG["base.chara"].y_offset + 48,
                                                       ratio * 30)
       end
    end

@@ -154,8 +154,9 @@ return {
             },
 
             default_return_to_title = {
-               name = "「タイトルに戻る」のデフォルト",
-               yes_no = "config.common.yes_no.shiyou_suru_shinai"
+               name = "「タイトルに戻る」",
+               yes = "優先",
+               no = "デフォルト"
             },
 
             --
@@ -268,7 +269,21 @@ return {
 
             scroll = {
                doc = "PCが動くときスクロールアニメーションを表示します。",
-               name = "スクロール"
+               name = "スクロール",
+               variants = {
+                  none = "しない",
+                  player = "PCのみ",
+                  all = "全キャラ"
+               }
+            },
+
+            scroll_type = {
+               doc = "PCが動くときスクロールアニメーションの種類です。",
+               name = "スクロールタイプ",
+               variants = {
+                  smooth = "滑らか",
+                  classic = "旧式"
+               }
             },
 
             window_anime = {
@@ -298,7 +313,7 @@ return {
             },
 
             anime_wait_type = {
-               name = "アニメーションウェイト種類",
+               name = "アニメウェイトタイプ",
                variants = {
                   always_wait = "待つ",
                   at_turn_start = "ターン開始に待つ",

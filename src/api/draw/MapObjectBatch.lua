@@ -19,11 +19,14 @@ function MapObjectBatch:add(map_object, x, y, width, height, color, centered, ro
    memory = self.memory[self.memory_idx]
    map_object:produce_memory(memory)
 
-   local drawable_x, drawable_y = x, y
+   local drawable_x = x
+   local drawable_y = y
    if centered then
       local tw, th = self:tile_size(memory.image)
       drawable_x = x - tw / 2
-      drawable_y = y - th / 2
+      if th == 48 then
+         drawable_y = y - th / 2
+      end
    end
 
    self.objs[self.memory_idx] = {

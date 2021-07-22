@@ -8,35 +8,12 @@ local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 local I18N = require("api.I18N")
 local data = require("internal.data")
-local Rand = require("api.Rand")
+local Pcc = require("api.gui.Pcc")
 
 local ChangeAppearanceList = class.class("ChangeAppearanceList", IUiList)
 
 ChangeAppearanceList:delegate("model", IUiList)
 ChangeAppearanceList:delegate("input", IInput)
-
--- TODO enum iteration
-local COLORS = {
-   { 255, 255, 255 },
-   { 175, 255, 175 },
-   { 255, 155, 155 },
-   { 175, 175, 255 },
-   { 255, 215, 175 },
-   { 255, 255, 175 },
-   { 155, 154, 153 },
-   { 185, 155, 215 },
-   { 155, 205, 205 },
-   { 255, 195, 185 },
-   { 235, 215, 155 },
-   { 225, 215, 185 },
-   { 105, 235, 105 },
-   { 205, 205, 205 },
-   { 255, 225, 225 },
-   { 225, 225, 255 },
-   { 225, 195, 255 },
-   { 215, 255, 215 },
-   { 210, 250, 160 },
-}
 
 function ChangeAppearanceList:make_keymap()
    return {
@@ -113,7 +90,7 @@ function ChangeAppearanceList:init()
                entry.values = assert(pcc_parts[entry.value_type[2]], entry.value_type[2])
                entry.index = 2 -- 1 is "disable"
             elseif value_ty == "color" then
-               entry.values = COLORS
+               entry.values = Pcc.COLORS
             elseif value_ty == "portrait" then
                entry.values = portraits
             elseif value_ty == "custom" then

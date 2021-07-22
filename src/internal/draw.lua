@@ -201,7 +201,7 @@ end
 
 function draw.set_root(ui_layer, priority)
    priority = priority or 0
-   class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
+   class.assert_is_an(require("api.gui.ILayer"), ui_layer)
    layers = {{layer=ui_layer, priority=priority}}
    sort_layers()
    ui_layer:relayout(0, 0, draw.get_width(), draw.get_height())
@@ -216,7 +216,7 @@ function draw.set_root_input_handler(input)
 end
 
 function draw.push_layer(ui_layer, priority)
-   class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
+   class.assert_is_an(require("api.gui.ILayer"), ui_layer)
    priority = priority or ui_layer:default_z_order()
    ui_layer:relayout(0, 0, draw.get_width(), draw.get_height())
    ui_layer:focus()
@@ -281,7 +281,9 @@ local function hotload_layer(layer)
    end
    layer:relayout(0, 0, draw.get_width(), draw.get_height())
 
-   layer:bind_keys(layer:make_keymap())
+   if class.is_an("api.gui.IUiLayer", layer) then
+      layer:bind_keys(layer:make_keymap())
+   end
 end
 
 function draw.draw_layers()
@@ -535,7 +537,7 @@ local default_font = FALLBACK_FONT
 function draw.set_default_font(font)
    local path = fs.join("data/font", font)
    assert(fs.exists(path), "Font file " .. path .. " does not exist")
-   default_font = default_font
+   default_font = path
 end
 
 local font_cache = setmetatable({}, { __mode = "v" })
