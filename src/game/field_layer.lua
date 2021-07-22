@@ -341,6 +341,7 @@ function field_layer:update_scrolling()
          local i = 0
 
          repeat
+            -- BUG if no-wait mode, then assume updated positions, and scroll preemptively
             local scroll_x = i * (dx / ms) * tw
             local scroll_y = i * (dy / ms) * th
             local sx, sy = draw.get_coords():get_draw_pos(px - scroll_x + tdx,

@@ -21,7 +21,6 @@ local main_state = require("internal.global.main_state")
 
 local Gui = {}
 
-local scroll = false
 local capitalize = true
 local newline = true
 
@@ -32,8 +31,7 @@ function Gui.update_screen(dt, and_draw)
       sw = Stopwatch:new()
    end
 
-   field:update_screen(dt, and_draw, scroll)
-   scroll = false
+   field:update_screen(dt, and_draw)
 
    if sw then
       sw:p("screen update")
@@ -48,7 +46,6 @@ end
 --- @tparam int sy screen Y
 function Gui.set_camera_pos(sx, sy)
    field:set_camera_pos(sx, sy)
-   scroll = false
 end
 
 --- @tparam int sdx screen delta X
@@ -229,11 +226,15 @@ end
 
 function Gui.scroll_object(obj, prev_x, prev_y)
    if not obj:is_in_fov() then
+      field.scrolling_objs[obj.uid] = nil
       return
    end
    assert(math.type(prev_x) == "integer")
    assert(math.type(prev_y) == "integer")
-   field.scrolling_objs[obj.uid] = { prev_x = prev_x, prev_y = prev_y }
+   local exist = field.scrolling_objs[obj.uid]
+   if exist == nil then
+      field.scrolling_objs[obj.uid] = { prev_x = prev_x, prev_y = prev_y }
+   end
 end
 
 function Gui.set_scrolling(mode)
