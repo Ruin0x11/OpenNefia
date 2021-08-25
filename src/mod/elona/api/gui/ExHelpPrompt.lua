@@ -29,11 +29,7 @@ local function split(str, delimiter)
    return result
 end
 
-function ExHelpPrompt:init(help_id)
-   data["elona.ex_help"]:ensure(help_id)
-
-   local text = assert(I18N.get_optional(("elona.ex_help._.%s"):format(help_id)), "missing help text for " .. help_id)
-
+function ExHelpPrompt:init(text)
    self.sections = split(text, "\n\n")
    if #self.sections == 0 then
       error("No sections found.")
