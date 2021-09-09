@@ -203,7 +203,7 @@ data:add {
    weight = 2850,
    material = "elona.wood",
    level = 15,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    skill = "elona.shield",
@@ -246,7 +246,7 @@ data:add {
    weight = 950,
    material = "elona.coral",
    level = 15,
-   fltselect = 2,
+   fltselect = Enum.FltSelect.Unique,
    coefficient = 100,
 
    skill = "elona.shield",

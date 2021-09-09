@@ -1527,7 +1527,7 @@ data:add {
    value = 2800,
    weight = 14000,
    on_use = function() end,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1545,7 +1545,7 @@ data:add {
    value = 2800,
    weight = 24000,
    on_use = function() end,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1562,7 +1562,7 @@ data:add {
    value = 2000,
    weight = 12000,
    on_use = function() end,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1580,7 +1580,7 @@ data:add {
    value = 1800,
    weight = 8900,
    on_use = function() end,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 200000,
    coefficient = 100,
    categories = {
@@ -1890,7 +1890,7 @@ data:add {
    weight = 140000,
    on_use = function() end,
    level = 18,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 50000,
    coefficient = 100,
    categories = {
@@ -1908,7 +1908,7 @@ data:add {
    weight = 140000,
    on_use = function() end,
    level = 18,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 50000,
    coefficient = 100,
    categories = {
@@ -2604,7 +2604,7 @@ data:add {
    image = "elona.item_shrine_gate",
    value = 7500,
    weight = 8000,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 10000,
    coefficient = 100,
 
@@ -2626,7 +2626,7 @@ data:add {
    value = 50,
    weight = 5000000,
    level = 15,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 400000,
    coefficient = 100,
    categories = {
@@ -2910,7 +2910,7 @@ data:add {
    image = "elona.item_upstairs",
    value = 150000,
    weight = 7500,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 20000,
    coefficient = 0,
    categories = {
@@ -2952,7 +2952,7 @@ data:add {
    image = "elona.item_downstairs",
    value = 150000,
    weight = 7500,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 20000,
    coefficient = 0,
    categories = {
@@ -2996,7 +2996,7 @@ data:add {
    value = 7800,
    weight = 9800,
    level = 28,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 10000,
    coefficient = 100,
    random_color = "Furniture",
@@ -3025,7 +3025,7 @@ data:add {
    image = "elona.item_daruma",
    value = 3200,
    weight = 720,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    coefficient = 100,
    categories = {
       "elona.no_generate",
@@ -3041,7 +3041,7 @@ data:add {
    value = 760,
    weight = 280,
    level = 25,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 5000,
    coefficient = 100,
    tags = { "fest" },
@@ -3122,7 +3122,7 @@ data:add {
    value = 400,
    weight = 150,
    level = 10,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 5000,
    coefficient = 100,
    tags = { "fest" },
@@ -3141,7 +3141,7 @@ data:add {
    value = 1650,
    weight = 530,
    level = 10,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 5000,
    coefficient = 100,
    tags = { "fest" },
@@ -3278,7 +3278,7 @@ data:add {
    image = "elona.item_fountain",
    value = 2400,
    weight = 600000,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    coefficient = 100,
 
    categories = {
@@ -3298,7 +3298,7 @@ data:add {
    image = "elona.item_holy_well",
    value = 185000,
    weight = 350000,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 50000,
    coefficient = 100,
 
@@ -3363,7 +3363,7 @@ data:add {
    image = "elona.item_ceremony_altar",
    value = 1500,
    weight = 500000,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    coefficient = 100,
 
    params = { altar = { god_id = "" } },
@@ -3383,7 +3383,7 @@ data:add {
    image = "elona.item_ceremony_altar",
    value = 1600,
    weight = 500000,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    coefficient = 100,
    categories = {
       "elona.furniture_altar",
@@ -3857,7 +3857,7 @@ data:add {
    value = 250,
    weight = 800,
    level = 5,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 25000,
    coefficient = 100,
 
@@ -4035,7 +4035,7 @@ data:add {
    image = "elona.item_stradivarius",
    value = 35000,
    weight = 4500,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    rarity = 400000,
    coefficient = 100,
 
@@ -4070,7 +4070,7 @@ data:add {
    value = 35000,
    weight = 45000,
    level = 20,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    rarity = 100000,
    coefficient = 100,
 

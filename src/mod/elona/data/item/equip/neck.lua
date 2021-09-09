@@ -218,7 +218,7 @@ data:add {
    weight = 250,
    material = "elona.iron",
    level = 15,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -255,7 +255,7 @@ data:add {
    weight = 400,
    material = "elona.coral",
    level = 25,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -294,7 +294,7 @@ data:add {
    weight = 400,
    material = "elona.mica",
    level = 25,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -333,7 +333,7 @@ data:add {
    weight = 150,
    material = "elona.mica",
    level = 5,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,

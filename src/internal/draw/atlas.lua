@@ -199,9 +199,9 @@ local function get_images(image)
    --   + creates animation "default" with frames numbered 1, 2, 3, etc.
    --
    --     {
-   --       height = 48,
    --       source = "graphic/map0.bmp",
    --       width = 48,
+   --       height = 48,
    --       count_x = 1,
    --       x = 0,
    --       y = 0,

@@ -41,7 +41,7 @@ data:add {
    weight = 1200,
    material = "elona.mithril",
    level = 30,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -82,7 +82,7 @@ data:add {
    weight = 500,
    material = "elona.mithril",
    level = 30,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,

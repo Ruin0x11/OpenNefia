@@ -201,7 +201,7 @@ data:add {
    weight = 650,
    material = "elona.leather",
    level = 15,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,

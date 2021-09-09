@@ -316,7 +316,7 @@ data:add {
    weight = 1250,
    material = "elona.fresh",
    level = 15,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 300000,
    coefficient = 100,
 
@@ -396,7 +396,7 @@ data:add {
    value = 1200,
    weight = 1250,
    level = 15,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 300000,
    coefficient = 100,
    categories = {

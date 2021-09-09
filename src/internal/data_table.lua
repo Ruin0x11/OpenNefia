@@ -3,7 +3,6 @@ local EventTree = require ("api.EventTree")
 local Log = require ("api.Log")
 local env = require ("internal.env")
 local fs = require("util.fs")
-local schema = require("thirdparty.schema")
 
 local data_table = class.class("data_table")
 
@@ -157,8 +156,26 @@ local function make_fallbacks(fallbacks, fields)
    return result
 end
 
+local ty_schema = types.fields_strict {
+   name = types.identifier,
+   fields = types.list(
+      types.fields_strict {
+         name = types.string,
+         template = types.optional(types.boolean),
+         type = types.type,
+         default = types.optional(types.any),
+         doc = types.optional(types.string),
+         no_fallback = types.optional(types.boolean)
+      }
+   ),
+   fallbacks = types.optional(types.table),
+   doc = types.optional(types.string)
+}
+
+local ty_ext_table = types.map(types.some(types.interface_type, types.data_id("base.data_ext")), types.table)
+
 function data_table:add_type(schema, params)
-   schema.fields = schema.fields or {}
+   assert(types.check(schema, ty_schema))
    schema.fallbacks = schema.fallbacks or {}
 
    params = params or {}
@@ -170,6 +187,38 @@ function data_table:add_type(schema, params)
 
    local mod_name, loc = env.find_calling_mod()
    local _type = mod_name .. "." .. schema.name
+
+   local checkers = {}
+   for i, field in ipairs(schema.fields) do
+      if type(field.name) ~= "string" then
+         error("Data type %s: missing field name (index %d)"):format(_type, i)
+      end
+      if not types.is_type_checker(field.type) then
+         error(("Data type %s: invalid type specified for field named '%s'"):format(_type, field.name))
+      end
+      if field.default then
+         local ok, err = types.check(field.default, field.type)
+         if not ok then
+            error(("Data type %s: invalid default value for field '%s': '%s'"):format(_type, field.name, err))
+         end
+      end
+      checkers[field.name] = field.type
+   end
+
+   -- Fields available on all types
+   checkers._type = types.data_type_id
+   checkers._id = types.identifier
+   checkers._ext = types.optional(ty_ext_table)
+   checkers._ordering = types.optional(types.number) -- TODO
+
+   schema.type = types.fields_strict(checkers)
+   schema.validate = function(obj, verbose)
+      local ok, err = types.check(obj, schema.type, verbose)
+      if not ok then
+         return false, ("Validation for data type '%s' failed: %s"):format(_type, err)
+      end
+      return true
+   end
 
    if env.is_hotloading() and self.schemas[_type] then
       Log.debug("In-place update of type %s", _type)
@@ -222,6 +271,8 @@ function data_table:add_type(schema, params)
 
    local fallbacks = make_fallbacks(schema.fallbacks, schema.fields)
    self.fallbacks[_type] = fallbacks
+
+   return schema
 end
 
 -- TODO: metatable indexing could create a system for indexing
@@ -326,26 +377,9 @@ function data_table:add(dat)
       end
    end
 
-   local errs = schema.CheckSchema(dat, _schema.schema)
-   local failed = false
-
-   for _, err in ipairs(errs) do
-      local add = true
-
-      if string.match(err.message, "^Superfluous value: ") then
-         local path = tostring(err.path)
-         if path == "_id"
-            or path == "_type"
-            or path == "_index_on"
-         then
-            add = false
-         end
-      end
-
-      if add then
-         failed = true
-         -- self:error(tostring(err))
-      end
+   local ok, err = _schema.validate(dat)
+   if not ok then
+      error(err)
    end
 
    -- Verify extension fields.
@@ -671,6 +705,14 @@ end
 
 function proxy:interface()
    return self.data.metatables[self._type]
+end
+
+function proxy:type()
+   return self.data.schemas[self._type].type
+end
+
+function proxy:validate(obj)
+   return self.data.schemas[self._type].validate(obj)
 end
 
 function proxy:ensure(k)

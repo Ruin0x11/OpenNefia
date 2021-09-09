@@ -28,7 +28,7 @@ data:add {
       return "player_turn_query"
       -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
    end,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    category = 55000,
    coefficient = 100,
    is_wishable = false,
@@ -71,7 +71,7 @@ data:add {
    image = "elona.item_book",
    value = 100,
    weight = 80,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    category = 55000,
    coefficient = 100,
 
@@ -156,7 +156,7 @@ data:add {
    image = "elona.item_book",
    value = 4000,
    weight = 80,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    category = 55000,
    rarity = 50000,
    coefficient = 0,

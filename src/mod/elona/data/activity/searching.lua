@@ -20,7 +20,7 @@ data:add {
    _id = "searching",
    elona_id = 105,
 
-   params = { feat = "table", no_more_materials = "boolean" },
+   params = { feat = types.map_object("base.feat"), no_more_materials = types.boolean },
 
    default_turns = function(self)
       return try_get_spot_info(self.params.feat, "activity_default_turns") or 20

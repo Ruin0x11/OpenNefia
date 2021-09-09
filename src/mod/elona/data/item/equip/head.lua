@@ -106,7 +106,7 @@ data:add {
    weight = 1500,
    material = "elona.mithril",
    level = 20,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -153,7 +153,7 @@ data:add {
    damage_bonus = 8,
    material = "elona.obsidian",
    level = 5,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,

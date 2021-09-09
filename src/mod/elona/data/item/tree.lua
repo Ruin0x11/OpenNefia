@@ -2,6 +2,7 @@ local Rand = require("api.Rand")
 local Gui = require("api.Gui")
 local Item = require("api.Item")
 local light = require("mod.elona.data.item.light")
+local Enum = require("api.Enum")
 
 --
 -- Tree
@@ -46,7 +47,7 @@ data:add {
    image = "elona.item_tree_of_fruitless",
    value = 500,
    weight = 35000,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    category = 80000,
    rarity = 100000,
    coefficient = 100,
@@ -209,7 +210,7 @@ data:add {
    image = "elona.item_tree_of_naked",
    value = 500,
    weight = 14000,
-   fltselect = 8,
+   fltselect = Enum.FltSelect.Snow,
    category = 80000,
    rarity = 250000,
    coefficient = 100,
@@ -227,7 +228,7 @@ data:add {
    image = "elona.item_tree_of_fir",
    value = 1800,
    weight = 28000,
-   fltselect = 8,
+   fltselect = Enum.FltSelect.Snow,
    category = 80000,
    rarity = 100000,
    coefficient = 100,
@@ -246,7 +247,7 @@ data:add {
    value = 4800,
    weight = 35000,
    level = 30,
-   fltselect = 8,
+   fltselect = Enum.FltSelect.Snow,
    category = 80000,
    rarity = 100000,
    coefficient = 100,

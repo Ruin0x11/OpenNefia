@@ -81,7 +81,7 @@ data:add {
    _id = "eating",
    elona_id = 1,
 
-   params = { food = "table", no_message = "boolean" },
+   params = { food = types.map_object("base.item"), no_message = types.boolean },
    default_turns = 8,
 
    animation_wait = 100,
@@ -168,7 +168,7 @@ local traveling = {
    _id = "traveling",
    elona_id = 3,
 
-   params = { dest_x = "number", dest_y = "number" },
+   params = { dest_x = types.uint, dest_y = types.uint },
 
    animation_wait = 0,
    can_scroll = true,

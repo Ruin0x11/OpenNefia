@@ -100,7 +100,7 @@ data:add {
    image = "elona.item_figurine",
    value = 1000,
    weight = 2500,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 100000,
    coefficient = 100,
    categories = {
@@ -122,7 +122,7 @@ data:add {
    image = "elona.item_card",
    value = 500,
    weight = 200,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 100000,
    coefficient = 100,
    categories = {

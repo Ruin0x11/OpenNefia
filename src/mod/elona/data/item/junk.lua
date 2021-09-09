@@ -372,7 +372,7 @@ data:add {
    image = "elona.item_bait_water_flea",
    value = 1000,
    weight = 250,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    category = 64000,
    coefficient = 100,
 
@@ -393,7 +393,7 @@ data:add {
    image = "elona.item_monster_heart",
    value = 25000,
    weight = 2500,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    category = 64000,
    rarity = 800000,
    coefficient = 100,
