@@ -62,6 +62,9 @@ local SANDBOX_GLOBALS = {
    -- OOP library
    "class",
 
+   -- Typechecking
+   "types",
+
    -- misc. globals
    "inspect",
    "fun",
