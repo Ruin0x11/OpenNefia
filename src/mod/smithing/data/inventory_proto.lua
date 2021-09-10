@@ -8,7 +8,7 @@ data:add {
    elona_sub_id = 0,
 
    sources = { "chara", "equipment", "ground" },
-   params = { hammer = "table" },
+   params = { hammer = types.map_object("base.item") },
    icon = nil,
    show_money = false,
    query_amount = false,
@@ -28,7 +28,7 @@ data:add {
    elona_sub_id = 1,
 
    sources = { "chara", "equipment", "ground" },
-   params = { hammer = "table", selected_items = "table" },
+   params = { hammer = types.map_object("base.item"), selected_items = types.list(types.map_object("base.item")) },
    icon = nil,
    show_money = false,
    query_amount = false,
@@ -48,7 +48,7 @@ data:add {
    elona_sub_id = 3,
 
    sources = { "chara", "equipment", "ground" },
-   params = { hammer = "table", selected_items = "table" },
+   params = { hammer = types.map_object("base.item"), selected_items = types.list(types.map_object("base.item")) },
    icon = nil,
    show_money = false,
    query_amount = false,
