@@ -75,6 +75,33 @@ local ty_item_filter = types.fields {
    ownerless = types.boolean,
 }
 
+local ty_ai_action = types.all(
+   types.fields {
+      id = types.data_id("base.ai_action")
+   },
+   types.map(types.string, types.any)
+)
+
+local ty_chara_ai_actions = types.fields {
+   main = types.optional(types.list(ty_ai_action)),
+   sub = types.optional(types.list(ty_ai_action))
+}
+
+local ty_equip_spec = types.map(
+   types.string,
+   types.fields {
+      _id = types.optional(types.data_id("base.item")),
+      category = types.optional(types.data_id("base.item_type")),
+      quality = types.optional(types.enum(Enum.Quality))
+   }
+)
+
+local ty_drop = types.fields {
+   _id = types.data_id("base.item"),
+   amount = types.uint,
+   on_create = types.callback("item", types.map_object("base.item"), "chara", types.map_object("base.chara"), "attacker", types.optional(types.map_object("base.chara")))
+}
+
 data:add_type(
    {
       name = "chara",
@@ -94,6 +121,18 @@ Relative strength of this character.
 ]]
          },
          {
+            name = "quality",
+            type = types.optional(types.enum(Enum.Quality)),
+         },
+         {
+            name = "ai_actions",
+            type = ty_chara_ai_actions,
+            default = {},
+            doc = [[
+Chance this unit will take an idle action if they have no target.
+]]
+         },
+         {
             name = "ai_move_chance",
             type = types.uint,
             default = 100,
@@ -110,10 +149,11 @@ Idle AI action this unit will take if they have no target.
 ]]
          },
          {
-            name = "ai_calm_action",
-            type = types.optional(types.data_id("base.ai_action")),
+            name = "ai_sub_action_chance",
+            type = types.uint,
+            default = 0,
             doc = [[
-Idle AI action this unit will take if they have no target.
+Chance this character will use an AI sub action.
 ]]
          },
          {
@@ -126,7 +166,7 @@ Minimum distance before this unit starts moving toward their target.
          },
          {
             name = "portrait",
-            type = types.optional(types.data_id("base.portrait")),
+            type = types.optional(types.some(types.data_id("base.portrait"), types.literal("random"))),
             default = nil,
             doc = [[
 Portrait displayed when conversing with this character.
@@ -149,6 +189,11 @@ A list of strings used for filtering during character generation.
 ]]
          },
          {
+            name = "has_own_name",
+            type = types.boolean,
+            default = false,
+         },
+         {
             name = "can_talk",
             type = types.boolean,
             default = false,
@@ -166,6 +211,11 @@ What alignment this character has.
 
 This determines if it will act hostile toward the player on first sight.
 ]]
+         },
+         {
+            -- TODO should be data ID in key positions
+            name = "initial_equipment",
+            type = ty_equip_spec
          },
          {
             name = "race",
@@ -293,6 +343,75 @@ This is for making characters say custom text on certain events.
             default = nil
          },
          {
+            -- TODO
+            name = "eqtwohand",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqrange",
+            type = types.optional(types.some(types.uint, types.tuple(types.uint, types.uint))),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqrange_0",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqrange_1",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqammo",
+            type = types.optional(types.tuple(types.uint, types.uint)),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqammo_0",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqammo_1",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqring1",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqmultiweapon",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            name = "effect_immunities",
+            type = types.list(types.data_id("base.effect")),
+            default = {}
+         },
+         {
+            name = "unarmed_element_id",
+            type = types.optional(types.data_id("base.element")),
+            default = nil
+         },
+         {
+            name = "unarmed_element_power",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
             name = "creaturepack",
             type = types.enum(Enum.CharaCategory),
             default = Enum.CharaCategory.None,
@@ -339,6 +458,83 @@ Color to display on the character's sprite.
             default = false
          },
          {
+            name = "splits",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "splits2",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "has_lay_hand",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "can_cast_rapid_magic",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "is_invisible",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "is_floating",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "is_immune_to_mines",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "is_explodable",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "always_drops_gold",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "ai_regenerates_mana",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "rich_loot_amount",
+            type = types.uint,
+            default = 0
+         },
+         {
+            name = "can_use_snow",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "is_immune_to_elemental_damage",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "on_initialize_equipment",
+            type = types.optional(types.callback("self", types.map_object("base.chara"), "params", types.table, "equip_spec", ty_equip_spec)),
+         },
+         {
+            name = "on_drop_loot",
+            type = types.optional(types.callback("self", types.map_object("base.chara"), "params", types.table, "drops", types.list(ty_drop))),
+         },
+         {
+            name = "calc_initial_gold",
+            type = types.optional(types.callback({"self", types.map_object("base.chara")}, types.uint)),
+         },
+         {
             name = "ai",
             type = types.data_id("base.ai_action"),
             default = "elona.elona_default_ai",
@@ -350,7 +546,7 @@ AI callback to run on this character's turn.
             name = "damage_reaction",
             type = types.optional(
                types.fields {
-                  _id = types.data_id("base.damage_reaction"),
+                  id = types.data_id("base.damage_reaction"),
                   power = types.int
                }
             ),
@@ -493,10 +689,7 @@ Skills this character will already know when they're created.
          noise = 0,
          relation = 0,
 
-         splits = nil,
-         splits2 = nil,
          is_quick_tempered = nil,
-         has_lay_hand = nil,
          is_lay_hand_available = nil,
          is_invisible = nil,
          is_summoned = nil,
@@ -2514,13 +2707,6 @@ data:add_type {
          type = types.callback({"x", types.number, "y", types.number, "t", types.table})
       }
    }
-}
-
-local ty_equip_spec = types.map(types.string, types.fields { category = types.data_id("base.item_type"), quality = types.enum(Enum.Quality)})
-local ty_drop = types.fields {
-   _id = types.data_id("base.item"),
-   amount = types.uint,
-   on_create = types.callback("item", types.map_object("base.item"), "chara", types.map_object("base.chara"), "attacker", types.optional(types.map_object("base.chara")))
 }
 
 data:add_type {

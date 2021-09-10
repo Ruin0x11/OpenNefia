@@ -852,7 +852,7 @@ do
          end
          s[#s+1] = tostring(checker)
       end
-      return ("all<%s>"):format(table.concat(", "))
+      return ("all<%s>"):format(print_list(self.checkers))
    end
    types.all = wrap(all_checker)
 end
