@@ -78,9 +78,9 @@ end
 local harvest = {
    _id = "harvest",
    _type = "elona_sys.quest",
+   _ordering = 60000,
 
    elona_id = 1006,
-   ordering = 60000,
    client_chara_type = 5,
    reward = "elona.supply",
    reward_fix = 60,
@@ -94,7 +94,7 @@ local harvest = {
       return 30
    end,
 
-   params = { required_weight = "number", current_weight = "number" },
+   params = { required_weight = types.number, current_weight = types.number },
 
    difficulty = function()
       return math.clamp(Rand.rnd(Chara.player():calc("level") + 5) +

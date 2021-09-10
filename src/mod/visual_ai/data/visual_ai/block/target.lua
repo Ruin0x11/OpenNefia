@@ -1,12 +1,8 @@
-local UidTracker = require("api.UidTracker")
 local Enum = require("api.Enum")
 local Pos = require("api.Pos")
 local I18N = require("api.I18N")
 local Chara = require("api.Chara")
 local utils = require("mod.visual_ai.internal.utils")
-local ICharaVisualAI = require("mod.visual_ai.api.aspect.ICharaVisualAI")
-
-local order = UidTracker:new(20000)
 
 data:add {
    _type = "visual_ai.block",
@@ -15,8 +11,6 @@ data:add {
    type = "target",
    color = {80, 100, 180},
    icon = "visual_ai.icon_singleplayer",
-
-   ordering = order:get_next_and_increment(),
 
    target_source = "character",
 
@@ -33,8 +27,6 @@ data:add {
    color = {80, 100, 180},
    icon = "visual_ai.icon_singleplayer",
 
-   ordering = order:get_next_and_increment(),
-
    target_source = "character",
 
    target_filter = function(self, chara, candidate)
@@ -49,8 +41,6 @@ data:add {
    type = "target",
    color = {80, 100, 180},
    icon = "visual_ai.icon_multiplayer",
-
-   ordering = order:get_next_and_increment(),
 
    target_source = "character",
 
@@ -67,8 +57,6 @@ data:add {
    color = {180, 100, 80},
    icon = "visual_ai.icon_multiplayer",
 
-   ordering = order:get_next_and_increment(),
-
    target_source = "character",
 
    target_filter = function(self, chara, candidate)
@@ -83,8 +71,6 @@ data:add {
    type = "target",
    color = {180, 180, 80},
    icon = "visual_ai.icon_multiplayer",
-
-   ordering = order:get_next_and_increment(),
 
    target_source = "character",
 
@@ -101,8 +87,6 @@ data:add {
    color = {50, 180, 100},
    icon = "visual_ai.icon_diamond",
 
-   ordering = order:get_next_and_increment(),
-
    target_source = "items_on_ground",
 
    target_filter = function(self, chara, candidate)
@@ -118,8 +102,6 @@ data:add {
    icon = "visual_ai.icon_diamond",
    color = {50, 180, 100},
    vars = {},
-
-   ordering = order:get_next_and_increment(),
 
    target_source = "items_on_self",
 
@@ -140,8 +122,6 @@ data:add {
       comparator = utils.vars.comparator,
       threshold = { type = "integer", min_value = 0, max_value = 100, default = 100, increment_amount = 10 }
    },
-   ordering = order:get_next_and_increment(),
-
    applies_to = "map_object",
 
    format_name = function(proto, vars)
@@ -168,8 +148,6 @@ data:add {
    color = {140, 100, 140},
    icon = "visual_ai.icon_return",
 
-   ordering = order:get_next_and_increment(),
-
    target_order = function(self, chara, candidate_a, candidate_b)
       return Pos.dist(chara.x, chara.y, candidate_a.x, candidate_a.y)
          < Pos.dist(chara.x, chara.y, candidate_b.x, candidate_b.y)
@@ -183,8 +161,6 @@ data:add {
    type = "target",
    color = {140, 100, 140},
    icon = "visual_ai.icon_return",
-
-   ordering = order:get_next_and_increment(),
 
    target_order = function(self, chara, candidate_a, candidate_b)
       return Pos.dist(chara.x, chara.y, candidate_a.x, candidate_a.y)
@@ -203,8 +179,6 @@ data:add {
       kind = { type = "enum", choices = { "hp", "mp", "stamina" }},
       comparator = utils.vars.comparator_partial,
    },
-   ordering = order:get_next_and_increment(),
-
    applies_to = "map_object",
 
    format_name = function(proto, vars)
@@ -230,8 +204,6 @@ data:add {
    color = {100, 40, 100},
    icon = "visual_ai.icon_singleplayer",
 
-   ordering = order:get_next_and_increment(),
-
    target_source = "any",
 
    target_filter = function(self, chara, candidate, ty)
@@ -248,8 +220,6 @@ data:add {
    type = "target",
    color = {100, 40, 100},
    icon = "visual_ai.icon_singleplayer",
-
-   ordering = order:get_next_and_increment(),
 
    target_source = "character",
 
@@ -272,8 +242,6 @@ data:add {
       y = { type = "integer", min_value = 0 },
    },
 
-   ordering = order:get_next_and_increment(),
-
    format_name = function(proto, vars)
       return I18N.get("visual_ai.block." .. proto._id .. ".name", vars.x, vars.y)
    end,
@@ -293,8 +261,6 @@ data:add {
    type = "target",
    color = {160, 160, 130},
    icon = "visual_ai.icon_target",
-
-   ordering = order:get_next_and_increment(),
 
    target_source = "position",
 

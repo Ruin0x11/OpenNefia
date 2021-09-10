@@ -96,7 +96,7 @@ data:add_type {
       },
       {
          name = "progress",
-         type = types.map(types.int, types.locale_id)
+         type = types.map(types.int, types.some(types.locale_id, types.callback({"flag", types.int}, types.string)))
       }
    }
 }
@@ -230,14 +230,6 @@ How much time to wait when running this animation, in milliseconds.
          default = nil,
          doc = [[
 How many frames this animation holds. Omit to default to the asset's `count_x` property.
-]]
-      },
-      {
-         name = "wait",
-         type = types.optional(types.number),
-         default = 3.5,
-         doc = [[
-How much time to wait between frames.
 ]]
       },
       {

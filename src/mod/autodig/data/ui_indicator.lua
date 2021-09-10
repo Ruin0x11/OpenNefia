@@ -14,6 +14,5 @@ data:add {
    _type = "base.ui_indicator",
    _id = "autodig",
 
-   ordering = 1000000,
    indicator = indicator_autodig
 }

@@ -116,9 +116,6 @@ function VisualAIBlockList:set_category(category_idx)
    end
    local entries = data["visual_ai.block"]:iter():filter(pred):map(map):to_list()
 
-   local sort = function(a, b) return a.proto.ordering < b.proto.ordering end
-   table.sort(entries, sort)
-
    self.model:set_data(entries)
 
    self:_recalc_layout()

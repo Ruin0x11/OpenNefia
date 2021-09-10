@@ -17,8 +17,6 @@ local item =
          value = 1,
          weight = 1,
          fltselect = Enum.FltSelect.Sp,
-         category = 99999999,
-         subcategory = 99999999,
          coefficient = 100,
          categories = {
             "elona.bug",

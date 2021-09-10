@@ -43,7 +43,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -71,7 +70,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -99,7 +97,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -127,7 +124,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -154,7 +150,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -181,7 +176,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -209,7 +203,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -237,7 +230,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -265,7 +257,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -293,7 +284,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -321,7 +311,6 @@ data:add {
    rarity = 300000,
    coefficient = 100,
 
-   rftags = { "fish" },
 
    categories = {
       "elona.no_generate",

@@ -240,7 +240,6 @@ data:add {
    elona_id = 597,
    image = "elona.item_christmas_tree",
    value = 3500,
-   is_cargo = true,
    coefficient = 100,
 
    categories = {

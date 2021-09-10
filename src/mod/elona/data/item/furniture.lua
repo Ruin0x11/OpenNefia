@@ -1309,7 +1309,6 @@ data:add {
    value = 380,
    weight = 180,
    coefficient = 100,
-   can_read_multiple_times = true,
    categories = {
       "elona.furniture"
    }

@@ -28,7 +28,7 @@ data:add_type {
       },
       {
          name = "target_source",
-         type = types.optional(types.literal("character", "items_on_self", "items_on_ground"))
+         type = types.optional(types.literal("character", "items_on_self", "items_on_ground", "position"))
       },
       {
          name = "target_filter",
@@ -68,7 +68,7 @@ data:add_type {
          template = true
       },
       {
-         name = "action",
+         name = "condition",
          type = types.optional(types.callback({"self", types.table,
                                                "chara", types.map_object("base.chara"),
                                                "target", types.some(types.map_object("any"), ty_pos),

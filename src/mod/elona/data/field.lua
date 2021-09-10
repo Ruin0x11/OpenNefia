@@ -16,7 +16,8 @@ data:add_type {
       },
       {
          name = "tiles",
-         type = types.list(types.fields_strict { id = types.data_id("base.map_tile"), density = types.number })
+         type = types.list(types.fields_strict { id = types.data_id("base.map_tile"), density = types.number }),
+         default = {}
       },
       {
          name = "generate",

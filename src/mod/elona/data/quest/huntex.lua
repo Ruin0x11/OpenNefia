@@ -30,9 +30,9 @@ data:add(quest_huntex)
 local huntex = {
    _id = "huntex",
    _type = "elona_sys.quest",
+   _ordering = 20000,
 
    elona_id = 1010,
-   ordering = 20000,
    client_chara_type = 1,
    reward = "elona.supply",
    reward_fix = 140,
@@ -40,7 +40,7 @@ local huntex = {
    min_fame = 30000,
    chance = 13,
 
-   params = { enemy_id = "string" },
+   params = { enemy_id = types.data_id("base.chara") },
 
    reward_count = function() return Rand.rnd(Rand.rnd(4) + 1) + 3 end,
 

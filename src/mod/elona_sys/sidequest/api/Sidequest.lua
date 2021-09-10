@@ -98,7 +98,7 @@ end
 local function sort(a, b)
    local proto_a = data["elona_sys.sidequest"]:ensure(a)
    local proto_b = data["elona_sys.sidequest"]:ensure(a)
-   return proto_a.ordering < proto_b.ordering
+   return proto_a._ordering < proto_b._ordering
 end
 
 function Sidequest.iter_active_main_quests()

@@ -70,16 +70,13 @@ function TitlesMenu.generate_list(chara)
 
       return {
          _id = title._id,
-         ordering = title.ordering,
          name = title_name,
          condition = title_condition,
          color = color
       }
    end
 
-   local sort = function(a, b) return a.ordering < b.ordering end
-
-   return data["titles.title"]:iter():map(map):into_sorted(sort):to_list()
+   return data["titles.title"]:iter():map(map):to_list()
 end
 
 function TitlesMenu:init(chara)

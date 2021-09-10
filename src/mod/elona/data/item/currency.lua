@@ -43,7 +43,6 @@ data:add {
    image = "elona.item_gold_piece",
    value = 1,
    weight = 0,
-   category = 68000,
    coefficient = 100,
 
    prevent_sell_in_own_shop = true,
@@ -103,7 +102,6 @@ data:add {
    image = "elona.item_platinum_coin",
    value = 1,
    weight = 1,
-   category = 69000,
    coefficient = 100,
    tags = { "noshop" },
    always_drop = true,
@@ -146,7 +144,6 @@ data:add {
    image = "elona.item_small_medal",
    value = 1,
    weight = 1,
-   category = 77000,
    rarity = 10000,
    coefficient = 100,
 
@@ -154,7 +151,6 @@ data:add {
    always_stack = true,
 
    tags = { "noshop" },
-   rftags = { "ore" },
    categories = {
       "elona.tag_noshop",
       "elona.ore"
@@ -169,14 +165,12 @@ data:add {
    value = 1,
    weight = 1,
    fltselect = Enum.FltSelect.Sp,
-   category = 77000,
    rarity = 10000,
    coefficient = 100,
 
    is_precious = true,
 
    tags = { "noshop" },
-   rftags = { "ore" },
    categories = {
       "elona.tag_noshop",
       "elona.no_generate",
@@ -192,7 +186,6 @@ data:add {
    value = 1,
    weight = 1,
    fltselect = Enum.FltSelect.Sp,
-   category = 77000,
    rarity = 10000,
    coefficient = 100,
    originalnameref2 = "token",
@@ -200,7 +193,6 @@ data:add {
    is_precious = true,
 
    tags = { "noshop" },
-   rftags = { "ore" },
    categories = {
       "elona.tag_noshop",
       "elona.no_generate",

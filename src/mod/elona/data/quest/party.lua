@@ -43,9 +43,9 @@ data:add(map_party)
 local party = {
    _id = "party",
    _type = "elona_sys.quest",
+   _ordering = 50000,
 
    elona_id = 1009,
-   ordering = 50000,
    client_chara_type = 7,
    reward = nil,
    reward_fix = 0,
@@ -59,7 +59,7 @@ local party = {
       return 23
    end,
 
-   params = { required_points = "number" },
+   params = { required_points = types.number },
 
    difficulty = function()
       local performer_skill = Chara.player():skill_level("elona.performer")

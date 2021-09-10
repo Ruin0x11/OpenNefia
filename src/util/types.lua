@@ -859,13 +859,17 @@ end
 
 do
    local fields_checker = class.class("fields_checker", ITypeChecker)
-   function fields_checker:init(fields)
+   function fields_checker:init(fields, array_part)
       for key, checker in pairs(fields) do
          if not is_type_checker(checker) then
             error(("Object for field '%s' is not a type checker (%s)"):format(key, checker))
          end
       end
+      if array_part then
+         assert(is_type_checker(array_part))
+      end
       self.fields = fields
+      self.array_part = array_part
    end
    function fields_checker:check(obj, ctxt)
       if not types.table:check(obj, ctxt) then
@@ -879,6 +883,17 @@ do
             return false, err
          end
          ctxt:pop()
+      end
+
+      if self.array_part then
+         for i, val in ipairs(self.fields) do
+            ctxt:push(i, val)
+            local ok, err = self.array_part:check(val, ctxt)
+            if not ok then
+               return false, err
+            end
+            ctxt:pop()
+         end
       end
 
       return true

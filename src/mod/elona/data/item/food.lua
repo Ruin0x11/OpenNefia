@@ -668,8 +668,6 @@ data:add {
    coefficient = 0,
    originalnameref2 = "bottle",
 
-   rftags = { "flavor" },
-
    categories = {
       "elona.food"
    },
@@ -691,8 +689,6 @@ data:add {
    rarity = 100000,
    coefficient = 0,
    originalnameref2 = "sack",
-
-   rftags = { "flavor" },
 
    categories = {
       "elona.food"

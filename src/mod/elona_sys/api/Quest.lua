@@ -149,8 +149,9 @@ function Quest.generate_from_proto(proto_id, chara, map)
    add_field(proto, quest, "reward_fix")
 
    for key, ty in pairs(proto.params or {}) do
-      if type(quest.params[key]) ~= ty then
-         error(("Generated quest '%s' expects parameter '%s' of type '%s', got '%s'"):format(proto._id, key, ty, type(quest.params[key])))
+      local ok, err = types.check(quest.params[key], ty)
+      if not ok then
+         error(("Generated quest '%s' expects parameter '%s' of type '%s': %s"):format(proto._id, key, ty, err))
       end
    end
 
@@ -161,8 +162,9 @@ function Quest.generate_from_proto(proto_id, chara, map)
       local reward = data["elona_sys.quest_reward"]:ensure(quest.reward._id)
       if reward.params then
          for key, ty in pairs(reward.params) do
-            if type(quest.reward[key]) ~= ty then
-               error(("Quest reward '%s' expects parameter '%s' of type '%s', got '%s' (%s)"):format(quest.reward._id, key, ty, type(quest.reward[key]), proto._id))
+            local ok, err = types.check(quest.reward[key], ty)
+            if not ok then
+               error(("Quest reward '%s' expects key '%s' of type '%s': %s"):format(quest.reward._id, key, ty, err))
             end
          end
       end
@@ -280,10 +282,7 @@ function Quest.generate(chara, map)
 
    Log.debug("Attempting to generate quest for client %d", uid)
 
-   -- Sort by ordering to preserve the imperative randomization
-   -- (sequential checks for rnd(n) == 0)
    local list = data["elona_sys.quest"]:iter():to_list()
-   table.sort(list, function(a, b) return a.ordering < b.ordering end)
 
    local fame = Chara.player():calc("fame")
 

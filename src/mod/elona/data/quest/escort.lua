@@ -45,9 +45,9 @@ end
 local escort = {
    _id = "escort",
    _type = "elona_sys.quest",
+   _ordering = 40000,
 
    elona_id = 1007,
-   ordering = 40000,
    client_chara_type = 6,
    reward = "elona.supply",
    reward_fix = 140,

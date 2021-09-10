@@ -91,6 +91,9 @@ function Object.generate(proto)
    local obj = object.deserialize(proto)
    assert(obj.proto)
 
+   local fallbacks = data.fallbacks[obj._type]
+   obj:mod_base_with(table.deepcopy(fallbacks), "merge")
+
    return obj
 end
 

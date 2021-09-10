@@ -62,7 +62,7 @@ data:add {
 data:add {
    _id = "by_category",
    _type = "elona_sys.quest_reward",
-   params = { category = "string" },
+   params = { category = types.data_id("base.item_type") },
    generate = function(self, quest)
       return mkgenerate({self.category})(self, quest)
    end,

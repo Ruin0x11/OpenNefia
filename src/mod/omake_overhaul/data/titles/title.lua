@@ -4,17 +4,12 @@ local Title = require("mod.titles.api.Title")
 local MapObject = require("api.MapObject")
 local Event = require("api.Event")
 
-local function order(elona_id)
-   return 100000 + elona_id * 10000
-end
-
 data:add {
    _type = "titles.title",
    _id = "decoy",
    elona_variant_ids = {
       oomsest = 0
    },
-   ordering = order(0),
 
    localize_info = function(info)
       -- >>>>>>>> oomSEST/src/southtyris.hsp:42487 	if (title_pos == 1) { ...
@@ -45,7 +40,6 @@ data:add {
    elona_variant_ids = {
       oomsest = 1
    },
-   ordering = order(1),
 
    localize_info = function(info)
       -- >>>>>>>> oomSEST/src/southtyris.hsp:42487 	if (title_pos == 1) { ...
@@ -69,7 +63,6 @@ data:add {
    elona_variant_ids = {
       oomsest = 25
    },
-   ordering = order(25),
 
    localize_info = function(info)
       -- >>>>>>>> oomSEST/src/southtyris.hsp:42575 	if (title_pos == 25) { ...

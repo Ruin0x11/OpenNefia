@@ -3,7 +3,7 @@ local Item = require("api.Item")
 local class = {
    {
       _id = "warrior",
-      ordering = 10010,
+      _ordering = 10010,
 
       properties = {
          equipment_type = "elona.warrior"
@@ -36,7 +36,7 @@ local class = {
    },
    {
       _id = "thief",
-      ordering = 10020,
+      _ordering = 10020,
 
       properties = {
          equipment_type = "elona.thief"
@@ -66,7 +66,7 @@ local class = {
    },
    {
       _id = "wizard",
-      ordering = 10030,
+      _ordering = 10030,
 
       properties = {
          equipment_type = "elona.mage"
@@ -100,7 +100,7 @@ local class = {
    },
    {
       _id = "farmer",
-      ordering = 10040,
+      _ordering = 10040,
 
       properties = {
          equipment_type = "elona.warrior"
@@ -133,7 +133,7 @@ local class = {
    },
    {
       _id = "predator",
-      ordering = 20010,
+      _ordering = 20010,
       is_extra = true,
 
       properties = {
@@ -155,7 +155,7 @@ local class = {
    },
    {
       _id = "archer",
-      ordering = 10050,
+      _ordering = 10050,
 
       properties = {
          equipment_type = "elona.archer"
@@ -185,7 +185,7 @@ local class = {
    },
    {
       _id = "warmage",
-      ordering = 10060,
+      _ordering = 10060,
 
       properties = {
          equipment_type = "elona.war_mage"
@@ -219,7 +219,7 @@ local class = {
    },
    {
       _id = "tourist",
-      ordering = 10070,
+      _ordering = 10070,
 
       properties = {
          equipment_type = nil
@@ -241,7 +241,7 @@ local class = {
    },
    {
       _id = "pianist",
-      ordering = 10080,
+      _ordering = 10080,
 
       properties = {
          equipment_type = "elona.archer"
@@ -273,7 +273,7 @@ local class = {
    },
    {
       _id = "gunner",
-      ordering = 20020,
+      _ordering = 20020,
       is_extra = true,
 
       properties = {
@@ -299,7 +299,7 @@ local class = {
    },
    {
       _id = "priest",
-      ordering = 10090,
+      _ordering = 10090,
 
       properties = {
          equipment_type = "elona.priest"
@@ -333,7 +333,7 @@ local class = {
    },
    {
       _id = "claymore",
-      ordering = 10100,
+      _ordering = 10100,
 
       properties = {
          equipment_type = "elona.claymore"

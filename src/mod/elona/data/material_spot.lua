@@ -47,7 +47,7 @@ data:add {
    is_solid = false,
    is_opaque = false,
 
-   params = { material_spot_info = "string" },
+   params = { material_spot_info = types.data_id("elona.material_spot_feat_info") },
 
    on_stepped_on = function(self, params)
       if params.chara:is_player() then

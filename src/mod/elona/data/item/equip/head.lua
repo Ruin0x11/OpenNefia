@@ -150,7 +150,6 @@ data:add {
    image = "elona.item_knight_helm",
    value = 15000,
    weight = 2400,
-   damage_bonus = 8,
    material = "elona.obsidian",
    level = 5,
    fltselect = Enum.FltSelect.SpUnique,
@@ -183,6 +182,7 @@ data:add {
          equip_slots = { "elona.head" },
          dv = 2,
          pv = 7,
+         damage_bonus = 8,
       }
    }
 }

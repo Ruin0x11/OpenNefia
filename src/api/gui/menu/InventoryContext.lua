@@ -252,7 +252,7 @@ end
 -- >>>>>>>> shade2/command.hsp:3431 	list(0,listMax)=cnt,refType*1000+iId(cnt) ...
 local function category_order(item)
    local order = function(cat)
-      return data["base.item_type"]:ensure(cat).ordering or 0
+      return data["base.item_type"]:ensure(cat)._ordering or 0
    end
 
    local major = item:major_categories()

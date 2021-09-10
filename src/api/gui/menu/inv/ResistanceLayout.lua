@@ -21,14 +21,9 @@ function ResistanceLayout.make_list()
       }
    end
 
-   local sort = function(a, b)
-      return (a.ordering or 0) < (b.ordering or 0)
-   end
-
    return data["base.element"]:iter()
       :filter(filter)
       :map(map)
-      :into_sorted(sort)
       :to_list()
 end
 

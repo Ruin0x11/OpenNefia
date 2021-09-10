@@ -29,7 +29,6 @@ data:add {
       -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
    end,
    fltselect = Enum.FltSelect.Sp,
-   category = 55000,
    coefficient = 100,
    is_wishable = false,
 
@@ -47,7 +46,6 @@ data:add {
    image = "elona.item_book",
    value = 500,
    weight = 80,
-   category = 55000,
    rarity = 2000000,
    coefficient = 100,
 
@@ -72,10 +70,9 @@ data:add {
    value = 100,
    weight = 80,
    fltselect = Enum.FltSelect.Sp,
-   category = 55000,
    coefficient = 100,
 
-   param1 = 2,
+   -- param1 = 2,
    elona_type = "normal_book",
    categories = {
       "elona.book",
@@ -90,7 +87,6 @@ data:add {
    image = "elona.item_textbook",
    value = 4800,
    weight = 80,
-   category = 55000,
    rarity = 50000,
    coefficient = 100,
 
@@ -112,7 +108,6 @@ data:add {
    image = "elona.item_book",
    value = 4000,
    weight = 80,
-   category = 55000,
    rarity = 50000,
    coefficient = 0,
 
@@ -141,7 +136,6 @@ data:add {
       -- menucycle = 1,
       -- show_city_chart(),
    end,
-   category = 55000,
    rarity = 20000,
    coefficient = 0,
    categories = {
@@ -157,7 +151,6 @@ data:add {
    value = 4000,
    weight = 80,
    fltselect = Enum.FltSelect.Sp,
-   category = 55000,
    rarity = 50000,
    coefficient = 0,
    originalnameref2 = "book",

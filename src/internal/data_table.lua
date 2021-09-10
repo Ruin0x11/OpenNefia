@@ -43,6 +43,7 @@ end
 
 function data_table:init()
     rawset(self, "errors", {})
+    rawset(self, "defaults", {})
     rawset(self, "fallbacks", {})
 
     rawset(self, "inner", {})
@@ -136,8 +137,8 @@ function data_table:_add_index(_type, field)
    end
 end
 
-local function make_fallbacks(fallbacks, fields)
-   local result = table.deepcopy(fallbacks)
+local function make_defaults(fields)
+   local result = {}
    for _, field in ipairs(fields) do
       local default = field.default
       if not field.no_fallback then
@@ -146,8 +147,6 @@ local function make_fallbacks(fallbacks, fields)
             if mt then
                if mt.__codegen_type == "block_string" then
                   default = field.default[1]
-               elseif mt.__codegen_type == "literal" then
-                  default = fallbacks[field.name]
                end
             end
          end
@@ -195,9 +194,13 @@ function data_table:add_type(schema, params)
    local _type = mod_name .. "." .. schema.name
 
    local checkers = {}
+   local seen = table.set {}
    for i, field in ipairs(schema.fields) do
       if type(field.name) ~= "string" then
          error("Data type %s: missing field name (index %d)"):format(_type, i)
+      end
+      if seen[field.name] then
+         error(("Data type %s: duplicate field name '%s' (index %d)"):format(_type, field.name, i))
       end
       if not types.is_type_checker(field.type) then
          error(("Data type %s: invalid type specified for field named '%s'"):format(_type, field.name))
@@ -209,6 +212,7 @@ function data_table:add_type(schema, params)
          end
       end
       checkers[field.name] = field.type
+      seen[field.name] = true
 
       if field.indexed then
          schema.indexes[field.name] = true
@@ -251,8 +255,9 @@ function data_table:add_type(schema, params)
       end
       table.replace_with(self.schemas[_type], schema)
 
-      local fallbacks = make_fallbacks(schema.fallbacks, schema.fields)
-      self.fallbacks[_type] = fallbacks
+      local defaults = make_defaults(schema.fields)
+      self.defaults[_type] = defaults
+      self.fallbacks[_type] = table.merge(table.deepcopy(schema.fallbacks, defaults))
       return
    end
 
@@ -282,8 +287,9 @@ function data_table:add_type(schema, params)
 
    self.global_edits[_type] = EventTree:new()
 
-   local fallbacks = make_fallbacks(schema.fallbacks, schema.fields)
-   self.fallbacks[_type] = fallbacks
+   local defaults = make_defaults(schema.fields)
+   self.defaults[_type] = defaults
+   self.fallbacks[_type] = table.merge(table.deepcopy(schema.fallbacks, defaults))
 end
 
 -- Apply data edits.
@@ -366,7 +372,7 @@ end
 local function make_ext_fallback(dat)
    local fields = dat.fields or {}
 
-   local ext = make_fallbacks({}, fields)
+   local ext = make_defaults(fields)
 
    return ext
 end
@@ -394,12 +400,7 @@ function data_table:add(dat)
       return nil
    end
 
-   local fallbacks = self.fallbacks[_type]
-   for field, fallback in pairs(fallbacks) do
-      if dat[field] == nil then
-         dat[field] = fallback
-      end
-   end
+   dat = table.merge_missing(dat, self.defaults[_type])
 
    -- Verify extension fields.
    if dat._ext then

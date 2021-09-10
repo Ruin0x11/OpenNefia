@@ -3,7 +3,7 @@ data:add_type {
    fields = {
       {
          name = "nodes",
-         type = types.map(types.identifier, types.any) -- TODO
+         type = types.map(types.string, types.any) -- TODO
       }
    }
 }

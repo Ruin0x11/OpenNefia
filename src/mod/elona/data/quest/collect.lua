@@ -15,9 +15,9 @@ local Enum = require("api.Enum")
 local collect = {
    _id = "collect",
    _type = "elona_sys.quest",
+   _ordering = 10000,
 
    elona_id = 1011,
-   ordering = 10000,
    client_chara_type = 3,
    reward = "elona.supply",
    reward_fix = 60,

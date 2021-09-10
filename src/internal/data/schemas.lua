@@ -45,12 +45,34 @@ local ty_event = types.fields {
 }
 
 local ty_light = types.fields {
-   chip = types.data_id("base.chip"),
-   brightness = types.positive(types.number),
+   chip = types.string,
+   bright = types.positive(types.number),
    offset_y = types.number,
    power = types.number,
    flicker = types.positive(types.number),
    always_on = types.optional(types.boolean)
+}
+
+local ty_chara_filter = types.fields {
+   quality = types.enum(Enum.Quality),
+   level = types.uint,
+   initial_level = types.uint,
+   id = types.data_id("base.chara"),
+   fltselect = types.enum(Enum.FltSelect),
+   category = types.enum(Enum.CharaCategory),
+   create_params = types.table,
+   tag_filters = types.list(types.string),
+   race_filter = types.data_id("base.race"),
+   ownerless = types.boolean,
+}
+
+local ty_item_filter = types.fields {
+   quality = types.enum(Enum.Quality),
+   level = types.uint,
+   id = types.data_id("base.chara"),
+   categories = types.some(types.data_id("base.item_type"), types.list(types.data_id("base.item_type"))),
+   create_params = types.table,
+   ownerless = types.boolean,
 }
 
 data:add_type(
@@ -479,6 +501,10 @@ data:add_type(
             indexed = true,
          },
          {
+            name = "custom_author",
+            type = types.optional(types.string),
+         },
+         {
             name = "level",
             type = types.uint,
             default = 1,
@@ -502,6 +528,16 @@ Relative strength of this item.
          {
             name = "color",
             type = types.optional(types.color),
+            default = nil,
+         },
+         {
+            name = "random_color",
+            type = types.optional(types.literal("Random", "Furniture")),
+            default = nil,
+         },
+         {
+            name = "container_params",
+            type = types.optional(types.fields { type = types.literal("local"), max_capacity = types.optional(types.uint), combine_weight = types.optional(types.boolean) }),
             default = nil,
          },
          {
@@ -548,10 +584,37 @@ dungeons.
             default = {}
          },
          {
+            name = "quality",
+            type = types.optional(types.enum(Enum.Quality)),
+         },
+         {
+            name = "medal_value",
+            type = types.uint,
+            default = 0
+         },
+         {
             name = "categories",
-            type = types.list(types.data_id("base.item_type")),
-            default = {},
-            template = true
+            type = types.fields({ no_implicit = types.optional(types.boolean) }, types.data_id("base.item_type")),
+            default = { "elona.equip_melee", "elona.equip_ranged" },
+            template = true,
+            doc = [[
+Valid item categories this enchantment skill applies to.
+]]
+         },
+         {
+            name = "on_generate",
+            type = types.optional(types.callback("self", types.map_object("base.item"))),
+            default = nil,
+         },
+         {
+            name = "on_init_params",
+            type = types.optional(types.callback("self", types.map_object("base.item"))),
+            default = nil,
+         },
+         {
+            name = "before_wish",
+            type = types.optional(types.callback({"self", types.map_object("base.item"), "params", types.table}, ty_item_filter)),
+            default = nil,
          },
          {
             name = "on_read",
@@ -574,6 +637,31 @@ dungeons.
             default = nil,
          },
          {
+            name = "on_open",
+            type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+            default = nil,
+         },
+         {
+            name = "on_throw",
+            type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+            default = nil,
+         },
+         {
+            name = "on_use",
+            type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+            default = nil,
+         },
+         {
+            name = "on_ascend",
+            type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+            default = nil,
+         },
+         {
+            name = "on_descend",
+            type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+            default = nil,
+         },
+         {
             name = "fltselect",
             type = types.enum(Enum.FltSelect),
             default = Enum.FltSelect.None,
@@ -586,6 +674,12 @@ dungeons.
             doc = [[
 A list of strings used for filtering during item generation.
 ]]
+         },
+         {
+            -- TODO
+            name = "knownnameref",
+            type = types.optional(types.string),
+            default = nil,
          },
          {
             -- TODO
@@ -622,6 +716,31 @@ What gods this item can be offered to.
             name = "is_precious",
             type = types.boolean,
             default = false,
+         },
+         {
+            name = "is_handmade",
+            type = types.boolean,
+            default = false,
+         },
+         {
+            name = "is_showroom_only",
+            type = types.boolean,
+            default = false,
+         },
+         {
+            name = "has_random_name",
+            type = types.boolean,
+            default = false,
+         },
+         {
+            -- TODO remove
+            name = "elona_function",
+            type = types.optional(types.uint),
+         },
+         {
+            -- TODO remove
+            name = "elona_type",
+            type = types.optional(types.string),
          },
          {
             name = "skill",
@@ -692,13 +811,53 @@ Hours until the item spoils. Used for items of material "elona.fresh" only.
 ]]
          },
          {
+            name = "cooldown_hours",
+            type = types.optional(types.uint),
+            default = nil
+         },
+         {
+            name = "ambient_sounds",
+            type = types.optional(types.list(types.data_id("base.sound"))),
+            default = nil
+         },
+         {
             name = "is_wishable",
             type = types.boolean,
             default = true,
             doc = [[
 If false, this item cannot be wished for.
 ]]
-         }
+         },
+         {
+            name = "cannot_use_flight_on",
+            type = types.optional(types.boolean),
+            default = nil
+         },
+         {
+            name = "prevent_sell_in_own_shop",
+            type = types.optional(types.boolean),
+            default = nil
+         },
+         {
+            name = "always_drop",
+            type = types.optional(types.boolean),
+            default = nil
+         },
+         {
+            name = "always_stack",
+            type = types.boolean,
+            default = false,
+         },
+         {
+            name = "prevent_dip",
+            type = types.optional(types.boolean),
+            default = nil
+         },
+         {
+            name = "can_read_in_world_map",
+            type = types.optional(types.boolean),
+            default = nil
+         },
       },
       fallbacks = {
          amount = 1,
@@ -712,8 +871,6 @@ If false, this item cannot be wished for.
 
          x_offset = nil,
          y_offset = nil,
-
-         can_use_flight_on = nil -- elona.cooler_box
       }
    },
    { interface = IItem }
@@ -1228,12 +1385,31 @@ data:add_type {
          default = false,
       },
       {
+         name = "show_name",
+         type = types.boolean,
+         default = false,
+      },
+      {
          name = "wall",
          type = types.optional(types.data_id("base.map_tile")),
       },
       {
          name = "wall_kind",
          type = types.optional(types.literal(1, 2)),
+      },
+      {
+         name = "mining_difficulty",
+         type = types.uint,
+         default = 0,
+      },
+      {
+         name = "mining_difficulty_coefficient",
+         type = types.uint,
+         default = 30,
+      },
+      {
+         name = "anime_frame",
+         type = types.optional(types.uint),
       },
       {
          name = "count_x",
@@ -1274,14 +1450,6 @@ Value of this enchantment.
          template = true,
          doc = [[
 Rarity of this enchantment. Lower means more rare.
-]]
-      },
-      {
-         name = "level",
-         type = types.uint,
-         template = true,
-         doc = [[
-Level of this enchantment.
 ]]
       },
       {
@@ -1885,6 +2053,10 @@ data:add_type {
 
    fields = {
       {
+         name = "author",
+         type = types.optional(types.string),
+      },
+      {
          name = "show_in_menu",
          type = types.boolean,
          default = false,
@@ -1928,6 +2100,11 @@ data:add_type {
       {
          name = "default_alternate",
          type = types.optional(types.list(types.string))
+      },
+      {
+         name = "uses_shift_delay",
+         type = types.boolean,
+         default = false
       }
    }
 }
@@ -1948,19 +2125,6 @@ data:add_type {
          type = types.optional(types.color)
       }
    }
-}
-
-local ty_chara_filter = types.fields {
-   quality = types.enum(Enum.Quality),
-   level = types.uint,
-   initial_level = types.uint,
-   id = types.data_id("base.chara"),
-   fltselect = types.enum(Enum.FltSelect),
-   category = types.enum(Enum.CharaCategory),
-   create_params = types.table,
-   tag_filters = types.list(types.string),
-   race_filter = types.data_id("base.race"),
-   ownerless = types.boolean,
 }
 
 data:add_type {
@@ -2323,7 +2487,7 @@ data:add_type {
          type = types.callback({"x", types.number, "y", types.number, "t", types.table}, types.callback())
       },
       {
-         name = "callback",
+         name = "draw",
          type = types.callback({"x", types.number, "y", types.number, "t", types.table})
       }
    }

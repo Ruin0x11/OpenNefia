@@ -18,9 +18,9 @@ local Effect = require("mod.elona.api.Effect")
 local deliver = {
    _id = "deliver",
    _type = "elona_sys.quest",
+   _ordering = 80000,
 
    elona_id = 1002,
-   ordering = 80000,
    client_chara_type = 2,
    reward = "elona.supply",
    reward_fix = 70,

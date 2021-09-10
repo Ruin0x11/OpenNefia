@@ -413,7 +413,7 @@ data:add {
    coefficient = 100,
 
    elona_function = 13,
-   param1 = 100,
+   -- param1 = 100,
    categories = {
       "elona.misc_item"
    },
@@ -621,7 +621,7 @@ data:add {
    value = 150000,
    weight = 400,
    level = 20,
-   fltselect = Enum.FltSelect.Unique,
+   fltselect = 2,
    rarity = 10000,
    coefficient = 100,
 
@@ -791,7 +791,7 @@ data:add {
    coefficient = 100,
 
    -- TODO implement everywhere in the code (see: Noel's dialog)
-   params = { secret_treasure_trait = "elona.perm_good" },
+   -- params = { secret_treasure_trait = "elona.perm_good" },
 
    elona_function = 29,
    is_precious = true,
@@ -816,8 +816,8 @@ data:add {
 
    elona_function = 30,
    is_precious = true,
-   param1 = 446,
-   param2 = 300,
+   -- param1 = 446,
+   -- param2 = 300,
    cooldown_hours = 12,
    quality = Enum.Quality.Unique,
 
@@ -843,8 +843,8 @@ data:add {
 
    elona_function = 30,
    is_precious = true,
-   param1 = 404,
-   param2 = 400,
+   -- param1 = 404,
+   -- param2 = 400,
    cooldown_hours = 8,
    quality = Enum.Quality.Unique,
 
@@ -895,8 +895,8 @@ data:add {
 
    elona_function = 30,
    is_precious = true,
-   param1 = 1132,
-   param2 = 100,
+   -- param1 = 1132,
+   -- param2 = 100,
    cooldown_hours = 24,
    quality = Enum.Quality.Unique,
 
@@ -1270,8 +1270,8 @@ data:add {
 
    elona_function = 30,
    is_precious = true,
-   param1 = 1132,
-   param2 = 100,
+   -- param1 = 1132,
+   -- param2 = 100,
    cooldown_hours = 24,
 
    color = { 255, 155, 155 },
@@ -1295,8 +1295,8 @@ data:add {
 
    elona_function = 30,
    is_precious = true,
-   param1 = 1132,
-   param2 = 100,
+   -- param1 = 1132,
+   -- param2 = 100,
    cooldown_hours = 24,
 
    color = { 255, 155, 155 },
@@ -1320,8 +1320,8 @@ data:add {
 
    elona_function = 30,
    is_precious = true,
-   param1 = 1132,
-   param2 = 100,
+   -- param1 = 1132,
+   -- param2 = 100,
    cooldown_hours = 24,
 
    color = { 255, 155, 155 },
@@ -1345,8 +1345,8 @@ data:add {
 
    elona_function = 30,
    is_precious = true,
-   param1 = 1132,
-   param2 = 100,
+   -- param1 = 1132,
+   -- param2 = 100,
    cooldown_hours = 24,
 
    color = { 255, 155, 155 },

@@ -12,9 +12,9 @@ local Gui = require("api.Gui")
 local conquer = {
    _id = "conquer",
    _type = "elona_sys.quest",
+   _ordering = 30000,
 
    elona_id = 1008,
-   ordering = 30000,
    client_chara_type = 8,
    reward = "elona.wear",
    reward_fix = 175,
@@ -22,7 +22,7 @@ local conquer = {
    min_fame = 50000,
    chance = 20,
 
-   params = { enemy_id = "string" },
+   params = { enemy_id = types.data_id("base.chara") },
 
    reward_count = function() return Rand.rnd(Rand.rnd(4) + 1) + 3 end,
 

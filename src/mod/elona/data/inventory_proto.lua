@@ -1464,7 +1464,7 @@ local inv_equipment_flight = {
 
    filter = function(ctxt, item)
       -- >>>>>>>> shade2/command.hsp:3404 		if invCtrl(1)=6: if (iWeight(cnt)<=0)or(iId(cnt) ..
-      return item.weight > 1 and item:calc("can_use_flight_on") ~= false
+      return item.weight > 1 and not item:calc("cannot_use_flight_on") ~= false
       -- <<<<<<<< shade2/command.hsp:3404 		if invCtrl(1)=6: if (iWeight(cnt)<=0)or(iId(cnt) ..
    end,
 

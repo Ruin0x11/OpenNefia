@@ -12,7 +12,7 @@ data:add_type {
          type = types.string
       },
       {
-         name = "map",
+         name = "image",
          type = types.data_id("base.chip")
       },
       {

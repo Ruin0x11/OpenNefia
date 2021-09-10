@@ -142,12 +142,10 @@ end
 function FeatsMenu.generate_list(chara)
    local list = {}
 
-   local sort = function(a, b) return (a.ordering or a.elona_id or 0) < (b.ordering or b.elona_id or 0) end
-
    if chara.feats_acquirable > 0 then
       list[#list+1] = { type = "header", text = I18N.get("trait.window.available_feats") }
 
-      for _, trait in data["base.trait"]:iter():filter(function(t) return t.type == "feat" end):into_sorted(sort) do
+      for _, trait in data["base.trait"]:iter():filter(function(t) return t.type == "feat" end) do
          local level = chara:trait_level(trait._id)
          if can_acquire_trait(trait, level, chara) then
             local delta = 1
@@ -160,7 +158,7 @@ function FeatsMenu.generate_list(chara)
 
    list[#list+1] = { type = "header", text = I18N.get("trait.window.feats_and_traits") }
 
-   for _, trait in data["base.trait"]:iter():into_sorted(sort) do
+   for _, trait in data["base.trait"]:iter() do
       local level = chara:trait_level(trait._id)
       if level ~= 0 then
          local color = trait_color(level)
@@ -169,7 +167,7 @@ function FeatsMenu.generate_list(chara)
       end
    end
 
-   for _, trait_ind in data["base.trait_indicator"]:iter():into_sorted(sort) do
+   for _, trait_ind in data["base.trait_indicator"]:iter() do
       if trait_ind.applies_to(chara) then
          local indicator = trait_ind.make_indicator(chara)
          list[#list+1] = {
