@@ -92,7 +92,5 @@ data:add {
    _type = "base.scenario",
    _id = "elona",
 
-   name = "Normal",
-
    on_game_start = start
 }

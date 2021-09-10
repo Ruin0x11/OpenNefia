@@ -10,7 +10,7 @@ data:add {
    _type = "base.activity",
    _id = "upgrade_hammer",
 
-   params = { hammer = "table" },
+   params = { hammer = types.map_object("base.chara") },
    default_turns = SmithingFormula.calc_hammer_activity_turns,
 
    animation_wait = 20,

@@ -254,7 +254,7 @@ do
       _id = "test_site",
       _type = "base.map_archetype",
 
-      unique = true,
+      -- unique = true,
 
       properties = {
          music = "elona.puti",

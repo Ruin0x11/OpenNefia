@@ -366,7 +366,7 @@ data:add {
    value = 300,
    rarity = 15000,
 
-   params = { enchantment_skill_id = "id:base.enchantment_skill" },
+   params = { enchantment_skill_id = types.data_id("base.enchantment_skill") },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:578 		if enc=encProc{ ..
       -- Find a list of invokable skills that can be added onto this item.
@@ -458,9 +458,9 @@ data:add {
    -- <<<<<<<< shade2/item_data.hsp:612 		if refType@=fltAmmo:return ..
 
    params = {
-      ammo_enchantment_id = "id:base.ammo_enchantment",
-      ammo_max = "number",
-      ammo_current = "number"
+      ammo_enchantment_id = types.data_id("base.ammo_enchantment"),
+      ammo_max = types.uint,
+      ammo_current = types.uint
    },
    compare = function(my_params, other_params)
       return my_params.ammo_enchantment_id == other_params.ammo_enchantment_id

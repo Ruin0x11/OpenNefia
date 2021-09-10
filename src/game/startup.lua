@@ -105,9 +105,6 @@ function startup.run(mods)
       Log.warn("JIT compiler is _off_ due to sethook/debug settings.")
    end
 
-   -- For determinism during mod loading.
-   Rand.set_seed(0)
-
    require("internal.data.base")
 
    progress("Loading mods...")
@@ -115,6 +112,15 @@ function startup.run(mods)
    mod.load_mods(mods)
    data:run_all_edits()
    data:sort_all()
+   local errs = data:validate_all()
+   local strict = true
+   if strict and #errs > 0 then
+      for _, v in ipairs(errs) do
+         Log.error("%s:%s: %s", v._type, v._id, v.error)
+      end
+      local v = errs[1]
+      error(("%s:%s: %s"):format(v._type, v._id, v.error))
+   end
 
    -- data is finalized at this point.
 

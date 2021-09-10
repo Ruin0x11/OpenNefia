@@ -18,8 +18,6 @@ do
       _type = "base.map_archetype",
       elona_id = 10,
 
-      image = "elona.feat_area_crypt",
-
       starting_pos = MapEntrance.edge,
 
       properties = {
@@ -1040,8 +1038,6 @@ do
       _id = "fort_of_chaos_collapsed",
       _type = "base.map_archetype",
       elona_id = 24,
-
-      image = "elona.feat_area_god",
 
       starting_pos = MapEntrance.south,
 

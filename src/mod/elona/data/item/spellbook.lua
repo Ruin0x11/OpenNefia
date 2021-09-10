@@ -15,7 +15,7 @@ data:add {
    fields = {
       {
          name = "can_be_reserved",
-         type = "boolean",
+         type = types.boolean,
          default = true
       }
    }

@@ -10,7 +10,6 @@ do
       elona_id = 35,
 
       on_generate_map = util.generate_122("dungeon1"),
-      image = "elona.feat_area_border_tent",
 
       starting_pos = MapEntrance.south,
 
@@ -66,7 +65,7 @@ do
          prevents_monster_ball = true
       }
    }
-   function arena.on_generate(area, floor)
+   function arena.on_generate_map(area, floor)
       local map = Elona122Map.generate("arena_1")
       map:set_archetype("elona.arena", { set_properties = true })
 
@@ -102,7 +101,7 @@ do
          prevents_monster_ball = true
       }
    }
-   function pet_arena.on_generate(area, floor)
+   function pet_arena.on_generate_map(area, floor)
       local map = Elona122Map.generate("arena_2")
       map:set_archetype("elona.pet_arena", { set_properties = true })
 
@@ -166,7 +165,7 @@ do
       elona_id = 9,
 
       types = { "field" },
-      deepest_level = 45,
+      deepest_floor = 45,
 
       floors = {
          [1] = "elona.rq"

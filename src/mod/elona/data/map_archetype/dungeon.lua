@@ -528,7 +528,6 @@ do
       _type = "base.map_archetype",
       elona_id = 27,
 
-      image = "elona.feat_area_dungeon",
       starting_pos = MapEntrance.stairs_up,
 
       chara_filter = Dungeon.default_chara_filter,

@@ -122,19 +122,23 @@ function God.can_offer_item_to(god_id, item)
    return false
 end
 
-local function mkblessing(cb)
-   return function(skill, coefficient, add)
-      return function(chara)
-         if chara["has_" .. cb](chara, skill) then
-            local amount = math.clamp((chara.piety or 0) / coefficient, 1, add + chara:skill_level("elona.faith") / 10)
-            chara["mod_" .. cb .. "_level"](chara, skill, amount, "add")
-         end
+function God.make_skill_blessing(skill_id, coefficient, add)
+   return function(chara)
+      if chara:has_skill(skill_id) then
+         local amount = math.clamp((chara.piety or 0) / coefficient, 1, add + chara:skill_level("elona.faith") / 10)
+         chara:mod_skill_level(skill_id, amount, "add")
       end
    end
 end
 
-God.make_skill_blessing = mkblessing("skill")
-God.make_resist_blessing = mkblessing("resist")
+function God.make_resist_blessing(resist_id, coefficient, add)
+   return function(chara)
+      if chara:has_resist(resist_id) then
+         local amount = math.clamp((chara.piety or 0) / coefficient, 1, add + chara:skill_level("elona.faith") / 10)
+         chara:mod_resist_level(resist_id, amount, "add")
+      end
+   end
+end
 
 function God.switch_religion_with_penalty(chara, new_god)
    -- >>>>>>>> shade2/god.hsp:238 		gosub *screen_drawStatus ...

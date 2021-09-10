@@ -1020,7 +1020,6 @@ local feat_chips = {
       _id = "hidden",
       elona_id = 233,
       elona_atlas = 1,
-      offset_bottom = 48,
       y_offset = 56
    },
    {
