@@ -169,7 +169,8 @@ local ty_schema = types.fields_strict {
       }
    ),
    fallbacks = types.optional(types.table),
-   doc = types.optional(types.string)
+   doc = types.optional(types.string),
+   validation = types.optional(types.literal("strict", "permissive"))
 }
 
 local ty_ext_table = types.map(types.some(types.interface_type, types.data_id("base.data_ext")), types.table)
@@ -211,7 +212,11 @@ function data_table:add_type(schema, params)
    checkers._ext = types.optional(ty_ext_table)
    checkers._ordering = types.optional(types.number) -- TODO
 
-   schema.type = types.fields_strict(checkers)
+   if schema.validation == "permissive" then
+      schema.type = types.fields(checkers)
+   else
+      schema.type = types.fields_strict(checkers)
+   end
    schema.validate = function(obj, verbose)
       local ok, err = types.check(obj, schema.type, verbose)
       if not ok then
@@ -271,15 +276,6 @@ function data_table:add_type(schema, params)
 
    local fallbacks = make_fallbacks(schema.fallbacks, schema.fields)
    self.fallbacks[_type] = fallbacks
-
-   return schema
-end
-
--- TODO: metatable indexing could create a system for indexing
--- sandboxed properties partitioned by each mod. For example the
--- underlying table would contain { base = {...}, mod = {...} } and
--- indexing obj.field might actually self.index obj.base.field.
-function data_table:extend_type(type_id, delta)
 end
 
 -- Apply data edits.
@@ -377,6 +373,7 @@ function data_table:add(dat)
       end
    end
 
+   -- TODO only validate after all data has been added (handles data entry field dependencies)
    local ok, err = _schema.validate(dat)
    if not ok then
       error(err)

@@ -25,20 +25,20 @@ local INSPECT_OPTIONS = {
    newline = " ", indent = "", max_length = 16,
 }
 
-local function get_name(obj)
-   if type(obj) == "string" then
-      return smart_quote(obj)
-   elseif type(obj) == "table" then
-      if class.is_class_instance(obj) then
-         return tostring(obj)
+local function get_name(obj, ctxt)
+   if type(obj, ctxt) == "string" then
+      return smart_quote(obj, ctxt)
+   elseif type(obj, ctxt) == "table" then
+      if class.is_class_instance(obj, ctxt) then
+         return tostring(obj, ctxt)
       end
       return inspect(obj, INSPECT_OPTIONS)
    end
 
-   return tostring(obj)
+   return tostring(obj, ctxt)
 end
 
-function ctxt_mt:make_trail(obj)
+function ctxt_mt:make_trail(obj, ctxt)
    local seen = {obj = true}
    local s = { get_name(obj, seen) }
    for _, entry in ipairs(self.stack) do
@@ -86,8 +86,12 @@ local function print_fields(fields)
    return table.concat(s, ", ")
 end
 
-local function type_error(ty)
-   return ("Value is not of type \"%s\""):format(ty)
+local function type_error(ty, inner)
+   local s = ("Value is not of type \"%s\""):format(ty)
+   if inner then
+      s = s .. "(" .. inner .. ")"
+   end
+   return s
 end
 
 --
@@ -96,9 +100,9 @@ end
 
 local ITypeChecker = class.interface("ITypeChecker", { check = "function" })
 
-local function is_type_checker(obj)
+local function is_type_checker(obj, ctxt)
    if not class.is_an(ITypeChecker, obj) then
-      return false, ("%s is not a type checker"):format(obj)
+      return false, ("%s is not a type checker"):format(obj, ctxt)
    end
    return true
 end
@@ -120,7 +124,7 @@ function primitive_checker:init(ty)
    self.type = ty
 end
 function primitive_checker:check(obj, ctxt)
-   if type(obj) == self.type then
+   if type(obj, ctxt) == self.type then
       return true
    end
    return false, type_error(self)
@@ -143,7 +147,7 @@ for _, ty in ipairs(primitives) do
    types[ty] = primitive_checker:new(ty)
 end
 
-local function is_nan(obj)
+local function is_nan(obj, ctxt)
    -- According to IEEE 754, a nan value is considered not equal to any value,
    -- including itself.
    return obj ~= obj
@@ -180,7 +184,7 @@ end
 do
    local int_checker = class.class("int_checker", ITypeChecker)
    function int_checker:check(obj, _ctxt)
-      if math.type(obj) == "int" and not is_nan(obj) then
+      if math.type(obj) == "integer" and not is_nan(obj) then
          return true
       end
       return false, type_error(self)
@@ -244,6 +248,21 @@ do
 end
 
 do
+   local path_checker = class.class("path_checker", ITypeChecker)
+   function path_checker:check(obj, ctxt)
+      if not types.string:check(obj, ctxt) then
+         return false, type_error(self)
+      end
+
+      return true
+   end
+   function path_checker:__tostring()
+      return "path"
+   end
+   types.path = path_checker:new()
+end
+
+do
    local locale_id_checker = class.class("locale_id_checker", ITypeChecker)
    function locale_id_checker:check(obj, ctxt)
       if not types.string:check(obj, ctxt) then
@@ -256,6 +275,21 @@ do
       return "locale_id"
    end
    types.locale_id = locale_id_checker:new()
+end
+
+do
+   local require_path_checker = class.class("require_path_checker", ITypeChecker)
+   function require_path_checker:check(obj, ctxt)
+      if not types.string:check(obj, ctxt) then
+         return false, type_error(self)
+      end
+
+      return true
+   end
+   function require_path_checker:__tostring()
+      return "require_path"
+   end
+   types.require_path = require_path_checker:new()
 end
 
 do
@@ -340,9 +374,10 @@ do
       self.checker = checker
       self.comp = comp
    end
-   function gt_checker:check(obj, _ctxt)
-      if not self.checker:check(obj) then
-         return false, type_error(self)
+   function gt_checker:check(obj, ctxt)
+      local ok, err = self.checker:check(obj, ctxt)
+      if not ok then
+         return false, type_error(self, err)
       end
 
       if obj > self.comp then
@@ -364,9 +399,10 @@ do
       self.checker = checker
       self.comp = comp
    end
-   function lt_checker:check(obj, _ctxt)
-      if not self.checker:check(obj) then
-         return false, type_error(self)
+   function lt_checker:check(obj, ctxt)
+      local ok, err = self.checker:check(obj, ctxt)
+      if not ok then
+         return false, type_error(self, err)
       end
 
       if obj < self.comp then
@@ -388,9 +424,10 @@ do
       self.checker = checker
       self.comp = comp
    end
-   function gteq_checker:check(obj, _ctxt)
-      if not self.checker:check(obj) then
-         return false, type_error(self)
+   function gteq_checker:check(obj, ctxt)
+      local ok, err = self.checker:check(obj, ctxt)
+      if not ok then
+         return false, type_error(self, err)
       end
 
       if obj >= self.comp then
@@ -412,9 +449,10 @@ do
       self.checker = checker
       self.comp = comp
    end
-   function lteq_checker:check(obj, _ctxt)
-      if not self.checker:check(obj) then
-         return false, type_error(self)
+   function lteq_checker:check(obj, ctxt)
+      local ok, err = self.checker:check(obj, ctxt)
+      if not ok then
+         return false, type_error(self, err)
       end
 
       if obj <= self.comp then
@@ -437,7 +475,7 @@ function types.negative(checker)
    return types.lt(checker, 0)
 end
 
-types.uint = types.positive(types.integer)
+types.uint = types.positive(types.int)
 
 do
    local range_checker = class.class("range_checker", ITypeChecker)
@@ -447,16 +485,17 @@ do
       self.min = min
       self.max = max
    end
-   function range_checker:check(obj, _ctxt)
-      if not self.checker:check(obj) then
-         return false, type_error(self)
+   function range_checker:check(obj, ctxt)
+      local ok, err = self.checker:check(obj, ctxt)
+      if not ok then
+         return false, type_error(self, err)
       end
 
-      if obj < self.min or obj > self.max then
-         return false, type_error(self)
+      if obj >= self.min and obj <= self.max then
+         return true
       end
 
-      return true
+      return false, type_error(self)
    end
    function range_checker:__tostring()
       return ("%s in [%s, %s]"):format(self.checker, self.min, self.max)
@@ -531,9 +570,9 @@ function optional_checker:check(obj, ctxt)
       return true
    end
 
-   local ok, _err = self.checker:check(obj, ctxt)
+   local ok, err = self.checker:check(obj, ctxt)
    if not ok then
-      return false, type_error(self)
+      return false, type_error(self, err)
    end
 
    return true
@@ -561,9 +600,9 @@ do
       for i, checker in ipairs(self.checkers) do
          local val = obj[i]
          ctxt:push(i, val)
-         local ok, _err = checker:check(val, ctxt)
+         local ok, err = checker:check(val, ctxt)
          if not ok then
-            return false, type_error(self)
+            return false, type_error(self, err)
          end
          ctxt:pop()
       end
@@ -587,11 +626,11 @@ do
          return false, type_error(self)
       end
 
-      for key, _ in pairs(obj) do
+      for key, _ in pairs(obj, ctxt) do
          ctxt:push(key)
-         local ok, _err = self.checker:check(key)
+         local ok, err = self.checker:check(key)
          if not ok then
-            return false, type_error(self)
+            return false, type_error(self, err)
          end
          ctxt:pop()
       end
@@ -615,11 +654,11 @@ do
          return false, type_error(self)
       end
 
-      for key, val in pairs(obj) do
+      for key, val in pairs(obj, ctxt) do
          ctxt:push(key, val)
-         local ok, _err = self.checker:check(val)
+         local ok, err = self.checker:check(val)
          if not ok then
-            return false, type_error(self)
+            return false, type_error(self, err)
          end
          ctxt:pop()
       end
@@ -645,18 +684,18 @@ do
          return false, type_error(self)
       end
 
-      for key, val in pairs(obj) do
+      for key, val in pairs(obj, ctxt) do
          ctxt:push(key)
-         local ok, _err = self.key_checker:check(key, ctxt)
+         local ok, err = self.key_checker:check(key, ctxt)
          if not ok then
-            return false, type_error(self)
+            return false, type_error(self, err)
          end
          ctxt:pop()
 
          ctxt:push(key, val)
-         ok, _err = self.value_checker:check(val, ctxt)
+         ok, err = self.value_checker:check(val, ctxt)
          if not ok then
-            return false, type_error(self)
+            return false, type_error(self, err)
          end
          ctxt:pop()
       end
@@ -674,7 +713,7 @@ function types.set(value_checker)
 end
 
 do
-   local list_keys_checker = types.keys(types.int)
+   local list_keys_checker = types.keys(types.uint)
 
    local list_checker = class.class("list_checker", ITypeChecker)
    function list_checker:init(checker)
@@ -690,13 +729,14 @@ do
          return true
       end
 
-      if not list_keys_checker:check(obj, ctxt) then
-         return false, type_error("table with integer keys")
+      local ok, err = list_keys_checker:check(obj, ctxt)
+      if not ok then
+         return false, type_error(("table with integer keys (%s)"):format(err))
       end
 
-      for i, val in ipairs(obj) do
+      for i, val in ipairs(obj, ctxt) do
          ctxt:push(i, val)
-         local ok, err = self.checker:check(val, ctxt)
+         ok, err = self.checker:check(val, ctxt)
          if not ok then
             return false, err
          end
@@ -741,6 +781,8 @@ do
    end
    types.some = wrap(some_checker)
 end
+
+types.serializable = types.some(types["nil"], types.boolean, types.number, types.string, types.table)
 
 do
    local all_checker = class.class("all_checker", ITypeChecker)
@@ -822,7 +864,7 @@ do
       end
 
       local remaining = table.set(table.keys(self.fields))
-      for key, val in pairs(obj) do
+      for key, val in pairs(obj, ctxt) do
          local checker = self.fields[key]
          if not checker then
             return false, ("Table has superfluous key: \"%s\""):format(key)
@@ -924,17 +966,18 @@ do
    function callback_checker:init(...)
       local checkers = { ... }
       local args = {}
-      for i=1, #checkers, 2 do
-         local arg_name = checkers[i]
-         local checker = checkers[i+1]
-         assert(type(arg_name) == "string", ("Callback argument name must be string, got '%s'"):format(arg_name))
-         assert(is_type_checker(checker))
-         args[#args+1] = {name = arg_name, checker = checker}
-      end
+      -- TODO retvals
+      -- for i=1, #checkers, 2 do
+      --    local arg_name = checkers[i]
+      --    local checker = checkers[i+1]
+      --    assert(type(arg_name) == "string", ("Callback argument name must be string, got '%s'"):format(arg_name))
+      --    assert(is_type_checker(checker))
+      --    args[#args+1] = {name = arg_name, checker = checker}
+      -- end
       self.args = args
    end
    function callback_checker:check(obj, _ctxt)
-      if types["function"]:check(obj) then
+      if types["function"]:check(obj, ctxt) then
          return true
       end
 
@@ -961,7 +1004,7 @@ do
    function map_object_checker:check(obj, ctxt)
       -- copied from MapObject.is_map_object()
       if not class.is_an("api.IMapObject", obj) then
-         return false, ("'%s' is not a map object"):format(obj)
+         return false, ("'%s' is not a map object"):format(obj, ctxt)
       end
 
       if self._type == "any" then
@@ -988,13 +1031,13 @@ function types.check(obj, checker, verbose)
       err = err or "<unknown error>"
       local s
       if verbose then
-         s = ctxt:make_trail(obj)
+         s = ctxt:make_trail(obj, ctxt)
       else
          local entry = ctxt.stack[#ctxt.stack]
          if entry then
             s = get_name(entry.value or entry.key)
          else
-            s = get_name(obj)
+            s = get_name(obj, ctxt)
          end
       end
       return false, ("%s: %s"):format(err, s)
@@ -1003,13 +1046,13 @@ function types.check(obj, checker, verbose)
 end
 
 function types.wrap(checker)
-   return function(obj)
+   return function(obj, ctxt)
       return types.check(obj, checker)
    end
 end
 
 function types.wrap_strict(checker)
-   return function(obj)
+   return function(obj, ctxt)
       return assert(types.check(obj, checker))
    end
 end

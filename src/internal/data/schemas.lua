@@ -1,8 +1,10 @@
-local schema = require("thirdparty.schema")
 local data = require("internal.data")
 local CodeGenerator = require("api.CodeGenerator")
 local Enum = require("api.Enum")
 local IEventEmitter = require("api.IEventEmitter")
+local InstancedMap = require("api.InstancedMap")
+local InstancedArea = require("api.InstancedArea")
+local IConfigItemWidget = require("api.gui.menu.config.item.IConfigItemWidget")
 
 local ty_data_ext_field = types.fields {
    name = types.string,
@@ -463,6 +465,12 @@ Skills this character will already know when they're created.
    { interface = IChara }
 )
 
+local ty_enchantment_def = types.fields {
+   _id = types.data_id("base.enchantment"),
+   power = types.number,
+   params = types.optional(types.table)
+}
+
 data:add_type(
    {
       name = "item",
@@ -598,11 +606,7 @@ What gods this item can be offered to.
          {
             name = "enchantments",
             type = types.list(
-               types.fields {
-                  _id = types.data_id("base.enchantment"),
-                  power = types.number,
-                  params = types.optional(types.table)
-               }
+               ty_enchantment_def
             ),
             default = {},
          },
@@ -985,6 +989,10 @@ data:add_type(
    }
 )
 
+local ty_indicator_text = types.some(types.string, types.fields { text = types.string, color = ty_color })
+local ty_indicator_cb = types.callback({"chara", types.map_object("base.chara")}, ty_indicator_text)
+local ty_indicator = types.some(types.locale_id, ty_indicator_cb)
+
 data:add_type{
    name = "effect",
    fields = {
@@ -994,7 +1002,7 @@ data:add_type{
       },
       {
          name = "indicator",
-         type = types.some(types.locale_id, types.callback("chara", types.map_object("base.chara")))
+         type = ty_indicator
       },
       {
          name = "emotion_icon",
@@ -1125,7 +1133,7 @@ data:add_type {
 
 local ty_image_entry = types.some(
    -- "graphic/chip.png",
-   types.string,
+   types.path,
 
    -- {
    --   image = "graphic/chip.bmp",
@@ -1133,7 +1141,7 @@ local ty_image_entry = types.some(
    --   key_color = {0, 0, 0}
    -- }
    types.fields_strict {
-      image = types.string,
+      image = types.path,
       count_x = types.optional(types.uint),
       key_color = types.optional(ty_color)
    },
@@ -1148,7 +1156,7 @@ local ty_image_entry = types.some(
    --   key_color = {0, 0, 0}
    -- }
    types.fields_strict {
-      source = types.string,
+      source = types.path,
       width = types.uint,
       height = types.uint,
       x = types.uint,
@@ -1252,16 +1260,37 @@ Value of this enchantment.
 ]]
       },
       {
-         name = "level",
+         name = "rarity",
          type = types.uint,
-         default = 100,
          template = true,
          doc = [[
 Rarity of this enchantment. Lower means more rare.
 ]]
       },
       {
+         name = "level",
+         type = types.uint,
+         template = true,
+         doc = [[
+Level of this enchantment.
+]]
+      },
+      {
+         name = "icon",
+         type = types.optional(types.uint) -- TODO: needs to be themable
+      },
+      {
+         name = "color",
+         type = types.optional(ty_color)
+      },
+      {
+         name = "params",
+         type = types.map(types.string, types.type),
+         default = {}
+      },
+      {
          name = "filter",
+         type = types.optional(types.callback({"item", types.map_object("base.item")}, types.boolean)),
          template = true,
          doc = [[
 Function to filter which items this enchantment will get applied to. If nil, it
@@ -1269,7 +1298,43 @@ can be applied to any item generated randomly.
 ]]
       },
       {
+         name = "on_generate",
+         type = types.optional(types.callback({"self", types.data_entry("base.enchantment"), "item", types.map_object("base.item"), "params", types.table}, types.boolean)),
+         template = true,
+      },
+      {
+         name = "on_initialize",
+         type = types.optional(types.callback("self", types.data_entry("base.enchantment"), "item", types.map_object("base.item"), "params", types.table)),
+         template = true,
+      },
+      {
+         name = "localize",
+         type = types.optional(types.callback({"power", types.number, "params", types.table, "item", types.map_object("base.item")}, types.string)),
+         template = true,
+      },
+      {
+         name = "on_refresh",
+         type = types.optional(types.callback("power", types.number, "params", types.table, "item", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+         template = true,
+      },
+      {
+         name = "on_attack_hit",
+         type = types.optional(types.callback("power", types.number, "enc_params", types.table, "chara", types.map_object("base.chara"), "params", types.table)),
+         template = true,
+      },
+      {
+         name = "on_turns_passed",
+         type = types.optional(types.callback("power", types.number, "params", types.table, "item", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+         template = true,
+      },
+      {
+         name = "on_eat_food",
+         type = types.optional(types.callback("power", types.number, "enc_params", types.table, "item", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+         template = true,
+      },
+      {
          name = "alignment",
+         type = types.literal("positive", "negative"),
          default = "positive",
          template = true,
          doc = [[
@@ -1277,12 +1342,13 @@ Determines if this enchantment is beneficial or not. One of "positive" or "negat
 ]]
       },
       {
-         name = "power",
-         default = CodeGenerator.gen_literal [[
-function(power, item, wearer)
-      return power / 50
-   end
-]],
+         name = "adjusted_power",
+         type = types.optional(types.callback({"power", types.number}, types.number)),
+         --          default = CodeGenerator.gen_literal [[
+         -- function(power, item, wearer)
+         --       return power / 50
+         --    end
+         -- ]],
          template = true,
          doc = [[
 How to adjust the power when applying the enchantment.
@@ -1296,8 +1362,7 @@ data:add_type {
    fields = {
       {
          name = "level",
-         type = "int",
-         default = 0,
+         type = types.uint,
          template = true,
          doc = [[
 Level of this ego enchantment. Typically between 0-3.
@@ -1305,12 +1370,7 @@ Level of this ego enchantment. Typically between 0-3.
       },
       {
          name = "filter",
-         type = "function",
-         default = CodeGenerator.gen_literal [[
-function(item)
-   return true
-end
-]],
+         type = types.callback("item", types.map_object("base.item")),
          template = true,
          doc = [[
 A function to filter which items this ego can get applied to.
@@ -1318,6 +1378,7 @@ A function to filter which items this ego can get applied to.
       },
       {
          name = "enchantments",
+         type = types.list(ty_enchantment_def),
          default = {},
          template = true,
          doc = [[
@@ -1332,12 +1393,18 @@ data:add_type {
    fields = {}
 }
 
+local ty_target_type = types.literal("self", "nearby", "self_or_nearby", "enemy", "other", "location", "direction", "target_or_location")
+
 data:add_type {
    name = "enchantment_skill",
    fields = {
       {
+         name = "elona_id",
+         type = types.optional(types.uint)
+      },
+      {
          name = "skill_id",
-         default = "elona.short_teleport",
+         type = types.data_id("base.skill"),
          template = true,
          doc = [[
 Skill to trigger.
@@ -1345,6 +1412,7 @@ Skill to trigger.
       },
       {
          name = "target_type",
+         type = ty_target_type,
          default = "self",
          template = true,
          doc = [[
@@ -1353,6 +1421,7 @@ The target of the skill. Same format as that of "base.skill". Usually either "se
       },
       {
          name = "rarity",
+         type = types.uint,
          default = 100,
          template = true,
          doc = [[
@@ -1361,7 +1430,8 @@ Rarity of this enchantment skill when generating an enchantment containing it.
       },
       {
          name = "categories",
-         default = { "elona.equip_melee" },
+         type = types.list(types.data_id("base.item_type")),
+         default = { "elona.equip_melee", "elona.equip_ranged" },
          template = true,
          doc = [[
 Valid item categories this enchantment skill applies to.
@@ -1369,10 +1439,20 @@ Valid item categories this enchantment skill applies to.
       },
       {
          name = "power",
+         type = types.number,
          default = 10,
          template = true,
          doc = [[
 Power of the skill when it is triggered.
+]]
+      },
+      {
+         name = "chance",
+         type = types.number,
+         default = 10,
+         template = true,
+         doc = [[
+Chance to trigger skill.
 ]]
       }
    }
@@ -1383,6 +1463,7 @@ data:add_type {
    fields = {
       {
          name = "ammo_amount",
+         type = types.uint,
          default = 30,
          template = true,
          doc = [[
@@ -1391,6 +1472,7 @@ Controls the starting amount of ammo.
       },
       {
          name = "ammo_factor",
+         type = types.uint,
          default = 70,
          template = true,
          doc = [[
@@ -1399,6 +1481,7 @@ Controls the starting amount of ammo.
       },
       {
          name = "stamina_cost",
+         type = types.number,
          default = 1,
          template = true,
          doc = [[
@@ -1409,38 +1492,20 @@ Stamina cost of the ammo when fired.
 }
 
 data:add_type {
-   name = "stat",
-   schema = schema.Record {
-   },
-}
-
-data:add_type {
    name = "skill",
    fields = {
       {
          name = "type",
-         default = "effect",
+         type = types.literal("stat", "stat_special", "skill", "weapon_proficiency"),
+         default = "skill",
          template = true,
          doc = [[
-Determines how this skill is treated in the interface. Available options:
-
-- "skill": Only viewable in the player's skills list in the character sheet. (default)
-- "spell": Castable from the player's Spells menu.
-- "action": Useable from the player's Skills menu.
-]]
-      },
-      {
-         name = "effect_id",
-         default = nil,
-         template = true,
-         doc = [[
-The related magic of this skill to trigger when its entry in the menu is selected.
-
-*Required* if the skill's `type` is "spell" or "action".
+Determines how this skill is treated in the interface.
 ]]
       },
       {
          name = "related_skill",
+         type = types.optional(types.data_id("base.skill")),
          default = nil,
          template = true,
          doc = [[
@@ -1449,6 +1514,7 @@ A related stat to improve when this skill is used. Affects the skill's icon in t
       },
       {
          name = "cost",
+         type = types.uint,
          default = 10,
          template = true,
          doc = [[
@@ -1459,6 +1525,7 @@ Used only when the skill's `type` is "spell" or "action".
       },
       {
          name = "range",
+         type = types.uint,
          default = 0,
          template = true,
          doc = [[
@@ -1472,6 +1539,7 @@ Used only when the skill's `type` is "spell" or "action".
       },
       {
          name = "difficulty",
+         type = types.uint,
          default = 100,
          template = true,
          doc = [[
@@ -1482,6 +1550,7 @@ Used only when the skill's `type` is "spell" or "action".
       },
       {
          name = "target_type",
+         type = ty_target_type,
          default = "self",
          template = true,
          doc = [[
@@ -1505,6 +1574,7 @@ Used only when the skill's `type` is "spell" or "action".
       },
       {
          name = "ignore_missing_target",
+         type = types.boolean,
          default = false,
          doc = [[
 If true, continue to use the skill even if a target character was not found.
@@ -1517,39 +1587,91 @@ This is used by the Pickpocket skill to select an item on the ground independent
 
 data:add_type {
    name = "trait",
-   schema = schema.Record {
+   fields = {
+      {
+         name = "elona_id",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "level_min",
+         type = types.uint,
+      },
+      {
+         name = "level_max",
+         type = types.uint,
+      },
+      {
+         name = "type",
+         type = types.literal("feat", "mutation", "race", "ether_disease")
+      },
+      {
+         name = "can_acquire",
+         type = types.optional(types.callback({"self", types.data_entry("base.trait"), "chara", types.map_object("base.chara")}, types.boolean))
+      },
+      {
+         name = "on_modify_level",
+         type = types.optional(types.callback("cur_level", types.int, "chara", types.map_object("base.chara"), "prev_level", types.int))
+      },
+      {
+         name = "on_refresh",
+         type = types.optional(types.callback("self", types.data_entry("base.trait"), "chara", types.map_object("base.chara")))
+      },
+      {
+         name = "on_turn_begin",
+         type = types.optional(types.callback({"self", types.data_entry("base.trait"), "chara", types.map_object("base.chara")}, types.any))
+      },
+      {
+         name = "locale_params",
+         type = types.optional(types.callback({"self", types.data_entry("base.trait"), "chara", types.map_object("base.chara")}, types.any))
+      },
    },
 }
 
 data:add_type {
    name = "sound",
-   schema = schema.Record {
-      file = schema.String
-   },
+   fields = {
+      {
+         name = "elona_id",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "file",
+         type = types.path
+      }
+   }
 }
 
 data:add_type {
    name = "music",
-   schema = schema.Record {
-      file = schema.String
-   },
+   fields = {
+      {
+         name = "elona_id",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "file",
+         type = types.path
+      }
+   }
 }
 
 data:add_type {
    name = "ui_indicator",
-   schema = schema.Record {
-      indicator = schema.Function
-   },
+   fields = {
+      {
+         name = "indicator",
+         type = ty_indicator_cb
+      }
+   }
 }
 
 data:add_type {
    name = "scenario",
    fields = {
       {
-         name = "on_game_begin",
-         default = nil,
+         name = "on_game_start",
+         type = types.callback("self", types.data_entry("base.scenario"), "player", types.map_object("base.chara")),
          template = true,
-         type = "function(self,IChara)",
          doc = [[
 Function called on game begin. Is passed the created player.
 ]]
@@ -1562,16 +1684,79 @@ data:add_type {
    fields = {
       {
          name = "overrides",
-         default = {},
+         type = types.map(types.data_type_id, types.table),
          template = true,
       }
    }
 }
 
+local ty_region = types.tuple(types.uint, types.uint, types.uint, types.uint)
+
 data:add_type {
    name = "asset",
-   schema = schema.Record {
-   },
+   fields = {
+      {
+         name = "type",
+         type = types.literal("asset", "font", "color"),
+         default = "asset"
+      },
+
+      -- asset
+      {
+         name = "image",
+         type = types.optional(types.path)
+      },
+      {
+         name = "source",
+         type = types.optional(types.path)
+      },
+      {
+         name = "x",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "y",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "width",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "height",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "count_x",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "count_y",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "regions",
+         type = types.optional(types.some(types.values(ty_region),
+                                          types.callback({"width", types.number, "height", types.number},
+                                             types.values(ty_region))))
+      },
+      {
+         name = "key_color",
+         type = types.optional(types.some(types.literal("none"), ty_color))
+      },
+
+      -- font
+      {
+         name = "size",
+         type = types.optional(types.uint)
+      },
+
+      -- color
+      {
+         name = "color",
+         type = types.optional(ty_color)
+      }
+   }
 }
 
 data:add_type {
@@ -1579,9 +1764,8 @@ data:add_type {
    fields = {
       {
          name = "image",
-         default = "mod/<mod_id>/graphic/image.png",
+         type = ty_image,
          template = true,
-         type = "string|{source=string,x=int,y=int,width=int,height=int,count_x=int?,count_y=int?,key_color={int,int,int}?}",
          doc = [[
 The image to use for this chip.
 
@@ -1597,7 +1781,18 @@ It can either be a string referencing an image file, or a table with these conte
 ]]
       },
       {
+         name = "shadow",
+         type = types.uint,
+         default = 0
+      },
+      {
+         name = "stack_height",
+         type = types.int,
+         default = 0
+      },
+      {
          name = "y_offset",
+         type = types.int,
          default = 0,
          template = true,
          doc = [[
@@ -1608,179 +1803,183 @@ Y offset of the sprite in pixels.
 }
 
 data:add_type {
-   name = "asset",
-   schema = schema.Record {
-      target = schema.String,
-   }
-}
-
-data:add_type {
    name = "ai_action",
    fields = {
       {
          name = "act",
-         default = CodeGenerator.gen_literal [[
-function(chara, params)
-      return true
-   end]],
+         type = types.callback({"chara", types.map_object("base.chara"), "params", types.table}, types.boolean),
          template = true,
-         type = "function(IChara,table)",
 doc = [[
-   Runs arbitrary AI actions. Is passed the character and extra parameters, differing depending on the action.
+Runs arbitrary AI actions. Is passed the character and extra parameters, differing depending on the action.
 
-   Returns true if the character acted, false if not.
+Returns true if the character acted, false if not.
 ]]
       }
    }
 }
 
 data:add_type {
-   name = "talk",
-   schema = schema.Record {
-      messages = schema.Table
-   }
-}
-
-data:add_type {
    name = "talk_event",
-   schema = schema.Record {
-      params = schema.Table
+   fields = {
+      {
+         name = "elona_txt_id",
+         type = types.optional(types.string)
+      }
    }
 }
 
 data:add_type {
    name = "portrait",
-   schema = schema.Record {
-      image = schema.String
-   }
-}
-
-data:add_type {
-   name = "config_menu",
-   schema = schema.Record {
-      options = schema.Table,
-      on_generate = schema.Optional(schema.Function),
+   fields = {
+      {
+         name = "elona_id",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "image",
+         type = ty_image
+      }
    }
 }
 
 data:add_type {
    name = "keybind",
-   schema = schema.Record {
-      default = schema.String
+   fields = {
+      {
+         name = "default",
+         type = types.string
+      },
+      {
+         name = "default_alternate",
+         type = types.optional(types.list(types.string))
+      }
    }
 }
 
 data:add_type {
    name = "pcc_part",
-   schema = schema.Record {
-      kind = schema.String,
-      image = schema.String
+   fields = {
+      {
+         name = "kind",
+         type = types.literal("belt", "body", "boots", "chest", "cloth", "etc", "eye", "glove", "hair", "hairbk", "leg", "mantle", "mantlebk", "pants", "ride", "ridebk", "subhair")
+      },
+      {
+         name = "image",
+         type = types.path
+      },
+      {
+         name = "key_color",
+         type = types.optional(ty_color)
+      }
    }
 }
 
-data:add_type {
-   name = "map_template",
-   schema = schema.Record {
-      map = schema.String,
-      copy = schema.Optional(schema.Table),
-      areas = schema.Optional(schema.Table),
-      on_generate = schema.Optional(schema.Function),
-   },
-   fields = {
-      {
-         name = "copy",
-         default = {},
-         template = true,
-         type = "table",
-         doc = [[
-List of fields to copy to the map when it is instantiated.
-]]
-      },
-      {
-         name = "areas",
-         default = nil,
-         template = false,
-         type = "table",
-         doc = [[
-List of map entrances to other maps contained in this map.
-]]
-      },
-   }
+local ty_chara_filter = types.fields {
+   quality = types.enum(Enum.Quality),
+   level = types.uint,
+   initial_level = types.uint,
+   id = types.data_id("base.chara"),
+   fltselect = types.enum(Enum.FltSelect),
+   category = types.enum(Enum.CharaCategory),
+   create_params = types.table,
+   tag_filters = types.list(types.string),
+   race_filter = types.data_id("base.race"),
+   ownerless = types.boolean,
 }
 
 data:add_type {
    name = "map_archetype",
    fields = {
       {
-         name = "on_spawn_monster",
-         default = CodeGenerator.gen_literal [[
-function(map)
-   end]],
+         name = "starting_pos",
+         type = types.optional(types.callback("map", types.class(InstancedMap),
+                                              "chara", types.map_object("base.chara"),
+                                              "prev_map", types.optional(types.class(InstancedMap)),
+                                              "feat", types.optional(types.map_object("base.feat")))),
          template = true,
-         type = "function(InstancedMap)",
-         doc = [[
-Callback run when a monster is spawned in the map.
-]]
-      },
-      {
-         name = "on_map_restock",
-         default = CodeGenerator.gen_literal [[
-function(map)
-   end]],
-         template = true,
-         type = "function(InstancedMap)",
          doc = [[
 Callback run when this map is restocked, refreshing things like shop inventories.
 ]]
       },
       {
-         name = "on_map_renew",
-         default = CodeGenerator.gen_literal [[
-function(map)
-   end]],
+         name = "on_generate_map",
+         type = types.optional(types.callback({"area", types.class(InstancedArea)}, types.class(InstancedMap))),
          template = true,
-         type = "function(InstancedMap)",
          doc = [[
+Callback run when this map is to be generated. Must return the final map.
+]]
+      },
+      {
+         name = "on_map_renew_minor",
+         type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
+   template = true,
+   doc = [[
+Callback run when this map is restocked, refreshing things like shop inventories.
+]]
+      },
+      {
+         name = "on_map_renew_major",
+         type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
+   template = true,
+   doc = [[
 Callback run when this map is renewed, in order to regenerate its geometry.
 ]]
       },
       {
-         name = "on_generate_map",
-         default = CodeGenerator.gen_literal [[
-function(area, floor)
-   return InstancedMap(20, 20)
-end
-]],
-         template = true,
-         type = "function(InstancedArea, int)?",
-         doc = [[
-How this map should be generated for the first time.
+         name = "on_map_renew_geometry",
+         type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
+   template = true,
+   doc = [[
+Callback run when this map's geometry is recreated from scratch.
 
-This is to be used for generating areas from `base.area_archetype` so you don't
-have to create a new instance of `base.area_archetype` every single time for its
-`on_generate_floor` callback if all you want is an area containing a single map.
-If you don't list this map archetype in the `floors` property of any area
-archetype, then this function can be omitted.
+Used for restoring towns to their pristine condition after destroying their terrain.
+]]
+      },
+      {
+         name = "on_map_loaded_events",
+         type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
+         template = true,
+         doc = [[
+Callback run when this map is about to be entered.
+]]
+      },
+      {
+         name = "on_map_entered",
+         type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
+         template = true,
+         doc = [[
+Callback run when this map is being entered (after on_map_loaded_events).
+]]
+      },
+      {
+         name = "on_map_pass_turn",
+         type = types.optional(types.callback({"map", types.class(InstancedMap), "params", types.table, "result", types.string}, types.string)),
+         template = true,
+         doc = [[
+Callback run when a turn is passed in this map.
 ]]
       },
       {
          name = "properties",
-         default = CodeGenerator.gen_literal [[
-{
-   is_indoor = true,
-   level = 10
-}]],
+         type = types.map(types.string, types.any),
          template = true,
-         type = "table",
          doc = [[
 Properties to copy to this map after it is generated. Does not override any values already set in the `on_generate` callback.
 ]]
       },
       {
-         name = "_events",
+         name = "chara_filter",
+         type = types.optional(types.callback({"map", types.class(InstancedMap)}, ty_chara_filter)),
+         template = true,
+         doc = [[
+Properties to copy to this map after it is generated. Does not override any values already set in the `on_generate` callback.
+]]
+      },
+      {
+         name = "events",
+         type = types.list(ty_event),
          default = {},
          template = false,
-         type = "table",
          doc = [[
 Additional events to bind to this map when it is loaded.
 ]]
@@ -1793,13 +1992,8 @@ data:add_type {
    fields = {
       {
          name = "on_generate_floor",
-         default = CodeGenerator.gen_literal [[
-   function(area, floor)
-      return InstancedMap:new(25, 25)
-end
-]],
+         type = types.optional(types.callback({"area", types.class(InstancedArea), "floor", types.int}, types.class(InstancedMap))),
          template = true,
-         type = "function(InstancedArea, int)",
          doc = [[
 Map generator for this area. Determines how maps in this area should be created
 when they're initially generated. Takes an area and a floor number and returns a
@@ -1816,27 +2010,35 @@ set `is_temporary` to `true` on the generated map.
       },
       {
          name = "image",
+         type = types.data_id("base.chip"),
          default = "elona.feat_area_village",
          template = true,
-         type = "id:base.chip",
          doc = [[
 Image this area will have when created with Area.create_entrance().
 ]]
       },
       {
          name = "deepest_floor",
+         type = types.optional(types.int),
          default = nil,
          template = false,
-         type = "int?",
          doc = [[
 Deepest floor of this area. Used with generating dungeons.
 ]]
       },
       {
          name = "parent_area",
+         type = types.optional(
+            types.fields_strict {
+               _id = types.data_id("base.area_archetype"),
+               on_floor = types.uint,
+               x = types.uint,
+               y = types.uint,
+               starting_floor = types.uint
+            }
+         ),
          default = nil,
          template = true,
-         type = "{_id=id:base.unique_area,on_floor=uint,x=uint,y=uint,starting_floor=uint}",
          doc = [[
 Parent area that this area is contained in. If present, an entrance leading to
 this area on floor `starting_floor` will be created when the given parent area's
@@ -1871,12 +2073,8 @@ data:add_type {
    fields = {
       {
          name = "on_damage",
-         default = CodeGenerator.gen_literal [[
-   function(chara, power, params)
-end
-]],
+         type = types.callback("chara", types.map_object("base.chara", "power", types.number, "params", types.params)),
          template = true,
-         type = "function(IChara, int, table)",
          doc = [[
 Behavior to trigger when this character is melee attacked.
 ]]
@@ -1889,8 +2087,8 @@ data:add_type {
    fields = {
       {
          name = "language_code",
+         type = types.string,
          template = true,
-         default = "",
          doc = [[
 The language code for this language.
 
@@ -1905,8 +2103,23 @@ base.
    }
 }
 
+local ty_dialog_choice_entry = types.tuple(types.string, types.some(types.locale_id, types.literal("MORE", "BYE")))
+local ty_dialog_choice_cb = types.callback({"speaker", types.map_object("base.chara"), "state", types.table}, types.list(ty_dialog_choice_entry))
+local ty_dialog_choice = types.some(ty_dialog_choice_entry, ty_dialog_choice_cb)
+
 data:add_type {
    name = "role",
+   fields = {
+      {
+         name = "elona_id",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "dialog_choices",
+         type = types.list(ty_dialog_choice),
+         default = {}
+      }
+   }
 }
 
 data:add_type {
@@ -1914,31 +2127,34 @@ data:add_type {
    fields = {
       {
          name = "validate",
+         type = types.callback({"option", types.data_entry("base.config_option"), "value", types.any}, {types.boolean, types.optional(types.string)}),
          template = true,
-         default = CodeGenerator.gen_literal [[
-   function(value, option)
-      return true
-end
-]],
          doc = [[
-Used to validate if a value for this option is valid.
+Used to validate if a value for this config option type is valid.
 ]]
       },
       {
          name = "widget",
+         type = types.some(types.require_path, types.callback({"proto", types.data_entry("base.config_option")}, types.interface(IConfigItemWidget))),
          template = true,
-         type = "string",
          doc = [[
-Require path of the widget used to display this config option.
+Require path of the widget used to display this config option type.
 
 It must implement IConfigItemWidget.
 ]]
       },
       {
          name = "fields",
-         type = "table",
+         type = types.map(types.string, types.type),
          doc = [[
-Extra fields for configuring this config option.
+Extra fields for configuring this config option type.
+]]
+      },
+      {
+         name = "default",
+         type = types.some(types.serializable, types.callback({"option", types.data_entry("base.config_option")}, types.serializable)),
+         doc = [[
+Default value of this config option type.
 ]]
       }
    }
@@ -1949,19 +2165,19 @@ data:add_type {
    fields = {
       {
          name = "type",
+         type = types.some(types.literal("boolean", "string", "number", "int", "enum", "table", "data_id", "any"), types.data_id("base.config_option_type")),
          template = true,
-         default = "boolean",
          no_fallback = true,
          doc = [[
 Type of this config option.
 
-One of "boolean", "string", "number", "int" "enum", "table", "data_id" or "any".
+One of "boolean", "string", "number", "int", "enum", "table", "data_id" or "any".
 ]]
       },
       {
          name = "default",
+         type = types.any,
          template = true,
-         default = true,
          no_fallback = true,
          doc = [[
 Default value of this config option.
@@ -1969,7 +2185,7 @@ Default value of this config option.
       },
       {
          name = "choices",
-         default = CodeGenerator.gen_literal "{}",
+         type = types.some(types.list(types.string)), types.callback({}, types.list(types.string)),
          no_fallback = true,
          doc = [[
 Only used if the type is "enum".
@@ -1979,12 +2195,36 @@ The list of enum variants of this config option.
       },
       {
          name = "data_type",
-         default = "base.chara",
+         type = types.data_type_id,
          no_fallback = true,
          doc = [[
 Only used if the type is "data_id".
 
 The data type of the ID in this config option.
+]]
+      },
+      {
+         name = "on_changed",
+         type = types.callback("value", types.any, "is_startup", types.boolean),
+         no_fallback = true,
+         doc = [[
+Callback run immediately after this option is changed in the settings menu.
+
+"is_startup" is true if the option was set from the intial config load at startup.
+]]
+      }
+   },
+   validation = "permissive"
+}
+
+data:add_type {
+   name = "config_menu",
+   fields = {
+      {
+         name = "items",
+         type = types.list(types.data_id("base.config_option")),
+         doc = [[
+List of config options in this config menu.
 ]]
       }
    }
@@ -1993,25 +2233,84 @@ The data type of the ID in this config option.
 data:add_type {
    name = "auto_turn_anim",
    fields = {
+      {
+         name = "sound",
+         type = types.data_id("base.sound")
+      },
+      {
+         name = "on_start_callback",
+         type = types.optional(types.callback())
+      },
+      {
+         name = "callback",
+         type = types.callback({"x", types.number, "y", types.number, "t", types.table}, types.callback())
+      },
+      {
+         name = "callback",
+         type = types.callback({"x", types.number, "y", types.number, "t", types.table})
+      }
    }
+}
+
+local ty_equip_spec = types.map(types.string, types.fields { category = types.data_id("base.item_type"), quality = types.enum(Enum.Quality)})
+local ty_drop = types.fields {
+   _id = types.data_id("base.item"),
+   amount = types.uint,
+   on_create = types.callback("item", types.map_object("base.item"), "chara", types.map_object("base.chara"), "attacker", types.optional(types.map_object("base.chara")))
 }
 
 data:add_type {
    name = "equipment_type",
-   fields = {}
+   fields = {
+      {
+         name = "elona_id",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "on_initialize_equipment",
+         type = types.callback("chara", types.map_object("base.chara"), "equip_spec", ty_equip_spec, "gen_chance", types.uint)
+      },
+      {
+         name = "on_drop_loot",
+         type = types.optional(types.callback("chara", types.map_object("base.chara"), "attacker", types.optional(types.map_object("base.chara")), "drops", types.list(ty_drop)))
+      }
+   }
 }
 
 data:add_type {
    name = "loot_type",
-   fields = {}
+   fields = {
+      {
+         name = "elona_id",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "on_drop_loot",
+         type = types.callback("chara", types.map_object("base.chara"), "attacker", types.optional(types.map_object("base.chara")), "drops", types.list(ty_drop))
+      }
+   }
 }
 
 data:add_type {
    name = "trait_indicator",
-   fields = {}
+   fields = {
+      {
+         name = "applies_to",
+         type = types.callback("chara", types.map_object("base.chara"))
+      },
+      {
+         name = "make_indicator",
+         type = types.callback({"chara", types.map_object("base.chara")}, types.fields_strict { desc = types.string, color = types.optional(ty_color) }),
+      }
+   }
 }
 
 data:add_type {
    name = "journal_page",
-   fields = {}
+   fields = {
+      {
+         name = "render",
+         type = types.callback({}, types.string)
+      }
+   }
 }

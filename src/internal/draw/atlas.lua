@@ -202,9 +202,9 @@ local function get_images(image)
    --       source = "graphic/map0.bmp",
    --       width = 48,
    --       height = 48,
-   --       count_x = 1,
    --       x = 0,
    --       y = 0,
+   --       count_x = 1,
    --       key_color = {0, 0, 0}
    --     }
    --

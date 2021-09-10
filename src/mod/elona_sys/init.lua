@@ -1,12 +1,6 @@
 local CodeGenerator = require("api.CodeGenerator")
 
 local function add_elona_id(_type)
-   data:extend_type(
-      _type,
-      {
-         elona_id = schema.Number,
-      }
-   )
    data:add_index(_type, "elona_id")
 end
 
@@ -63,7 +57,6 @@ add_elona_id("base.element")
 add_elona_id("base.sound")
 add_elona_id("base.music")
 add_elona_id("base.body_part")
-add_elona_id("base.map_template")
 add_elona_id("base.portrait")
 
 

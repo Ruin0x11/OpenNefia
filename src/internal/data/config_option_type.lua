@@ -30,7 +30,7 @@ data:add_multi(
       {
          _id = "number",
 
-         fields = { min_value = "number", max_value = "number" },
+         fields = { min_value = types.number, max_value = types.number },
          widget = "api.gui.menu.config.item.ConfigItemNumberWidget",
 
          default = function(option)
@@ -62,7 +62,7 @@ data:add_multi(
       {
          _id = "integer",
 
-         fields = { min_value = "integer", max_value = "integer" },
+         fields = { min_value = types.int, max_value = types.int },
          widget = "api.gui.menu.config.item.ConfigItemIntegerWidget",
 
          default = function(option)
@@ -94,7 +94,7 @@ data:add_multi(
       {
          _id = "enum",
 
-         fields = { choices = "table" },
+         fields = { choices = types.some(types.list(types.string), types.callback({}, types.list(types.string))) },
          widget = "api.gui.menu.config.item.ConfigItemEnumWidget",
 
          default = function(option)
@@ -125,7 +125,7 @@ data:add_multi(
       {
          _id = "string",
 
-         fields = { max_length = "integer" },
+         fields = { max_length = types.uint },
          widget = "api.gui.menu.config.item.ConfigItemStringWidget",
 
          default = "",
