@@ -1,5 +1,16 @@
 data:add_type {
-   name = "building"
+   name = "building",
+   fields = {
+      {
+         name = "area_archetype_id",
+         type = types.data_id("base.area_archetype"),
+         template = true
+      },
+      {
+         name = "tax_cost",
+         type = types.int
+      }
+   }
 }
 
 data:add {

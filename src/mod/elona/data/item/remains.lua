@@ -1,6 +1,7 @@
 --
 -- Remains
 --
+local Enum = require("api.Enum")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 local IItemMuseumValued = require("mod.elona.api.aspect.IItemMuseumValued")
 local ItemMuseumValuedFigureAspect = require("mod.elona.api.aspect.ItemMuseumValuedFigureAspect")

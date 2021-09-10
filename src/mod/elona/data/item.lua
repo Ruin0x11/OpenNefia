@@ -1,3 +1,4 @@
+local Enum = require("api.Enum")
 local light = require("mod.elona.data.item.light")
 
 -- TODO: Some fields should not be stored on the prototype as

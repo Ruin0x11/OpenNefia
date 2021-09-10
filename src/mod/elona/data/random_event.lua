@@ -14,40 +14,35 @@ local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local DeferredEvents = require("mod.elona.api.DeferredEvents")
 local Calc = require("mod.elona.api.Calc")
 local Enum = require("api.Enum")
-local CodeGenerator = require("api.CodeGenerator")
 
 data:add_type {
    name = "random_event",
    fields = {
          {
             name = "image",
-            type = "id:base.asset",
+            type = types.data_id("base.asset"),
             template = true,
          },
          {
             name = "on_event_triggered",
-            type = "function",
-            default = CodeGenerator.gen_literal [[
-function()
-end
-]],
+            type = types.callback(),
             template = true
          },
          {
             name = "choice_count",
-            type = "integer",
+            type = types.uint,
             default = 1,
             template = true,
          },
          {
             name = "choices",
-            type = "table?",
+            type = types.optional(types.list(types.callback())),
             default = nil,
             template = true,
          },
          {
             name = "luck_threshold",
-            type = "integer?",
+            type = types.optional(types.uint),
             default = nil,
          },
    }

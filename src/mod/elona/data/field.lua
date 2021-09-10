@@ -1,21 +1,33 @@
 local Rand = require("api.Rand")
 local Itemgen = require("mod.elona.api.Itemgen")
-local schema = require("thirdparty.schema")
 local I18N = require("api.I18N")
+local InstancedMap = require("api.InstancedMap")
 
 data:add_type {
    name = "field_type",
-   schema = schema.Record {
-      generate = schema.Function,
-   },
-}
-
-data:extend_type(
-   "base.map_tile",
-   {
-      field_type = schema.Optional(schema.String),
+   fields = {
+      {
+         name = "default_tile",
+         type = types.data_id("base.map_tile")
+      },
+      {
+         name = "fog",
+         type = types.data_id("base.map_tile")
+      },
+      {
+         name = "tiles",
+         type = types.list(types.fields_strict { id = types.data_id("base.map_tile"), density = types.number })
+      },
+      {
+         name = "generate",
+         type = types.optional(types.callback("self", types.data_entry("elona.field_type"), "map", types.class(InstancedMap)))
+      },
+      {
+         name = "material_spot_type",
+         type = types.optional(types.data_id("elona.material_spot"))
+      }
    }
-)
+}
 
 local function create_junk_items(map)
    local stood_map_tile = true

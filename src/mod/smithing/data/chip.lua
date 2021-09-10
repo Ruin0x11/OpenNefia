@@ -1,4 +1,4 @@
-d,ata:add {
+data:add {
    _type = "base.chip",
    _id = "blacksmith_hammer",
 

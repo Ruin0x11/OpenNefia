@@ -708,7 +708,6 @@ function env.generate_sandbox(mod_name, is_strict)
    sandbox["dofile"] = function(path) return env.load_sandboxed_chunk(path, mod_name) end
    sandbox["data"] = require("internal.data")
    sandbox["config"] = require("internal.config")
-   sandbox["schema"] = require("thirdparty.schema")
    sandbox["pause"] = function(...) return _G.pause(...) end
    sandbox["_G"] = sandbox
 

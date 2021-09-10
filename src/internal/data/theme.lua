@@ -8,28 +8,6 @@ data:add {
    overrides = {}
 }
 
-data:add_type {
-   name = "theme_transform",
-
-   fields = {
-      {
-         name = "applies_to",
-         type = "string",
-         template = true
-      },
-      {
-         name = "transform",
-         type = "function",
-         template = true,
-         default = CodeGenerator.gen_literal [[
-function(old, new)
-   return table.merge(old, {})
-end
-]]
-      }
-   }
-}
-
 data:add {
    _type = "base.theme_transform",
    _id = "chip",

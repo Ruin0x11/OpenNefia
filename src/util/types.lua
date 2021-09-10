@@ -22,7 +22,7 @@ local function smart_quote(str)
 end
 
 local INSPECT_OPTIONS = {
-   newline = " ", indent = "", max_length = 16,
+   newline = " ", indent = "", max_length = 32,
 }
 
 local function get_name(obj, ctxt)
@@ -560,6 +560,48 @@ do
    types.interface = wrap(interface_checker)
 end
 
+do
+   local class_type_implementing_checker = class.class("class_type_implementing_checker", ITypeChecker)
+   function class_type_implementing_checker:init(iface)
+      assert(class.is_interface(iface), ("%s is not a interface"):format(iface))
+      self.iface = iface
+   end
+   function class_type_implementing_checker:check(obj, _ctxt)
+      if not class.is_class(obj) then
+         return false, type_error(self)
+      end
+
+      if class.uses_interface(self.iface, obj) then
+         return true
+      end
+
+      return false, type_error(self)
+   end
+   function class_type_implementing_checker:__tostring()
+      return ("<? implements %s>"):format(self.iface)
+   end
+   types.class_type_implementing = wrap(class_type_implementing_checker)
+end
+
+do
+   local iterator_checker = class.class("iterator_checker", ITypeChecker)
+   function iterator_checker:init(ty)
+      self.type = ty
+   end
+   function iterator_checker:check(obj, ctxt)
+      if type(obj) == "table" and tostring(obj) == "<generator>" then
+         -- TODO account for type of inner object
+         return true
+      end
+
+      return false, type_error(self)
+   end
+   function iterator_checker:__tostring()
+      return ("iterator<%s>"):format(self.ty)
+   end
+   types.iterator = wrap(iterator_checker)
+end
+
 local optional_checker = class.class("optional_checker", ITypeChecker)
 function optional_checker:init(checker)
    assert(is_type_checker(checker))
@@ -917,6 +959,14 @@ do
    types.literal = wrap(literal_checker)
 end
 
+local ty_color_value = types.range(types.int, 0, 255)
+types.color = types.tuple {
+   ty_color_value,
+   ty_color_value,
+   ty_color_value,
+   types.optional(ty_color_value),
+}
+
 do
    local data_id_checker = class.class("data_id_checker", ITypeChecker)
    function data_id_checker:init(_type)
@@ -976,7 +1026,7 @@ do
       -- end
       self.args = args
    end
-   function callback_checker:check(obj, _ctxt)
+   function callback_checker:check(obj, ctxt)
       if types["function"]:check(obj, ctxt) then
          return true
       end
@@ -984,7 +1034,7 @@ do
       return false, type_error(self)
    end
    function callback_checker:__tostring()
-      return ("function<%s>"):format(print_list(self.checkers))
+      return ("function<%s>"):format(print_list(self.args))
    end
 
    function types.callback(s)

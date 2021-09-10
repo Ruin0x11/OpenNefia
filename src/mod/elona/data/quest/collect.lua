@@ -26,9 +26,9 @@ local collect = {
    chance = 14,
 
    params = {
-      target_chara_uid = "number",
-      target_name = "string",
-      target_item_id = "string"
+      target_chara_uid = types.uint,
+      target_name = types.string,
+      target_item_id = types.data_id("base.item")
    },
 
    difficulty = function()

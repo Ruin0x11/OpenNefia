@@ -3,8 +3,7 @@ data:add_type {
    fields = {
       {
          name = "layout",
-         type = "string",
-         default = "",
+         type = types.string,
          template = true
       }
    }

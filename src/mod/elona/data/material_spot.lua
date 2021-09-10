@@ -8,14 +8,22 @@ data:add_type {
    name = "material_spot",
    fields = {
       {
-         name = "on_finish",
-         type = "locale_key",
+         name = "on_search",
+         type = types.optional(types.callback({"chara", types.map_object("base.chara"),
+                                               "feat", types.map_object("base.feat"),
+                                               "level", types.uint,
+                                               "choices", types.list(types.data_id("elona.material"))},
+                                  types.data_id("elona.material"))),
+         default = nil,
+      },
+      {
+         name = "get_verb",
+         type = types.locale_id,
          default = nil,
       },
       {
          name = "materials",
-         type = "table",
-         default = {},
+         type = types.list(types.data_id("elona.material")),
          template = true
       }
    }
@@ -101,65 +109,65 @@ data:add_type {
    fields = {
       {
          name = "auto_turn_anim",
-         type = "id:base.auto_turn_anim",
+         type = types.data_id("base.auto_turn_anim"),
          default = "base.searching",
          template = true
       },
       {
          name = "activity_name",
-         type = "locale_key",
+         type = types.locale_id,
          default = "activity._.elona.searching.verb",
          template = true
       },
       {
          name = "activity_animation_wait",
-         type = "number",
+         type = types.uint,
          default = 15,
          template = true
       },
       {
          name = "activity_default_turns",
-         type = "integer",
+         type = types.uint,
          default = 20,
          template = true
       },
       {
          name = "image",
-         type = "id:base.chip?",
+         type = types.optional(types.data_id("base.chip")),
          default = nil,
          template = true
       },
       {
          name = "material_spot_type",
-         type = "id:elona.material_spot?",
+         type = types.optional(types.data_id("elona.material_spot?")),
          default = nil,
          template = true
       },
       {
          name = "on_stepped_on_text",
-         type = "locale_key",
+         type = types.locale_id,
          default = "action.move.feature.material.spot",
          template = true
       },
       {
          name = "on_start_gather_text",
-         type = "locale_key",
+         type = types.locale_id,
          default = "activity.dig_spot.start.other",
          template = true
       },
       {
          name = "on_start_gather_sound",
-         type = "id:base.sound?",
+         type = types.optional(types.data_id("base.sound")),
          default = nil,
       },
       {
          name = "on_gather_sound_text",
-         type = "locale_key?",
+         type = types.optional(types.locale_id),
          default = nil,
       },
       {
          name = "on_gather_no_more_text",
-         type = "locale_key",
+         type = types.locale_id,
          default = "activity.material.searching.no_more",
          template = true
       },

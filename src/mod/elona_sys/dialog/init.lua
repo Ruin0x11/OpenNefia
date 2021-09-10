@@ -1,10 +1,10 @@
 data:add_type {
    name = "dialog",
-   schema = schema.Record {
-      name = schema.String,
-      image = schema.Number,
-      max_hp = schema.Number,
-      on_death = schema.Optional(schema.Function),
+   fields = {
+      {
+         name = "nodes",
+         type = types.map(types.identifier, types.any) -- TODO
+      }
    }
 }
 

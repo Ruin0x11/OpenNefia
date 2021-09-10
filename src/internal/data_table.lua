@@ -118,7 +118,7 @@ local function remove_index_field(self, dat, _type, field)
    end
 end
 
-function data_table:add_index(_type, field)
+function data_table:_add_index(_type, field)
    if not self.schemas[_type] then
       return
    end
@@ -165,7 +165,8 @@ local ty_schema = types.fields_strict {
          type = types.type,
          default = types.optional(types.any),
          doc = types.optional(types.string),
-         no_fallback = types.optional(types.boolean)
+         no_fallback = types.optional(types.boolean),
+         indexed = types.optional(types.boolean)
       }
    ),
    fallbacks = types.optional(types.table),
@@ -220,7 +221,7 @@ function data_table:add_type(schema, params)
    schema.validate = function(obj, verbose)
       local ok, err = types.check(obj, schema.type, verbose)
       if not ok then
-         return false, ("Validation for data type '%s' failed: %s"):format(_type, err)
+         return false, ("Validation for data entry '%s:%s.%s' failed: %s"):format(_type, mod_name, obj._id or "<???>", err)
       end
       return true
    end
@@ -366,17 +367,18 @@ function data_table:add(dat)
       return nil
    end
 
+   -- TODO only validate after all data has been added (handles data entry field dependencies)
+   -- TODO add fallback field types
+   local ok, err = _schema.validate(dat)
+   if not ok then
+      -- print("Error: " .. err)
+   end
+
    local fallbacks = self.fallbacks[_type]
    for field, fallback in pairs(fallbacks) do
       if dat[field] == nil then
          dat[field] = fallback
       end
-   end
-
-   -- TODO only validate after all data has been added (handles data entry field dependencies)
-   local ok, err = _schema.validate(dat)
-   if not ok then
-      error(err)
    end
 
    -- Verify extension fields.
@@ -457,8 +459,11 @@ function data_table:add(dat)
    -- TODO fallbacks and prototype_fallbacks should be separate
    self.inner[_type][full_id] = dat
 
-   for field, _ in pairs(_schema.indexes) do
-      add_index_field(self, dat, _type, field)
+   for _, field in ipairs(_schema.fields) do
+      if field.indexed then
+         _schema.indexes[field] = true
+         add_index_field(self, dat, _type, field.name)
+      end
    end
 
    dat._id = full_id

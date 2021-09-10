@@ -1,3 +1,4 @@
+local Enum = require("api.Enum")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 --

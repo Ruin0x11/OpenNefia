@@ -1,6 +1,36 @@
 -- >>>>>>>> shade2/item_data.hsp:1243 	#define global maxFish 100 ...
 data:add_type {
-   name = "fish"
+   name = "fish",
+   fields = {
+      {
+         name = "level",
+         type = types.uint,
+      },
+      {
+         name = "rarity",
+         type = types.uint,
+      },
+      {
+         name = "power",
+         type = types.uint,
+      },
+      {
+         name = "speed",
+         type = types.uint,
+      },
+      {
+         name = "weight",
+         type = types.uint,
+      },
+      {
+         name = "value",
+         type = types.uint,
+      },
+      {
+         name = "item_id",
+         type = types.data_id("base.item"),
+      },
+   }
 }
 
 local fish = {

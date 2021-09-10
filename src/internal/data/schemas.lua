@@ -44,13 +44,6 @@ local ty_event = types.fields {
    callback = types.callback("self", types.interface(IEventEmitter), "params", types.table, "result", types.any),
 }
 
-local ty_color_value = types.range(types.int, 0, 255)
-local ty_color = types.tuple {
-   ty_color_value,
-   ty_color_value,
-   ty_color_value,
-   types.optional(ty_color_value),
-}
 local ty_light = types.fields {
    chip = types.data_id("base.chip"),
    brightness = types.positive(types.number),
@@ -283,7 +276,7 @@ List of events to bind to this character when they are spawned.
          },
          {
             name = "color",
-            type = types.optional(ty_color),
+            type = types.optional(types.color),
             default = nil,
             doc = [[
 Color to display on the character's sprite.
@@ -498,7 +491,7 @@ Relative strength of this item.
          },
          {
             name = "color",
-            type = types.optional(ty_color),
+            type = types.optional(types.color),
             default = nil,
          },
          {
@@ -736,6 +729,7 @@ data:add_type(
       fields = {
          {
             name = "elona_id",
+            indexed = true,
             type = types.optional(types.uint),
          },
          {
@@ -812,6 +806,7 @@ data:add_type(
       fields = {
          {
             name = "elona_id",
+            indexed = true,
             type = types.optional(types.uint),
          },
          {
@@ -886,6 +881,7 @@ data:add_type(
          },
          {
             name = "elona_id",
+            indexed = true,
             type = types.optional(types.uint),
          },
          {
@@ -928,15 +924,16 @@ data:add_type(
       fields = {
          {
             name = "elona_id",
+            indexed = true,
             type = types.optional(types.uint),
          },
          {
             name = "color",
-            type = types.optional(ty_color)
+            type = types.optional(types.color)
          },
          {
             name = "ui_color",
-            type = types.optional(ty_color)
+            type = types.optional(types.color)
          },
          {
             name = "can_resist",
@@ -989,7 +986,7 @@ data:add_type(
    }
 )
 
-local ty_indicator_text = types.some(types.string, types.fields { text = types.string, color = ty_color })
+local ty_indicator_text = types.some(types.string, types.fields { text = types.string, color = types.color })
 local ty_indicator_cb = types.callback({"chara", types.map_object("base.chara")}, ty_indicator_text)
 local ty_indicator = types.some(types.locale_id, ty_indicator_cb)
 
@@ -998,7 +995,7 @@ data:add_type{
    fields = {
       {
          name = "color",
-         type = ty_color,
+         type = types.color,
       },
       {
          name = "indicator",
@@ -1122,6 +1119,7 @@ data:add_type {
    fields = {
       {
          name = "elona_id",
+         indexed = true,
          type = types.optional(types.uint)
       },
       {
@@ -1143,7 +1141,7 @@ local ty_image_entry = types.some(
    types.fields_strict {
       image = types.path,
       count_x = types.optional(types.uint),
-      key_color = types.optional(ty_color)
+      key_color = types.optional(types.color)
    },
 
    -- {
@@ -1162,7 +1160,7 @@ local ty_image_entry = types.some(
       x = types.uint,
       y = types.uint,
       count_x = types.optional(types.uint),
-      key_color = types.optional(ty_color)
+      key_color = types.optional(types.color)
    }
 )
 
@@ -1281,7 +1279,7 @@ Level of this enchantment.
       },
       {
          name = "color",
-         type = types.optional(ty_color)
+         type = types.optional(types.color)
       },
       {
          name = "params",
@@ -1400,6 +1398,7 @@ data:add_type {
    fields = {
       {
          name = "elona_id",
+         indexed = true,
          type = types.optional(types.uint)
       },
       {
@@ -1514,7 +1513,7 @@ A related stat to improve when this skill is used. Affects the skill's icon in t
       },
       {
          name = "cost",
-         type = types.uint,
+         type = types.number,
          default = 10,
          template = true,
          doc = [[
@@ -1581,6 +1580,11 @@ If true, continue to use the skill even if a target character was not found.
 
 This is used by the Pickpocket skill to select an item on the ground independent of a target character.
 ]]
+      },
+      {
+         name = "ai_check_ranged_if_self",
+         type = types.boolean,
+         default = false
       }
    }
 }
@@ -1590,6 +1594,7 @@ data:add_type {
    fields = {
       {
          name = "elona_id",
+         indexed = true,
          type = types.optional(types.uint)
       },
       {
@@ -1632,6 +1637,7 @@ data:add_type {
    fields = {
       {
          name = "elona_id",
+         indexed = true,
          type = types.optional(types.uint)
       },
       {
@@ -1646,6 +1652,7 @@ data:add_type {
    fields = {
       {
          name = "elona_id",
+         indexed = true,
          type = types.optional(types.uint)
       },
       {
@@ -1685,6 +1692,23 @@ data:add_type {
       {
          name = "overrides",
          type = types.map(types.data_type_id, types.table),
+         template = true,
+      }
+   }
+}
+
+data:add_type {
+   name = "theme_transform",
+
+   fields = {
+      {
+         name = "applies_to",
+         type = types.data_type_id,
+         template = true
+      },
+      {
+         name = "transform",
+         type = types.callback({"old", types.table, "new", types.table}, types.table),
          template = true,
       }
    }
@@ -1742,7 +1766,7 @@ data:add_type {
       },
       {
          name = "key_color",
-         type = types.optional(types.some(types.literal("none"), ty_color))
+         type = types.optional(types.some(types.literal("none"), types.color))
       },
 
       -- font
@@ -1754,7 +1778,7 @@ data:add_type {
       -- color
       {
          name = "color",
-         type = types.optional(ty_color)
+         type = types.optional(types.color)
       }
    }
 }
@@ -1782,17 +1806,17 @@ It can either be a string referencing an image file, or a table with these conte
       },
       {
          name = "shadow",
-         type = types.uint,
+         type = types.optional(types.uint),
          default = 0
       },
       {
          name = "stack_height",
-         type = types.int,
+         type = types.optional(types.int),
          default = 0
       },
       {
          name = "y_offset",
-         type = types.int,
+         type = types.optional(types.int),
          default = 0,
          template = true,
          doc = [[
@@ -1829,10 +1853,34 @@ data:add_type {
 }
 
 data:add_type {
+   name = "tone",
+
+   fields = {
+      {
+         name = "show_in_menu",
+         type = types.boolean,
+         default = false,
+      },
+      {
+         name = "texts",
+         template = true,
+         type = types.map(types.string,
+                          types.map(types.data_id("base.talk_event"),
+                                    types.list(types.some(types.string,
+                                                          types.callback("t", types.table,
+                                                                         "env", types.table,
+                                                                         "args", types.table,
+                                                                         "chara", types.map_object("base.map_object"))))))
+      },
+   }
+}
+
+data:add_type {
    name = "portrait",
    fields = {
       {
          name = "elona_id",
+         indexed = true,
          type = types.optional(types.uint)
       },
       {
@@ -1869,7 +1917,7 @@ data:add_type {
       },
       {
          name = "key_color",
-         type = types.optional(ty_color)
+         type = types.optional(types.color)
       }
    }
 }
@@ -2112,6 +2160,7 @@ data:add_type {
    fields = {
       {
          name = "elona_id",
+         indexed = true,
          type = types.optional(types.uint)
       },
       {
@@ -2185,7 +2234,7 @@ Default value of this config option.
       },
       {
          name = "choices",
-         type = types.some(types.list(types.string)), types.callback({}, types.list(types.string)),
+         type = types.some(types.list(types.string), types.callback({}, types.list(types.string))),
          no_fallback = true,
          doc = [[
 Only used if the type is "enum".
@@ -2264,6 +2313,7 @@ data:add_type {
    fields = {
       {
          name = "elona_id",
+         indexed = true,
          type = types.optional(types.uint)
       },
       {
@@ -2282,6 +2332,7 @@ data:add_type {
    fields = {
       {
          name = "elona_id",
+         indexed = true,
          type = types.optional(types.uint)
       },
       {
@@ -2300,7 +2351,7 @@ data:add_type {
       },
       {
          name = "make_indicator",
-         type = types.callback({"chara", types.map_object("base.chara")}, types.fields_strict { desc = types.string, color = types.optional(ty_color) }),
+         type = types.callback({"chara", types.map_object("base.chara")}, types.fields_strict { desc = types.string, color = types.optional(types.color) }),
       }
    }
 }

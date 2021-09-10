@@ -3,7 +3,13 @@ local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
 
 data:add_type {
-   name = "predicate"
+   name = "predicate",
+   fields = {
+      {
+         name = "match",
+         type = types.callback({"item", types.map_object("base.item")}, types.boolean)
+      }
+   }
 }
 
 data:add {

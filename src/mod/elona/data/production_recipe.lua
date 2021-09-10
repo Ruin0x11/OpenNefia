@@ -3,23 +3,23 @@ data:add_type {
    fields = {
       {
          name = "item_id",
-         type = "id:base.item",
+         type = types.data_id("base.item"),
          template = true,
       },
       {
          name = "skill_used",
-         type = "id:base.skill",
+         type = types.data_id("base.skill"),
          template = true,
       },
       {
          name = "required_skill_level",
-         type = "integer",
+         type = types.uint,
          default = 1,
          template = true,
       },
       {
          name = "materials",
-         type = "table",
+         type = types.list(types.fields_strict { _id = types.data_id("elona.material"), amount = types.uint }),
          template = true,
       },
    }

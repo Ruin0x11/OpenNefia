@@ -5,23 +5,22 @@ data:add_type {
    fields = {
       {
          name = "item_id",
+         type = types.data_id("base.item"),
          template = true,
-         default = "",
-         type = "id:base.item"
       },
       {
          name = "chip_id",
+         type = types.optional(types.data_id("base.chip")),
          template = true,
-         type = "id:base.chip?"
       },
       {
          name = "color",
+         type = types.optional(types.color),
          template = true,
-         type = "color?|string?"
       },
       {
          name = "chip_variants",
-         type = "table?"
+         type = types.optional(types.list(types.data_id("base.chip"))),
       }
    }
 }

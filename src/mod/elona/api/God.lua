@@ -122,15 +122,19 @@ function God.can_offer_item_to(god_id, item)
    return false
 end
 
-function God.make_skill_blessing(skill, coefficient, add)
-   -- data["base.skill"]:ensure(skill) TODO
-   return function(chara)
-      if chara:has_skill(skill) then
-         local amount = math.clamp((chara.piety or 0) / coefficient, 1, add + chara:skill_level("elona.faith") / 10)
-         chara:mod_skill_level(skill, amount, "add")
+local function mkblessing(cb)
+   return function(skill, coefficient, add)
+      return function(chara)
+         if chara:has_skill(skill) then
+            local amount = math.clamp((chara.piety or 0) / coefficient, 1, add + chara:skill_level("elona.faith") / 10)
+            chara[cb](chara, skill, amount, "add")
+         end
       end
    end
 end
+
+God.make_skill_blessing = mkblessing("mod_skill_level")
+God.make_resist_blessing = mkblessing("mod_resist_level")
 
 function God.switch_religion_with_penalty(chara, new_god)
    -- >>>>>>>> shade2/god.hsp:238 		gosub *screen_drawStatus ...

@@ -1510,7 +1510,7 @@ local inv_take = {
    default_amount = 1,
    -- <<<<<<<< shade2/command.hsp:3943 			if iId(ci)=idGold:in=iNum(ci):else:in=1 ..
    -- >>>>>>>> shade2/command.hsp:3565 	if invCtrl=25:s="" ...
-   show_weight_text = false,
+   hide_weight_text = true,
    -- <<<<<<<< shade2/command.hsp:3565 	if invCtrl=25:s="" ..
    -- >>>>>>>> shade2/command.hsp:3568 	if invCtrl=25{ ...
    show_target_equip = true,

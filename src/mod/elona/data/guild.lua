@@ -7,7 +7,13 @@ local function order(elona_id)
 end
 
 data:add_type {
-   name = "guild"
+   name = "guild",
+   fields = {
+      {
+         name = "guest_trainer_skills",
+         type = types.list(types.data_id("base.skill"))
+      }
+   }
 }
 
 --

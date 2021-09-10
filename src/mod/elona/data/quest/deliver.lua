@@ -29,11 +29,11 @@ local deliver = {
    chance = 6,
 
    params = {
-      target_map_uid = "number",
-      target_chara_uid = "number",
-      target_name = "string",
-      item_category = "string",
-      item_id = "string",
+      target_map_uid = types.uint,
+      target_chara_uid = types.uint,
+      target_name = types.string,
+      item_category = types.data_id("base.item_type"),
+      item_id = types.data_id("base.item"),
    },
 
    difficulty = 0,

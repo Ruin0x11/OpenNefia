@@ -21,12 +21,7 @@ data:add_type {
    fields = {
       {
          name = "on_wish",
-         type = "function(string, IChara)",
-         default = CodeGenerator.gen_literal [[
-function(wish, chara)
-      return false
-   end
-]],
+         type = types.callback({"wish", types.string, "chara", types.map_object("base.chara")}, types.boolean),
          template = true,
          doc = [[
 Code to run on wish. `wish` contains the wish text. `chara` contains the wishing character.
@@ -34,6 +29,7 @@ Code to run on wish. `wish` contains the wish text. `chara` contains the wishing
       },
       {
          name = "ordering",
+         type = types.int,
          default = 0,
          template = true,
          doc = [[

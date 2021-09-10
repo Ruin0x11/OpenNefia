@@ -1,60 +1,79 @@
+local ty_pos = types.fields { x = types.uint, y = types.uint }
+local ty_visual_ai_var = types.table -- TODO
+
 data:add_type {
    name = "block",
    fields = {
       {
          name = "icon",
-         type = "id:base.asset",
+         type = types.data_id("base.asset"),
          template = true
       },
       {
          name = "type",
-         type = "string",
-         default = "action",
+         type = types.literal("target", "action", "condition", "special"),
          template = true
       },
       {
          name = "vars",
-         type = "table",
+         type = types.map(types.identifier, ty_visual_ai_var),
          default = {},
          template = true
       },
       {
          name = "color",
-         type = "string|table|nil",
+         type = types.optional(types.color),
          default = nil,
          template = true
       },
       {
          name = "target_source",
-         type = "string",
+         type = types.optional(types.literal("character", "items_on_self", "items_on_ground"))
       },
       {
          name = "target_filter",
-         type = "function",
+         type = types.optional(types.callback({"self", types.table,
+                                               "chara", types.map_object("base.chara"),
+                                               "candidate", types.map_object("base.chara")},
+                                  types.boolean))
       },
       {
          name = "target_order",
-         type = "function",
-      },
-      {
-         name = "ordering",
-         type = "number",
-         default = 10000,
-         template = true
+         type = types.optional(types.callback({"self", types.table,
+                                               "chara", types.map_object("base.chara"),
+                                               "candidate_a", types.map_object("base.chara"),
+                                               "candidate_b", types.map_object("base.chara")},
+                                  types.boolean))
       },
       {
          name = "is_terminal",
-         type = "boolean",
-         default = true
+         type = types.optional(types.boolean),
       },
       {
          name = "format_name",
-         type = "function"
+         type = types.optional(types.callback({"proto", types.data_entry("visual_ai.block"), "vars", types.table}, types.string))
       },
       {
          name = "applies_to",
-         type = "string",
-         default = "any",
+         type = types.optional(types.literal("any", "map_object", "position")),
+         template = true
+      },
+      {
+         name = "action",
+         type = types.optional(types.callback({"self", types.table,
+                                               "chara", types.map_object("base.chara"),
+                                               "target", types.some(types.map_object("any"), ty_pos),
+                                               "ty", types.literal("map_object", "position")},
+                                  types.string)),
+         template = true
+      },
+      {
+         name = "action",
+         type = types.optional(types.callback({"self", types.table,
+                                               "chara", types.map_object("base.chara"),
+                                               "target", types.some(types.map_object("any"), ty_pos),
+                                               "ty", types.literal("map_object", "position")},
+                                  types.boolean)),
          template = true
       }
    }

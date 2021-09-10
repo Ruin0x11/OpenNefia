@@ -450,11 +450,11 @@ function InventoryMenu:update_filtering(play_sound)
       self.play_sound = true
    end
 
-   if self.ctxt.proto.show_weight_text then
+   if self.ctxt.proto.hide_weight_text then
+      self.total_weight_text = ""
+   else
       local weight_text = I18N.get("ui.inv.window.total_weight", self.total_weight, self.max_weight, self.cargo_weight)
       self.total_weight_text = ("%d items  (%s)"):format(self.pages:len(), weight_text)
-   else
-      self.total_weight_text = ""
    end
 end
 

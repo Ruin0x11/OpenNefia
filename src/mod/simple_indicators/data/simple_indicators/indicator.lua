@@ -1,5 +1,11 @@
 data:add_type {
-   name = "indicator"
+   name = "indicator",
+   fields = {
+      {
+         name = "render",
+         type = types.callback({"player", types.map_object("base.chara")}, types.string)
+      }
+   }
 }
 
 data:add {
