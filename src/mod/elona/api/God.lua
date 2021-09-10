@@ -126,7 +126,7 @@ local function mkblessing(cb)
    return function(skill, coefficient, add)
       return function(chara)
          if chara["has_" .. cb](chara, skill) then
-            local amount = math.clamp((chara.piety or 0) / coefficient, 1, add + chara[cb .. "_level"](chara, "elona.faith") / 10)
+            local amount = math.clamp((chara.piety or 0) / coefficient, 1, add + chara:skill_level("elona.faith") / 10)
             chara["mod_" .. cb .. "_level"](chara, skill, amount, "add")
          end
       end

@@ -58,13 +58,22 @@ end
 local function copy_params(feat, params)
    local proto = data["base.feat"]:ensure(feat._id)
    local found = table.set{}
-   for property, ty in pairs(proto.params or {}) do
+   for property, entry in pairs(proto.params or {}) do
       local value = params[property]
-      -- everything is implicitly optional for now, until we get a better
-      -- typechecker
-      if value ~= nil and type(value) ~= ty then
-         error(("Feat '%s' requires parameter '%s' of type %s, got '%s'"):format(feat._id, property, ty, value))
-         found[property] = true
+      local error_msg = "Invalid parameter passed for feat with ID '%d': "
+      local checker
+      if types.is_type_checker(entry) then
+         checker = entry
+      else
+         checker = entry.type
+         if value == nil then
+            value = entry.default
+            error_msg = "Invalid default parameter for feat with ID '%d': "
+         end
+      end
+      local ok, err = types.check(value, checker)
+      if not ok then
+         error((error_msg):format(feat._id), err)
       end
       feat.params[property] = value
    end

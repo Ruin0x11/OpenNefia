@@ -58,6 +58,11 @@ data:add_type(
       name = "chara",
       fields = {
          {
+            name = "elona_id",
+            type = types.optional(types.uint),
+            indexed = true,
+         },
+         {
             name = "level",
             type = types.uint,
             default = 1,
@@ -469,6 +474,11 @@ data:add_type(
       name = "item",
       fields = {
          {
+            name = "elona_id",
+            type = types.optional(types.uint),
+            indexed = true,
+         },
+         {
             name = "level",
             type = types.uint,
             default = 1,
@@ -734,7 +744,7 @@ data:add_type(
          },
          {
             name = "params",
-            type = types.table,
+            type = types.map(types.string, types.fields { type = types.type, default = types.optional(types.any) }),
             default = {}
          },
          {

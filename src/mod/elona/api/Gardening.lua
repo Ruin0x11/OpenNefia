@@ -43,7 +43,7 @@ function Gardening.plant_seed(seed, chara, x, y)
    data["elona.plant"]:ensure(plant_id)
 
    local plant = assert(Feat.create("elona.plant", x, y, { force = true }, map))
-   plant.plant_id = plant_id
+   plant.params.plant_id = plant_id
    Gardening.recalc_plant_growth_time(plant, chara, is_crop_tile)
 
    local mes
@@ -72,7 +72,7 @@ function Gardening.grow_plants(map, chara, days_passed)
 
    for _, feat in Feat.iter(map):filter(is_plant) do
       for _ = 1, days_passed do
-         if feat.plant_growth_stage >= 2 then
+         if feat.params.plant_growth_stage >= 2 then
             break
          end
          local is_crop_tile = map:tile(feat.x, feat.y).role == Enum.TileRole.Crop
@@ -84,14 +84,14 @@ end
 
 function Gardening.grow_plant(plant, chara, is_crop_tile)
    -- >>>>>>>> elona122/shade2/action.hsp:2294 *item_seedGrowth ..
-   plant.plant_time_to_growth_days = plant.plant_time_to_growth_days - 1
-   if plant.plant_time_to_growth_days % 50 == 0 then
-      if plant.plant_time_to_growth_days >= 50 then
+   plant.params.plant_time_to_growth_days = plant.params.plant_time_to_growth_days - 1
+   if plant.params.plant_time_to_growth_days % 50 == 0 then
+      if plant.params.plant_time_to_growth_days >= 50 then
          -- >= 50 means wilted
-         plant.plant_growth_stage = 3
-         plant.image = "elona.feat_plant_" .. plant.plant_growth_stage
+         plant.params.plant_growth_stage = 3
+         plant.image = "elona.feat_plant_" .. plant.params.plant_growth_stage
       else
-         plant.plant_growth_stage = math.min(plant.plant_growth_stage + 1, 3)
+         plant.params.plant_growth_stage = math.min(plant.params.plant_growth_stage + 1, 3)
          Gardening.recalc_plant_growth_time(plant, chara, is_crop_tile)
       end
    end
@@ -99,21 +99,21 @@ function Gardening.grow_plant(plant, chara, is_crop_tile)
 end
 
 function Gardening.recalc_plant_growth_time(plant, chara, is_crop_tile)
-   plant.plant_growth_stage = plant.plant_growth_stage or 0
-   plant.image = "elona.feat_plant_" .. plant.plant_growth_stage
+   plant.params.plant_growth_stage = plant.params.plant_growth_stage or 0
+   plant.image = "elona.feat_plant_" .. plant.params.plant_growth_stage
    local time_to_growth = Gardening.calc_plant_time_to_growth_days(plant, chara, is_crop_tile)
-   plant.plant_time_to_growth_days = time_to_growth
+   plant.params.plant_time_to_growth_days = time_to_growth
 end
 
 function Gardening.calc_gardening_difficulty(plant, chara, is_crop_tile)
-   local plant_data = data["elona.plant"]:ensure(plant.plant_id)
+   local plant_data = data["elona.plant"]:ensure(plant.params.plant_id)
    local difficulty = plant_data.growth_difficulty or 10
 
    if not is_crop_tile then
       difficulty = difficulty * 3 / 2
    end
 
-   if plant.plant_growth_stage == 0 and not Weather.is_raining() then
+   if plant.params.plant_growth_stage == 0 and not Weather.is_raining() then
       difficulty = difficulty * 2
    end
 
@@ -135,14 +135,14 @@ end
 
 function Gardening.calc_regrowth_difficulty(plant, chara, is_crop_tile)
    -- >>>>>>>> shade2/action.hsp:2316 	p=15 ...
-   local plant_data = data["elona.plant"]:ensure(plant.plant_id)
+   local plant_data = data["elona.plant"]:ensure(plant.params.plant_id)
    local difficulty = plant_data.regrowth_difficulty or 15
 
    if not is_crop_tile then
       difficulty = difficulty * 2
    end
 
-   if plant.plant_growth_stage == 0 and not Weather.is_raining() then
+   if plant.params.plant_growth_stage == 0 and not Weather.is_raining() then
       difficulty = difficulty * 4 / 3
    end
 
@@ -159,9 +159,9 @@ function Gardening.regrow_plant(plant, chara, is_crop_tile)
 
    local map = assert(chara:current_map())
    local new_plant = assert(Feat.create("elona.plant", plant.x, plant.y, { force = true }, map))
-   new_plant.plant_id = plant.plant_id
-   new_plant.plant_growth_stage = 0
-   new_plant.plant_time_to_growth_days = 0
+   new_plant.params.plant_id = plant.params.plant_id
+   new_plant.params.plant_growth_stage = 0
+   new_plant.params.plant_time_to_growth_days = 0
    Gardening.recalc_plant_growth_time(new_plant, chara, is_crop_tile)
    Gui.mes_c("action.plant.new_plant_grows", "Green")
    plant:remove_ownership()
@@ -172,11 +172,11 @@ end
 
 function Gardening.get_plant(plant, chara)
    -- >>>>>>>> elona122/shade2/command.hsp:3198 			if feat<tile_plant+2 : txt lang("芽を摘み取った。","You ..
-   if plant.plant_growth_stage < 2 then
+   if plant.params.plant_growth_stage < 2 then
       Gui.mes("action.get.plant.young")
       plant:remove_ownership()
       return true
-   elseif plant.plant_growth_stage == 3 then
+   elseif plant.params.plant_growth_stage == 3 then
       Gui.mes("action.get.plant.dead")
       plant:remove_ownership()
       return true
@@ -194,7 +194,7 @@ function Gardening.get_plant(plant, chara)
    Gardening.regrow_plant(plant, chara, is_crop_tile)
 
    -- TODO artifact
-   if plant.plant_id == "elona.artifact" then
+   if plant.params.plant_id == "elona.artifact" then
       Save.queue_autosave()
    end
 

@@ -81,7 +81,7 @@ data:add {
    _id = "eating",
    elona_id = 1,
 
-   params = { food = types.map_object("base.item"), no_message = types.boolean },
+   params = { food = types.map_object("base.item"), no_message = types.optional(types.boolean) },
    default_turns = 8,
 
    animation_wait = 100,
@@ -365,7 +365,7 @@ data:add {
    _id = "mining",
    elona_id = 5,
 
-   params = { x = "number", y = "number" },
+   params = { x = types.uint, y = types.uint },
    default_turns = 40,
 
    animation_wait = 15,
@@ -495,7 +495,7 @@ data:add {
    _id = "preparing_to_sleep",
    elona_id = 100,
 
-   params = { bed = "table" },
+   params = { bed = types.map_object("base.item") },
    default_turns = 20,
 
    animation_wait = 5,
@@ -549,7 +549,7 @@ data:add {
    _id = "sex",
    elona_id = 11,
 
-   params = { partner = "table", is_host = "boolean" },
+   params = { partner = types.map_object("base.chara"), is_host = types.optional(types.boolean) },
    default_turns = function()
       return 25 + Rand.rnd(10)
    end,
@@ -894,7 +894,12 @@ data:add {
    _id = "performing",
    elona_id = 6,
 
-   params = { instrument = "table", performace_quality = "number", tip_gold = "number", number_of_tips = "number" },
+   params = {
+      instrument = types.map_object("base.item"),
+      performance_quality = types.number,
+      tip_gold = types.int,
+      number_of_tips = types.uint
+   },
    default_turns = 61,
 
    animation_wait = 40,
@@ -1064,7 +1069,7 @@ data:add {
    _id = "reading_spellbook",
    elona_id = 2,
 
-   params = { skill_id = "string", spellbook = "table", },
+   params = { skill_id = types.data_id("base.skill_id"), spellbook = types.map_object("base.item"), },
    default_turns = 10,
 
    animation_wait = 25,
@@ -1175,7 +1180,7 @@ data:add {
    _id = "reading_ancient_book",
    elona_id = 2,
 
-   params = { ancient_book = "table", },
+   params = { ancient_book = types.map_object("base.item"), },
    default_turns = 10,
 
    animation_wait = 25,
@@ -1274,7 +1279,7 @@ data:add {
    _id = "harvest",
    elona_id = 103,
 
-   params = { item = "table", },
+   params = { item = types.map_object("base.item"), },
    default_turns = function(self, params, chara)
       -- >>>>>>>> shade2/proc.hsp:467 			cActionPeriod(cc)=10+limit(iWeight(ci)/(1+sSTR( ...
       local item = params.item
@@ -1345,7 +1350,7 @@ data:add {
    _id = "training",
    elona_id = 104,
 
-   params = { skill_id = "string", item = "table" },
+   params = { skill_id = types.data_id("base.skill"), item = types.map_object("base.item") },
 
    -- >>>>>>>> shade2/proc.hsp:478 			cActionPeriod(cc)=50 ...
    default_turns = 50,
@@ -1499,7 +1504,7 @@ data:add {
    _id = "pickpocket",
    elona_id = 105,
 
-   params = { item = "table" },
+   params = { item = types.map_object("base.item") },
    default_turns = function(self, params)
       -- >>>>>>>> shade2/proc.hsp:443:DONE 			cActionPeriod(cc)=2+limit(iWeight(ci)/500,0,50) ..
       return 2 + math.clamp(self.params.item:calc("weight") / 500, 0, 50)

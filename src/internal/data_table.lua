@@ -182,6 +182,7 @@ function data_table:add_type(schema, params)
    schema.fallbacks = schema.fallbacks or {}
    schema.max_ordering = 100000
    schema.needs_resort = true
+   schema.indexes = {}
 
    params = params or {}
 
@@ -208,6 +209,10 @@ function data_table:add_type(schema, params)
          end
       end
       checkers[field.name] = field.type
+
+      if field.indexed then
+         schema.indexes[field.name] = true
+      end
    end
 
    -- Fields available on all types
@@ -250,8 +255,6 @@ function data_table:add_type(schema, params)
       self.fallbacks[_type] = fallbacks
       return
    end
-
-   schema.indexes = {}
 
    local metatable = params.interface or {}
    metatable._type = _type
@@ -485,11 +488,8 @@ function data_table:add(dat)
    -- TODO fallbacks and prototype_fallbacks should be separate
    self.inner[_type][full_id] = dat
 
-   for _, field in ipairs(_schema.fields) do
-      if field.indexed then
-         _schema.indexes[field] = true
-         add_index_field(self, dat, _type, field.name)
-      end
+   for field, _ in pairs(_schema.indexes) do
+      add_index_field(self, dat, _type, field)
    end
 
    dat._id = full_id

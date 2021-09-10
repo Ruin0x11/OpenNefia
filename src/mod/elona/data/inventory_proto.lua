@@ -95,7 +95,7 @@ local inv_drop = {
    _id = "inv_drop",
    elona_id = 2,
 
-   params = { is_multi_drop = { type = "boolean", optional = true } },
+   params = { is_multi_drop = types.optional(types.boolean) },
 
    keybinds = function(ctxt)
       return {
@@ -243,7 +243,7 @@ local inv_equip = {
    _id = "inv_equip",
    elona_id = 6,
 
-   params = { body_part_id = "string" },
+   params = { body_part_id = types.data_id("base.body_part") },
    sources = { "chara" },
    icon = nil,
    window_title = "ui.inventory_command.equip",
@@ -335,7 +335,7 @@ local inv_give = {
    elona_id = 10,
 
    sources = { "chara" },
-   params = { is_giving_to_ally = "boolean" },
+   params = { is_giving_to_ally = types.optional(types.boolean) },
    icon = 17,
    show_money = false,
    query_amount = false,
@@ -694,7 +694,7 @@ local inv_dip = {
    elona_id = 18,
 
    sources = { "chara", "ground", "equipment" },
-   params = { dip_item = "table" },
+   params = { dip_item = types.map_object("base.item") },
    icon = nil,
    query_amount = false,
    window_title = "ui.inventory_command.dip",
@@ -742,7 +742,7 @@ local inv_present = {
    elona_id = 20,
 
    sources = { "chara" },
-   params = { trade_item = "table" },
+   params = { trade_item = types.map_object("base.item") },
    window_title = "ui.inventory_command.present",
 
    query_text = function(ctxt)
@@ -922,7 +922,7 @@ local inv_take_food_container = {
    elona_sub_id = 3,
 
    sources = { "container" },
-   params = { container_item = "table" },
+   params = { container_item = types.map_object("base.item") },
    icon = 17,
    show_money = false,
    query_amount = false,
@@ -1013,7 +1013,7 @@ local inv_put_food_container = {
    elona_sub_id = 3,
 
    sources = { "chara" },
-   params = { container_item = "table" },
+   params = { container_item = types.map_object("base.item") },
    icon = 17,
    show_money = false,
    query_amount = false,
