@@ -62,7 +62,7 @@ function SkillsMenu.generate_list(chara)
 
          list[#list+1] = {
             _id = entry._id,
-            ordering = (entry.elona_id or 0) * 100,
+            ordering = entry._ordering,
             name = name,
             cost = ("%d Sp"):format(cost),
             description = utf8.wide_sub(Skill.get_description(entry._id, chara), 0, 34),

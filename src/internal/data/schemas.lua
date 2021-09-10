@@ -1160,6 +1160,7 @@ local ty_image_entry = types.some(
       x = types.uint,
       y = types.uint,
       count_x = types.optional(types.uint),
+      count_y = types.optional(types.uint),
       key_color = types.optional(types.color)
    }
 )
@@ -1599,11 +1600,11 @@ data:add_type {
       },
       {
          name = "level_min",
-         type = types.uint,
+         type = types.int,
       },
       {
          name = "level_max",
-         type = types.uint,
+         type = types.int,
       },
       {
          name = "type",
@@ -1787,6 +1788,14 @@ data:add_type {
    name = "chip",
    fields = {
       {
+         name = "elona_id",
+         type = types.optional(types.uint),
+      },
+      {
+         name = "elona_atlas",
+         type = types.optional(types.uint),
+      },
+      {
          name = "image",
          type = ty_image,
          template = true,
@@ -1805,9 +1814,18 @@ It can either be a string referencing an image file, or a table with these conte
 ]]
       },
       {
+         name = "group",
+         type = types.string,
+      },
+      {
          name = "shadow",
          type = types.optional(types.uint),
          default = 0
+      },
+      {
+         name = "is_tall",
+         type = types.boolean,
+         default = false
       },
       {
          name = "stack_height",
@@ -2214,13 +2232,13 @@ data:add_type {
    fields = {
       {
          name = "type",
-         type = types.some(types.literal("boolean", "string", "number", "int", "enum", "table", "data_id", "any"), types.data_id("base.config_option_type")),
+         type = types.some(types.literal("boolean", "string", "number", "integer", "enum", "table", "data_id", "any"), types.data_id("base.config_option_type")),
          template = true,
          no_fallback = true,
          doc = [[
 Type of this config option.
 
-One of "boolean", "string", "number", "int", "enum", "table", "data_id" or "any".
+One of "boolean", "string", "number", "integer", "enum", "table", "data_id" or "any".
 ]]
       },
       {
@@ -2234,7 +2252,7 @@ Default value of this config option.
       },
       {
          name = "choices",
-         type = types.some(types.list(types.string), types.callback({}, types.list(types.string))),
+         type = types.optional(types.some(types.list(types.string), types.callback({}, types.list(types.string)))),
          no_fallback = true,
          doc = [[
 Only used if the type is "enum".
@@ -2244,7 +2262,7 @@ The list of enum variants of this config option.
       },
       {
          name = "data_type",
-         type = types.data_type_id,
+         type = types.optional(types.data_type_id),
          no_fallback = true,
          doc = [[
 Only used if the type is "data_id".
@@ -2254,7 +2272,7 @@ The data type of the ID in this config option.
       },
       {
          name = "on_changed",
-         type = types.callback("value", types.any, "is_startup", types.boolean),
+         type = types.optional(types.callback("value", types.any, "is_startup", types.boolean)),
          no_fallback = true,
          doc = [[
 Callback run immediately after this option is changed in the settings menu.

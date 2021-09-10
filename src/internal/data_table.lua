@@ -3,6 +3,7 @@ local EventTree = require ("api.EventTree")
 local Log = require ("api.Log")
 local env = require ("internal.env")
 local fs = require("util.fs")
+local Stopwatch = require("api.Stopwatch")
 
 local data_table = class.class("data_table")
 
@@ -45,12 +46,12 @@ function data_table:init()
     rawset(self, "fallbacks", {})
 
     rawset(self, "inner", {})
+    rawset(self, "inner_sorted", {})
     rawset(self, "index", {})
     rawset(self, "schemas", {})
     rawset(self, "metatables", {})
     rawset(self, "generates", {})
     rawset(self, "ext", {})
-    rawset(self, "strict", false)
 
     rawset(self, "global_edits", {})
     rawset(self, "single_edits", {})
@@ -179,6 +180,8 @@ local ty_ext_table = types.map(types.some(types.interface_type, types.data_id("b
 function data_table:add_type(schema, params)
    assert(types.check(schema, ty_schema))
    schema.fallbacks = schema.fallbacks or {}
+   schema.max_ordering = 100000
+   schema.needs_resort = true
 
    params = params or {}
 
@@ -209,9 +212,9 @@ function data_table:add_type(schema, params)
 
    -- Fields available on all types
    checkers._type = types.data_type_id
-   checkers._id = types.identifier
+   checkers._id = types.data_type_id
    checkers._ext = types.optional(ty_ext_table)
-   checkers._ordering = types.optional(types.number) -- TODO
+   checkers._ordering = types.optional(types.number)
 
    if schema.validation == "permissive" then
       schema.type = types.fields(checkers)
@@ -221,7 +224,7 @@ function data_table:add_type(schema, params)
    schema.validate = function(obj, verbose)
       local ok, err = types.check(obj, schema.type, verbose)
       if not ok then
-         return false, ("Validation for data entry '%s:%s.%s' failed: %s"):format(_type, mod_name, obj._id or "<???>", err)
+         return false, ("Validation for data entry '%s:%s' failed: %s"):format(_type, obj._id or "<???>", err)
       end
       return true
    end
@@ -268,6 +271,7 @@ function data_table:add_type(schema, params)
    end
 
    self.inner[_type] = {}
+   self.inner_sorted[_type] = {}
    self.index[_type] = {}
    self.schemas[_type] = schema
    self.metatables[_type] = metatable
@@ -301,24 +305,44 @@ function data_table:run_edits_for(_type, _id)
    self[_type][_id] = self.global_edits[_type](self[_type][_id])
 end
 
-local function update_docs(dat, _schema, loc, is_hotloading)
-   if (dat._doc or _schema.on_document) then
-      if loc then
-         dat._defined_in = {
-            relative = fs.normalize(loc.short_src),
-            line = loc.lastlinedefined
-         }
-      else
-         dat._defined_in = {
-            relative = ".",
-            line = 0
-         }
-      end
-      local the_doc = dat._doc
-      if _schema.on_document then
-         the_doc =_schema.on_document(dat)
+function data_table:validate_all(verbose)
+   local errors = {}
+   for _, _type, proxy in self:iter() do
+      for _id, entry in proxy:iter() do
+         local ok, err = proxy:validate(entry, verbose)
+         if not ok then
+            errors[#errors+1] = { _type = _type, _id = _id, error = err }
+         end
       end
    end
+   return errors
+end
+
+local function sort_data_entries(a, b)
+   return a._ordering < b._ordering
+end
+
+function data_table:sort_all()
+   local errors = {}
+   local inner = self.inner
+   local sw = Stopwatch:new("info")
+   for _type, _ in pairs(inner) do
+      self:sort_type(_type)
+   end
+   sw:p("data:sort_all()")
+   return errors
+end
+
+function data_table:sort_type(_type)
+   local src = self.inner[_type]
+   local dst = {}
+   assert(src, "Unknown type")
+   for _, entry in pairs(src) do
+      table.insert(dst, entry)
+   end
+   table.sort(dst, sort_data_entries)
+   self.inner_sorted[_type] = dst
+   self.schemas[_type].needs_resort = false
 end
 
 function data_table:replace(dat)
@@ -367,13 +391,6 @@ function data_table:add(dat)
       return nil
    end
 
-   -- TODO only validate after all data has been added (handles data entry field dependencies)
-   -- TODO add fallback field types
-   local ok, err = _schema.validate(dat)
-   if not ok then
-      -- print("Error: " .. err)
-   end
-
    local fallbacks = self.fallbacks[_type]
    for field, fallback in pairs(fallbacks) do
       if dat[field] == nil then
@@ -419,8 +436,6 @@ function data_table:add(dat)
       end
    end
 
-   if self.strict and failed then return nil end
-
    local full_id = mod_name .. "." .. _id
 
    Log.trace("Adding data entry %s:%s", _type, full_id)
@@ -432,6 +447,8 @@ function data_table:add(dat)
 
          local Event = require("api.Event")
          Event.trigger("base.before_hotload_prototype", {old=self.inner[_type][full_id], new=dat})
+
+         dat._ordering = self.inner[_type][full_id]._ordering
 
          table.replace_with(self.inner[_type][full_id], dat)
          self:run_edits_for(_type, full_id)
@@ -447,13 +464,22 @@ function data_table:add(dat)
 
          Event.trigger("base.on_hotload_prototype", {entry=dat})
 
-         update_docs(dat, _schema, loc, true)
-
          return dat
       else
          self:error(("ID is already taken on type '%s': '%s'"):format(_type, full_id))
          return nil
       end
+   end
+
+   if dat._ordering then
+      if type(dat._ordering) ~= "number" then
+         self:error(("_ordering field must be number, got %s (%s)"):format(dat._ordering, full_id))
+         return nil
+      end
+      _schema.max_ordering = math.max(_schema.max_ordering, dat._ordering)
+   else
+      _schema.max_ordering = _schema.max_ordering + 1000
+      dat._ordering = _schema.max_ordering
    end
 
    -- TODO fallbacks and prototype_fallbacks should be separate
@@ -472,7 +498,7 @@ function data_table:add(dat)
       self.ext[full_id] = make_ext_fallback(dat)
    end
 
-   update_docs(dat, _schema, loc)
+   _schema.needs_resort = true
 
    return dat
 end
@@ -675,10 +701,6 @@ function proxy:__index(k)
       return self.data.schemas[self._type]._defined_in
    end
 
-   if k == "on_document" then
-      return self.data.schemas[self._type].on_document
-   end
-
    if k == "doc" then
       return self.data.schemas[self._type].doc
    end
@@ -713,8 +735,8 @@ function proxy:type()
    return self.data.schemas[self._type].type
 end
 
-function proxy:validate(obj)
-   return self.data.schemas[self._type].validate(obj)
+function proxy:validate(obj, verbose)
+   return self.data.schemas[self._type].validate(obj, verbose)
 end
 
 function proxy:ensure(k)
@@ -751,7 +773,10 @@ local function iter(state, prev_index)
 end
 
 function proxy:iter()
-   local inner_iter, inner_state, inner_index = pairs(self.data.inner[self._type])
+   if self.data.schemas[self._type].needs_resort then
+      self.data:sort_type(self._type)
+   end
+   local inner_iter, inner_state, inner_index = ipairs(self.data.inner_sorted[self._type])
    return fun.wrap(iter, {iter=inner_iter,state=inner_state}, inner_index)
 end
 

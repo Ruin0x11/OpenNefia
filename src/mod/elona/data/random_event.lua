@@ -19,6 +19,11 @@ data:add_type {
    name = "random_event",
    fields = {
          {
+            name = "elona_id",
+            type = types.optional(types.uint),
+            indexed = true,
+         },
+         {
             name = "image",
             type = types.data_id("base.asset"),
             template = true,

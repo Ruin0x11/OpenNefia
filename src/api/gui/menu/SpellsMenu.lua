@@ -58,7 +58,6 @@ function SpellsMenu.generate_list(chara)
 
          list[#list+1] = {
             _id = entry._id,
-            ordering = (entry.elona_id or 0) * 100,
             name = name,
             cost_stock = ("%d (%d)"):format(Skill.calc_spell_mp_cost(entry._id, chara), chara:spell_stock(entry._id)),
             lv_chance = ("%d/%d%%"):format(chara:skill_level(entry._id), Skill.calc_spell_success_chance(entry._id, chara)),
@@ -67,8 +66,6 @@ function SpellsMenu.generate_list(chara)
          }
       end
    end
-
-   table.sort(list, function(a, b) return a.ordering < b.ordering end)
 
    return list
 end

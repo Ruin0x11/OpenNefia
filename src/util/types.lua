@@ -25,22 +25,21 @@ local INSPECT_OPTIONS = {
    newline = " ", indent = "", max_length = 32,
 }
 
-local function get_name(obj, ctxt)
-   if type(obj, ctxt) == "string" then
-      return smart_quote(obj, ctxt)
-   elseif type(obj, ctxt) == "table" then
-      if class.is_class_instance(obj, ctxt) then
-         return tostring(obj, ctxt)
+local function get_name(obj)
+   if type(obj) == "string" then
+      return smart_quote(obj)
+   elseif type(obj) == "table" then
+      if class.is_class_instance(obj) then
+         return tostring(obj)
       end
       return inspect(obj, INSPECT_OPTIONS)
    end
 
-   return tostring(obj, ctxt)
+   return tostring(obj)
 end
 
-function ctxt_mt:make_trail(obj, ctxt)
-   local seen = {obj = true}
-   local s = { get_name(obj, seen) }
+function ctxt_mt:make_trail(obj)
+   local s = { get_name(obj) }
    for _, entry in ipairs(self.stack) do
       s[#s+1] = "["
       s[#s+1] = get_name(entry.key)
@@ -1081,11 +1080,14 @@ function types.check(obj, checker, verbose)
       err = err or "<unknown error>"
       local s
       if verbose then
-         s = ctxt:make_trail(obj, ctxt)
+         s = ctxt:make_trail(obj)
       else
          local entry = ctxt.stack[#ctxt.stack]
          if entry then
-            s = get_name(entry.value or entry.key)
+            s = get_name(entry.key)
+            if entry.value then
+               s = s .. " (" .. get_name(entry.value) .. ")"
+            end
          else
             s = get_name(obj, ctxt)
          end

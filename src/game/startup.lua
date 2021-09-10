@@ -114,6 +114,7 @@ function startup.run(mods)
 
    mod.load_mods(mods)
    data:run_all_edits()
+   data:sort_all()
 
    -- data is finalized at this point.
 
