@@ -108,7 +108,6 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "quest_collect",
 
-   root = "talk.npc.quest_giver",
    nodes = {
       give = function(t)
          -- TODO generalize with dialog argument

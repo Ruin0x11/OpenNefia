@@ -89,13 +89,18 @@ Available properties:
 local ty_item_categories = types.some(types.data_id("base.item_type"), types.list(types.data_id("base.item_type")))
 
 local ty_shop_inv_rule = types.fields {
-   one_in = types.uint,
-   all_but_one_in = types.uint,
-   categories = ty_item_categories,
-   id = types.some(types.data_id("base.item"), types.literal("Skip")),
-   choices = types.list(types.fields { categories = types.some(types.data_id("base.item_type"), types.list(types.data_id("base.item_type"))) }),
-   predicate = types.callback({"args", types.table}, types.boolean),
-   on_generate = types.callback({}, types.table), -- TODO recursive types
+   one_in = types.optional(types.uint),
+   all_but_one_in = types.optional(types.uint),
+   categories = types.optional(ty_item_categories),
+   id = types.optional(types.some(types.data_id("base.item"), types.literal("Skip"))),
+   choices = types.optional(types.list(types.fields {
+                                          -- TODO recursive types
+                                          categories = types.optional(types.some(types.data_id("base.item_type"),
+                                                                                 types.list(types.data_id("base.item_type")))),
+                                          choices = types.optional(types.table)
+   })),
+   predicate = types.optional(types.callback({"args", types.table}, types.boolean)),
+   on_generate = types.optional(types.callback({}, types.table)), -- TODO recursive types
 }
 
 data:add_type(
@@ -125,6 +130,16 @@ data:add_type(
          {
             name = "restock_interval",
             type = types.positive(types.number)
+         },
+         {
+            name = "is_temporary",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "ignores_noshop",
+            type = types.boolean,
+            default = false
          },
       }
    }

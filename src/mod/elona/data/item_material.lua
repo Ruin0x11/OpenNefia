@@ -1,3 +1,10 @@
+-- TODO join with definition in `base`
+local ty_enchantment_def = types.fields {
+   _id = types.data_id("base.enchantment"),
+   power = types.number,
+   params = types.optional(types.table)
+}
+
 data:add_type {
     name = "item_material",
     fields = {
@@ -58,6 +65,19 @@ data:add_type {
             name = "no_furniture",
             type = types.boolean,
             default = false
+        },
+        {
+            name = "on_refresh",
+            type = types.optional(types.callback("item", types.map_object("base.item"))),
+        },
+        {
+            name = "on_equipper_refresh",
+            type = types.optional(types.callback("chara", types.map_object("base.chara"), "item", types.map_object("base.item"))),
+        },
+        {
+            name = "enchantments",
+            type = types.list(ty_enchantment_def),
+            default = {}
         }
     },
 }

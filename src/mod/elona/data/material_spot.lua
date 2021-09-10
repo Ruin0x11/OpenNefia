@@ -19,7 +19,7 @@ data:add_type {
       {
          name = "get_verb",
          type = types.locale_id,
-         default = nil,
+         default = "activity.material.get_verb.get"
       },
       {
          name = "materials",
@@ -108,7 +108,7 @@ data:add_type {
 
    fields = {
       {
-         name = "auto_turn_anim",
+         name = "activity_auto_turn_anim",
          type = types.data_id("base.auto_turn_anim"),
          default = "base.searching",
          template = true
@@ -142,6 +142,10 @@ data:add_type {
          type = types.optional(types.data_id("elona.material_spot?")),
          default = nil,
          template = true
+      },
+      {
+         name = "on_calc_materials",
+         type = types.optional(types.callback({"self", types.map_object("base.chara"), "params", types.table, "result", types.any}, types.table))
       },
       {
          name = "on_stepped_on_text",

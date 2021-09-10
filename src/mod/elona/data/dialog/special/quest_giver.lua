@@ -5,7 +5,6 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "quest_giver",
 
-   root = "talk.npc.quest_giver",
    nodes = {
       quest_about = {
          text = function(t)

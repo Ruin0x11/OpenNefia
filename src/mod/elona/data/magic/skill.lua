@@ -319,7 +319,6 @@ data:add {
    type = "skill_action",
    effect_id = "elona.riding",
    related_skill = "elona.stat_will",
-   ability_type = 0,
    target_type = "nearby",
 }
 

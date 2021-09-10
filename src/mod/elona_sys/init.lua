@@ -1,11 +1,17 @@
 local InventoryContext = require("api.gui.menu.InventoryContext")
 local InventoryWrapper = require("api.gui.menu.InventoryWrapper")
+local InstancedMap = require("api.InstancedMap")
 
 local ty_quest = types.table -- TODO
 
 data:add_type {
    name = "quest",
    fields = {
+      {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
       {
          name = "client_chara_type",
          type = types.uint,
@@ -24,7 +30,7 @@ data:add_type {
       },
       {
          name = "chance",
-         type = types.uint
+         type = types.some(types.uint, types.callback({"client", types.table, "town", types.class(InstancedMap)}, types.number)),
       },
       {
          name = "params",
@@ -43,23 +49,56 @@ data:add_type {
          type = types.optional(types.callback({}, types.number))
       },
       {
+         name = "calc_reward_gold",
+         type = types.optional(types.callback({"quest", ty_quest, "gold", types.uint}, types.uint))
+      },
+      {
+         name = "calc_reward_platinum",
+         type = types.optional(types.callback({"quest", ty_quest, "platinum", types.uint}, types.uint))
+      },
+      {
+         name = "calc_reward_item_count",
+         type = types.optional(types.callback({"quest", ty_quest, "item_count", types.uint}, types.uint))
+      },
+      {
+         name = "reward_count",
+         type = types.optional(types.callback({"quest", ty_quest}, types.uint))
+      },
+      {
          name = "generate",
          type = types.callback({"quest", ty_quest, "client", types.map_object("base.chara")}, types.boolean)
       },
       {
          name = "on_accept",
-         type = types.callback({"quest", ty_quest}, {types.boolean, types.optional(types.locale_id)})
+         type = types.optional(types.callback({"quest", ty_quest}, {types.boolean, types.optional(types.locale_id)}))
       },
       {
          name = "on_failure",
-         type = types.callback({"quest", ty_quest})
+         type = types.optional(types.callback("quest", ty_quest))
       },
       {
          name = "on_complete",
          type = types.callback({}, types.locale_id)
       },
       {
+         name = "on_time_expired",
+         type = types.optional(types.callback("quest", ty_quest))
+      },
+      {
+         name = "locale_data",
+         type = types.optional(types.callback({"quest", ty_quest}, types.table))
+      },
+      {
+         name = "target_chara_uids",
+         type = types.optional(types.callback({"quest", ty_quest}, types.list(types.uint)))
+      },
+      {
          name = "prevents_return",
+         type = types.boolean,
+         default = false
+      },
+      {
+         name = "prevents_pickpocket",
          type = types.boolean,
          default = false
       }
@@ -77,6 +116,15 @@ data:add_type {
       {
          name = "generate",
          type = types.callback({"quest_reward", types.table, "quest", ty_quest})
+      },
+      {
+         name = "localize",
+         type = types.optional(types.callback({"self", types.table}, types.string))
+      },
+      {
+         name = "params",
+         type = types.map(types.string, types.type),
+         default = {}
       }
    }
 }
@@ -101,6 +149,7 @@ data:add_type {
    }
 }
 
+-- TODO unify with definition in `base` mod
 local ty_dice = types.fields_strict {
    x = types.number,
    y = types.number,
@@ -165,12 +214,17 @@ Function run when the magic is cast.
          type = types.data_id("base.skill")
       },
       {
+         name = "alignment",
+         type = types.optional(types.literal("positive", "negative"))
+      },
+      {
          name = "cost",
          type = types.number
       },
       {
          name = "range",
-         type = types.uint
+         type = types.uint,
+         default = 0,
       },
       {
          name = "type",
@@ -201,6 +255,18 @@ implemented in event handlers, like for Silence.
 ]]
       },
       {
+         name = "on_add",
+         type = types.optional(types.callback("self", types.data_entry("base.buff"), "params", types.table)),
+      },
+      {
+         name = "on_remove",
+         type = types.optional(types.callback("self", types.data_entry("base.buff"), "chara", types.map_object("base.chara"))),
+      },
+      {
+         name = "on_expire",
+         type = types.optional(types.callback("self", types.data_entry("base.buff"), "chara", types.map_object("base.chara"))),
+      },
+      {
          name = "params",
          type = types.callback({"self", types.data_entry("base.buff"), "params", types.table}, types.fields_strict { duration = types.number, power = types.number })
       },
@@ -208,6 +274,16 @@ implemented in event handlers, like for Silence.
          -- TODO needs to be themable
          name = "image",
          type = types.uint
+      },
+      {
+         name = "target_rider",
+         type = types.boolean,
+         default = false
+      },
+      {
+         name = "no_remove_on_heal",
+         type = types.boolean,
+         default = false
       }
    },
 }
@@ -215,6 +291,11 @@ implemented in event handlers, like for Silence.
 data:add_type {
    name = "basic_anim",
    fields = {
+      {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
       {
          name = "wait",
          type = types.number,
@@ -288,7 +369,7 @@ data:add_type {
       },
       {
          name = "sources",
-         type = types.list(types.literal("chara", "equipment", "target", "container", "shop", "target_equipment", "ground"))
+         type = types.list(types.literal("chara", "equipment", "target", "target_optional", "container", "shop", "target_equipment", "ground"))
       },
       {
          name = "shortcuts",
@@ -310,16 +391,34 @@ data:add_type {
          default = false,
       },
       {
+         name = "show_target_equip",
+         type = types.boolean,
+         default = false
+      },
+      {
          name = "window_title",
          type = types.locale_id
       },
       {
          name = "query_text",
-         type = types.locale_id
+         type = types.some(types.locale_id, types.callback({"ctxt", types.class(InventoryContext), "item", types.map_object("base.item")}, types.string))
       },
       {
          name = "window_detail_header",
          type = types.locale_id
+      },
+      {
+         name = "default_amount",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "allow_special_owned",
+         type = types.boolean,
+         default = false
+      },
+      {
+         name = "params",
+         type = types.map(types.string, types.type)
       },
       {
          name = "keybinds",
@@ -327,7 +426,15 @@ data:add_type {
       },
       {
          name = "key_hints",
-         type = types.optional(types.callback({"ctxt", types.class(InventoryContext)}, types.list(ty_key_hint)))
+         type = types.optional(
+            types.some(
+               types.list(ty_key_hint),
+               types.callback({"ctxt", types.class(InventoryContext)}, types.list(ty_key_hint)))
+         )
+      },
+      {
+         name = "get_item_name",
+         type = types.optional(types.callback({"name", types.string, "item", types.map_object("base.item")}, types.string))
       },
       {
          name = "get_item_detail_text",
@@ -344,6 +451,10 @@ data:add_type {
       {
          name = "after_filter",
          type = types.optional(types.callback({"ctxt", types.class(InventoryContext), "filtered", types.list(ty_ctxt_item)}, types.optional(types.string)))
+      },
+      {
+         name = "on_query",
+         type = types.optional(types.callback("ctxt", types.class(InventoryContext)))
       },
       {
          name = "can_select",
@@ -396,6 +507,10 @@ local ty_scene_entry = types.some(
       [2] = types.data_id("base.music"),
    },
    types.fields_strict {
+      [1] = types.literal("se"),
+      [2] = types.data_id("base.sound"),
+   },
+   types.fields_strict {
       [1] = types.literal("txt"),
       [2] = types.string
    },
@@ -406,7 +521,9 @@ local ty_scene_entry = types.some(
    },
    types.fields_strict {
       [1] = types.literal("actor"),
-      [2] = types.fields_strict { name = types.string, portrait = types.data_id("base.portrait") }
+      [2] = types.uint,
+      name = types.string,
+      portrait = types.data_id("base.portrait")
    }
 )
 

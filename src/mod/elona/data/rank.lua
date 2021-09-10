@@ -1,6 +1,24 @@
 data:add_type {
    name = "rank",
-   fields = {}
+   fields = {
+      {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
+      {
+         name = "decay_period_days",
+         type = types.optional(types.number)
+      },
+      {
+         name = "provides_salary_items",
+         type = types.optional(types.boolean)
+      },
+      {
+         name = "calc_income",
+         type = types.optional(types.callback({"income", types.number}, types.number))
+      },
+   }
 }
 
 data:add {

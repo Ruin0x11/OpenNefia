@@ -328,6 +328,9 @@ function data_table:validate_all(verbose)
 end
 
 local function sort_data_entries(a, b)
+   if a._ordering == b._ordering then
+      return a._id < b._id
+   end
    return a._ordering < b._ordering
 end
 

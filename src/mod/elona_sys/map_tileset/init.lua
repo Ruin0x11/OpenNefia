@@ -12,7 +12,16 @@ data:add_type {
       },
       {
          name = "fog",
-         type = types.data_id("base.map_tile")
+         type = types.some(types.data_id("base.map_tile"), types.callback({"x", types.uint, "y", types.uint, "tile", types.table}, types.data_id("base.map_tile")))
+      },
+      {
+         name = "door",
+         type = types.optional(types.fields
+                               {
+                                  open_tile = types.data_id("base.chip"),
+                                  closed_tile = types.data_id("base.chip")
+                               }
+         )
       }
    }
 }

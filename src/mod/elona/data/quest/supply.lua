@@ -70,7 +70,6 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "quest_supply",
 
-   root = "talk.npc.quest_giver",
    nodes = {
       trade = function(t)
          Gui.mes_c("TODO", "Yellow")

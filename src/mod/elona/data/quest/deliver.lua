@@ -188,7 +188,6 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "quest_deliver",
 
-   root = "talk.npc.quest_giver",
    nodes = {
       backpack_full = {
          text = {

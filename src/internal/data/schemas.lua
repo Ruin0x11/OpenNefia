@@ -1294,8 +1294,23 @@ data:add_type(
             type = types.map(types.data_id("base.skill"), types.number)
          },
          {
+            name = "traits",
+            type = types.map(types.data_id("base.trait"), types.number),
+            default = {}
+         },
+         {
             name = "body_parts",
             type = types.list(types.data_id("base.body_part")),
+         },
+         {
+            name = "resistances",
+            type = types.list(types.data_id("base.element")),
+            default = {}
+         },
+         {
+            name = "effect_immunities",
+            type = types.list(types.data_id("base.effect")),
+            default = {}
          }
       },
    }
@@ -1787,6 +1802,7 @@ data:add_type {
 }
 
 local ty_target_type = types.literal("self", "nearby", "self_or_nearby", "enemy", "other", "location", "direction", "target_or_location")
+local ty_triggered_by = types.literal("spell", "action", "wand", "potion", "potion_thrown", "potion_spilt", "use", "open")
 
 data:add_type {
    name = "enchantment_skill",
@@ -1885,16 +1901,35 @@ Stamina cost of the ammo when fired.
    }
 }
 
+local ty_dice = types.fields_strict {
+   x = types.number,
+   y = types.number,
+   bonus = types.number
+}
+
 data:add_type {
    name = "skill",
    fields = {
       {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint),
+      },
+      {
          name = "type",
-         type = types.literal("stat", "stat_special", "skill", "weapon_proficiency"),
+         type = types.literal("stat", "stat_special", "skill", "spell", "action", "skill_action", "effect", "weapon_proficiency"),
          default = "skill",
          template = true,
          doc = [[
 Determines how this skill is treated in the interface.
+]]
+      },
+      {
+         name = "is_main_skill",
+         type = types.boolean,
+         default = false,
+         doc = [[
+If true, this skill will gain a level bonus for every character that is created.
 ]]
       },
       {
@@ -1941,6 +1976,56 @@ Difficulty of triggering this skill.
 
 Used only when the skill's `type` is "spell" or "action".
 ]]
+      },
+      {
+         name = "effect_id",
+         type = types.optional(types.data_id("elona_sys.magic")),
+      },
+      {
+         name = "is_rapid_magic",
+         type = types.boolean,
+         default = false,
+      },
+      {
+         name = "alignment",
+         type = types.optional(types.literal("positive", "negative")),
+      },
+      {
+         name = "calc_initial_level",
+         type = types.optional(types.callback("level", types.number, "chara", types.map_object("base.chara"))),
+      },
+      {
+         name = "calc_critical_damage",
+         type = types.optional(types.callback("self", types.table, "params", types.table)),
+      },
+      {
+         name = "on_check_can_cast",
+         type = types.optional(types.callback({"skill_data", types.data_entry("base.skill"), "caster", types.map_object("base.chara")}, types.boolean)),
+      },
+      {
+         name = "on_choose_target",
+         type = types.optional(types.callback("target_type", ty_target_type,
+                                              "range", types.number,
+                                              "caster", types.map_object("base.chara"),
+                                              "triggered_by", ty_triggered_by,
+                                              "ai_target", types.map_object("base.chara"),
+                                              "check_ranged_if_self", types.boolean)),
+      },
+      {
+         name = "calc_desc",
+         type = types.optional(types.callback("chara", types.map_object("base.chara"),
+                                              "power", types.number,
+                                              "dice", ty_dice)),
+      },
+      {
+         name = "calc_mp_cost",
+         type = types.optional(types.callback("skill_entry", types.data_entry("base.skill"),
+                                              "chara", types.map_object("base.chara"))),
+      },
+      {
+         -- TODO should be themable
+         name = "attack_animation",
+         type = types.optional(types.uint),
       },
       {
          name = "target_type",
@@ -2038,6 +2123,11 @@ data:add_type {
       {
          name = "file",
          type = types.path
+      },
+      {
+         name = "volume",
+         type = types.number,
+         default = 1.0
       }
    }
 }
@@ -2260,7 +2350,15 @@ data:add_type {
       {
          name = "elona_txt_id",
          type = types.optional(types.string)
-      }
+      },
+      {
+         name = "variant_ids",
+         type = types.optional(types.table)
+      },
+      {
+         name = "variant_txt_ids",
+         type = types.optional(types.table)
+      },
    }
 }
 

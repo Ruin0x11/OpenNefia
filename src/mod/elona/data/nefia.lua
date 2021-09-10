@@ -18,6 +18,10 @@ data:add_type {
          type = types.data_id("base.chip")
       },
       {
+         name = "color",
+         type = types.optional(types.color)
+      },
+      {
          name = "on_generate_floor",
          type = types.callback({"area", types.class(InstancedArea), "floor", types.uint}, types.class(InstancedMap))
       },

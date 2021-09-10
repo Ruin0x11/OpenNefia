@@ -8,7 +8,7 @@ data:add {
    level_max = 3,
    type = "feat",
 
-   can_learn = function(self, chara)
+   can_acquire = function(self, chara)
       return chara:is_player()
    end,
 }

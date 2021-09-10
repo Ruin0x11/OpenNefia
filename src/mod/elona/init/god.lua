@@ -3,19 +3,19 @@ local God = require("mod.elona.api.God")
 
 local ty_god_item = types.fields {
    id = types.data_id("base.item"),
-   no_stack = types.boolean,
-   only_once = types.boolean,
-   properties = types.table
+   no_stack = types.optional(types.boolean),
+   only_once = types.optional(types.boolean),
+   properties = types.optional(types.table),
 }
 
 local ty_god_offering = types.some(
    types.fields_strict {
       type = types.literal("category"),
-      id = types.data_id("base.item_type")
+      id = types.data_id("base.item_type"),
    },
    types.fields_strict {
       type = types.literal("item"),
-      id = types.data_id("base.item")
+      id = types.data_id("base.item"),
    }
 )
 

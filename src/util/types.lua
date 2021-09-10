@@ -570,7 +570,7 @@ do
          return false, type_error(self)
       end
 
-      if class.uses_interface(self.iface, obj) then
+      if class.uses_interface(obj, self.iface) then
          return true
       end
 

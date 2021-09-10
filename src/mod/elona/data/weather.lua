@@ -18,6 +18,11 @@ data:add_type {
    name = "weather",
    fields = {
       {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
+      {
          name = "travel_speed_modifier",
          type = types.callback({"turns", types.number}, types.number),
          template = true
@@ -39,7 +44,7 @@ data:add_type {
       },
       {
          name = "outdoor_shadow",
-         type = types.callback({"shadow", types.color}, types.color),
+         type = types.optional(types.callback({"shadow", types.color}, types.color)),
          template = true
       },
       {

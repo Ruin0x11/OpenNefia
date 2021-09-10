@@ -13,7 +13,7 @@ Controls the level of the encounter.
       },
       {
          name = "before_encounter_start",
-         type = types.callback({"level", types.uint, "outer_map", types.class(InstancedMap), "outer_x", types.uint, "outer_y", types.uint}, types.number),
+         type = types.optional(types.callback({"level", types.uint, "outer_map", types.class(InstancedMap), "outer_x", types.uint, "outer_y", types.uint}, types.number)),
          template = true,
          doc = [[
 This is run before the player is transported to the encounter map.

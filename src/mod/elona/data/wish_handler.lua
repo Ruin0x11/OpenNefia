@@ -26,19 +26,7 @@ data:add_type {
          doc = [[
 Code to run on wish. `wish` contains the wish text. `chara` contains the wishing character.
 ]]
-      },
-      {
-         name = "ordering",
-         type = types.int,
-         default = 0,
-         template = true,
-         doc = [[
-Order to run the handler in. Lower values get checked before later ones.
-
-This is important as the item/skill name matchers can match an arbitrary string,
-so more specific handlers should have lower priority than those.
-]]
-      },
+      }
    }
 }
 
@@ -49,7 +37,7 @@ local function match_any(wish, locale_key)
    return fun.iter(cands):any(match)
 end
 
-local function add_wish_handler(_id, match, on_wish, priority)
+local function add_wish_handler(_id, match, on_wish, ordering)
    if type(match) == "string" then
       local match_ = match
       match = function(wish, chara)
@@ -70,9 +58,9 @@ local function add_wish_handler(_id, match, on_wish, priority)
    data:add {
       _type = "elona.wish_handler",
       _id = _id,
+      _ordering = ordering,
 
       on_wish = on_wish,
-      priority = priority
    }
 end
 

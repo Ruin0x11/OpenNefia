@@ -1,6 +1,34 @@
 data:add_type {
    name = "food_type",
    fields = {
+      {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
+      {
+         name = "uses_chara_name",
+         type = types.boolean,
+         default = false
+      },
+      {
+         name = "exp_gains",
+         type = types.list(types.fields { _id = types.data_id("base.skill"), amount = types.number }),
+         default = {}
+      },
+      {
+         name = "base_nutrition",
+         type = types.number,
+      },
+      {
+         name = "item_chips",
+         type = types.map(types.uint, types.data_id("base.chip")),
+         default = {}
+      },
+      {
+         name = "quest_reward_category",
+         type = types.optional(types.data_id("elona_sys.quest_reward")),
+      },
    }
 }
 

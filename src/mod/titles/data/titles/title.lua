@@ -16,7 +16,7 @@ data:add_type {
       },
       {
          name = "on_refresh",
-         type = types.callback("chara", types.map_object("base.chara"), "effect_on", types.boolean)
+         type = types.optional(types.callback("chara", types.map_object("base.chara"), "effect_on", types.boolean))
       }
    }
 }
