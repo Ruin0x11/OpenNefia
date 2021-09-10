@@ -102,6 +102,21 @@ Chance this unit will take an idle action if they have no target.
 ]]
          },
          {
+            -- TODO should be ID
+            name = "ai_calm_action",
+            type = types.optional(types.string),
+            doc = [[
+Idle AI action this unit will take if they have no target.
+]]
+         },
+         {
+            name = "ai_calm_action",
+            type = types.optional(types.data_id("base.ai_action")),
+            doc = [[
+Idle AI action this unit will take if they have no target.
+]]
+         },
+         {
             name = "ai_distance",
             type = types.uint,
             default = 1,
@@ -235,6 +250,14 @@ large level difference against the character's level.
 Higher means a smaller range of dungeon levels the character appears in. Lower
 means the character has a greater chance of appearing in both high-level and
 low-level dungeons.
+]]
+         },
+         {
+            name = "loot_type",
+            type = types.optional(types.data_id("base.loot_type")),
+            default = nil,
+            doc = [[
+Type of loot this character drops on death.
 ]]
          },
          {

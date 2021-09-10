@@ -18,7 +18,7 @@ do
          types = { "quest" },
          level = 1,
          is_indoor = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          tileset = "elona.home",
          reveals_fog = true,
          prevents_monster_ball = true,
@@ -58,7 +58,7 @@ do
          tileset = "elona.tower_1",
          level = 1,
          is_indoor = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          max_crowd_density = 0,
          reveals_fog = true,
          is_temporary = true,
@@ -93,7 +93,7 @@ do
          tileset = "elona.tower_1",
          level = 1,
          is_indoor = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          max_crowd_density = 0,
          reveals_fog = true,
          is_temporary = true,
@@ -130,7 +130,7 @@ do
          is_indoor = false,
          is_temporary = true,
          max_crowd_density = 0,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          shows_floor_count_in_name = true,
          prevents_building_shelter = true
       }
@@ -154,7 +154,7 @@ do
          level = 1,
          is_indoor = false,
          max_crowd_density = 0,
-         default_ai_calm = 0
+         default_ai_calm = "base.calm_null"
       }
    }
 

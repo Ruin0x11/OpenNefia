@@ -317,10 +317,10 @@ end
 function data_table:validate_all(verbose)
    local errors = {}
    for _, _type, proxy in self:iter() do
-      for _id, entry in proxy:iter() do
+      for _, entry in proxy:iter() do
          local ok, err = proxy:validate(entry, verbose)
          if not ok then
-            errors[#errors+1] = { _type = _type, _id = _id, error = err }
+            errors[#errors+1] = { _type = _type, _id = entry._id, error = err }
          end
       end
    end

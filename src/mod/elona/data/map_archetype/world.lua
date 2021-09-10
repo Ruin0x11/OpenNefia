@@ -17,7 +17,7 @@ do
          turn_cost = 50000,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
       },
    }
 
@@ -87,7 +87,7 @@ do
          is_indoor = false,
          has_anchored_npcs = true,
          max_crowd_density = 0,
-         default_ai_calm = 0
+         default_ai_calm = "base.calm_null"
       }
       -- areas = {
       --    { map = generate_122("elona.south_tyris_north_border"), x = 42, y = 1 },
@@ -127,7 +127,7 @@ do
          level = 1,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 0
+         default_ai_calm = "base.calm_null"
       },
    }
    data:add(test_world)

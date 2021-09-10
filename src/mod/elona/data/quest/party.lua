@@ -23,7 +23,7 @@ local map_party = {
       is_indoor = false,
       is_temporary = true,
       max_crowd_density = 0,
-      default_ai_calm = 0,
+      default_ai_calm = "base.calm_null",
       shows_floor_count_in_name = true,
       prevents_building_shelter = true
    }

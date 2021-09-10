@@ -40,7 +40,7 @@ function FieldMap.generate(stood_tile, width, height, outer_map)
    map.level = 1
    map.is_indoor = false
    map.has_anchored_npcs = false
-   map.default_ai_calm = 0
+   map.default_ai_calm = "base.calm_null"
    map.default_tile = field.fog
 
    return map
