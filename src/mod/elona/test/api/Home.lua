@@ -53,7 +53,7 @@ function test_Home_add_salary_to_salary_chest()
    Rank.set("elona.shop", 1000)
    Home.add_salary_to_salary_chest(inv)
 
-   Assert.eq(4, inv:len())
+   Assert.eq(5, inv:len())
 
    local gold = inv:iter():filter(function(i) return i._id == "elona.gold_piece" end):nth(1)
    Assert.is_truthy(gold)

@@ -1,9 +1,8 @@
 --- @module Feat
-local data = require("internal.data")
 local Log = require("api.Log")
 
-local Event = require("api.Event")
 local Map = require("api.Map")
+local Object = require("api.Object")
 local MapObject = require("api.MapObject")
 local ILocation = require("api.ILocation")
 local field = require("game.field")
@@ -53,38 +52,6 @@ function Feat.is_alive(feat, map)
    end
 
    return their_map.uid == map.uid
-end
-
-local function copy_params(feat, params)
-   local proto = data["base.feat"]:ensure(feat._id)
-   local found = table.set{}
-   for property, entry in pairs(proto.params or {}) do
-      local value = params[property]
-      local error_msg = "Invalid parameter passed for feat with ID '%d': "
-      local checker
-      if types.is_type_checker(entry) then
-         checker = entry
-      else
-         checker = entry.type
-         if value == nil then
-            value = entry.default
-            error_msg = "Invalid default parameter for feat with ID '%d': "
-         end
-      end
-      local ok, err = types.check(value, checker)
-      if not ok then
-         error((error_msg):format(feat._id), err)
-      end
-      feat.params[property] = value
-   end
-
-   if table.count(found) ~= table.count(params) then
-      for k, v in pairs(params) do
-         if not proto.params[k] then
-            error(("Feat '%s' does not accept parameter '%s'"):format(feat._id, k))
-         end
-      end
-   end
 end
 
 --- Creates a new feat. Returns the feat on success, or nil if
@@ -143,10 +110,7 @@ function Feat.create(id, x, y, params, where)
    }
    local feat = MapObject.generate_from("base.feat", id)
 
-   feat.params = {}
-   if params.params then
-      copy_params(feat, params.params)
-   end
+   feat.params = Object.copy_params(feat.proto.params, params.params, "base.feat", id)
 
    if where then
       feat = where:take_object(feat, x, y)

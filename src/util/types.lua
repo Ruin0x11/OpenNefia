@@ -1068,7 +1068,7 @@ do
    function map_object_checker:check(obj, ctxt)
       -- copied from MapObject.is_map_object()
       if not class.is_an("api.IMapObject", obj) then
-         return false, ("'%s' is not a map object"):format(obj, ctxt)
+         return false, type_error(self)
       end
 
       if self._type == "any" then
@@ -1082,7 +1082,7 @@ do
       return true
    end
    function map_object_checker:__tostring()
-      return ("map_object<%s>"):format(self.iface)
+      return ("map_object<%s>"):format(self._type)
    end
    types.map_object = wrap(map_object_checker)
 end

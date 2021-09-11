@@ -95,7 +95,7 @@ end
 
 function InstancedArea:starting_floor()
    local archetype = self:archetype()
-   if archetype and archetype.floors then
+   if archetype and #archetype.floors > 0 then
       return fun.iter(table.keys(archetype.floors)):min()
    end
 

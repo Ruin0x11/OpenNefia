@@ -206,7 +206,7 @@ If true, you can talk to this character by bumping into them.
          {
             name = "relation",
             type = types.enum(Enum.Relation),
-            default = Enum.Relation.Enemy,
+            default = Enum.Relation.Neutral,
             template = true,
             doc = [[
 What alignment this character has.

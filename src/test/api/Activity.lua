@@ -4,14 +4,18 @@ local Feat = require("api.Feat")
 
 function test_Activity_create__params_validation()
    Assert.throws_error(function() Activity.create("elona.searching", {feat=42}) end,
-         "Activity 'elona.searching' requires parameter 'feat' of type table")
+      "base.activity 'elona.searching' received invalid value for parameter 'feat': Value is not of type \"map_object<base.feat>\": 42")
 
-   local feat = Feat.create("elona.material_spot", nil, nil, {ownerless=true})
+   Assert.throws_error(function() Activity.create("elona.searching", {feat=nil}) end,
+      "base.activity 'elona.searching' received invalid value for parameter 'feat': Value is not of type \"map_object<base.feat>\": nil")
+
+   local feat = Feat.create("elona.material_spot", nil, nil, {ownerless=true, params={material_spot_info="elona.spring"}})
+
+   Assert.throws_error(function() Activity.create("elona.searching", {feat=feat, dood=42}) end,
+      "base.activity 'elona.searching' does not accept parameter 'dood'")
+
    local activity = Activity.create("elona.searching", {feat=feat})
    Assert.eq(feat, activity.params.feat)
-
-   activity = Activity.create("elona.searching", {feat=nil})
-   Assert.eq(nil, activity.params.feat)
 end
 
 function test_Activity_create__params_reserved_property_name()

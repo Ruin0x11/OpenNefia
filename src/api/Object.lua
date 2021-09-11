@@ -140,4 +140,53 @@ function Object.mock(mt, tbl)
    return obj
 end
 
+-- Validates a params table against the type definitions in an object's data
+-- entry.
+--
+-- For example, a door feat will be able to have an unlock difficulty set on it.
+-- `proto_params` is the `params` table in the `base.feat`'s data definition and
+-- looks like { difficulty = types.number }, and `passed_params` would have been
+-- passed to `Feat.create()` and looks something like { difficulty = 25 }.
+function Object.copy_params(proto_params, passed_params, _type, _id)
+   proto_params = proto_params or {}
+   passed_params = passed_params or {}
+
+   local result = {}
+
+   local found = table.set{}
+
+   for property, entry in pairs(proto_params) do
+      local value = passed_params[property]
+      local error_msg = "%s '%s' received invalid value for parameter '%s': %s"
+      local checker
+      if types.is_type_checker(entry) then
+         checker = entry
+      else
+         checker = entry.type
+         if not types.is_type_checker(checker) then
+            error(("%s '%s' has invalid type checker for parameter '%s': %s"):format(_type, _id, property, checker))
+         end
+         if value == nil then
+            value = entry.default
+            error_msg = "%s '%s' is missing required parameter '%s': %s"
+         end
+      end
+      local ok, err = types.check(value, checker)
+      if not ok then
+         error((error_msg):format(_type, _id, property, err))
+      end
+      result[property] = value
+   end
+
+   if table.count(found) ~= table.count(passed_params) then
+      for k, v in pairs(passed_params) do
+         if not proto_params[k] then
+            error(("%s '%s' does not accept parameter '%s'"):format(_type, _id, k))
+         end
+      end
+   end
+
+   return result
+end
+
 return Object
