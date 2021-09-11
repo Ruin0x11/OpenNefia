@@ -315,12 +315,18 @@ function FeatsMenu:update()
                -- Because most callbacks expect the given character to be built, you cannot call `refresh` during character making.
                self.chara:refresh()
             end
+
+            if self.chara_make and self.chara.feats_acquirable <= 0 then
+               return true
+            end
+
             self.data = FeatsMenu.generate_list(self.chara)
             self.pages:set_data(self.data)
 
             local filter = function(_, i)
                return i.type == "have" and i.trait._id == item.trait._id
             end
+
             local index = self.pages:iter_all_pages():enumerate():filter(filter):nth(1)
             self.pages:select(index)
 

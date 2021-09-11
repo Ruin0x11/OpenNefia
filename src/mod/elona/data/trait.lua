@@ -43,7 +43,7 @@ local trait = {
       type = "feat",
 
       -- >>>>>>>> shade2/trait.hsp:153 		spGain(actLeadership) ...
-      on_modify_level = gain_or_lose_action("elona.action_leadership"),
+      on_modify_level = gain_or_lose_action("elona.action_cheer"),
       -- <<<<<<<< shade2/trait.hsp:153 		spGain(actLeadership) ..
    },
    {
