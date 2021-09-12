@@ -341,8 +341,16 @@ function IChara:swap_places(other)
 
    Gui.scroll_object(self, sx, sy)
    Gui.scroll_object(other, ox, oy)
+
    location:move_object(self, ox, oy)
+   if self:is_player() and config.base.scroll == "player" then
+      field:update_scrolling()
+   end
+
    location:move_object(other, sx, sy)
+   if other:is_player() and config.base.scroll == "player" then
+      field:update_scrolling()
+   end
 
    self:emit("base.on_chara_moved", {prev_x=sx, prev_y=sy, x=self.x, y=self.y})
    other:emit("base.on_chara_moved", {prev_x=ox, prev_y=oy, x=other.x, y=other.y})
@@ -665,6 +673,11 @@ function IChara:set_item_using(item)
       self.item_using = nil
    end
    self.item_using = item
+end
+
+function IChara:get_screen_pos()
+   local sx, sy = IMapObject.get_screen_pos(self)
+   return sx + self.scroll_x_offset, sy + self.scroll_y_offset
 end
 
 function IChara:remove_ownership()

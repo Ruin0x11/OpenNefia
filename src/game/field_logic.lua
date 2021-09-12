@@ -610,6 +610,7 @@ function field_logic.query()
    draw.push_layer(field.hud)
    draw.push_layer(field)
 
+   field:reset_scrolling()
    Gui.update_screen()
 
    while going do

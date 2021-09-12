@@ -1,5 +1,6 @@
 --- @interface IMapObject
 
+local Draw = require("api.Draw")
 local IOwned = require("api.IOwned")
 local IObject = require("api.IObject")
 local IDrawableHolder = require("api.IDrawableHolder")
@@ -136,6 +137,10 @@ function IMapObject:containing_map()
    end
 
    return nil
+end
+
+function IMapObject:get_screen_pos()
+   return Draw.get_coords():tile_to_screen(self.x, self.y)
 end
 
 --- @treturn bool
