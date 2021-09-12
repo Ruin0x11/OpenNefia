@@ -5,6 +5,7 @@ local theme = require("internal.theme")
 local tile_layer = require("internal.layer.tile_layer")
 local chip_layer = require("internal.layer.chip_layer")
 local DrawLayerSpec = require("api.draw.DrawLayerSpec")
+local TopicWindow = require("api.gui.TopicWindow")
 
 local MapRenderer = require("api.gui.MapRenderer")
 local IUiElement = require("api.gui.IUiElement")
@@ -16,6 +17,7 @@ function ConfigThemeMenuPreview:init(map, themes)
 
    self.map = nil
    self.map_renderer = nil
+   self.window = TopicWindow:new(1, 1)
 
    self.themes = themes or {}
 
@@ -160,15 +162,18 @@ function ConfigThemeMenuPreview:relayout(x, y, width, height)
    self.width = width
    self.height = height
 
+   self.window:relayout(self.x - 4, self.y - 4, self.width + 8, self.height + 8)
    self.map_renderer:relayout(self.x, self.y, self.width, self.height)
 end
 
 function ConfigThemeMenuPreview:draw()
    Draw.set_color(255, 255, 255)
+   self.window:draw()
    self.map_renderer:draw()
 end
 
 function ConfigThemeMenuPreview:update(dt)
+   self.window:update(dt)
    self.map_renderer:update(dt)
 end
 

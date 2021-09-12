@@ -6,6 +6,7 @@ local KeyHandler = require("api.gui.KeyHandler")
 local Env = require("api.Env")
 local DrawLayerSpec = require("api.draw.DrawLayerSpec")
 local MapRenderer = require("api.gui.MapRenderer")
+local save_store = require("internal.save_store")
 
 local config = require("internal.config")
 local draw = require("internal.draw")
@@ -83,6 +84,7 @@ end
 function field_layer:init_global_data()
    self.player = nil
    self.map = nil
+   save_store.clear()
 
    Event.trigger("base.on_init_save")
 end

@@ -14,6 +14,8 @@ local I18N = require("api.I18N")
 local Layout = require("mod.tools.api.Layout")
 local data = require("internal.data")
 local config = require("internal.config")
+local theme = require("internal.theme")
+local Log = require("api.Log")
 
 local ConfigThemeMenu = class.class("ConfigThemeMenu", IConfigMenu)
 
@@ -54,10 +56,11 @@ function ConfigThemeMenu.generate_list(active_themes)
          index = 0
          ordering = -10000000
          enabled = "default"
+         name = "Apply Changes"
       elseif index then
          index = index
          ordering = -1000000 + index
-         name = ("%s (%d)"):format(name, index)
+         name = ("%s [%d]"):format(name, index)
       else
          ordering = theme._ordering
       end
@@ -147,8 +150,8 @@ function ConfigThemeMenu.build_preview_map()
       tiles = [[
 .......
 .......
-.ae....
-.f.c...
+.fce...
+.a.....
 ..b..T.
 ...TwxC
 ..C.yz.
@@ -299,7 +302,17 @@ function ConfigThemeMenu:on_choose(index)
       return
    end
 
-   if item.enabled then
+   if item.enabled == "default" then
+      if not table.deepcompare(config.base.themes, self.active_themes) then
+         config.base.themes = table.shallow_copy(self.active_themes)
+         local cb = function(mes)
+            -- TODO progress bar
+            Log.info("%s", mes)
+            coroutine.yield()
+         end
+         theme.reload_all(cb)
+      end
+   elseif item.enabled then
       table.iremove_value(self.active_themes, item._id)
    else
       table.insert(self.active_themes, 1, item._id)

@@ -68,11 +68,7 @@ function InstancedMap:init(width, height, tile)
    IModDataHolder.init(self)
    IEventEmitter.init(self)
 
-   if main_state.is_in_game then
-      self.uid = save.base.map_uids:get_next_and_increment()
-   else
-      self.uid = 0
-   end
+   self.uid = save.base.map_uids:get_next_and_increment()
 
    width = math.floor(width)
    height = math.floor(height)

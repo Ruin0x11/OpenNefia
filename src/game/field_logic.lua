@@ -29,6 +29,8 @@ local field_logic = {}
 local dt = 0
 
 function field_logic.setup_new_game(player, save_id)
+   main_state.is_in_game = true
+
    field.map = nil
 
    local scenario = data["base.scenario"]:ensure(save.base.scenario)
