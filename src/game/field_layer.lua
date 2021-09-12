@@ -305,8 +305,8 @@ function field_layer:update_scrolling()
                                                           self.renderer.renderer.height)
 
             for _, offset in ipairs(obj_scroll_offsets) do
-               local obj_scroll_x = i * offset.dx / frames
-               local obj_scroll_y = i * offset.dy / frames
+               local obj_scroll_x = math.floor(i * offset.dx / frames)
+               local obj_scroll_y = math.floor(i * offset.dy / frames)
                layer:scroll_chip(offset.index, obj_scroll_x, obj_scroll_y)
             end
 
@@ -349,8 +349,8 @@ function field_layer:update_scrolling()
                                                           self.renderer.renderer.height)
 
             for _, offset in ipairs(obj_scroll_offsets) do
-               local obj_scroll_x = i * (offset.dx / ms)
-               local obj_scroll_y = i * (offset.dy / ms)
+               local obj_scroll_x = math.floor(i * (offset.dx / ms))
+               local obj_scroll_y = math.floor(i * (offset.dy / ms))
                layer:scroll_chip(offset.index, obj_scroll_x, obj_scroll_y)
             end
 
