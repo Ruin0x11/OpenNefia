@@ -669,6 +669,8 @@ Skills this character will already know when they're created.
 
          x_offset = nil,
          y_offset = nil,
+         scroll_x_offset = 0,
+         scroll_y_offset = 0,
 
          materials = {},
          spell_stocks = {},

@@ -1,5 +1,6 @@
 --- @classmod IChara
 local data = require("internal.data")
+local config = require("internal.config")
 local field = require("game.field")
 local Chara = require("api.Chara")
 local Rand = require("api.Rand")
@@ -298,7 +299,13 @@ function IChara:set_pos(x, y, force)
       Gui.scroll_object(self, self.x, self.y)
    end
 
-   return IMapObject.set_pos(self, x, y, force)
+   local result = IMapObject.set_pos(self, x, y, force)
+
+   if self:is_player() and config.base.scroll == "player" then
+      field:update_scrolling()
+   end
+
+   return result
 end
 
 --- Returns true if this character is the current player.

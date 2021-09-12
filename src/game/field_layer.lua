@@ -389,7 +389,9 @@ function field_layer:update_screen(dt, and_draw)
       self.map:calc_screen_sight(player.x, player.y, player:calc("fov") or 15)
    end
 
-   self:update_scrolling()
+   if config.base.scroll == "all" then
+      self:update_scrolling()
+   end
    self:update_draw_pos()
 
    local dt = dt or 0
