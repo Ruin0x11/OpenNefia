@@ -109,12 +109,14 @@ function IUiLayer:query(z_order)
          success, res, canceled = xpcall(
             function()
                if config.base.update_unfocused_ui_layers then
-                  local layers = draw.get_layers()
-                  for i = 1, #layers-1 do
-                     local layer = layers[i].layer
-                     -- HACK
-                     if not class.is_an(IHud, layer) then
-                        layer:update(dt, false)
+                  if self:is_querying() then
+                     local layers = draw.get_layers()
+                     for i = 1, #layers-1 do
+                        local layer = layers[i].layer
+                        -- HACK
+                        if not class.is_an(IHud, layer) then
+                           layer:update(dt, false)
+                        end
                      end
                   end
                end
