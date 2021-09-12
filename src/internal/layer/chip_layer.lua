@@ -125,7 +125,7 @@ end
 local CONFIG = {
    ["base.chara"] = {
       z_order = 3,
-      y_offset = -16
+      y_offset = 0
    },
    ["base.item"] = {
       z_order = 2,
@@ -260,14 +260,14 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, map_size, z_order)
       if self.shadow_batch_inds[index] then
          self.shadow_batch.xcoords[index] = x
          self.shadow_batch.ycoords[index] = y
-         self.shadow_batch.yoffs[index] = y_offset_base
+         self.shadow_batch.yoffs[index] = 0
          self.shadow_batch.updated = true
       else
          self.shadow_batch:add_tile(index, {
             tile = "shadow",
             x = x,
             y = y,
-            y_offset = y_offset_base,
+            y_offset = 0,
             z_order = 0
          })
          self.shadow_batch_inds[index] = true
