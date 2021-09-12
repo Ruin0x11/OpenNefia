@@ -8,6 +8,7 @@ local midi = require("internal.midi")
 local global_sound_manager = require("internal.global.global_sound_manager")
 local Event = require("api.Event")
 local ConfigThemeMenu = require("api.gui.menu.config.menu.ConfigThemeMenu")
+local main_state = require("internal.global.main_state")
 
 data:add_multi(
    "base.config_option",
@@ -310,7 +311,7 @@ data:add_multi(
 
          on_changed = function()
             local field = require("game.field")
-            if field.is_active then
+            if main_state.is_in_game then
                for _, obj in field.map:iter() do
                   ISoundHolder.on_set_location(obj, obj.location)
                end

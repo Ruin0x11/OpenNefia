@@ -446,6 +446,10 @@ end
 
 local supports_subtract = Env.os() ~= "Android"
 
+function Draw.get_blend_mode()
+   return love.graphics.getBlendMode()
+end
+
 function Draw.set_blend_mode(mode, alphamode)
    -- BUG: Graphics hardware on mobile devices doesn't always seem to
    -- support the "subtract" blending mode. In this case, we should

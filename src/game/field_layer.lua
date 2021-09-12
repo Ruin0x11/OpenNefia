@@ -492,8 +492,8 @@ function field_layer:query_repl()
    end
 end
 
-function field_layer:register_draw_layer(tag, require_path, z_order, enabled)
-   return self.draw_layer_spec:register_draw_layer(tag, require_path, z_order, enabled)
+function field_layer:register_draw_layer(tag, require_path_or_layer, z_order, enabled)
+   return self.draw_layer_spec:register_draw_layer(tag, require_path_or_layer, z_order, enabled)
 end
 
 function field_layer:get_draw_layer(tag)

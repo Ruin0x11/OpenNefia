@@ -1,8 +1,7 @@
-local Map = require("api.Map")
 local IDrawLayer = require("api.gui.IDrawLayer")
 local tile_batch = require("internal.draw.tile_batch")
-local save = require("internal.global.save")
 local atlases = require("internal.global.atlases")
+local atlas = require("internal.draw.atlas")
 
 local tile_layer = class.class("tile_layer", IDrawLayer)
 
@@ -10,6 +9,7 @@ function tile_layer:init(width, height)
    self.width = width
    self.height = height
 
+   self.atlas = nil
    self.tile_batch = tile_batch:new(self.width, self.height)
    self.tile_width = nil
    self.tile_height = nil
@@ -19,9 +19,16 @@ function tile_layer:default_z_order()
    return 100000
 end
 
+function tile_layer:set_atlas(the_atlas)
+   if the_atlas ~= nil then
+      assert(class.is_an(atlas, the_atlas))
+   end
+   self.atlas = the_atlas
+end
+
 function tile_layer:on_theme_switched(coords)
    self.coords = coords
-   local tile_atlas = atlases.get().tile
+   local tile_atlas = self.atlas or atlases.get().tile
    local tw, th = coords:get_size()
 
    self.tile_batch:on_theme_switched(tile_atlas, coords)

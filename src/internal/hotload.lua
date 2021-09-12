@@ -2,6 +2,7 @@ local Log = require("api.Log")
 local env = require("internal.env")
 local Event = require("api.Event")
 local theme = require("internal.theme")
+local main_state = require("internal.global.main_state")
 
 local hotload = {}
 
@@ -79,7 +80,7 @@ end
 Event.register("base.on_hotload_end", "Hotload field renderer",
                function()
                   local field = require("game.field")
-                  if field.is_active then
+                  if main_state.is_in_game then
                      field.renderer:force_screen_update()
                      field:update(0, false, nil)
                   end

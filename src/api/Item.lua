@@ -130,7 +130,7 @@ function Item.create(id, x, y, params, where)
       no_build = params.no_build,
       build_params = params
    }
-   local item = MapObject.generate_from("base.item", id)
+   local item = MapObject.generate_from("base.item", id, params.uid_tracker or nil)
 
    item.quality = params.quality or Enum.Quality.Bad
 

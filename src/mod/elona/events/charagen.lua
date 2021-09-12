@@ -248,7 +248,7 @@ Event.register(
       params.id = Charagen.random_chara_id_raw(params.level, params.filter, params.category)
 
       -- using Chara.create would cause recursion
-      local chara = MapObject.generate_from("base.chara", params.id)
+      local chara = MapObject.generate_from("base.chara", params.id, params.uid_tracker)
 
       chara.is_shade = true
       chara.name = I18N.get("chara.job.shade")

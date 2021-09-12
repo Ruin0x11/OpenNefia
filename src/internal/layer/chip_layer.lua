@@ -12,6 +12,9 @@ function chip_layer:init(width, height)
    self.width = width
    self.height = height
 
+   self.chip_atlas = nil
+   self.item_shadow_atlas = nil
+
    self.chip_batch = sparse_batch:new(self.width, self.height)
    self.shadow_batch = sparse_batch:new(self.width, self.height)
    self.drop_shadow_batch = sparse_batch:new(self.width, self.height)
@@ -35,9 +38,20 @@ function chip_layer:default_z_order()
    return Gui.LAYER_Z_ORDER_TILEMAP + 30000
 end
 
+function chip_layer:set_atlases(chip_atlas, item_shadow_atlas)
+   if chip_atlas ~= nil then
+      assert(class.is_an(atlas, chip_atlas))
+   end
+   if item_shadow_atlas ~= nil then
+      assert(class.is_an(atlas, item_shadow_atlas))
+   end
+   self.chip_atlas = chip_atlas
+   self.item_shadow_atlas = item_shadow_atlas
+end
+
 function chip_layer:on_theme_switched(coords)
-   local chip_atlas = atlases.get().chip
-   local item_shadow_atlas = atlases.get().item_shadow
+   local chip_atlas = self.chip_atlas or atlases.get().chip
+   local item_shadow_atlas = self.item_shadow_atlas or atlases.get().item_shadow
 
    local shadow_atlas = atlas:new(48, 48)
    self.t = UiTheme.load(self)

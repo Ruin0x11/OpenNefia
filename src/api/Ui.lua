@@ -25,7 +25,7 @@ local tile_size = 48
 --- @tparam[opt] boolean tiled
 function Ui.params_centered(width, height, tiled)
    if tiled == nil then
-      tiled = Gui.get_active_state() == "field"
+      tiled = Gui.get_active_state() == "in_game"
    end
 
    local x = (Draw.get_width() - width) / 2

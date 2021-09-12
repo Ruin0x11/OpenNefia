@@ -1,14 +1,13 @@
 local data = require("internal.data")
 local multi_pool = require("internal.multi_pool")
 local save = require("internal.global.save")
+local main_state = require("internal.global.main_state")
 local IModDataHolder = require("api.IModDataHolder")
-local ModExtTable = require("api.ModExtTable")
 
 local Pos = require("api.Pos")
 local IEventEmitter = require("api.IEventEmitter")
 local IModdable = require("api.IModdable")
 local Draw = require("api.Draw")
-local ILocation = require("api.ILocation")
 local ITypedLocation = require("api.ITypedLocation")
 local I18N = require("api.I18N")
 
@@ -64,17 +63,22 @@ local function t(o)
    return setmetatable(o or {}, { __inspect = tostring })
 end
 
-function InstancedMap:init(width, height, uids, tile)
+function InstancedMap:init(width, height, tile)
    IModdable.init(self)
    IModDataHolder.init(self)
    IEventEmitter.init(self)
 
-   self.uid = save.base.map_uids:get_next_and_increment()
+   if main_state.is_in_game then
+      self.uid = save.base.map_uids:get_next_and_increment()
+   else
+      self.uid = 0
+   end
 
    width = math.floor(width)
    height = math.floor(height)
-   uids = uids or save.base.uids
    tile = tile or "base.floor"
+
+   data["base.map_tile"]:ensure(tile)
 
    if width <= 0 or height <= 0 then
       error("Maps must be at least 1 tile wide and long.")
@@ -119,7 +123,6 @@ function InstancedMap:init(width, height, uids, tile)
 
    self._tiles = t(table.of(function() return {} end, width * height))
    self._tiles_dirty = t()
-   self._uids = uids
 
    self.debris = t()
 
@@ -131,7 +134,7 @@ function InstancedMap:init(width, height, uids, tile)
    -- map from the world map or similar.
    self._previous_map = nil
 
-   self.default_tile = "base.floor"
+   self.default_tile = tile
    self.name = I18N.get("map.default_name")
 
    self:init_map_data()

@@ -33,6 +33,10 @@ local function reset_global_state()
    SaveFs.clear()
    save_store.clear()
 
+   -- Prepare default global save data in case something in the config menus/etc
+   -- needs it.
+   field:init_global_data()
+
    Gui.stop_background_sound()
    Gui.stop_all_draw_callbacks()
 end

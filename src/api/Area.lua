@@ -134,7 +134,7 @@ function Area.for_map(map_or_uid)
    if class.is_an(InstancedMap, map_or_uid) then
       uid = map_or_uid.uid
    end
-   assert(type(uid) == "number", "UID must be number")
+   assert(math.type(uid) == "integer", "UID must be an integer, got '%s'", uid)
 
    local areas = save.base.areas
 

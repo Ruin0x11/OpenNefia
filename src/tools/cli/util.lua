@@ -2,16 +2,17 @@ local field = require("game.field")
 local field_logic = require("game.field_logic")
 local Gui = require("api.Gui")
 local Log = require("api.Log")
+local main_state = require("internal.global.main_state")
 
 local util = {}
 
 function util.load_game()
    Log.info("Attempting to start the game headlessly.")
 
-   field.is_active = false
+   main_state.is_in_game = false
    field_logic.quickstart()
    field_logic.setup()
-   field.is_active = true
+   main_state.is_in_game = true
    Gui.update_screen() -- refresh shadows/FOV
 end
 
