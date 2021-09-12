@@ -12,7 +12,6 @@ local UiMouseMenuButton = require("mod.mouse_ui.api.gui.UiMouseMenuButton")
 local MapEditorLayoutPlugin = class.class("MapEditorLayoutPlugin", IMapEditorPlugin)
 
 function MapEditorLayoutPlugin:init()
-   self.target_floor = 20
 end
 
 function MapEditorLayoutPlugin:on_install(map_editor)

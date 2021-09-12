@@ -116,7 +116,7 @@ function MapEditLayer:select_tile(id)
    self.selected_tile = id
 
    self.tile_batch:clear()
-   local width, height = Draw.get_coords:get_size()
+   local width, height = Draw.get_coords():get_size()
    self.tile_batch:add(self.selected_tile, self.width - 80, self.y + 20, width, height)
 end
 

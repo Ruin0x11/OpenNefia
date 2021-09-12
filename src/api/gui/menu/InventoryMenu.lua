@@ -86,7 +86,6 @@ function InventoryMenu:init(ctxt, returns_item)
    self.cargo_weight = 0
    self.detail_view = nil
    self.subtext_column = self.ctxt.proto.window_detail_header or "ui.inv.window.weight"
-   self.is_drawing = true
    self.total_weight_text = ""
    self.text_equip_slots = {}
    self.play_sound = false
@@ -458,8 +457,12 @@ function InventoryMenu:update_filtering(play_sound)
    end
 end
 
+function InventoryMenu:is_menu_visible()
+   return self.ctxt:is_menu_visible()
+end
+
 function InventoryMenu:draw()
-   if not self.ctxt:is_menu_visible() then
+   if not self:is_menu_visible() then
       return
    end
 
