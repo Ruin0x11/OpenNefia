@@ -293,6 +293,10 @@ function IChara:set_pos(x, y, force)
       return false
    end
 
+   if self:is_player() and config.base.scroll == "player" then
+      Gui.update_screen()
+   end
+
    local dx = math.abs(x - self.x)
    local dy = math.abs(y - self.y)
    if dx == 1 or dy == 1 then
@@ -338,6 +342,10 @@ function IChara:swap_places(other)
 
    local sx, sy = self.x, self.y
    local ox, oy = other.x, other.y
+
+   if (self:is_player() or other:is_player()) and config.base.scroll == "player" then
+      Gui.update_screen()
+   end
 
    Gui.scroll_object(self, sx, sy)
    Gui.scroll_object(other, ox, oy)
