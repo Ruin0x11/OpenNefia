@@ -7,6 +7,7 @@
 --- @module Draw
 local draw = require("internal.draw")
 local Env = require("api.Env")
+local main_state = require("internal.global.main_state")
 
 local Draw = {}
 
@@ -378,11 +379,11 @@ function Draw.add_async_callback(cb)
       error("Callback must be a function.")
    end
 
-   local field = require("game.field")
-   if not field.is_active then
+   if not main_state.is_in_game then
       error("Must be in-game.")
    end
 
+   local field = require("game.field")
    field:add_async_draw_callback(cb)
 end
 

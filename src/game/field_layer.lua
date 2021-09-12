@@ -6,19 +6,17 @@ local KeyHandler = require("api.gui.KeyHandler")
 local Env = require("api.Env")
 local DrawLayerSpec = require("api.draw.DrawLayerSpec")
 local MapRenderer = require("api.gui.MapRenderer")
-local Stopwatch = require("api.Stopwatch")
 
 local config = require("internal.config")
 local draw = require("internal.draw")
 local draw_callbacks = require("internal.draw_callbacks")
+local main_state = require("internal.global.main_state")
 
 local field_layer = class.class("field_layer", IUiLayer)
 
 field_layer:delegate("keys", IInput)
 
 function field_layer:init()
-   self.is_active = false
-
    self.hud = require("api.gui.hud.MainHud"):new()
 
    self.map = nil
@@ -379,7 +377,7 @@ function field_layer:update_scrolling()
 end
 
 function field_layer:update_screen(dt, and_draw)
-   if not self.is_active or not self.renderer then return end
+   if not main_state.is_in_game or not self.renderer then return end
 
    assert(self.map ~= nil)
 
@@ -464,7 +462,7 @@ function field_layer:update_draw_callbacks(dt)
 end
 
 function field_layer:draw()
-   if not self.is_active or not self.renderer then
+   if not main_state.is_in_game or not self.renderer then
       return
    end
 

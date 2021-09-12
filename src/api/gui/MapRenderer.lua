@@ -21,7 +21,7 @@ function MapRenderer:init(map, draw_layer_spec)
 end
 
 function MapRenderer:set_map(map)
-   if map then
+   if map ~= nil then
       class.assert_is_an(InstancedMap, map)
       self.map = map
       self.renderer:set_map_size(self.map:width(), self.map:height(), self.draw_layer_spec)

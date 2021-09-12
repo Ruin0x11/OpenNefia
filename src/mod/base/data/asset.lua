@@ -1520,6 +1520,16 @@ local assets = {
       color = {0, 0, 0, 128}
    },
    {
+      _id = "text_color_active",
+      type = "color",
+      color = {55, 55, 255}
+   },
+   {
+      _id = "text_color_inactive",
+      type = "color",
+      color = {120, 120, 120}
+   },
+   {
       _id = "text_list_key_name",
       type = "color",
       color = {250, 240, 230},

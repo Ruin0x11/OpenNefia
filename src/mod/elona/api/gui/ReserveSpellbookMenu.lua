@@ -18,9 +18,6 @@ local ReserveSpellbookMenu = class.class("ReserveSpellbookMenu", {IUiLayer, IPag
 ReserveSpellbookMenu:delegate("input", IInput)
 ReserveSpellbookMenu:delegate("pages", IPaged)
 
-local COLOR_NOT_RESERVED = {120, 120, 120}
-local COLOR_RESERVED = {55, 55, 255}
-
 local UiListExt = function(reserve_spellbook_menu)
    local E = {}
 
@@ -39,10 +36,10 @@ local UiListExt = function(reserve_spellbook_menu)
 
       local detail_text
       if entry.is_reserved then
-         color = COLOR_RESERVED
+         color = reserve_spellbook_menu.t.base.text_color_active
          detail_text = I18N.get("ui.reserve.reserved")
       else
-         color = COLOR_NOT_RESERVED
+         color = reserve_spellbook_menu.t.base.text_color_inactive
          detail_text = I18N.get("ui.reserve.not_reserved")
       end
       Draw.text(detail_text, x + 342, y + 2, color)
