@@ -127,8 +127,7 @@ function field_layer:relayout(x, y, width, height)
    self.width = width or self.width
    self.height = height or self.height
    if self.renderer then
-      self.renderer:relayout(self.x, self.y, self.width, self.height)
-      self.renderer:relayout_inner(self.x, self.y, self.width, self.height + self:get_renderer_y_offset())
+      self.renderer:relayout(self.x, self.y, self.width, self.height + self:get_renderer_y_offset())
    end
 end
 
