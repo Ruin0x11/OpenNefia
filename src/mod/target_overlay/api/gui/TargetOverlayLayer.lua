@@ -44,7 +44,7 @@ end
 function TargetOverlayLayer:update_lines()
    local i = 1
 
-   for _, chara in Chara.iter() do
+   for _, chara in Chara.iter(Chara.player():current_map()) do
       local target = chara:get_target()
       if target and (self.see_all or chara:is_in_fov()) then
          local offset = 0

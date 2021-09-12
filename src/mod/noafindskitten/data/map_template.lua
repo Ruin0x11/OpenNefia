@@ -32,7 +32,7 @@ data:add {
    shadow_type = "normal",
 
    on_bumped_into = function(self, params)
-      if self.is_kitten then
+      if self.params.is_kitten then
          local anim = Anim.load("elona.anim_smoke", self.x, self.y)
          Gui.start_draw_callback(anim)
          self.image = "elona.chara_stray_cat"
@@ -47,12 +47,12 @@ data:add {
          ElonaQuest.travel_to_previous_map()
       else
          Gui.play_sound("base.chat")
-         Gui.mes_c(self.description)
+         Gui.mes_c(self.params.description)
       end
       return "turn_end"
    end,
    on_bash = function(self)
-      if not self.is_kitten then
+      if not self.params.is_kitten then
          Gui.play_sound("base.bash1")
          self:remove_ownership()
          return "turn_end"
@@ -89,13 +89,12 @@ function quest_noafindskitten.on_generate_map(area, floor, params)
    -- NOTE: we'd want to ensure there's a clear path to kitten, so the player doesn't get blocked.
    local count = math.floor(map:width() * map:height() / 40)
    for _=1, count do
-      local object = Feat.create("noafindskitten.object", nil, nil, {}, map)
+      local object = Feat.create("noafindskitten.object", nil, nil, {params={description=I18N.get("noafindskitten.nki")}}, map)
       if object then
-         object.description = I18N.get("noafindskitten.nki")
          object.color = {Color:new_hsl(Rand.rnd(360), 1, 0.8):to_rgb()}
       end
    end
-   Rand.choice(Feat.iter(map):filter(function(i) return i._id == "noafindskitten.object" end)).is_kitten = true
+   Rand.choice(Feat.iter(map):filter(function(i) return i._id == "noafindskitten.object" end)).params.is_kitten = true
 
    return map, "noafindskitten.noafindskitten"
 end
