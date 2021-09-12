@@ -7,6 +7,7 @@ local ISoundHolder = require("api.ISoundHolder")
 local midi = require("internal.midi")
 local global_sound_manager = require("internal.global.global_sound_manager")
 local Event = require("api.Event")
+local ConfigThemeMenu = require("api.gui.menu.config.menu.ConfigThemeMenu")
 
 data:add_multi(
    "base.config_option",
@@ -187,7 +188,7 @@ data:add_multi(
             local choices = fun.iter(modes):filter(filter):to_list()
 
             -- Display screen resolutions from smallest to largest.
-            -- I'm not sure if LOVE always returns them in the correct order
+            -- I'm not sure if LÖVE always returns them in the correct order
             -- between Windows and Linux.
             local first = choices[1]
             local last = choices[#choices]
@@ -687,6 +688,20 @@ data:add {
    }
 }
 
+--
+-- Menu: theme
+--
+
+data:add {
+   _id = "theme",
+   _type = "base.config_menu",
+
+   impl = ConfigThemeMenu
+}
+
+--
+-- Config options not available in menus
+--
 
 data:add_multi(
    "base.config_option",

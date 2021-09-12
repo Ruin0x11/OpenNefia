@@ -1,5 +1,5 @@
 local IInput = require("api.gui.IInput")
-local IUiLayer = require("api.gui.IUiLayer")
+local IConfigMenu = require("api.gui.menu.config.IConfigMenu")
 local InputHandler = require("api.gui.InputHandler")
 local UiTheme = require("api.gui.UiTheme")
 local Ui = require("api.Ui")
@@ -7,9 +7,8 @@ local Draw = require("api.Draw")
 local UiWindow = require("api.gui.UiWindow")
 local ConfigMenuList = require("api.gui.menu.config.ConfigMenuList")
 local data = require("internal.data")
-local I18N = require("api.I18N")
 
-local ConfigMenu = class.class("ConfigMenu", IUiLayer)
+local ConfigMenu = class.class("ConfigMenu", IConfigMenu)
 
 ConfigMenu:delegate("input", IInput)
 
@@ -95,20 +94,24 @@ function ConfigMenu:draw()
 end
 
 function ConfigMenu:update(dt)
-   if self.list.chosen then
-      self.list.chosen = nil
+   local canceled = self.canceled
+   local chosen = self.list.chosen
+   local changed = self.list.changed
+
+   self.canceled = false
+   self.win:update(dt)
+   self.list:update(dt)
+
+   if chosen then
       return self.list:selected_item().menu
    end
-   if self.list.changed then
+   if changed then
       if self.list.page_max > 0 then
          self.win:set_pages(self.list)
       end
    end
 
-   self.win:update()
-   self.list:update()
-
-   if self.canceled then
+   if canceled then
       return nil, "canceled"
    end
 end

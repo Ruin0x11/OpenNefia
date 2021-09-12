@@ -1,12 +1,12 @@
 local Draw = require("api.Draw")
 local UiTheme = require("api.gui.UiTheme")
 local ConfigMenu = require("api.gui.menu.config.ConfigMenu")
-local Gui = require("api.Gui")
-
 local IInput = require("api.gui.IInput")
 local IUiLayer = require("api.gui.IUiLayer")
 local InputHandler = require("api.gui.InputHandler")
+
 local config_store = require("internal.config_store")
+local data = require("internal.data")
 
 local ConfigMenuWrapper = class.class("ConfigMenuWrapper", IUiLayer)
 
@@ -31,7 +31,14 @@ function ConfigMenuWrapper:make_keymap()
 end
 
 function ConfigMenuWrapper:push_menu(config_menu_id)
-   local submenu = ConfigMenu:new(config_menu_id)
+   local proto = data["base.config_menu"]:ensure(config_menu_id)
+
+   local submenu
+   if proto.impl then
+      submenu = proto.impl:new()
+   else
+      submenu = ConfigMenu:new(config_menu_id)
+   end
 
    if self.submenu then
       table.insert(self.submenu_trail, self.submenu)

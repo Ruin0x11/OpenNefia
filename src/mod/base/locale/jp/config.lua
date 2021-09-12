@@ -91,6 +91,9 @@ return {
             language = {
                name = "言語(Language)"
             },
+            theme = {
+               name = "テーマ"
+            },
          }
       },
       option = {

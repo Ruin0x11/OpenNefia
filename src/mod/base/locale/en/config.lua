@@ -83,6 +83,9 @@ return {
             language = {
                name = "Language"
             },
+            theme = {
+               name = "Themes"
+            },
          }
       },
       option = {

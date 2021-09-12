@@ -19,7 +19,8 @@ data:add_multi(
             { _type = "base.config_menu", _id = "base.input" },
             { _type = "base.config_menu", _id = "base.keybindings" },
             { _type = "base.config_menu", _id = "base.message" },
-            { _type = "base.config_menu", _id = "base.language" }
+            { _type = "base.config_menu", _id = "base.language" },
+            { _type = "base.config_menu", _id = "base.theme" }
          }
       }
    }
