@@ -5,6 +5,7 @@ local tile_batch = require("internal.draw.tile_batch")
 local save = require("internal.global.save")
 local atlases = require("internal.global.atlases")
 local Gui = require("api.Gui")
+local atlas = require("internal.draw.atlas")
 
 local tile_overhang_layer = class.class("tile_overhang_layer", IDrawLayer)
 
@@ -12,6 +13,7 @@ function tile_overhang_layer:init(width, height)
    self.width = width
    self.height = height
    self.coords = nil
+   self.atlas = nil
    self.overhang_batch = tile_batch:new(self.width, self.height)
    self.width = width
    self.height = height
@@ -25,8 +27,15 @@ function tile_overhang_layer:default_z_order()
    return Gui.LAYER_Z_ORDER_TILEMAP + 40000
 end
 
+function tile_overhang_layer:set_atlas(the_atlas)
+   if the_atlas ~= nil then
+      assert(class.is_an(atlas, the_atlas))
+   end
+   self.atlas = the_atlas
+end
+
 function tile_overhang_layer:on_theme_switched(coords)
-   local tile_overhang_atlas = atlases.get().tile_overhang
+   local tile_overhang_atlas = self.atlas or atlases.get().tile_overhang
 
    local tw, th = coords:get_size()
 

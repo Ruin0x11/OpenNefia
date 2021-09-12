@@ -20,6 +20,12 @@ function MapRenderer:init(map, draw_layer_spec)
    self:set_map(map)
 end
 
+function MapRenderer:set_draw_layer_spec(draw_layer_spec)
+   class.assert_is_an(DrawLayerSpec, draw_layer_spec)
+   self.draw_layer_spec = draw_layer_spec
+   self.renderer:set_draw_layer_spec(draw_layer_spec)
+end
+
 function MapRenderer:set_map(map)
    if map ~= nil then
       class.assert_is_an(InstancedMap, map)
@@ -27,6 +33,7 @@ function MapRenderer:set_map(map)
       self.renderer:set_map_size(self.map:width(), self.map:height(), self.draw_layer_spec)
       self.renderer:relayout(self.x, self.y, self.width, self.height)
       self:on_theme_switched()
+      self:update(0)
    else
       self.map = nil
    end

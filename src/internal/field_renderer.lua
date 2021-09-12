@@ -16,6 +16,10 @@ function field_renderer:init(map_width, map_height, draw_layer_spec)
 
    self.screen_updated = true
 
+   self:set_draw_layer_spec(draw_layer_spec)
+end
+
+function field_renderer:set_draw_layer_spec(draw_layer_spec)
    self.layers = PriorityMap:new()
    self.enabled = {}
 
@@ -31,13 +35,13 @@ function field_renderer:init(map_width, map_height, draw_layer_spec)
             error("Could not load draw layer " .. tostring(entry.require_path) .. ":\n\t" .. layer)
          end
 
-         instance = layer:new(map_width, map_height)
+         instance = layer:new(self.map_width, self.map_height)
       end
 
       class.assert_is_an(IDrawLayer, instance)
 
       -- TODO
-      instance:on_theme_switched(coords)
+      instance:on_theme_switched(self.coords)
       instance:reset()
       instance:relayout(self.x, self.y, self.width, self.height)
 

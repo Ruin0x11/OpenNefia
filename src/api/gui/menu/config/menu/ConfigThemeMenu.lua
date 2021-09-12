@@ -6,12 +6,12 @@ local UiTheme = require("api.gui.UiTheme")
 local Ui = require("api.Ui")
 local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
-local InstancedMap = require("api.InstancedMap")
 local ConfigThemeMenuPreview = require("api.gui.menu.config.menu.ConfigThemeMenuPreview")
 local Chara = require("api.Chara")
 local Item = require("api.Item")
 local UidTracker = require("api.UidTracker")
 local I18N = require("api.I18N")
+local Layout = require("mod.tools.api.Layout")
 local data = require("internal.data")
 local config = require("internal.config")
 
@@ -55,7 +55,7 @@ function ConfigThemeMenu.generate_list(active_themes)
          ordering = -10000000
          enabled = "default"
       elseif index then
-         index = index + 1
+         index = index
          ordering = -1000000 + index
          name = ("%s (%d)"):format(name, index)
       else
@@ -88,7 +88,7 @@ function ConfigThemeMenu:init()
    self.win = UiWindow:new("config.menu.base.theme.name", true, key_hints)
 
    local map = ConfigThemeMenu.build_preview_map()
-   self.preview = ConfigThemeMenuPreview:new(map)
+   self.preview = ConfigThemeMenuPreview:new(map, self.active_themes)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -97,20 +97,86 @@ end
 
 function ConfigThemeMenu.build_preview_map()
    local uid_tracker = UidTracker:new()
-   local map = InstancedMap:new(15, 15, "elona.dirt", uid_tracker, 1)
-   assert(map.uid)
 
-   for x = 0, 10-1 do
-      map:set_tile(x, 0, "elona.wall_dirt_top")
-      if x > 3 then
-         map:set_tile(x, 1, "elona.wall_dirt_top")
+   local chara = function(_id)
+      return function(map, x, y)
+         Chara.create(_id, x, y, {uid_tracker=uid_tracker}, map)
       end
    end
 
-   Chara.create("elona.putit", 2, 2, {uid_tracker=uid_tracker}, map)
-   Chara.create("elona.little_girl", 4, 4, {uid_tracker=uid_tracker}, map)
-   Item.create("elona.dagger", 3, 1, {uid_tracker=uid_tracker}, map)
-   Item.create("elona.rod_of_teleportation", 3, 4, {uid_tracker=uid_tracker}, map)
+   local item = function(_id)
+      return function(map, x, y)
+         Item.create(_id, x, y, {uid_tracker=uid_tracker}, map)
+      end
+   end
+
+   local tile_layout = {
+      tiles = [[
+####XXM
+.~###XM
+.,~.%XM
+~,,***M
+.,%*;T;
+~**T;:;
+%*:;:;T
+]],
+
+      tileset = {
+         default = "elona.dirt",
+         ["."] = "elona.dirt",
+         ["*"] = "elona.dark_dirt_1",
+         ["%"] = "elona.dark_dirt_2",
+         ["#"] = "elona.wall_dirt_top",
+         ["X"] = "elona.wall_dirt_dark_top",
+         ["M"] = "elona.wall_stone_5_top",
+         ["T"] = "elona.grass",
+         ["~"] = "elona.dirt_grass",
+         [","] = "elona.dirt_patch",
+         [";"] = "elona.grass",
+         [":"] = "elona.grass_rocks",
+         ["a"] = "elona.dark_dirt_2",
+         ["c"] = "elona.dark_dirt_2",
+         ["w"] = "elona.grass",
+         ["x"] = "elona.grass",
+         ["y"] = "elona.grass",
+         ["z"] = "elona.grass",
+      }
+   }
+
+   local chip_layout = {
+      tiles = [[
+.......
+.......
+.ae....
+.f.c...
+..b..T.
+...TwxC
+..C.yz.
+]],
+
+      tileset = {
+         default = "elona.dirt",
+      },
+      callbacks = {
+         ["a"] = chara("elona.putit"),
+         ["b"] = chara("elona.little_girl"),
+         ["c"] = chara("elona.stone_golem"),
+         ["e"] = chara("elona.bat"),
+         ["f"] = chara("elona.cupid_of_love"),
+         ["w"] = item("elona.dagger"),
+         ["x"] = item("elona.potion_of_hero"),
+         ["y"] = item("elona.rod_of_teleportation"),
+         ["z"] = item("elona.spellbook_of_ice_bolt"),
+         ["T"] = item("elona.tree_of_beech"),
+         ["C"] = item("elona.tree_of_cedar"),
+      }
+   }
+
+   local map = Layout.to_map(tile_layout)
+   local chips = Layout.to_map(chip_layout)
+   for _, obj in chips:iter() do
+      map:take_object(obj, obj.x, obj.y)
+   end
 
    return map
 end
@@ -153,10 +219,14 @@ function ConfigThemeMenu:update_list(_id)
    local items = ConfigThemeMenu.generate_list(self.active_themes)
    self.pages:set_data(items)
 
-   local new_index = self.pages:iter():index_by(function(i) return i._id == _id end)
-   if new_index then
-      self.pages:select(new_index)
+   if _id then
+      local new_index = self.pages:iter():index_by(function(i) return i._id == _id end)
+      if new_index then
+         self.pages:select(new_index)
+      end
    end
+
+   self.preview:set_themes(self.active_themes)
 end
 
 function ConfigThemeMenu:increase_priority()
@@ -232,24 +302,24 @@ function ConfigThemeMenu:on_choose(index)
    if item.enabled then
       table.iremove_value(self.active_themes, item._id)
    else
-      table.insert(self.active_themes, item._id)
+      table.insert(self.active_themes, 1, item._id)
    end
 
-   self:update_list(item._id)
+   self:update_list()
 end
 
 function ConfigThemeMenu:update(dt)
    local canceled = self.canceled
    local chosen = self.pages.chosen
 
+   if chosen then
+      self:on_choose(self.pages:selected_index())
+   end
+
    self.canceled = false
    self.win:update(dt)
    self.pages:update(dt)
    self.preview:update(dt)
-
-   if chosen then
-      self:on_choose(self.pages:selected_index())
-   end
 
    if canceled then
       return nil, "canceled"

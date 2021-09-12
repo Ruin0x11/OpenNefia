@@ -15,6 +15,10 @@ function Layout.extract_params(layout)
 
    for i, s in ipairs(split) do
       if s:len() ~= width then
+         if i == #split then
+            height = height - 1
+            break
+         end
          error(("invalid row of width '%d' passed (expected '%d')"):format(s:len(), width))
       end
       for c in string.chars(s) do
@@ -116,13 +120,14 @@ end
 
 function Layout.to_map(layout)
    local width, height, tiles = Layout.extract_params(layout)
+   local default = layout.tileset.default or nil
 
    local map = InstancedMap:new(width, height)
 
    local i = 1
    for y = 0, height - 1 do
       for x = 0, width - 1 do
-         local tile_id = layout.tileset[tiles[i]]
+         local tile_id = layout.tileset[tiles[i]] or default
          assert(tile_id, "No map tile for symbol " .. tostring(tiles[i]))
          map:set_tile(x, y, tile_id)
          if layout.callbacks and layout.callbacks[tiles[i]] then

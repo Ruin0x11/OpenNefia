@@ -44,9 +44,12 @@ function theme.build_overrides()
 
    -- Get the list of overrides for each theme.
    local active_theme_ids = table.shallow_copy(config.base.themes or {})
+
+   -- earlier themes override later ones
+   table.reverse(active_theme_ids)
+
    local active_themes = fun.iter(active_theme_ids):map(function(_id) return data["base.theme"]:ensure(_id) end)
 
-   -- later themes override earlier ones
    for _, active_theme in active_themes:unwrap() do
       for _type, overrides in pairs(active_theme.overrides) do
          local theme_transform = data["base.theme_transform"]:iter():filter(function(tr) return tr.applies_to == _type end):nth(1)
