@@ -53,7 +53,7 @@ local ty_light = types.fields {
    always_on = types.optional(types.boolean)
 }
 
-local ty_shadow_type = types.literal("normal", "drop_shadow")
+local ty_shadow_type = types.literal("none", "normal", "drop_shadow")
 
 local ty_chara_filter = types.fields {
    quality = types.enum(Enum.Quality),
@@ -1159,7 +1159,7 @@ data:add_type(
          {
             name = "shadow_type",
             type = ty_shadow_type,
-            default = "normal"
+            default = "none"
          },
          {
             name = "image",
@@ -2454,7 +2454,7 @@ It can either be a string referencing an image file, or a table with these conte
       {
          name = "stack_height",
          type = types.optional(types.int),
-         default = 0
+         default = 8
       },
       {
          name = "y_offset",
