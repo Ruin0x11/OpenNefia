@@ -2,7 +2,6 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "larnneire",
 
-   root = "talk.unique.larnneire",
    nodes = {
       __start = {
          text = {

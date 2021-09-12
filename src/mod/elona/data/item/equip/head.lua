@@ -106,7 +106,7 @@ data:add {
    weight = 1500,
    material = "elona.mithril",
    level = 20,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -150,10 +150,9 @@ data:add {
    image = "elona.item_knight_helm",
    value = 15000,
    weight = 2400,
-   damage_bonus = 8,
    material = "elona.obsidian",
    level = 5,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -183,6 +182,7 @@ data:add {
          equip_slots = { "elona.head" },
          dv = 2,
          pv = 7,
+         damage_bonus = 8,
       }
    }
 }

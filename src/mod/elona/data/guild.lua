@@ -7,7 +7,13 @@ local function order(elona_id)
 end
 
 data:add_type {
-   name = "guild"
+   name = "guild",
+   fields = {
+      {
+         name = "guest_trainer_skills",
+         type = types.list(types.data_id("base.skill"))
+      }
+   }
 }
 
 --
@@ -32,7 +38,7 @@ do
       _type = "elona_sys.sidequest",
       _id = "guild_mage_joining",
       elona_id = 216,
-      ordering = order(216),
+      _ordering = order(216),
 
       progress = {
          [1] = function()
@@ -46,7 +52,7 @@ do
       _type = "elona_sys.sidequest",
       _id = "guild_mage_quota",
       elona_id = 219,
-      ordering = order(219),
+      _ordering = order(219),
 
       progress = {
          [1] = function()
@@ -80,7 +86,7 @@ do
       _type = "elona_sys.sidequest",
       _id = "guild_fighter_joining",
       elona_id = 217,
-      ordering = order(217),
+      _ordering = order(217),
 
       progress = {
          [1] = function()
@@ -96,7 +102,7 @@ do
       _type = "elona_sys.sidequest",
       _id = "guild_fighter_quota",
       elona_id = 220,
-      ordering = order(220),
+      _ordering = order(220),
 
       progress = {
          [1] = function()
@@ -132,7 +138,7 @@ do
       _type = "elona_sys.sidequest",
       _id = "guild_thief_joining",
       elona_id = 218,
-      ordering = order(218),
+      _ordering = order(218),
 
       progress = {
          [1] = "sidequest._.elona.guild_thief_joining.progress._0",
@@ -144,7 +150,7 @@ do
       _type = "elona_sys.sidequest",
       _id = "guild_thief_quota",
       elona_id = 221,
-      ordering = order(221),
+      _ordering = order(221),
 
       progress = {
          [1] = function()

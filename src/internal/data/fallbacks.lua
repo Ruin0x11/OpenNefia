@@ -1,5 +1,6 @@
 -- data that has to exist for no errors to occur
 local data = require("internal.data")
+local Enum = require("api.Enum")
 
 data:add {
    _type = "base.map_tile",

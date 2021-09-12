@@ -122,12 +122,20 @@ function God.can_offer_item_to(god_id, item)
    return false
 end
 
-function God.make_skill_blessing(skill, coefficient, add)
-   -- data["base.skill"]:ensure(skill) TODO
+function God.make_skill_blessing(skill_id, coefficient, add)
    return function(chara)
-      if chara:has_skill(skill) then
+      if chara:has_skill(skill_id) then
          local amount = math.clamp((chara.piety or 0) / coefficient, 1, add + chara:skill_level("elona.faith") / 10)
-         chara:mod_skill_level(skill, amount, "add")
+         chara:mod_skill_level(skill_id, amount, "add")
+      end
+   end
+end
+
+function God.make_resist_blessing(resist_id, coefficient, add)
+   return function(chara)
+      if chara:has_resist(resist_id) then
+         local amount = math.clamp((chara.piety or 0) / coefficient, 1, add + chara:skill_level("elona.faith") / 10)
+         chara:mod_resist_level(resist_id, amount, "add")
       end
    end
 end

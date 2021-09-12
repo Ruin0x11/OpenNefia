@@ -61,6 +61,8 @@ function ChooseNpcMenu.generate_list(charas, topic)
       return true
    end
 
+   local sort = function(a, b) return a.ordering > b.ordering end
+
    local list = fun.iter(charas):filter(filter_)
       :map(function(chara)
             local gender = I18N.capitalize(I18N.get("ui.sex3." .. chara:calc("gender")))
@@ -83,9 +85,8 @@ function ChooseNpcMenu.generate_list(charas, topic)
                ordering = chara:calc("level")
             }
           end)
+      :into_sorted(sort)
       :to_list()
-
-   table.insertion_sort(list, function(a, b) return a.ordering > b.ordering end)
 
    return list
 end

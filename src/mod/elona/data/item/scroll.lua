@@ -21,7 +21,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.identify", power = 100 }}, params)
    end,
-   category = 53000,
    coefficient = 0,
    originalnameref2 = "scroll",
    has_random_name = true,
@@ -44,7 +43,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.oracle", power = 100 }}, params)
    end,
-   category = 53000,
    coefficient = 0,
    originalnameref2 = "scroll",
    has_random_name = true,
@@ -67,7 +65,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.teleport", power = 100 }}, params)
    end,
-   category = 53000,
    coefficient = 0,
    originalnameref2 = "scroll",
    has_random_name = true,
@@ -92,7 +89,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.buff_incognito", power = 300 }}, params)
    end,
-   category = 53000,
    rarity = 70000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -116,7 +112,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.uncurse", power = 100 }}, params)
    end,
-   category = 53000,
    coefficient = 0,
    originalnameref2 = "scroll",
    has_random_name = true,
@@ -139,7 +134,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.return", power = 100 }}, params)
    end,
-   category = 53000,
    rarity = 300000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -163,7 +157,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.magic_map", power = 500 }}, params)
    end,
-   category = 53000,
    coefficient = 0,
    originalnameref2 = "scroll",
    has_random_name = true,
@@ -187,7 +180,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_skill", power = 100 }}, params)
    end,
    level = 15,
-   category = 53000,
    rarity = 25000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -228,7 +220,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_knowledge", power = 100 }}, params)
    end,
    level = 5,
-   category = 53000,
    rarity = 500000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -252,7 +243,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.teleport", power = 100 }}, params)
    end,
-   category = 53000,
    coefficient = 0,
    originalnameref2 = "scroll",
    has_random_name = true,
@@ -277,7 +267,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_curse", power = 100 }}, params)
    end,
-   category = 53000,
    coefficient = 0,
    originalnameref2 = "scroll",
    has_random_name = true,
@@ -304,7 +293,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.identify", power = 2000 }}, params)
    end,
    level = 10,
-   category = 53000,
    rarity = 300000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -329,7 +317,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.uncurse", power = 2500 }}, params)
    end,
    level = 12,
-   category = 53000,
    rarity = 300000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -354,7 +341,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.buff_holy_veil", power = 250 }}, params)
    end,
    level = 3,
-   category = 53000,
    rarity = 400000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -378,7 +364,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.holy_light", power = 300 }}, params)
    end,
-   category = 53000,
    rarity = 800000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -403,7 +388,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.vanquish_hex", power = 300 }}, params)
    end,
    level = 5,
-   category = 53000,
    rarity = 400000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -428,7 +412,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.harvest_mana", power = 250 }}, params)
    end,
    level = 5,
-   category = 53000,
    rarity = 150000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -453,7 +436,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_create_material", power = 250 }}, params)
    end,
    level = 5,
-   category = 53000,
    rarity = 700000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -478,7 +460,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.buff_divine_wisdom", power = 250 }}, params)
    end,
    level = 3,
-   category = 53000,
    rarity = 600000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -502,7 +483,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.sense_object", power = 500 }}, params)
    end,
-   category = 53000,
    coefficient = 0,
    originalnameref2 = "scroll",
    has_random_name = true,
@@ -526,7 +506,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_skill_potential", power = 500 }}, params)
    end,
    level = 5,
-   category = 53000,
    rarity = 80000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -555,7 +534,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_faith", power = 300 }}, params)
    end,
    level = 5,
-   category = 53000,
    rarity = 300000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -584,7 +562,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_ally", power = 100 }}, params)
    end,
    level = 10,
-   category = 53000,
    rarity = 300000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -608,7 +585,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_change_material", power = 10 }}, params)
    end,
-   category = 53000,
    coefficient = 0,
    originalnameref2 = "scroll",
    has_random_name = true,
@@ -635,7 +611,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_change_material", power = 180 }}, params)
    end,
    level = 15,
-   category = 53000,
    rarity = 500000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -660,7 +635,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_change_material", power = 350 }}, params)
    end,
    level = 30,
-   category = 53000,
    rarity = 100000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -701,7 +675,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_enchant_weapon", power = 200 }}, params)
    end,
-   category = 53000,
    rarity = 300000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -726,7 +699,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_enchant_weapon", power = 400 }}, params)
    end,
    level = 10,
-   category = 53000,
    rarity = 100000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -750,7 +722,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_enchant_armor", power = 200 }}, params)
    end,
-   category = 53000,
    rarity = 300000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -775,7 +746,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_enchant_armor", power = 400 }}, params)
    end,
    level = 10,
-   category = 53000,
    rarity = 100000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -800,7 +770,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_recharge", power = 300 }}, params)
    end,
    level = 5,
-   category = 53000,
    rarity = 500000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -825,7 +794,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.healing_rain", power = 400 }}, params)
    end,
    level = 12,
-   category = 53000,
    rarity = 500000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -852,7 +820,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_flight", power = 150 }}, params)
    end,
-   category = 53000,
    rarity = 25000,
    coefficient = 0,
    has_random_name = true,
@@ -875,7 +842,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_escape", power = 100 }}, params)
    end,
-   category = 53000,
    rarity = 500000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -899,7 +865,6 @@ data:add {
    on_read = function(self, params)
       return ElonaMagic.read_scroll(self, {{ _id = "elona.resurrection", power = 2500 }}, params)
    end,
-   category = 55000,
    rarity = 3000,
    coefficient = 0,
    originalnameref2 = "book",
@@ -927,7 +892,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.buff_contingency", power = 1500 }}, params)
    end,
    level = 5,
-   category = 53000,
    rarity = 3000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -955,7 +919,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_name", power = 100 }}, params)
    end,
    level = 20,
-   category = 53000,
    rarity = 2000,
    coefficient = 0,
    originalnameref2 = "scroll",
@@ -987,7 +950,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_younger_sister", power = 100 }}, params)
    end,
    level = 5,
-   category = 55000,
    rarity = 25000,
    coefficient = 0,
    has_random_name = true,
@@ -1014,7 +976,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_cat_sister", power = 100 }}, params)
    end,
    level = 15,
-   category = 55000,
    rarity = 1000,
    coefficient = 0,
    has_random_name = true,
@@ -1041,7 +1002,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_gain_young_lady", power = 100 }}, params)
    end,
    level = 5,
-   category = 55000,
    rarity = 5000,
    coefficient = 0,
    has_random_name = true,
@@ -1067,9 +1027,7 @@ data:add {
    image = "elona.item_deed",
    value = 50000,
    weight = 500,
-   fltselect = 1,
-   category = 53000,
-   subcategory = 53100,
+   fltselect = Enum.FltSelect.Sp,
    coefficient = 100,
 
    can_read_in_world_map = true,
@@ -1152,15 +1110,13 @@ data:add {
    value = 140000,
    weight = 500,
    on_read = deed_callback("elona.museum"),
-   fltselect = 1,
-   category = 53000,
-   subcategory = 53100,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 1000,
    coefficient = 100,
    originalnameref2 = "deed",
    can_read_in_world_map = true,
 
-   param1 = 1,
+   -- param1 = 1,
 
    color = { 255, 215, 175 },
 
@@ -1179,15 +1135,13 @@ data:add {
    value = 200000,
    weight = 500,
    on_read = deed_callback("elona.shop"),
-   fltselect = 1,
-   category = 53000,
-   subcategory = 53100,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 1000,
    coefficient = 100,
    originalnameref2 = "deed",
    can_read_in_world_map = true,
 
-   param1 = 1,
+   -- param1 = 1,
 
    color = { 255, 155, 155 },
 
@@ -1206,9 +1160,7 @@ data:add {
    value = 45000,
    weight = 500,
    on_read = deed_callback("elona.crop"),
-   fltselect = 1,
-   category = 53000,
-   subcategory = 53100,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 1000,
    coefficient = 100,
    originalnameref2 = "deed",
@@ -1231,9 +1183,7 @@ data:add {
    value = 10000,
    weight = 500,
    on_read = deed_callback("elona.storage_house"),
-   fltselect = 1,
-   category = 53000,
-   subcategory = 53100,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 1000,
    coefficient = 100,
    originalnameref2 = "deed",
@@ -1256,9 +1206,7 @@ data:add {
    value = 80000,
    weight = 500,
    on_read = deed_callback("elona.ranch"),
-   fltselect = 1,
-   category = 53000,
-   subcategory = 53100,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 1000,
    coefficient = 100,
    originalnameref2 = "deed",
@@ -1281,9 +1229,7 @@ data:add {
    value = 500000,
    weight = 500,
    on_read = deed_callback("elona.dungeon"),
-   fltselect = 1,
-   category = 53000,
-   subcategory = 53100,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 1000,
    coefficient = 100,
    originalnameref2 = "deed",
@@ -1313,7 +1259,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_deed_of_inheritance", power = self.params.deed_of_heirship_quality }})
    end,
    level = 3,
-   category = 53000,
    rarity = 250000,
    coefficient = 100,
    originalnameref2 = "deed",
@@ -1337,8 +1282,7 @@ data:add {
    image = "elona.item_bill",
    value = 100,
    weight = 100,
-   fltselect = 1,
-   category = 53000,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 400000,
    coefficient = 100,
 
@@ -1368,7 +1312,6 @@ data:add {
       return ElonaMagic.read_scroll(self, {{ _id = "elona.effect_treasure_map", power = 100 }}, params)
    end,
    level = 5,
-   category = 53000,
    rarity = 100000,
    coefficient = 100,
 
@@ -1405,8 +1348,7 @@ data:add {
    image = "elona.item_deed",
    value = 15000,
    weight = 500,
-   fltselect = 3,
-   category = 53000,
+   fltselect = Enum.FltSelect.SpUnique,
    rarity = 1000,
    coefficient = 100,
    originalnameref2 = "license",

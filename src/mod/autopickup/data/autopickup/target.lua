@@ -1,7 +1,13 @@
 local ElonaItem = require("mod.elona.api.ElonaItem")
 
 data:add_type {
-   name = "target"
+   name = "target",
+   fields = {
+      {
+         name = "match",
+         type = types.callback({"item", types.map_object("base.item")}, types.boolean)
+      }
+   }
 }
 
 data:add {

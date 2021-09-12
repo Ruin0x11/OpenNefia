@@ -28,36 +28,32 @@ data:add {
    is_solid = true,
    is_opaque = true,
    params = {
-      opened = "boolean",
-      open_sound = "string",
-      close_sound = "string",
-      opened_tile = "string",
-      closed_tile = "string",
-      difficulty = "number"
+      opened = { type = types.boolean, default = false },
+      open_sound = { type = types.optional(types.data_id("base.sound")), default = "base.door1" },
+      close_sound = { type = types.optional(types.data_id("base.sound")), default = "base.door1" },
+      locked_sound = { type = types.optional(types.data_id("base.sound")), default = "base.locked1" },
+      opened_tile = { type = types.optional(types.data_id("base.chip")), default = "elona.feat_door_wooden_open" },
+      closed_tile = { type = types.optional(types.data_id("base.chip")), default = "elona.feat_door_wooden_closed" },
+      difficulty = { type = types.number, default = 0 }
    },
-   open_sound = "base.door1",
-   close_sound = nil,
-   locked_sound = "base.locked1",
-   closed_tile = "elona.feat_door_wooden_closed",
-   opened_tile = "elona.feat_door_wooden_open",
    on_refresh = function(self)
-      self.opened = not not self.opened
+      self.params.opened = not not self.params.opened
 
-      self:reset("can_open", not self.opened, "set")
-      self:reset("can_close", self.opened, "set")
-      self:reset("is_solid", not self.opened, "set")
-      self:reset("is_opaque", not self.opened, "set")
+      self.can_open = not self.params.opened
+      self.can_close = self.params.opened
+      self.is_solid = not self.params.opened
+      self.is_opaque = not self.params.opened
 
-      if self.opened then
-         self:reset("image", self.opened_tile)
+      if self.params.opened then
+         self.image = self.params.opened_tile
       else
-         self:reset("image", self.closed_tile)
+         self.image = self.params.closed_tile
       end
    end,
    on_bumped_into = function(self, params) self.proto.on_open(self, params) end,
 
    on_open = function(self, params)
-      if self.opened then
+      if self.params.opened then
          return "turn_end"
       end
 
@@ -65,26 +61,26 @@ data:add {
 
       -- TODO move to aspect
       if SkillCheck.try_to_open_door(chara, self) then
-         if self.difficulty and self.difficulty > 0 then
+         if self.params.difficulty > 0 then
             -- >>>>>>>> shade2/calculation.hsp:99 	skillExp rsOpenLock,r1,100 ...
             Skill.gain_skill_exp(chara, "elona.lock_picking", 100)
             -- <<<<<<<< shade2/calculation.hsp:99 	skillExp rsOpenLock,r1,100 ..
          end
-         self.difficulty = 0
-         self.opened = true
+         self.params.difficulty = 0
+         self.params.opened = true
          self.is_solid = false
          self.is_opaque = false
 
          if chara:is_in_fov() then
             Gui.mes("action.open.door.succeed", chara)
          end
-         if self.open_sound then
-            Gui.play_sound(self.open_sound, self.x, self.y)
+         if self.params.open_sound then
+            Gui.play_sound(self.params.open_sound, self.x, self.y)
          end
       else
          Gui.mes_duplicate()
-         if self.locked_sound then
-            Gui.play_sound(self.locked_sound, self.x, self.y)
+         if self.params.locked_sound then
+            Gui.play_sound(self.params.locked_sound, self.x, self.y)
          end
          if chara:is_in_fov() then
             Gui.mes("action.open.door.fail", chara)
@@ -100,7 +96,7 @@ data:add {
       return "turn_end"
    end,
    on_close = function(self, params)
-      self.opened = false
+      self.params.opened = false
       self.is_solid = true
       self.is_opaque = true
 
@@ -114,14 +110,14 @@ data:add {
    end,
    on_bash = function(self, params)
       -- >>>>>>>> elona122/shade2/action.hsp:443 		if feat(1)=objDoorClosed{ ..
-      if self.opened then
+      if self.params.opened then
          return nil
       end
 
       local basher = params.chara
       Gui.play_sound("base.bash1")
 
-      local difficulty = self.difficulty * 3 + 30
+      local difficulty = self.params.difficulty * 3 + 30
       local is_jail = self:current_map()._archetype == "elona.jail"
 
       if is_jail then
@@ -132,8 +128,8 @@ data:add {
 
       if Rand.rnd(difficulty) < str and Rand.one_in(2) then
          Gui.mes("action.bash.door.destroyed")
-         if self.difficulty > str then
-            Skill.gain_skill_exp("elona.stat_strength", (self.difficulty - str) * 15)
+         if self.params.difficulty > str then
+            Skill.gain_skill_exp("elona.stat_strength", (self.params.difficulty - str) * 15)
          end
          self:remove_ownership()
          return "turn_end"
@@ -159,8 +155,8 @@ data:add {
             end
          end
          if Rand.one_in(3) then
-            if self.difficulty > 0 then
-               self.difficulty = self.difficulty - 1
+            if self.params.difficulty > 0 then
+               self.params.difficulty = self.params.difficulty - 1
                Gui.mes_visible("action.bash.door.cracked", basher)
             end
          end
@@ -169,14 +165,7 @@ data:add {
 
       return "turn_end"
       -- <<<<<<<< elona122/shade2/action.hsp:464 		} ..
-   end,
-   events = {
-      {
-         id = "base.on_object_finalized",
-         name = "Set difficulty.",
-         callback = function(self) self.difficulty = self.difficulty or 5 end
-      }
-   }
+   end
 }
 
 
@@ -188,8 +177,6 @@ data:add {
    image = "elona.feat_pot",
    is_solid = true,
    is_opaque = false,
-
-   params = {},
 
    on_bash = function(self, params)
       local map = self:current_map()
@@ -412,16 +399,16 @@ data:add {
    is_opaque = false,
 
    params = {
-      plant_id = "string",
-      plant_growth_stage = "number",
-      plant_time_to_growth_days = "number"
+      plant_id = { type = types.data_id("elona.plant"), default = "elona.vegetable" },
+      plant_growth_stage = { type = types.uint, default = 0 },
+      plant_time_to_growth_days = { type = types.number, default = 0 },
    },
 
    on_stepped_on = function(self, params)
       -- >>>>>>>> shade2/action.hsp:768 			if feat(1)=objPlant{ ...
-      local name = I18N.get("plant." .. self.plant_id .. ".plant_name")
+      local name = I18N.get("plant." .. self.params.plant_id .. ".plant_name")
 
-      local stage = self.plant_growth_stage
+      local stage = self.params.plant_growth_stage
       if stage == 0 then
          Gui.mes("action.move.feature.seed.growth.seed", name)
       elseif stage == 1 then
@@ -439,7 +426,7 @@ data:add {
          id = "elona.on_harvest_plant",
          name = "Harvest plant.",
          callback = function(self, params)
-            data["elona.plant"]:ensure(self.plant_id).on_harvest(self, params)
+            data["elona.plant"]:ensure(self.params.plant_id).on_harvest(self, params)
          end
       }
    }

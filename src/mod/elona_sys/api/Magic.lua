@@ -369,13 +369,6 @@ function Magic.cast(id, params)
    return result.did_something, result.turn_result
 end
 
-local function on_cast_magic(_, params, result)
-   local did_something, turn_result = params.magic:cast(params.magic_params)
-   result.did_something = did_something
-   result.turn_result = turn_result
-end
-Event.register("elona_sys.on_cast_magic", "Cast magic", on_cast_magic, { priority = 100000 })
-
 function Magic.skills_for_magic(magic_id)
    if magic_id == nil then
       return nil

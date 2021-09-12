@@ -96,7 +96,7 @@ data["base.effect"]:edit("register status effect indicator",
                  return raw
               end
            end,
-           ordering = dat.ordering
+           _ordering = dat._ordering
         }
         end
       return dat

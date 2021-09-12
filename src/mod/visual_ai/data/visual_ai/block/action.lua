@@ -10,10 +10,6 @@ local Const = require("api.Const")
 local Itemgen = require("mod.elona.api.Itemgen")
 local Rand = require("api.Rand")
 local Filters = require("mod.elona.api.Filters")
-local Item = require("api.Item")
-local ICharaVisualAI = require("mod.visual_ai.api.aspect.ICharaVisualAI")
-
-local order = UidTracker:new(30000)
 
 data:add {
    _type = "visual_ai.block",
@@ -23,7 +19,6 @@ data:add {
    vars = {},
 
    is_terminal = true,
-   ordering = order:get_next_and_increment(),
 
    action = function(self, chara, target, ty)
       if ty == "map_object" then
@@ -62,7 +57,6 @@ data:add {
    vars = {
       threshold = { type = "integer", min_value = 0, default = 3 }
    },
-   ordering = order:get_next_and_increment(),
 
    format_name = function(proto, vars)
       return I18N.get("visual_ai.block." .. proto._id .. ".name", vars.threshold)
@@ -100,7 +94,6 @@ data:add {
    vars = {
       skill_id = utils.vars.known_skill
    },
-   ordering = order:get_next_and_increment(),
 
    format_name = function(proto, vars)
       local name
@@ -148,7 +141,6 @@ data:add {
    vars = {},
 
    is_terminal = true,
-   ordering = order:get_next_and_increment(),
 
    applies_to = "any",
 
@@ -185,7 +177,6 @@ data:add {
    vars = {
       threshold = { type = "integer", min_value = 0, default = 3 }
    },
-   ordering = order:get_next_and_increment(),
 
    format_name = function(proto, vars)
       return I18N.get("visual_ai.block." .. proto._id .. ".name", vars.threshold)
@@ -232,7 +223,6 @@ data:add {
    vars = {},
 
    is_terminal = true,
-   ordering = order:get_next_and_increment(),
 
    applies_to = "map_object",
 
@@ -257,7 +247,6 @@ data:add {
    vars = {},
 
    is_terminal = true,
-   ordering = order:get_next_and_increment(),
 
    applies_to = "map_object",
 
@@ -289,7 +278,6 @@ data:add {
    },
 
    is_terminal = true,
-   ordering = order:get_next_and_increment(),
 
    applies_to = "map_object",
 
@@ -326,7 +314,6 @@ data:add {
 
    is_terminal = true,
    color = {50, 180, 100},
-   ordering = order:get_next_and_increment(),
 
    applies_to = "map_object",
 
@@ -352,7 +339,6 @@ data:add {
 
    is_terminal = true,
    color = {50, 180, 100},
-   ordering = order:get_next_and_increment(),
 
    applies_to = "map_object",
 
@@ -385,7 +371,6 @@ data:add {
    is_terminal = false,
    color = {50, 180, 100},
    icon = "visual_ai.icon_joystick_right",
-   ordering = order:get_next_and_increment(),
 
    applies_to = "map_object",
 
@@ -405,7 +390,6 @@ data:add {
    is_terminal = true,
    color = {50, 180, 100},
    icon = "visual_ai.icon_diamond",
-   ordering = order:get_next_and_increment(),
 
    applies_to = "any",
 
@@ -432,7 +416,6 @@ data:add {
    is_terminal = true,
    color = {100, 50, 180},
    icon = "visual_ai.icon_target",
-   ordering = order:get_next_and_increment(),
 
    applies_to = "any",
 
@@ -461,7 +444,6 @@ data:add {
    is_terminal = false,
    color = {100, 40, 100},
    icon = "visual_ai.icon_download",
-   ordering = order:get_next_and_increment(),
 
    applies_to = "map_object",
 
@@ -484,7 +466,6 @@ data:add {
    is_terminal = true,
    color = {180, 140, 100},
    icon = "visual_ai.icon_flag",
-   ordering = order:get_next_and_increment(),
 
    applies_to = "any",
 
@@ -507,7 +488,6 @@ data:add {
    is_terminal = true,
    color = {180, 140, 100},
    icon = "visual_ai.icon_stop",
-   ordering = order:get_next_and_increment(),
 
    applies_to = "any",
 

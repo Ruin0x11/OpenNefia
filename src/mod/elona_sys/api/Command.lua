@@ -483,15 +483,11 @@ function Command.interact(player)
 end
 
 function Command.journal(player)
-   local sort = function(a, b)
-      return a.ordering < b.ordering
-   end
-
    local render = function(page)
       return page.render()
    end
 
-   local pages = data["base.journal_page"]:iter():into_sorted(sort):map(render):to_list()
+   local pages = data["base.journal_page"]:iter():map(render):to_list()
 
    -- TODO icon bar wrapper
    JournalMenu:new(pages):query()

@@ -109,9 +109,6 @@ end
 --- Finishes initializing this character. All characters must run this
 --- function sometime after running pre_build() before being used.
 function IChara:build()
-   local fallbacks = data.fallbacks["base.chara"]
-   self:mod_base_with(table.deepcopy(fallbacks), "merge")
-
    self.state = "Alive"
 
    self.target = nil

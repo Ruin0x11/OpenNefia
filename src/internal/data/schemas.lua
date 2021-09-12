@@ -1,7 +1,16 @@
-local schema = require("thirdparty.schema")
 local data = require("internal.data")
 local CodeGenerator = require("api.CodeGenerator")
 local Enum = require("api.Enum")
+local IEventEmitter = require("api.IEventEmitter")
+local InstancedMap = require("api.InstancedMap")
+local InstancedArea = require("api.InstancedArea")
+local IConfigItemWidget = require("api.gui.menu.config.item.IConfigItemWidget")
+
+local ty_data_ext_field = types.fields {
+   name = types.string,
+   type = types.type,
+   default = types.any
+}
 
 data:add_type {
    name = "data_ext",
@@ -9,7 +18,7 @@ data:add_type {
       {
          name = "fields",
          template = true,
-         type = "table",
+         type = types.list(ty_data_ext_field),
          default = {}
       }
    }
@@ -17,9 +26,7 @@ data:add_type {
 
 data:add_type {
    name = "event",
-   schema = schema.Record {
-      observer = schema.Optional(schema.String)
-   },
+   fields = {},
    doc = [[
 Events that can be fired.
 ]]
@@ -28,26 +35,87 @@ Events that can be fired.
 local IChara = require("api.chara.IChara")
 local IItem = require("api.item.IItem")
 local IFeat = require("api.feat.IFeat")
-local ITrap = require("api.feat.ITrap")
 local IActivity = require("api.activity.IActivity")
 local IMef = require("api.mef.IMef")
 
-data:add_type(
-   {
-      name = "resource",
-      schema = schema.Record {
-         type = schema.String,
-         value = schema.Any
-      }
+local ty_event = types.fields {
+   id = types.data_id("base.event"),
+   name = types.string,
+   callback = types.callback("self", types.interface(IEventEmitter), "params", types.table, "result", types.any),
+}
+
+local ty_light = types.fields {
+   chip = types.string,
+   bright = types.positive(types.number),
+   offset_y = types.number,
+   power = types.number,
+   flicker = types.positive(types.number),
+   always_on = types.optional(types.boolean)
+}
+
+local ty_shadow_type = types.literal("none", "normal", "drop_shadow")
+
+local ty_chara_filter = types.fields {
+   quality = types.enum(Enum.Quality),
+   level = types.uint,
+   initial_level = types.uint,
+   id = types.data_id("base.chara"),
+   fltselect = types.enum(Enum.FltSelect),
+   category = types.enum(Enum.CharaCategory),
+   create_params = types.table,
+   tag_filters = types.list(types.string),
+   race_filter = types.data_id("base.race"),
+   ownerless = types.boolean,
+}
+
+local ty_item_filter = types.fields {
+   quality = types.enum(Enum.Quality),
+   level = types.uint,
+   id = types.data_id("base.chara"),
+   categories = types.some(types.data_id("base.item_type"), types.list(types.data_id("base.item_type"))),
+   create_params = types.table,
+   ownerless = types.boolean,
+}
+
+local ty_ai_action = types.all(
+   types.fields {
+      id = types.data_id("base.ai_action")
+   },
+   types.map(types.string, types.any)
+)
+
+local ty_chara_ai_actions = types.fields {
+   main = types.optional(types.list(ty_ai_action)),
+   sub = types.optional(types.list(ty_ai_action))
+}
+
+local ty_equip_spec = types.map(
+   types.string,
+   types.fields {
+      _id = types.optional(types.data_id("base.item")),
+      category = types.optional(types.data_id("base.item_type")),
+      quality = types.optional(types.enum(Enum.Quality))
    }
 )
+
+local ty_drop = types.fields {
+   _id = types.data_id("base.item"),
+   amount = types.uint,
+   on_create = types.callback("item", types.map_object("base.item"), "chara", types.map_object("base.chara"), "attacker", types.optional(types.map_object("base.chara")))
+}
 
 data:add_type(
    {
       name = "chara",
       fields = {
          {
+            name = "elona_id",
+            type = types.optional(types.uint),
+            indexed = true,
+         },
+         {
             name = "level",
+            type = types.uint,
             default = 1,
             template = true,
             doc = [[
@@ -55,14 +123,44 @@ Relative strength of this character.
 ]]
          },
          {
+            name = "quality",
+            type = types.optional(types.enum(Enum.Quality)),
+         },
+         {
+            name = "ai_actions",
+            type = ty_chara_ai_actions,
+            default = {},
+            doc = [[
+Chance this unit will take an idle action if they have no target.
+]]
+         },
+         {
             name = "ai_move_chance",
+            type = types.uint,
             default = 100,
             doc = [[
 Chance this unit will take an idle action if they have no target.
 ]]
          },
          {
+            -- TODO should be ID
+            name = "ai_calm_action",
+            type = types.optional(types.string),
+            doc = [[
+Idle AI action this unit will take if they have no target.
+]]
+         },
+         {
+            name = "ai_sub_action_chance",
+            type = types.uint,
+            default = 0,
+            doc = [[
+Chance this character will use an AI sub action.
+]]
+         },
+         {
             name = "ai_distance",
+            type = types.uint,
             default = 1,
             doc = [[
 Minimum distance before this unit starts moving toward their target.
@@ -70,8 +168,8 @@ Minimum distance before this unit starts moving toward their target.
          },
          {
             name = "portrait",
+            type = types.optional(types.some(types.data_id("base.portrait"), types.literal("random"))),
             default = nil,
-            type = "base.portrait",
             doc = [[
 Portrait displayed when conversing with this character.
 
@@ -80,25 +178,26 @@ Remove this to use the character's sprite instead.
          },
          {
             name = "resistances",
+            type = types.map(types.data_id("base.resistance"), types.int),
             default = {},
             no_fallback = true
          },
          {
-            name = "item_type",
-            default = 0,
-            doc = [[
-The kind of item this character drops on death.
-]]
-         },
-         {
             name = "tags",
+            type = types.list(types.string),
             default = {},
             doc = [[
 A list of strings used for filtering during character generation.
 ]]
          },
          {
+            name = "has_own_name",
+            type = types.boolean,
+            default = false,
+         },
+         {
             name = "can_talk",
+            type = types.boolean,
             default = false,
             doc = [[
 If true, you can talk to this character by bumping into them.
@@ -106,9 +205,9 @@ If true, you can talk to this character by bumping into them.
          },
          {
             name = "relation",
-            default = CodeGenerator.gen_literal [[ Enum.Relation.Enemy ]],
+            type = types.enum(Enum.Relation),
+            default = Enum.Relation.Neutral,
             template = true,
-            type = "integer",
             doc = [[
 What alignment this character has.
 
@@ -116,67 +215,78 @@ This determines if it will act hostile toward the player on first sight.
 ]]
          },
          {
+            -- TODO should be data ID in key positions
+            name = "initial_equipment",
+            type = ty_equip_spec
+         },
+         {
             name = "race",
+            type = types.data_id("base.race"),
             default = "elona.slime",
             template = true,
-            type = "id:base.race",
             doc = [[
 The race of this character.
 ]]
          },
          {
             name = "class",
+            type = types.data_id("base.class"),
             default = "elona.predator",
             template = true,
-            type = "id:base.class",
             doc = [[
 The class of this character.
 ]]
          },
          {
             name = "image",
+            type = types.optional(types.data_id("base.chip")),
             default = nil,
             template = true,
-            type = "id:base.chip",
             doc = [[
 The character's image. Can be nil to use the race's default image.
 ]]
          },
          {
             name = "male_image",
+            type = types.optional(types.data_id("base.chip")),
             default = nil,
-            type = "base.chip",
             doc = [[
 The character's male image. Can be nil to use the race's default image.
 ]]
          },
          {
             name = "female_image",
+            type = types.optional(types.data_id("base.chip")),
             default = nil,
-            type = "base.chip",
             doc = [[
 The character's female image. Can be nil to use the race's default image.
 ]]
          },
          {
             name = "gender",
+            type = types.literal("female", "male"), -- TODO allow arbitrary genders
             default = "female",
             no_fallback = true,
-            type = "string",
             doc = [[
 The character's gender, either "male" or "female".
 ]]
          },
          {
-            name = "fixlv",
-            default = nil
+            name = "shadow_type",
+            type = ty_shadow_type,
+            default = "normal"
          },
          {
             name = "fltselect",
-            default = 0
+            type = types.enum(Enum.FltSelect),
+            default = Enum.FltSelect.None,
+            doc = [[
+Determines if the character is spawned in towns, etc.
+]]
          },
          {
             name = "rarity",
+            type = types.int,
             default = 100000,
             template = true,
             doc = [[
@@ -187,6 +297,7 @@ Increase to make more common; set to 0 to disable random generation entirely.
          },
          {
             name = "coefficient",
+            type = types.int,
             default = 400,
             template = true,
             doc = [[
@@ -199,9 +310,17 @@ low-level dungeons.
 ]]
          },
          {
-            name = "dialog",
+            name = "loot_type",
+            type = types.optional(types.data_id("base.loot_type")),
             default = nil,
-            type = "elona_sys.dialog",
+            doc = [[
+Type of loot this character drops on death.
+]]
+         },
+         {
+            name = "dialog",
+            type = types.optional(types.data_id("elona_sys.dialog")),
+            default = nil,
             doc = [[
 Dialog tree to run upon bumping into this character.
 
@@ -210,8 +329,8 @@ The character must have `can_talk` set to `true` for this to trigger.
          },
          {
             name = "tone",
+            type = types.optional(types.data_id("base.tone")),
             default = nil,
-            type = "base.tone",
             doc = [[
 Custom talk tone for this character.
 
@@ -219,81 +338,237 @@ This is for making characters say custom text on certain events.
 ]]
          },
          {
+            -- TODO
             name = "cspecialeq",
+            type = types.optional(types.literal(1)),
             default = nil
          },
-         eqweapon1 = {
+         {
+            -- TODO
+            name = "eqweapon1",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqtwohand",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqrange",
+            type = types.optional(types.some(types.uint, types.tuple(types.uint, types.uint))),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqrange_0",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqrange_1",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqammo",
+            type = types.optional(types.tuple(types.uint, types.uint)),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqammo_0",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqammo_1",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqring1",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            -- TODO
+            name = "eqmultiweapon",
+            type = types.optional(types.int),
+            default = nil
+         },
+         {
+            name = "effect_immunities",
+            type = types.list(types.data_id("base.effect")),
+            default = {}
+         },
+         {
+            name = "unarmed_element_id",
+            type = types.optional(types.data_id("base.element")),
+            default = nil
+         },
+         {
+            name = "unarmed_element_power",
+            type = types.optional(types.int),
             default = nil
          },
          {
             name = "creaturepack",
-            default = nil
+            type = types.enum(Enum.CharaCategory),
+            default = Enum.CharaCategory.None,
          },
          {
+            -- TODO remove
             name = "flags",
+            type = types.list(types.string),
             default = {}
          },
          {
             name = "on_eat_corpse",
-            default = nil,
-            type = "function(IItem, {chara=IChara})",
-               doc = [[
+            type = types.optional(types.callback("corpse", types.map_object("base.item"),
+                                                 "params", types.fields { chara = types.map_object("base.chara") })),
+            doc = [[
 A callback to be run when this character's corpse is eaten.
    ]]
          },
          {
             name = "events",
             default = nil,
-            type = "table",
+            type = types.list(ty_event),
             doc = [[
 List of events to bind to this character when they are spawned.
 ]]
          },
          {
             name = "category",
-            default = nil,
-            type = "number"
+            type = types.enum(Enum.CharaCategory),
+            default = Enum.CharaCategory.None,
          },
          {
             name = "color",
+            type = types.optional(types.color),
             default = nil,
-            type = "{int,int,int}",
             doc = [[
 Color to display on the character's sprite.
 ]]
          },
          {
+            -- TODO
             name = "is_unique",
+            type = types.boolean,
             default = false
          },
          {
-            name = "drops",
-            default = nil,
-            type = "table",
+            name = "splits",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "splits2",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "has_lay_hand",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "can_cast_rapid_magic",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "is_invisible",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "is_floating",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "is_immune_to_mines",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "is_explodable",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "always_drops_gold",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "ai_regenerates_mana",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "rich_loot_amount",
+            type = types.uint,
+            default = 0
+         },
+         {
+            name = "can_use_snow",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "is_immune_to_elemental_damage",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "on_initialize_equipment",
+            type = types.optional(types.callback("self", types.map_object("base.chara"), "params", types.table, "equip_spec", ty_equip_spec)),
+         },
+         {
+            name = "on_drop_loot",
+            type = types.optional(types.callback("self", types.map_object("base.chara"), "params", types.table, "drops", types.list(ty_drop))),
+         },
+         {
+            name = "calc_initial_gold",
+            type = types.optional(types.callback({"self", types.map_object("base.chara")}, types.uint)),
          },
          {
             name = "ai",
+            type = types.data_id("base.ai_action"),
             default = "elona.elona_default_ai",
-            type = "base.ai_action",
             doc = [[
 AI callback to run on this character's turn.
 ]]
          },
          {
             name = "damage_reaction",
+            type = types.optional(
+               types.fields {
+                  id = types.data_id("base.damage_reaction"),
+                  power = types.int
+               }
+            ),
             default = nil,
-            type = "{_id=id:base.damage_reaction,power=int}",
             doc = [[
 A damage reaction to trigger if this character is melee attacked.
 ]]
          },
          {
             name = "skills",
+            type = types.optional(types.list(types.data_id("base.skill"))),
             default = nil,
-            type = "table?",
             no_fallback = true,
             doc = [[
-Skills this character will already know on creation.
+Skills this character will already know when they're created.
 ]]
          }
       },
@@ -421,10 +696,7 @@ Skills this character will already know on creation.
          noise = 0,
          relation = 0,
 
-         splits = nil,
-         splits2 = nil,
          is_quick_tempered = nil,
-         has_lay_hand = nil,
          is_lay_hand_available = nil,
          is_invisible = nil,
          is_summoned = nil,
@@ -436,14 +708,29 @@ Skills this character will already know on creation.
    { interface = IChara }
 )
 
+local ty_enchantment_def = types.fields {
+   _id = types.data_id("base.enchantment"),
+   power = types.number,
+   params = types.optional(types.table)
+}
+
 data:add_type(
    {
       name = "item",
       fields = {
          {
+            name = "elona_id",
+            type = types.optional(types.uint),
+            indexed = true,
+         },
+         {
+            name = "custom_author",
+            type = types.optional(types.string),
+         },
+         {
             name = "level",
+            type = types.uint,
             default = 1,
-            type = "number",
             template = true,
             doc = [[
 Relative strength of this item.
@@ -451,32 +738,47 @@ Relative strength of this item.
          },
          {
             name = "weight",
+            type = types.uint,
             default = 0,
-            type = "number",
             template = true
          },
          {
             name = "value",
+            type = types.uint,
             default = 0,
-            type = "number",
             template = true
          },
          {
             name = "color",
+            type = types.optional(types.color),
             default = nil,
-            type = "table?"
+         },
+         {
+            name = "random_color",
+            type = types.optional(types.literal("Random", "Furniture")),
+            default = nil,
+         },
+         {
+            name = "container_params",
+            type = types.optional(types.fields { type = types.literal("local"), max_capacity = types.optional(types.uint), combine_weight = types.optional(types.boolean) }),
+            default = nil,
          },
          {
             name = "image",
-            default = "",
+            type = types.data_id("base.chip"),
             template = true,
-            type = "base.chip",
             doc = [[
 The item's image.
 ]]
          },
          {
+            name = "shadow_type",
+            type = ty_shadow_type,
+            default = "normal"
+         },
+         {
             name = "rarity",
+            type = types.int,
             default = 0,
             template = true,
             doc = [[
@@ -487,6 +789,7 @@ Increase to make more common; set to 0 to disable random generation entirely.
          },
          {
             name = "coefficient",
+            type = types.int,
             default = 0,
             template = true,
             doc = [[
@@ -500,64 +803,126 @@ dungeons.
          },
          {
             name = "flags",
-            type = "table",
+            type = types.list(types.string),
             default = {}
          },
          {
             name = "params",
-            type = "table",
+            type = types.table,
             default = {}
          },
          {
+            name = "quality",
+            type = types.optional(types.enum(Enum.Quality)),
+         },
+         {
+            name = "medal_value",
+            type = types.uint,
+            default = 0
+         },
+         {
             name = "categories",
-            default = {},
-            type = "table",
-            template = true
+            type = types.fields({ no_implicit = types.optional(types.boolean) }, types.data_id("base.item_type")),
+            default = { "elona.equip_melee", "elona.equip_ranged" },
+            template = true,
+            doc = [[
+Valid item categories this enchantment skill applies to.
+]]
+         },
+         {
+            name = "on_generate",
+            type = types.optional(types.callback("self", types.map_object("base.item"))),
+            default = nil,
+         },
+         {
+            name = "on_init_params",
+            type = types.optional(types.callback("self", types.map_object("base.item"))),
+            default = nil,
+         },
+         {
+            name = "before_wish",
+            type = types.optional(types.callback({"self", types.map_object("base.item"), "params", types.table}, ty_item_filter)),
+            default = nil,
          },
          {
             name = "on_read",
+            type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
             default = nil,
-            type = "function(IItem,IChara)?"
          },
          {
             name = "on_zap",
+            type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
             default = nil,
-            type = "function(IItem,IChara)?"
          },
          {
             name = "on_eat",
+            type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
             default = nil,
-            type = "function(IItem,IChara)?"
          },
          {
             name = "on_drink",
+            type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
             default = nil,
-            type = "function(IItem,IChara)?"
+         },
+         {
+            name = "on_open",
+            type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+            default = nil,
+         },
+         {
+            name = "on_throw",
+            type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+            default = nil,
+         },
+         {
+            name = "on_use",
+            type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+            default = nil,
+         },
+         {
+            name = "on_ascend",
+            type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+            default = nil,
+         },
+         {
+            name = "on_descend",
+            type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+            default = nil,
          },
          {
             name = "fltselect",
-            default = nil,
-            type = "number?"
+            type = types.enum(Enum.FltSelect),
+            default = Enum.FltSelect.None,
          },
          {
             name = "tags",
+            type = types.list(types.string),
             default = {},
             template = true,
             doc = [[
 A list of strings used for filtering during item generation.
 ]]
          },
-         originalnameref2 = {
+         {
+            -- TODO
+            name = "knownnameref",
+            type = types.optional(types.string),
             default = nil,
-            type = "string?"
+         },
+         {
+            -- TODO
+            name = "originalnameref2",
+            type = types.optional(types.string),
+            default = nil,
          },
          {
             name = "count",
+            type = types.optional(types.int),
             default = nil,
-            type = "number?"
          },
          {
             name = "gods",
+            type = types.list(types.data_id("elona.god")),
             default = {},
             doc = [[
 What gods this item can be offered to.
@@ -565,34 +930,55 @@ What gods this item can be offered to.
          },
          {
             name = "enchantments",
-            default = nil,
-            type = "table?",
-         },
-         {
-            name = "fixlv",
-            default = nil,
-            type = "string?"
+            type = types.list(
+               ty_enchantment_def
+            ),
+            default = {},
          },
          {
             name = "identify_difficulty",
+            type = types.number,
             default = 0,
-            type = "string?"
          },
          {
             name = "is_precious",
-            default = nil,
-            type = "boolean"
+            type = types.boolean,
+            default = false,
+         },
+         {
+            name = "is_handmade",
+            type = types.boolean,
+            default = false,
+         },
+         {
+            name = "is_showroom_only",
+            type = types.boolean,
+            default = false,
+         },
+         {
+            name = "has_random_name",
+            type = types.boolean,
+            default = false,
+         },
+         {
+            -- TODO remove
+            name = "elona_function",
+            type = types.optional(types.uint),
+         },
+         {
+            -- TODO remove
+            name = "elona_type",
+            type = types.optional(types.string),
          },
          {
             name = "skill",
+            type = types.optional(types.data_id("base.skill")),
             default = nil,
-            type = "base.skill?"
          },
          {
             name = "material",
-            default = nil,
+            type = types.data_id("base.material"),
             template = true,
-            type = "id:elona.item_material",
             doc = [[
 Material of this item.
 
@@ -602,24 +988,25 @@ on vanilla's formula.
          },
          {
             name = "effective_range",
+            type = types.list(types.number),
             default = {100, 20, 20, 20, 20, 20, 20, 20, 20, 20},
-            type = "table"
          },
          {
             name = "pierce_rate",
+            type = types.number,
             default = 0,
-            type = "number"
          },
          {
             name = "events",
-            default = nil,
-            type = "table?",
+            type = types.list(ty_event),
+            default = {},
             doc = [[
 List of events to bind to this item when it is spawned.
 ]]
          },
          {
             name = "is_light_source",
+            type = types.boolean,
             default = false,
             doc = [[
 If true, lights up dungeons if in the player's inventory.
@@ -627,8 +1014,8 @@ If true, lights up dungeons if in the player's inventory.
          },
          {
             name = "light",
+            type = types.optional(ty_light),
             default = nil,
-            type = "table?",
             doc = [[
 Ambient light information.
 - chip (id:base.chip): chip with animation to play over tile.
@@ -645,18 +1032,60 @@ Ambient light information.
          },
          {
             name = "spoilage_hours",
+            type = types.optional(types.number),
             default = nil,
             doc = [[
 Hours until the item spoils. Used for items of material "elona.fresh" only.
 ]]
          },
          {
+            name = "cooldown_hours",
+            type = types.optional(types.uint),
+            default = nil
+         },
+         {
+            name = "ambient_sounds",
+            type = types.optional(types.list(types.data_id("base.sound"))),
+            default = nil
+         },
+         {
             name = "is_wishable",
+            type = types.boolean,
             default = true,
             doc = [[
 If false, this item cannot be wished for.
 ]]
-         }
+         },
+         {
+            name = "cannot_use_flight_on",
+            type = types.optional(types.boolean),
+            default = nil
+         },
+         {
+            name = "prevent_sell_in_own_shop",
+            type = types.optional(types.boolean),
+            default = nil
+         },
+         {
+            name = "always_drop",
+            type = types.optional(types.boolean),
+            default = nil
+         },
+         {
+            name = "always_stack",
+            type = types.boolean,
+            default = false,
+         },
+         {
+            name = "prevent_dip",
+            type = types.optional(types.boolean),
+            default = nil
+         },
+         {
+            name = "can_read_in_world_map",
+            type = types.optional(types.boolean),
+            default = nil
+         },
       },
       fallbacks = {
          amount = 1,
@@ -670,8 +1099,6 @@ If false, this item cannot be wished for.
 
          x_offset = nil,
          y_offset = nil,
-
-         can_use_flight_on = nil -- elona.cooler_box
       }
    },
    { interface = IItem }
@@ -679,48 +1106,166 @@ If false, this item cannot be wished for.
 
 data:add_type {
    name = "item_type",
-   schema = schema.Record {
-      no_generate = schema.Optional(schema.Boolean)
+   fields = {
+      {
+         name = "no_generate",
+         type = types.boolean,
+         default = false,
+         doc = [[
+If true, don't randomly generate items with this category in the wild.
+]]
+      },
+      {
+         name = "is_major",
+         type = types.boolean,
+         default = false
+      },
+      {
+         name = "parents",
+         type = types.list(types.data_id("base.item_type")),
+         default = {},
+      },
    }
 }
 
 data:add_type(
    {
       name = "feat",
-      schema = schema.Record {
-         name = schema.String,
-         image = schema.Number,
-         params = schema.Table,
-         on_instantiate = schema.Optional(schema.Function),
+      fields = {
+         {
+            name = "elona_id",
+            indexed = true,
+            type = types.optional(types.uint),
+         },
+         {
+            name = "elona_sub_id",
+            type = types.optional(types.uint),
+         },
+         {
+            name = "params",
+            type = types.map(types.string, types.fields { type = types.type, default = types.optional(types.any) }),
+            default = {}
+         },
+         {
+            name = "is_solid",
+            type = types.boolean,
+            default = true,
+         },
+         {
+            name = "is_opaque",
+            type = types.boolean,
+            default = true,
+         },
+         {
+            name = "shadow_type",
+            type = ty_shadow_type,
+            default = "none"
+         },
+         {
+            name = "image",
+            type = types.optional(types.data_id("base.chip")),
+         },
+         {
+            name = "on_refresh",
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+         },
+         {
+            name = "on_search",
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+         },
+         {
+            name = "on_search_from_distance",
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+         },
+         {
+            name = "on_bumped_into",
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+         },
+         {
+            name = "on_open",
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+         },
+         {
+            name = "on_close",
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+         },
+         {
+            name = "on_bash",
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+         },
+         {
+            name = "on_activate",
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+         },
+         {
+            name = "on_ascend",
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+         },
+         {
+            name = "on_descend",
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+         },
+         {
+            name = "on_stepped_on",
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+         },
+         {
+            name = "events",
+            type = types.list(ty_event),
+            default = {},
+            doc = [[
+List of events to bind to this feat when it is created.
+]]
+         },
       },
-      fallbacks = {
-         params = {}
-      }
    },
    { interface = IFeat }
 )
 
 data:add_type(
    {
-      name = "trap",
-      schema = schema.Record {
-         name = schema.String,
-         image = schema.Number,
-         params = schema.Table,
-         on_instantiate = schema.Optional(schema.Function),
-      },
-   },
-   { interface = ITrap }
-)
-
-data:add_type(
-   {
       name = "mef",
       fields = {
+         {
+            name = "elona_id",
+            indexed = true,
+            type = types.optional(types.uint),
+         },
+         {
+            -- TODO
+            name = "params",
+            type = types.table,
+            default = {}
+         },
+         {
+            name = "image",
+            type = types.data_id("base.chip"),
+         },
+         {
+            name = "on_stepped_on",
+            type = types.optional(types.callback("self", types.map_object("base.mef"), "params", types.table))
+         },
+         {
+            name = "on_stepped_off",
+            type = types.optional(types.callback("self", types.map_object("base.mef"), "params", types.table))
+         },
+         {
+            name = "on_updated",
+            type = types.optional(types.callback("self", types.map_object("base.mef"), "params", types.table))
+         },
+         {
+            name = "on_removed",
+            type = types.optional(types.callback("self", types.map_object("base.mef"), "params", types.table))
+         },
+         {
+            name = "events",
+            type = types.list(ty_event),
+            default = {},
+            doc = [[
+List of events to bind to this mef when it is created.
+]]
+         },
       },
-      fallbacks = {
-         params = {},
-      }
    },
    { interface = IMef }
 )
@@ -728,16 +1273,90 @@ data:add_type(
 data:add_type(
    {
       name = "class",
-      schema = schema.Record {
-         on_generate = schema.Optional(schema.Function),
-      },
+      fields = {
+         {
+            name = "is_extra",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "properties",
+            type = types.map(types.string, types.any),
+            default = {}
+         },
+         {
+            name = "skills",
+            type = types.map(types.data_id("base.skill"), types.number),
+            default = {}
+         },
+         {
+            name = "on_init_player",
+            type = types.optional(types.callback("chara", types.map_object("base.chara")))
+         }
+      }
    }
 )
 
 data:add_type(
    {
       name = "race",
-      schema = schema.Record {
+      fields = {
+         {
+            name = "is_extra",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "elona_id",
+            indexed = true,
+            type = types.optional(types.uint),
+         },
+         {
+            name = "properties",
+            type = types.map(types.string, types.any),
+            default = {}
+         },
+         {
+            name = "male_ratio",
+            type = types.number,
+            default = 50,
+         },
+         {
+            name = "height",
+            type = types.number,
+            default = 10,
+         },
+         {
+            name = "age_min",
+            type = types.number,
+         },
+         {
+            name = "age_max",
+            type = types.number,
+         },
+         {
+            name = "skills",
+            type = types.map(types.data_id("base.skill"), types.number)
+         },
+         {
+            name = "traits",
+            type = types.map(types.data_id("base.trait"), types.number),
+            default = {}
+         },
+         {
+            name = "body_parts",
+            type = types.list(types.data_id("base.body_part")),
+         },
+         {
+            name = "resistances",
+            type = types.list(types.data_id("base.element")),
+            default = {}
+         },
+         {
+            name = "effect_immunities",
+            type = types.list(types.data_id("base.effect")),
+            default = {}
+         }
       },
    }
 )
@@ -745,18 +1364,146 @@ data:add_type(
 data:add_type(
    {
       name = "element",
-      schema = schema.Record {
-         preserves_sleep = schema.Boolean,
-         sound = schema.Optional(schema.String),
-      },
+      fields = {
+         {
+            name = "elona_id",
+            indexed = true,
+            type = types.optional(types.uint),
+         },
+         {
+            name = "color",
+            type = types.optional(types.color)
+         },
+         {
+            name = "ui_color",
+            type = types.optional(types.color)
+         },
+         {
+            name = "can_resist",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "preserves_sleep",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "sound",
+            type = types.optional(types.data_id("base.sound"))
+         },
+         {
+            name = "death_anim",
+            type = types.optional(types.data_id("base.asset"))
+         },
+         {
+            name = "death_anim_dy",
+            type = types.optional(types.number)
+         },
+         {
+            name = "rarity",
+            type = types.optional(types.number)
+         },
+         {
+            name = "on_modify_damage",
+            type = types.optional(types.callback("chara", types.map_object("base.chara"),
+                                                 "damage", types.number))
+         },
+         {
+            name = "on_damage_tile",
+            type = types.optional(types.callback("self", types.data_entry("base.element"),
+                                                 "x", types.uint,
+                                                 "y", types.uint,
+                                                 "source", types.map_object("base.chara")))
+         },
+         {
+            name = "on_damage",
+            type = types.optional(types.callback("chara", types.map_object("base.chara"),
+                                                 "params", types.table)) -- TODO
+         },
+         {
+            name = "after_apply_damage",
+            type = types.optional(types.callback("chara", types.map_object("base.chara"),
+                                                 "params", types.table)) -- TODO
+         },
+         {
+            name = "on_kill",
+            type = types.optional(types.callback("chara", types.map_object("base.chara"),
+                                                 "params", types.table)) -- TODO
+         },
+         {
+            name = "calc_initial_resist_level",
+            type = types.optional(types.callback("chara", types.map_object("base.chara"),
+                                                 "level", types.number))
+         }
+      }
    }
 )
+
+local ty_indicator_text = types.some(types.string, types.fields { text = types.string, color = types.color })
+local ty_indicator_cb = types.callback({"chara", types.map_object("base.chara")}, ty_indicator_text)
+local ty_indicator = types.some(types.locale_id, ty_indicator_cb)
 
 data:add_type{
    name = "effect",
    fields = {
       {
+         name = "color",
+         type = types.color,
+      },
+      {
+         name = "indicator",
+         type = ty_indicator
+      },
+      {
+         name = "emotion_icon",
+         type = types.optional(types.string) -- TODO
+      },
+      {
+         name = "on_add",
+         type = types.optional(types.callback("chara", types.map_object("base.chara")))
+      },
+      {
+         name = "on_remove",
+         type = types.optional(types.callback("chara", types.map_object("base.chara")))
+      },
+      {
+         name = "on_turn_start",
+         type = types.optional(types.callback("chara", types.map_object("base.chara")))
+      },
+      {
+         name = "on_turn_end",
+         type = types.optional(types.callback("chara", types.map_object("base.chara")))
+      },
+      {
+         name = "stops_activity",
+         type = types.boolean,
+         default = false,
+         template = true,
+         doc = [[
+If true, this effect will stop any active activities on the applied character.
+]]
+      },
+      {
+         name = "related_element",
+         type = types.optional(types.data_id("base.element"))
+      },
+      {
+         name = "calc_adjusted_power",
+         type = types.optional(types.callback("chara", types.map_object("base.chara"), "power", types.number))
+      },
+      {
+         name = "calc_additive_power",
+         type = types.optional(types.callback("chara", types.map_object("base.chara"), "power", types.number))
+      },
+      {
+         name = "on_sleep",
+         type = types.optional(types.some(types.literal("remove"),
+                                          types.callback("chara", types.map_object("base.chara"))))
+      },
+      {
          name = "auto_heal",
+         type = types.boolean,
          default = true,
          template = true,
          doc = [[
@@ -771,42 +1518,236 @@ False for sickness and choking on mochi.
 data:add_type(
    {
       name = "activity",
-      schema = {
+      fields = {
+         {
+            name = "elona_id",
+            type = types.optional(types.uint)
+         },
+         {
+            name = "params",
+            type = types.map(types.string, types.type),
+            default = {}
+         },
+         {
+            name = "default_turns",
+            type = types.some(types.uint,
+                              types.callback({"self", types.interface(IActivity)}, types.int)),
+            default = 10
+         },
+         {
+            name = "animation_wait",
+            type = types.some(types.positive(types.number),
+                              types.callback({"self", types.interface(IActivity)}, types.number))
+         },
+         {
+            name = "auto_turn_anim",
+            type = types.optional(types.some(types.data_id("base.auto_turn_anim"),
+                                             types.callback({"self", types.interface(IActivity)}, types.data_id("base.auto_turn_anim"))))
+         },
+         {
+            name = "localize",
+            type = types.optional(types.some(types.locale_id,
+                                             types.callback({"self", types.interface(IActivity)}, types.locale_id)))
+         },
+         {
+            name = "can_scroll",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "on_start",
+            type = types.optional(types.callback("self", types.interface(IActivity), "params", types.table))
+         },
+         {
+            name = "on_finish",
+            type = types.optional(types.callback("self", types.interface(IActivity), "params", types.table))
+         },
+         {
+            name = "on_pass_turns",
+            type = types.optional(types.callback({"self", types.interface(IActivity), "params", types.table}, types.string))
+         },
+         {
+            name = "on_interrupt",
+            type = types.literal("ignore", "prompt", "stop"),
+         },
+         {
+            name = "interrupt_on_displace",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "events",
+            type = types.list(ty_event),
+            default = {},
+            doc = [[
+List of events to bind to this activity when it is created.
+]]
+         },
       },
    },
    { interface = IActivity }
 )
 
-data:add_type(
-   {
-      name = "map",
-      schema = schema.Record {
-         name = schema.String
+data:add_type {
+   name = "body_part",
+   fields = {
+      {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
       },
+      {
+         name = "icon",
+         type = types.uint -- TODO: needs to be themable
+      }
+   }
+}
+
+local ty_image_entry = types.some(
+   -- "graphic/chip.png",
+   types.path,
+
+   -- {
+   --   image = "graphic/chip.bmp",
+   --   count_x = 1,
+   --   key_color = {0, 0, 0}
+   -- }
+   types.fields_strict {
+      image = types.path,
+      count_x = types.optional(types.uint),
+      key_color = types.optional(types.some(types.color, types.literal("none")))
+   },
+
+   -- {
+   --   height = 48,
+   --   source = "graphic/map0.bmp",
+   --   width = 48,
+   --   x = 0,
+   --   y = 0,
+   --   count_x = 1,
+   --   key_color = {0, 0, 0}
+   -- }
+   types.fields_strict {
+      source = types.path,
+      width = types.uint,
+      height = types.uint,
+      x = types.uint,
+      y = types.uint,
+      count_x = types.optional(types.uint),
+      count_y = types.optional(types.uint),
+      key_color = types.optional(types.some(types.color, types.literal("none")))
    }
 )
 
-data:add_type {
-   name = "body_part",
-   schema = schema.Record {
-      name = schema.String,
-      icon = schema.Number -- TODO: needs to be themable
-   }
-}
+-- {
+--   default = "graphic/chip.bmp",
+--   anim1 = { image = "graphic/chip1.bmp", count_x = 2 }
+-- }
+local ty_image_anims = types.map(types.string, ty_image_entry)
+
+local ty_image = types.some(ty_image_entry, ty_image_anims)
 
 data:add_type {
    name = "map_tile",
-   schema = schema.Record {
-      image = schema.Number,
-      is_solid = schema.Boolean,
-   },
+   fields = {
+      {
+         name = "elona_id",
+         type = types.optional(types.uint),
+      },
+      {
+         name = "elona_atlas",
+         type = types.optional(types.uint),
+      },
+      {
+         name = "image",
+         type = ty_image
+      },
+      {
+         name = "field_type",
+         type = types.optional(types.data_id("elona.field_type")),
+      },
+      {
+         name = "kind",
+         type = types.enum(Enum.TileRole),
+         default = Enum.TileRole.None
+      },
+      {
+         name = "kind2",
+         type = types.enum(Enum.TileRole),
+         default = Enum.TileRole.None
+      },
+      {
+         name = "is_solid",
+         type = types.boolean,
+         default = false,
+      },
+      {
+         name = "is_opaque",
+         type = types.boolean,
+         default = false,
+      },
+      {
+         name = "is_road",
+         type = types.boolean,
+         default = false,
+      },
+      {
+         name = "is_feat",
+         type = types.boolean,
+         default = false,
+      },
+      {
+         name = "show_name",
+         type = types.boolean,
+         default = false,
+      },
+      {
+         name = "wall",
+         type = types.optional(types.data_id("base.map_tile")),
+      },
+      {
+         name = "wall_kind",
+         type = types.optional(types.literal(1, 2)),
+      },
+      {
+         name = "mining_difficulty",
+         type = types.uint,
+         default = 0,
+      },
+      {
+         name = "mining_difficulty_coefficient",
+         type = types.uint,
+         default = 30,
+      },
+      {
+         name = "anime_frame",
+         type = types.optional(types.uint),
+      },
+      {
+         name = "count_x",
+         type = types.optional(types.uint),
+      },
+      {
+         name = "disable_in_map_edit",
+         type = types.boolean,
+         default = false
+      },
+   }
 }
+
+local ty_alignment = types.literal("positive", "negative")
 
 data:add_type {
    name = "enchantment",
    fields = {
       {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
+      {
          name = "level",
+         type = types.int,
          default = 1,
          template = true,
          doc = [[
@@ -815,6 +1756,7 @@ Level of this enchantment.
       },
       {
          name = "value",
+         type = types.uint,
          default = 100,
          template = true,
          doc = [[
@@ -822,15 +1764,29 @@ Value of this enchantment.
 ]]
       },
       {
-         name = "level",
-         default = 100,
+         name = "rarity",
+         type = types.uint,
          template = true,
          doc = [[
 Rarity of this enchantment. Lower means more rare.
 ]]
       },
       {
+         name = "icon",
+         type = types.optional(types.uint) -- TODO: needs to be themable
+      },
+      {
+         name = "color",
+         type = types.optional(types.color)
+      },
+      {
+         name = "params",
+         type = types.map(types.string, types.type),
+         default = {}
+      },
+      {
          name = "filter",
+         type = types.optional(types.callback({"item", types.map_object("base.item")}, types.boolean)),
          template = true,
          doc = [[
 Function to filter which items this enchantment will get applied to. If nil, it
@@ -838,7 +1794,47 @@ can be applied to any item generated randomly.
 ]]
       },
       {
+         name = "on_generate",
+         type = types.optional(types.callback({"self", types.data_entry("base.enchantment"), "item", types.map_object("base.item"), "params", types.table}, types.boolean)),
+         template = true,
+      },
+      {
+         name = "on_initialize",
+         type = types.optional(types.callback("self", types.data_entry("base.enchantment"), "item", types.map_object("base.item"), "params", types.table)),
+         template = true,
+      },
+      {
+         name = "localize",
+         type = types.optional(types.callback({"power", types.number, "params", types.table, "item", types.map_object("base.item")}, types.string)),
+         template = true,
+      },
+      {
+         name = "on_refresh",
+         type = types.optional(types.callback("power", types.number, "params", types.table, "item", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+         template = true,
+      },
+      {
+         name = "on_attack_hit",
+         type = types.optional(types.callback("power", types.number, "enc_params", types.table, "chara", types.map_object("base.chara"), "params", types.table)),
+         template = true,
+      },
+      {
+         name = "on_turns_passed",
+         type = types.optional(types.callback("power", types.number, "params", types.table, "item", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+         template = true,
+      },
+      {
+         name = "on_eat_food",
+         type = types.optional(types.callback("power", types.number, "enc_params", types.table, "item", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
+         template = true,
+      },
+      {
+         name = "compare",
+         type = types.optional(types.callback({"my_params", types.table, "other_params", types.table}, types.boolean)),
+      },
+      {
          name = "alignment",
+         type = types.some(ty_alignment, types.callback({"power", types.number}, ty_alignment)),
          default = "positive",
          template = true,
          doc = [[
@@ -846,17 +1842,23 @@ Determines if this enchantment is beneficial or not. One of "positive" or "negat
 ]]
       },
       {
-         name = "power",
-         default = CodeGenerator.gen_literal [[
-function(power, item, wearer)
-      return power / 50
-   end
-]],
+         name = "adjusted_power",
+         type = types.optional(types.callback({"power", types.number}, types.number)),
+         --          default = CodeGenerator.gen_literal [[
+         -- function(power, item, wearer)
+         --       return power / 50
+         --    end
+         -- ]],
          template = true,
          doc = [[
 How to adjust the power when applying the enchantment.
 ]]
       },
+      {
+         name = "no_merge",
+         type = types.boolean,
+         default = false
+      }
    }
 }
 
@@ -865,8 +1867,7 @@ data:add_type {
    fields = {
       {
          name = "level",
-         type = "integer",
-         default = 0,
+         type = types.uint,
          template = true,
          doc = [[
 Level of this ego enchantment. Typically between 0-3.
@@ -874,12 +1875,7 @@ Level of this ego enchantment. Typically between 0-3.
       },
       {
          name = "filter",
-         type = "function",
-         default = CodeGenerator.gen_literal [[
-function(item)
-   return true
-end
-]],
+         type = types.callback("item", types.map_object("base.item")),
          template = true,
          doc = [[
 A function to filter which items this ego can get applied to.
@@ -887,6 +1883,7 @@ A function to filter which items this ego can get applied to.
       },
       {
          name = "enchantments",
+         type = types.list(ty_enchantment_def),
          default = {},
          template = true,
          doc = [[
@@ -901,12 +1898,20 @@ data:add_type {
    fields = {}
 }
 
+local ty_target_type = types.literal("self", "nearby", "self_or_nearby", "enemy", "other", "location", "direction", "target_or_location")
+local ty_triggered_by = types.literal("spell", "action", "wand", "potion", "potion_thrown", "potion_spilt", "use", "open")
+
 data:add_type {
    name = "enchantment_skill",
    fields = {
       {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
+      {
          name = "skill_id",
-         default = "elona.short_teleport",
+         type = types.data_id("base.skill"),
          template = true,
          doc = [[
 Skill to trigger.
@@ -914,6 +1919,7 @@ Skill to trigger.
       },
       {
          name = "target_type",
+         type = ty_target_type,
          default = "self",
          template = true,
          doc = [[
@@ -922,6 +1928,7 @@ The target of the skill. Same format as that of "base.skill". Usually either "se
       },
       {
          name = "rarity",
+         type = types.uint,
          default = 100,
          template = true,
          doc = [[
@@ -930,7 +1937,8 @@ Rarity of this enchantment skill when generating an enchantment containing it.
       },
       {
          name = "categories",
-         default = { "elona.equip_melee" },
+         type = types.list(types.data_id("base.item_type")),
+         default = { "elona.equip_melee", "elona.equip_ranged" },
          template = true,
          doc = [[
 Valid item categories this enchantment skill applies to.
@@ -938,10 +1946,20 @@ Valid item categories this enchantment skill applies to.
       },
       {
          name = "power",
+         type = types.number,
          default = 10,
          template = true,
          doc = [[
 Power of the skill when it is triggered.
+]]
+      },
+      {
+         name = "chance",
+         type = types.number,
+         default = 10,
+         template = true,
+         doc = [[
+Chance to trigger skill.
 ]]
       }
    }
@@ -952,6 +1970,7 @@ data:add_type {
    fields = {
       {
          name = "ammo_amount",
+         type = types.uint,
          default = 30,
          template = true,
          doc = [[
@@ -960,6 +1979,7 @@ Controls the starting amount of ammo.
       },
       {
          name = "ammo_factor",
+         type = types.uint,
          default = 70,
          template = true,
          doc = [[
@@ -968,48 +1988,75 @@ Controls the starting amount of ammo.
       },
       {
          name = "stamina_cost",
+         type = types.number,
          default = 1,
          template = true,
          doc = [[
 Stamina cost of the ammo when fired.
 ]]
+      },
+      {
+         name = "on_calc_damage",
+         type = types.optional(types.callback({"ammo", types.map_object("base.item"), "params", types.table}, types.fields { damage = types.number })),
+      },
+      {
+         name = "on_ranged_attack",
+         type = types.optional(types.callback("chara", types.map_object("base.chara"),
+                                              "weapon", types.optional(types.map_object("base.item")),
+                                              "target", types.map_object("base.chara"),
+                                              "skill", types.data_id("base.skill"),
+                                              "ammo", types.map_object("base.item"),
+                                              "ammo_enchantment_id", types.data_id("base.skill"))),
+      },
+      {
+         name = "on_attack_hit",
+         type = types.optional(types.callback("chara", types.map_object("base.chara"), "params", types.table)),
       }
    }
 }
 
-data:add_type {
-   name = "stat",
-   schema = schema.Record {
-   },
+local ty_dice = types.fields_strict {
+   x = types.number,
+   y = types.number,
+   bonus = types.number
+}
+
+local ty_damage_params = types.fields {
+   dmgfix = types.number,
+   dice_x = types.int,
+   dice_y = types.int,
+   multiplier = types.number,
+   pierce_rate = types.number
 }
 
 data:add_type {
    name = "skill",
    fields = {
       {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint),
+      },
+      {
          name = "type",
-         default = "effect",
+         type = types.literal("stat", "stat_special", "skill", "spell", "action", "skill_action", "effect", "weapon_proficiency"),
+         default = "skill",
          template = true,
          doc = [[
-Determines how this skill is treated in the interface. Available options:
-
-- "skill": Only viewable in the player's skills list in the character sheet. (default)
-- "spell": Castable from the player's Spells menu.
-- "action": Useable from the player's Skills menu.
+Determines how this skill is treated in the interface.
 ]]
       },
       {
-         name = "effect_id",
-         default = nil,
-         template = true,
+         name = "is_main_skill",
+         type = types.boolean,
+         default = false,
          doc = [[
-The related magic of this skill to trigger when its entry in the menu is selected.
-
-*Required* if the skill's `type` is "spell" or "action".
+If true, this skill will gain a level bonus for every character that is created.
 ]]
       },
       {
          name = "related_skill",
+         type = types.optional(types.data_id("base.skill")),
          default = nil,
          template = true,
          doc = [[
@@ -1018,6 +2065,7 @@ A related stat to improve when this skill is used. Affects the skill's icon in t
       },
       {
          name = "cost",
+         type = types.number,
          default = 10,
          template = true,
          doc = [[
@@ -1028,6 +2076,7 @@ Used only when the skill's `type` is "spell" or "action".
       },
       {
          name = "range",
+         type = types.uint,
          default = 0,
          template = true,
          doc = [[
@@ -1041,6 +2090,7 @@ Used only when the skill's `type` is "spell" or "action".
       },
       {
          name = "difficulty",
+         type = types.uint,
          default = 100,
          template = true,
          doc = [[
@@ -1050,7 +2100,71 @@ Used only when the skill's `type` is "spell" or "action".
 ]]
       },
       {
+         name = "effect_id",
+         type = types.optional(types.data_id("elona_sys.magic")),
+      },
+      {
+         name = "is_rapid_magic",
+         type = types.boolean,
+         default = false,
+      },
+      {
+         name = "alignment",
+         type = types.optional(ty_alignment),
+      },
+      {
+         name = "calc_initial_level",
+         type = types.optional(types.callback("level", types.number, "chara", types.map_object("base.chara"))),
+      },
+      {
+         name = "calc_critical_damage",
+         type = types.optional(types.callback("self", types.table, "params", types.table)),
+      },
+      {
+         name = "calc_damage_params",
+         type = types.optional(types.callback({"self", types.data_entry("base.skill"),
+                                              "chara", types.map_object("base.chara"),
+                                              "weapon", types.optional(types.map_object("base.item")),
+                                              "target", types.map_object("base.chara")},
+                                  ty_damage_params
+         )),
+      },
+      {
+         name = "calc_final",
+         type = types.optional(types.callback({"level", types.int}, types.fields { level = types.int, potential = types.uint })),
+      },
+      {
+         name = "on_check_can_cast",
+         type = types.optional(types.callback({"skill_data", types.data_entry("base.skill"), "caster", types.map_object("base.chara")}, types.boolean)),
+      },
+      {
+         name = "on_choose_target",
+         type = types.optional(types.callback("target_type", ty_target_type,
+                                              "range", types.number,
+                                              "caster", types.map_object("base.chara"),
+                                              "triggered_by", ty_triggered_by,
+                                              "ai_target", types.map_object("base.chara"),
+                                              "check_ranged_if_self", types.boolean)),
+      },
+      {
+         name = "calc_desc",
+         type = types.optional(types.callback("chara", types.map_object("base.chara"),
+                                              "power", types.number,
+                                              "dice", ty_dice)),
+      },
+      {
+         name = "calc_mp_cost",
+         type = types.optional(types.callback("skill_entry", types.data_entry("base.skill"),
+                                              "chara", types.map_object("base.chara"))),
+      },
+      {
+         -- TODO should be themable
+         name = "attack_animation",
+         type = types.optional(types.uint),
+      },
+      {
          name = "target_type",
+         type = ty_target_type,
          default = "self",
          template = true,
          doc = [[
@@ -1074,51 +2188,117 @@ Used only when the skill's `type` is "spell" or "action".
       },
       {
          name = "ignore_missing_target",
+         type = types.boolean,
          default = false,
          doc = [[
 If true, continue to use the skill even if a target character was not found.
 
 This is used by the Pickpocket skill to select an item on the ground independent of a target character.
 ]]
+      },
+      {
+         name = "ai_check_ranged_if_self",
+         type = types.boolean,
+         default = false
       }
    }
 }
 
 data:add_type {
    name = "trait",
-   schema = schema.Record {
+   fields = {
+      {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
+      {
+         name = "level_min",
+         type = types.int,
+      },
+      {
+         name = "level_max",
+         type = types.int,
+      },
+      {
+         name = "type",
+         type = types.literal("feat", "mutation", "race", "ether_disease")
+      },
+      {
+         name = "can_acquire",
+         type = types.optional(types.callback({"self", types.data_entry("base.trait"), "chara", types.map_object("base.chara")}, types.boolean))
+      },
+      {
+         name = "on_modify_level",
+         type = types.optional(types.callback("cur_level", types.int, "chara", types.map_object("base.chara"), "prev_level", types.int))
+      },
+      {
+         name = "on_refresh",
+         type = types.optional(types.callback("self", types.data_entry("base.trait"), "chara", types.map_object("base.chara")))
+      },
+      {
+         name = "on_turn_begin",
+         type = types.optional(types.callback({"self", types.data_entry("base.trait"), "chara", types.map_object("base.chara")}, types.any))
+      },
+      {
+         name = "locale_params",
+         type = types.optional(types.callback({"self", types.data_entry("base.trait"), "chara", types.map_object("base.chara")}, types.any))
+      },
    },
 }
 
 data:add_type {
    name = "sound",
-   schema = schema.Record {
-      file = schema.String
-   },
+   fields = {
+      {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
+      {
+         name = "file",
+         type = types.path
+      },
+      {
+         name = "volume",
+         type = types.number,
+         default = 1.0
+      }
+   }
 }
 
 data:add_type {
    name = "music",
-   schema = schema.Record {
-      file = schema.String
-   },
+   fields = {
+      {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
+      {
+         name = "file",
+         type = types.path
+      }
+   }
 }
 
 data:add_type {
    name = "ui_indicator",
-   schema = schema.Record {
-      indicator = schema.Function
-   },
+   fields = {
+      {
+         name = "indicator",
+         type = ty_indicator_cb
+      }
+   }
 }
 
 data:add_type {
    name = "scenario",
    fields = {
       {
-         name = "on_game_begin",
-         default = nil,
+         name = "on_game_start",
+         type = types.callback("self", types.data_entry("base.scenario"), "player", types.map_object("base.chara")),
          template = true,
-         type = "function(self,IChara)",
          doc = [[
 Function called on game begin. Is passed the created player.
 ]]
@@ -1131,26 +2311,113 @@ data:add_type {
    fields = {
       {
          name = "overrides",
-         default = {},
+         type = types.map(types.data_type_id, types.table),
          template = true,
       }
    }
 }
 
 data:add_type {
+   name = "theme_transform",
+
+   fields = {
+      {
+         name = "applies_to",
+         type = types.data_type_id,
+         template = true
+      },
+      {
+         name = "transform",
+         type = types.callback({"old", types.table, "new", types.table}, types.table),
+         template = true,
+      }
+   }
+}
+
+local ty_region = types.tuple(types.uint, types.uint, types.uint, types.uint)
+
+data:add_type {
    name = "asset",
-   schema = schema.Record {
-   },
+   fields = {
+      {
+         name = "type",
+         type = types.literal("asset", "font", "color"),
+         default = "asset"
+      },
+
+      -- asset
+      {
+         name = "image",
+         type = types.optional(types.path)
+      },
+      {
+         name = "source",
+         type = types.optional(types.path)
+      },
+      {
+         name = "x",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "y",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "width",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "height",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "count_x",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "count_y",
+         type = types.optional(types.uint)
+      },
+      {
+         name = "regions",
+         type = types.optional(types.some(types.values(ty_region),
+                                          types.callback({"width", types.number, "height", types.number},
+                                             types.values(ty_region))))
+      },
+      {
+         name = "key_color",
+         type = types.optional(types.some(types.literal("none"), types.color))
+      },
+
+      -- font
+      {
+         name = "size",
+         type = types.optional(types.uint)
+      },
+
+      -- color
+      {
+         name = "color",
+         type = types.optional(types.color)
+      }
+   }
 }
 
 data:add_type {
    name = "chip",
    fields = {
       {
+         name = "elona_id",
+         type = types.optional(types.uint),
+      },
+      {
+         name = "elona_atlas",
+         type = types.optional(types.uint),
+      },
+      {
          name = "image",
-         default = "mod/<mod_id>/graphic/image.png",
+         type = ty_image,
          template = true,
-         type = "string|{source=string,x=int,y=int,width=int,height=int,count_x=int?,count_y=int?,key_color={int,int,int}?}",
          doc = [[
 The image to use for this chip.
 
@@ -1166,7 +2433,32 @@ It can either be a string referencing an image file, or a table with these conte
 ]]
       },
       {
+         name = "group",
+         type = types.string,
+      },
+      {
+         name = "shadow",
+         type = types.optional(types.uint),
+         default = 0
+      },
+      {
+         -- TODO
+         name = "effect",
+         type = types.optional(types.uint),
+      },
+      {
+         name = "is_tall",
+         type = types.boolean,
+         default = false
+      },
+      {
+         name = "stack_height",
+         type = types.optional(types.int),
+         default = 8
+      },
+      {
          name = "y_offset",
+         type = types.optional(types.int),
          default = 0,
          template = true,
          doc = [[
@@ -1177,103 +2469,118 @@ Y offset of the sprite in pixels.
 }
 
 data:add_type {
-   name = "asset",
-   schema = schema.Record {
-      target = schema.String,
-   }
-}
-
-data:add_type {
    name = "ai_action",
    fields = {
       {
          name = "act",
-         default = CodeGenerator.gen_literal [[
-function(chara, params)
-      return true
-   end]],
+         type = types.some(
+            types.callback({"chara", types.map_object("base.chara"), "params", types.table}, types.boolean),
+            types.list(types.data_id("base.ai_action"))
+         ),
          template = true,
-         type = "function(IChara,table)",
 doc = [[
-   Runs arbitrary AI actions. Is passed the character and extra parameters, differing depending on the action.
+Runs arbitrary AI actions. Is passed the character and extra parameters, differing depending on the action.
 
-   Returns true if the character acted, false if not.
+Returns true if the character acted, false if not.
 ]]
       }
    }
 }
 
 data:add_type {
-   name = "talk",
-   schema = schema.Record {
-      messages = schema.Table
+   name = "talk_event",
+   fields = {
+      {
+         name = "elona_txt_id",
+         type = types.optional(types.string)
+      },
+      {
+         name = "variant_ids",
+         type = types.optional(types.table)
+      },
+      {
+         name = "variant_txt_ids",
+         type = types.optional(types.table)
+      },
    }
 }
 
 data:add_type {
-   name = "talk_event",
-   schema = schema.Record {
-      params = schema.Table
+   name = "tone",
+
+   fields = {
+      {
+         name = "author",
+         type = types.optional(types.string),
+      },
+      {
+         name = "show_in_menu",
+         type = types.boolean,
+         default = false,
+      },
+      {
+         name = "texts",
+         template = true,
+         type = types.map(types.string,
+                          types.map(types.data_id("base.talk_event"),
+                                    types.list(types.some(types.string,
+                                                          types.callback("t", types.table,
+                                                                         "env", types.table,
+                                                                         "args", types.table,
+                                                                         "chara", types.map_object("base.map_object"))))))
+      },
    }
 }
 
 data:add_type {
    name = "portrait",
-   schema = schema.Record {
-      image = schema.String
-   }
-}
-
-data:add_type {
-   name = "config_menu",
-   schema = schema.Record {
-      options = schema.Table,
-      on_generate = schema.Optional(schema.Function),
+   fields = {
+      {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
+      {
+         name = "image",
+         type = ty_image
+      }
    }
 }
 
 data:add_type {
    name = "keybind",
-   schema = schema.Record {
-      default = schema.String
+   fields = {
+      {
+         name = "default",
+         type = types.string
+      },
+      {
+         name = "default_alternate",
+         type = types.optional(types.list(types.string))
+      },
+      {
+         name = "uses_shift_delay",
+         type = types.boolean,
+         default = false
+      }
    }
 }
 
 data:add_type {
    name = "pcc_part",
-   schema = schema.Record {
-      kind = schema.String,
-      image = schema.String
-   }
-}
-
-data:add_type {
-   name = "map_template",
-   schema = schema.Record {
-      map = schema.String,
-      copy = schema.Optional(schema.Table),
-      areas = schema.Optional(schema.Table),
-      on_generate = schema.Optional(schema.Function),
-   },
    fields = {
       {
-         name = "copy",
-         default = {},
-         template = true,
-         type = "table",
-         doc = [[
-List of fields to copy to the map when it is instantiated.
-]]
+         name = "kind",
+         type = types.literal("belt", "body", "boots", "chest", "cloth", "etc", "eye", "glove", "hair", "hairbk", "leg", "mantle", "mantlebk", "pants", "ride", "ridebk", "subhair")
       },
       {
-         name = "areas",
-         default = nil,
-         template = false,
-         type = "table",
-         doc = [[
-List of map entrances to other maps contained in this map.
-]]
+         name = "image",
+         type = types.path
       },
+      {
+         name = "key_color",
+         type = types.optional(types.color)
+      }
    }
 }
 
@@ -1281,75 +2588,99 @@ data:add_type {
    name = "map_archetype",
    fields = {
       {
-         name = "on_spawn_monster",
-         default = CodeGenerator.gen_literal [[
-function(map)
-   end]],
-         template = true,
-         type = "function(InstancedMap)",
-         doc = [[
-Callback run when a monster is spawned in the map.
-]]
+         name = "elona_id",
+         type = types.optional(types.uint)
       },
       {
-         name = "on_map_restock",
-         default = CodeGenerator.gen_literal [[
-function(map)
-   end]],
+         name = "starting_pos",
+         type = types.optional(types.callback("map", types.class(InstancedMap),
+                                              "chara", types.map_object("base.chara"),
+                                              "prev_map", types.optional(types.class(InstancedMap)),
+                                              "feat", types.optional(types.map_object("base.feat")))),
          template = true,
-         type = "function(InstancedMap)",
          doc = [[
 Callback run when this map is restocked, refreshing things like shop inventories.
 ]]
       },
       {
-         name = "on_map_renew",
-         default = CodeGenerator.gen_literal [[
-function(map)
-   end]],
+         name = "on_generate_map",
+         type = types.optional(types.callback({"area", types.class(InstancedArea)}, types.class(InstancedMap))),
          template = true,
-         type = "function(InstancedMap)",
          doc = [[
+Callback run when this map is to be generated. Must return the final map.
+]]
+      },
+      {
+         name = "on_map_renew_minor",
+         type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
+   template = true,
+   doc = [[
+Callback run when this map is restocked, refreshing things like shop inventories.
+]]
+      },
+      {
+         name = "on_map_renew_major",
+         type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
+   template = true,
+   doc = [[
 Callback run when this map is renewed, in order to regenerate its geometry.
 ]]
       },
       {
-         name = "on_generate_map",
-         default = CodeGenerator.gen_literal [[
-function(area, floor)
-   return InstancedMap(20, 20)
-end
-]],
-         template = true,
-         type = "function(InstancedArea, int)?",
-         doc = [[
-How this map should be generated for the first time.
+         name = "on_map_renew_geometry",
+         type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
+   template = true,
+   doc = [[
+Callback run when this map's geometry is recreated from scratch.
 
-This is to be used for generating areas from `base.area_archetype` so you don't
-have to create a new instance of `base.area_archetype` every single time for its
-`on_generate_floor` callback if all you want is an area containing a single map.
-If you don't list this map archetype in the `floors` property of any area
-archetype, then this function can be omitted.
+Used for restoring towns to their pristine condition after destroying their terrain.
+]]
+      },
+      {
+         name = "on_map_loaded",
+         type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
+         template = true,
+         doc = [[
+Callback run when this map is about to be entered.
+]]
+      },
+      {
+         name = "on_map_entered",
+         type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
+         template = true,
+         doc = [[
+Callback run when this map is being entered (after on_map_loaded is called).
+]]
+      },
+      {
+         name = "on_map_pass_turn",
+         type = types.optional(types.callback({"map", types.class(InstancedMap), "params", types.table, "result", types.string}, types.string)),
+         template = true,
+         doc = [[
+Callback run when a turn is passed in this map.
 ]]
       },
       {
          name = "properties",
-         default = CodeGenerator.gen_literal [[
-{
-   is_indoor = true,
-   level = 10
-}]],
+         type = types.map(types.string, types.any),
          template = true,
-         type = "table",
          doc = [[
 Properties to copy to this map after it is generated. Does not override any values already set in the `on_generate` callback.
 ]]
       },
       {
-         name = "_events",
+         name = "chara_filter",
+         type = types.optional(types.callback({"map", types.class(InstancedMap)}, ty_chara_filter)),
+         template = true,
+         doc = [[
+Properties to copy to this map after it is generated. Does not override any values already set in the `on_generate` callback.
+]]
+      },
+      {
+         name = "events",
+         type = types.list(ty_event),
          default = {},
          template = false,
-         type = "table",
          doc = [[
 Additional events to bind to this map when it is loaded.
 ]]
@@ -1357,18 +2688,19 @@ Additional events to bind to this map when it is loaded.
    }
 }
 
+local ty_area_type = types.literal("town", "dungeon", "guild", "shelter", "field", "quest", "player_owned", "world_map")
+
 data:add_type {
    name = "area_archetype",
    fields = {
       {
+         name = "elona_id",
+         type = types.optional(types.uint)
+      },
+      {
          name = "on_generate_floor",
-         default = CodeGenerator.gen_literal [[
-   function(area, floor)
-      return InstancedMap:new(25, 25)
-end
-]],
+         type = types.optional(types.callback({"area", types.class(InstancedArea), "floor", types.int}, types.class(InstancedMap))),
          template = true,
-         type = "function(InstancedArea, int)",
          doc = [[
 Map generator for this area. Determines how maps in this area should be created
 when they're initially generated. Takes an area and a floor number and returns a
@@ -1385,27 +2717,52 @@ set `is_temporary` to `true` on the generated map.
       },
       {
          name = "image",
+         type = types.data_id("base.chip"),
          default = "elona.feat_area_village",
          template = true,
-         type = "id:base.chip",
          doc = [[
 Image this area will have when created with Area.create_entrance().
 ]]
       },
       {
+         name = "types",
+         type = types.list(ty_area_type),
+         default = {}
+      },
+      {
+         name = "metadata",
+         type = types.fields {
+            can_return_to = types.optional(types.boolean)
+         },
+         default = {}
+      },
+      {
+         name = "floors",
+         type = types.map(types.int, types.data_id("base.map_archetype")),
+         default = {}
+      },
+      {
          name = "deepest_floor",
+         type = types.optional(types.int),
          default = nil,
          template = false,
-         type = "int?",
          doc = [[
 Deepest floor of this area. Used with generating dungeons.
 ]]
       },
       {
          name = "parent_area",
+         type = types.optional(
+            types.fields_strict {
+               _id = types.data_id("base.area_archetype"),
+               on_floor = types.uint,
+               x = types.uint,
+               y = types.uint,
+               starting_floor = types.uint
+            }
+         ),
          default = nil,
          template = true,
-         type = "{_id=id:base.unique_area,on_floor=uint,x=uint,y=uint,starting_floor=uint}",
          doc = [[
 Parent area that this area is contained in. If present, an entrance leading to
 this area on floor `starting_floor` will be created when the given parent area's
@@ -1440,12 +2797,8 @@ data:add_type {
    fields = {
       {
          name = "on_damage",
-         default = CodeGenerator.gen_literal [[
-   function(chara, power, params)
-end
-]],
+         type = types.callback("chara", types.map_object("base.chara", "power", types.number, "params", types.params)),
          template = true,
-         type = "function(IChara, int, table)",
          doc = [[
 Behavior to trigger when this character is melee attacked.
 ]]
@@ -1458,8 +2811,8 @@ data:add_type {
    fields = {
       {
          name = "language_code",
+         type = types.string,
          template = true,
-         default = "",
          doc = [[
 The language code for this language.
 
@@ -1474,8 +2827,24 @@ base.
    }
 }
 
+local ty_dialog_choice_entry = types.tuple(types.string, types.some(types.locale_id, types.literal("MORE", "BYE")))
+local ty_dialog_choice_cb = types.callback({"speaker", types.map_object("base.chara"), "state", types.table}, types.list(ty_dialog_choice_entry))
+local ty_dialog_choice = types.some(ty_dialog_choice_entry, ty_dialog_choice_cb)
+
 data:add_type {
    name = "role",
+   fields = {
+      {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
+      {
+         name = "dialog_choices",
+         type = types.list(ty_dialog_choice),
+         default = {}
+      }
+   }
 }
 
 data:add_type {
@@ -1483,31 +2852,34 @@ data:add_type {
    fields = {
       {
          name = "validate",
+         type = types.callback({"option", types.data_entry("base.config_option"), "value", types.any}, {types.boolean, types.optional(types.string)}),
          template = true,
-         default = CodeGenerator.gen_literal [[
-   function(value, option)
-      return true
-end
-]],
          doc = [[
-Used to validate if a value for this option is valid.
+Used to validate if a value for this config option type is valid.
 ]]
       },
       {
          name = "widget",
+         type = types.some(types.require_path, types.callback({"proto", types.data_entry("base.config_option")}, types.interface(IConfigItemWidget))),
          template = true,
-         type = "string",
          doc = [[
-Require path of the widget used to display this config option.
+Require path of the widget used to display this config option type.
 
 It must implement IConfigItemWidget.
 ]]
       },
       {
          name = "fields",
-         type = "table",
+         type = types.map(types.string, types.type),
          doc = [[
-Extra fields for configuring this config option.
+Extra fields for configuring this config option type.
+]]
+      },
+      {
+         name = "default",
+         type = types.some(types.serializable, types.callback({"option", types.data_entry("base.config_option")}, types.serializable)),
+         doc = [[
+Default value of this config option type.
 ]]
       }
    }
@@ -1518,19 +2890,19 @@ data:add_type {
    fields = {
       {
          name = "type",
+         type = types.some(types.literal("boolean", "string", "number", "integer", "enum", "table", "data_id", "any"), types.data_id("base.config_option_type")),
          template = true,
-         default = "boolean",
          no_fallback = true,
          doc = [[
 Type of this config option.
 
-One of "boolean", "string", "number", "integer" "enum", "table", "data_id" or "any".
+One of "boolean", "string", "number", "integer", "enum", "table", "data_id" or "any".
 ]]
       },
       {
          name = "default",
+         type = types.any,
          template = true,
-         default = true,
          no_fallback = true,
          doc = [[
 Default value of this config option.
@@ -1538,7 +2910,7 @@ Default value of this config option.
       },
       {
          name = "choices",
-         default = CodeGenerator.gen_literal "{}",
+         type = types.optional(types.some(types.list(types.string), types.callback({}, types.list(types.string)))),
          no_fallback = true,
          doc = [[
 Only used if the type is "enum".
@@ -1548,12 +2920,57 @@ The list of enum variants of this config option.
       },
       {
          name = "data_type",
-         default = "base.chara",
+         type = types.optional(types.data_type_id),
          no_fallback = true,
          doc = [[
 Only used if the type is "data_id".
 
 The data type of the ID in this config option.
+]]
+      },
+      {
+         name = "on_changed",
+         type = types.optional(types.callback("value", types.any, "is_startup", types.boolean)),
+         no_fallback = true,
+         doc = [[
+Callback run immediately after this option is changed in the settings menu.
+
+"is_startup" is true if the option was set from the intial config load at startup.
+]]
+      }
+   },
+   validation = "permissive"
+}
+
+local ty_config_menu_item = types.some(
+   types.data_id("base.config_option"),
+   types.fields { _type = types.literal("base.config_menu"), _id = types.data_id("base.config_menu") }
+)
+
+data:add_type {
+   name = "config_menu",
+   fields = {
+      {
+         name = "items",
+         type = types.list(ty_config_menu_item),
+         doc = [[
+List of config options in this config menu.
+]]
+      },
+      {
+         name = "menu_width",
+         type = types.uint,
+         default = 440,
+         doc = [[
+Height of this menu in pixels, when using the default config menu UI.
+]]
+      },
+      {
+         name = "menu_height",
+         type = types.uint,
+         default = 300,
+         doc = [[
+Height of this menu in pixels, when using the default config menu UI.
 ]]
       }
    }
@@ -1562,25 +2979,79 @@ The data type of the ID in this config option.
 data:add_type {
    name = "auto_turn_anim",
    fields = {
+      {
+         name = "sound",
+         type = types.data_id("base.sound")
+      },
+      {
+         name = "on_start_callback",
+         type = types.optional(types.callback())
+      },
+      {
+         name = "callback",
+         type = types.callback({"x", types.number, "y", types.number, "t", types.table}, types.callback())
+      },
+      {
+         name = "draw",
+         type = types.callback({"x", types.number, "y", types.number, "t", types.table})
+      }
    }
 }
 
 data:add_type {
    name = "equipment_type",
-   fields = {}
+   fields = {
+      {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
+      {
+         name = "on_initialize_equipment",
+         type = types.callback("chara", types.map_object("base.chara"), "equip_spec", ty_equip_spec, "gen_chance", types.uint)
+      },
+      {
+         name = "on_drop_loot",
+         type = types.optional(types.callback("chara", types.map_object("base.chara"), "attacker", types.optional(types.map_object("base.chara")), "drops", types.list(ty_drop)))
+      }
+   }
 }
 
 data:add_type {
    name = "loot_type",
-   fields = {}
+   fields = {
+      {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
+      {
+         name = "on_drop_loot",
+         type = types.callback("chara", types.map_object("base.chara"), "attacker", types.optional(types.map_object("base.chara")), "drops", types.list(ty_drop))
+      }
+   }
 }
 
 data:add_type {
    name = "trait_indicator",
-   fields = {}
+   fields = {
+      {
+         name = "applies_to",
+         type = types.callback("chara", types.map_object("base.chara"))
+      },
+      {
+         name = "make_indicator",
+         type = types.callback({"chara", types.map_object("base.chara")}, types.fields_strict { desc = types.string, color = types.optional(types.color) }),
+      }
+   }
 }
 
 data:add_type {
    name = "journal_page",
-   fields = {}
+   fields = {
+      {
+         name = "render",
+         type = types.callback({}, types.string)
+      }
+   }
 }

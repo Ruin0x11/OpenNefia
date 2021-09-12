@@ -10,7 +10,7 @@ data:add {
    _type = "base.journal_page",
    _id = "news",
 
-   ordering = 40000,
+   _ordering = 40000,
 
    render = function()
       -- >>>>>>>> shade2/command.hsp:907 	buff=newsBuff ...
@@ -83,7 +83,7 @@ data:add {
    _type = "base.journal_page",
    _id = "quest",
 
-   ordering = 45000,
+   _ordering = 45000,
 
    render = function()
       local main_quest_infos = Sidequest.iter_active_main_quests()
@@ -157,7 +157,7 @@ data:add {
    _type = "base.journal_page",
    _id = "quest_item",
 
-   ordering = 50000,
+   _ordering = 50000,
 
    render = function()
       local quest_item_infos = get_quest_item_infos()
@@ -201,7 +201,7 @@ data:add {
    _type = "base.journal_page",
    _id = "title_and_ranking",
 
-   ordering = 55000,
+   _ordering = 55000,
 
    render = function()
       -- >>>>>>>> shade2/command.hsp:951 	noteadd " - Title & Ranking - ":noteadd "" ...
@@ -238,7 +238,7 @@ data:add {
    _type = "base.journal_page",
    _id = "income_and_expense",
 
-   ordering = 60000,
+   _ordering = 60000,
 
    render = function()
       -- >>>>>>>> shade2/command.hsp:973 	noteadd " - Income & Expense - ":noteadd "" ...
@@ -288,7 +288,7 @@ data:add {
    _type = "base.journal_page",
    _id = "completed_quests",
 
-   ordering = 65000,
+   _ordering = 65000,
 
    render = function()
       local sub_quest_infos = Sidequest.iter_active_sub_quests()

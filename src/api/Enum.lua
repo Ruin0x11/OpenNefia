@@ -144,6 +144,7 @@ Enum.AiBehavior = Enum.new("AiBehavior", {
 
 -- >>>>>>>> shade2/init.hsp:825 	#enum global fltGoblin=1 ..
 Enum.CharaCategory = Enum.new("CharaCategory", {
+   None = 0,
    Goblin = 1,
    Orc = 2,
    Slime = 3,
@@ -172,6 +173,7 @@ Enum.CharaCategory = Enum.new("CharaCategory", {
 
 -- >>>>>>>> shade2/init.hsp:815 	#enum global fltSp=1 ..
 Enum.FltSelect = Enum.new("FltSelect", {
+	None = 0,
 	Sp = 1,
 	Unique = 2,
 	SpUnique = 3,

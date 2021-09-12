@@ -1020,7 +1020,6 @@ local feat_chips = {
       _id = "hidden",
       elona_id = 233,
       elona_atlas = 1,
-      offset_bottom = 48,
       y_offset = 56
    },
    {
@@ -1397,7 +1396,6 @@ local function make_chip_group(chips, group, source)
 
       local x = (chip.elona_id % 33) * 48
       local y = math.floor(chip.elona_id / 33) * 48
-      chip.count_x = chip.count_x or 1
 
       chip._id = group .. "_" .. chip._id
       chip._type = "base.chip"
@@ -1408,10 +1406,11 @@ local function make_chip_group(chips, group, source)
          y = y,
          width = width,
          height = height,
-         count_x = chip.count_x,
+         count_x = chip.count_x or 1,
          count_y = 1
       }
 
+      chip.count_x = nil
       chip.group = group
 
       data:add(chip)

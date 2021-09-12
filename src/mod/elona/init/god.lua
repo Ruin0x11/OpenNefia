@@ -1,16 +1,71 @@
 local Event = require("api.Event")
-local Rand = require("api.Rand")
-local schema = require("thirdparty.schema")
 local God = require("mod.elona.api.God")
+
+local ty_god_item = types.fields {
+   id = types.data_id("base.item"),
+   no_stack = types.optional(types.boolean),
+   only_once = types.optional(types.boolean),
+   properties = types.optional(types.table),
+}
+
+local ty_god_offering = types.some(
+   types.fields_strict {
+      type = types.literal("category"),
+      id = types.data_id("base.item_type"),
+   },
+   types.fields_strict {
+      type = types.literal("item"),
+      id = types.data_id("base.item"),
+   }
+)
 
 data:add_type {
    name = "god",
-   schema = schema.Record {
-      elona_id = schema.Number
+   fields = {
+      {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
+      {
+         name = "is_primary_god",
+         type = types.boolean
+      },
+      {
+         name = "summon",
+         type = types.optional(types.data_id("base.chara"))
+      },
+      {
+         name = "servant",
+         type = types.data_id("base.chara")
+      },
+      {
+         name = "items",
+         type = types.list(ty_god_item)
+      },
+      {
+         name = "artifact",
+         type = types.data_id("base.item")
+      },
+      {
+         name = "blessings",
+         type = types.list(types.callback("chara", types.map_object("base.chara")))
+      },
+      {
+         name = "offerings",
+         type = types.list(ty_god_offering),
+         default = {}
+      },
+      {
+         name = "on_join_faith",
+         type = types.optional(types.callback("chara", types.map_object("base.chara")))
+      },
+      {
+         name = "on_leave_faith",
+         type = types.optional(types.callback("chara", types.map_object("base.chara")))
+      }
    }
 }
-
-data:add_index("elona.god", "elona_id")
 
 local function set_god(chara)
    local has_dialog = chara.can_talk or chara.dialog

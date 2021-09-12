@@ -1,37 +1,5 @@
 local data = require("internal.data")
 
-data:add_type {
-   name = "talk_event",
-
-   fields = {
-      {
-         name = "elona_txt_id",
-         type = "string?"
-      },
-      {
-         name = "variant_txt_ids",
-         type = "table?"
-      }
-   }
-}
-
-data:add_type {
-   name = "tone",
-
-   fields = {
-      {
-         name = "show_in_menu",
-         default = nil,
-         type = "boolean?"
-      },
-      {
-         name = "texts",
-         template = true,
-         type = "table"
-      },
-   }
-}
-
 data:add {
    _type = "base.talk_event",
    _id = "calm",

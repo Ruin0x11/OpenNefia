@@ -11,7 +11,6 @@ data:add {
    _type = "elona_sys.quest",
    _id = "noafindskitten",
 
-   ordering = 200000,
    client_chara_type = 1,
    reward = "elona.wear",
    reward_fix = 135,

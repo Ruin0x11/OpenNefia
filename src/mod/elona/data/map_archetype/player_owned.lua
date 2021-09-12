@@ -32,7 +32,7 @@ local your_home = {
       level = 1,
       is_indoor = true,
       has_anchored_npcs = true,
-      default_ai_calm = 1,
+      default_ai_calm = "base.calm_roam",
       tileset = "elona.home",
 
       is_fixed = true,

@@ -7,9 +7,25 @@ local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local Dungeon = require("mod.elona.api.Dungeon")
 local Feat = require("api.Feat")
 local IFeat = require("api.feat.IFeat")
+local InstancedArea = require("api.InstancedArea")
+local InstancedMap = require("api.InstancedMap")
 
 data:add_type {
-   name = "nefia"
+   name = "nefia",
+   fields = {
+      {
+         name = "image",
+         type = types.data_id("base.chip")
+      },
+      {
+         name = "color",
+         type = types.optional(types.color)
+      },
+      {
+         name = "on_generate_floor",
+         type = types.callback({"area", types.class(InstancedArea), "floor", types.uint}, types.class(InstancedMap))
+      },
+   }
 }
 
 data:add {

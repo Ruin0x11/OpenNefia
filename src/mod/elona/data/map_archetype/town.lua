@@ -37,7 +37,7 @@ do
          is_indoor = false,
          is_temporary = false,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          max_crowd_density = 40,
          trainer_skills = {
             "elona.alchemy",
@@ -233,7 +233,7 @@ do
          level = 1,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          quest_town_id = 2,
          trainer_skills = {
             "elona.healing",
@@ -401,7 +401,7 @@ do
          level = 1,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          max_crowd_density = 45,
          quest_town_id = 3,
          trainer_skills = {
@@ -517,11 +517,11 @@ do
 
       chara = Chara.create("elona.stersha", 7, 2, nil, map)
       chara:add_role("elona.royal_family")
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.xabi", 6, 2, nil, map)
       chara:add_role("elona.royal_family")
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.elder", 49, 11, nil, map)
       chara:add_role("elona.elder")
@@ -539,39 +539,39 @@ do
 
       chara = Chara.create("elona.guard", 16, 5, nil, map)
       chara:add_role("elona.guard")
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.guard", 16, 9, nil, map)
       chara:add_role("elona.guard")
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.guard", 5, 3, nil, map)
       chara:add_role("elona.guard")
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.guard", 8, 3, nil, map)
       chara:add_role("elona.guard")
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.guard", 35, 14, nil, map)
       chara:add_role("elona.guard")
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.guard", 38, 14, nil, map)
       chara:add_role("elona.guard")
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.guard", 29, 2, nil, map)
       chara:add_role("elona.guard")
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.guard", 19, 18, nil, map)
       chara:add_role("elona.guard")
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.guard", 22, 18, nil, map)
       chara:add_role("elona.guard")
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       for _=1,5 do
          chara = Chara.create("elona.citizen", nil, nil, nil, map)
@@ -641,7 +641,7 @@ do
          level = 1,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          quest_town_id = 4,
          trainer_skills = {
             "elona.lock_picking",
@@ -799,7 +799,7 @@ do
          level = 1,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          quest_town_id = 5,
          trainer_skills = {
             "elona.negotiation",
@@ -987,7 +987,7 @@ do
          deepest_dungeon_level = 1,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          quest_town_id = 6,
          has_snow = true,
          max_crowd_density = 35,
@@ -1070,7 +1070,7 @@ do
       chara.is_only_in_christmas = true
 
       chara = Chara.create("elona.bartender", 17, 8, nil, map)
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
       chara.relation = Enum.Relation.Neutral
       chara.is_only_in_christmas = true
       chara:add_role("elona.shopkeeper", {inventory_id="elona.food_vendor"})
@@ -1078,7 +1078,7 @@ do
       chara.name = I18N.get("chara.job.food_vendor", chara.name)
 
       chara = Chara.create("elona.hot_spring_maniac", 25, 8, nil, map)
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
       chara.relation = Enum.Relation.Neutral
       chara.is_only_in_christmas = true
       chara:add_role("elona.shopkeeper", {inventory_id="elona.souvenir_vendor"})
@@ -1086,7 +1086,7 @@ do
       chara.name = I18N.get("chara.job.souvenir_vendor", Text.random_name())
 
       chara = Chara.create("elona.rogue", 24, 22, nil, map)
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
       chara.relation = Enum.Relation.Neutral
       chara.is_only_in_christmas = true
       chara:add_role("elona.shopkeeper", {inventory_id="elona.souvenir_vendor"})
@@ -1094,14 +1094,14 @@ do
       chara.name = I18N.get("chara.job.souvenir_vendor", Text.random_name())
 
       chara = Chara.create("elona.shopkeeper", 38, 12, nil, map)
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
       chara:add_role("elona.shopkeeper", {inventory_id="elona.blackmarket"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.blackmarket", Text.random_name())
       chara.is_only_in_christmas = true
 
       chara = Chara.create("elona.rogue", 28, 9, nil, map)
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
       chara.relation = Enum.Relation.Neutral
       chara.is_only_in_christmas = true
       chara:add_role("elona.shopkeeper", {inventory_id="elona.street_vendor"})
@@ -1109,7 +1109,7 @@ do
       chara.name = I18N.get("chara.job.street_vendor", Text.random_name())
 
       chara = Chara.create("elona.rogue", 29, 24, nil, map)
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
       chara.faction = Enum.Relation.Neutral
       chara.is_only_in_christmas = true
       chara:add_role("elona.shopkeeper", {inventory_id="elona.street_vendor"})
@@ -1403,7 +1403,7 @@ do
          level = 1,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          quest_town_id = 7,
          trainer_skills = {
             "elona.casting",

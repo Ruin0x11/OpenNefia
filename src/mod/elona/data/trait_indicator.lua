@@ -4,8 +4,6 @@ data:add {
    _type = "base.trait_indicator",
    _id = "incognito",
 
-   ordering = 100000,
-
    -- >>>>>>>> shade2/command.hsp:746 	traitExtra cIncognito,	lang("あなたは変装している","You are ...
    applies_to = function(chara)
       return chara:calc("is_anorexic")
@@ -22,8 +20,6 @@ data:add {
 data:add {
    _type = "base.trait_indicator",
    _id = "pregnant",
-
-   ordering = 110000,
 
    -- >>>>>>>> shade2/command.hsp:747 	traitExtra cPregnant,	lang("あなたは寄生されている","You are ...
    applies_to = function(chara)
@@ -42,8 +38,6 @@ data:add {
    _type = "base.trait_indicator",
    _id = "anorexia",
 
-   ordering = 120000,
-
    -- >>>>>>>> shade2/command.hsp:748 	traitExtra cAnorexia,	lang("あなたは拒食症だ","You have a ...
    applies_to = function(chara)
       return chara:calc("is_anorexic")
@@ -60,8 +54,6 @@ data:add {
 data:add {
    _type = "base.trait_indicator",
    _id = "body_is_complicated",
-
-   ordering = 130000,
 
    -- >>>>>>>> shade2/command.hsp:751 	if cBodySpdFix(tc)!0{ ...
    applies_to = function(chara)
@@ -82,8 +74,6 @@ data:add {
 data:add {
    _type = "base.trait_indicator",
    _id = "ether_disease_speed",
-
-   ordering = 140000,
 
    -- >>>>>>>> shade2/command.hsp:746 	traitExtra cIncognito,	lang("あなたは変装している","You are ...
    applies_to = function(chara)

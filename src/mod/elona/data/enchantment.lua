@@ -40,7 +40,7 @@ data:add {
    icon = 2,
    color = { 0, 0, 100 },
 
-   params = { skill_id = "id:base.skill" },
+   params = { skill_id = types.data_id("base.skill") },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:555 		if enc=encModAttb{ ..
       self.params.skill_id = Skill.random_attribute()
@@ -122,7 +122,7 @@ data:add {
    icon = 3,
    color = { 80, 100, 0 },
 
-   params = { element_id = "id:base.element" },
+   params = { element_id = types.data_id("base.element") },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:560 		if enc=encModRes{ ..
       self.params.element_id = Skill.random_resistance_by_rarity()
@@ -183,7 +183,7 @@ data:add {
    icon = 1,
    color = { 0, 100, 0 },
 
-   params = { skill_id = "id:base.skill" },
+   params = { skill_id = types.data_id("base.skill") },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:565 		if enc=encModSkill{ ..
       self.params.skill_id = Skill.random_skill()
@@ -251,7 +251,7 @@ data:add {
    icon = 8,
    color = { 0, 100, 100 },
 
-   params = { skill_id = "id:base.skill" },
+   params = { skill_id = types.data_id("base.skill") },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:570 		if enc=encSustain{ ..
       self.params.skill_id = Skill.random_attribute()
@@ -311,7 +311,7 @@ data:add {
    rarity = 300,
    filter = filter_categories { "elona.equip_melee", "elona.equip_ranged" },
 
-   params = { element_id = "id:base.element" },
+   params = { element_id = types.data_id("base.element") },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:574 		if enc=encEleDmg{ ..
       self.params.element_id = Skill.random_resistance_by_rarity()
@@ -366,7 +366,7 @@ data:add {
    value = 300,
    rarity = 15000,
 
-   params = { enchantment_skill_id = "id:base.enchantment_skill" },
+   params = { enchantment_skill_id = types.data_id("base.enchantment_skill") },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:578 		if enc=encProc{ ..
       -- Find a list of invokable skills that can be added onto this item.
@@ -458,9 +458,9 @@ data:add {
    -- <<<<<<<< shade2/item_data.hsp:612 		if refType@=fltAmmo:return ..
 
    params = {
-      ammo_enchantment_id = "id:base.ammo_enchantment",
-      ammo_max = "number",
-      ammo_current = "number"
+      ammo_enchantment_id = types.data_id("base.ammo_enchantment"),
+      ammo_max = types.uint,
+      ammo_current = types.uint
    },
    compare = function(my_params, other_params)
       return my_params.ammo_enchantment_id == other_params.ammo_enchantment_id

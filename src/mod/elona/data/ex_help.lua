@@ -1,5 +1,12 @@
 data:add_type {
-   name = "ex_help"
+   name = "ex_help",
+   fields = {
+      {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      }
+   }
 }
 
 local helps = {

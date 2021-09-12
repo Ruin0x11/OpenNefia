@@ -2,6 +2,7 @@ local Rand = require("api.Rand")
 local Gui = require("api.Gui")
 local Item = require("api.Item")
 local light = require("mod.elona.data.item.light")
+local Enum = require("api.Enum")
 
 --
 -- Tree
@@ -14,7 +15,6 @@ data:add {
    image = "elona.item_tree_of_beech",
    value = 700,
    weight = 45000,
-   category = 80000,
    rarity = 3000000,
    coefficient = 100,
    originalnameref2 = "tree",
@@ -30,7 +30,6 @@ data:add {
    image = "elona.item_tree_of_cedar",
    value = 500,
    weight = 38000,
-   category = 80000,
    rarity = 800000,
    coefficient = 100,
    originalnameref2 = "tree",
@@ -46,8 +45,7 @@ data:add {
    image = "elona.item_tree_of_fruitless",
    value = 500,
    weight = 35000,
-   fltselect = 1,
-   category = 80000,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 100000,
    coefficient = 100,
    originalnameref2 = "tree",
@@ -64,7 +62,6 @@ data:add {
    image = "elona.item_tree_of_fruits",
    value = 2000,
    weight = 42000,
-   category = 80000,
    rarity = 100000,
    coefficient = 100,
    originalnameref2 = "tree",
@@ -142,7 +139,6 @@ data:add {
    image = "elona.item_dead_tree",
    value = 500,
    weight = 20000,
-   category = 80000,
    rarity = 500000,
    coefficient = 100,
    categories = {
@@ -157,7 +153,6 @@ data:add {
    image = "elona.item_tree_of_zelkova",
    value = 800,
    weight = 28000,
-   category = 80000,
    rarity = 1500000,
    coefficient = 100,
    originalnameref2 = "tree",
@@ -173,7 +168,6 @@ data:add {
    image = "elona.item_tree_of_palm",
    value = 1000,
    weight = 39000,
-   category = 80000,
    rarity = 200000,
    coefficient = 100,
    originalnameref2 = "tree",
@@ -189,7 +183,6 @@ data:add {
    image = "elona.item_tree_of_ash",
    value = 900,
    weight = 28000,
-   category = 80000,
    rarity = 500000,
    coefficient = 100,
    originalnameref2 = "tree",
@@ -209,8 +202,7 @@ data:add {
    image = "elona.item_tree_of_naked",
    value = 500,
    weight = 14000,
-   fltselect = 8,
-   category = 80000,
+   fltselect = Enum.FltSelect.Snow,
    rarity = 250000,
    coefficient = 100,
    originalnameref2 = "tree",
@@ -227,8 +219,7 @@ data:add {
    image = "elona.item_tree_of_fir",
    value = 1800,
    weight = 28000,
-   fltselect = 8,
-   category = 80000,
+   fltselect = Enum.FltSelect.Snow,
    rarity = 100000,
    coefficient = 100,
    originalnameref2 = "tree",
@@ -246,8 +237,7 @@ data:add {
    value = 4800,
    weight = 35000,
    level = 30,
-   fltselect = 8,
-   category = 80000,
+   fltselect = Enum.FltSelect.Snow,
    rarity = 100000,
    coefficient = 100,
    categories = {

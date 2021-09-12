@@ -2,23 +2,29 @@ data:add_type {
    name = "material",
    fields = {
       {
+         name = "elona_id",
+         type = types.optional(types.uint),
+      },
+      {
          name = "level",
+         type = types.uint,
          default = 1,
          template = true
       },
       {
          name = "rarity",
+         type = types.uint,
          default = 1,
          template = true
       },
       {
          name = "image",
+         type = types.data_id("base.chip"),
          default = "elona.item_garbage",
          template = true
       }
    }
 }
-data:add_index("elona.material", "elona_id")
 
 local materials = {
    -- global

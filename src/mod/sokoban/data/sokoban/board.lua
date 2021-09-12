@@ -2,9 +2,8 @@ data:add_type {
    name = "board",
    fields = {
       {
-         name = "layout",
-         type = "string",
-         default = "",
+         name = "board",
+         type = types.string,
          template = true
       }
    }

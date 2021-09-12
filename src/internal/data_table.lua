@@ -3,7 +3,7 @@ local EventTree = require ("api.EventTree")
 local Log = require ("api.Log")
 local env = require ("internal.env")
 local fs = require("util.fs")
-local schema = require("thirdparty.schema")
+local Stopwatch = require("api.Stopwatch")
 
 local data_table = class.class("data_table")
 
@@ -43,15 +43,16 @@ end
 
 function data_table:init()
     rawset(self, "errors", {})
+    rawset(self, "defaults", {})
     rawset(self, "fallbacks", {})
 
     rawset(self, "inner", {})
+    rawset(self, "inner_sorted", {})
     rawset(self, "index", {})
     rawset(self, "schemas", {})
     rawset(self, "metatables", {})
     rawset(self, "generates", {})
     rawset(self, "ext", {})
-    rawset(self, "strict", false)
 
     rawset(self, "global_edits", {})
     rawset(self, "single_edits", {})
@@ -119,7 +120,7 @@ local function remove_index_field(self, dat, _type, field)
    end
 end
 
-function data_table:add_index(_type, field)
+function data_table:_add_index(_type, field)
    if not self.schemas[_type] then
       return
    end
@@ -136,8 +137,8 @@ function data_table:add_index(_type, field)
    end
 end
 
-local function make_fallbacks(fallbacks, fields)
-   local result = table.deepcopy(fallbacks)
+local function make_defaults(fields)
+   local result = {}
    for _, field in ipairs(fields) do
       local default = field.default
       if not field.no_fallback then
@@ -146,8 +147,6 @@ local function make_fallbacks(fallbacks, fields)
             if mt then
                if mt.__codegen_type == "block_string" then
                   default = field.default[1]
-               elseif mt.__codegen_type == "literal" then
-                  default = fallbacks[field.name]
                end
             end
          end
@@ -157,9 +156,32 @@ local function make_fallbacks(fallbacks, fields)
    return result
 end
 
+local ty_schema = types.fields_strict {
+   name = types.identifier,
+   fields = types.list(
+      types.fields_strict {
+         name = types.string,
+         template = types.optional(types.boolean),
+         type = types.type,
+         default = types.optional(types.any),
+         doc = types.optional(types.string),
+         no_fallback = types.optional(types.boolean),
+         indexed = types.optional(types.boolean)
+      }
+   ),
+   fallbacks = types.optional(types.table),
+   doc = types.optional(types.string),
+   validation = types.optional(types.literal("strict", "permissive"))
+}
+
+local ty_ext_table = types.map(types.some(types.interface_type, types.data_id("base.data_ext")), types.table)
+
 function data_table:add_type(schema, params)
-   schema.fields = schema.fields or {}
+   assert(types.check(schema, ty_schema))
    schema.fallbacks = schema.fallbacks or {}
+   schema.max_ordering = 100000
+   schema.needs_resort = true
+   schema.indexes = {}
 
    params = params or {}
 
@@ -170,6 +192,51 @@ function data_table:add_type(schema, params)
 
    local mod_name, loc = env.find_calling_mod()
    local _type = mod_name .. "." .. schema.name
+
+   local checkers = {}
+   local seen = table.set {}
+   for i, field in ipairs(schema.fields) do
+      if type(field.name) ~= "string" then
+         error("Data type %s: missing field name (index %d)"):format(_type, i)
+      end
+      if seen[field.name] then
+         error(("Data type %s: duplicate field name '%s' (index %d)"):format(_type, field.name, i))
+      end
+      if not types.is_type_checker(field.type) then
+         error(("Data type %s: invalid type specified for field named '%s'"):format(_type, field.name))
+      end
+      if field.default then
+         local ok, err = types.check(field.default, field.type)
+         if not ok then
+            error(("Data type %s: invalid default value for field '%s': '%s'"):format(_type, field.name, err))
+         end
+      end
+      checkers[field.name] = field.type
+      seen[field.name] = true
+
+      if field.indexed then
+         schema.indexes[field.name] = true
+      end
+   end
+
+   -- Fields available on all types
+   checkers._type = types.data_type_id
+   checkers._id = types.data_type_id
+   checkers._ext = types.optional(ty_ext_table)
+   checkers._ordering = types.optional(types.number)
+
+   if schema.validation == "permissive" then
+      schema.type = types.fields(checkers)
+   else
+      schema.type = types.fields_strict(checkers)
+   end
+   schema.validate = function(obj, verbose)
+      local ok, err = types.check(obj, schema.type, verbose)
+      if not ok then
+         return false, ("Validation for data entry '%s:%s' failed: %s"):format(_type, obj._id or "<???>", err)
+      end
+      return true
+   end
 
    if env.is_hotloading() and self.schemas[_type] then
       Log.debug("In-place update of type %s", _type)
@@ -188,12 +255,11 @@ function data_table:add_type(schema, params)
       end
       table.replace_with(self.schemas[_type], schema)
 
-      local fallbacks = make_fallbacks(schema.fallbacks, schema.fields)
-      self.fallbacks[_type] = fallbacks
+      local defaults = make_defaults(schema.fields)
+      self.defaults[_type] = defaults
+      self.fallbacks[_type] = table.merge(table.deepcopy(schema.fallbacks, defaults))
       return
    end
-
-   schema.indexes = {}
 
    local metatable = params.interface or {}
    metatable._type = _type
@@ -213,6 +279,7 @@ function data_table:add_type(schema, params)
    end
 
    self.inner[_type] = {}
+   self.inner_sorted[_type] = {}
    self.index[_type] = {}
    self.schemas[_type] = schema
    self.metatables[_type] = metatable
@@ -220,15 +287,9 @@ function data_table:add_type(schema, params)
 
    self.global_edits[_type] = EventTree:new()
 
-   local fallbacks = make_fallbacks(schema.fallbacks, schema.fields)
-   self.fallbacks[_type] = fallbacks
-end
-
--- TODO: metatable indexing could create a system for indexing
--- sandboxed properties partitioned by each mod. For example the
--- underlying table would contain { base = {...}, mod = {...} } and
--- indexing obj.field might actually self.index obj.base.field.
-function data_table:extend_type(type_id, delta)
+   local defaults = make_defaults(schema.fields)
+   self.defaults[_type] = defaults
+   self.fallbacks[_type] = table.merge(table.deepcopy(schema.fallbacks, defaults))
 end
 
 -- Apply data edits.
@@ -253,24 +314,47 @@ function data_table:run_edits_for(_type, _id)
    self[_type][_id] = self.global_edits[_type](self[_type][_id])
 end
 
-local function update_docs(dat, _schema, loc, is_hotloading)
-   if (dat._doc or _schema.on_document) then
-      if loc then
-         dat._defined_in = {
-            relative = fs.normalize(loc.short_src),
-            line = loc.lastlinedefined
-         }
-      else
-         dat._defined_in = {
-            relative = ".",
-            line = 0
-         }
-      end
-      local the_doc = dat._doc
-      if _schema.on_document then
-         the_doc =_schema.on_document(dat)
+function data_table:validate_all(verbose)
+   local errors = {}
+   for _, _type, proxy in self:iter() do
+      for _, entry in proxy:iter() do
+         local ok, err = proxy:validate(entry, verbose)
+         if not ok then
+            errors[#errors+1] = { _type = _type, _id = entry._id, error = err }
+         end
       end
    end
+   return errors
+end
+
+local function sort_data_entries(a, b)
+   if a._ordering == b._ordering then
+      return a._id < b._id
+   end
+   return a._ordering < b._ordering
+end
+
+function data_table:sort_all()
+   local errors = {}
+   local inner = self.inner
+   local sw = Stopwatch:new("info")
+   for _type, _ in pairs(inner) do
+      self:sort_type(_type)
+   end
+   sw:p("data:sort_all()")
+   return errors
+end
+
+function data_table:sort_type(_type)
+   local src = self.inner[_type]
+   local dst = {}
+   assert(src, "Unknown type")
+   for _, entry in pairs(src) do
+      table.insert(dst, entry)
+   end
+   table.sort(dst, sort_data_entries)
+   self.inner_sorted[_type] = dst
+   self.schemas[_type].needs_resort = false
 end
 
 function data_table:replace(dat)
@@ -291,7 +375,7 @@ end
 local function make_ext_fallback(dat)
    local fields = dat.fields or {}
 
-   local ext = make_fallbacks({}, fields)
+   local ext = make_defaults(fields)
 
    return ext
 end
@@ -319,34 +403,7 @@ function data_table:add(dat)
       return nil
    end
 
-   local fallbacks = self.fallbacks[_type]
-   for field, fallback in pairs(fallbacks) do
-      if dat[field] == nil then
-         dat[field] = fallback
-      end
-   end
-
-   local errs = schema.CheckSchema(dat, _schema.schema)
-   local failed = false
-
-   for _, err in ipairs(errs) do
-      local add = true
-
-      if string.match(err.message, "^Superfluous value: ") then
-         local path = tostring(err.path)
-         if path == "_id"
-            or path == "_type"
-            or path == "_index_on"
-         then
-            add = false
-         end
-      end
-
-      if add then
-         failed = true
-         -- self:error(tostring(err))
-      end
-   end
+   dat = table.merge_missing(dat, self.defaults[_type])
 
    -- Verify extension fields.
    if dat._ext then
@@ -386,8 +443,6 @@ function data_table:add(dat)
       end
    end
 
-   if self.strict and failed then return nil end
-
    local full_id = mod_name .. "." .. _id
 
    Log.trace("Adding data entry %s:%s", _type, full_id)
@@ -399,6 +454,8 @@ function data_table:add(dat)
 
          local Event = require("api.Event")
          Event.trigger("base.before_hotload_prototype", {old=self.inner[_type][full_id], new=dat})
+
+         dat._ordering = self.inner[_type][full_id]._ordering
 
          table.replace_with(self.inner[_type][full_id], dat)
          self:run_edits_for(_type, full_id)
@@ -414,13 +471,22 @@ function data_table:add(dat)
 
          Event.trigger("base.on_hotload_prototype", {entry=dat})
 
-         update_docs(dat, _schema, loc, true)
-
          return dat
       else
          self:error(("ID is already taken on type '%s': '%s'"):format(_type, full_id))
          return nil
       end
+   end
+
+   if dat._ordering then
+      if type(dat._ordering) ~= "number" then
+         self:error(("_ordering field must be number, got %s (%s)"):format(dat._ordering, full_id))
+         return nil
+      end
+      _schema.max_ordering = math.max(_schema.max_ordering, dat._ordering)
+   else
+      _schema.max_ordering = _schema.max_ordering + 1000
+      dat._ordering = _schema.max_ordering
    end
 
    -- TODO fallbacks and prototype_fallbacks should be separate
@@ -436,7 +502,7 @@ function data_table:add(dat)
       self.ext[full_id] = make_ext_fallback(dat)
    end
 
-   update_docs(dat, _schema, loc)
+   _schema.needs_resort = true
 
    return dat
 end
@@ -639,10 +705,6 @@ function proxy:__index(k)
       return self.data.schemas[self._type]._defined_in
    end
 
-   if k == "on_document" then
-      return self.data.schemas[self._type].on_document
-   end
-
    if k == "doc" then
       return self.data.schemas[self._type].doc
    end
@@ -671,6 +733,14 @@ end
 
 function proxy:interface()
    return self.data.metatables[self._type]
+end
+
+function proxy:type()
+   return self.data.schemas[self._type].type
+end
+
+function proxy:validate(obj, verbose)
+   return self.data.schemas[self._type].validate(obj, verbose)
 end
 
 function proxy:ensure(k)
@@ -707,7 +777,10 @@ local function iter(state, prev_index)
 end
 
 function proxy:iter()
-   local inner_iter, inner_state, inner_index = pairs(self.data.inner[self._type])
+   if self.data.schemas[self._type].needs_resort then
+      self.data:sort_type(self._type)
+   end
+   local inner_iter, inner_state, inner_index = ipairs(self.data.inner_sorted[self._type])
    return fun.wrap(iter, {iter=inner_iter,state=inner_state}, inner_index)
 end
 

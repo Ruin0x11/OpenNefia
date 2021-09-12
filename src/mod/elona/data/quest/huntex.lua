@@ -20,7 +20,7 @@ local quest_huntex = {
       is_indoor = false,
       is_temporary = true,
       max_crowd_density = 0,
-      default_ai_calm = 0,
+      default_ai_calm = "base.calm_null",
       shows_floor_count_in_name = true,
       prevents_building_shelter = true
    }
@@ -30,9 +30,9 @@ data:add(quest_huntex)
 local huntex = {
    _id = "huntex",
    _type = "elona_sys.quest",
+   _ordering = 20000,
 
    elona_id = 1010,
-   ordering = 20000,
    client_chara_type = 1,
    reward = "elona.supply",
    reward_fix = 140,
@@ -40,7 +40,7 @@ local huntex = {
    min_fame = 30000,
    chance = 13,
 
-   params = { enemy_id = "string" },
+   params = { enemy_id = types.data_id("base.chara") },
 
    reward_count = function() return Rand.rnd(Rand.rnd(4) + 1) + 3 end,
 

@@ -11,7 +11,7 @@ local item_enchantments = {
 
 local function items_in_category(cat)
    local filter = function(i)
-      if i.enchantments ~= nil then
+      if #i.enchantments > 0 then
          return false
       end
       for _, c in ipairs(i.categories or {}) do
@@ -66,6 +66,9 @@ local function make_enchantments(x, y, map)
             ids[cat] = items_in_category(cat)
          end
          local _id = Rand.choice(ids[cat])
+         if _id == nil then
+            error("No items in category " .. cat)
+         end
          for i= -1, 1, 2 do
             local power = 150 * i
             local item = assert(Item.create(_id, ix, iy, {}, map))
@@ -108,7 +111,7 @@ end
 
 local function make_fixed_enchantments(x, y, map)
    local filter = function(i)
-      return i.enchantments ~= nil
+      return #i.enchantments > 0
    end
 
    local ix = x

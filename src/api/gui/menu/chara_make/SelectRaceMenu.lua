@@ -52,8 +52,6 @@ function SelectRaceMenu:init(charamake_data)
 
    races = races:to_list()
 
-   table.sort(races, function(a, b) return a.proto.ordering < b.proto.ordering end)
-
    self.pages = UiList:new_paged(races, 16)
    table.merge(self.pages, UiListExt())
    self.bg = Ui.random_cm_bg()

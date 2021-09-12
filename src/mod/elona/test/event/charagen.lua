@@ -20,13 +20,13 @@ function test_charagen_default_race_image_override()
 end
 
 function test_charagen_shade()
-   Rand.set_seed(5)
+   Rand.set_seed(24)
    local map = InstancedMap:new(10, 10)
    local chara = Chara.create("elona.shade", 4, 5, {level = 20}, map)
 
    Assert.not_eq("elona.shade", chara._id)
    Assert.eq(I18N.get("chara.job.shade"), chara.name)
-   Assert.eq(37, chara.level)
+   Assert.eq(1, chara.level)
    Assert.eq(true, map:has_object(chara))
    Assert.eq(4, chara.x)
    Assert.eq(5, chara.y)

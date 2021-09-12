@@ -634,6 +634,12 @@ local function proc_confusion_message(chara)
 end
 Event.register("base.before_chara_moved", "Proc confusion message", proc_confusion_message, { priority = 200000 })
 
+local function on_cast_magic(_, params, result)
+   local did_something, turn_result = params.magic:cast(params.magic_params)
+   result.did_something = did_something
+   result.turn_result = turn_result
+end
+Event.register("elona_sys.on_cast_magic", "Cast magic", on_cast_magic, { priority = 100000 })
 
 require("mod.elona_sys.event.instantiate_feat")
 require("mod.elona_sys.event.instantiate_item")

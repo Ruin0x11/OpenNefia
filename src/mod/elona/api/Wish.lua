@@ -35,16 +35,8 @@ end
 function Wish.grant_wish(wish, chara)
    chara = chara or Chara.player()
 
-   local sort = function(a, b)
-      if a.priority == b.priority then
-         return a._id < b._id
-      end
-
-      return a.priority < b.priority
-   end
-
    local did_something = false
-   for _, handler in data["elona.wish_handler"]:iter():into_sorted(sort) do
+   for _, handler in data["elona.wish_handler"]:iter() do
       local result = handler.on_wish(wish, chara)
       if result then
          did_something = true

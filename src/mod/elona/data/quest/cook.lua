@@ -13,9 +13,9 @@ local IItemFood = require("mod.elona.api.aspect.IItemFood")
 local cook = {
    _id = "cook",
    _type = "elona_sys.quest",
+   _ordering = 90000,
 
    elona_id = 1003,
-   ordering = 90000,
    client_chara_type = 3,
    reward = "elona.supply",
    reward_fix = 60,
@@ -24,8 +24,8 @@ local cook = {
    chance = 6,
 
    params = {
-      food_type = "string",
-      food_quality = "number"
+      food_type = types.string,
+      food_quality = types.uint
    },
 
    difficulty = 0,
@@ -85,7 +85,6 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "quest_cook",
 
-   root = "talk.npc.quest_giver",
    nodes = {
       give = function(t)
          -- TODO generalize with dialog argument

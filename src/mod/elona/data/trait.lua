@@ -43,7 +43,7 @@ local trait = {
       type = "feat",
 
       -- >>>>>>>> shade2/trait.hsp:153 		spGain(actLeadership) ...
-      on_modify_level = gain_or_lose_action("elona.action_leadership"),
+      on_modify_level = gain_or_lose_action("elona.action_cheer"),
       -- <<<<<<<< shade2/trait.hsp:153 		spGain(actLeadership) ..
    },
    {
@@ -192,7 +192,7 @@ local trait = {
       level_max = 1,
       type = "feat",
 
-      can_learn = function(self, chara)
+      can_acquire = function(self, chara)
          return chara:has_skill("elona.shield")
       end,
 
@@ -216,7 +216,7 @@ local trait = {
       level_max = 2,
       type = "feat",
 
-      can_learn = function(self, chara)
+      can_acquire = function(self, chara)
          return chara:has_skill("elona.dual_wield")
       end,
 
@@ -256,7 +256,7 @@ local trait = {
       level_max = 2,
       type = "feat",
 
-      can_learn = function(self, chara)
+      can_acquire = function(self, chara)
          return chara:has_skill("elona.negotiation")
       end,
 
@@ -320,7 +320,7 @@ local trait = {
       level_max = 2,
       type = "feat",
 
-      can_learn = function(self, chara)
+      can_acquire = function(self, chara)
          return chara:has_skill("elona.detection")
       end,
 
@@ -336,7 +336,7 @@ local trait = {
       level_max = 2,
       type = "feat",
 
-      can_learn = function(self, chara)
+      can_acquire = function(self, chara)
          if self.level == 1 then
             return chara.level >= 5
          end
@@ -355,7 +355,7 @@ local trait = {
       level_max = 3,
       type = "feat",
 
-      can_learn = function(self, chara)
+      can_acquire = function(self, chara)
          if self.level == 1 then
             return chara.level >= 5
          end
@@ -386,7 +386,7 @@ local trait = {
       level_max = 3,
       type = "feat",
 
-      can_learn = function(self, chara)
+      can_acquire = function(self, chara)
          return chara:has_skill("elona.evasion")
       end,
 

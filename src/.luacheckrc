@@ -12,6 +12,7 @@ globals = {
    "_IS_LOVEJS",
    "love",
    "class",
+   "types",
    "inspect",
    "fun",
    "_ppr",

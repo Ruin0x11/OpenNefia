@@ -29,7 +29,7 @@ do
          is_temporary = false,
          is_not_renewable = true,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          max_crowd_density = 0,
          tileset = "elona.dungeon",
          material_spot_type = "elona.dungeon"
@@ -138,7 +138,7 @@ do
          is_indoor = true,
          is_temporary = false,
          is_not_renewable = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          max_crowd_density = 0,
          tileset = "elona.dungeon",
          material_spot_type = "elona.dungeon"
@@ -254,7 +254,7 @@ do
       _id = "test_site",
       _type = "base.map_archetype",
 
-      unique = true,
+      -- unique = true,
 
       properties = {
          music = "elona.puti",
@@ -263,7 +263,7 @@ do
          is_indoor = true,
          is_not_renewable = true,
          max_crowd_density = 0,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          tileset = "elona.dungeon",
          material_spot_type = "elona.dungeon"
       },

@@ -1,26 +1,9 @@
 local Gui = require("api.Gui")
 local Debug = require("mod.tools.api.debug.Debug")
 
-data:add_type {
-   name = "interactive_fn",
-   fields = {
-      {
-         name = "func",
-         type = "function",
-         template = true
-      },
-      {
-         name = "spec",
-         type = "table",
-         template = true
-      }
-   }
-}
-
 require("mod.tools.data.init")
 
 require("mod.tools.exec.config")
-require("mod.tools.exec.interactive")
 require("mod.tools.exec.widgets")
 
 local function toggle_widget(id)

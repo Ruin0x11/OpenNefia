@@ -39,9 +39,6 @@ function IItem:normal_build(params)
    self.name = self._id
    self.image = self.image or self.proto.image
 
-   local fallbacks = data.fallbacks["base.item"]
-   self:mod_base_with(table.deepcopy(fallbacks), "merge")
-
    IObject.normal_build(self, params)
 end
 

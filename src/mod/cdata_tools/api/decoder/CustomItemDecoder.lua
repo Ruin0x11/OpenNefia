@@ -126,7 +126,7 @@ local function make_item_locale_data(item_data, locale, mod_id, item_id)
 end
 
 local function find_item_type(elona_item_type)
-   local filter = function(t) return t.ordering == elona_item_type end
+   local filter = function(t) return t._ordering == elona_item_type end
    local ty = data["base.item_type"]:iter():filter(filter):nth(1)
    if ty == nil then
       error("Could not find Elona item type " .. elona_item_type)

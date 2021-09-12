@@ -47,7 +47,7 @@ data:add {
    weight = 1200,
    material = "elona.mithril",
    level = 35,
-   fltselect = 2,
+   fltselect = Enum.FltSelect.Unique,
    coefficient = 100,
 
    is_precious = true,
@@ -128,7 +128,7 @@ data:add {
    weight = 800,
    material = "elona.ether",
    level = 60,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -351,7 +351,7 @@ data:add {
    weight = 2800,
    material = "elona.diamond",
    level = 60,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -398,7 +398,7 @@ data:add {
    value = 25000,
    weight = 950,
    material = "elona.iron",
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -484,7 +484,7 @@ data:add {
    weight = 8500,
    material = "elona.ether",
    level = 80,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    rarity = 200000,
    coefficient = 100,
 
@@ -639,7 +639,7 @@ data:add {
    weight = 7500,
    material = "elona.adamantium",
    level = 15,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -677,7 +677,7 @@ data:add {
    weight = 75000,
    material = "elona.gold",
    level = 25,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -758,7 +758,7 @@ data:add {
    weight = 250,
    material = "elona.silk",
    level = 40,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,

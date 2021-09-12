@@ -81,9 +81,9 @@ local god = {
       blessings = {
          God.make_skill_blessing("elona.stat_magic", 300, 18),
          God.make_skill_blessing("elona.meditation", 350, 15),
-         God.make_skill_blessing("elona.element_fire", 50, 200),
-         God.make_skill_blessing("elona.element_cold", 50, 200),
-         God.make_skill_blessing("elona.element_lightning", 50, 200),
+         God.make_resist_blessing("elona.fire", 50, 200),
+         God.make_resist_blessing("elona.cold", 50, 200),
+         God.make_resist_blessing("elona.lightning", 50, 200),
       },
       offerings = {
          { type = "category", id = "elona.equip_melee_staff" },

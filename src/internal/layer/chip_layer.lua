@@ -72,31 +72,15 @@ end
 function chip_layer:draw_drop_shadow(index, i, x, y, y_offset)
    local batch_ind = self.drop_shadow_batch_inds[index]
    local image = i.image
-   local x_offset = i.x_offset
+   local x_offset = i.x_offset or 0
    local rotation = i.shadow_angle or 20
 
-   local draw = true
-   local image_data = self.chip_batch.atlas.tiles[image]
-   local is_tall = false
-   if image_data then
-      local _, _, tw, th = image_data.quad:getViewport()
-      is_tall = tw * 2 == th
-   end
-
    -- TODO no idea what the rotation amounts should be
-   if is_tall then
-      x_offset = i.x_offset + rotation / 2
-      y_offset = y_offset - 4
-      rotation = rotation / 2
-   else
-      if (i.y_offset or 0) < self.chip_batch.tile_height / 2 then
-         x_offset = (i.x_offset or 0) + rotation / 80 + 2
-         y_offset = y_offset - 2
-         rotation = rotation / 16
-      else
-         draw = false
-      end
-   end
+   x_offset = x_offset + rotation / 8
+   y_offset = y_offset - 2
+   rotation = rotation / 16
+
+   local draw = true
 
    if draw then
       if batch_ind == nil then
@@ -253,6 +237,7 @@ function chip_layer:draw_one(index, ind, x, y, i, chip_type, map_size, z_order)
    end
 
    if shadow_type == "drop_shadow" then
+
       --
       -- Item drop shadow.
       --

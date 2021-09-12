@@ -18,34 +18,49 @@ data:add_type {
    name = "weather",
    fields = {
       {
+         name = "elona_id",
+         indexed = true,
+         type = types.optional(types.uint)
+      },
+      {
          name = "travel_speed_modifier",
-         default = CodeGenerator.gen_literal [[
-function(turns)
-    return turns * 3 / 2
-end
-]],
+         type = types.callback({"turns", types.number}, types.number),
          template = true
       },
       {
          name = "on_travel",
-         default = CodeGenerator.gen_literal [[
-function(chara, turns)
-    if Rand.one_in(4) then
-        return turns + 10
-    end
-
-    return turns
-end
-]],
+         type = types.callback({"chara", types.map_object("base.chara"), "turns", types.number}, types.number),
+         template = true
+      },
+      {
+         name = "on_weather_change",
+         type = types.callback({}, types.data_id("elona.weather")),
          template = true
       },
       {
          name = "draw_callback",
-         default = CodeGenerator.gen_literal [[
-function()
-end
-]],
+         type = types.callback(),
          template = true
+      },
+      {
+         name = "outdoor_shadow",
+         type = types.optional(types.callback({"shadow", types.color}, types.color)),
+         template = true
+      },
+      {
+         name = "on_turn_start",
+         type = types.callback("chara", types.map_object("base.chara")),
+         template = true
+      },
+      {
+         name = "is_bad_weather",
+         type = types.boolean,
+         template = true,
+         default = false
+      },
+      {
+         name = "ambient_sound",
+         type = types.optional(types.data_id("base.sound")),
       },
    }
 }

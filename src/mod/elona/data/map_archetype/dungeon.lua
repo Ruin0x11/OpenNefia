@@ -25,7 +25,7 @@ do
          types = { "dungeon" },
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          shows_floor_count_in_name = true,
          material_spot_type = "elona.dungeon"
       }
@@ -124,7 +124,7 @@ do
       properties = {
          types = { "dungeon" },
          is_indoor = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          prevents_domination = true,
          material_spot_type = "elona.dungeon"
       }
@@ -188,7 +188,7 @@ do
          types = { "dungeon" },
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          material_spot_type = "elona.building"
       }
    }
@@ -274,7 +274,7 @@ do
          types = { "dungeon" },
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          material_spot_type = "elona.dungeon"
       }
    }
@@ -346,7 +346,7 @@ do
          types = { "dungeon" },
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          material_spot_type = "elona.building"
       }
    }
@@ -423,7 +423,7 @@ do
          types = { "dungeon" },
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          material_spot_type = "elona.dungeon"
       }
    }
@@ -482,7 +482,7 @@ do
          types = { "dungeon" },
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          material_spot_type = "elona.dungeon"
       }
    }
@@ -528,7 +528,6 @@ do
       _type = "base.map_archetype",
       elona_id = 27,
 
-      image = "elona.feat_area_dungeon",
       starting_pos = MapEntrance.stairs_up,
 
       chara_filter = Dungeon.default_chara_filter,
@@ -536,7 +535,7 @@ do
       properties = {
          types = { "dungeon" },
          is_indoor = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          is_generated_every_time = true,
          material_spot_type = "elona.dungeon"
       },
@@ -593,7 +592,7 @@ do
          types = { "dungeon" },
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          material_spot_type = "elona.dungeon"
       }
    }
@@ -666,7 +665,7 @@ do
          types = { "dungeon" },
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          material_spot_type = "elona.dungeon"
       }
    }

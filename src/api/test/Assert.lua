@@ -107,13 +107,14 @@ function Assert.no_matches(match, str)
 end
 
 function Assert.throws_error(f, err_match, ...)
-   local ok, err = pcall(f, ...)
+   local ok, err = xpcall(f, debug.traceback, ...)
    if ok then
       error("expected error, but was successful", 2)
    end
    if err_match then
-      if not err:match(err_match) then
-         error(("expected error to match '%s', got '%s'"):format(err_match, err), 2)
+      local first_line = string.split(tostring(err))[1]
+      if not first_line:match(err_match) then
+         error(("expected error to match:\n\t'%s'\ngot:\n\t'%s'"):format(err_match, err), 2)
       end
    end
 end

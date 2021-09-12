@@ -17,13 +17,11 @@ end
 local function make_status_indicators(_, params, result)
    local chara = params.chara
 
-   -- TODO ordering
    for _, v in data["base.ui_indicator"]:iter() do
       if v.indicator then
          local raw = v.indicator(chara)
          if type(raw) == "table" then
             raw.text = I18N.get_optional(raw.text) or raw.text
-            raw.ordering = v.ordering
             result[#result+1] = raw
          end
       end
@@ -50,12 +48,10 @@ function UiStatusEffects:set_data(player)
 
    for _, ind in ipairs(raw) do
       if type(ind) == "table" then
-         ind.ordering = ind.ordering or 100000
          self.indicators[#self.indicators + 1] = ind
       end
    end
 
-   table.sort(raw, function(a, b) return a.ordering < b.ordering end)
    if self.t then
       self:calc_max_width()
    end

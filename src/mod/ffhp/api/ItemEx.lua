@@ -143,7 +143,7 @@ function ItemEx.parse_item_ex_csv(csv_file, base_path, mod_id)
       local shadow = tonumber(row[6])
       local color = tonumber(row[7])
       local use_directional_chips = tonumber(row[8])
-      if use_directional_chips == "1" then
+      if use_directional_chips == 1 then
          use_directional_chips = true
          chip_path = Fs.join(base_path, "graphic", "item", ("itemEx2_%03d.bmp"):format(chip_id))
       end

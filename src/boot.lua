@@ -42,9 +42,10 @@ if _DEBUG then
    _CONSOLE = true
 end
 
-class = require("util.class")
-
 require("ext")
+
+class = require("util.class")
+types = require("util.types")
 
 inspect = require("thirdparty.inspect")
 fun = require("thirdparty.fun")

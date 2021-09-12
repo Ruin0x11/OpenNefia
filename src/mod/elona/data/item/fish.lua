@@ -1,3 +1,4 @@
+local Enum = require("api.Enum")
 local IItemFood = require("mod.elona.api.aspect.IItemFood")
 
 --
@@ -42,7 +43,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -70,7 +70,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -98,7 +97,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -126,7 +124,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -153,7 +150,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -180,7 +176,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -208,7 +203,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -236,7 +230,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -264,7 +257,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -292,7 +284,6 @@ data:add {
    coefficient = 100,
 
    tags = { "fish" },
-   rftags = { "fish" },
    categories = {
       "elona.tag_fish",
       "elona.food",
@@ -316,11 +307,10 @@ data:add {
    weight = 1250,
    material = "elona.fresh",
    level = 15,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 300000,
    coefficient = 100,
 
-   rftags = { "fish" },
 
    categories = {
       "elona.no_generate",
@@ -396,7 +386,7 @@ data:add {
    value = 1200,
    weight = 1250,
    level = 15,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 300000,
    coefficient = 100,
    categories = {

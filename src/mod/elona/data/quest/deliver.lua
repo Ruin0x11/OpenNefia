@@ -18,9 +18,9 @@ local Effect = require("mod.elona.api.Effect")
 local deliver = {
    _id = "deliver",
    _type = "elona_sys.quest",
+   _ordering = 80000,
 
    elona_id = 1002,
-   ordering = 80000,
    client_chara_type = 2,
    reward = "elona.supply",
    reward_fix = 70,
@@ -29,11 +29,11 @@ local deliver = {
    chance = 6,
 
    params = {
-      target_map_uid = "number",
-      target_chara_uid = "number",
-      target_name = "string",
-      item_category = "string",
-      item_id = "string",
+      target_map_uid = types.uint,
+      target_chara_uid = types.uint,
+      target_name = types.string,
+      item_category = types.data_id("base.item_type"),
+      item_id = types.data_id("base.item"),
    },
 
    difficulty = 0,
@@ -188,7 +188,6 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "quest_deliver",
 
-   root = "talk.npc.quest_giver",
    nodes = {
       backpack_full = {
          text = {

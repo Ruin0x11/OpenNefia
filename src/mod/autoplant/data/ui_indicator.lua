@@ -14,6 +14,5 @@ data:add {
    _type = "base.ui_indicator",
    _id = "autoplant",
 
-   ordering = 1000000,
    indicator = indicator_autoplant
 }

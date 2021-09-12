@@ -9,7 +9,6 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "miches",
 
-   root = "talk.unique.miches",
    nodes = {
       __start = function()
          local flag = Sidequest.progress("elona.putit_attacks")

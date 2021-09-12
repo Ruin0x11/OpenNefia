@@ -86,7 +86,7 @@ data:add {
    weight = 1250,
    material = "elona.mithril",
    level = 13,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,

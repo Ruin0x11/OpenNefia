@@ -80,8 +80,8 @@ end
 
 function InstancedEnchantment:__lt(other)
    -- >>>>>>>> shade2/item_data.hsp:496 	#deffunc sortEnc int id ...
-   local my_ordering = self.ordering or (self.proto.elona_id and self.proto.elona_id * 10000) or 0
-   local their_ordering = other.ordering or (other.proto.elona_id and other.proto.elona_id * 10000) or 0
+   local my_ordering = self.proto._ordering
+   local their_ordering = other.proto._ordering
    return my_ordering < their_ordering
    -- <<<<<<<< shade2/item_data.hsp:513 	#global  ..
 end

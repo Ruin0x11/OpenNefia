@@ -1,14 +1,11 @@
-local CodeGenerator = require("api.CodeGenerator")
+local InstancedMap = require("api.InstancedMap")
 
 data:add_type {
    name = "encounter",
    fields = {
       {
          name = "encounter_level",
-         default = CodeGenerator.gen_literal [[
-function(outer_map, outer_x, outer_y)
-   return 10
-end]],
+         type = types.callback({"outer_map", types.class(InstancedMap), "outer_x", types.uint, "outer_y", types.uint}, types.number),
          template = true,
          doc = [[
 Controls the level of the encounter.
@@ -16,11 +13,7 @@ Controls the level of the encounter.
       },
       {
          name = "before_encounter_start",
-         default = CodeGenerator.gen_literal [[
-function(level, outer_map, outer_x, outer_y)
-    Gui.mes("Ambush!")
-    Input.query_more()
-end]],
+         type = types.optional(types.callback({"level", types.uint, "outer_map", types.class(InstancedMap), "outer_x", types.uint, "outer_y", types.uint}, types.number)),
          template = true,
          doc = [[
 This is run before the player is transported to the encounter map.
@@ -28,12 +21,7 @@ This is run before the player is transported to the encounter map.
       },
       {
          name = "on_map_entered",
-         default = CodeGenerator.gen_literal [[
-function(map, level, outer_map, outer_x, outer_y)
-    for i = 1, 10 do
-        Chara.create("elona.putit", nil, nil, nil, map)
-    end
-end]],
+         type = types.callback({"map", types.class(InstancedMap), "level", types.uint, "outer_map", types.class(InstancedMap), "outer_x", types.uint, "outer_y", types.uint}, types.number),
          template = true,
          doc = [[
 Generates the encounter. This function receives map that the encounter will take

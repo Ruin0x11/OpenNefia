@@ -1,3 +1,4 @@
+local Enum = require("api.Enum")
 local light = require("mod.elona.data.item.light")
 
 -- TODO: Some fields should not be stored on the prototype as
@@ -15,9 +16,7 @@ local item =
          image = "elona.item_worthless_fake_gold_bar",
          value = 1,
          weight = 1,
-         fltselect = 1,
-         category = 99999999,
-         subcategory = 99999999,
+         fltselect = Enum.FltSelect.Sp,
          coefficient = 100,
          categories = {
             "elona.bug",

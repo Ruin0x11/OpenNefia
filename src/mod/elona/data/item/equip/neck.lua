@@ -41,7 +41,7 @@ data:add {
    material = "elona.metal",
    level = 30,
    coefficient = 100,
-   has_random_name = "ring",
+   has_random_name = true,
    categories = {
       "elona.equip_neck_armor",
       "elona.equip_neck"
@@ -65,7 +65,7 @@ data:add {
    material = "elona.soft",
    level = 30,
    coefficient = 100,
-   has_random_name = "ring",
+   has_random_name = true,
    categories = {
       "elona.equip_neck_armor",
       "elona.equip_neck"
@@ -89,7 +89,7 @@ data:add {
    material = "elona.metal",
    level = 10,
    coefficient = 100,
-   has_random_name = "ring",
+   has_random_name = true,
    categories = {
       "elona.equip_neck_armor",
       "elona.equip_neck"
@@ -113,7 +113,7 @@ data:add {
    material = "elona.soft",
    level = 10,
    coefficient = 100,
-   has_random_name = "ring",
+   has_random_name = true,
    tags = { "fest" },
    categories = {
       "elona.equip_neck_armor",
@@ -139,7 +139,7 @@ data:add {
    material = "elona.metal",
    level = 5,
    coefficient = 100,
-   has_random_name = "ring",
+   has_random_name = true,
    categories = {
       "elona.equip_neck_armor",
       "elona.equip_neck"
@@ -162,7 +162,7 @@ data:add {
    material = "elona.metal",
    rarity = 800000,
    coefficient = 100,
-   has_random_name = "ring",
+   has_random_name = true,
    categories = {
       "elona.equip_neck_armor",
       "elona.equip_neck"
@@ -218,7 +218,7 @@ data:add {
    weight = 250,
    material = "elona.iron",
    level = 15,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -255,7 +255,7 @@ data:add {
    weight = 400,
    material = "elona.coral",
    level = 25,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -294,7 +294,7 @@ data:add {
    weight = 400,
    material = "elona.mica",
    level = 25,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -333,7 +333,7 @@ data:add {
    weight = 150,
    material = "elona.mica",
    level = 5,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,

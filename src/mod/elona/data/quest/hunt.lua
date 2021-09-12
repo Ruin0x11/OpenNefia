@@ -10,9 +10,9 @@ local Event = require("api.Event")
 local hunt = {
    _id = "hunt",
    _type = "elona_sys.quest",
+   _ordering = 70000,
 
    elona_id = 1001,
-   ordering = 70000,
    client_chara_type = 1,
    reward = "elona.wear",
    reward_fix = 135,

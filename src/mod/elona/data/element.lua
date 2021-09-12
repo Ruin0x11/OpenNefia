@@ -16,7 +16,7 @@ local element = {
    {
       _id = "fire",
       elona_id = 50,
-      ordering = order(50),
+      _ordering = order(50),
       color = { 255, 155, 155 },
       ui_color = { 150, 0, 0 },
       can_resist = true,
@@ -60,7 +60,7 @@ local element = {
    {
       _id = "cold",
       elona_id = 51,
-      ordering = order(51),
+      _ordering = order(51),
       color = { 255, 255, 255 },
       ui_color = { 0, 0, 150 },
       can_resist = true,
@@ -83,7 +83,7 @@ local element = {
    {
       _id = "lightning",
       elona_id = 52,
-      ordering = order(52),
+      _ordering = order(52),
       color = { 255, 255, 175 },
       ui_color = { 150, 150, 0 },
       can_resist = true,
@@ -116,7 +116,7 @@ local element = {
    {
       _id = "darkness",
       elona_id = 53,
-      ordering = order(53),
+      _ordering = order(53),
       color = { 175, 175, 255 },
       ui_color = { 100, 80, 80 },
       can_resist = true,
@@ -134,7 +134,7 @@ local element = {
    {
       _id = "mind",
       elona_id = 54,
-      ordering = order(54),
+      _ordering = order(54),
       color = { 255, 195, 185 },
       ui_color = { 150, 100, 50 },
       can_resist = true,
@@ -153,7 +153,7 @@ local element = {
    {
       _id = "poison",
       elona_id = 55,
-      ordering = order(55),
+      _ordering = order(55),
       color = { 175, 255, 175 },
       ui_color = { 0, 150, 0 },
       can_resist = true,
@@ -171,7 +171,7 @@ local element = {
    {
       _id = "nether",
       elona_id = 56,
-      ordering = order(56),
+      _ordering = order(56),
       color = { 155, 154, 153 },
       ui_color = { 150, 50, 0 },
       can_resist = true,
@@ -206,7 +206,7 @@ local element = {
    {
       _id = "sound",
       elona_id = 57,
-      ordering = order(57),
+      _ordering = order(57),
       color = { 235, 215, 155 },
       ui_color = { 50, 100, 150 },
       can_resist = true,
@@ -224,7 +224,7 @@ local element = {
    {
       _id = "nerve",
       elona_id = 58,
-      ordering = order(59),
+      _ordering = order(59),
       color = { 155, 205, 205 },
       ui_color = { 100, 150, 50 },
       can_resist = true,
@@ -243,7 +243,7 @@ local element = {
    {
       _id = "chaos",
       elona_id = 59,
-      ordering = order(59),
+      _ordering = order(59),
       color = { 185, 155, 215 },
       ui_color = { 150, 0, 150 },
       can_resist = true,
@@ -280,7 +280,7 @@ local element = {
    {
       _id = "magic",
       elona_id = 60,
-      ordering = order(60),
+      _ordering = order(60),
       ui_color = { 150, 100, 100 },
       can_resist = true,
       rarity = 5,
@@ -297,7 +297,7 @@ local element = {
    {
       _id = "cut",
       elona_id = 61,
-      ordering = order(61),
+      _ordering = order(61),
 
       on_damage = function(chara, params)
          -- >>>>>>>> shade2/chara_func.hsp:1555 			if ele=rsResCut		: dmgCon tc,conBleed,rnd(eleP+ ..
@@ -309,7 +309,7 @@ local element = {
    {
       _id = "ether",
       elona_id = 62,
-      ordering = order(62),
+      _ordering = order(62),
 
       on_damage = function(chara)
          print("ether")
@@ -319,7 +319,7 @@ local element = {
       _id = "acid",
       color = { 175, 255, 175 },
       elona_id = 63,
-      ordering = order(63),
+      _ordering = order(63),
       sound = "base.atk_poison",
       death_anim = "base.anim_elem_poison",
 

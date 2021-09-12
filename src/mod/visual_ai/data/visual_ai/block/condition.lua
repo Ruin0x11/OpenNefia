@@ -1,12 +1,9 @@
 local I18N = require("api.I18N")
 local utils = require("mod.visual_ai.internal.utils")
-local UidTracker = require("api.UidTracker")
 local Pos = require("api.Pos")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local Const = require("api.Const")
 local Rand = require("api.Rand")
-
-local order = UidTracker:new(10000)
 
 data:add {
    _type = "visual_ai.block",
@@ -14,7 +11,6 @@ data:add {
 
    type = "condition",
    vars = {},
-   ordering = order:get_next_and_increment(),
 
    condition = function(self, chara, target, ty)
       return chara:has_los(target.x, target.y)
@@ -32,7 +28,6 @@ data:add {
       comparator = utils.vars.comparator,
       threshold = { type = "integer", min_value = 0, max_value = 100, default = 100, increment_amount = 10 }
    },
-   ordering = order:get_next_and_increment(),
 
    format_name = function(proto, vars)
       return I18N.get("visual_ai.block." .. proto._id .. ".name", "visual_ai.var.hp_mp_sp." .. vars.kind, vars.comparator, vars.threshold)
@@ -51,7 +46,6 @@ data:add {
 
    type = "condition",
    vars = {},
-   ordering = order:get_next_and_increment(),
 
    condition = function(self, chara, target)
       return Pos.dist(target.x, target.y, chara.x, chara.y) <= 1
@@ -64,7 +58,6 @@ data:add {
 
    type = "condition",
    vars = {},
-   ordering = order:get_next_and_increment(),
 
    condition = function(self, chara, target)
       local ranged, ammo = ElonaAction.get_ranged_weapon_and_ammo(chara)
@@ -85,7 +78,6 @@ data:add {
       comparator = utils.vars.comparator,
       threshold = { type = "integer", min_value = 0, default = 3 }
    },
-   ordering = order:get_next_and_increment(),
 
    format_name = function(proto, vars)
       return I18N.get("visual_ai.block." .. proto._id .. ".name", vars.comparator, vars.threshold)
@@ -104,7 +96,6 @@ data:add {
    vars = {
       skill_id = utils.vars.known_skill
    },
-   ordering = order:get_next_and_increment(),
 
    format_name = function(proto, vars)
       local name
@@ -140,7 +131,6 @@ data:add {
    vars = {
       chance = { type = "integer", min_value = 0, max_value = 100, default = 50, increment_amount = 10 }
    },
-   ordering = order:get_next_and_increment(),
 
    format_name = function(proto, vars)
       return I18N.get("visual_ai.block." .. proto._id .. ".name", vars.chance)

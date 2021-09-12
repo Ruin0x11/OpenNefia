@@ -1,8 +1,5 @@
 local Rand = require("api.Rand")
-local Item = require("api.Item")
-local World = require("api.World")
 local Filters = require("mod.elona.api.Filters")
-local schema = require("thirdparty.schema")
 local Enum = require("api.Enum")
 local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local Chara = require("api.Chara")
@@ -89,14 +86,61 @@ Available properties:
     shopkeeper: character who is the shopkeeper.
 ]]
 
--- NOTE: "id" must be the same as a character role, and between
--- [1000,1999]. (2003 is special-cased.)
+local ty_item_categories = types.some(types.data_id("base.item_type"), types.list(types.data_id("base.item_type")))
+
+local ty_shop_inv_rule = types.fields {
+   one_in = types.optional(types.uint),
+   all_but_one_in = types.optional(types.uint),
+   categories = types.optional(ty_item_categories),
+   id = types.optional(types.some(types.data_id("base.item"), types.literal("Skip"))),
+   choices = types.optional(types.list(types.fields {
+                                          -- TODO recursive types
+                                          categories = types.optional(types.some(types.data_id("base.item_type"),
+                                                                                 types.list(types.data_id("base.item_type")))),
+                                          choices = types.optional(types.table)
+   })),
+   predicate = types.optional(types.callback({"args", types.table}, types.boolean)),
+   on_generate = types.optional(types.callback({}, types.table)), -- TODO recursive types
+}
+
 data:add_type(
    {
       name = "shop_inventory",
-      schema = schema.Record {
-         type = schema.String,
-         value = schema.Any
+      fields = {
+         {
+            name = "elona_id",
+            type = types.uint,
+         },
+         {
+            name = "rules",
+            type = types.some(types.list(ty_shop_inv_rule), types.callback({}, types.list(ty_shop_inv_rule)))
+         },
+         {
+            name = "item_number",
+            type = types.optional(types.callback({"shopkeeper", types.map_object("base.chara"), "items_to_create", types.uint, "rules", types.list(ty_shop_inv_rule)}, types.uint))
+         },
+         {
+            name = "item_base_value",
+            type = types.optional(types.callback({"args", types.table}, types.uint))
+         },
+         {
+            name = "on_generate_item",
+            type = types.optional(types.callback("args", types.table))
+         },
+         {
+            name = "restock_interval",
+            type = types.positive(types.number)
+         },
+         {
+            name = "is_temporary",
+            type = types.boolean,
+            default = false
+         },
+         {
+            name = "ignores_noshop",
+            type = types.boolean,
+            default = false
+         },
       }
    }
 )

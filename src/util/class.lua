@@ -496,14 +496,12 @@ function class.uses_interface(klass_or_iface, iface)
 
    for _, i in ipairs(ifaces) do
       if iface == i then
-         print("find " .. " " .. klass_or_iface.__name .. " " .. iface.__name .. " " .. i.__name)
          return true
       end
 
       local children = _iface_children[iface] or {}
       for _, child in ipairs(children) do
          if class.uses_interface(klass_or_iface, child) then
-            print("find " .. " " .. klass_or_iface.__name .. " " .. iface.__name .. " " .. i.__name)
             return true
          end
       end

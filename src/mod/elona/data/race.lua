@@ -3,7 +3,7 @@ local race =
       {
          _id = "kobold",
          is_extra = true,
-         ordering = 20010,
+         _ordering = 20010,
          elona_id = 1,
 
          properties = {
@@ -51,7 +51,7 @@ local race =
       {
          _id = "orc",
          is_extra = true,
-         ordering = 20020,
+         _ordering = 20020,
          elona_id = 2,
 
          properties = {
@@ -98,7 +98,7 @@ local race =
       {
          _id = "troll",
          is_extra = true,
-         ordering = 20030,
+         _ordering = 20030,
          elona_id = 3,
 
          properties = {
@@ -142,7 +142,7 @@ local race =
       {
          _id = "lizardman",
          is_extra = true,
-         ordering = 20040,
+         _ordering = 20040,
          elona_id = 4,
 
          properties = {
@@ -190,7 +190,7 @@ local race =
       {
          _id = "minotaur",
          is_extra = true,
-         ordering = 20050,
+         _ordering = 20050,
          elona_id = 5,
 
          properties = {
@@ -234,7 +234,7 @@ local race =
       {
          _id = "yerles",
          is_extra = false,
-         ordering = 10010,
+         _ordering = 10010,
          elona_id = 6,
 
          properties = {
@@ -289,7 +289,7 @@ local race =
       {
          _id = "norland",
          is_extra = true,
-         ordering = 20060,
+         _ordering = 20060,
          elona_id = 7,
 
          properties = {
@@ -340,7 +340,7 @@ local race =
       {
          _id = "eulderna",
          is_extra = false,
-         ordering = 10020,
+         _ordering = 10020,
          elona_id = 8,
 
          properties = {
@@ -394,7 +394,7 @@ local race =
       {
          _id = "fairy",
          is_extra = false,
-         ordering = 10030,
+         _ordering = 10030,
          elona_id = 9,
 
          properties = {
@@ -458,7 +458,7 @@ local race =
       {
          _id = "asura",
          is_extra = true,
-         ordering = 20070,
+         _ordering = 20070,
          elona_id = 10,
 
          properties = {
@@ -501,7 +501,7 @@ local race =
       {
          _id = "slime",
          is_extra = true,
-         ordering = 20080,
+         _ordering = 20080,
          elona_id = 11,
 
          properties = {
@@ -540,7 +540,7 @@ local race =
       {
          _id = "wolf",
          is_extra = true,
-         ordering = 20090,
+         _ordering = 20090,
          elona_id = 12,
 
          properties = {
@@ -583,7 +583,7 @@ local race =
       {
          _id = "dwarf",
          is_extra = false,
-         ordering = 10040,
+         _ordering = 10040,
          elona_id = 13,
 
          properties = {
@@ -636,7 +636,7 @@ local race =
       {
          _id = "juere",
          is_extra = false,
-         ordering = 10050,
+         _ordering = 10050,
          elona_id = 14,
 
          properties = {
@@ -691,7 +691,7 @@ local race =
       {
          _id = "zombie",
          is_extra = true,
-         ordering = 20100,
+         _ordering = 20100,
          elona_id = 15,
 
          properties = {
@@ -741,7 +741,7 @@ local race =
       {
          _id = "elea",
          is_extra = false,
-         ordering = 10060,
+         _ordering = 10060,
          elona_id = 16,
 
          properties = {
@@ -795,7 +795,7 @@ local race =
       {
          _id = "rabbit",
          is_extra = true,
-         ordering = 20110,
+         _ordering = 20110,
          elona_id = 17,
 
          properties = {
@@ -835,7 +835,7 @@ local race =
       {
          _id = "sheep",
          is_extra = true,
-         ordering = 20120,
+         _ordering = 20120,
          elona_id = 18,
 
          properties = {
@@ -877,7 +877,7 @@ local race =
       {
          _id = "frog",
          is_extra = true,
-         ordering = 20130,
+         _ordering = 20130,
          elona_id = 19,
 
          properties = {
@@ -914,7 +914,7 @@ local race =
       {
          _id = "centipede",
          is_extra = true,
-         ordering = 20140,
+         _ordering = 20140,
          elona_id = 20,
 
          properties = {
@@ -952,7 +952,7 @@ local race =
       {
          _id = "snail",
          is_extra = false,
-         ordering = 10070,
+         _ordering = 10070,
          elona_id = 21,
 
          properties = {
@@ -988,7 +988,7 @@ local race =
       {
          _id = "mandrake",
          is_extra = true,
-         ordering = 20150,
+         _ordering = 20150,
          elona_id = 22,
 
          properties = {
@@ -1027,7 +1027,7 @@ local race =
       {
          _id = "beetle",
          is_extra = true,
-         ordering = 20160,
+         _ordering = 20160,
          elona_id = 23,
 
          properties = {
@@ -1065,7 +1065,7 @@ local race =
       {
          _id = "mushroom",
          is_extra = true,
-         ordering = 20170,
+         _ordering = 20170,
          elona_id = 24,
 
          properties = {
@@ -1105,7 +1105,7 @@ local race =
       {
          _id = "bat",
          is_extra = true,
-         ordering = 20180,
+         _ordering = 20180,
          elona_id = 25,
 
          properties = {
@@ -1143,7 +1143,7 @@ local race =
       {
          _id = "ent",
          is_extra = true,
-         ordering = 20190,
+         _ordering = 20190,
          elona_id = 26,
 
          properties = {
@@ -1184,7 +1184,7 @@ local race =
       {
          _id = "lich",
          is_extra = false,
-         ordering = 10080,
+         _ordering = 10080,
          elona_id = 27,
 
          properties = {
@@ -1246,7 +1246,7 @@ local race =
       {
          _id = "hound",
          is_extra = true,
-         ordering = 20200,
+         _ordering = 20200,
          elona_id = 28,
 
          properties = {
@@ -1289,7 +1289,7 @@ local race =
       {
          _id = "ghost",
          is_extra = true,
-         ordering = 20210,
+         _ordering = 20210,
          elona_id = 29,
 
          properties = {
@@ -1341,7 +1341,7 @@ local race =
       {
          _id = "spirit",
          is_extra = true,
-         ordering = 20220,
+         _ordering = 20220,
          elona_id = 30,
 
          properties = {
@@ -1385,7 +1385,7 @@ local race =
       {
          _id = "eye",
          is_extra = true,
-         ordering = 20230,
+         _ordering = 20230,
          elona_id = 31,
 
          properties = {
@@ -1423,7 +1423,7 @@ local race =
       {
          _id = "wyvern",
          is_extra = true,
-         ordering = 20240,
+         _ordering = 20240,
          elona_id = 32,
 
          properties = {
@@ -1464,7 +1464,7 @@ local race =
       {
          _id = "wasp",
          is_extra = true,
-         ordering = 20250,
+         _ordering = 20250,
          elona_id = 33,
 
          properties = {
@@ -1502,7 +1502,7 @@ local race =
       {
          _id = "giant",
          is_extra = true,
-         ordering = 20260,
+         _ordering = 20260,
          elona_id = 34,
 
          properties = {
@@ -1545,7 +1545,7 @@ local race =
       {
          _id = "imp",
          is_extra = true,
-         ordering = 20270,
+         _ordering = 20270,
          elona_id = 35,
 
          properties = {
@@ -1590,7 +1590,7 @@ local race =
       {
          _id = "hand",
          is_extra = true,
-         ordering = 20280,
+         _ordering = 20280,
          elona_id = 36,
 
          properties = {
@@ -1630,7 +1630,7 @@ local race =
       {
          _id = "snake",
          is_extra = true,
-         ordering = 20290,
+         _ordering = 20290,
          elona_id = 37,
 
          properties = {
@@ -1667,7 +1667,7 @@ local race =
       {
          _id = "drake",
          is_extra = true,
-         ordering = 20300,
+         _ordering = 20300,
          elona_id = 38,
 
          properties = {
@@ -1709,7 +1709,7 @@ local race =
       {
          _id = "goblin",
          is_extra = false,
-         ordering = 10090,
+         _ordering = 10090,
          elona_id = 39,
 
          properties = {
@@ -1763,7 +1763,7 @@ local race =
       {
          _id = "bear",
          is_extra = true,
-         ordering = 20310,
+         _ordering = 20310,
          elona_id = 40,
 
          properties = {
@@ -1808,7 +1808,7 @@ local race =
       {
          _id = "armor",
          is_extra = true,
-         ordering = 20320,
+         _ordering = 20320,
          elona_id = 41,
 
          properties = {
@@ -1854,7 +1854,7 @@ local race =
       {
          _id = "medusa",
          is_extra = true,
-         ordering = 20330,
+         _ordering = 20330,
          elona_id = 42,
 
          properties = {
@@ -1898,7 +1898,7 @@ local race =
       {
          _id = "cupid",
          is_extra = true,
-         ordering = 20340,
+         _ordering = 20340,
          elona_id = 43,
 
          properties = {
@@ -1942,7 +1942,7 @@ local race =
       {
          _id = "phantom",
          is_extra = true,
-         ordering = 20350,
+         _ordering = 20350,
          elona_id = 44,
          properties = {
             breed_power = 35,
@@ -1992,7 +1992,7 @@ local race =
       {
          _id = "harpy",
          is_extra = true,
-         ordering = 20360,
+         _ordering = 20360,
          elona_id = 45,
          properties = {
             breed_power = 420,
@@ -2036,7 +2036,7 @@ local race =
       {
          _id = "dragon",
          is_extra = true,
-         ordering = 20370,
+         _ordering = 20370,
          elona_id = 46,
 
          properties = {
@@ -2078,7 +2078,7 @@ local race =
       {
          _id = "dinosaur",
          is_extra = true,
-         ordering = 20380,
+         _ordering = 20380,
          elona_id = 47,
 
          properties = {
@@ -2120,7 +2120,7 @@ local race =
       {
          _id = "cerberus",
          is_extra = true,
-         ordering = 20390,
+         _ordering = 20390,
          elona_id = 48,
 
          properties = {
@@ -2164,7 +2164,7 @@ local race =
       {
          _id = "spider",
          is_extra = true,
-         ordering = 20400,
+         _ordering = 20400,
          elona_id = 49,
 
          properties = {
@@ -2208,7 +2208,7 @@ local race =
       {
          _id = "golem",
          is_extra = false,
-         ordering = 10100,
+         _ordering = 10100,
          elona_id = 50,
 
          properties = {
@@ -2270,7 +2270,7 @@ local race =
       {
          _id = "rock",
          is_extra = true,
-         ordering = 20410,
+         _ordering = 20410,
          elona_id = 51,
 
          properties = {
@@ -2309,7 +2309,7 @@ local race =
       {
          _id = "crab",
          is_extra = true,
-         ordering = 20420,
+         _ordering = 20420,
          elona_id = 52,
 
          properties = {
@@ -2353,7 +2353,7 @@ local race =
       {
          _id = "skeleton",
          is_extra = true,
-         ordering = 20430,
+         _ordering = 20430,
          elona_id = 53,
 
          properties = {
@@ -2408,7 +2408,7 @@ local race =
       {
          _id = "piece",
          is_extra = true,
-         ordering = 20440,
+         _ordering = 20440,
          elona_id = 54,
 
          properties = {
@@ -2456,7 +2456,7 @@ local race =
       {
          _id = "cat",
          is_extra = true,
-         ordering = 20450,
+         _ordering = 20450,
          elona_id = 55,
 
          properties = {
@@ -2503,7 +2503,7 @@ local race =
       {
          _id = "dog",
          is_extra = true,
-         ordering = 20460,
+         _ordering = 20460,
          elona_id = 56,
 
          properties = {
@@ -2548,7 +2548,7 @@ local race =
       {
          _id = "roran",
          is_extra = true,
-         ordering = 20470,
+         _ordering = 20470,
          elona_id = 57,
 
          properties = {
@@ -2597,7 +2597,7 @@ local race =
       {
          _id = "rat",
          is_extra = true,
-         ordering = 20480,
+         _ordering = 20480,
          elona_id = 58,
 
          properties = {
@@ -2639,7 +2639,7 @@ local race =
       {
          _id = "shell",
          is_extra = true,
-         ordering = 20490,
+         _ordering = 20490,
          elona_id = 59,
 
          properties = {
@@ -2678,7 +2678,7 @@ local race =
       {
          _id = "catgod",
          is_extra = true,
-         ordering = 20500,
+         _ordering = 20500,
          elona_id = 60,
 
          properties = {
@@ -2724,7 +2724,7 @@ local race =
       {
          _id = "machinegod",
          is_extra = true,
-         ordering = 20510,
+         _ordering = 20510,
          elona_id = 61,
 
          properties = {
@@ -2769,7 +2769,7 @@ local race =
       {
          _id = "undeadgod",
          is_extra = true,
-         ordering = 20520,
+         _ordering = 20520,
          elona_id = 62,
 
          properties = {
@@ -2812,7 +2812,7 @@ local race =
       {
          _id = "machine",
          is_extra = true,
-         ordering = 20530,
+         _ordering = 20530,
          elona_id = 63,
 
          properties = {
@@ -2862,7 +2862,7 @@ local race =
       {
          _id = "wisp",
          is_extra = true,
-         ordering = 20540,
+         _ordering = 20540,
          elona_id = 64,
 
          properties = {
@@ -2900,7 +2900,7 @@ local race =
       {
          _id = "chicken",
          is_extra = true,
-         ordering = 20550,
+         _ordering = 20550,
          elona_id = 65,
 
          properties = {
@@ -2938,7 +2938,7 @@ local race =
       {
          _id = "stalker",
          is_extra = true,
-         ordering = 20560,
+         _ordering = 20560,
          elona_id = 66,
 
          properties = {
@@ -2988,7 +2988,7 @@ local race =
       {
          _id = "catsister",
          is_extra = true,
-         ordering = 20570,
+         _ordering = 20570,
          elona_id = 67,
 
          properties = {
@@ -3036,7 +3036,7 @@ local race =
       {
          _id = "mutant",
          is_extra = false,
-         ordering = 10110,
+         _ordering = 10110,
          elona_id = 68,
 
          properties = {
@@ -3078,7 +3078,7 @@ local race =
       {
          _id = "yeek",
          is_extra = true,
-         ordering = 20580,
+         _ordering = 20580,
          elona_id = 69,
 
          properties = {
@@ -3125,7 +3125,7 @@ local race =
       {
          _id = "yith",
          is_extra = true,
-         ordering = 20590,
+         _ordering = 20590,
          elona_id = 70,
 
          properties = {
@@ -3172,7 +3172,7 @@ local race =
       {
          _id = "servant",
          is_extra = true,
-         ordering = 20600,
+         _ordering = 20600,
          elona_id = 71,
 
          properties = {
@@ -3224,7 +3224,7 @@ local race =
       {
          _id = "horse",
          is_extra = true,
-         ordering = 20610,
+         _ordering = 20610,
          elona_id = 72,
 
          properties = {
@@ -3263,7 +3263,7 @@ local race =
       {
          _id = "god",
          is_extra = true,
-         ordering = 20620,
+         _ordering = 20620,
          elona_id = 73,
 
          properties = {
@@ -3309,7 +3309,7 @@ local race =
       {
          _id = "quickling",
          is_extra = true,
-         ordering = 20630,
+         _ordering = 20630,
          elona_id = 74,
 
          properties = {
@@ -3359,7 +3359,7 @@ local race =
       {
          _id = "metal",
          is_extra = true,
-         ordering = 20640,
+         _ordering = 20640,
          elona_id = 75,
 
          properties = {
@@ -3405,7 +3405,7 @@ local race =
       {
          _id = "bike",
          is_extra = true,
-         ordering = 20650,
+         _ordering = 20650,
          elona_id = 76,
 
          properties = {
@@ -3453,7 +3453,7 @@ local race =
       -- For debug
       {
          _id = "slug",
-         ordering = 0,
+         _ordering = 0,
          is_extra = true,
 
          properties = {

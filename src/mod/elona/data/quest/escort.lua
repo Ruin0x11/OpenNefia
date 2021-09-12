@@ -45,9 +45,9 @@ end
 local escort = {
    _id = "escort",
    _type = "elona_sys.quest",
+   _ordering = 40000,
 
    elona_id = 1007,
-   ordering = 40000,
    client_chara_type = 6,
    reward = "elona.supply",
    reward_fix = 140,
@@ -55,7 +55,11 @@ local escort = {
    min_fame = 0,
    chance = 11,
 
-   params = { escort_type = "string", destination_map_uid = "number", encounters_seen = "number" },
+   params = {
+      escort_type = types.literal("protect", "poison", "deadline"),
+      destination_map_uid = types.uint,
+      encounters_seen = types.uint
+   },
 
    difficulty = 0,
 

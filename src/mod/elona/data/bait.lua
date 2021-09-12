@@ -1,5 +1,20 @@
 data:add_type {
-   name = "bait"
+   name = "bait",
+
+   fields = {
+      {
+         name = "image",
+         type = types.data_id("base.chip")
+      },
+      {
+         name = "rank",
+         type = types.uint,
+      },
+      {
+         name = "value",
+         type = types.uint
+      }
+   }
 }
 
 local function value(rank)

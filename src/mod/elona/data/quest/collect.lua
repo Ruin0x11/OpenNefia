@@ -15,9 +15,9 @@ local Enum = require("api.Enum")
 local collect = {
    _id = "collect",
    _type = "elona_sys.quest",
+   _ordering = 10000,
 
    elona_id = 1011,
-   ordering = 10000,
    client_chara_type = 3,
    reward = "elona.supply",
    reward_fix = 60,
@@ -26,9 +26,9 @@ local collect = {
    chance = 14,
 
    params = {
-      target_chara_uid = "number",
-      target_name = "string",
-      target_item_id = "string"
+      target_chara_uid = types.uint,
+      target_name = types.string,
+      target_item_id = types.data_id("base.item")
    },
 
    difficulty = function()
@@ -108,7 +108,6 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "quest_collect",
 
-   root = "talk.npc.quest_giver",
    nodes = {
       give = function(t)
          -- TODO generalize with dialog argument

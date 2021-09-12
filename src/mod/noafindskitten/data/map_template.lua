@@ -22,8 +22,8 @@ data:add {
    _id = "object",
 
    params = {
-      is_kitten = "boolean",
-      description = "string",
+      is_kitten = { type = types.boolean, default = false },
+      description = { type = types.string }
    },
 
    image = "noafindskitten.object",

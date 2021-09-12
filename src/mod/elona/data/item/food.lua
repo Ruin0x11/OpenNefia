@@ -402,7 +402,7 @@ data:add {
    image = "elona.item_hero_cheese",
    value = 100000,
    weight = 500,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -436,7 +436,7 @@ data:add {
    value = 900,
    weight = 500,
    level = 3,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 250000,
    coefficient = 100,
 
@@ -471,7 +471,7 @@ data:add {
    image = "elona.item_rabbits_tail",
    value = 10000,
    weight = 150,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -543,7 +543,7 @@ data:add {
    image = "elona.item_kagami_mochi",
    value = 2500,
    weight = 800,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 400000,
    coefficient = 0,
 
@@ -668,8 +668,6 @@ data:add {
    coefficient = 0,
    originalnameref2 = "bottle",
 
-   rftags = { "flavor" },
-
    categories = {
       "elona.food"
    },
@@ -691,8 +689,6 @@ data:add {
    rarity = 100000,
    coefficient = 0,
    originalnameref2 = "sack",
-
-   rftags = { "flavor" },
 
    categories = {
       "elona.food"
@@ -735,7 +731,7 @@ data:add {
    image = "elona.item_putitoro",
    value = 2000,
    weight = 200,
-   fltselect = 1,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 150000,
    coefficient = 0,
 
@@ -1315,7 +1311,7 @@ data:add {
    image = "elona.item_happy_apple",
    value = 100000,
    weight = 720,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,
@@ -1349,7 +1345,7 @@ data:add {
    image = "elona.item_magic_fruit",
    value = 100000,
    weight = 440,
-   fltselect = 3,
+   fltselect = Enum.FltSelect.SpUnique,
    coefficient = 100,
 
    is_precious = true,

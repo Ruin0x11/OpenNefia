@@ -5,7 +5,21 @@ local Enum = require("api.Enum")
 local Gardening = require("mod.elona.api.Gardening")
 
 data:add_type {
-   name = "plant"
+   name = "plant",
+   fields = {
+      {
+         name = "growth_difficulty",
+         type = types.number
+      },
+      {
+         name = "regrowth_difficulty",
+         type = types.number,
+      },
+      {
+         name = "on_harvest",
+         type = types.callback("plant", types.map_object("base.feat", "params", types.table)),
+      }
+   }
 }
 
 data:add {

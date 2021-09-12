@@ -13,14 +13,11 @@ local function maybe_init_rank(rank_id)
 end
 
 function Rank.iter()
-   local sort = function(a, b)
-      return (a.ordering or 0) < (b.ordering or 0)
-   end
    local map = function(rank)
       return rank, maybe_init_rank(rank._id)
    end
 
-   return data["elona.rank"]:iter():into_sorted(sort):map(map)
+   return data["elona.rank"]:iter():map(map)
 end
 
 function Rank.get(rank_id)

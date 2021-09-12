@@ -11,8 +11,6 @@ data:add {
    _type = "simple_indicators.indicator",
    _id = "hammer_level",
 
-   ordering = 1000000,
-
    render = function(player)
       -- >>>>>>>> oomSEST/src/net.hsp:896 			if (hammerNoPlus@st > 0) { ...
       if not Item.is_alive(global.tracked_hammer)
@@ -39,8 +37,6 @@ data:add {
 data:add {
    _type = "simple_indicators.indicator",
    _id = "sps",
-
-   ordering = 1001000,
 
    render = function(player)
       -- >>>>>>>> oomSEST/src/net.hsp:914 			if (length(spsIntervals) == 0) { ...

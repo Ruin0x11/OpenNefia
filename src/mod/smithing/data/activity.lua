@@ -10,7 +10,7 @@ data:add {
    _type = "base.activity",
    _id = "upgrade_hammer",
 
-   params = { hammer = "table" },
+   params = { hammer = types.map_object("base.chara") },
    default_turns = SmithingFormula.calc_hammer_activity_turns,
 
    animation_wait = 20,
@@ -48,7 +48,14 @@ data:add {
    _type = "base.activity",
    _id = "create_equipment",
 
-   params = { hammer = "table", extend = "number", categories = "table", target_item = "table", material_item = "table", infinite = "boolean" },
+   params = {
+      hammer = types.map_object("base.item"),
+      extend = types.number,
+      categories = types.list(types.data_id("base.item_type")),
+      target_item = types.map_object("base.item"),
+      material_item = types.map_object("base.item"),
+      infinite = types.optional(types.boolean)
+   },
    default_turns = SmithingFormula.calc_hammer_activity_turns,
 
    animation_wait = 20,
@@ -134,7 +141,11 @@ data:add {
    _type = "base.activity",
    _id = "repair_furniture",
 
-   params = { hammer = "table", target_item = "table", material_item = "table" },
+   params = {
+      hammer = types.map_object("base.item"),
+      target_item = types.map_object("base.item"),
+      material_item = types.map_object("base.item")
+   },
    default_turns = SmithingFormula.calc_hammer_activity_turns,
 
    animation_wait = 20,
@@ -172,7 +183,11 @@ data:add {
    _type = "base.activity",
    _id = "repair_equipment",
 
-   params = { hammer = "table", target_item = "table", power = "number" },
+   params = {
+      hammer = types.map_object("base.item"),
+      target_item = types.map_object("base.item"),
+      power = types.number
+   },
    default_turns = SmithingFormula.calc_hammer_activity_turns,
 
    animation_wait = 20,

@@ -37,8 +37,8 @@ end
 data:add {
    _type = "base.ui_indicator",
    _id = "nutrition",
+   _ordering = 10000,
 
-   ordering = 10000,
    indicator = indicator_nutrition
 }
 
@@ -57,8 +57,8 @@ end
 data:add {
    _type = "base.ui_indicator",
    _id = "burden",
+   _ordering = 190000,
 
-   ordering = 190000,
    indicator = indicator_burden
 }
 
@@ -82,8 +82,8 @@ end
 data:add {
    _type = "base.ui_indicator",
    _id = "stamina",
+   _ordering = 180000,
 
-   ordering = 180000,
    indicator = indicator_stamina
 }
 
@@ -109,8 +109,8 @@ end
 data:add {
    _type = "base.ui_indicator",
    _id = "awake_hours",
+   _ordering = 170000,
 
-   ordering = 170000,
    indicator = indicator_awake_hours
 }
 
@@ -118,7 +118,7 @@ local effect = {
    {
       _id = "sick",
 
-      ordering = 20000,
+      _ordering = 20000,
       color = {80, 120, 0},
       indicator = function(chara)
          local turns = chara:effect_turns("elona.sick")
@@ -182,7 +182,7 @@ local effect = {
    {
       _id = "poison",
 
-      ordering = 30000,
+      _ordering = 30000,
       color = { 0, 150, 0 },
       emotion_icon = "elona.skull",
       indicator = function(chara)
@@ -239,7 +239,7 @@ local effect = {
    {
       _id = "sleep",
 
-      ordering = 40000,
+      _ordering = 40000,
       color = {0, 50, 50},
       emotion_icon = "elona.sleep",
       indicator = function(chara)
@@ -303,7 +303,7 @@ local effect = {
    },
    {
       _id = "blindness",
-      ordering = 50000,
+      _ordering = 50000,
       color = {100, 100, 0},
       indicator = "effect.elona.blindness.indicator",
       emotion_icon = "elona.blind",
@@ -357,7 +357,7 @@ local effect = {
    },
    {
       _id = "paralysis",
-      ordering = 60000,
+      _ordering = 60000,
       color = {0, 100, 100},
       indicator = "effect.elona.paralysis.indicator",
       emotion_icon = "elona.paralyze",
@@ -402,7 +402,7 @@ local effect = {
    },
    {
       _id = "choking",
-      ordering = 70000,
+      _ordering = 70000,
       color = {0, 100, 100},
       indicator = "effect.elona.choking.indicator",
 
@@ -434,7 +434,7 @@ local effect = {
    },
    {
       _id = "confusion",
-      ordering = 80000,
+      _ordering = 80000,
       color = {100, 0, 100},
       indicator = "effect.elona.confusion.indicator",
       emotion_icon = "elona.confuse",
@@ -471,7 +471,7 @@ local effect = {
    },
    {
       _id = "fear",
-      ordering = 90000,
+      _ordering = 90000,
       color = {100, 0, 100},
       indicator = "effect.elona.fear.indicator",
       emotion_icon = "elona.fear",
@@ -496,7 +496,7 @@ local effect = {
    },
    {
       _id = "dimming",
-      ordering = 100000,
+      _ordering = 100000,
       color = {0, 100, 100},
       emotion_icon = "elona.dim",
 
@@ -561,7 +561,7 @@ local effect = {
    },
    {
       _id = "fury",
-      ordering = 110000,
+      _ordering = 110000,
       color = {150, 0, 0},
       indicator = function(chara)
          local turns = chara:effect_turns("elona.fury")
@@ -578,7 +578,7 @@ local effect = {
    },
    {
       _id = "bleeding",
-      ordering = 120000,
+      _ordering = 120000,
       color = {150, 0, 0},
       emotion_icon = "elona.bleed",
       indicator = function(chara)
@@ -626,7 +626,7 @@ local effect = {
    },
    {
       _id = "insanity",
-      ordering = 130000,
+      _ordering = 130000,
       color = {150, 100, 0},
       emotion_icon = "elona.insane",
       indicator = function(chara)
@@ -684,7 +684,7 @@ local effect = {
    },
    {
       _id = "drunk",
-      ordering = 140000,
+      _ordering = 140000,
       color = {100, 0, 100},
       indicator = "effect.elona.drunk.indicator",
       emotion_icon = "elona.happy",
@@ -701,7 +701,7 @@ local effect = {
    },
    {
       _id = "wet",
-      ordering = 150000,
+      _ordering = 150000,
       color = {0, 0, 160},
       indicator = "effect.elona.wet.indicator",
 
@@ -711,7 +711,7 @@ local effect = {
    },
    {
       _id = "gravity",
-      ordering = 160000,
+      _ordering = 160000,
       color = {0, 80, 80},
       indicator = "effect.elona.gravity.indicator"
    },

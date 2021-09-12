@@ -9,7 +9,7 @@ function ItemBookAspect:init(item, params)
       self.book_id = params.book_id
    else
       local cands = data["elona.book"]:iter()
-         :filter(function(book) return book.is_randomly_generated end)
+         :filter(function(book) return not book.no_generate end)
          :extract("_id")
          :to_list()
       self.book_id = Rand.choice(cands)

@@ -18,8 +18,6 @@ do
       _type = "base.map_archetype",
       elona_id = 10,
 
-      image = "elona.feat_area_crypt",
-
       starting_pos = MapEntrance.edge,
 
       properties = {
@@ -29,7 +27,7 @@ do
          level = 1,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          max_crowd_density = 7,
       }
    }
@@ -93,7 +91,7 @@ do
          is_indoor = false,
          max_crowd_density = 10,
          has_anchored_npcs = true,
-         default_ai_calm = 1
+         default_ai_calm = "base.calm_roam"
       }
    }
 
@@ -170,7 +168,7 @@ do
          turn_cost = 100000,
          level = 1,
          is_indoor = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          max_crowd_density = 0,
          prevents_teleport = true,
          prevents_return = true,
@@ -207,13 +205,13 @@ local function on_generate_border(map)
    chara:add_role("elona.shopkeeper", { inventory_id = "elona.general_vendor" })
    chara.shop_rank = 10
    chara.name = I18N.get("chara.job.general_vendor", chara.name)
-   chara.ai_calm = 3
+   chara.ai_calm_action = "base.calm_stand"
 
    chara = Chara.create("elona.shopkeeper", 5, 17, nil, map)
    chara:add_role("elona.shopkeeper", { inventory_id = "elona.trader" })
    chara.shop_rank = 12
    chara.name = I18N.get("chara.job.trader", chara.name)
-   chara.ai_calm = 3
+   chara.ai_calm_action = "base.calm_stand"
 
    chara = Chara.create("elona.shopkeeper", 16, 19, nil, map)
    chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
@@ -242,11 +240,11 @@ local function on_generate_border(map)
 
    chara = Chara.create("elona.guard", 5, 7, nil, map)
    chara:add_role("elona.guard")
-   chara.ai_calm = 3
+   chara.ai_calm_action = "base.calm_stand"
 
    chara = Chara.create("elona.guard", 8, 7, nil, map)
    chara:add_role("elona.guard")
-   chara.ai_calm = 3
+   chara.ai_calm_action = "base.calm_stand"
 end
 
 do
@@ -266,7 +264,7 @@ do
          level = 1,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          max_crowd_density = 0,
       }
    }
@@ -331,7 +329,7 @@ do
          level = 1,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          max_crowd_density = 0,
       }
    }
@@ -386,7 +384,7 @@ do
          level = 1,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
       },
    }
    data:add(south_tyris_north_border)
@@ -440,7 +438,7 @@ do
          level = 1,
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          max_crowd_density = 0,
       }
    }
@@ -457,22 +455,22 @@ do
 
       chara = Chara.create("elona.the_leopard_warrior", 26, 16, nil, map)
       chara:add_role("elona.special")
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.town_child", 25, 15, nil, map)
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.town_child", 25, 17, nil, map)
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.town_child", 27, 18, nil, map)
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.town_child", 27, 16, nil, map)
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.town_child", 26, 17, nil, map)
-      chara.ai_calm = 3
+      chara.ai_calm_action = "base.calm_stand"
 
       chara = Chara.create("elona.silvia", 4, 3, nil, map)
       chara:add_role("elona.special")
@@ -544,7 +542,7 @@ do
          level = 1,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          reveals_fog = true,
       }
    }
@@ -605,7 +603,7 @@ do
          level = 1,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          has_snow = true,
          max_crowd_density = 0,
       }
@@ -677,7 +675,7 @@ do
          level = 1,
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          max_crowd_density = 10,
       }
    }
@@ -764,7 +762,7 @@ do
          level = 1,
          is_indoor = false,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          max_crowd_density = 20,
       }
    }
@@ -866,7 +864,7 @@ do
          level = 1,
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          reveals_fog = true,
          max_crowd_density = 0,
       }
@@ -946,7 +944,7 @@ do
          level = 33,
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          max_crowd_density = 0,
       }
    }
@@ -999,7 +997,7 @@ do
          max_crowd_density = 0,
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 1
+         default_ai_calm = "base.calm_roam"
       }
    }
    function fort_of_chaos_machine.on_generate_map(area, floor)
@@ -1041,8 +1039,6 @@ do
       _type = "base.map_archetype",
       elona_id = 24,
 
-      image = "elona.feat_area_god",
-
       starting_pos = MapEntrance.south,
 
       properties = {
@@ -1053,7 +1049,7 @@ do
          max_crowd_density = 0,
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 1
+         default_ai_calm = "base.calm_roam"
       }
    }
    function fort_of_chaos_collapsed.on_generate_map(area, floor)
@@ -1105,7 +1101,7 @@ do
          level = -999999,
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 1,
+         default_ai_calm = "base.calm_roam",
          max_crowd_density = 0,
          item_on_floor_limit = 5,
 
@@ -1154,7 +1150,7 @@ do
          level = 20,
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          max_crowd_density = 40,
          prevents_teleport = true,
          material_spot_type = "elona.dungeon"
@@ -1200,7 +1196,7 @@ do
          level = 21,
          is_indoor = true,
          has_anchored_npcs = true,
-         default_ai_calm = 0,
+         default_ai_calm = "base.calm_null",
          max_crowd_density = 0,
          prevents_teleport = true,
          material_spot_type = "elona.dungeon"

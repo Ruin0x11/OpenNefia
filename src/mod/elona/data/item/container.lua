@@ -58,7 +58,6 @@ data:add {
    image = "elona.item_small_gamble_chest",
    value = 3000,
    weight = 3000,
-   category = 72000,
    rarity = 100000,
    coefficient = 100,
    random_color = "Furniture",
@@ -90,7 +89,6 @@ data:add {
    image = "elona.item_small_gamble_chest",
    value = 1200,
    weight = 300000,
-   category = 72000,
    rarity = 500000,
    coefficient = 100,
    random_color = "Furniture",
@@ -112,7 +110,6 @@ data:add {
    image = "elona.item_shop_strongbox",
    value = 1000,
    weight = 300000,
-   category = 72000,
    rarity = 500000,
    coefficient = 100,
    random_color = "Furniture",
@@ -140,8 +137,7 @@ data:add {
    image = "elona.item_heir_trunk",
    value = 380,
    weight = 1200,
-   fltselect = 1,
-   category = 72000,
+   fltselect = Enum.FltSelect.Sp,
    coefficient = 100,
 
    categories = {
@@ -171,8 +167,7 @@ data:add {
    image = "elona.item_wallet",
    value = 380,
    weight = 250,
-   fltselect = 1,
-   category = 72000,
+   fltselect = Enum.FltSelect.Sp,
    coefficient = 100,
 
    on_init_params = function(self)
@@ -213,17 +208,13 @@ data:add {
    image = "elona.item_heir_trunk",
    value = 380,
    weight = 1200,
-   fltselect = 1,
-   category = 72000,
+   fltselect = Enum.FltSelect.Sp,
    coefficient = 100,
    categories = {
       "elona.container",
       "elona.no_generate"
    },
    is_wishable = false,
-
-   on_init_params = function(self)
-   end,
 
    container_params = {
       type = "local"
@@ -252,7 +243,6 @@ data:add {
    image = "elona.item_material_box",
    value = 500,
    weight = 1200,
-   category = 72000,
    coefficient = 100,
    categories = {
       "elona.container"
@@ -266,7 +256,6 @@ data:add {
    image = "elona.item_rare_treasure_ball",
    value = 4000,
    weight = 500,
-   category = 72000,
    rarity = 100000,
    coefficient = 100,
 
@@ -300,7 +289,6 @@ data:add {
    image = "elona.item_rare_treasure_ball",
    value = 12000,
    weight = 500,
-   category = 72000,
    rarity = 25000,
    coefficient = 100,
    tags = { "spshop" },
@@ -336,7 +324,6 @@ data:add {
    image = "elona.item_small_gamble_chest",
    value = 1200,
    weight = 3400,
-   category = 72000,
    rarity = 50000,
    coefficient = 100,
 
@@ -496,8 +483,7 @@ data:add {
    image = "elona.item_new_years_gift",
    value = 1650,
    weight = 80,
-   fltselect = 1,
-   category = 72000,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 50000,
    coefficient = 100,
    categories = {
@@ -519,8 +505,7 @@ data:add {
    image = "elona.item_heir_trunk",
    value = 4500,
    weight = 20000,
-   fltselect = 1,
-   category = 72000,
+   fltselect = Enum.FltSelect.Sp,
    coefficient = 100,
 
    categories = {
@@ -536,8 +521,7 @@ data:add {
    image = "elona.item_salary_chest",
    value = 6400,
    weight = 20000,
-   fltselect = 1,
-   category = 72000,
+   fltselect = Enum.FltSelect.Sp,
    coefficient = 100,
 
    on_open = function(self, params)
@@ -562,8 +546,7 @@ data:add {
    image = "elona.item_masters_delivery_chest",
    value = 380,
    weight = 20000,
-   fltselect = 1,
-   category = 72000,
+   fltselect = Enum.FltSelect.Sp,
    coefficient = 100,
 
    is_precious = true,
@@ -596,8 +579,7 @@ data:add {
    image = "elona.item_shop_strongbox",
    value = 7200,
    weight = 20000,
-   fltselect = 1,
-   category = 72000,
+   fltselect = Enum.FltSelect.Sp,
    coefficient = 100,
 
    prevent_sell_in_own_shop = true,
@@ -625,8 +607,7 @@ data:add {
    value = 3800,
    weight = 15000,
    level = 30,
-   fltselect = 1,
-   category = 72000,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 50000,
    coefficient = 100,
 
@@ -684,8 +665,7 @@ data:add {
    value = 14500,
    weight = 6500,
    level = 30,
-   fltselect = 1,
-   category = 72000,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 100000,
    coefficient = 100,
 
@@ -714,8 +694,7 @@ data:add {
    value = 7500,
    weight = 2500,
    level = 30,
-   fltselect = 3,
-   category = 72000,
+   fltselect = Enum.FltSelect.SpUnique,
    rarity = 50000,
    coefficient = 100,
 
@@ -734,7 +713,7 @@ data:add {
    is_precious = true,
    quality = Enum.Quality.Unique,
 
-   can_use_flight_on = false,
+   cannot_use_flight_on = true,
 
    categories = {
       "elona.container",
@@ -784,8 +763,7 @@ data:add {
    value = 1800,
    weight = 150000,
    level = 10,
-   fltselect = 1,
-   category = 72000,
+   fltselect = Enum.FltSelect.Sp,
    rarity = 100000,
    coefficient = 100,
 
@@ -826,7 +804,6 @@ data:add {
    image = "elona.item_recipe_holder",
    value = 2500,
    weight = 550,
-   category = 72000,
    rarity = 100000,
    coefficient = 0,
    categories = {

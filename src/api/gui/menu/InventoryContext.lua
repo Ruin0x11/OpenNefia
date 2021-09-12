@@ -99,9 +99,9 @@ local sources = {
          return name .. " (Ground)"
       end,
       params = {
-         ground_x = { type = "number", optional = true },
-         ground_y = { type = "number", optional = true },
-         chara    = { type = "IChara", optional = true },
+         ground_x = types.optional(types.uint),
+         ground_y = types.optional(types.uint),
+         chara    = types.map_object("base.chara")
       }
    },
    {
@@ -203,14 +203,8 @@ function InventoryContext:init(proto, params, ctxt_params)
    if self.proto.params then
       for name, required_type in pairs(self.proto.params) do
          local val = passed_params[name]
-         local optional = false
 
-         if type(required_type) == "table" then
-            optional = required_type.optional
-            required_type = assert(required_type.type)
-         end
-
-         local ok = type(val) == required_type
+         local ok = types.check(val, required_type)
 
          if not ok then
             ok = type(val) == "table"
@@ -218,7 +212,7 @@ function InventoryContext:init(proto, params, ctxt_params)
                and val:is_a(required_type)
          end
 
-         if not ok and not (optional and val == nil) then
+         if not ok then
             error(string.format("Inventory context expects parameter %s (%s) to be passed.", name, required_type))
          end
 
@@ -258,7 +252,7 @@ end
 -- >>>>>>>> shade2/command.hsp:3431 	list(0,listMax)=cnt,refType*1000+iId(cnt) ...
 local function category_order(item)
    local order = function(cat)
-      return data["base.item_type"]:ensure(cat).ordering or 0
+      return data["base.item_type"]:ensure(cat)._ordering or 0
    end
 
    local major = item:major_categories()

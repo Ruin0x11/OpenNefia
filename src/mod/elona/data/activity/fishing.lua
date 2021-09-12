@@ -140,7 +140,7 @@ data:add {
    _id = "fishing",
    elona_id = 7,
 
-   params = { x = "number", y = "number", fishing_pole = "table", no_animation = "boolean" },
+   params = { x = types.uint, y = types.uint, fishing_pole = types.map_object("base.item"), no_animation = types.optional(types.boolean) },
    default_turns = 100,
 
    animation_wait = 40,

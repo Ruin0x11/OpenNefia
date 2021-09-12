@@ -13,9 +13,9 @@ local ElonaItem = require("mod.elona.api.ElonaItem")
 local supply = {
    _id = "supply",
    _type = "elona_sys.quest",
+   _ordering = 100000,
 
    elona_id = 1004,
-   ordering = 100000,
    client_chara_type = 3,
    reward = "elona.supply",
    reward_fix = 65,
@@ -24,7 +24,7 @@ local supply = {
    chance = 5,
 
    params = {
-      target_item_id = "string"
+      target_item_id = types.data_id("base.item")
    },
 
    difficulty = function() return math.clamp(Rand.rnd(Chara.player():calc("level") + 5) + 1, 1, 30) end,
@@ -70,7 +70,6 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "quest_supply",
 
-   root = "talk.npc.quest_giver",
    nodes = {
       trade = function(t)
          Gui.mes_c("TODO", "Yellow")

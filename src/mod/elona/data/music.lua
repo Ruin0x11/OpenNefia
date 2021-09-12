@@ -5,12 +5,12 @@ data:add {
    fields = {
       {
          name = "can_randomly_generate",
-         type = "boolean",
+         type = types.boolean,
          default = true
       },
       {
          name = "music_number",
-         type = "integer?",
+         type = types.optional(types.uint),
          default = nil
       }
    }

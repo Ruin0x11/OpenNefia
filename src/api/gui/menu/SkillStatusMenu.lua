@@ -287,7 +287,7 @@ function SkillStatusMenu.build_list(chara, mode, trainer_skills)
    local has_skill = function(skill_entry) return chara:has_skill(skill_entry._id) end
 
    -- >>>>>>>> shade2/command.hsp:2382 	list(0,listMax)=-1,20000:listn(0,listMax)=lang("◆ ..
-   list[#list+1] = { name = I18N.get("ui.chara_sheet.category.skill"), kind = "header", ordering = 100000 }
+   list[#list+1] = { name = I18N.get("ui.chara_sheet.category.skill"), kind = "header", ordering = 1000000 }
 
    local skill_iter
 
@@ -307,11 +307,11 @@ function SkillStatusMenu.build_list(chara, mode, trainer_skills)
          kind = "skill",
          icon = Ui.skill_icon(skill_entry.related_skill),
          right_align = right_align,
-         ordering = (skill_entry.elona_id or 0) + 110000
+         ordering = skill_entry._ordering + 1100000
       }
    end
 
-   list[#list+1] = { name = I18N.get("ui.chara_sheet.category.weapon_proficiency"), kind = "header", ordering = 200000 }
+   list[#list+1] = { name = I18N.get("ui.chara_sheet.category.weapon_proficiency"), kind = "header", ordering = 2000000 }
 
    for _, skill_entry in Skill.iter_weapon_proficiencies() do
       local add = true
@@ -334,13 +334,13 @@ function SkillStatusMenu.build_list(chara, mode, trainer_skills)
             detail = skill_detail(skill_entry._id),
             icon = Ui.skill_icon(skill_entry.related_skill),
             right_align = right_align,
-            ordering = (skill_entry.elona_id or 0) + 210000
+            ordering = skill_entry._ordering + 2100000
          }
       end
    end
 
    if mode == "player_status" or mode == "informer" then
-      list[#list+1] = { name = I18N.get("ui.chara_sheet.category.resistance"), kind = "header", ordering = 300000 }
+      list[#list+1] = { name = I18N.get("ui.chara_sheet.category.resistance"), kind = "header", ordering = 3000000 }
       for _, element_entry in Skill.iter_resistances() do
          if chara:has_resist(element_entry._id) then
             list[#list+1] = {
@@ -352,7 +352,7 @@ function SkillStatusMenu.build_list(chara, mode, trainer_skills)
                detail = resist_detail(element_entry._id),
                icon = 11,
                right_align = right_align,
-               ordering = (element_entry.elona_id or 0) + 310000
+               ordering = element_entry._ordering or 0 + 3100000
             }
          end
       end
