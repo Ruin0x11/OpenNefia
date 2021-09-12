@@ -285,11 +285,11 @@ function field_layer:update_scrolling()
 
       if config.base.scroll_type == "classic" then
          -- >>>>>>>> elona122/shade2/screen.hsp:1224 *screen_scroll ...
-         local frames = 5
+         local frames = 3
          if self.scrolling_mode == "fast" then
-            frames = 3
+            frames = 4 -- TODO config option: running speed (?)
          elseif self.scrolling_mode == "slow" then
-            frames = 6
+            frames = 5 -- TODO config option: walking speed
          end
          if self:player_is_running() then
             frames = 1
@@ -322,7 +322,7 @@ function field_layer:update_scrolling()
                self.draw_callbacks:update(dt)
                self.keys:update_repeats(dt)
                ms = ms + dt
-            until ms > 33.0 / 1000.0
+            until ms > 20.0 / 1000.0
          end
          -- <<<<<<<< elona122/shade2/screen.hsp:1267 	return ..
       else

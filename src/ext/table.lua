@@ -676,3 +676,13 @@ function table.clear(tbl)
       tbl[k] = nil
    end
 end
+
+function table.reverse(tbl)
+   local n = #tbl
+   local i = 1
+   while i < n do
+      tbl[i], tbl[n] = tbl[n], tbl[i]
+      i = i + 1
+      n = n - 1
+   end
+end
