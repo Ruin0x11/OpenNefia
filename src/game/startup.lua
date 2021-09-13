@@ -56,8 +56,8 @@ local function copy_files(src, dest)
 end
 
 local function check_dependencies()
-   copy_files("deps/elona/graphic", "graphic")
-   copy_files("deps/elona/sound", "mod/elona/sound")
+   -- copy_files("deps/elona/graphic", "graphic")
+   -- copy_files("deps/elona/sound", "mod/elona/sound")
 end
 
 local function load_keybinds()

@@ -134,6 +134,18 @@ function env.find_calling_mod(offset)
       return path_is_in_mod(hotload_path) or "base"
    end
 
+   if _IS_LOVEJS then
+      for i = #LOADING_STACK, 1, -1 do
+         local path = LOADING_STACK[i]
+         local mod_name = path_is_in_mod(path)
+         if mod_name then
+            return mod_name
+         end
+      end
+
+      return "base"
+   end
+
    if #LOADING_STACK > 0 then
       for i = #LOADING_STACK-offset, 1, -1 do
          local path = LOADING_STACK[i]
@@ -212,6 +224,24 @@ local function get_require_path(path, mod_env)
 
    local resolved = package.searchpath(path, package.path)
 
+   if resolved == nil then
+      -- Some modules like luasocket aren't in package.cpath but can
+      -- be loaded with 'require' anyway because they're a part of
+      -- LÖVE.
+      if LOVE2D_REQUIRES[path] then
+         -- Catch any errors that might occur if we attempt to load the native
+         -- library but fail.
+         local ok, err = xpcall(package.require, debug.traceback, path)
+         if ok then
+            return path, true
+         end
+
+         Log.debug("Failed to load native library \"%s\": %s", path, err)
+
+         return nil, false
+      end
+   end
+
    if resolved == nil and can_load_native_libs(mod_env) then
       -- Also try cpath, but only when not using the love runtime
       -- (tests). Mods shouldn't be able to load arbitrary native
@@ -232,24 +262,6 @@ local function get_require_path(path, mod_env)
       end
    end
 
-   if resolved == nil then
-      -- Some modules like luasocket aren't in package.cpath but can
-      -- be loaded with 'require' anyway because they're a part of
-      -- LÖVE.
-      if LOVE2D_REQUIRES[path] then
-         -- Catch any errors that might occur if we attempt to load the native
-         -- library but fail.
-         local ok, err = xpcall(global_require, debug.traceback, path)
-         if ok then
-            return path, true
-         end
-
-         Log.debug("Failed to load native library \"%s\": %s", path, err)
-
-         return nil, false
-      end
-   end
-
    return resolved, false
 end
 
@@ -266,7 +278,7 @@ local function env_dofile(path, mod_env)
    if require_now then
       -- Catch any errors that might occur if we attempt to load a native
       -- library but fail.
-      local success, err = xpcall(global_require, debug.traceback, resolved)
+      local success, err = xpcall(package.require, debug.traceback, resolved)
       if not success then
          return nil, err
       end
@@ -434,19 +446,19 @@ local function gen_require(chunk_loader, can_load_path)
       end
 
       if LOADING[req_path] then
-         local loop = {}
-         local found = false
-         for _, p in ipairs(LOADING_STACK) do
-            if p == req_path then
-               found = true
-            end
-            if found then
-               loop[#loop+1] = p
-            end
-         end
-         LOADING = {}
-         LOADING_STACK = {}
-         error("Loop while loading " .. req_path .. ":\n" .. inspect(loop))
+         -- local loop = {}
+         -- local found = false
+         -- for _, p in ipairs(LOADING_STACK) do
+         --    if p == req_path then
+         --       found = true
+         --    end
+         --    if found then
+         --       loop[#loop+1] = p
+         --    end
+         -- end
+         -- LOADING = {}
+         -- LOADING_STACK = {}
+         -- error("Loop while loading " .. req_path .. ":\n" .. inspect(loop))
       end
 
       hotload = hotload or HOTLOAD_DEPS
@@ -810,7 +822,7 @@ function env.reset()
    -- global context (bypassing the hooked `require`).
    local function rerequire_globally(path)
       package.loaded[path] = nil
-      package.loaded[path] = global_require(path)
+      package.loaded[path] = package.require(path)
    end
 
    -- `api.Log` is weird, since we use it in really low level places like

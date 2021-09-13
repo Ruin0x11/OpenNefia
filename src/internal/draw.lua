@@ -52,6 +52,8 @@ local function set_window_mode(width, height, window_mode)
    window_mode.minheight = 600
    window_mode.vsync = true
    window_mode.resizable = true
+   width = 800
+   height = 600
 
    local success = love.window.setMode(width, height, window_mode)
    if not success then
@@ -629,6 +631,8 @@ end
 
 function draw.reload_window_mode()
    local new_w, new_h = config.base.screen_resolution:match("(.+)x(.+)")
+   new_w = 800
+   new_h = 600
    local mode = config.base.screen_mode
    draw.set_fullscreen(mode, new_w, new_h)
 end

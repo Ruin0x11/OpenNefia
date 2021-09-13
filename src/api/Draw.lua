@@ -444,7 +444,7 @@ function Draw.color_from_bytes(r, g, b, a)
    return love.math.colorFromBytes(r, g, b, a)
 end
 
-local supports_subtract = Env.os() ~= "Android"
+local supports_subtract = Env.os() ~= "Android" and Env.os() ~= "Web"
 
 function Draw.set_blend_mode(mode, alphamode)
    -- BUG: Graphics hardware on mobile devices doesn't always seem to

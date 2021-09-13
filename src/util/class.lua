@@ -156,7 +156,7 @@ local function verify(instance, interface, message)
       if type(instance[name]) ~= required_type and not optional then
          ok = false
          if message then
-            err = (err or "") .. string.format("\n    %s (%s)", name, required_type)
+            err = (err or "") .. string.format("\n    %s (%s)", tostring(name), tostring(required_type))
          end
       end
    end
@@ -232,7 +232,7 @@ function class.assert_is_an(interface, obj)
          ok, err = verify(obj, interface, true)
       end
 
-      error(string.format("%s (%s) is not an instance of %s: %s", obj, type(obj), interface, err))
+      error(string.format("%s (%s) is not an instance of %s: %s", tostring(obj), type(obj), tostring(interface), tostring(err)))
    end
 end
 
@@ -268,7 +268,7 @@ function class.implements(iface, klass_or_iface)
 end
 
 function class.assert_implements(iface, klass_or_iface)
-   assert(class.implements(iface, klass_or_iface), ("%s does not implement %s"):format(klass_or_iface, iface))
+   assert(class.implements(iface, klass_or_iface), ("%s does not implement %s"):format(tostring(klass_or_iface), tostring(iface)))
 end
 
 local function copy_all_interface_methods_to_class(klass)

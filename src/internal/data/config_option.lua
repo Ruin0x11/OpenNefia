@@ -173,7 +173,7 @@ data:add_multi(
 
          on_changed = function(v, is_startup)
             if not is_startup then
-               draw.reload_window_mode()
+               -- draw.reload_window_mode()
             end
          end
       },
@@ -190,7 +190,7 @@ data:add_multi(
 
          on_changed = function(v, is_startup)
             if not is_startup and config.base.screen_mode ~= "desktop" then
-               draw.reload_window_mode()
+               -- draw.reload_window_mode()
             end
          end
       },

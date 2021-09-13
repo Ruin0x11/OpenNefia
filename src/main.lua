@@ -21,8 +21,8 @@ function love.load(arg)
    draw.init()
    Draw.set_font(12)
 
-   server = debug_server:new()
-   server:start()
+   -- server = debug_server:new()
+   -- server:start()
 
    if arg[#arg] == "-debug" then
       _DEBUG = true
@@ -66,14 +66,14 @@ function love.update(dt)
 
    main_state.frame_start = true
 
-   if env.server_needs_restart then
-      if server then
-         server:stop()
-      end
-      server = debug_server:new()
-      server:start()
-      env.server_needs_restart = false
-   end
+   -- if env.server_needs_restart then
+   --    if server then
+   --       server:stop()
+   --    end
+   --    server = debug_server:new()
+   --    server:start()
+   --    env.server_needs_restart = false
+   -- end
 
    if server then
       local ok, cmd_name = server:step(dt)

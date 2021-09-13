@@ -201,7 +201,7 @@ function Inspector:puts(...)
   if self.max_length and #buffer >= self.max_length then
      len = len + 1
      buffer[len] = "< ... >"
-     error("over length")
+     error(Inspector)
   end
 end
 
@@ -346,7 +346,7 @@ function inspect.inspect(root, options)
   }, Inspector_mt)
 
   local ok, err = pcall(inspector.putValue, inspector, root)
-  if not ok and not err:match(": over length$") then
+  if not ok and err ~= Inspector then
      error(err)
   end
 

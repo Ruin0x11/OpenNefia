@@ -3456,6 +3456,11 @@ local race =
          _ordering = 0,
          is_extra = true,
 
+         male_ratio = 50,
+         height = 150,
+         age_min = 15,
+         age_max = 44,
+
          properties = {
             dv_correction = 1000,
          },

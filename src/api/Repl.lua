@@ -95,7 +95,7 @@ function Repl.generate_env(locals)
    repl_env = table.merge(repl_env, repl.require_all_apis("game"))
    repl_env = table.merge(repl_env, repl.require_all_apis("util"))
 
-   repl_env._traceback = debug.traceback("", nil, 2)
+   repl_env._traceback = "" -- debug.traceback("", nil, 2)
 
    local history = {}
    if SaveFs.exists("data/repl_history", "global") then

@@ -272,11 +272,14 @@ function bmp_convert.load_image(source, key_color)
 
    local image
    if string.match(source, "%.bmp$") and not Env.is_headless() then
-      image = bmp_convert.convert(source, key_color)
+      -- image = bmp_convert.convert(source, key_color)
+      local source2 = source:gsub("%.bmp$", ".png")
+      image = love.graphics.newImage(source2)
    else
       image = love.graphics.newImage(source)
    end
 
+   print(">>>" .. source)
    image_cache[source] = image_cache[source] or {}
    image_cache[source][key] = image
 

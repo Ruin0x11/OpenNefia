@@ -86,7 +86,7 @@ local function print_fields(fields)
 end
 
 local function type_error(ty, inner)
-   local s = ("Value is not of type \"%s\""):format(ty)
+   local s = ("Value is not of type \"%s\""):format(tostring(ty))
    if inner then
       s = s .. "(" .. inner .. ")"
    end
@@ -101,7 +101,7 @@ local ITypeChecker = class.interface("ITypeChecker", { check = "function" })
 
 local function is_type_checker(obj, ctxt)
    if not class.is_an(ITypeChecker, obj) then
-      return false, ("%s is not a type checker"):format(obj, ctxt)
+      return false, ("%s is not a type checker"):format(tostring(obj))
    end
    return true
 end
@@ -386,7 +386,7 @@ do
       return false, type_error(self)
    end
    function gt_checker:__tostring()
-      return ("%s > %s"):format(self.checker, self.comp)
+      return ("%s > %s"):format(tostring(self.checker), tostring(self.comp))
    end
    types.gt = wrap(gt_checker)
 end
@@ -411,7 +411,7 @@ do
       return false, type_error(self)
    end
    function lt_checker:__tostring()
-      return ("%s < %s"):format(self.checker, self.comp)
+      return ("%s < %s"):format(tostring(self.checker), tostring(self.comp))
    end
    types.lt = wrap(lt_checker)
 end
@@ -436,7 +436,7 @@ do
       return false, type_error(self)
    end
    function gteq_checker:__tostring()
-      return ("%s >= %s"):format(self.checker, self.comp)
+      return ("%s >= %s"):format(tostring(self.checker), tostring(self.comp))
    end
    types.gteq = wrap(gteq_checker)
 end
@@ -461,7 +461,7 @@ do
       return false, type_error(self)
    end
    function lteq_checker:__tostring()
-      return ("%s <= %s"):format(self.checker, self.comp)
+      return ("%s <= %s"):format(tostring(self.checker), tostring(self.comp))
    end
    types.lteq = wrap(lteq_checker)
 end
@@ -497,7 +497,7 @@ do
       return false, type_error(self)
    end
    function range_checker:__tostring()
-      return ("%s in [%s, %s]"):format(self.checker, self.min, self.max)
+      return ("%s in [%s, %s]"):format(tostring(self.checker), tostring(self.min), tostring(self.max))
    end
    types.range = wrap(range_checker)
 end
@@ -505,7 +505,7 @@ end
 do
    local enum_checker = class.class("enum_checker", ITypeChecker)
    function enum_checker:init(enum)
-      assert(is_enum(enum), ("%s is not an enum"):format(enum))
+      assert(is_enum(enum), ("%s is not an enum"):format(tostring(enum)))
       self.enum = enum
    end
    function enum_checker:check(obj, _ctxt)
@@ -524,7 +524,7 @@ end
 do
    local class_checker = class.class("class_checker", ITypeChecker)
    function class_checker:init(klass)
-      assert(class.is_class(klass), ("%s is not a class"):format(klass))
+      assert(class.is_class(klass), ("%s is not a class"):format(tostring(klass)))
       self.class = klass
    end
    function class_checker:check(obj, _ctxt)
@@ -543,7 +543,7 @@ end
 do
    local interface_checker = class.class("interface_checker", ITypeChecker)
    function interface_checker:init(iface)
-      assert(class.is_interface(iface), ("%s is not an interface"):format(iface))
+      assert(class.is_interface(iface), ("%s is not an interface"):format(tostring(iface)))
       self.iface = iface
    end
    function interface_checker:check(obj, _ctxt)
@@ -562,7 +562,7 @@ end
 do
    local class_type_implementing_checker = class.class("class_type_implementing_checker", ITypeChecker)
    function class_type_implementing_checker:init(iface)
-      assert(class.is_interface(iface), ("%s is not a interface"):format(iface))
+      assert(class.is_interface(iface), ("%s is not a interface"):format(tostring(iface)))
       self.iface = iface
    end
    function class_type_implementing_checker:check(obj, _ctxt)
@@ -577,7 +577,7 @@ do
       return false, type_error(self)
    end
    function class_type_implementing_checker:__tostring()
-      return ("<? implements %s>"):format(self.iface)
+      return ("<? implements %s>"):format(tostring(self.iface))
    end
    types.class_type_implementing = wrap(class_type_implementing_checker)
 end
@@ -596,7 +596,7 @@ do
       return false, type_error(self)
    end
    function iterator_checker:__tostring()
-      return ("iterator<%s>"):format(self.ty)
+      return ("iterator<%s>"):format(tostring(self.ty))
    end
    types.iterator = wrap(iterator_checker)
 end
@@ -619,7 +619,7 @@ function optional_checker:check(obj, ctxt)
    return true
 end
 function optional_checker:__tostring()
-   return ("optional<%s>"):format(self.checker)
+   return ("optional<%s>"):format(tostring(self.checker))
 end
 types.optional = wrap(optional_checker)
 
@@ -628,7 +628,7 @@ do
    function tuple_checker:init(checkers)
       for i, checker in ipairs(checkers) do
          if not is_type_checker(checker) then
-            error(("Object for tuple index '%s' is not a type checker (%s)"):format(i, checker))
+            error(("Object for tuple index '%s' is not a type checker (%s)"):format(tostring(i), tostring(checker)))
          end
       end
       self.checkers = checkers
@@ -679,7 +679,7 @@ do
       return true
    end
    function keys_checker:__tostring()
-      return ("keys<%s>"):format(self.checker)
+      return ("keys<%s>"):format(tostring(self.checker))
    end
    types.keys = wrap(keys_checker)
 end
@@ -707,7 +707,7 @@ do
       return true
    end
    function values_checker:__tostring()
-      return ("values<%s>"):format(self.checker)
+      return ("values<%s>"):format(tostring(self.checker))
    end
    types.values = wrap(values_checker)
 end
@@ -744,7 +744,7 @@ do
       return true
    end
    function map_checker:__tostring()
-      return ("map<%s, %s>"):format(self.key_checker, self.value_checker)
+      return ("map<%s, %s>"):format(tostring(self.key_checker), tostring(self.value_checker))
    end
    types.map = wrap(map_checker)
 end
@@ -772,7 +772,7 @@ do
 
       local ok, err = list_keys_checker:check(obj, ctxt)
       if not ok then
-         return false, type_error(("table with integer keys (%s)"):format(err))
+         return false, type_error(("table with integer keys (%s)"):format(tostring(err)))
       end
 
       for i, val in ipairs(obj, ctxt) do
@@ -787,7 +787,7 @@ do
       return true
    end
    function list_checker:__tostring()
-      return ("list<%s>"):format(self.checker)
+      return ("list<%s>"):format(tostring(self.checker))
    end
    types.list = wrap(list_checker)
 end
@@ -862,7 +862,7 @@ do
    function fields_checker:init(fields, array_part)
       for key, checker in pairs(fields) do
          if not is_type_checker(checker) then
-            error(("Object for field '%s' is not a type checker (%s)"):format(key, checker))
+            error(("Object for field '%s' is not a type checker (%s)"):format(tostring(key), tostring(checker)))
          end
       end
       if array_part then
@@ -909,7 +909,7 @@ do
    function fields_strict_checker:init(fields)
       for key, checker in pairs(fields) do
          if not is_type_checker(checker) then
-            error(("Object for field '%s' is not a type checker (%s)"):format(key, checker))
+            error(("Object for field '%s' is not a type checker (%s)"):format(tostring(key), tostring(checker)))
          end
       end
       self.fields = fields
@@ -923,7 +923,7 @@ do
       for key, val in pairs(obj, ctxt) do
          local checker = self.fields[key]
          if not checker then
-            return false, ("Table has superfluous key: \"%s\""):format(key)
+            return false, ("Table has superfluous key: \"%s\""):format(tostring(key))
          end
 
          ctxt:push(key, val)
@@ -942,7 +942,7 @@ do
       if missing then
          local checker = self.fields[missing]
          if not class.is_an(optional_checker, checker) then
-            return false, ("Table is missing required field '%s' of type '%s'"):format(missing, checker)
+            return false, ("Table is missing required field '%s' of type '%s'"):format(tostring(missing), tostring(checker))
          end
       end
 
@@ -998,7 +998,7 @@ do
       return true
    end
    function data_id_checker:__tostring()
-      return ("data_id<%s>"):format(self._type)
+      return ("data_id<%s>"):format(tostring(self._type))
    end
    types.data_id = wrap(data_id_checker)
 end
@@ -1020,7 +1020,7 @@ do
       return true
    end
    function data_entry_checker:__tostring()
-      return ("data_entry<%s>"):format(self._type)
+      return ("data_entry<%s>"):format(tostring(self._type))
    end
    types.data_entry = wrap(data_entry_checker)
 end
@@ -1076,13 +1076,13 @@ do
       end
 
       if self._type ~= obj._type then
-         return false, ("Expected map object of type '%s', got '%s'"):format(self._type, obj._type)
+         return false, ("Expected map object of type '%s', got '%s'"):format(tostring(self._type), tostring(obj._type))
       end
 
       return true
    end
    function map_object_checker:__tostring()
-      return ("map_object<%s>"):format(self._type)
+      return ("map_object<%s>"):format(tostring(self._type))
    end
    types.map_object = wrap(map_object_checker)
 end
@@ -1107,7 +1107,7 @@ function types.check(obj, checker, verbose)
             s = get_name(obj, ctxt)
          end
       end
-      return false, ("%s: %s"):format(err, s)
+      return false, ("%s: %s"):format(tostring(err), tostring(s))
    end
    return true
 end
