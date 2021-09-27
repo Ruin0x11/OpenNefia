@@ -127,6 +127,7 @@ function UiHelpMarkup.parse_elona_markup(text, width, color, font_size)
             if tag.reset_x then
                current_text = current_text .. "\n"
                x = 0
+               last_x = 0
             end
             if tag.font_delta then
                font_size = base_font_size + tag.font_delta
