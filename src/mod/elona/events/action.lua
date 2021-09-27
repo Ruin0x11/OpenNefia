@@ -51,17 +51,6 @@ end
 
 Event.register("elona.on_chara_displaced", "Interrupt eating activity", interrupt_eating_activity)
 
-local function interrupt_eating_activity(chara, params, result)
-   -- >>>>>>>> shade2/action.hsp:551 			if cRowAct(tc)=rowActEat:if cActionPeriod(tc)>0 ...
-   local displacer = params.chara
-   local activity = chara:get_activity()
-   if activity and activity.proto.interrupt_on_displace then
-      Gui.mes("action.move.interrupt", chara, displacer)
-      chara:remove_activity()
-   end
-   -- <<<<<<<< shade2/action.hsp:551 			if cRowAct(tc)=rowActEat:if cActionPeriod(tc)>0 ..
-end
-
 local function proc_moved_onto_water(chara, params)
    -- >>>>>>>> shade2/action.hsp:639  	if tRole(p)=tWater{ ...
    chara.y_offset = nil

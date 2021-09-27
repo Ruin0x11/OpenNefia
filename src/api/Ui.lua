@@ -10,10 +10,6 @@ local Gui = require("api.Gui")
 local config = require("internal.config")
 local data = require("internal.data")
 
-local UiMouseButton = require("mod.mouse_ui.api.gui.UiMouseButton")
-local UiMouseMenuButton = require("mod.mouse_ui.api.gui.UiMouseMenuButton")
-local UiMouseMenu = require("mod.mouse_ui.api.gui.UiMouseMenu")
-
 -- Commonly used functions for UI rendering.
 -- @module Ui
 local Ui = {}

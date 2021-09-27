@@ -67,8 +67,6 @@ function TestUtil.stripped_item(id, map, x, y, amount, aspects)
    return item
 end
 
-local transient_paths = table.set {}
-
 function TestUtil.hotload_code(path, mod_id, code)
    env.load_transient_path(path, mod_id, code)
    return hotload.hotload(path, false)

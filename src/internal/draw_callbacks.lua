@@ -127,6 +127,8 @@ end
 function draw_callbacks:update(dt)
    -- TODO: order by priority
    for _, co in pairs(self.draw_callbacks) do
+      -- BUG: update gets called twice for some reason in scene playback. It
+      -- leads to large delays in some cases.
       co.dt = co.dt - dt
    end
    self.dt_this_frame = dt
@@ -140,9 +142,6 @@ function draw_callbacks:update(dt)
 end
 
 function draw_callbacks:has_more(include_bg_cbs)
-   if include_bg_cbs then
-      print(inspect(self.draw_callbacks))
-   end
    for _, draw_cb in pairs(self.draw_callbacks) do
       if not draw_cb.is_background then
          return true

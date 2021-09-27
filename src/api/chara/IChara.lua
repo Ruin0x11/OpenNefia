@@ -685,7 +685,7 @@ end
 
 function IChara:get_screen_pos()
    local sx, sy = IMapObject.get_screen_pos(self)
-   return sx + self.scroll_x_offset, sy + self.scroll_y_offset
+   return sx + (self.scroll_x_offset or 0), sy + (self.scroll_y_offset or 0)
 end
 
 function IChara:remove_ownership()

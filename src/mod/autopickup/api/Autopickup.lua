@@ -8,12 +8,6 @@ local Enum = require("api.Enum")
 
 local Autopickup = {}
 
-local cache = nil
-
-function Autopickup.clear_cache()
-   cache = nil
-end
-
 Autopickup.OP = {
    DESTROY = "!",
    DESTROY_PROMPT = "!?",
@@ -179,6 +173,29 @@ function Autopickup.can_autopickup(item)
    -- <<<<<<<< oomSEST/src/southtyris.hsp:82446 			if (iOwnState(cnt) < 1) { ..
 end
 
+local cache = nil
+
+function Autopickup.clear_cache()
+   cache = nil
+end
+
+function Autopickup.build_cache(force)
+   if cache == nil or force then
+      local rules_text = config.autopickup.rules
+      if rules_text == "" then
+         return false
+      end
+
+      local valid_rule = function(s) return s ~= "" and s:sub(0, 1) ~= "#" end
+
+      cache = fun.wrap(fun.dup(string.lines(rules_text)))
+         :filter(valid_rule)
+         :map(Autopickup.compile_rule)
+         :to_list()
+   end
+   return cache
+end
+
 function Autopickup.run(chara, rules, x, y)
    local map = chara:current_map()
    if map == nil then
@@ -187,23 +204,7 @@ function Autopickup.run(chara, rules, x, y)
 
    x = x or chara.x
    y = y or chara.y
-
-   if rules == nil then
-      if cache == nil then
-         local rules_text = config.autopickup.rules
-         if rules_text == "" then
-            return false
-         end
-
-         local valid_rule = function(s) return s ~= "" and s:sub(0, 1) ~= "#" end
-
-         cache = fun.wrap(fun.dup(string.lines(rules_text)))
-            :filter(valid_rule)
-            :map(Autopickup.compile_rule)
-            :to_list()
-      end
-      rules = cache
-   end
+   rules = rules or Autopickup.build_cache()
 
    local did_something = false
    for _, item in Item.at(x, y, map):filter(Autopickup.can_autopickup) do
