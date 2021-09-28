@@ -7,6 +7,10 @@ return {
    --- of a module
    is_main_title_reached = false,
 
+   --- True if a game is loaded and running, false if at the title
+   --- screen/anywhere else.
+   is_in_game = false,
+
    stop_low_power = false,
 
    --- global draw stats provided by love.graphics.getStats.

@@ -258,9 +258,6 @@ function DeferredEvents.meet_house_guest(map)
             chara = guest
          end
       end
-      if chara == nil then
-         pause()
-      end
    end
 
    if not Chara.is_alive(chara) then

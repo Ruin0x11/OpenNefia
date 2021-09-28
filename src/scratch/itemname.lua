@@ -3,8 +3,6 @@ local Itemname = require("mod.elona.api.Itemname")
 local I18N = require("api.I18N")
 local Enum = require("api.Enum")
 
-if not field.is_active then lo() end
-
 if I18N.language_id() ~= "base.english" then
    I18N.switch_language("base.english")
 end

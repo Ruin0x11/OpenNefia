@@ -1,13 +1,11 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
-local Ui = require("api.Ui")
 local InstancedMap = require("api.InstancedMap")
 
 local MapRenderer = require("api.gui.MapRenderer")
 local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
-local UiTheme = require("api.gui.UiTheme")
 
 local MapViewer = class.class("MapViewer", IUiLayer)
 
@@ -22,9 +20,13 @@ function MapViewer:init(map)
 
    self.renderer = MapRenderer:new(map)
 
-   self.offset_x = 0
-   self.offset_y = 0
-   self.delta = 50
+   local tw, th = Draw.get_coords():get_size()
+   local mw = self.map:width() * tw
+   local mh = self.map:height() * th
+
+   self.offset_x = math.floor((Draw.get_width() - mw) / 2)
+   self.offset_y = math.floor((Draw.get_height() - mh) / 2)
+   self.delta = math.floor(tw / 2)
 
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
@@ -50,16 +52,9 @@ function MapViewer:on_query()
    Gui.play_sound("base.pop2")
 end
 
-function MapViewer:update_draw_pos()
-   self.renderer:set_draw_pos(self.offset_x, self.offset_y)
-   local tx, ty = Gui.screen_to_tile(-self.offset_x + math.floor(self.width / 2), -self.offset_y + math.floor(self.height / 2))
-   self.map:calc_screen_sight(tx, ty, "all")
-end
-
 function MapViewer:pan(dx, dy)
    self.offset_x = math.floor(self.offset_x + dx)
    self.offset_y = math.floor(self.offset_y + dy)
-   self:update_draw_pos()
 end
 
 function MapViewer:relayout(x, y, width, height)
@@ -69,17 +64,14 @@ function MapViewer:relayout(x, y, width, height)
    self.height = height
 
    self.renderer:relayout(self.x, self.y, self.width, self.height)
-   self:update_draw_pos()
 end
 
 function MapViewer:draw()
    local x = self.x + self.offset_x
    local y = self.y + self.offset_y
 
-   local width = math.floor(self.width)
-   local height = math.floor(self.height)
-
-   self.renderer:relayout_inner(x, y, width, height)
+   self.renderer.x = x
+   self.renderer.y = y
 
    Draw.set_color(255, 255, 255)
    self.renderer:draw()

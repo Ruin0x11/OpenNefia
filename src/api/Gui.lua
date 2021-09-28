@@ -267,7 +267,7 @@ end
 --- @tparam int tx Tile X coordinate
 --- @tparam int ty Tile Y coordinate
 function Gui.tile_to_visible_screen(tx, ty)
-   if not field.is_active or not field.renderer then
+   if not main_state.is_in_game or not field.renderer then
       return nil, nil
    end
 
@@ -281,7 +281,7 @@ end
 --- @tparam int tx Tile X coordinate
 --- @tparam int ty Tile Y coordinate
 function Gui.visible_screen_to_tile(sx, sy)
-   if not field.is_active or not field.renderer then
+   if not main_state.is_in_game or not field.renderer then
       return nil, nil
    end
 
@@ -651,8 +651,8 @@ function Gui.bind_keys(keys)
 end
 
 function Gui.get_active_state()
-   if field.is_active then
-      return "field"
+   if main_state.is_in_game then
+      return "in_game"
    elseif main_state.is_main_title_reached then
       return "main_title"
    else
@@ -688,10 +688,10 @@ Gui.LAYER_Z_ORDER_TILEMAP = 100000
 Gui.LAYER_Z_ORDER_USER = 500000
 Gui.LAYER_Z_ORDER_HUD = 10000000
 
-function Gui.register_draw_layer(tag, layer, opts)
+function Gui.register_draw_layer(tag, require_path_or_layer, opts)
    local z_order = opts and opts.z_order or Gui.LAYER_Z_ORDER_USER
    local enabled = opts and opts.enabled
-   field:register_draw_layer(tag, layer, z_order, enabled)
+   field:register_draw_layer(tag, require_path_or_layer, z_order, enabled)
 end
 
 function Gui.set_draw_layer_enabled(tag, enabled)

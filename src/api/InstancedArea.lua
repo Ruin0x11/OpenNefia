@@ -85,7 +85,7 @@ function InstancedArea:deepest_floor()
       if archetype.deepest_floor then
          return archetype.deepest_floor
       end
-      if archetype.floors then
+      if #archetype.floors > 0 then
          return fun.iter(table.keys(archetype.floors)):max()
       end
    end

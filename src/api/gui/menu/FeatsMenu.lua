@@ -13,7 +13,6 @@ local UiTheme = require("api.gui.UiTheme")
 
 local FeatsMenu = class.class("FeatsMenu", IUiLayer)
 
-FeatsMenu:delegate("pages", "chosen")
 FeatsMenu:delegate("input", IInput)
 
 local TRAIT_ICONS = {

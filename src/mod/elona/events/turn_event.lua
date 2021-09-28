@@ -96,34 +96,34 @@ local function direction_to_angle(dir)
    end
 end
 
-local function leave_footsteps(chara, _, result)
+local function leave_footsteps(chara, params)
    -- >>>>>>>> shade2/action.hsp:747 			if p=tSnow :addEfMap cX(cc),cY(cc),mefSnow,10,d ...
+   if not chara:is_player() then
+      return
+   end
+
    local map = chara:current_map()
-   if (chara.x ~= result.x or chara.y ~= result.y)
-      and Map.can_access(result.x, result.y, map)
-   then
+   if params.prev_x ~= params.x or params.prev_y ~= params.y then
       local angle = direction_to_angle(chara.direction)
-      local tile = map:tile(result.x, result.y)
+      local tile = map:tile(params.x, params.y)
       if tile.show_name then
          Gui.mes("action.move.walk_into", "map_tile._." .. tile._id .. ".name")
       end
       if tile.kind == Enum.TileRole.Snow then
-         Gui.add_effect_map(Rand.choice(snow_efmaps), result.x, result.y, 10, angle, "fade")
+         Gui.add_effect_map(Rand.choice(snow_efmaps), params.x, params.y, 10, angle, "fade")
          Gui.play_sound(snow_footsteps[footstep%2+1])
          footstep = footstep + Rand.rnd(2)
       else
          if map:has_type("world_map") then
-            Gui.add_effect_map("base.effect_map_foot", result.x, result.y, 10, angle, "fade")
+            Gui.add_effect_map("base.effect_map_foot", params.x, params.y, 10, angle, "fade")
             Gui.play_sound(footsteps[footstep%2+1])
             footstep = footstep + 1
          end
       end
    end
-
-   return result
    -- <<<<<<<< shade2/action.hsp:753 			} ..
 end
-Event.register("elona_sys.before_player_move", "Leave footsteps", leave_footsteps)
+Event.register("base.on_chara_moved", "Leave footsteps", leave_footsteps)
 
 local function proc_random_encounter(chara, params, result)
    -- >>>>>>>> shade2/action.hsp:647 	if mType=mTypeWorld:if cc=pc{ ...

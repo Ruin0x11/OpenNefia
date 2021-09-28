@@ -91,6 +91,13 @@ return {
             language = {
                name = "言語(Language)"
             },
+            theme = {
+               name = "テーマ",
+               key_hint = {
+                  increase_priority = "優先順位＋",
+                  decrease_priority = "優先順位－",
+               }
+            },
          }
       },
       option = {

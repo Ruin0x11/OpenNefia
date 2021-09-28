@@ -20,6 +20,7 @@ local state = require("internal.global.field_logic_state")
 local fs = require("util.fs")
 local SaveFs = require("api.SaveFs")
 local Rand = require("api.Rand")
+local main_state = require("internal.global.main_state")
 
 local DeathMenu = require("api.gui.menu.DeathMenu")
 
@@ -28,6 +29,8 @@ local field_logic = {}
 local dt = 0
 
 function field_logic.setup_new_game(player, save_id)
+   main_state.is_in_game = true
+
    field.map = nil
 
    local scenario = data["base.scenario"]:ensure(save.base.scenario)
@@ -116,7 +119,7 @@ function field_logic.setup()
    if not field.repl then
       field:setup_repl()
    end
-   if not field.is_active then
+   if not main_state.is_in_game then
       Event.trigger("base.on_game_initialize")
    end
 end
@@ -602,11 +605,12 @@ function field_logic.query()
    local going = true
    local target_chara
 
-   field.is_active = true
+   main_state.is_in_game = true
 
    draw.push_layer(field.hud)
    draw.push_layer(field)
 
+   field:reset_scrolling()
    Gui.update_screen()
 
    while going do
@@ -617,7 +621,7 @@ function field_logic.query()
    draw.pop_layer()
 
    field.map = nil
-   field.is_active = false
+   main_state.is_in_game = false
 
    return event
 end

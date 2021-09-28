@@ -508,7 +508,7 @@ data:add {
 
       local item = result.result
 
-      local level = "unidentified"
+      local level = Enum.IdentifyState.None
       if params.power >= item:calc("identify_difficulty") then
          level = Enum.IdentifyState.Full
       end

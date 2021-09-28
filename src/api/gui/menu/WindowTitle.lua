@@ -34,7 +34,7 @@ function WindowTitle:draw()
    end
 
    local offset_y = 0
-   if Gui.get_active_state() == "field" then
+   if Gui.get_active_state() == "in_game" then
       offset_y = 1
    end
    self.t.base.tip_icons:draw_region(1, self.x, self.y + offset_y)

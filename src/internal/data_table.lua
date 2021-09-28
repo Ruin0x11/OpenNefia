@@ -171,7 +171,8 @@ local ty_schema = types.fields_strict {
    ),
    fallbacks = types.optional(types.table),
    doc = types.optional(types.string),
-   validation = types.optional(types.literal("strict", "permissive"))
+   validation = types.optional(types.literal("strict", "permissive")),
+   on_validate = types.optional(types.callback({"entry", types.table, "verbose", types.boolean}, {types.boolean, types.optional(types.string)}))
 }
 
 local ty_ext_table = types.map(types.some(types.interface_type, types.data_id("base.data_ext")), types.table)
@@ -230,8 +231,12 @@ function data_table:add_type(schema, params)
    else
       schema.type = types.fields_strict(checkers)
    end
+
    schema.validate = function(obj, verbose)
       local ok, err = types.check(obj, schema.type, verbose)
+      if ok and schema.on_validate then
+         ok, err = schema.on_validate(obj, verbose)
+      end
       if not ok then
          return false, ("Validation for data entry '%s:%s' failed: %s"):format(_type, obj._id or "<???>", err)
       end

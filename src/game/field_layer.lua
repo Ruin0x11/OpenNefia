@@ -6,19 +6,18 @@ local KeyHandler = require("api.gui.KeyHandler")
 local Env = require("api.Env")
 local DrawLayerSpec = require("api.draw.DrawLayerSpec")
 local MapRenderer = require("api.gui.MapRenderer")
-local Stopwatch = require("api.Stopwatch")
+local save_store = require("internal.save_store")
 
 local config = require("internal.config")
 local draw = require("internal.draw")
 local draw_callbacks = require("internal.draw_callbacks")
+local main_state = require("internal.global.main_state")
 
 local field_layer = class.class("field_layer", IUiLayer)
 
 field_layer:delegate("keys", IInput)
 
 function field_layer:init()
-   self.is_active = false
-
    self.hud = require("api.gui.hud.MainHud"):new()
 
    self.map = nil
@@ -85,6 +84,7 @@ end
 function field_layer:init_global_data()
    self.player = nil
    self.map = nil
+   save_store.clear()
 
    Event.trigger("base.on_init_save")
 end
@@ -127,8 +127,7 @@ function field_layer:relayout(x, y, width, height)
    self.width = width or self.width
    self.height = height or self.height
    if self.renderer then
-      self.renderer:relayout(self.x, self.y, self.width, self.height)
-      self.renderer:relayout_inner(self.x, self.y, self.width, self.height + self:get_renderer_y_offset())
+      self.renderer:relayout(self.x, self.y, self.width, self.height + self:get_renderer_y_offset())
    end
 end
 
@@ -216,6 +215,15 @@ local function can_scroll_object(obj)
    return false
 end
 
+function field_layer:reset_scrolling()
+   self.scrolling_mode = "none"
+   self.scrolling_objs = {}
+   if self.player then
+      self.scroll_last_px = self.player.x
+      self.scroll_last_py = self.player.y
+   end
+end
+
 function field_layer:update_scrolling()
    if self.player == nil
       or config.base.scroll == "none"
@@ -223,10 +231,7 @@ function field_layer:update_scrolling()
       or (self:player_is_running() and not config.base.scroll_when_run)
       or self.no_scroll_this_update
    then
-      self.scrolling_mode = "none"
-      self.scroll_last_px = self.player.x
-      self.scroll_last_py = self.player.y
-      self.scrolling_objs = {}
+      self:reset_scrolling()
       return
    end
 
@@ -259,6 +264,7 @@ function field_layer:update_scrolling()
                local ody = (pos.prev_y - obj.y) * th
                if odx ~= 0 or ody ~= 0 then
                   table.insert(obj_scroll_offsets, {
+                                  obj = obj,
                                   index = index,
                                   dx = odx,
                                   dy = ody
@@ -295,6 +301,8 @@ function field_layer:update_scrolling()
             frames = 1
          end
 
+         local delay = 20.0
+
          for i = 0, frames-1 do
             local scroll_x = dx * i * tw / frames
             local scroll_y = dy * i * th / frames
@@ -307,9 +315,29 @@ function field_layer:update_scrolling()
                                                           self.renderer.renderer.height)
 
             for _, offset in ipairs(obj_scroll_offsets) do
-               local obj_scroll_x = i * offset.dx / frames
-               local obj_scroll_y = i * offset.dy / frames
+               local obj = offset.obj
+               local obj_scroll_x = math.floor(i * offset.dx / frames)
+               local obj_scroll_y = math.floor(i * offset.dy / frames)
                layer:scroll_chip(offset.index, obj_scroll_x, obj_scroll_y)
+
+               local sxoff = 0
+               local syoff = 0
+               if offset.dx ~= 0 then
+                  if offset.dx > 0 then
+                     sxoff = tw - obj_scroll_x
+                  else
+                     sxoff = -tw - obj_scroll_x
+                  end
+               end
+               if offset.dy ~= 0 then
+                  if offset.dy > 0 then
+                     syoff = th - obj_scroll_y
+                  else
+                     syoff = -th - obj_scroll_y
+                  end
+               end
+               obj.scroll_x_offset = sxoff
+               obj.scroll_y_offset = syoff
             end
 
             self.renderer.x = -(draw_x - sx)
@@ -322,7 +350,7 @@ function field_layer:update_scrolling()
                self.draw_callbacks:update(dt)
                self.keys:update_repeats(dt)
                ms = ms + dt
-            until ms > 20.0 / 1000.0
+            until ms > delay / 1000.0
          end
          -- <<<<<<<< elona122/shade2/screen.hsp:1267 	return ..
       else
@@ -351,9 +379,29 @@ function field_layer:update_scrolling()
                                                           self.renderer.renderer.height)
 
             for _, offset in ipairs(obj_scroll_offsets) do
-               local obj_scroll_x = i * (offset.dx / ms)
-               local obj_scroll_y = i * (offset.dy / ms)
+               local obj = offset.obj
+               local obj_scroll_x = math.floor(i * (offset.dx / ms))
+               local obj_scroll_y = math.floor(i * (offset.dy / ms))
                layer:scroll_chip(offset.index, obj_scroll_x, obj_scroll_y)
+
+               local sxoff = 0
+               local syoff = 0
+               if offset.dx ~= 0 then
+                  if offset.dx > 0 then
+                     sxoff = tw - obj_scroll_x
+                  else
+                     sxoff = -tw - obj_scroll_x
+                  end
+               end
+               if offset.dy ~= 0 then
+                  if offset.dy > 0 then
+                     syoff = th - obj_scroll_y
+                  else
+                     syoff = -th - obj_scroll_y
+                  end
+               end
+               obj.scroll_x_offset = sxoff
+               obj.scroll_y_offset = syoff
             end
 
             self.renderer.x = -(draw_x - sx)
@@ -370,16 +418,19 @@ function field_layer:update_scrolling()
       self.scrolling_mode = "none"
    end
 
+   for _, offset in ipairs(obj_scroll_offsets) do
+      local obj = offset.obj
+      obj.scroll_x_offset = 0
+      obj.scroll_y_offset = 0
+   end
+
    self.renderer.x = self.x
    self.renderer.y = self.y
-   self.scroll_last_px = self.player.x
-   self.scroll_last_py = self.player.y
-   self.scrolling_mode = "none"
-   self.scrolling_objs = {}
+   self:reset_scrolling()
 end
 
 function field_layer:update_screen(dt, and_draw)
-   if not self.is_active or not self.renderer then return end
+   if not main_state.is_in_game or not self.renderer then return end
 
    assert(self.map ~= nil)
 
@@ -389,7 +440,9 @@ function field_layer:update_screen(dt, and_draw)
       self.map:calc_screen_sight(player.x, player.y, player:calc("fov") or 15)
    end
 
-   self:update_scrolling()
+   if config.base.scroll ~= "player" then
+      self:update_scrolling()
+   end
    self:update_draw_pos()
 
    local dt = dt or 0
@@ -464,7 +517,7 @@ function field_layer:update_draw_callbacks(dt)
 end
 
 function field_layer:draw()
-   if not self.is_active or not self.renderer then
+   if not main_state.is_in_game or not self.renderer then
       return
    end
 
@@ -492,8 +545,8 @@ function field_layer:query_repl()
    end
 end
 
-function field_layer:register_draw_layer(tag, require_path, z_order, enabled)
-   return self.draw_layer_spec:register_draw_layer(tag, require_path, z_order, enabled)
+function field_layer:register_draw_layer(tag, require_path_or_layer, z_order, enabled)
+   return self.draw_layer_spec:register_draw_layer(tag, require_path_or_layer, z_order, enabled)
 end
 
 function field_layer:get_draw_layer(tag)

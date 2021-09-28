@@ -7,7 +7,6 @@ local PagedListModel = class.class("PagedListModel", {IList, IPaged, ISettable})
 PagedListModel:delegate("model",
                         {"items",
                          "selected_item",
-                         "choose",
                          "chosen",
                          "selected",
                          "on_choose",
@@ -133,6 +132,11 @@ function PagedListModel:previous_page()
    self:select_page(page)
 
    return turned
+end
+
+function PagedListModel:choose(i)
+   self.model:choose(i)
+   self:update_selected_index()
 end
 
 function PagedListModel:select_next(delta)

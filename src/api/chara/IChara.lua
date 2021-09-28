@@ -1,5 +1,6 @@
 --- @classmod IChara
 local data = require("internal.data")
+local config = require("internal.config")
 local field = require("game.field")
 local Chara = require("api.Chara")
 local Rand = require("api.Rand")
@@ -292,13 +293,23 @@ function IChara:set_pos(x, y, force)
       return false
    end
 
+   if self:is_player() and config.base.scroll == "player" then
+      Gui.update_screen()
+   end
+
    local dx = math.abs(x - self.x)
    local dy = math.abs(y - self.y)
    if dx == 1 or dy == 1 then
       Gui.scroll_object(self, self.x, self.y)
    end
 
-   return IMapObject.set_pos(self, x, y, force)
+   local result = IMapObject.set_pos(self, x, y, force)
+
+   if self:is_player() and config.base.scroll == "player" then
+      field:update_scrolling()
+   end
+
+   return result
 end
 
 --- Returns true if this character is the current player.
@@ -332,10 +343,22 @@ function IChara:swap_places(other)
    local sx, sy = self.x, self.y
    local ox, oy = other.x, other.y
 
+   if (self:is_player() or other:is_player()) and config.base.scroll == "player" then
+      Gui.update_screen()
+   end
+
    Gui.scroll_object(self, sx, sy)
    Gui.scroll_object(other, ox, oy)
+
    location:move_object(self, ox, oy)
+   if self:is_player() and config.base.scroll == "player" then
+      field:update_scrolling()
+   end
+
    location:move_object(other, sx, sy)
+   if other:is_player() and config.base.scroll == "player" then
+      field:update_scrolling()
+   end
 
    self:emit("base.on_chara_moved", {prev_x=sx, prev_y=sy, x=self.x, y=self.y})
    other:emit("base.on_chara_moved", {prev_x=ox, prev_y=oy, x=other.x, y=other.y})
@@ -658,6 +681,11 @@ function IChara:set_item_using(item)
       self.item_using = nil
    end
    self.item_using = item
+end
+
+function IChara:get_screen_pos()
+   local sx, sy = IMapObject.get_screen_pos(self)
+   return sx + (self.scroll_x_offset or 0), sy + (self.scroll_y_offset or 0)
 end
 
 function IChara:remove_ownership()

@@ -115,7 +115,7 @@ function Mef.create(id, x, y, params, where)
       no_build = params.no_build,
       build_params = params
    }
-   local mef = MapObject.generate_from("base.mef", id)
+   local mef = MapObject.generate_from("base.mef", id, params.uid_tracker or nil)
 
    mef.origin_uid = origin_uid
    mef.turns = params.duration or 10

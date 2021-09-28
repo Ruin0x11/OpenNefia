@@ -2,6 +2,9 @@ local NpcMemory = {}
 
 function NpcMemory.on_killed(id)
    local memory = save.elona_sys.npc_memory
+   if memory == nil then
+      return
+   end
    if not memory.killed[id] then
       memory.killed[id] = 0
    end
@@ -10,6 +13,9 @@ end
 
 function NpcMemory.on_generated(id)
    local memory = save.elona_sys.npc_memory
+   if memory == nil then
+      return
+   end
    if not memory.generated[id] then
       memory.generated[id] = 0
    end
@@ -18,6 +24,9 @@ end
 
 function NpcMemory.forget_generated(id)
    local memory = save.elona_sys.npc_memory
+   if memory == nil then
+      return
+   end
    if not memory.generated[id] then
       memory.generated[id] = 0
    end
@@ -26,11 +35,17 @@ end
 
 function NpcMemory.killed(id)
    local memory = save.elona_sys.npc_memory
+   if memory == nil then
+      return 0
+   end
    return memory.killed[id] or 0
 end
 
 function NpcMemory.generated(id)
    local memory = save.elona_sys.npc_memory
+   if memory == nil then
+      return 0
+   end
    return memory.generated[id] or 0
 end
 

@@ -83,6 +83,13 @@ return {
             language = {
                name = "Language"
             },
+            theme = {
+               name = "Themes",
+               key_hint = {
+                  increase_priority = "Priority+",
+                  decrease_priority = "Priority-",
+               }
+            },
          }
       },
       option = {

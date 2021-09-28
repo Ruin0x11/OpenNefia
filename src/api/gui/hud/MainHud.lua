@@ -13,7 +13,7 @@ function MainHud:init()
 end
 
 function MainHud:default_z_order()
-   return 10000000 -- Gui.LAYER_Z_ORDER_HUD
+   return 100000 -- Gui.LAYER_Z_ORDER_HUD
 end
 
 function MainHud:reset()

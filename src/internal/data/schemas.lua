@@ -1,9 +1,9 @@
 local data = require("internal.data")
-local CodeGenerator = require("api.CodeGenerator")
 local Enum = require("api.Enum")
 local IEventEmitter = require("api.IEventEmitter")
 local InstancedMap = require("api.InstancedMap")
 local InstancedArea = require("api.InstancedArea")
+local IConfigMenu = require("api.gui.menu.config.IConfigMenu")
 local IConfigItemWidget = require("api.gui.menu.config.item.IConfigItemWidget")
 
 local ty_data_ext_field = types.fields {
@@ -669,6 +669,8 @@ Skills this character will already know when they're created.
 
          x_offset = nil,
          y_offset = nil,
+         scroll_x_offset = 0,
+         scroll_y_offset = 0,
 
          materials = {},
          spell_stocks = {},
@@ -2952,10 +2954,14 @@ data:add_type {
    fields = {
       {
          name = "items",
-         type = types.list(ty_config_menu_item),
+         type = types.optional(types.list(ty_config_menu_item)),
          doc = [[
 List of config options in this config menu.
 ]]
+      },
+      {
+         name = "impl",
+         type = types.optional(types.class_type_implementing(IConfigMenu))
       },
       {
          name = "menu_width",
@@ -2973,7 +2979,14 @@ Height of this menu in pixels, when using the default config menu UI.
 Height of this menu in pixels, when using the default config menu UI.
 ]]
       }
-   }
+   },
+   on_validate = function(entry)
+      if entry.items == nil and entry.impl == nil then
+         return false, "One of 'items' or 'impl' must be specified."
+      end
+
+      return true
+   end
 }
 
 data:add_type {

@@ -39,13 +39,12 @@ local COLORS = {
 
 function TargetOverlayLayer:update(map, dt, screen_updated)
    self.frame = self.frame + dt
-   if not screen_updated then
-      return
-   end
+end
 
+function TargetOverlayLayer:update_lines()
    local i = 1
 
-   for _, chara in Chara.iter(map) do
+   for _, chara in Chara.iter(Chara.player():current_map()) do
       local target = chara:get_target()
       if target and (self.see_all or chara:is_in_fov()) then
          local offset = 0
@@ -58,8 +57,8 @@ function TargetOverlayLayer:update(map, dt, screen_updated)
             offset = 4
          end
 
-         local sx, sy = self.coords:tile_to_screen(chara.x, chara.y)
-         local tx, ty = self.coords:tile_to_screen(target.x, target.y)
+         local sx, sy = chara:get_screen_pos()
+         local tx, ty = target:get_screen_pos()
 
          local line = self.lines[i]
          if not line then
@@ -78,6 +77,8 @@ function TargetOverlayLayer:update(map, dt, screen_updated)
 end
 
 function TargetOverlayLayer:draw(draw_x, draw_y)
+   self:update_lines()
+
    for _, line in ipairs(self.lines) do
       local sx = line.sx + self.w + draw_x
       local sy = line.sy + self.h + draw_y

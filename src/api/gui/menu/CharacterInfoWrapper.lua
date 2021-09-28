@@ -115,8 +115,8 @@ end
 
 function CharacterInfoWrapper:draw()
    Draw.set_color(255, 255, 255)
-   self.icon_bar:draw()
    self.submenu:draw()
+   self.icon_bar:draw()
 end
 
 function CharacterInfoWrapper:update()

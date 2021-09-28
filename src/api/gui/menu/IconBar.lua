@@ -80,6 +80,8 @@ function IconBar:do_redraw()
 end
 
 function IconBar:draw()
+   Draw.set_color(255, 255, 255)
+
    if self.redraw then
       Draw.with_canvas(self.canvas, function() self:do_redraw() end)
       self.redraw = false

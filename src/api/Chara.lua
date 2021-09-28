@@ -216,6 +216,7 @@ local hook_generate_chara =
 ---     touched by things like `level` or events/hooks that modify its
 ---     properties. Examples include unique characters like the strange
 ---     scientist that should not get automatically leveled up inside The Void.
+---   - uid_tracker (UidTracker): UID tracker to use, for creation outside of the main game
 --- @tparam[opt] ILocation map Where to instantiate this item. Defaults to the current map.
 --- @treturn[opt] IChara
 --- @treturn[opt] string error
@@ -255,7 +256,7 @@ function Chara.create(id, x, y, params, where)
    local chara = hook_generate_chara(params)
 
    if chara == nil then
-      chara = MapObject.generate_from("base.chara", id)
+      chara = MapObject.generate_from("base.chara", id, params.uid_tracker or nil)
 
       if not params.no_modify then
          chara.level = params.level or chara.level

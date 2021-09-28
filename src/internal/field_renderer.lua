@@ -1,6 +1,7 @@
 local Draw = require("api.Draw")
 local Log = require("api.Log")
 local PriorityMap = require("api.PriorityMap")
+local IDrawLayer = require("api.gui.IDrawLayer")
 
 local field_renderer = class.class("field_renderer")
 
@@ -15,23 +16,32 @@ function field_renderer:init(map_width, map_height, draw_layer_spec)
 
    self.screen_updated = true
 
+   self:set_draw_layer_spec(draw_layer_spec)
+end
+
+function field_renderer:set_draw_layer_spec(draw_layer_spec)
    self.layers = PriorityMap:new()
    self.enabled = {}
 
    for tag, entry in draw_layer_spec:iter() do
-      -- WARNING: This needs to be sanitized by moving all the layers
-      -- to the public API, to prevent usage of the global require.
-      local ok, layer = pcall(require, entry.require_path)
-      if not ok then
-         error("Could not load draw layer " .. tostring(entry.require_path) .. ":\n\t" .. layer)
-      end
-      local IDrawLayer = require("api.gui.IDrawLayer")
+      local instance
+      if class.is_an(IDrawLayer, entry.instance) then
+         instance = entry.instance
+      else
+         -- WARNING: This needs to be sanitized by moving all the layers
+         -- to the public API, to prevent usage of the global require.
+         local ok, layer = pcall(require, entry.require_path)
+         if not ok then
+            error("Could not load draw layer " .. tostring(entry.require_path) .. ":\n\t" .. layer)
+         end
 
-      local instance = layer:new(map_width, map_height)
+         instance = layer:new(self.map_width, self.map_height)
+      end
+
       class.assert_is_an(IDrawLayer, instance)
 
       -- TODO
-      instance:on_theme_switched(coords)
+      instance:on_theme_switched(self.coords)
       instance:reset()
       instance:relayout(self.x, self.y, self.width, self.height)
 

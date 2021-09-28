@@ -3365,7 +3365,7 @@ data:add {
    fltselect = Enum.FltSelect.Sp,
    coefficient = 100,
 
-   params = { altar = { god_id = "" } },
+   params = { altar_god_id = "" },
 
    categories = {
       "elona.furniture_altar",
