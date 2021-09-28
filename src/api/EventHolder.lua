@@ -25,6 +25,7 @@ function EventHolder:clone()
 end
 
 function EventHolder:serialize()
+   return self
 end
 
 function EventHolder:deserialize()

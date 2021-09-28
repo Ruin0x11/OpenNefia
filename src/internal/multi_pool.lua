@@ -4,8 +4,11 @@ local ITypedLocation = require("api.ITypedLocation")
 -- A pool that stores objects of multiple types.
 local multi_pool = class.class("multi_pool", ITypedLocation)
 
+local t_mt = { __inspect = tostring }
+local refs_mt = { __mode = "v", __inspect = tostring }
+
 local function t(o)
-   return setmetatable(o or {}, { __inspect = tostring })
+   return setmetatable(o or {}, t_mt)
 end
 
 function multi_pool:init(width, height, owner)
@@ -17,7 +20,7 @@ function multi_pool:init(width, height, owner)
    self.height = height
 
    self.subpools = t()
-   self.refs = setmetatable({}, { __mode = "v", __inspect = tostring })
+   self.refs = setmetatable({}, refs_mt)
 
    self.positional = {}
 end
@@ -149,4 +152,4 @@ function multi_pool:can_take_object(obj)
    return true
 end
 
-return multi_pool
+return multi_pool, { metatables = { t_mt = t_mt, refs_mt = refs_mt } }

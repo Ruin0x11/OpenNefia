@@ -5,6 +5,7 @@ local env = require ("internal.env")
 local fs = require("util.fs")
 local Stopwatch = require("api.Stopwatch")
 local ISerializable = require("api.ISerializable")
+local binser = require("thirdparty.binser")
 
 local data_table = class.class("data_table")
 
@@ -386,6 +387,24 @@ local function make_ext_fallback(dat)
    return ext
 end
 
+local data_entry_mt = {
+   __serial_id = "data_entry",
+   __serial_type = "immediate"
+}
+data_entry_mt.__index = data_entry_mt
+
+local function data_entry_serialize(self)
+   return rawget(self, "_type"), rawget(self, "_id")
+end
+
+local function data_entry_deserialize(_type, _id)
+   return package.loaded["internal.data"][_type][_id]
+end
+
+if not binser.hasRegistry("data_entry") then
+   binser.register("data_entry", "data_entry", data_entry_serialize, data_entry_deserialize)
+end
+
 function data_table:add(dat)
    local mod_name, loc = env.find_calling_mod()
 
@@ -503,6 +522,7 @@ function data_table:add(dat)
    end
 
    dat._id = full_id
+   setmetatable(dat, data_entry_mt)
 
    if _type == "base.data_ext" then
       self.ext[full_id] = make_ext_fallback(dat)
@@ -663,6 +683,7 @@ end
 local proxy = class.class("proxy", ISerializable)
 -- WARNING: This serial ID is reserved! Do not change!
 proxy.__serial_id = "data_proxy"
+proxy.__serial_type = "immediate"
 
 function proxy:init(_type, data)
    rawset(self, "_type", _type)
@@ -678,9 +699,6 @@ function proxy:serialize()
 end
 
 function proxy.deserialize(_type)
-   print(package.loaded["internal.data"][_type])
-   print(package.loaded["internal.data"][_type])
-   print(package.loaded["internal.data"][_type])
    return package.loaded["internal.data"][_type]
 end
 

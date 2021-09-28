@@ -2,7 +2,7 @@ local Log = require("api.Log")
 local paths = require("internal.paths")
 local main_state = require("internal.global.main_state")
 local ISerializable = require("api.ISerializable")
-local binser = require("thirdparty.binser2")
+local binser = require("thirdparty.binser")
 
 --- Module and mod environment functions. This module implements
 --- seamless hotloading by replacing the global `require` with one
@@ -421,6 +421,8 @@ local function env_dofile_or_safe_load(path)
    return env_dofile(path)
 end
 
+local function identity(t) return t end
+
 local function gen_require(chunk_loader, can_load_path)
    return function(path, hotload)
       local req_path = paths.convert_to_require_path(path)
@@ -535,12 +537,13 @@ local function gen_require(chunk_loader, can_load_path)
          if class.is_class(result) or class.is_interface(result) then
             local mt = getmetatable(result)
             mt.__require_path = req_path
+            result.__serial_id = result.__serial_id or req_path
             local ok, on_require = pcall(function() return result.__on_require end)
             if type(on_require) == "function" then
                on_require(package.loaded[req_path], result)
             end
 
-            if class.is_class(result) and class.implements(ISerializable, result) then
+            if class.is_class(result) then
                binser.registerClass(result)
             end
          end
@@ -548,21 +551,34 @@ local function gen_require(chunk_loader, can_load_path)
 
       -- Hotload any classes the user returns from the chunk, so they can be
       -- tracked by the serialization system.
-      if type(extra) == "table" and extra.inner_defns then
-         for _, defn in ipairs(extra.inner_defns) do
-            if class.is_class(defn) or class.is_interface(defn) then
-               local id = req_path .. ":" .. defn.__name
-               if type(inner_defns[id]) == "table" then
-                  class.hotload(inner_defns[id], result)
+      if type(extra) == "table" then
+         if extra.inner_defns then
+            for _, defn in ipairs(extra.inner_defns) do
+               if class.is_class(defn) or class.is_interface(defn) then
+                  local id = req_path .. ":" .. defn.__name
+                  if type(inner_defns[id]) == "table" then
+                     class.hotload(inner_defns[id], result)
+                  else
+                     inner_defns[id] = result
+                  end
+
+                  defn.__require_path = id
+
+                  if class.is_class(defn) then
+                     defn.__serial_id = defn.__serial_id or id
+                     binser.registerClass(defn)
+                  end
                else
-                  inner_defns[id] = result
+                  Log.error("Object passed as inner class '%s' was not a class or interface table", defn)
                end
-               defn.__require_path = id
-               if class.is_class(defn) and class.implements(ISerializable, defn) then
-                  binser.registerClass(defn)
-               end
-            else
-               Log.error("Object passed as inner class '%s' was not a class or interface table", defn)
+            end
+         end
+         if extra.metatables then
+            for name, tbl in pairs(extra.metatables) do
+               assert(type(tbl) == "table")
+               local full_name = req_path .. ":mt:" .. name
+               binser.unregister(full_name)
+               binser.register(tbl, full_name, identity, identity)
             end
          end
       end
@@ -858,7 +874,7 @@ function env.reset()
 
    -- `util.class` is also weird, because it depends on binser. binser's
    -- serializers are global, so we need to reset those too.
-   local binser = assert(package.loaded["thirdparty.binser2"])
+   local binser = assert(package.loaded["thirdparty.binser"])
    binser.clearRegistry()
 
    paths_loaded_by_hooked_require = {}

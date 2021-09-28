@@ -1,7 +1,6 @@
 local data = require("internal.data")
 local multi_pool = require("internal.multi_pool")
 local save = require("internal.global.save")
-local main_state = require("internal.global.main_state")
 local IModDataHolder = require("api.IModDataHolder")
 
 local Pos = require("api.Pos")
@@ -59,8 +58,9 @@ local function gen_fov_radius(fov_max)
    return fov_cache[fov_max]
 end
 
+local t_mt = { __inspect = tostring }
 local function t(o)
-   return setmetatable(o or {}, { __inspect = tostring })
+   return setmetatable(o or {}, t_mt)
 end
 
 function InstancedMap:init(width, height, tile)
@@ -840,4 +840,4 @@ function InstancedMap:can_take_object(obj)
    return true
 end
 
-return InstancedMap
+return InstancedMap, { metatables = { t_mt = t_mt } }

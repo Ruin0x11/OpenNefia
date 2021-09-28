@@ -9,6 +9,8 @@ local pool = class.class("pool", { ILocation, ICloneable }, { no_inspect = false
 -- serialization ID for binser
 pool.__serial_id = "pool"
 
+local t_mt = { __inspect = tostring }
+
 function pool:init(type_id, width, height, owner)
    if owner then
       -- assert(class.is_an(ILocation, owner))
@@ -18,7 +20,7 @@ function pool:init(type_id, width, height, owner)
    height = height or 1
 
    self.type_id = type_id
-   self.content = setmetatable({}, { __inspect = tostring })
+   self.content = setmetatable({}, t_mt)
    self.uids = {}
    self.width = width
    self.height = height
@@ -178,6 +180,7 @@ function pool:has_object(obj)
 end
 
 function pool:serialize()
+   return self
 end
 
 function pool:deserialize()
@@ -189,6 +192,7 @@ function pool:deserialize()
          end
       end
    end
+   return self
 end
 
 local function iter(state, index)
@@ -244,4 +248,4 @@ function pool:clone(uids, cache, uid_mapping, opts)
    return new_pool
 end
 
-return pool
+return pool, { metatables = { t_mt = t_mt } }

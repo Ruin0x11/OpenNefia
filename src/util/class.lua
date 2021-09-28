@@ -415,7 +415,7 @@ function class.class(name, ifaces, opts)
 
    c.delegate = delegate
 
-   -- ISerializable must be explicitly implemented.
+   -- Defaults to require path, set by internal.env
    c.__serial_id = nil
 
    c.serialize = function(self)
