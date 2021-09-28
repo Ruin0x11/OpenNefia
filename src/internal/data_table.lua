@@ -4,6 +4,7 @@ local Log = require ("api.Log")
 local env = require ("internal.env")
 local fs = require("util.fs")
 local Stopwatch = require("api.Stopwatch")
+local ISerializable = require("api.ISerializable")
 
 local data_table = class.class("data_table")
 
@@ -659,7 +660,9 @@ function data_table:has_type(_type)
    return self.inner[_type] ~= nil
 end
 
-local proxy = class.class("proxy")
+local proxy = class.class("proxy", ISerializable)
+-- WARNING: This serial ID is reserved! Do not change!
+proxy.__serial_id = "data_proxy"
 
 function proxy:init(_type, data)
    rawset(self, "_type", _type)
@@ -668,6 +671,17 @@ end
 
 function proxy:__newindex(k, v)
    return nil
+end
+
+function proxy:serialize()
+   return rawget(self, "_type")
+end
+
+function proxy.deserialize(_type)
+   print(package.loaded["internal.data"][_type])
+   print(package.loaded["internal.data"][_type])
+   print(package.loaded["internal.data"][_type])
+   return package.loaded["internal.data"][_type]
 end
 
 function proxy:edit(name, func)
@@ -816,4 +830,4 @@ end
 function data_table:__newindex(k, v)
 end
 
-return data_table
+return data_table, { inner_defns = { proxy } }

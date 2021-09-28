@@ -1,5 +1,3 @@
-local binser = require("thirdparty.binser")
-
 -- OOP wrapper. Based on 30log (https://github.com/Yonaba/30log)
 --
 -- TODOs:
@@ -111,10 +109,6 @@ function class.interface(name, reqs, parents)
    i.__tostring = iface_mt.__tostring
 
    _iface_children[i] = _iface_children[i] or setmetatable({}, { __mode = "k" })
-
-   if not binser.hasResource(name) and not binser.hasRegistry(name) then
-      binser.registerClass(i, name)
-   end
 
    return setmetatable(i, iface_mt)
 end
@@ -296,6 +290,7 @@ function class.class(name, ifaces, opts)
 
    c.__tostring = class_mt.__tostring
 
+   c.__class = c
    c.__delegates = {}
    c.__memoized = setmetatable({}, { __mode = "v" })
    c.__index = function(t, k)
@@ -324,7 +319,8 @@ function class.class(name, ifaces, opts)
             t = field
             field = t[field_name]
             if field == nil then break end
-            local cl = rawget(field, "__class")
+            local mt = getmetatable(field)
+            local cl = mt and rawget(mt, "__class")
             if cl then
                d = rawget(cl, "__delegates")
                if d and d[k] then
@@ -376,7 +372,8 @@ function class.class(name, ifaces, opts)
             t = field
             field = t[field_name]
             if field == nil then break end
-            local cl = rawget(field, "__class")
+            local mt = getmetatable(field)
+            local cl = mt and rawget(mt, "__class")
             if cl then
                d = rawget(cl, "__delegates")
                if d and d[k] then
@@ -408,6 +405,7 @@ function class.class(name, ifaces, opts)
    c.__verify = true
 
    c.__name = name
+   c.__require_path = nil -- added by internal.env
 
    if _interfaces[ifaces] then ifaces = {ifaces} end
    c.__interfaces = ifaces or {}
@@ -417,38 +415,49 @@ function class.class(name, ifaces, opts)
 
    c.delegate = delegate
 
-   c._serialize = function(self)
-      if type(self.serialize) == "function" then
-         self:serialize()
-      end
-      -- BUG this mutates state after saving the game!
-      --
-      -- we need a "post_serialize" callback in binser for calling
-      -- "_deserialize" right afterwards. the invariant that should be followed
-      -- is that calling :serialize() and :deserialize() should retain the
-      -- current state of the object. (you'd have a lot of problems otherwise)
-      --
-      -- also we need to rename the methods to :__serialize() and
-      -- :__deserialize(), to indicate they're special.
+   -- ISerializable must be explicitly implemented.
+   c.__serial_id = nil
+
+   c.serialize = function(self)
       return self
    end
 
-   c._deserialize = function(self)
-      self.__memoized = {}
-      self.__class = c
-      setmetatable(self, c)
-      if type(self.deserialize) == "function" then
-         self:deserialize()
-      end
-      return self
+   c.deserialize = function(t)
+      return t
    end
+
+   -- c._serialize = function(self)
+   --    if type(self.serialize) == "function" then
+   --       self:serialize()
+   --    end
+   --    -- BUG this mutates state after saving the game!
+   --    --
+   --    -- we need a "post_serialize" callback in binser for calling
+   --    -- "_deserialize" right afterwards. the invariant that should be followed
+   --    -- is that calling :serialize() and :deserialize() should retain the
+   --    -- current state of the object. (you'd have a lot of problems otherwise)
+   --    --
+   --    -- also we need to rename the methods to :__serialize() and
+   --    -- :__deserialize(), to indicate they're special.
+   --    return self
+   -- end
+
+   -- c._deserialize = function(self)
+   --    self.__memoized = {}
+   --    self.__class = c
+   --    setmetatable(self, c)
+   --    if type(self.deserialize) == "function" then
+   --       self:deserialize()
+   --    end
+   --    return self
+   -- end
 
    c.new = function(self, ...)
       if type(self) ~= "table" or self.__name ~= name then
          error("Call new() with colon (:) syntax.")
       end
 
-      local instance = {__class = c}
+      local instance = {}
 
       instance.__memoized = {}
 
@@ -465,10 +474,6 @@ function class.class(name, ifaces, opts)
       end
 
       return instance
-   end
-
-   if not binser.hasResource(name) and not binser.hasRegistry(name) then
-      binser.registerClass(c, name)
    end
 
    return setmetatable(c, class_mt)

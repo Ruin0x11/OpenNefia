@@ -1,4 +1,3 @@
-local env = require("internal.env")
 local data = require("internal.data")
 local binser = require("thirdparty.binser")
 
@@ -42,9 +41,6 @@ function object.__index(t, k)
    if k == "__iface" then
       return mt.__iface
    end
-   if k == "__mt" then
-      return env.get_require_path(mt.__iface)
-   end
    if k == "_id" then
       return mt._id
    end
@@ -77,7 +73,6 @@ end
 
 function object.__newindex(t, k, v)
    if k == "__iface"
-      or k == "__mt"
       or k == "_id"
       or k == "_type"
       or k == "uid"
@@ -163,7 +158,7 @@ function object.deserialize(self, _type, _id)
       -- to be set by pool:deserialize()
       location = nil,
 
-      __id = "object",
+      __serial_id = "object",
       __index = object.__index,
       __newindex = object.__newindex,
       __iface = iface,

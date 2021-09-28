@@ -7,7 +7,7 @@ local Log = require("api.Log")
 local pool = class.class("pool", { ILocation, ICloneable }, { no_inspect = false })
 
 -- serialization ID for binser
-pool.__id = "pool"
+pool.__serial_id = "pool"
 
 function pool:init(type_id, width, height, owner)
    if owner then
@@ -184,7 +184,7 @@ function pool:deserialize()
    for _, v in self:iter() do
       if type(v) == "table" then
          local mt = getmetatable(v)
-         if mt.__id == "object" then
+         if mt.__serial_id == "object" then
             mt.location = self
          end
       end

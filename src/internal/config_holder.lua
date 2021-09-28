@@ -1,15 +1,16 @@
 local Log = require("api.Log")
 local Config = require("api.Config")
 local data = require("internal.data")
+local ISerializable = require("api.ISerializable")
 
-local config_holder = class.class("config_holder")
+local config_holder = class.class("config_holder", ISerializable)
+config_holder.__serial_id = "63e61cda-2a0e-4bc9-bf35-525fc95a719a"
 
 function config_holder:init(mod_id)
    assert(mod_id, "No mod ID provided")
    rawset(self, "_mod_id", mod_id)
    rawset(self, "_data", {})
 end
-
 
 function config_holder:__index(k)
    local exist = rawget(config_holder, k)
@@ -50,13 +51,11 @@ function config_holder:__newindex(k, v)
    end
 end
 
-function config_holder:serialize()
-end
-
-function config_holder:deserialize()
+function config_holder.deserialize(raw)
    local dead = {}
-   for k, v in pairs(self._data) do
-      local id = self._mod_id .. "." .. k
+
+   for k, v in pairs(raw._data) do
+      local id = raw._mod_id .. "." .. k
       local option = data["base.config_option"][id]
       if not option then
          Log.warn("Missing config option '%s' in engine, but was saved", id)
@@ -69,7 +68,9 @@ function config_holder:deserialize()
          end
       end
    end
-   table.remove_keys(self._data, dead)
+   table.remove_keys(raw._data, dead)
+
+   return raw
 end
 
 function config_holder:__inspect()

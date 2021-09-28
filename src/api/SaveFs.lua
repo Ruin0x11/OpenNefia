@@ -1,4 +1,4 @@
-local binser = require("thirdparty.binser")
+local binser = require("thirdparty.binser2")
 local fs = require("util.fs")
 local Log = require("api.Log")
 local Compress = require("api.Compress")

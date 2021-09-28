@@ -20,7 +20,7 @@ function MapObject.generate_from(_type, id, uid_tracker)
    local obj = Object.generate_from(_type, id)
 
    local mt = getmetatable(obj)
-   assert(mt.__id == "object")
+   assert(mt.__serial_id == "object")
    rawset(mt, "uid", uid)
 
    -- class.assert_is_an(IMapObject, data)
@@ -39,7 +39,7 @@ function MapObject.generate(proto, uid_tracker)
    local obj = Object.generate(proto)
 
    local mt = getmetatable(obj)
-   assert(mt.__id == "object")
+   assert(mt.__serial_id == "object")
    rawset(mt, "uid", uid)
 
    -- class.assert_is_an(IMapObject, obj)
@@ -162,12 +162,12 @@ local function cycle_aware_copy(t, uids, cache, uid_mapping, first, opts)
       res.__class = mt
    end
    if mt then
-      local is_object = mt.__id == "object"
+      local is_object = mt.__serial_id == "object"
       if is_object then
          local new_mt = {}
 
          -- see `object.deserialize()`
-         new_mt.__id = mt.__id
+         new_mt.__serial_id = mt.__serial_id
          new_mt.__index = object.__index
          new_mt.__newindex = object.__newindex
          new_mt.__iface = mt.__iface

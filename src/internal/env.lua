@@ -1,7 +1,8 @@
 local Log = require("api.Log")
-local fs = require("util.fs")
 local paths = require("internal.paths")
 local main_state = require("internal.global.main_state")
+local ISerializable = require("api.ISerializable")
+local binser = require("thirdparty.binser2")
 
 --- Module and mod environment functions. This module implements
 --- seamless hotloading by replacing the global `require` with one
@@ -104,6 +105,10 @@ local fn_to_module = setmetatable({}, { __mode = "k" })
 -- Paths with in-memory Lua code strings. Used for testing.
 -- Looks like {{ mod_id = "@test@", code = "require()..." }}
 local transient_paths = {}
+
+-- Classes/interfaces from chunks where more than one class was defined. These
+-- classes are tracked by the serialization and hotloading systems.
+local inner_defns = {}
 
 -- This flag is used for e.g. relayouting all UI layers on hotload so
 -- the changes are visible immediately and on_hotload() can be called.
@@ -268,11 +273,11 @@ local function env_dofile(path, mod_env)
       -- library but fail.
       local success, err = xpcall(global_require, debug.traceback, resolved)
       if not success then
-         return nil, err
+         return false, err
       end
 
       local result = err
-      return result, nil
+      return true, result
    end
 
    if resolved == nil then
@@ -286,7 +291,7 @@ local function env_dofile(path, mod_env)
       if can_load_native_libs(mod_env) then
           split_path(package.cpath)
       end
-      return nil, ("Cannot find path '%s'. Tried searching the following: %s"):format(path, tried_paths)
+      return false, ("Cannot find path '%s'. Tried searching the following: %s"):format(path, tried_paths)
    end
 
    local chunk, err
@@ -303,19 +308,13 @@ local function env_dofile(path, mod_env)
    end
 
    if chunk == nil then
-      return nil, err
+      return false, err
    end
 
    mod_env = mod_env or _G
    setfenv(chunk, mod_env)
 
-   local success, err = xpcall(chunk, debug.traceback)
-   if not success then
-      return nil, err
-   end
-
-   local result = err
-   return result
+   return xpcall(chunk, debug.traceback)
 end
 
 function env.load_sandboxed_chunk(path, mod_name)
@@ -409,7 +408,7 @@ local function safe_load_chunk(path)
       return env_dofile(path)
    end
 
-   return nil
+   return false, "Cannot load path " .. path
 end
 
 --- Requires a path with either the mod environment or the global
@@ -467,13 +466,14 @@ local function gen_require(chunk_loader, can_load_path)
       end
 
       LOADING[req_path] = true
-      local result, err = chunk_loader(req_path)
+      local ok, result, extra = chunk_loader(req_path)
       LOADING_STACK[#LOADING_STACK] = nil
       LOADING[req_path] = false
 
-      if err then
+      if not ok then
+         local err = result
          HOTLOADING_PATH = false
-         error(("%s:\n\t%s"):format(path, string.strip_whitespace(err)), 0)
+         error(("%s:\n\t%s"):format(path, string.strip_whitespace(tostring(err))), 0)
       end
 
       if HOTLOADING_PATH and result == "no_hotload" then
@@ -533,9 +533,36 @@ local function gen_require(chunk_loader, can_load_path)
          end
 
          if class.is_class(result) or class.is_interface(result) then
+            local mt = getmetatable(result)
+            mt.__require_path = req_path
             local ok, on_require = pcall(function() return result.__on_require end)
             if type(on_require) == "function" then
                on_require(package.loaded[req_path], result)
+            end
+
+            if class.is_class(result) and class.implements(ISerializable, result) then
+               binser.registerClass(result)
+            end
+         end
+      end
+
+      -- Hotload any classes the user returns from the chunk, so they can be
+      -- tracked by the serialization system.
+      if type(extra) == "table" and extra.inner_defns then
+         for _, defn in ipairs(extra.inner_defns) do
+            if class.is_class(defn) or class.is_interface(defn) then
+               local id = req_path .. ":" .. defn.__name
+               if type(inner_defns[id]) == "table" then
+                  class.hotload(inner_defns[id], result)
+               else
+                  inner_defns[id] = result
+               end
+               defn.__require_path = id
+               if class.is_class(defn) and class.implements(ISerializable, defn) then
+                  binser.registerClass(defn)
+               end
+            else
+               Log.error("Object passed as inner class '%s' was not a class or interface table", defn)
             end
          end
       end
@@ -705,7 +732,12 @@ function env.generate_sandbox(mod_name, is_strict)
    sandbox["_MOD_ID"] = mod_name
 
    sandbox["require"] = mod_require
-   sandbox["dofile"] = function(path) return env.load_sandboxed_chunk(path, mod_name) end
+   sandbox["dofile"] = function(path)
+      local results = {env.load_sandboxed_chunk(path, mod_name)}
+      local ok = results[1]
+      assert(ok, results[2])
+      return table.unpack(results, 2)
+   end
    sandbox["data"] = require("internal.data")
    sandbox["config"] = require("internal.config")
    sandbox["pause"] = function(...) return _G.pause(...) end
@@ -826,7 +858,7 @@ function env.reset()
 
    -- `util.class` is also weird, because it depends on binser. binser's
    -- serializers are global, so we need to reset those too.
-   local binser = assert(package.loaded["thirdparty.binser"])
+   local binser = assert(package.loaded["thirdparty.binser2"])
    binser.clearRegistry()
 
    paths_loaded_by_hooked_require = {}
