@@ -545,19 +545,20 @@ local function newbinser()
       local t = byte(str, index)
       if not t then return nil, index end
       if t < 128 then
-         return { t }, index + 1
+         return { t, t - 27 }, index + 1
       elseif t < 192 then
          local b2 = byte(str, index + 1)
          if not b2 then error("Expected more bytes of input.") end
-         return { t, b2 }, index + 2
+         local b = b2 + 0x100 * (t - 128) - 8192
+         return { t, b }, index + 2
       elseif t == 202 then
-         return { t }, index + 1
+         return { t, nil }, index + 1
       elseif t == 203 or t == 212 then
          return { t, number_from_str(str, index) }
       elseif t == 204 then
-         return { t }, index + 1
+         return { t, true }, index + 1
       elseif t == 205 then
-         return { t }, index + 1
+         return { t, false }, index + 1
       elseif t == 206 then
          local length, dataindex = number_from_str(str, index + 1)
          local nextindex = dataindex + length
@@ -595,7 +596,7 @@ local function newbinser()
             if k == nil then error("Can't have nil table keys") end
             ret[#ret+1] = { k, v }
          end
-         return { t, kvs = ret, mt = mt or nil }, nextindex
+         return { t, ret, mt = mt or nil }, nextindex
       elseif t == 208 then
          local ref, nextindex = number_from_str(str, index + 1)
          return { t, ref }, nextindex
@@ -613,7 +614,7 @@ local function newbinser()
          --    error(("Cannot deserialize class '%s'"):format(tostring(name)))
          -- end
          visited[#visited + 1] = args
-         return { t, name, args }, nextindex
+         return { t, name, args = args }, nextindex
       -- elseif t == 210 then
       --    local length, dataindex = number_from_str(str, index + 1)
       --    local nextindex = dataindex + length
@@ -637,14 +638,14 @@ local function newbinser()
          local args = {}
          for i = 1, count do
             local oldindex = nextindex
-            args[i], nextindex = deserialize_value(str, nextindex, visited)
+            args[i], nextindex = deserialize_value_raw(str, nextindex, visited)
             if nextindex == oldindex then error("Expected more bytes of input.") end
          end
          -- if not serial_id or not classes[serial_id] then
          --    error(("Cannot deserialize class with serial ID '%s'"):format(tostring(serial_id)))
          -- end
          visited[#visited + 1] = args
-         return { t, serial_id, args }, nextindex
+         return { t, serial_id, args = args }, nextindex
       else
          error("Could not deserialize type byte " .. t .. ".")
       end
@@ -774,7 +775,6 @@ local function newbinser()
             break
          end
       end
-      deserialize_stage2(visited)
       return vals, len, visited
    end
 
