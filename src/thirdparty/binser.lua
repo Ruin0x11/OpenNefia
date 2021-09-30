@@ -554,7 +554,8 @@ local function newbinser()
       elseif t == 202 then
          return { t, nil }, index + 1
       elseif t == 203 or t == 212 then
-         return { t, number_from_str(str, index) }
+         local num, nextindex = number_from_str(str, index)
+         return { t, num }, nextindex
       elseif t == 204 then
          return { t, true }, index + 1
       elseif t == 205 then
@@ -581,7 +582,7 @@ local function newbinser()
          for i = 1, count do
             local oldindex = nextindex
             item, nextindex = deserialize_value_raw(str, nextindex, visited)
-            ret[#ret+1] = { i, item }
+            ret[#ret+1] = { { 212, i }, item }
             if nextindex == oldindex then error("Expected more bytes of input.") end
          end
          count, nextindex = number_from_str(str, nextindex)
@@ -599,7 +600,12 @@ local function newbinser()
          return { t, ret, mt = mt or nil }, nextindex
       elseif t == 208 then
          local ref, nextindex = number_from_str(str, index + 1)
-         return { t, ref }, nextindex
+         if type(visited[ref]) == "string" then
+            -- Dereference strings inline
+            return { 206, visited[ref] }, nextindex
+         else
+            return { t, ref, deref = visited[ref] }, nextindex
+         end
       elseif t == 209 or t == 214 then
          local count
          local name, nextindex = deserialize_value_raw(str, index + 1, visited)

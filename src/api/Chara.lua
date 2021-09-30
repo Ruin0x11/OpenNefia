@@ -256,7 +256,7 @@ function Chara.create(id, x, y, params, where)
    local chara = hook_generate_chara(params)
 
    if chara == nil then
-      chara = MapObject.generate_from("base.chara", id, params.uid_tracker or nil)
+      chara = MapObject.generate_from("base.chara", id)
 
       if not params.no_modify then
          chara.level = params.level or chara.level

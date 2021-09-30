@@ -108,7 +108,7 @@ function Feat.create(id, x, y, params, where)
       no_build = params.no_build,
       build_params = params
    }
-   local feat = MapObject.generate_from("base.feat", id, params.uid_tracker or nil)
+   local feat = MapObject.generate_from("base.feat", id)
 
    feat.params = Object.copy_params(feat.proto.params, params.params, "base.feat", id)
 

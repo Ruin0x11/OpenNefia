@@ -99,17 +99,15 @@ function ConfigThemeMenu:init()
 end
 
 function ConfigThemeMenu.build_preview_map()
-   local uid_tracker = UidTracker:new()
-
    local chara = function(_id)
       return function(map, x, y)
-         Chara.create(_id, x, y, {uid_tracker=uid_tracker}, map)
+         Chara.create(_id, x, y, {}, map)
       end
    end
 
    local item = function(_id)
       return function(map, x, y)
-         Item.create(_id, x, y, {uid_tracker=uid_tracker}, map)
+         Item.create(_id, x, y, {}, map)
       end
    end
 
