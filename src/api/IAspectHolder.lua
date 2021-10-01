@@ -27,8 +27,8 @@ function IAspectHolder:get_aspect(iface)
    return self._aspects:get_aspect(self, iface)
 end
 
-function IAspectHolder:get_aspect_or_default(iface, and_set, ...)
-   return self._aspects:get_aspect_or_default(self, iface, and_set, ...)
+function IAspectHolder:get_aspect_or_default(iface, no_set, ...)
+   return self._aspects:get_aspect_or_default(self, iface, no_set, ...)
 end
 
 function IAspectHolder:set_aspect(iface, aspect)
@@ -71,6 +71,7 @@ function IAspectHolder:calc_aspect(iface, prop)
    if aspect == nil then
       return nil
    end
+   print(inspect(aspect.temp))
    return aspect:calc(self, prop)
 end
 

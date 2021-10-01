@@ -140,6 +140,7 @@ end
 
 function InstancedMap:on_refresh()
    IModdable.on_refresh(self)
+   IAspectHolder.on_refresh(self)
 end
 
 local fallbacks = {

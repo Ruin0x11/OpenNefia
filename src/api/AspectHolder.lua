@@ -39,7 +39,7 @@ function AspectHolder:get_aspect_or_default(target, iface, no_set)
       local default = Aspect.get_default_impl(iface)
       aspect = default:new(target, {})
       local priority = AspectHolder.DEFAULT_PRIORITY
-      if not no_set == "no_set" then
+      if no_set ~= "no_set" then
          self._store:set(name, aspect, priority)
       end
    end
