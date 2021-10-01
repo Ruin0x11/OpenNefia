@@ -6,10 +6,9 @@ local Log = require("api.Log")
 local ICloneable = require("api.ICloneable")
 local IComparable = require("api.IComparable")
 
-local EventHolder = class.class("EventHolder", {ICloneable, IComparable})
-EventHolder.__serial_opts = {
-   load_type = "freeform"
-}
+local EventHolder = class.class("EventHolder",
+                                {ICloneable, IComparable},
+                                { serial_opts = { load_type = "freeform" } })
 
 EventHolder.DEFAULT_PRIORITY = 100000
 
@@ -28,6 +27,7 @@ function EventHolder:clone()
 end
 
 function EventHolder:serialize()
+   -- No-op, events should be registered again after loading the game.
    return nil
 end
 

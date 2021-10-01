@@ -415,8 +415,10 @@ function class.class(name, ifaces, opts)
 
    c.delegate = delegate
 
-   -- Defaults to require path, set by internal.env
-   c.__serial_id = nil
+   -- Defaults to require path, which is set later by internal.env
+   c.__serial_id = opts.serial_id or nil
+
+   c.__serial_opts = opts.serial_opts or {}
 
    c.serialize = function(self)
       return self

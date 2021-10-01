@@ -1,5 +1,7 @@
-local serial_TestClass_freeform = class.class("serial_TestClass_freeform")
-serial_TestClass_freeform.__serial_opts = { load_type = "freeform" }
+local serial_TestClass_freeform = class.class("serial_TestClass_freeform",
+                                              {},
+                                              { serial_opts = { load_type = "freeform" } })
+
 
 function serial_TestClass_freeform:init(foo, bar)
    self.foo = foo

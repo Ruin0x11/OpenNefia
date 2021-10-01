@@ -10,6 +10,8 @@ function EventTree:init()
 end
 
 function EventTree:serialize()
+   -- No-op, events should be registered again after loading the game.
+   return nil
 end
 
 function EventTree:deserialize()

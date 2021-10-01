@@ -36,6 +36,11 @@ function test_serial_data_entries()
    Assert.eq(entry, new)
 end
 
+function test_serial_object_serial_id()
+   local a = TestUtil.stripped_chara("elona.putit")
+   Assert.eq("object", a.__serial_id)
+end
+
 function test_serial_nested_map_object_reference()
    local a = TestUtil.stripped_chara("elona.putit")
    local b = TestUtil.stripped_chara("elona.putit")

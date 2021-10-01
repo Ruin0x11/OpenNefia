@@ -1,5 +1,6 @@
-local serial_TestClass_reference = class.class("serial_TestClass_reference")
-serial_TestClass_reference.__serial_opts = { load_type = "reference" }
+local serial_TestClass_reference = class.class("serial_TestClass_reference",
+                                               {},
+                                               { serial_opts = { load_type = "reference" } })
 
 local instances = {}
 

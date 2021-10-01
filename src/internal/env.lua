@@ -538,7 +538,7 @@ local function gen_require(chunk_loader, can_load_path)
             local mt = getmetatable(result)
             mt.__require_path = req_path
             result.__serial_id = result.__serial_id or req_path
-            local opts = rawget(result, "__serial_opts")
+            local opts = result.__serial_opts
             if opts then
                opts.load_type = opts.load_type or "self"
                local load_type = opts.load_type

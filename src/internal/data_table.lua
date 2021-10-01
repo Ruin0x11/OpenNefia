@@ -700,12 +700,8 @@ function data_table:has_type(_type)
    return self.inner[_type] ~= nil
 end
 
-local proxy = class.class("proxy", ISerializable)
--- WARNING: This serial ID is reserved! Do not change!
-proxy.__serial_id = "data_proxy"
-proxy.__serial_opts = {
-   load_type = "reference"
-}
+-- WARNING: The serial ID is reserved! Do not change!
+local proxy = class.class("proxy", ISerializable, { serial_id = "data_proxy", serial_opts = { load_type = "reference" } })
 
 function proxy:init(_type, data)
    rawset(self, "_type", _type)

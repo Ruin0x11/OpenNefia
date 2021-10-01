@@ -229,6 +229,7 @@ local function newbinser()
    local deserializers = {}
    local classes = {}
    local serial_ids = {}
+   local serial_opts = {}
    local types = {}
 
    types["nil"] = function(x, visited, accum)
@@ -331,7 +332,7 @@ local function newbinser()
          accum[#accum + 1] = "\215"
          types[type(serial_id)](serial_id, visited, accum)
 
-         local opts = rawget(classes[serial_id], "__serial_opts")
+         local opts = serial_opts[serial_id]
          local load_type = opts and opts.load_type or "self"
          local memoized
 
@@ -560,7 +561,7 @@ local function newbinser()
             error(("Cannot deserialize class with serial ID '%s'"):format(tostring(serial_id)))
          end
          local ret
-         local opts = rawget(classes[serial_id], "__serial_opts")
+         local opts = serial_opts[serial_id]
          local load_type = opts and opts.load_type or "self"
          if load_type == "self" then
             -- In `self` mode (the default), we expect a single argument to be
@@ -744,6 +745,9 @@ local function newbinser()
    end
 
    local function deserialize_stage2(visited)
+      -- NOTE: In the future, save migration code will be inserted here in case
+      -- the raw data needs to be transformed by mods before the final
+      -- serialization pass with classes, etc. is run.
       for obj, meta in pairs(visited[PENDING_CLASS_OBJS]) do
          local klass = meta.serial_class
          if type(klass) ~= "table" then
@@ -918,7 +922,7 @@ local function newbinser()
          error("Cannot register class " .. tostring(klass) .. " for serialization: Is not a class")
       end
 
-      local serial_id = klass.__serial_id
+      local serial_id = rawget(klass, "__serial_id")
 
       if RESERVED_IDS[serial_id] then
          error("Cannot register class " .. klass.__name .. " for serialization: __serial_id '" .. serial_id .. "' is reserved")
@@ -936,8 +940,14 @@ local function newbinser()
          end
       end
 
+      local opts = rawget(klass, "__serial_opts")
+      if type(opts) ~= "table" then
+         error("Cannot register class " .. klass.__name .. " for serialization: Does not declare __serial_opts table property")
+      end
+
       classes[serial_id] = klass
       serial_ids[klass] = serial_id
+      serial_opts[serial_id] = opts
    end
 
    local function clearRegistry()

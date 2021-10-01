@@ -6,9 +6,6 @@ local Log = require("api.Log")
 -- anything that needs to store map objects uses this internally.
 local pool = class.class("pool", { ILocation, ICloneable }, { no_inspect = false })
 
--- serialization ID for binser
-pool.__serial_id = "pool"
-
 local t_mt = { __inspect = tostring }
 
 function pool:init(type_id, width, height, owner)
