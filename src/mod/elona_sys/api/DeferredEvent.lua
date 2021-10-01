@@ -1,17 +1,19 @@
+local global = require("mod.elona_sys.internal.global")
+
 local DeferredEvent = {}
 
 function DeferredEvent.add(cb, priority)
    assert(type(cb) == "function")
    priority = priority or 100000
-   save.elona_sys.deferred_events:insert(priority, cb)
+   global.deferred_events:insert(priority, cb)
 end
 
 function DeferredEvent.clear()
-   save.elona_sys.deferred_events:clear()
+   global.deferred_events:clear()
 end
 
 function DeferredEvent.is_pending()
-   return save.elona_sys.deferred_events:length() > 0
+   return global.deferred_events:length() > 0
 end
 
 return DeferredEvent

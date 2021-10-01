@@ -234,6 +234,29 @@ local function newbinser()
    local serial_opts = {}
    local types = {}
 
+   local last_key = {}
+   local last_class = {}
+
+   local function serial_error(fmt, ...)
+      local key = last_key[#last_key]
+      local klass = last_class[#last_class]
+      if key or klass then
+         fmt = fmt .. " ("
+         if key then
+            fmt = fmt .. "key: " .. tostring(key)
+            if klass then
+               fmt = fmt .. ", "
+            end
+         end
+         if klass then
+            fmt = fmt .. "class: " .. klass.__name
+         end
+         fmt = fmt .. ")"
+      end
+
+      error((fmt):format(...))
+   end
+
    types["nil"] = function(x, visited, accum)
       accum[#accum + 1] = "\202"
    end
@@ -270,7 +293,7 @@ local function newbinser()
 
       local mt = getmetatable(x)
       local serial_id = mt and (mt.__serial_id or serial_ids[mt])
-      -- print("GETSER", serial_id, mt, serializers[serial_id])
+      print("GETSER", serial_id, mt, serializers[serial_id])
       if serial_id == "object" then
          accum[#accum + 1] = "\214"
 
@@ -358,6 +381,8 @@ local function newbinser()
             x.__memoized = nil
          end
 
+         table.insert(last_class, mt.__class)
+
          local ok, err = xpcall(function()
                accum[#accum + 1] = number_to_str(len)
                for i = 1, len do
@@ -365,6 +390,8 @@ local function newbinser()
                   types[type(arg)](arg, visited, accum)
                end
          end, debug.traceback)
+
+         table.remove(last_class)
 
          if load_type == "self" then
             -- Restore state and call :deserialize(). It is the programmer's
@@ -394,7 +421,7 @@ local function newbinser()
          accum[#accum + 1] = number_to_str(visited[x])
       else
          if check_custom_type(x, visited, accum) then return end
-         error("Cannot serialize this userdata.")
+         serial_error("Cannot serialize this userdata.")
       end
    end
 
@@ -418,7 +445,9 @@ local function newbinser()
          accum[#accum + 1] = number_to_str(xlen)
          for i = 1, xlen do
             local v = x[i]
+            table.insert(last_key, i)
             types[type(v)](v, visited, accum)
+            table.remove(last_key)
          end
          local key_count = 0
          for k in pairs(x) do
@@ -429,10 +458,12 @@ local function newbinser()
          accum[#accum + 1] = number_to_str(key_count)
          for k, v in pairs(x) do
             if not_array_index(k, xlen) then
-               -- print("KV", tostring(k), type(k), type(v))
-               -- print(inspect(k))
+               print("KV", tostring(k), type(k), type(v))
+               print(inspect(k))
                types[type(k)](k, visited, accum)
+               table.insert(last_key, k)
                types[type(v)](v, visited, accum)
+               table.remove(last_key)
             end
          end
       end
@@ -571,12 +602,12 @@ local function newbinser()
             -- full class instance with its metatable attached.
             ret = args[1]
             assert(type(ret) == "table", "deserialized class instance was not table")
-            visited[PENDING_CLASS_OBJS][ret] = { load_type = "self", serial_class = classes[serial_id] }
+            table.insert(visited[PENDING_CLASS_OBJS], { object = ret, load_type = "self", serial_class = classes[serial_id] })
          elseif load_type == "freeform" then
             -- In `freeform` mode, any number of arguments can be returned from
             -- :serialize().
             ret = args
-            visited[PENDING_CLASS_OBJS][ret] = { load_type = "freeform", serial_class = classes[serial_id] }
+            table.insert(visited[PENDING_CLASS_OBJS], { object = ret, load_type = "freeform", serial_class = classes[serial_id] })
          elseif load_type == "reference" then
             -- In `reference` mode, the arguments returned from :serialize() are
             -- passed to :deserialize(), and a new instance of the class is
@@ -707,6 +738,9 @@ local function newbinser()
    end
 
    local function serialize(...)
+      last_key = {}
+      last_class = {}
+
       local visited = {[NEXT] = 1, [CTORSTACK] = {}}
       local accum = {}
       for i = 1, select("#", ...) do
@@ -750,7 +784,8 @@ local function newbinser()
       -- NOTE: In the future, save migration code will be inserted here in case
       -- the raw data needs to be transformed by mods before the final
       -- serialization pass with classes, etc. is run.
-      for obj, meta in pairs(visited[PENDING_CLASS_OBJS]) do
+      for _, meta in ipairs(visited[PENDING_CLASS_OBJS]) do
+         local obj = meta.object
          local klass = meta.serial_class
          if type(klass) ~= "table" then
             error("Missing serial class")
@@ -790,6 +825,8 @@ local function newbinser()
          else
             error("Invalid class instance load type " .. tostring(meta.load_type))
          end
+
+         rawset(obj, "__memoized", {})
       end
    end
 

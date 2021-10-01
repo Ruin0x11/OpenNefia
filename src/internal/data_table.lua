@@ -412,7 +412,6 @@ local data_entry_mt = {
 data_entry_mt.__index = data_entry_mt
 
 local function data_entry_serialize(self)
-   print("SERIALID", rawget(self, "_type"), rawget(self, "_id"))
    return rawget(self, "_type"), rawget(self, "_id")
 end
 

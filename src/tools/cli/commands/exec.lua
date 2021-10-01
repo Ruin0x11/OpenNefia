@@ -49,6 +49,7 @@ return function(args)
       rawset(exec_env, "load_game", util.load_game)
    else
       exec_env = env.generate_sandbox("exec")
+      rawset(exec_env, "require", env.require)
    end
 
    setfenv(chunk, exec_env)

@@ -2,7 +2,7 @@ function love.conf(t)
     t.identity = "OpenNefia"
     t.appendidentity = false
     t.version = "11.3"
-    t.console = true
+    t.console = false
 
     t.window.title = "OpenNefia"
     t.window.icon = "data/icon.png"

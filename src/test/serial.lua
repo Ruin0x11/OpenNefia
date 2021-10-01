@@ -90,6 +90,13 @@ function test_serial_class_self()
    Assert.eq(false, new.serializing)
    Assert.eq(42, test.piyo)
    Assert.not_eq(test, new)
+
+   local expected = { { 1, 1 }, { 2, 2 }, { 3, 3 } }
+   local actual = {}
+   for _, priority, i in test.list:iterate() do
+      actual[#actual+1] = { priority, i }
+   end
+   Assert.same(actual, expected)
 end
 
 function test_serial_class_freeform()
@@ -140,7 +147,35 @@ function test_serial_class_reference()
    Assert.eq(test, new)
 end
 
-function test_serial_nested_map_object_reference()
+function test_serial_cyclical_reference()
+   local a = {}
+   local b = {}
+   a.b = b
+   b.a = a
+   local t = { a }
+
+   Assert.eq(t[1], t[1].b.a) -- by reference
+
+   local t2 = SaveFs.deserialize(SaveFs.serialize(t))
+   Assert.eq(t2[1], t2[1].b.a)
+end
+
+function test_serial_cyclical_reference_class()
+   local Queue = require("api.Queue")
+   local a = Queue:new()
+   local b = Queue:new()
+   a:push(b)
+   b:push(a)
+   local t = { a = a, b = b }
+
+   local t2 = SaveFs.deserialize(SaveFs.serialize(t))
+   local a2 = t2.b:pop()
+   local b2 = t2.a:pop()
+   Assert.eq(t2.a, a2)
+   Assert.eq(t2.b, b2)
+end
+
+function test_serial_cyclical_reference_map_object()
    local a = TestUtil.stripped_chara("elona.putit")
    local b = TestUtil.stripped_chara("elona.putit")
    a.b = b

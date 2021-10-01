@@ -75,8 +75,14 @@ function Pcc:init(parts)
    self.quads = {}
 end
 
-function Pcc:deserialize()
+function Pcc:serialize()
+   self.image = nil
+   self.quads = {}
    self.dirty = true
+end
+
+function Pcc:deserialize()
+   self:refresh()
 end
 
 function Pcc:refresh()

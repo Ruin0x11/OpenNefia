@@ -4,9 +4,7 @@ local Gui = require("api.Gui")
 local Map = require("api.Map")
 local Rand = require("api.Rand")
 local Quest = require("mod.elona_sys.api.Quest")
-local Feat = require("api.Feat")
 local Anim = require("mod.elona_sys.api.Anim")
-local Mef = require("api.Mef")
 local UidTracker = require("api.UidTracker")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Log = require("api.Log")
@@ -18,10 +16,9 @@ local Chara = require("api.Chara")
 local ElonaQuest = require("mod.elona.api.ElonaQuest")
 local Enum = require("api.Enum")
 local Hunger = require("mod.elona.api.Hunger")
-local World = require("api.World")
 local Const = require("api.Const")
-local ExHelp = require("mod.elona.api.ExHelp")
 local SkipList = require("api.SkipList")
+local global = require("mod.elona_sys.internal.global")
 
 --
 --
@@ -104,8 +101,9 @@ local function init_save()
    s.quest_time_limit = 0
    s.quest_time_limit_notice_interval = 0
    s.sidequest = {}
-   s.deferred_events = SkipList:new()
    s.active_main_quests = {}
+
+   global.deferred_events = SkipList:new()
 end
 
 Event.register("base.on_init_save", "Init save (elona_sys)", init_save)

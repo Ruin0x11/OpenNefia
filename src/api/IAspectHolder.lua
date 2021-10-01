@@ -71,7 +71,6 @@ function IAspectHolder:calc_aspect(iface, prop)
    if aspect == nil then
       return nil
    end
-   print(inspect(aspect.temp))
    return aspect:calc(self, prop)
 end
 

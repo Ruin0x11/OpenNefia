@@ -1,13 +1,14 @@
 local Event = require("api.Event")
 local Gui = require("api.Gui")
+local global = require("mod.elona_sys.internal.global")
 
 local function run_events(_, _, result)
    local to_remove = 0
 
    -- Make sure to run events that are added by other deferred events
    -- themselves.
-   while save.elona_sys.deferred_events:length() > 0 do
-      for _, _, event in save.elona_sys.deferred_events:iterate() do
+   while global.deferred_events:length() > 0 do
+      for _, _, event in global.deferred_events:iterate() do
          to_remove = to_remove + 1
 
          -- the event can be nil if a save was loaded, since functions aren't
@@ -25,7 +26,7 @@ local function run_events(_, _, result)
       end
 
       for _ = 1, to_remove do
-         save.elona_sys.deferred_events:pop()
+         global.deferred_events:pop()
       end
    end
 
@@ -35,7 +36,7 @@ end
 Event.register("base.on_turn_begin", "Run deferred events", run_events)
 
 local function clear_events()
-   save.elona_sys.deferred_events:clear()
+   global.deferred_events:clear()
 end
 
 Event.register("base.on_map_leave", "Clear deferred events", clear_events)
