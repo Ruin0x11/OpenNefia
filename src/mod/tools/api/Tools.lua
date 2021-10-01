@@ -1141,4 +1141,17 @@ function Tools.id_list(_type)
    return inspect(data[_type]:iter():extract("_id"):into_sorted():to_list(), { always_tabify = true })
 end
 
+function Tools.spawn_cards_and_figurines()
+   for _ = 1, 50 do
+      local chara_id = Charagen.random_chara_id(20)
+      local item_id
+      if Rand.one_in(2) then
+         item_id = "elona.card"
+      else
+         item_id = "elona.figurine"
+      end
+      Item.create(item_id, nil, nil, {aspects={[IItemFromChara] = { chara_id = chara_id }}})
+   end
+end
+
 return Tools

@@ -102,7 +102,7 @@ function SelectGenderMenu:get_charamake_result(charamake_data, retval)
 
    if chara.image == nil or chara.image == "base.default" then
       local ElonaChara = require("mod.elona.api.ElonaChara")
-      local image = ElonaChara.default_chara_image(chara)
+      local image = ElonaChara.default_chara_image(chara.proto)
       if image then
          chara.image = image
       else

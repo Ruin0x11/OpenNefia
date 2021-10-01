@@ -2,9 +2,9 @@ local IComparable = require("api.IComparable")
 local IDrawable = require("api.gui.IDrawable")
 local Draw = require("api.Draw")
 
-local FigureDrawable = class.class("FigureDrawable", { IDrawable, IComparable })
+local FigurineDrawable = class.class("FigurineDrawable", { IDrawable, IComparable })
 
-function FigureDrawable:init(chip_id, color)
+function FigurineDrawable:init(chip_id, color)
    self.batch = nil
    self.dirty = true
    self.chip_id = chip_id
@@ -12,18 +12,18 @@ function FigureDrawable:init(chip_id, color)
    self.color[4] = 150
 end
 
-function FigureDrawable:serialize()
+function FigurineDrawable:serialize()
    self.batch = nil
 end
 
-function FigureDrawable:deserialize()
+function FigurineDrawable:deserialize()
    self.dirty = true
 end
 
-function FigureDrawable:update(dt)
+function FigurineDrawable:update(dt)
 end
 
-function FigureDrawable:draw(x, y, w, h, centered, rot)
+function FigurineDrawable:draw(x, y, w, h, centered, rot)
    if self.dirty then
       self.batch = Draw.make_chip_batch("chip")
       self.dirty = false
@@ -40,7 +40,7 @@ function FigureDrawable:draw(x, y, w, h, centered, rot)
    -- <<<<<<<< shade2/module.hsp:577 	:if %%1=531:pos 8,1058-chipCh(%%2):gcopy selChr,chi ..
 end
 
-function FigureDrawable:compare(other)
+function FigurineDrawable:compare(other)
    if self.chip_id ~= other.chip_id then
       return false
    end
@@ -52,4 +52,4 @@ function FigureDrawable:compare(other)
    return self.color == nil and other.color == nil
 end
 
-return FigureDrawable
+return FigurineDrawable

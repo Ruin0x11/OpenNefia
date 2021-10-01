@@ -293,7 +293,7 @@ local function newbinser()
 
       local mt = getmetatable(x)
       local serial_id = mt and (mt.__serial_id or serial_ids[mt])
-      print("GETSER", serial_id, mt, serializers[serial_id])
+      -- print("GETSER", serial_id, mt, serializers[serial_id])
       if serial_id == "object" then
          accum[#accum + 1] = "\214"
 
@@ -458,8 +458,8 @@ local function newbinser()
          accum[#accum + 1] = number_to_str(key_count)
          for k, v in pairs(x) do
             if not_array_index(k, xlen) then
-               print("KV", tostring(k), type(k), type(v))
-               print(inspect(k))
+               -- print("KV", tostring(k), type(k), type(v))
+               -- print(inspect(k))
                types[type(k)](k, visited, accum)
                table.insert(last_key, k)
                types[type(v)](v, visited, accum)
@@ -523,7 +523,7 @@ local function newbinser()
          if t == 213 then
             mt, nextindex = deserialize_value(str, nextindex, visited)
             if type(mt) ~= "table" then error("Expected table metatable") end
-            print(inspect(mt))
+            -- print(inspect(mt))
          end
          count, nextindex = number_from_str(str, nextindex)
          for i = 1, count do
@@ -656,7 +656,7 @@ local function newbinser()
          if t == 213 then
             mt, nextindex = deserialize_value_raw(str, nextindex, visited)
             if type(mt) ~= "table" then error("Expected table metatable") end
-            print(inspect(mt))
+            -- print(inspect(mt))
          end
          count, nextindex = number_from_str(str, nextindex)
          for i = 1, count do

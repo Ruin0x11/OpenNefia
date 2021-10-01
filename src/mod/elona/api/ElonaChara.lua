@@ -4,7 +4,7 @@ local Rand = require("api.Rand")
 local Enum = require("api.Enum")
 local Charagen = require("mod.elona.api.Charagen")
 local Chara = require("api.Chara")
-local Log = require("api.Log")
+local MapObject = require("api.MapObject")
 
 local ElonaChara = {}
 
@@ -136,27 +136,29 @@ function ElonaChara.random_human_image(adv)
    return Rand.choice(HUMAN_IMAGES[gender])
 end
 
-function ElonaChara.default_chara_image(chara)
-   if chara.proto.image then
-      return chara.proto.image
+function ElonaChara.default_chara_image(proto, gender)
+   if type(proto) == "string" then
+      proto = data["base.chara"]:ensure(proto)
+   elseif MapObject.is_map_object(proto, "base.chara") then
+      gender = proto.gender
+      proto = proto.proto
    end
 
-   if chara.male_image and chara.gender == "male" then
-      return chara.male_image
-   end
-   if chara.female_image and chara.gender == "female" then
-      return chara.female_image
+   if proto.image then
+      return proto.image
    end
 
-   local race_id = chara.race or chara.proto.race
+   gender = gender or "female"
+
+   local race_id = proto.race
    if race_id then
       local race = data["base.race"][race_id]
       if race and race.properties then
-         if race.properties.male_image and chara.gender == "male" then
-            return race.properties.male_image
-         end
-         if race.properties.female_image and chara.gender == "female" then
+         if race.properties.female_image and gender == "female" then
             return race.properties.female_image
+         end
+         if race.properties.male_image and gender == "male" then
+            return race.properties.male_image
          end
          if race.properties.image then
             return race.properties.image

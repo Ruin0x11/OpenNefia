@@ -2,7 +2,10 @@ local IAspect = require("api.IAspect")
 
 local IItemFromChara = class.interface("IItemFromChara",
                                        {
-                                          chara_id = { type = "string", optional = true }
+                                          chara_id = { type = "string", optional = true },
+                                          image = { type = "string", optional = true },
+                                          color = { type = "table", optional = true },
+                                          gender = { type = "string", optional = true }
                                        },
                                        { IAspect })
 

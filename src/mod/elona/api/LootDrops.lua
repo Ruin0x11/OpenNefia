@@ -6,12 +6,9 @@ local Chara = require("api.Chara")
 local Calc = require("mod.elona.api.Calc")
 local Itemgen = require("mod.elona.api.Itemgen")
 local Skill = require("mod.elona_sys.api.Skill")
-local FigureDrawable = require("mod.elona.api.gui.FigureDrawable")
-local CardDrawable = require("mod.elona.api.gui.CardDrawable")
 local Equipment = require("mod.elona.api.Equipment")
 local IItemCargo = require("mod.elona.api.aspect.IItemCargo")
 local IItemFromChara = require("mod.elona.api.aspect.IItemFromChara")
-local ItemFromCharaAspect = require("mod.elona.api.aspect.ItemFromCharaAspect")
 local Aspect = require("api.Aspect")
 
 local LootDrops = {}
@@ -337,44 +334,18 @@ function LootDrops.calc_loot_drops(chara, map, attacker)
    -- TODO arena
    local is_arena = false
    if not is_arena and not chara:find_role("elona.custom_chara") then
-      local chara_color = chara.color
-
-      local function set_collectable_params(tag, drawable_klass)
-         return function(item)
-            item:set_aspect(IItemFromChara, Aspect.new_default(IItemFromChara, item, { chara = chara }))
-
-            -- special case for card/figure. the color of the chara chip displayed
-            -- is changed, not the figure/card itself. (so not item.color)
-            local chara_color = table.deepcopy(chara_color)
-
-            -- TODO api to get the default image for a character (including class)
-            -- :calc("image") probably shouldn't be used here
-            local chara_image = chara.proto.image or chara:calc("image") or nil
-
-            if item._id == "elona.figurine" and chara_image then
-               local chip = data["base.chip"]:ensure(chara_image)
-               if chip.is_tall then
-                  item.image = "elona.item_figurine_tall"
-               end
-            end
-
-            -- TODO preinit item.params before on_init_params, so this can get
-            -- moved into the on_init_params() callback
-            item:set_drawable(tag, drawable_klass:new(chara_image, chara_color), "above", 10000)
-
-            item:refresh_cell_on_map()
-         end
-      end
-
-      local set_figure_params = set_collectable_params("elona.figurine", FigureDrawable)
-      local set_card_params = set_collectable_params("elona.card", CardDrawable)
+      local aspects = {
+         [IItemFromChara] = {
+            chara = chara
+         }
+      }
 
       if LootDrops.should_drop_card_or_figure(chara) then
-         drops[#drops+1] = { _id = "elona.card", on_create = set_card_params }
+         drops[#drops+1] = { _id = "elona.card", aspects = aspects }
       end
 
       if LootDrops.should_drop_card_or_figure(chara) then
-         drops[#drops+1] = { _id = "elona.figurine", on_create = set_figure_params }
+         drops[#drops+1] = { _id = "elona.figurine", aspects = aspects }
       end
    end
    -- <<<<<<<< shade2/item.hsp:296 		} ..
@@ -448,7 +419,8 @@ function LootDrops.do_drop_loot(chara, map, attacker, drops)
       else
          data["base.item"]:ensure(drop._id)
          local params = {
-            amount = drop.amount
+            amount = drop.amount,
+            aspects = drop.aspects
          }
 
          item = Item.create(drop._id, chara.x, chara.y, params, map)

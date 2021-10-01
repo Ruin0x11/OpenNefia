@@ -280,7 +280,7 @@ function ElonaItem.random_furniture_color()
    -- <<<<<<<< shade2/item.hsp:613 	if iCol(ci)=coRand	:iCol(ci)=randColor(rnd(length ...end
 end
 
-function ElonaItem.default_item_image(item)
+function ElonaItem.default_item_image(proto)
    local food = item:get_aspect(IItemFood)
    if food and food:is_cooked_dish(item) then
       return Hunger.get_food_image(food:calc(item, "food_type"), food:calc(item, "food_quality"))
@@ -404,11 +404,11 @@ end
 Event.register("base.on_build_item", "Apply Item.fix_item", item_fix_on_build)
 
 local function apply_item_on_init_params(item, params)
-   if item.proto.on_init_params then
-      item.proto.on_init_params(item, params)
-   end
    for _, aspect in item:iter_aspects(IItemInittable) do
       aspect:on_init_params(item, params)
+   end
+   if item.proto.on_init_params then
+      item.proto.on_init_params(item, params)
    end
 end
 Event.register("base.on_item_init_params", "Default item on_init_params callback", apply_item_on_init_params)
