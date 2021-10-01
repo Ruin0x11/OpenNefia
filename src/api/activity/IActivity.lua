@@ -8,9 +8,12 @@ local I18N = require("api.I18N")
 local IActivity = class.interface("IActivity", {}, { IObject, IEventEmitter })
 IActivity._type = "base.activity"
 
-function IActivity:build()
+function IActivity:pre_build()
    IObject.init(self)
    IEventEmitter.init(self)
+end
+
+function IActivity:build()
    self.turns = 0
    self.interrupted = false
 end

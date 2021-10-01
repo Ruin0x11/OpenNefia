@@ -293,7 +293,7 @@ local function newbinser()
 
       local mt = getmetatable(x)
       local serial_id = mt and (mt.__serial_id or serial_ids[mt])
-      -- print("GETSER", serial_id, mt, serializers[serial_id])
+      print("GETSER", serial_id, mt, serializers[serial_id])
       if serial_id == "object" then
          accum[#accum + 1] = "\214"
 
@@ -458,8 +458,8 @@ local function newbinser()
          accum[#accum + 1] = number_to_str(key_count)
          for k, v in pairs(x) do
             if not_array_index(k, xlen) then
-               -- print("KV", tostring(k), type(k), type(v))
-               -- print(inspect(k))
+               print("KV", tostring(k), type(k), type(v))
+               print(inspect(k))
                types[type(k)](k, visited, accum)
                table.insert(last_key, k)
                types[type(v)](v, visited, accum)
@@ -474,7 +474,7 @@ local function newbinser()
          accum[#accum + 1] = "\208"
          accum[#accum + 1] = number_to_str(visited[x])
       else
-         error("Cannot serialize functions.")
+         serial_error("Cannot serialize functions.")
       end
    end
 
@@ -484,7 +484,7 @@ local function newbinser()
          accum[#accum + 1] = number_to_str(visited[x])
       else
          if check_custom_type(x, visited, #accum) then return end
-         error("Cannot serialize this cdata.")
+         serial_error("Cannot serialize this cdata.")
       end
    end
 

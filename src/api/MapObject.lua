@@ -25,8 +25,6 @@ function MapObject.generate_from(_type, id, uid_tracker)
 
    -- class.assert_is_an(IMapObject, data)
 
-   obj:pre_build()
-
    return obj
 end
 
@@ -43,8 +41,6 @@ function MapObject.generate(proto, uid_tracker)
    rawset(mt, "uid", uid)
 
    -- class.assert_is_an(IMapObject, obj)
-
-   obj:pre_build()
 
    return obj
 end

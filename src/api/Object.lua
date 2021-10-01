@@ -92,6 +92,8 @@ function Object.generate(proto)
    local fallbacks = data.fallbacks[obj._type]
    obj:mod_base_with(table.deepcopy(fallbacks), "merge")
 
+   obj:pre_build()
+
    return obj
 end
 

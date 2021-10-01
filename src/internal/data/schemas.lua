@@ -1264,24 +1264,29 @@ data:add_type(
          },
          {
             name = "on_stepped_on",
-            type = types.optional(types.callback("self", types.map_object("base.mef"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.mef"), "params", types.table)),
+            no_save = true
          },
          {
             name = "on_stepped_off",
-            type = types.optional(types.callback("self", types.map_object("base.mef"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.mef"), "params", types.table)),
+            no_save = true
          },
          {
             name = "on_updated",
-            type = types.optional(types.callback("self", types.map_object("base.mef"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.mef"), "params", types.table)),
+            no_save = true
          },
          {
             name = "on_removed",
-            type = types.optional(types.callback("self", types.map_object("base.mef"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.mef"), "params", types.table)),
+            no_save = true
          },
          {
             name = "events",
             type = types.list(ty_event),
             default = {},
+            no_save = true,
             doc = [[
 List of events to bind to this mef when it is created.
 ]]
@@ -1600,6 +1605,7 @@ data:add_type(
             name = "events",
             type = types.list(ty_event),
             default = {},
+            no_save = true,
             doc = [[
 List of events to bind to this activity when it is created.
 ]]
@@ -2618,6 +2624,7 @@ data:add_type {
                                               "chara", types.map_object("base.chara"),
                                               "prev_map", types.optional(types.class(InstancedMap)),
                                               "feat", types.optional(types.map_object("base.feat")))),
+         no_save = true,
          template = true,
          doc = [[
 Callback run when this map is restocked, refreshing things like shop inventories.
@@ -2626,6 +2633,7 @@ Callback run when this map is restocked, refreshing things like shop inventories
       {
          name = "on_generate_map",
          type = types.optional(types.callback({"area", types.class(InstancedArea)}, types.class(InstancedMap))),
+         no_save = true,
          template = true,
          doc = [[
 Callback run when this map is to be generated. Must return the final map.
@@ -2634,24 +2642,27 @@ Callback run when this map is to be generated. Must return the final map.
       {
          name = "on_map_renew_minor",
          type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
-   template = true,
-   doc = [[
+         no_save = true,
+         template = true,
+         doc = [[
 Callback run when this map is restocked, refreshing things like shop inventories.
 ]]
       },
       {
          name = "on_map_renew_major",
          type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
-   template = true,
-   doc = [[
+         no_save = true,
+         template = true,
+         doc = [[
 Callback run when this map is renewed, in order to regenerate its geometry.
 ]]
       },
       {
          name = "on_map_renew_geometry",
          type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
-   template = true,
-   doc = [[
+         no_save = true,
+         template = true,
+         doc = [[
 Callback run when this map's geometry is recreated from scratch.
 
 Used for restoring towns to their pristine condition after destroying their terrain.
@@ -2660,6 +2671,7 @@ Used for restoring towns to their pristine condition after destroying their terr
       {
          name = "on_map_loaded",
          type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
+         no_save = true,
          template = true,
          doc = [[
 Callback run when this map is about to be entered.
@@ -2668,6 +2680,7 @@ Callback run when this map is about to be entered.
       {
          name = "on_map_entered",
          type = types.optional(types.callback("map", types.class(InstancedMap), "params", types.table)),
+         no_save = true,
          template = true,
          doc = [[
 Callback run when this map is being entered (after on_map_loaded is called).
@@ -2676,6 +2689,7 @@ Callback run when this map is being entered (after on_map_loaded is called).
       {
          name = "on_map_pass_turn",
          type = types.optional(types.callback({"map", types.class(InstancedMap), "params", types.table, "result", types.string}, types.string)),
+         no_save = true,
          template = true,
          doc = [[
 Callback run when a turn is passed in this map.
@@ -2701,6 +2715,7 @@ Properties to copy to this map after it is generated. Does not override any valu
          name = "events",
          type = types.list(ty_event),
          default = {},
+         no_save = true,
          template = false,
          doc = [[
 Additional events to bind to this map when it is loaded.
