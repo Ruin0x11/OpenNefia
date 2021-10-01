@@ -26,7 +26,7 @@ function AspectHolder:get_aspect(target, iface)
    return self._store:get(name)
 end
 
-function AspectHolder:get_aspect_or_default(target, iface, and_set)
+function AspectHolder:get_aspect_or_default(target, iface, no_set)
    if type(iface) == "string" then
       iface = env.safe_require(iface)
    end
@@ -39,7 +39,7 @@ function AspectHolder:get_aspect_or_default(target, iface, and_set)
       local default = Aspect.get_default_impl(iface)
       aspect = default:new(target, {})
       local priority = AspectHolder.DEFAULT_PRIORITY
-      if and_set then
+      if not no_set == "no_set" then
          self._store:set(name, aspect, priority)
       end
    end

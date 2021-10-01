@@ -543,7 +543,7 @@ function Effect.damage_item_fire(item, fireproof_blanket)
    end
 
    if fireproof_blanket and Item.is_alive(fireproof_blanket) then
-      local aspect = fireproof_blanket:get_aspect_or_default(IItemChargeable, true)
+      local aspect = fireproof_blanket:get_aspect_or_default(IItemChargeable)
       if owner then
          Gui.mes_visible("item.fireproof_blanket.protects_item", owner.x, owner.y, fireproof_blanket:build_name(1), owner)
       end
@@ -666,7 +666,7 @@ function Effect.damage_item_ice(item, coldproof_blanket)
    end
 
    if coldproof_blanket and Item.is_alive(coldproof_blanket) then
-      local aspect = coldproof_blanket:get_aspect_or_default(IItemChargeable, true)
+      local aspect = coldproof_blanket:get_aspect_or_default(IItemChargeable)
       if owner then
          Gui.mes_visible("item.coldproof_blanket.protects_item", owner.x, owner.y, coldproof_blanket:build_name(1), owner)
       end

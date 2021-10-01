@@ -5,7 +5,7 @@ local ISerializable = require("api.ISerializable")
 
 local config_holder = class.class("config_holder", ISerializable)
 config_holder.__serial_id = "63e61cda-2a0e-4bc9-bf35-525fc95a719a"
-config_holder.__serial_type = "deferred"
+config_holder.__serial_opts = { load_type = "deferred" }
 
 function config_holder:init(mod_id)
    assert(mod_id, "No mod ID provided")

@@ -31,7 +31,7 @@ data:add {
       take = function(t)
          Gui.mes("talk.unique.poppy.find.you_must_return", t.speaker)
          Chara.player():recruit_as_ally(t.speaker)
-         local aspect = t.speaker:get_aspect_or_default(ICharaElonaFlags, true)
+         local aspect = t.speaker:get_aspect_or_default(ICharaElonaFlags)
          aspect.is_being_escorted_sidequest = true
          t.speaker:refresh()
 

@@ -433,6 +433,7 @@ This is for making characters say custom text on certain events.
             name = "on_eat_corpse",
             type = types.optional(types.callback("corpse", types.map_object("base.item"),
                                                  "params", types.fields { chara = types.map_object("base.chara") })),
+            no_save = true,
             doc = [[
 A callback to be run when this character's corpse is eaten.
    ]]
@@ -441,6 +442,7 @@ A callback to be run when this character's corpse is eaten.
             name = "events",
             default = nil,
             type = types.list(ty_event),
+            no_save = true,
             doc = [[
 List of events to bind to this character when they are spawned.
 ]]
@@ -532,14 +534,17 @@ Color to display on the character's sprite.
          {
             name = "on_initialize_equipment",
             type = types.optional(types.callback("self", types.map_object("base.chara"), "params", types.table, "equip_spec", ty_equip_spec)),
+            no_save = true,
          },
          {
             name = "on_drop_loot",
             type = types.optional(types.callback("self", types.map_object("base.chara"), "params", types.table, "drops", types.list(ty_drop))),
+            no_save = true,
          },
          {
             name = "calc_initial_gold",
             type = types.optional(types.callback({"self", types.map_object("base.chara")}, types.uint)),
+            no_save = true,
          },
          {
             name = "ai",
@@ -567,6 +572,7 @@ A damage reaction to trigger if this character is melee attacked.
             type = types.optional(types.list(types.data_id("base.skill"))),
             default = nil,
             no_fallback = true,
+            no_save = true,
             doc = [[
 Skills this character will already know when they're created.
 ]]
@@ -834,62 +840,62 @@ Valid item categories this enchantment skill applies to.
          {
             name = "on_generate",
             type = types.optional(types.callback("self", types.map_object("base.item"))),
-            default = nil,
+            no_save = true,
          },
          {
             name = "on_init_params",
             type = types.optional(types.callback("self", types.map_object("base.item"))),
-            default = nil,
+            no_save = true,
          },
          {
             name = "before_wish",
             type = types.optional(types.callback({"self", types.map_object("base.item"), "params", types.table}, ty_item_filter)),
-            default = nil,
+            no_save = true,
          },
          {
             name = "on_read",
             type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
-            default = nil,
+            no_save = true,
          },
          {
             name = "on_zap",
             type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
-            default = nil,
+            no_save = true,
          },
          {
             name = "on_eat",
             type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
-            default = nil,
+            no_save = true,
          },
          {
             name = "on_drink",
             type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
-            default = nil,
+            no_save = true,
          },
          {
             name = "on_open",
             type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
-            default = nil,
+            no_save = true,
          },
          {
             name = "on_throw",
             type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
-            default = nil,
+            no_save = true,
          },
          {
             name = "on_use",
             type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
-            default = nil,
+            no_save = true,
          },
          {
             name = "on_ascend",
             type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
-            default = nil,
+            no_save = true,
          },
          {
             name = "on_descend",
             type = types.optional(types.callback("self", types.map_object("base.item"), "chara", types.map_object("base.chara"))),
-            default = nil,
+            no_save = true,
          },
          {
             name = "fltselect",
@@ -1002,6 +1008,7 @@ on vanilla's formula.
             name = "events",
             type = types.list(ty_event),
             default = {},
+            no_save = true,
             doc = [[
 List of events to bind to this item when it is spawned.
 ]]
@@ -1169,52 +1176,64 @@ data:add_type(
          },
          {
             name = "on_refresh",
-            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table)),
+            no_save = true,
          },
          {
             name = "on_search",
-            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table)),
+            no_save = true,
          },
          {
             name = "on_search_from_distance",
-            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table)),
+            no_save = true,
          },
          {
             name = "on_bumped_into",
-            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table)),
+            no_save = true,
          },
          {
             name = "on_open",
-            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table)),
+            no_save = true,
          },
          {
             name = "on_close",
-            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table)),
+            no_save = true,
          },
          {
             name = "on_bash",
-            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table)),
+            no_save = true,
          },
          {
             name = "on_activate",
-            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table)),
+            no_save = true,
          },
          {
             name = "on_ascend",
-            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table)),
+            no_save = true,
          },
          {
             name = "on_descend",
-            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table)),
+            no_save = true,
          },
          {
             name = "on_stepped_on",
-            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table))
+            type = types.optional(types.callback("self", types.map_object("base.feat"), "params", types.table)),
+            no_save = true,
          },
          {
             name = "events",
             type = types.list(ty_event),
             default = {},
+            no_save = true,
             doc = [[
 List of events to bind to this feat when it is created.
 ]]

@@ -185,7 +185,7 @@ data:add {
             local adv = t.speaker
             local player = Chara.player()
             local map = player:current_map()
-            local flags = adv:get_aspect_or_default(ICharaElonaFlags, true)
+            local flags = adv:get_aspect_or_default(ICharaElonaFlags)
             local token = Item.create("elona.token_of_friendship", player.x, player.y, {}, map)
             if token then
                flags.has_given_token_of_friendship = true

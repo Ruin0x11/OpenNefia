@@ -14,7 +14,7 @@ function ICharaEquip:init()
    self.equip = EquipSlots:new(self.body_parts, self)
    self.equipment_weight = 0
 
-   self:get_aspect_or_default(ICharaEquipStyle, true)
+   self:get_aspect_or_default(ICharaEquipStyle)
 end
 
 local function apply_item_enchantments(chara, item)

@@ -1241,7 +1241,7 @@ data:add {
       end
 
       Gui.play_sound("base.build1", x, y)
-      target:get_aspect_or_default(ICharaSandBag, true):hang_on_sand_bag(target, self, true)
+      target:get_aspect_or_default(ICharaSandBag):hang_on_sand_bag(target, self, true)
       Gui.mes("action.use.sandbag.start", target)
       Gui.mes("action.use.leash.other.start.dialog", target)
       local anim = Anim.load("elona.anim_smoke", target.x, target.y)

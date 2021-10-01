@@ -135,12 +135,6 @@ function ConfigThemeMenu.build_preview_map()
          [","] = "elona.dirt_patch",
          [";"] = "elona.grass",
          [":"] = "elona.grass_rocks",
-         ["a"] = "elona.dark_dirt_2",
-         ["c"] = "elona.dark_dirt_2",
-         ["w"] = "elona.grass",
-         ["x"] = "elona.grass",
-         ["y"] = "elona.grass",
-         ["z"] = "elona.grass",
       }
    }
 

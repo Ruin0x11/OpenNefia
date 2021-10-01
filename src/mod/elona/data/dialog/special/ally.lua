@@ -35,7 +35,7 @@ data:add {
       marry_event = function(t)
          local origin = Chara.player()
          local target = t.speaker
-         local aspect = target:get_aspect_or_default(ICharaElonaFlags, true)
+         local aspect = target:get_aspect_or_default(ICharaElonaFlags)
          aspect.is_married = true
          DeferredEvent.add(function() DeferredEvents.marry(target, origin) end)
          return "__END__"

@@ -221,7 +221,7 @@ function VisualAI.run(chara, plan)
       return false, (("Plan has %d errors:\n%s"):format(#errors, error_text))
    end
 
-   local aspect = chara:get_aspect_or_default(ICharaVisualAI, true)
+   local aspect = chara:get_aspect_or_default(ICharaVisualAI)
    if not Chara.is_alive(aspect.stored_target) or not target_filter_in_fov.filter(nil, chara, aspect.stored_target) then
       aspect.stored_target = nil
    end
@@ -250,7 +250,7 @@ function VisualAI.run(chara, plan)
 end
 
 function VisualAI.edit(chara)
-   local aspect = chara:get_aspect_or_default(ICharaVisualAI, true)
+   local aspect = chara:get_aspect_or_default(ICharaVisualAI)
    local plan = aspect.plan or VisualAIPlan:new()
    local ok, canceled = VisualAIEditor:new(plan, {chara=chara}):query()
 

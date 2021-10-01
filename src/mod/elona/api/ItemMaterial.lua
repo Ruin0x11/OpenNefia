@@ -165,7 +165,7 @@ function ItemMaterial.change_item_material(item, new_material)
       local proto = item.proto
       item.weight = proto.weight or 0
       local equip_proto = item:get_aspect_proto(IItemEquipment)
-      local equip = item:get_aspect_or_default(IItemEquipment, true)
+      local equip = item:get_aspect_or_default(IItemEquipment)
       if equip_proto then
          equip.hit_bonus = equip_proto.hit_bonus or 0
          equip.damage_bonus = equip_proto.damage_bonus or 0

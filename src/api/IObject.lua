@@ -1,7 +1,6 @@
 --- @module IObject
 
 local IEventEmitter = require("api.IEventEmitter")
-local IModDataHolder = require("api.IModDataHolder")
 local IModdable = require("api.IModdable")
 local IAspectHolder = require("api.IAspectHolder")
 local Aspect = require("api.Aspect")
@@ -19,7 +18,7 @@ local IObject = class.interface("IObject",
                              refresh = "function",
                              finalize = "function",
                           },
-                          { IModdable, IModDataHolder, IAspectHolder }
+                          { IModdable, IAspectHolder }
 )
 
 function IObject:pre_build()
@@ -39,7 +38,6 @@ end
 
 function IObject:init()
    IModdable.init(self)
-   IModDataHolder.init(self)
    IAspectHolder.init(self)
 end
 

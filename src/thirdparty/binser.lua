@@ -267,6 +267,7 @@ local function newbinser()
 
       local mt = getmetatable(x)
       local serial_id = mt and (mt.__serial_id or serial_ids[mt])
+      print("GETSER", serial_id, mt, serializers[serial_id])
       if serial_id == "object" then
          accum[#accum + 1] = "\214"
 
@@ -329,11 +330,31 @@ local function newbinser()
          constructing[x] = true
          accum[#accum + 1] = "\215"
          types[type(serial_id)](serial_id, visited, accum)
-         local args, len = pack(mt.serialize(x))
 
-         local memoized = x.__memoized
-         setmetatable(x, nil)
-         x.__memoized = {}
+         local opts = rawget(classes[serial_id], "__serial_opts")
+         local load_type = opts and opts.load_type
+         local memoized
+
+         local args, len
+         if load_type == "immediate" then
+            -- In `immediate` mode, :serialize() will return any number of
+            -- arguments, and shouldn't mutate any state.
+            args, len = pack(mt.serialize(x))
+         else
+            -- In `deferred` mode (the default), :serialize() must return an
+            -- instance of the class, and :serialize() can also mutate state
+            -- internally.
+            args = {}
+            len = 1
+            args[1] = mt.serialize(x)
+            if getmetatable(args[1]) ~= mt then
+               error(mt.__name .. ":deserialize() must return an instance of " .. mt.__name .. ", got " .. tostring(args[1]))
+            end
+            memoized = x.__memoized
+            setmetatable(x, nil)
+            x.__memoized = nil
+         end
+
          local ok, err = xpcall(function()
                accum[#accum + 1] = number_to_str(len)
                for i = 1, len do
@@ -341,8 +362,16 @@ local function newbinser()
                   types[type(arg)](arg, visited, accum)
                end
          end, debug.traceback)
-         x.__memoized = memoized
-         setmetatable(x, mt)
+
+         if load_type ~= "immediate" then
+            -- Restore state and call :deserialize(). It is the programmer's
+            -- responsibility to ensure calling :serialize() followed by
+            -- :deserialize() is an idempotent operation (no state should
+            -- ultimately change)
+            x.__memoized = memoized
+            setmetatable(x, mt)
+            mt.deserialize(x)
+         end
 
          if not ok then
             error(err)
@@ -386,6 +415,7 @@ local function newbinser()
          accum[#accum + 1] = number_to_str(xlen)
          for i = 1, xlen do
             local v = x[i]
+            print("V", tostring(i), type(v))
             types[type(v)](v, visited, accum)
          end
          local key_count = 0
@@ -397,6 +427,9 @@ local function newbinser()
          accum[#accum + 1] = number_to_str(key_count)
          for k, v in pairs(x) do
             if not_array_index(k, xlen) then
+               print("KV", tostring(k), type(k), type(v))
+               print(inspect(k))
+               print(inspect(v))
                types[type(k)](k, visited, accum)
                types[type(v)](v, visited, accum)
             end
@@ -529,9 +562,18 @@ local function newbinser()
             error(("Cannot deserialize class with serial ID '%s'"):format(tostring(serial_id)))
          end
          local ret = args
-         if rawget(classes[serial_id], "__serial_type") == "immediate" then
+         local opts = rawget(classes[serial_id], "__serial_opts")
+         if opts and opts.load_type == "immediate" then
+            -- In `immediate` mode, the arguments returned from :serialize() are
+            -- passed to :deserialize(), and a new instance of the class is
+            -- returned by :deserialize().
             ret = classes[serial_id].deserialize(unpack(args))
          else
+            -- In `deferred` mode, we expect a single argument to be returned
+            -- from the class' :serialize() callback, which was the full class
+            -- instance with its metatable attached.
+            ret = args[1]
+            assert(type(ret) == "table", "deserialized class instance was not table")
             visited[PENDING_CLASS_OBJS][ret] = { serial_class = classes[serial_id] }
          end
          visited[#visited + 1] = ret
@@ -703,15 +745,16 @@ local function newbinser()
          if type(klass) ~= "table" then
             error("Missing serial class")
          end
-         local ret = klass.deserialize(unpack(obj))
 
-         if type(ret) ~= "table" then
-            error("deserialize() callback for class " .. klass.__name .. " did not return table")
-         end
+         -- `obj` is the raw data of the class without its metatable.
 
-         setmetatable(obj, nil)
-         table.replace_with(obj, ret)
+         -- Set the class metatable now so class methods are available in
+         -- :deserialize().
          setmetatable(obj, klass)
+
+         -- Call :deserialize(), which we expect to internally mutate the state
+         -- appropriately.
+         obj:deserialize()
       end
    end
 
@@ -796,28 +839,27 @@ local function newbinser()
       return serial_ids[id] ~= nil
    end
 
-   -- Used to serialize classes withh custom serializers and deserializers. If
-   -- no __serialize or __deserialize (or no _template) value is found in the
+   -- Used to serialize classes with custom serializers and deserializers. If no
+   -- __serialize or __deserialize (or no _template) value is found in the
    -- metatable, then the metatable is registered as a resources.
-   local function register(metatable, name, serialize, deserialize)
+   local function register(metatable, serial_id, serialize, deserialize)
       local id = metatable
       if type(metatable) == "table" then
-         id = metatable.__id or id
-         name = name or metatable.name
+         id = metatable.__serial_id or id
          serialize = serialize or metatable.__serialize
          deserialize = deserialize or metatable.__deserialize
       elseif type(metatable) == "string" then
-         name = name or metatable
+         serial_id = serial_id or metatable
       end
-      type_check(name, "string", "name")
+      type_check(serial_id, "string", "serial_id")
       type_check(serialize, "function", "serialize")
       type_check(deserialize, "function", "deserialize")
       assert((not serial_ids[id]), "Metatable already registered.")
-      assert((not mts[name]), ("Name %q already registered."):format(name))
-      mts[name] = id
-      serial_ids[id] = name
-      serializers[name] = serialize
-      deserializers[name] = deserialize
+      assert((not mts[serial_id]), ("Serial_Id %q already registered."):format(serial_id))
+      mts[serial_id] = id
+      serial_ids[id] = serial_id
+      serializers[serial_id] = serialize
+      deserializers[serial_id] = deserialize
       return metatable
    end
 

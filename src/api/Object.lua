@@ -5,12 +5,8 @@ local IObject = require("api.IObject")
 
 local Object = {}
 
-local NO_SAVE_FIELDS = table.set {
-   "_ext"
-}
-
 -- Modification of penlight's algorithm to ignore class fields
-local function cycle_aware_copy(t, cache)
+local function cycle_aware_copy(t, cache, no_save)
    -- TODO: standardize no-save fields
    if type(t) == "table" and t.__class then
       return
@@ -23,9 +19,9 @@ local function cycle_aware_copy(t, cache)
    local mt = getmetatable(t)
    for k,v in pairs(t) do
       -- TODO: standardize no-save fields
-      if not NO_SAVE_FIELDS[k] then
-         k = cycle_aware_copy(k, cache)
-         v = cycle_aware_copy(v, cache)
+      if not no_save[k] then
+         k = cycle_aware_copy(k, cache, no_save)
+         v = cycle_aware_copy(v, cache, no_save)
          res[k] = v
       end
    end
@@ -45,7 +41,9 @@ function Object.make_prototype(obj)
    assert(_type)
    assert(_id)
 
-   local copy = cycle_aware_copy(obj, {})
+   local no_save = data[_type]._no_save_fields
+
+   local copy = cycle_aware_copy(obj, {}, no_save)
    if type(copy) ~= "table" then
       return obj
    end

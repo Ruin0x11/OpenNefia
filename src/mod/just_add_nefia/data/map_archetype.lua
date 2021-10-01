@@ -9,6 +9,7 @@ local Effect = require("mod.elona.api.Effect")
 local Chara = require("api.Chara")
 local Draw = require("api.Draw")
 local Mef = require("api.Mef")
+local IMapJANDungeon = require("mod.just_add_nefia.api.aspect.IMapJANDungeon")
 
 local firey_life = {
    _type = "base.map_archetype",
@@ -28,7 +29,7 @@ local firey_life = {
 }
 
 function firey_life.on_map_entered(map)
-   local ext = map:get_mod_data("just_add_nefia")
+   local ext = map:get_aspect_or_default(IMapJANDungeon)
    ext.firey_life_turns = 0
 
    local tileset_tunnel = MapTileset.get("elona.mapgen_tunnel", map)
@@ -155,7 +156,7 @@ function firey_life.on_map_pass_turn(map)
    end
 
    local FIRE_STEP = 10
-   local ext = map:get_mod_data("just_add_nefia")
+   local ext = map:get_aspect(IMapJANDungeon)
    ext.firey_life_turns = ext.firey_life_turns + 1
    if ext.firey_life_turns % FIRE_STEP == FIRE_STEP-1 then
       Gui.play_sound("base.chest1")

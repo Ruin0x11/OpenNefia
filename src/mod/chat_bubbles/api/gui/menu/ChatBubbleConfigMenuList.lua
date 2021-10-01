@@ -321,7 +321,7 @@ function ChatBubbleConfigMenuList:run_on_changed(item)
       self.chara.talk_type = data.talk_type
 
       if item.id ~= "talk_type" then
-         local aspect = self.chara:get_aspect_or_default(ICharaChatBubble, true)
+         local aspect = self.chara:get_aspect_or_default(ICharaChatBubble)
          aspect.show_when_disabled = data.show_when_disabled
          aspect.x_offset = data.x_offset
          aspect.y_offset = data.y_offset

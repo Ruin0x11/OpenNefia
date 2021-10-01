@@ -47,6 +47,7 @@ function data_table:init()
     rawset(self, "errors", {})
     rawset(self, "defaults", {})
     rawset(self, "fallbacks", {})
+    rawset(self, "no_save_fields", {})
 
     rawset(self, "inner", {})
     rawset(self, "inner_sorted", {})
@@ -140,7 +141,15 @@ function data_table:_add_index(_type, field)
 end
 
 local function make_defaults(fields)
+   -- Default values to use when instantiating an object/map object from this
+   -- prototype.
    local result = {}
+
+   -- Values that should not be copied from the prototype to the object/map
+   -- object on creation, and thus won't get serialized. Examples include _ext
+   -- and the events tables on map object prototypes like `base.chara`.
+   local no_save_fields = table.set { "_ext", "_ordering" }
+
    for _, field in ipairs(fields) do
       local default = field.default
       if not field.no_fallback then
@@ -154,8 +163,12 @@ local function make_defaults(fields)
          end
          result[field.name] = default
       end
+      if field.no_save then
+         no_save_fields[field.name] = true
+      end
    end
-   return result
+
+   return result, no_save_fields
 end
 
 local ty_schema = types.fields_strict {
@@ -168,6 +181,7 @@ local ty_schema = types.fields_strict {
          default = types.optional(types.any),
          doc = types.optional(types.string),
          no_fallback = types.optional(types.boolean),
+         no_save = types.optional(types.boolean),
          indexed = types.optional(types.boolean)
       }
    ),
@@ -262,9 +276,10 @@ function data_table:add_type(schema, params)
       end
       table.replace_with(self.schemas[_type], schema)
 
-      local defaults = make_defaults(schema.fields)
+      local defaults, no_save_fields = make_defaults(schema.fields)
       self.defaults[_type] = defaults
       self.fallbacks[_type] = table.merge(table.deepcopy(schema.fallbacks, defaults))
+      self.no_save_fields[_type] = no_save_fields
       return
    end
 
@@ -294,9 +309,10 @@ function data_table:add_type(schema, params)
 
    self.global_edits[_type] = EventTree:new()
 
-   local defaults = make_defaults(schema.fields)
+   local defaults, no_save_fields = make_defaults(schema.fields)
    self.defaults[_type] = defaults
    self.fallbacks[_type] = table.merge(table.deepcopy(schema.fallbacks, defaults))
+   self.no_save_fields[_type] = no_save_fields
 end
 
 -- Apply data edits.
@@ -389,15 +405,19 @@ end
 
 local data_entry_mt = {
    __serial_id = "data_entry",
-   __serial_type = "immediate"
+   __serial_opts = {
+      load_type = "immediate"
+   }
 }
 data_entry_mt.__index = data_entry_mt
 
 local function data_entry_serialize(self)
+   print("SERIALID", rawget(self, "_type"), rawget(self, "_id"))
    return rawget(self, "_type"), rawget(self, "_id")
 end
 
 local function data_entry_deserialize(_type, _id)
+   print("GETDATAENTRY", package.loaded["internal.data"][_type][_id])
    return package.loaded["internal.data"][_type][_id]
 end
 
@@ -683,7 +703,9 @@ end
 local proxy = class.class("proxy", ISerializable)
 -- WARNING: This serial ID is reserved! Do not change!
 proxy.__serial_id = "data_proxy"
-proxy.__serial_type = "immediate"
+proxy.__serial_opts = {
+   load_type = "immediate"
+}
 
 function proxy:init(_type, data)
    rawset(self, "_type", _type)
@@ -748,6 +770,10 @@ function proxy:__index(k)
 
    if k == "_fallbacks" then
       return self.data.fallbacks[self._type]
+   end
+
+   if k == "_no_save_fields" then
+      return self.data.no_save_fields[self._type]
    end
 
    local _type = rawget(self, "_type")

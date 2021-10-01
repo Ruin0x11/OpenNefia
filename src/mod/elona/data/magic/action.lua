@@ -1099,7 +1099,7 @@ data:add {
 
       charges = charges * item_charges
 
-      local flags = source:get_aspect_or_default(ICharaElonaFlags, true)
+      local flags = source:get_aspect_or_default(ICharaElonaFlags)
       flags.absorbed_charges = flags.absorbed_charges + charges
       Gui.mes("magic.draw_charge", item_name, charges, flags.absorbed_charges)
 
@@ -1201,7 +1201,7 @@ data:add {
          return true, { obvious = false }
       end
 
-      local flags = source:get_aspect_or_default(ICharaElonaFlags, true)
+      local flags = source:get_aspect_or_default(ICharaElonaFlags)
 
       if flags.absorbed_charges < 10 then
          Gui.mes("magic.fill_charge.more_power_needed")

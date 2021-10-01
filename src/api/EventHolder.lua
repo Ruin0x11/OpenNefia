@@ -29,7 +29,6 @@ function EventHolder:serialize()
 end
 
 function EventHolder:deserialize()
-   self:init()
 end
 
 local function check_event(event_id)

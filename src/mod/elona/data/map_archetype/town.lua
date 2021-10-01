@@ -1051,7 +1051,7 @@ do
 
       chara = Chara.create("elona.punk", 38, 19, nil, map)
       chara.is_only_in_christmas = true
-      chara:get_aspect_or_default(ICharaSandBag, true):hang_on_sand_bag(chara)
+      chara:get_aspect_or_default(ICharaSandBag):hang_on_sand_bag(chara)
       chara.name = I18N.get("chara.job.fanatic")
 
       chara = Chara.create("elona.fanatic", 35, 19, nil, map)

@@ -33,7 +33,7 @@ end
 function utils.create_sandbag(x, y, map, chara_id)
    chara_id = chara_id or "elona.lomias"
    local chara = assert(Chara.create(chara_id, x, y, {}, map))
-   chara:get_aspect_or_default(ICharaSandBag, true):hang_on_sand_bag(chara)
+   chara:get_aspect_or_default(ICharaSandBag):hang_on_sand_bag(chara)
    chara.relation = Enum.Relation.Enemy
 end
 

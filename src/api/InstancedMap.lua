@@ -1,7 +1,7 @@
 local data = require("internal.data")
 local multi_pool = require("internal.multi_pool")
 local save = require("internal.global.save")
-local IModDataHolder = require("api.IModDataHolder")
+local IAspectHolder = require("api.IAspectHolder")
 
 local Pos = require("api.Pos")
 local IEventEmitter = require("api.IEventEmitter")
@@ -14,8 +14,8 @@ local InstancedMap = class.class("InstancedMap", {
                                     ITypedLocation,
                                     IModdable,
                                     IEventEmitter,
-                                    IModDataHolder
-                                                 })
+                                    IAspectHolder
+                                 })
 
 local fov_cache = {}
 
@@ -65,8 +65,8 @@ end
 
 function InstancedMap:init(width, height, tile)
    IModdable.init(self)
-   IModDataHolder.init(self)
    IEventEmitter.init(self)
+   IAspectHolder.init(self)
 
    self.uid = save.base.map_uids:get_next_and_increment()
 

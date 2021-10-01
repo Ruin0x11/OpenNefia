@@ -673,7 +673,7 @@ function Skill.calc_spell_success_chance(skill_id, chara)
       chance = math.min(chance, 100)
    end
 
-   local style = chara:get_aspect_or_default(ICharaEquipStyle, true)
+   local style = chara:get_aspect_or_default(ICharaEquipStyle)
 
    if style:calc(chara, "is_dual_wielding") then
       chance = chance - 6
