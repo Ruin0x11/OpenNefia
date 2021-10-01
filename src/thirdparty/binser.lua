@@ -332,23 +332,23 @@ local function newbinser()
          types[type(serial_id)](serial_id, visited, accum)
 
          local opts = rawget(classes[serial_id], "__serial_opts")
-         local load_type = opts and opts.load_type
+         local load_type = opts and opts.load_type or "self"
          local memoized
 
          local args, len
-         if load_type == "immediate" then
-            -- In `immediate` mode, :serialize() will return any number of
-            -- arguments, and shouldn't mutate any state.
+         if load_type == "freeform" or load_type == "reference" then
+            -- In `freeform` or `reference` mode, :serialize() will return any
+            -- number of arguments, and shouldn't mutate any state.
             args, len = pack(mt.serialize(x))
          else
-            -- In `deferred` mode (the default), :serialize() must return an
+            -- In `self` mode (the default), :serialize() must return an
             -- instance of the class, and :serialize() can also mutate state
             -- internally.
-            args = {}
+            args = { x }
             len = 1
-            args[1] = mt.serialize(x)
-            if getmetatable(args[1]) ~= mt then
-               error(mt.__name .. ":deserialize() must return an instance of " .. mt.__name .. ", got " .. tostring(args[1]))
+            mt.serialize(x)
+            if getmetatable(x) ~= mt then
+               error(mt.__name .. ":deserialize() object must be an instance of " .. mt.__name .. ", got " .. tostring(args[1]))
             end
             memoized = x.__memoized
             setmetatable(x, nil)
@@ -363,7 +363,7 @@ local function newbinser()
                end
          end, debug.traceback)
 
-         if load_type ~= "immediate" then
+         if load_type == "self" then
             -- Restore state and call :deserialize(). It is the programmer's
             -- responsibility to ensure calling :serialize() followed by
             -- :deserialize() is an idempotent operation (no state should
@@ -415,7 +415,6 @@ local function newbinser()
          accum[#accum + 1] = number_to_str(xlen)
          for i = 1, xlen do
             local v = x[i]
-            print("V", tostring(i), type(v))
             types[type(v)](v, visited, accum)
          end
          local key_count = 0
@@ -429,7 +428,6 @@ local function newbinser()
             if not_array_index(k, xlen) then
                print("KV", tostring(k), type(k), type(v))
                print(inspect(k))
-               print(inspect(v))
                types[type(k)](k, visited, accum)
                types[type(v)](v, visited, accum)
             end
@@ -561,20 +559,26 @@ local function newbinser()
          if not serial_id or not classes[serial_id] then
             error(("Cannot deserialize class with serial ID '%s'"):format(tostring(serial_id)))
          end
-         local ret = args
+         local ret
          local opts = rawget(classes[serial_id], "__serial_opts")
-         if opts and opts.load_type == "immediate" then
-            -- In `immediate` mode, the arguments returned from :serialize() are
+         local load_type = opts and opts.load_type or "self"
+         if load_type == "self" then
+            -- In `self` mode (the default), we expect a single argument to be
+            -- returned from the class' :serialize() callback, which was the
+            -- full class instance with its metatable attached.
+            ret = args[1]
+            assert(type(ret) == "table", "deserialized class instance was not table")
+            visited[PENDING_CLASS_OBJS][ret] = { load_type = "self", serial_class = classes[serial_id] }
+         elseif load_type == "freeform" then
+            -- In `freeform` mode, any number of arguments can be returned from
+            -- :serialize().
+            ret = args
+            visited[PENDING_CLASS_OBJS][ret] = { load_type = "freeform", serial_class = classes[serial_id] }
+         elseif load_type == "reference" then
+            -- In `reference` mode, the arguments returned from :serialize() are
             -- passed to :deserialize(), and a new instance of the class is
             -- returned by :deserialize().
             ret = classes[serial_id].deserialize(unpack(args))
-         else
-            -- In `deferred` mode, we expect a single argument to be returned
-            -- from the class' :serialize() callback, which was the full class
-            -- instance with its metatable attached.
-            ret = args[1]
-            assert(type(ret) == "table", "deserialized class instance was not table")
-            visited[PENDING_CLASS_OBJS][ret] = { serial_class = classes[serial_id] }
          end
          visited[#visited + 1] = ret
          return ret, nextindex
@@ -746,15 +750,40 @@ local function newbinser()
             error("Missing serial class")
          end
 
-         -- `obj` is the raw data of the class without its metatable.
+         if meta.load_type == "self" then
+            -- `obj` is the raw data of the class without its metatable.
 
-         -- Set the class metatable now so class methods are available in
-         -- :deserialize().
-         setmetatable(obj, klass)
+            -- Set the class metatable now so class methods are available in
+            -- :deserialize().
+            setmetatable(obj, klass)
 
-         -- Call :deserialize(), which we expect to internally mutate the state
-         -- appropriately.
-         obj:deserialize()
+            -- Call :deserialize(), which we expect to internally mutate the state
+            -- appropriately.
+            obj:deserialize()
+         elseif meta.load_type == "freeform" then
+            -- `obj` is a list of arguments to pass to :deserialize().
+            -- :deserialize() will return a new instance of the class, to
+            -- replace `obj`.
+            local ret = klass.deserialize(unpack(obj))
+
+            if type(ret) ~= "table" then
+               error("deserialize() callback for class " .. klass.__name .. " did not return table")
+            end
+
+            if getmetatable(ret) ~= klass then
+               error("deserialize() callback for class " .. klass.__name .. " did not return instance of " .. klass._name)
+            end
+
+            -- `obj` points to the position of the final table in the
+            -- deserialized hierarchy. Now all we have to do is replace the
+            -- contents of `obj` with that of table returned by :deserialize().
+            setmetatable(obj, nil)
+            setmetatable(ret, nil)
+            table.replace_with(obj, ret)
+            setmetatable(obj, klass)
+         else
+            error("Invalid class instance load type " .. tostring(meta.load_type))
+         end
       end
    end
 

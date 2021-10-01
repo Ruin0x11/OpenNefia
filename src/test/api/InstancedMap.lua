@@ -11,7 +11,7 @@ function test_InstancedMap_aspects()
    Assert.eq(0, aspect.foo)
    Assert.eq(nil, map:get_aspect(AspectHolder_ITestAspect))
 
-   local aspect = map:get_aspect_or_default(AspectHolder_ITestAspect)
+   aspect = map:get_aspect_or_default(AspectHolder_ITestAspect)
    Assert.eq(0, aspect.foo)
    Assert.eq(aspect, map:get_aspect(AspectHolder_ITestAspect))
    Assert.eq(0, map:calc_aspect(AspectHolder_ITestAspect, "foo"))

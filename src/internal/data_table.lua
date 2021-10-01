@@ -406,7 +406,7 @@ end
 local data_entry_mt = {
    __serial_id = "data_entry",
    __serial_opts = {
-      load_type = "immediate"
+      load_type = "reference"
    }
 }
 data_entry_mt.__index = data_entry_mt
@@ -704,7 +704,7 @@ local proxy = class.class("proxy", ISerializable)
 -- WARNING: This serial ID is reserved! Do not change!
 proxy.__serial_id = "data_proxy"
 proxy.__serial_opts = {
-   load_type = "immediate"
+   load_type = "reference"
 }
 
 function proxy:init(_type, data)

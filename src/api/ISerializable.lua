@@ -16,7 +16,7 @@
 --
 -- `load_type`: What stage of the loading process the data should be loaded at.
 --
--- - `deferred` (default) - First the raw class table is deserialized, then
+-- - `self` (default) - First the raw class table is deserialized, then
 --   after all data is loaded, the class' deserializer is run on each class
 --   instance that is found. The :serialize() function must return a single
 --   table with the class' metatable assigned, usually `self`. The
@@ -27,18 +27,22 @@
 --   :serialize(). Calling :serialize() followed by :deserialize() should not
 --   change any state in the object, i.e. it must be an idempotent operation.
 --
--- - `immediate` - The class will be insantiated as soon as the deserializer
---   reaches its table. The :serialize() function will accept an arbitrary
---   number of return values, and none of them should be class instances. The
+-- - `freeform` - The :serialize() function will accept an arbitrary number of
+--   return values, and none of them should be class instances. The
 --   :deserialize() function will receive each of these return values as
 --   separate arguments, and expects a single class instance to be returned. You
 --   can either construct one yourself or return a reference to one that already
 --   exists.
 --
--- `deferred` is the default option and should work in most cases, without
--- needing to implement `ISerializable` yourself. `immediate` is for things like
--- entries in `data` where the existing reference in `data` is the one that
--- needs to be returned, instead of a new instance.
+-- - `reference` - Same as `freeform`, but the class will be insantiated as soon
+--   as the deserializer reaches its table, and the deserialized object is
+--   guaranteed to be the same object in memory as the one returned by
+--   :deserialize(). This is for things like references to entries in `data`
+--   where by-reference comparison might be expected, and you must be able to
+--   use the exact same reference as the deserialized value.
+--
+-- `self` is the default option and should work in most cases, without
+-- needing to implement `ISerializable` yourself.
 
 return class.interface("ISerializable",
                        {
@@ -46,7 +50,7 @@ return class.interface("ISerializable",
                           deserialize = "function",
                           __serial_id = "string",
                           -- {
-                          --     load_type = "deferred", "immediate"
+                          --     load_type = "self", "immediate"
                           -- }
                           __serial_opts = { type = "table", optional = true }
                        })

@@ -7,6 +7,9 @@ local ICloneable = require("api.ICloneable")
 local IComparable = require("api.IComparable")
 
 local EventHolder = class.class("EventHolder", {ICloneable, IComparable})
+EventHolder.__serial_opts = {
+   load_type = "freeform"
+}
 
 EventHolder.DEFAULT_PRIORITY = 100000
 
@@ -25,10 +28,11 @@ function EventHolder:clone()
 end
 
 function EventHolder:serialize()
-   return self
+   return nil
 end
 
-function EventHolder:deserialize()
+function EventHolder.deserialize()
+   return EventHolder:new()
 end
 
 local function check_event(event_id)

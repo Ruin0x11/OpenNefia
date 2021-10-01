@@ -5,7 +5,7 @@ local ISerializable = require("api.ISerializable")
 
 local config_holder = class.class("config_holder", ISerializable)
 config_holder.__serial_id = "63e61cda-2a0e-4bc9-bf35-525fc95a719a"
-config_holder.__serial_opts = { load_type = "deferred" }
+config_holder.__serial_opts = { load_type = "self" }
 
 function config_holder:init(mod_id)
    assert(mod_id, "No mod ID provided")
@@ -52,11 +52,11 @@ function config_holder:__newindex(k, v)
    end
 end
 
-function config_holder.deserialize(raw)
+function config_holder:deserialize(raw)
    local dead = {}
 
-   for k, v in pairs(raw._data) do
-      local id = raw._mod_id .. "." .. k
+   for k, v in pairs(self._data) do
+      local id = self._mod_id .. "." .. k
       local option = data["base.config_option"][id]
       if not option then
          Log.warn("Missing config option '%s' in engine, but was saved", id)
@@ -69,9 +69,7 @@ function config_holder.deserialize(raw)
          end
       end
    end
-   table.remove_keys(raw._data, dead)
-
-   return raw
+   table.remove_keys(self._data, dead)
 end
 
 function config_holder:__inspect()
