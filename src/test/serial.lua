@@ -36,22 +36,22 @@ function test_serial_data_entries()
    Assert.eq(entry, new)
 end
 
-function test_serial_object_serial_id()
-   local a = TestUtil.stripped_chara("elona.putit")
-   Assert.eq("object", a.__serial_id)
+function test_serial_class_serial_id()
+   local Queue = require("api.Queue")
+   Assert.eq("api.Queue", Queue.__serial_id)
+
+   local instance = Queue:new()
+   Assert.eq("api.Queue", getmetatable(instance).__serial_id)
 end
 
-function test_serial_nested_map_object_reference()
+function test_serial_interface_serial_id()
+   local IChara = require("api.chara.IChara")
+   Assert.eq(nil, IChara.__serial_id)
+end
+
+function test_serial_object_serial_id()
    local a = TestUtil.stripped_chara("elona.putit")
-   local b = TestUtil.stripped_chara("elona.putit")
-   a.b = b
-   b.a = a
-   local t = { a }
-
-   Assert.eq(t[1], t[1].b.a) -- by reference
-
-   local t2 = SaveFs.deserialize(SaveFs.serialize(t))
-   Assert.eq(t2[1], t2[1].b.a)
+   Assert.eq("object", getmetatable(a).__serial_id)
 end
 
 function test_serial_class_self()
@@ -124,4 +124,17 @@ function test_serial_class_reference()
    Assert.eq(false, new.serializing)
    Assert.eq(42, test.piyo)
    Assert.eq(test, new)
+end
+
+function test_serial_nested_map_object_reference()
+   local a = TestUtil.stripped_chara("elona.putit")
+   local b = TestUtil.stripped_chara("elona.putit")
+   a.b = b
+   b.a = a
+   local t = { a }
+
+   Assert.eq(t[1], t[1].b.a) -- by reference
+
+   local t2 = SaveFs.deserialize(SaveFs.serialize(t))
+   Assert.eq(t2[1], t2[1].b.a)
 end

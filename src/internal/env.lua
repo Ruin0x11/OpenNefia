@@ -535,9 +535,18 @@ local function gen_require(chunk_loader, can_load_path)
          end
 
          if class.is_class(result) or class.is_interface(result) then
+            local ok, on_require = pcall(function() return result.__on_require end)
+            if type(on_require) == "function" then
+               on_require(package.loaded[req_path], result)
+            end
+         end
+
+         if class.is_class(result) then
             local mt = getmetatable(result)
+
             mt.__require_path = req_path
             result.__serial_id = result.__serial_id or req_path
+
             local opts = result.__serial_opts
             if opts then
                opts.load_type = opts.load_type or "self"
@@ -547,14 +556,7 @@ local function gen_require(chunk_loader, can_load_path)
                end
             end
 
-            local ok, on_require = pcall(function() return result.__on_require end)
-            if type(on_require) == "function" then
-               on_require(package.loaded[req_path], result)
-            end
-
-            if class.is_class(result) then
-               binser.registerClass(result)
-            end
+            binser.registerClass(result)
          end
       end
 

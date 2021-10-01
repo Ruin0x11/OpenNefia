@@ -59,6 +59,8 @@ local function make_test_env()
    tests.require = require
    tests.getmetatable = getmetatable
    tests.setmetatable = setmetatable
+   tests.rawget = setmetatable
+   tests.rawset = setmetatable
 
    local disabled = false
    tests.disable = function(reason)
