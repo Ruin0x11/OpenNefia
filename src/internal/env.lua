@@ -1,7 +1,6 @@
 local Log = require("api.Log")
 local paths = require("internal.paths")
 local main_state = require("internal.global.main_state")
-local ISerializable = require("api.ISerializable")
 local binser = require("thirdparty.binser")
 local mod_info = require("internal.mod_info")
 
@@ -555,7 +554,6 @@ function env.cache_chunk_metadata(req_path, result, extra)
             mod_version = mod_info_.manifest.version
          end
 
-         print(req_path)
          result.__require_path = req_path
          result.__serial_id = result.__serial_id or req_path
          result.__mod_id = mod_id
@@ -760,11 +758,14 @@ function env.hook_global_require()
       return env.require(path)
    end
 
-   -- Cache data for any paths loaded before the require was hooked.
-   -- BUG: This will miss the "extra" table...
+   -- Check if any classes/interfaces were loaded before the require was hooked
+   -- - this would be very bad. There would be no require path information
+   -- loaded for them, so serialization wouldn't work correctly.
    for req_path, chunk in pairs(package.loaded) do
       if not paths_loaded_by_hooked_require[req_path] then
-         env.cache_chunk_metadata(req_path, chunk, nil)
+         if class.is_class(chunk) or class.is_interface(chunk) then
+            error("Class/Interface in preloaded chunk: " .. tostring(chunk) .. " " .. req_path)
+         end
       end
    end
 end
