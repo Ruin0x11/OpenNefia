@@ -3,6 +3,7 @@ local paths = require("internal.paths")
 local main_state = require("internal.global.main_state")
 local ISerializable = require("api.ISerializable")
 local binser = require("thirdparty.binser")
+local mod_info = require("internal.mod_info")
 
 --- Module and mod environment functions. This module implements
 --- seamless hotloading by replacing the global `require` with one
@@ -516,88 +517,106 @@ local function gen_require(chunk_loader, can_load_path)
          HOTLOADED[req_path] = true
       end
 
-      if type(result) == "table" then
-         require_path_cache[result] = req_path
-
-         for k, v in pairs(result) do
-            if type(v) == "function" then
-               -- Save the module and identifier of this function.
-               --
-               -- NOTE: This will overwrite the existing metadata for a function
-               -- defined elsewhere that is later copied to another module. For
-               -- example, the `Draw` module copies a set of functions from the
-               -- internal `draw` module using assignment, instead of defining a
-               -- new function that calls the internal one, so the function
-               -- returned from the two modules will reference the same object
-               -- in memory.
-               fn_to_module[v] = { module = package.loaded[req_path], identifier = k }
-            end
-         end
-
-         if class.is_class(result) or class.is_interface(result) then
-            local ok, on_require = pcall(function() return result.__on_require end)
-            if type(on_require) == "function" then
-               on_require(package.loaded[req_path], result)
-            end
-         end
-
-         if class.is_class(result) then
-            local mt = getmetatable(result)
-
-            mt.__require_path = req_path
-            result.__serial_id = result.__serial_id or req_path
-
-            local opts = result.__serial_opts
-            if opts then
-               opts.load_type = opts.load_type or "self"
-               local load_type = opts.load_type
-               if load_type ~= "self" and load_type ~= "freeform" and load_type ~= "reference" then
-                  error(result.__name .. ": Invalid load_type specified in class __serial_opts (must be 'self', 'freeform' or 'reference'): " .. tostring(load_type))
-               end
-            end
-
-            binser.registerClass(result)
-         end
-      end
-
-      -- Hotload any classes the user returns from the chunk, so they can be
-      -- tracked by the serialization system.
-      if type(extra) == "table" then
-         if extra.inner_defns then
-            for _, defn in ipairs(extra.inner_defns) do
-               if class.is_class(defn) or class.is_interface(defn) then
-                  local id = req_path .. ":" .. defn.__name
-                  if type(inner_defns[id]) == "table" then
-                     class.hotload(inner_defns[id], result)
-                  else
-                     inner_defns[id] = result
-                  end
-
-                  defn.__require_path = id
-
-                  if class.is_class(defn) then
-                     defn.__serial_id = defn.__serial_id or id
-                     binser.registerClass(defn)
-                  end
-               else
-                  Log.error("Object passed as inner class '%s' was not a class or interface table", defn)
-               end
-            end
-         end
-         if extra.metatables then
-            for name, tbl in pairs(extra.metatables) do
-               assert(type(tbl) == "table")
-               local full_name = req_path .. ":mt:" .. name
-               binser.unregister(full_name)
-               binser.register(tbl, full_name, identity, identity)
-            end
-         end
-      end
+      env.cache_chunk_metadata(req_path, result, extra)
 
       paths_loaded_by_hooked_require[req_path] = true
 
       return package.loaded[req_path]
    end
+end
+
+function env.cache_chunk_metadata(req_path, result, extra)
+   if type(result) == "table" then
+      require_path_cache[result] = req_path
+
+      for k, v in pairs(result) do
+         if type(v) == "function" then
+            -- Save the module and identifier of this function.
+            --
+            -- NOTE: This will overwrite the existing metadata for a function
+            -- defined elsewhere that is later copied to another module. For
+            -- example, the `Draw` module copies a set of functions from the
+            -- internal `draw` module using assignment, instead of defining a
+            -- new function that calls the internal one, so the function
+            -- returned from the two modules will reference the same object
+            -- in memory.
+            fn_to_module[v] = { module = package.loaded[req_path], identifier = k }
+         end
+      end
+
+      if class.is_class(result) or class.is_interface(result) then
+         local mod_id = env.find_calling_mod()
+         local mod_version
+         if mod_id == "@test@" then
+            mod_version = "0.1.0"
+         else
+            local mod_info_ = mod_info.get_mod_info(mod_id)
+            assert(mod_info_, "Missing mod info for loaded class " .. result.__name .. " mod ")
+            mod_version = mod_info_.manifest.version
+         end
+
+         print(req_path)
+         result.__require_path = req_path
+         result.__serial_id = result.__serial_id or req_path
+         result.__mod_id = mod_id
+         result.__mod_version = mod_version
+
+         local ok, on_require = pcall(function() return result.__on_require end)
+         if type(on_require) == "function" then
+            on_require(package.loaded[req_path], result)
+         end
+      end
+
+      if class.is_class(result) then
+         local mt = getmetatable(result)
+
+         local opts = result.__serial_opts
+         if opts then
+            opts.load_type = opts.load_type or "self"
+            local load_type = opts.load_type
+            if load_type ~= "self" and load_type ~= "freeform" and load_type ~= "reference" then
+               error(result.__name .. ": Invalid load_type specified in class __serial_opts (must be 'self', 'freeform' or 'reference'): " .. tostring(load_type))
+            end
+         end
+
+         binser.registerClass(result)
+      end
+   end
+
+   -- Hotload any classes the user returns from the chunk, so they can be
+   -- tracked by the serialization system.
+   if type(extra) == "table" then
+      if extra.inner_defns then
+         for _, defn in ipairs(extra.inner_defns) do
+            if class.is_class(defn) or class.is_interface(defn) then
+               local id = req_path .. ":" .. defn.__name
+               if type(inner_defns[id]) == "table" then
+                  class.hotload(inner_defns[id], result)
+               else
+                  inner_defns[id] = result
+               end
+
+               defn.__require_path = id
+
+               if class.is_class(defn) then
+                  defn.__serial_id = defn.__serial_id or id
+                  binser.registerClass(defn)
+               end
+            else
+               Log.error("Object passed as inner class '%s' was not a class or interface table", defn)
+            end
+         end
+      end
+      if extra.metatables then
+         for name, tbl in pairs(extra.metatables) do
+            assert(type(tbl) == "table")
+            local full_name = req_path .. ":mt:" .. name
+            binser.unregister(full_name)
+            binser.register(tbl, full_name, identity, identity)
+         end
+      end
+   end
+
 end
 
 --- Version of `require` that will load sandboxed mod environments if
@@ -740,6 +759,14 @@ function env.hook_global_require()
       -- ignore second argument (`hotload`)
       return env.require(path)
    end
+
+   -- Cache data for any paths loaded before the require was hooked.
+   -- BUG: This will miss the "extra" table...
+   for req_path, chunk in pairs(package.loaded) do
+      if not paths_loaded_by_hooked_require[req_path] then
+         env.cache_chunk_metadata(req_path, chunk, nil)
+      end
+   end
 end
 
 local mod_require = function(path)
@@ -854,6 +881,10 @@ end
 function env.restart_debug_server()
    Log.warn("Restarting debug server...")
    env.server_needs_restart = true
+end
+
+function env.get_class_for_serial_id(serial_id)
+   return binser.getClassForSerialId(serial_id)
 end
 
 function env.reset()

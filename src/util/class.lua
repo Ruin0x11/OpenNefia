@@ -31,7 +31,7 @@ local function make_tostring(kind, tbl)
    end
 end
 
-local iface_mt = {
+local interface_mt = {
    __tostring = make_tostring("Interface", _interfaces),
    __index = function(t, k)
       local m = rawget(t, "all_methods")
@@ -53,12 +53,14 @@ local iface_mt = {
    end
 }
 
-_interfaces[iface_mt] = tostring(iface_mt)
-setmetatable(iface_mt,
+_interfaces[interface_mt] = tostring(interface_mt)
+setmetatable(interface_mt,
              {
-                __tostring = iface_mt.__tostring,
+                __tostring = interface_mt.__tostring,
                 __inspect = tostring
              })
+
+class.interface_mt = interface_mt
 
 function class.interface(name, reqs, parents)
    local i = {}
@@ -106,11 +108,11 @@ function class.interface(name, reqs, parents)
       end
    end
 
-   i.__tostring = iface_mt.__tostring
+   i.__tostring = interface_mt.__tostring
 
    _iface_children[i] = _iface_children[i] or setmetatable({}, { __mode = "k" })
 
-   return setmetatable(i, iface_mt)
+   return setmetatable(i, interface_mt)
 end
 
 local class_mt = {
@@ -120,6 +122,8 @@ local class_mt = {
 
 _classes[class_mt] = tostring(class_mt)
 setmetatable(class_mt, { __tostring = class_mt.__tostring })
+
+class.class_mt = class_mt
 
 local function verify(instance, interface, message)
    if not _interfaces[interface] then

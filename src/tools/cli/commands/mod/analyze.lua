@@ -1,4 +1,4 @@
-local mod = require("internal.mod")
+local mod_info = require("internal.mod_info")
 local fs = require("util.fs")
 local startup = require("game.startup")
 local Event = require("api.Event")
@@ -6,7 +6,7 @@ local field = require("game.field")
 local data = require("internal.data")
 
 local function print_tree(mods, stream)
-   local load_order = mod.calculate_load_order(mods)
+   local load_order = mod_info.calculate_load_order(mods)
 
    local mod_to_types = {}
    local adding_mod_to_type_to_count = {}
@@ -41,7 +41,7 @@ local function print_tree(mods, stream)
 
    for _, m in ipairs(load_order) do
       local mod_id = m.id
-      local manifest = assert(mod.load_manifest(m.manifest_path))
+      local manifest = assert(mod_info.load_manifest(m.manifest_path))
       stream:write(("+ %s (%s)\n"):format(mod_id, manifest.version))
       local found = false
       if mod_to_types[mod_id] then
@@ -65,7 +65,7 @@ return function(args)
       fs.create_directory(fs.get_save_directory())
    end
 
-   local mods = mod.scan_mod_dir()
+   local mods = mod_info.scan_mod_dir()
    startup.run_all(mods)
 
    Event.trigger("base.on_startup")

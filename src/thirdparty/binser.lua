@@ -199,6 +199,8 @@ local function number_from_str(str, index)
 end
 
 local RESERVED_IDS = {
+   ["class"] = true,
+   ["interface"] = true,
    ["object"] = true
 }
 
@@ -268,7 +270,7 @@ local function newbinser()
 
       local mt = getmetatable(x)
       local serial_id = mt and (mt.__serial_id or serial_ids[mt])
-      print("GETSER", serial_id, mt, serializers[serial_id])
+      -- print("GETSER", serial_id, mt, serializers[serial_id])
       if serial_id == "object" then
          accum[#accum + 1] = "\214"
 
@@ -403,7 +405,7 @@ local function newbinser()
       else
          if check_custom_type(x, visited, accum) then return end
          visited[x] = visited[NEXT]
-         visited[NEXT] =  visited[NEXT] + 1
+         visited[NEXT] = visited[NEXT] + 1
          local xlen = #x
          local mt = getmetatable(x)
          if mt then
@@ -427,8 +429,8 @@ local function newbinser()
          accum[#accum + 1] = number_to_str(key_count)
          for k, v in pairs(x) do
             if not_array_index(k, xlen) then
-               print("KV", tostring(k), type(k), type(v))
-               print(inspect(k))
+               -- print("KV", tostring(k), type(k), type(v))
+               -- print(inspect(k))
                types[type(k)](k, visited, accum)
                types[type(v)](v, visited, accum)
             end
@@ -913,6 +915,10 @@ local function newbinser()
       return metatable
    end
 
+   local function getClassForSerialId(serial_id)
+      return classes[serial_id]
+   end
+
    local function hasClass(klass)
       return classes[klass.__serial_id]
    end
@@ -950,6 +956,35 @@ local function newbinser()
       serial_opts[serial_id] = opts
    end
 
+   local function dumpRegistry()
+      local result = {
+         classes = {}
+      }
+
+      for serial_id, class in pairs(classes) do
+         if class.__require_path == nil then
+            error("Missing require path for class " .. class.__name)
+         end
+         if class.__mod_id == nil then
+            error("Missing mod ID for class " .. class.__name)
+         end
+         if class.__mod_version == nil then
+            error("Missing mod version for class " .. class.__name)
+         end
+
+         local t = {
+            serial_id = serial_id,
+            name = class.__name,
+            require_path = class.__require_path,
+            mod_id = class.__mod_id,
+            mod_version = class.__mod_version
+         }
+         result.classes[serial_id] = t
+      end
+
+      return result
+   end
+
    local function clearRegistry()
       mts = {}
       serializers = {}
@@ -978,8 +1013,10 @@ local function newbinser()
       register = register,
       unregister = unregister,
       appendFile = appendFile,
+      getClassForSerialId = getClassForSerialId,
       hasClass = hasClass,
       registerClass = registerClass,
+      dumpRegistry = dumpRegistry,
       clearRegistry = clearRegistry,
 
       newbinser = newbinser

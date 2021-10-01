@@ -1,4 +1,4 @@
-local mod = require("internal.mod")
+local mod_info = require("internal.mod_info")
 local fs = require("util.fs")
 local ansicolors = require("thirdparty.ansicolors")
 
@@ -6,7 +6,7 @@ return function(args)
    local mod_id = args.mod_id
    local example = args.example
 
-   if not mod.is_valid_mod_identifier(mod_id) then
+   if not mod_info.is_valid_mod_identifier(mod_id) then
       error("Mod ID must start with a letter and consist of letters, numbers or underscores only")
    end
 

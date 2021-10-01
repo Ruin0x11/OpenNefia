@@ -1,5 +1,5 @@
 local fs = require("util.fs")
-local mod = require("internal.mod")
+local mod_info = require("internal.mod_info")
 local startup = require("game.startup")
 local Event = require("api.Event")
 local field = require("game.field")
@@ -32,7 +32,7 @@ return function(args)
    else
       enabled_mods = { "base", "elona_sys", "elona", "extlibs" }
    end
-   local mods = mod.scan_mod_dir(enabled_mods)
+   local mods = mod_info.scan_mod_dir(enabled_mods)
    startup.run_all(mods)
 
    Event.trigger("base.on_startup")

@@ -36,6 +36,20 @@ function test_serial_data_entries()
    Assert.eq(entry, new)
 end
 
+function test_serial_classes()
+   local Queue = require("api.Queue")
+
+   local new = SaveFs.deserialize(SaveFs.serialize(Queue))
+   Assert.eq(Queue, new)
+end
+
+function test_serial_interfaces()
+   local ISerializable = require("api.ISerializable")
+
+   local new = SaveFs.deserialize(SaveFs.serialize(ISerializable))
+   Assert.eq(ISerializable, new)
+end
+
 function test_serial_class_serial_id()
    local Queue = require("api.Queue")
    Assert.eq("api.Queue", Queue.__serial_id)
@@ -46,7 +60,7 @@ end
 
 function test_serial_interface_serial_id()
    local IChara = require("api.chara.IChara")
-   Assert.eq(nil, IChara.__serial_id)
+   Assert.eq("api.chara.IChara", IChara.__serial_id)
 end
 
 function test_serial_object_serial_id()

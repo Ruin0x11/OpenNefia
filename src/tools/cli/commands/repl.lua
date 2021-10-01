@@ -1,10 +1,8 @@
-local field_logic = require("game.field_logic")
 local field = require("game.field")
-local mod = require("internal.mod")
 local startup = require("game.startup")
 local fs = require("util.fs")
 local Event = require("api.Event")
-local Gui = require("api.Gui")
+local mod_info = require("internal.mod_info")
 local Stopwatch = require("api.Stopwatch")
 local Env = require("api.Env")
 local Repl = require("api.Repl")
@@ -24,7 +22,7 @@ return function(args)
       fs.create_directory(fs.get_save_directory())
    end
 
-   local mods = mod.scan_mod_dir()
+   local mods = mod_info.scan_mod_dir()
    startup.run_all(mods)
 
    sw:p("REPL startup time")

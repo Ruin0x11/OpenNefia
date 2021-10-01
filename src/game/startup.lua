@@ -13,6 +13,7 @@ local theme = require("internal.theme")
 local events = require("internal.events")
 local config_store = require("internal.config_store")
 local midi = require("internal.midi")
+require("internal.serial")
 
 local startup = {}
 

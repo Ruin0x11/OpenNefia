@@ -1,5 +1,5 @@
 local startup = require("game.startup")
-local mod = require("internal.mod")
+local mod_info = require("internal.mod_info")
 local repl = require("internal.repl")
 local util = require("tools.cli.util")
 
@@ -12,7 +12,7 @@ return function(args)
    else
       enabled_mods = { "base", "elona_sys", "elona", "extlibs" }
    end
-   local mods = mod.scan_mod_dir(enabled_mods)
+   local mods = mod_info.scan_mod_dir(enabled_mods)
    startup.run_all(mods)
 
    repl.require_all_apis()

@@ -97,7 +97,11 @@ if not love or love.getVersion() == "lovemock" then
       }
    end
    fs.get_save_directory = function()
-      return fs.join(fs.get_temporary_directory(), ".local", "share", "love", "OpenNefia")
+      if is_windows then
+         return fs.join(os.getenv("APPDATA"), "LOVE", "OpenNefia")
+      else
+         return fs.join(fs.get_temporary_directory(), ".local", "share", "love", "OpenNefia")
+      end
    end
    fs.create_directory = function(name)
       name = fs.to_relative(name)

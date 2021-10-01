@@ -19,6 +19,7 @@ local Advice = require("api.Advice")
 local main_state = require("internal.global.main_state")
 local Env = require("api.Env")
 local aspect_state = require("internal.global.aspect_state")
+local mod_info = require("internal.mod_info")
 
 local function reset_all_globals()
    Log.debug("Resetting global state.")
@@ -231,7 +232,7 @@ return function(args)
 
    Log.debug("Test filter: %s:%s", filter_file_name, filter_test_name)
 
-   local all_mods = mod.scan_mod_dir()
+   local all_mods = mod_info.scan_mod_dir()
    local mods_with_tests = {}
 
    if filter_mod_name ~= "@base@" then
@@ -244,7 +245,7 @@ return function(args)
    end
 
    if #mods_with_tests > 0 then
-      mods_with_tests = mod.calculate_load_order(mods_with_tests)
+      mods_with_tests = mod_info.calculate_load_order(mods_with_tests)
 
       local mod_names = table.concat(fun.iter(mods_with_tests):extract("id"):to_list(), ", ")
 
@@ -269,7 +270,7 @@ return function(args)
       if not table.deepcompare(last_mods, enabled_mods) then
          reset_all_globals()
 
-         local mods = mod.scan_mod_dir(enabled_mods)
+         local mods = mod_info.scan_mod_dir(enabled_mods)
          startup.run_all(mods)
 
          load_test_mod()

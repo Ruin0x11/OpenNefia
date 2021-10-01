@@ -12,7 +12,7 @@ local ConfigMenuWrapper = require("api.gui.menu.config.ConfigMenuWrapper")
 
 local chara_make = require("game.chara_make")
 local config = require("internal.config")
-local mod = require("internal.mod")
+local mod_info = require("internal.mod_info")
 local startup = require("game.startup")
 local field_logic = require("game.field_logic")
 local save_store = require("internal.save_store")
@@ -100,7 +100,7 @@ function game.loop()
    -- Run one frame of drawing first, to clear the screen.
    coroutine.yield()
 
-   local mods = mod.scan_mod_dir()
+   local mods = mod_info.scan_mod_dir()
 
    -- This function will yield to support the progress bar.
    startup.run(mods)
