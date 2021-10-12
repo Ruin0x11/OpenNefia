@@ -266,7 +266,7 @@ local function _dostring(t, buf, self, xml_escape, parentns, idn, indent, attr_i
          nsid = nsid + 1;
          t_insert(buf, " xmlns:ns"..nsid.."='"..xml_escape(ns).."' ".."ns"..nsid..":"..attrk.."='"..xml_escape(v).."'");
       elseif not(k == "xmlns" and v == parentns) then
-         t_insert(buf, alf..k.."='"..xml_escape(v).."'");
+         t_insert(buf, alf..k.."=\""..xml_escape(v).."\"");
       end
    end
    -- it's useful for testing to have predictable attribute ordering, if available

@@ -177,7 +177,6 @@ function pool:has_object(obj)
 end
 
 function pool:serialize()
-   return self
 end
 
 function pool:deserialize()
@@ -189,7 +188,6 @@ function pool:deserialize()
          end
       end
    end
-   return self
 end
 
 local function iter(state, index)

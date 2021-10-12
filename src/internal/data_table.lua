@@ -416,7 +416,6 @@ local function data_entry_serialize(self)
 end
 
 local function data_entry_deserialize(_type, _id)
-   print("GETDATAENTRY", package.loaded["internal.data"][_type][_id])
    return package.loaded["internal.data"][_type][_id]
 end
 

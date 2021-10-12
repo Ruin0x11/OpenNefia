@@ -240,6 +240,7 @@ local function newbinser()
    local function serial_error(fmt, ...)
       local key = last_key[#last_key]
       local klass = last_class[#last_class]
+      fmt = fmt .. "WARNING: "
       if key or klass then
          fmt = fmt .. " ("
          if key then
@@ -254,7 +255,8 @@ local function newbinser()
          fmt = fmt .. ")"
       end
 
-      error((fmt):format(...))
+      -- error((fmt):format(...))
+      print((fmt):format(...))
    end
 
    types["nil"] = function(x, visited, accum)
@@ -293,7 +295,7 @@ local function newbinser()
 
       local mt = getmetatable(x)
       local serial_id = mt and (mt.__serial_id or serial_ids[mt])
-      print("GETSER", serial_id, mt, serializers[serial_id])
+      -- print("GETSER", serial_id, mt, serializers[serial_id])
       if serial_id == "object" then
          accum[#accum + 1] = "\214"
 
@@ -381,6 +383,11 @@ local function newbinser()
             x.__memoized = nil
          end
 
+         -- Mark as visted so recursive properties like `chara.activity.chara`
+         -- will be found and referenced correctly.
+         visited[x] = visited[NEXT]
+         visited[NEXT] = visited[NEXT] + 1
+
          table.insert(last_class, mt.__class)
 
          local ok, err = xpcall(function()
@@ -458,8 +465,8 @@ local function newbinser()
          accum[#accum + 1] = number_to_str(key_count)
          for k, v in pairs(x) do
             if not_array_index(k, xlen) then
-               print("KV", tostring(k), type(k), type(v))
-               print(inspect(k))
+               -- print("KV", tostring(k), type(k), type(v))
+               -- print(inspect(k))
                types[type(k)](k, visited, accum)
                table.insert(last_key, k)
                types[type(v)](v, visited, accum)

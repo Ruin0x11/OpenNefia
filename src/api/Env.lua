@@ -168,4 +168,8 @@ function Env.mod_filter(mod_id)
    end
 end
 
+function Env.iter_mods()
+   return mod.iter_loaded():extract("id")
+end
+
 return Env

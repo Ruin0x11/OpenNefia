@@ -125,18 +125,6 @@ function asset_drawable:draw_region(quad, x, y, width, height, color, centered, 
    Draw.image_region(self.image, self.quads[quad], x, y, width, height, color, centered, rotation)
 end
 
-function asset_drawable:draw_stretched(x, y, tx, ty, color, centered, rotation)
-   Draw.image_stretched(self.image, x, y, tx, ty, color, centered, rotation)
-end
-
-function asset_drawable:draw_region_stretched(quad, x, y, tx, ty, color, centered, rotation)
-   if not self.quads[quad] then
-      error(string.format("Quad ID '%s' not found", tostring(quad)))
-      return
-   end
-   Draw.image_region_stretched(self.image, self.quads[quad], x, y, tx, ty, color, centered, rotation)
-end
-
 function asset_drawable:draw_tiled()
    local iw = self:get_width()
    local ih = self:get_height()

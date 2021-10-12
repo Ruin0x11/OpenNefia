@@ -125,18 +125,6 @@ function asset_instance:draw_region(quad, x, y, width, height, color, centered, 
    Draw.image_region(self.asset.image, self.quads[quad], x, y, width, height, color, centered, rotation)
 end
 
-function asset_instance:draw_stretched(x, y, tx, ty, color, centered, rotation)
-   Draw.image_stretched(self.asset.image, x, y, tx, ty, color, centered, rotation)
-end
-
-function asset_instance:draw_region_stretched(quad, x, y, tx, ty, color, centered, rotation)
-   if not self.quads[quad] then
-      error(string.format("Quad ID '%s' not found", tostring(quad)))
-   end
-   Draw.image_region_stretched(self.asset.image, self.quads[quad], x, y, tx, ty, color, centered, rotation)
-end
-local Log = require("api.Log")
-
 function asset_instance:draw_bar(x, y, width, region)
    local iw = self.asset:get_width()
    local ih = self.asset:get_height()
