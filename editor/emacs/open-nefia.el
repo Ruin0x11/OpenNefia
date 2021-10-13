@@ -582,7 +582,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
 (defvar open-nefia--repl-entrypoint "src/opennefia.lua")
 
 (defun open-nefia--executable-name ()
-  (if (eq system-type 'windows-nt) "./OpenNefia.bat" "./OpenNefia"))
+  (if (eq system-type 'windows-nt) "OpenNefia.bat" "./OpenNefia"))
 
 (defun open-nefia--lua-headless-executable-name ()
   (if (eq system-type 'windows-nt) "luajit.exe" "luajit"))

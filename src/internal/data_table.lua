@@ -792,6 +792,10 @@ function proxy:interface()
    return self.data.metatables[self._type]
 end
 
+function proxy:fields()
+   return self.data.schemas[self._type].fields
+end
+
 function proxy:type()
    return self.data.schemas[self._type].type
 end

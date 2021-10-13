@@ -15,10 +15,76 @@ cnv["base.sound"] = {
    }
 }
 
-local function to_camel_case_id(str)
-   str = str:gsub("(.*)%.(.*)", "%2")
+cnv["base.music"] = {
+   name = "MusicDef",
+   fields = {
+      file = {
+         name = "Filepath",
+         cb = function(v)
+            return v:gsub("mod/[a-zA-Z0-9_]*/sound/", "Assets/Sound/")
+         end
+      }
+   }
+}
+
+cnv["base.asset"] = {
+   name = "AssetDef",
+   attributes = false,
+   fields = {
+      source = {
+         name = "SourceImagePath",
+         cb = function(v)
+            return v:gsub("graphic/", "Assets/Graphic/")
+         end
+      },
+      image = {
+         name = "ImagePath",
+         cb = function(v)
+            return v:gsub("graphic/", "Assets/Graphic/")
+         end
+      },
+      x = true,
+      y = true,
+      width = true,
+      height = true,
+   }
+}
+
+cnv["base.chip"] = {
+   name = "ChipDef",
+   attributes = true,
+   fields = {
+      image = {
+         name = function(v)
+            if type(v) == "table" then
+               return "ImageRegion"
+            else
+               return "ImagePath"
+            end
+         end,
+         cb = function(v)
+            if type(v) == "table" then
+               local s = ('SourceImagePath="%s" X="%s" Y="%s" Width="%s" Height="%s"'):format(v.source, v.x, v.y, v.width, v.height)
+               if v.count_x > 1 then
+                  s = s .. (' CountX="%s"'):format(v.count_x)
+               end
+               return s
+            else
+               return v:gsub("graphic/", "Assets/Graphic/")
+            end
+         end
+      },
+      group = true,
+   }
+}
+
+local function to_camel_case(str)
    str = str:gsub("[%-_]+([^%-_])", function(s) return s:upper() end)
    return str:sub(1, 1):upper() .. str:sub(2)
+end
+
+local function to_camel_case_id(str)
+   return to_camel_case(str:gsub("(.*)%.(.*)", "%2"))
 end
 
 local function convert(_type)
@@ -30,21 +96,39 @@ local function convert(_type)
 
       for _, entry in data[_type]:iter():filter(Env.mod_filter(mod_id)) do
          local id = to_camel_case_id(entry._id)
-         local t = { xml = c.name, Id = id }
 
-         for name, field in pairs(c.fields) do
-            local v = entry[name]
+         local t = { xml = c.name, Id = id, ElonaId = entry.elona_id }
 
-            if field.cb then
-               v = field.cb(v, entry)
+         for _, data_field in ipairs(data[_type]:fields()) do
+            local field = c.fields[data_field.name]
+            local v = entry[data_field.name]
+
+            if field ~= nil and v ~= nil then
+               if field == true then
+                  field = {
+                     name = to_camel_case(data_field.name)
+                  }
+               end
+
+               local name = field.name
+               if type(name) == "function" then
+                  name = name(v)
+               end
+
+               if v and field.cb then
+                  v = field.cb(v, entry)
+               end
+
+               if c.attributes then
+                  t[name] = tostring(v)
+               else
+                  local tn = { xml = name, tostring(v) }
+                  t[#t+1] = tn
+               end
             end
-
-            local tn = { xml = field.name, tostring(v) }
-            t[#t+1] = tn
-
-            def_ofs[#def_ofs+1] = ("public static %s %s = null!;"):format(c.name, id)
          end
 
+         def_ofs[#def_ofs+1] = ("public static %s %s = null!;"):format(c.name, id)
          doc[#doc+1] = t
       end
 
