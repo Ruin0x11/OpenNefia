@@ -9,8 +9,8 @@ local dir_sep = package.config:sub(1,1)
 local is_windows = dir_sep == "\\"
 
 if is_windows then
-   package.path = package.path .. ";..\\lib\\luasocket\\?.lua;..\\lib\\lua-vips\\?.lua"
-   package.cpath = package.cpath .. ";..\\lib\\luautf8\\?.dll;..\\lib\\luasocket\\?.dll;..\\lib\\luafilesystem\\?.dll;..\\lib\\lua-zlib\\?.dll"
+   package.path = package.path .. ";..\\lib\\luasocket\\?.lua;..\\lib\\lua-vips\\?.lua;..\\lib\\?\\init.lua;..\\lib\\?.lua"
+   package.cpath = package.cpath .. ";..\\lib\\?.dll;..\\lib\\luautf8\\?.dll;..\\lib\\luasocket\\?.dll;..\\lib\\luafilesystem\\?.dll;..\\lib\\lua-zlib\\?.dll"
 else
    package.cpath = package.cpath .. ";../lib/?.so"
 end
