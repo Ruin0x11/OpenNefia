@@ -408,7 +408,8 @@ data:add_multi(
       },
       {
          _id = "heart1",
-         file = "mod/elona/sound/Heart1.wav"
+         file = "mod/elona/sound/Heart1.wav",
+         elona_id = 32
       },
       {
          _id = "inv",

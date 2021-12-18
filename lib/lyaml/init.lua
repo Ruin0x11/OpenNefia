@@ -121,9 +121,16 @@ local dumper_mt = {
             anchor = self:get_anchor(map),
             style = 'BLOCK',
          }
-         local keys = table.keys(map)
-         table.sort(keys)
-         for _, k in ipairs(keys) do
+
+         local mt = getmetatable(map)
+         local order
+         if mt and mt.order then
+            order = mt.order
+         else
+            order = table.keys(map)
+            table.sort(order)
+         end
+         for _, k in ipairs(order) do
             local v = map[k]
             self:dump_node(k)
             self:dump_node(v)
