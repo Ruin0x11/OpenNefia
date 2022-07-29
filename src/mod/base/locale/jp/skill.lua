@@ -171,736 +171,736 @@ return {
                end
             },
 
-            action_absorb_magic = {
+            ActionAbsorbMagic = {
                description = "マナ回復",
                name = "魔力の吸収"
             },
-            spell_acid_ground = {
+            SpellAcidGround = {
                description = "酸の発生",
                name = "酸の海"
             },
-            alchemy = {
+            Alchemy = {
                description = "様々な材料を調合し、ポーションを作り出す",
                enchantment_description = "錬金の腕を上げる",
                name = "錬金術"
             },
-            anatomy = {
+            Anatomy = {
                description = "死体を残しやすくする",
                enchantment_description = "死体を残しやすくする",
                name = "解剖学"
             },
-            axe = {
+            Axe = {
                description = "斧を扱う技術",
                name = "斧"
             },
-            blunt = {
+            Blunt = {
                description = "鈍器を扱う技術",
                name = "鈍器"
             },
-            buff_boost = {
+            BuffBoost = {
                name = "ブースト"
             },
-            bow = {
+            Bow = {
                description = "弓を扱う技術",
                name = "弓"
             },
-            carpentry = {
+            Carpentry = {
                description = "木を加工し、アイテムを作り出す",
                enchantment_description = "大工の腕を上げる",
                name = "大工"
             },
-            casting = {
+            Casting = {
                description = "魔法詠唱の成功率を上げる",
                name = "詠唱"
             },
-            action_change = {
+            ActionChange = {
                description = "対象変容",
                name = "他者変容"
             },
-            spell_chaos_ball = {
+            SpellChaosBall = {
                description = "混沌の球",
                name = "混沌の渦"
             },
-            action_chaos_breath = {
+            ActionChaosBreath = {
                description = "混沌のブレス",
                name = "混沌のブレス"
             },
-            spell_chaos_eye = {
+            SpellChaosEye = {
                description = "混沌の矢",
                name = "混沌の瞳"
             },
-            action_cheer = {
+            ActionCheer = {
                description = "視界内仲間強化",
                name = "鼓舞"
             },
-            action_cold_breath = {
+            ActionColdBreath = {
                description = "冷気のブレス",
                name = "冷気のブレス"
             },
-            buff_contingency = {
+            BuffContingency = {
                name = "契約"
             },
-            control_magic = {
+            ControlMagic = {
                description = "魔法による仲間のまきこみを軽減する",
                name = "魔力制御"
             },
-            cooking = {
+            Cooking = {
                description = "料理の腕を上げる",
                enchantment_description = "料理の腕を上げる",
                name = "料理"
             },
-            crossbow = {
+            Crossbow = {
                description = "クロスボウを扱う技術",
                name = "クロスボウ"
             },
-            spell_crystal_spear = {
+            SpellCrystalSpear = {
                description = "無属性の矢",
                name = "魔力の集積"
             },
-            spell_cure_of_eris = {
+            SpellCureOfEris = {
                description = "体力回復",
                name = "エリスの癒し"
             },
-            spell_cure_of_jure = {
+            SpellCureOfJure = {
                description = "体力回復",
                name = "ジュアの癒し"
             },
-            action_curse = {
+            ActionCurse = {
                description = "呪いをかける",
                name = "呪いの言葉"
             },
-            spell_dark_eye = {
+            SpellDarkEye = {
                description = "暗黒の矢",
                name = "暗黒の矢"
             },
-            spell_darkness_bolt = {
+            SpellDarknessBolt = {
                description = "暗黒のボルト",
                name = "暗黒の光線"
             },
-            action_darkness_breath = {
+            ActionDarknessBreath = {
                description = "暗黒のブレス",
                name = "暗黒のブレス"
             },
-            buff_death_word = {
+            BuffDeathWord = {
                name = "死の宣告"
             },
-            action_decapitation = {
+            ActionDecapitation = {
                description = "対象即死",
                name = "首狩り"
             },
-            detection = {
+            Detection = {
                description = "隠された場所や罠を見つける",
                enchantment_description = "探知能力を強化する",
                name = "探知"
             },
-            action_dimensional_move = {
+            ActionDimensionalMove = {
                description = "近くへの瞬間移動",
                name = "空間歪曲"
             },
-            disarm_trap = {
+            DisarmTrap = {
                description = "複雑な罠の解体を可能にする",
                enchantment_description = "罠の解体を容易にする",
                name = "罠解体"
             },
-            action_distant_attack_4 = {
+            ActionDistantAttack4 = {
                description = "遠距離打撃",
                name = "遠距離打撃"
             },
-            action_distant_attack_7 = {
+            ActionDistantAttack7 = {
                description = "遠距離打撃",
                name = "遠距離打撃"
             },
-            buff_divine_wisdom = {
+            BuffDivineWisdom = {
                name = "知者の加護"
             },
-            spell_dominate = {
+            SpellDominate = {
                description = "対象を支配する",
                name = "支配"
             },
-            spell_door_creation = {
+            SpellDoorCreation = {
                description = "ドアの生成",
                name = "ドア生成"
             },
-            action_drain_blood = {
+            ActionDrainBlood = {
                description = "体力吸収",
                name = "吸血の牙"
             },
-            action_draw_charge = {
+            ActionDrawCharge = {
                description = "杖から魔力抽出",
                name = "魔力の抽出"
             },
-            action_draw_shadow = {
+            ActionDrawShadow = {
                description = "対象をテレポート",
                name = "異次元の手"
             },
-            action_drop_mine = {
+            ActionDropMine = {
                description = "足元に地雷設置",
                name = "地雷投下"
             },
-            dual_wield = {
+            DualWield = {
                description = "複数の武器を扱う技術",
                name = "二刀流"
             },
-            buff_element_scar = {
+            BuffElementScar = {
                name = "元素の傷跡"
             },
-            buff_elemental_shield = {
+            BuffElementalShield = {
                name = "元素保護"
             },
-            action_ether_ground = {
+            ActionEtherGround = {
                description = "エーテルの発生",
                name = "エーテルの海"
             },
-            evasion = {
+            Evasion = {
                description = "攻撃を回避する",
                name = "回避"
             },
-            action_eye_of_dimness = {
+            ActionEyeOfDimness = {
                description = "対象朦朧",
                name = "朦朧の眼差し"
             },
-            action_eye_of_ether = {
+            ActionEyeOfEther = {
                description = "対象エーテル侵食",
                name = "エーテルの眼差し"
             },
-            action_eye_of_insanity = {
+            ActionEyeOfInsanity = {
                description = "対象狂気",
                name = "狂気の眼差し"
             },
-            action_eye_of_mana = {
+            ActionEyeOfMana = {
                description = "マナダメージ",
                name = "マナの眼差し"
             },
-            eye_of_mind = {
+            EyeOfMind = {
                description = "クリティカル率を高める",
                enchantment_description = "心眼の技術を上昇させる",
                name = "心眼"
             },
-            action_eye_of_mutation = {
+            ActionEyeOfMutation = {
                description = "対象変容",
                name = "変容の眼差し"
             },
-            faith = {
+            Faith = {
                description = "神との距離を近める",
                enchantment_description = "信仰を深める",
                name = "信仰"
             },
-            action_fill_charge = {
+            ActionFillCharge = {
                description = "充填",
                name = "魔力の充填"
             },
-            spell_fire_ball = {
+            SpellFireBall = {
                description = "炎の球",
                name = "ファイアボール"
             },
-            spell_fire_bolt = {
+            SpellFireBolt = {
                description = "火炎のボルト",
                name = "ファイアボルト"
             },
-            action_fire_breath = {
+            ActionFireBreath = {
                description = "炎のブレス",
                name = "炎のブレス"
             },
-            spell_fire_wall = {
+            SpellFireWall = {
                description = "火柱の発生",
                name = "炎の壁"
             },
-            firearm = {
+            Firearm = {
                description = "遠隔機装を扱う技術",
                name = "銃器"
             },
-            fishing = {
+            Fishing = {
                description = "釣りを可能にする",
                enchantment_description = "釣りの腕を上げる",
                name = "釣り"
             },
-            spell_four_dimensional_pocket = {
+            SpellFourDimensionalPocket = {
                description = "四次元のポケットを召喚",
                name = "四次元ポケット"
             },
-            gardening = {
+            Gardening = {
                description = "植物を育て、採取する",
                enchantment_description = "栽培の腕を上げる",
                name = "栽培"
             },
-            gene_engineer = {
+            GeneEngineer = {
                description = "仲間合成の知識を高める",
                enchantment_description = "遺伝子学の知識を深める",
                name = "遺伝子学"
             },
-            spell_gravity = {
+            SpellGravity = {
                description = "重力の発生",
                name = "グラビティ"
             },
-            greater_evasion = {
+            GreaterEvasion = {
                description = "不正確な攻撃を確実に避ける",
                enchantment_description = "見切りの腕を上げる",
                name = "見切り"
             },
-            action_grenade = {
+            ActionGrenade = {
                description = "轟音の球",
                name = "グレネード"
             },
-            action_harvest_mana = {
+            ActionHarvestMana = {
                description = "マナ回復",
                name = "マナ回復"
             },
-            spell_heal_critical = {
+            SpellHealCritical = {
                description = "体力回復",
                name = "致命傷治癒"
             },
-            spell_heal_light = {
+            SpellHealLight = {
                description = "体力回復",
                name = "軽傷治癒"
             },
-            healing = {
+            Healing = {
                description = "怪我を自然に治癒する",
                enchantment_description = "体力回復を強化する",
                name = "治癒"
             },
-            spell_healing_rain = {
+            SpellHealingRain = {
                description = "体力回復の球",
                name = "治癒の雨"
             },
-            spell_healing_touch = {
+            SpellHealingTouch = {
                description = "体力回復",
                name = "癒しの手"
             },
-            heavy_armor = {
+            HeavyArmor = {
                description = "重い装備を扱う技術",
                enchantment_description = "重装備の技術を上昇させる",
                name = "重装備"
             },
-            buff_hero = {
+            BuffHero = {
                name = "英雄"
             },
-            spell_holy_light = {
+            SpellHolyLight = {
                description = "1つの呪い(hex)除去",
                name = "清浄なる光"
             },
-            buff_holy_shield = {
+            BuffHolyShield = {
                description = "防御力強化",
                name = "聖なる盾"
             },
-            buff_holy_veil = {
+            BuffHolyVeil = {
                name = "ホーリーヴェイル"
             },
-            spell_ice_ball = {
+            SpellIceBall = {
                description = "氷の球",
                name = "アイスボール"
             },
-            spell_ice_bolt = {
+            SpellIceBolt = {
                description = "氷のボルト",
                name = "アイスボルト"
             },
-            spell_identify = {
+            SpellIdentify = {
                description = "アイテム鑑定",
                name = "鑑定"
             },
-            buff_incognito = {
+            BuffIncognito = {
                name = "インコグニート"
             },
-            action_insult = {
+            ActionInsult = {
                description = "対象朦朧",
                name = "罵倒"
             },
-            investing = {
+            Investing = {
                description = "効果的に投資を行う",
                name = "投資"
             },
-            jeweler = {
+            Jeweler = {
                description = "宝石を加工し、アイテムを作り出す",
                enchantment_description = "宝石細工の腕を上げる",
                name = "宝石細工"
             },
-            light_armor = {
+            LightArmor = {
                description = "軽い装備を扱う技術",
                enchantment_description = "軽装備の技術を上昇させる",
                name = "軽装備"
             },
-            spell_lightning_bolt = {
+            SpellLightningBolt = {
                description = "雷のボルト",
                name = "ライトニングボルト"
             },
-            action_lightning_breath = {
+            ActionLightningBreath = {
                description = "電撃のブレス",
                name = "電撃のブレス"
             },
-            literacy = {
+            Literacy = {
                description = "難解な本の解読を可能にする",
                enchantment_description = "本の理解を深める",
                name = "読書"
             },
-            lock_picking = {
+            LockPicking = {
                description = "鍵を開ける",
                enchantment_description = "鍵開けの能力を強化する",
                name = "鍵開け"
             },
-            long_sword = {
+            LongSword = {
                description = "刃渡りの長い剣を扱う技術",
                name = "長剣"
             },
-            buff_lulwys_trick = {
+            BuffLulwysTrick = {
                name = "ルルウィの憑依"
             },
-            magic_capacity = {
+            MagicCapacity = {
                description = "マナの反動から身を守る",
                enchantment_description = "マナの限界を上昇させる",
                name = "魔力の限界"
             },
-            spell_magic_dart = {
+            SpellMagicDart = {
                description = "無属性の矢",
                name = "魔法の矢"
             },
-            magic_device = {
+            MagicDevice = {
                description = "道具から魔力を効果的に引き出す",
                enchantment_description = "魔道具の効果を上げる",
                name = "魔道具"
             },
-            spell_magic_map = {
+            SpellMagicMap = {
                description = "周囲の地形感知",
                name = "魔法の地図"
             },
-            spell_magic_storm = {
+            SpellMagicStorm = {
                description = "魔法の球",
                name = "魔力の嵐"
             },
-            action_manis_disassembly = {
+            ActionManisDisassembly = {
                description = "敵瀕死",
                name = "マニの分解術"
             },
-            marksman = {
+            Marksman = {
                description = "射撃の威力を上げる",
                enchantment_description = "射撃の理解を深める",
                name = "射撃"
             },
-            martial_arts = {
+            MartialArts = {
                description = "格闘の技術",
                name = "格闘"
             },
-            meditation = {
+            Meditation = {
                description = "消耗したマナを回復させる",
                enchantment_description = "マナ回復を強化する",
                name = "瞑想"
             },
-            medium_armor = {
+            MediumArmor = {
                description = "普通の装備を扱う技術",
                enchantment_description = "中装備の技術を上昇させる",
                name = "中装備"
             },
-            memorization = {
+            Memorization = {
                description = "書物から得た知識を記憶する",
                enchantment_description = "魔法の知識の忘却を防ぐ",
                name = "暗記"
             },
-            spell_meteor = {
+            SpellMeteor = {
                description = "全域攻撃",
                name = "メテオ"
             },
-            action_mewmewmew = {
+            ActionMewmewmew = {
                description = "？",
                name = "うみみゃぁ！"
             },
-            spell_mind_bolt = {
+            SpellMindBolt = {
                description = "幻惑のボルト",
                name = "幻影の光線"
             },
-            action_mind_breath = {
+            ActionMindBreath = {
                description = "幻惑のブレス",
                name = "幻惑のブレス"
             },
-            mining = {
+            Mining = {
                description = "壁を掘る効率を上げる",
                enchantment_description = "採掘能力を強化する",
                name = "採掘"
             },
-            action_mirror = {
+            ActionMirror = {
                description = "自分の状態の感知",
                name = "自己認識"
             },
-            spell_mist_of_darkness = {
+            SpellMistOfDarkness = {
                description = "霧の発生",
                name = "闇の霧"
             },
-            buff_mist_of_frailness = {
+            BuffMistOfFrailness = {
                name = "脆弱の霧"
             },
-            buff_mist_of_silence = {
+            BuffMistOfSilence = {
                description = "魔法使用不可",
                name = "沈黙の霧"
             },
-            spell_mutation = {
+            SpellMutation = {
                description = "突然変異",
                name = "自己の変容"
             },
-            negotiation = {
+            Negotiation = {
                description = "交渉や商談を有利に進める",
                enchantment_description = "交渉を有利に進めさせる",
                name = "交渉"
             },
-            spell_nerve_arrow = {
+            SpellNerveArrow = {
                description = "神経の矢",
                name = "麻痺の矢"
             },
-            action_nerve_breath = {
+            ActionNerveBreath = {
                description = "神経のブレス",
                name = "神経のブレス"
             },
-            spell_nether_arrow = {
+            SpellNetherArrow = {
                description = "地獄の矢",
                name = "地獄の吐息"
             },
-            action_nether_breath = {
+            ActionNetherBreath = {
                description = "地獄のブレス",
                name = "地獄のブレス"
             },
-            buff_nightmare = {
+            BuffNightmare = {
                name = "ナイトメア"
             },
-            spell_oracle = {
+            SpellOracle = {
                description = "アーティファクト感知",
                name = "神託"
             },
-            performer = {
+            Performer = {
                description = "質の高い演奏を可能にする",
                enchantment_description = "演奏の質を上げる",
                name = "演奏"
             },
-            pickpocket = {
+            Pickpocket = {
                description = "貴重な物品を盗む",
                enchantment_description = "窃盗の腕を上げる",
                name = "窃盗"
             },
-            action_poison_breath = {
+            ActionPoisonBreath = {
                description = "毒のブレス",
                name = "毒のブレス"
             },
-            polearm = {
+            Polearm = {
                description = "槍を扱う技術",
                name = "槍"
             },
-            action_power_breath = {
+            ActionPowerBreath = {
                description = "ブレス",
                name = "強力なブレス"
             },
-            action_prayer_of_jure = {
+            ActionPrayerOfJure = {
                description = "体力回復",
                name = "ジュアの祈り"
             },
-            action_pregnant = {
+            ActionPregnant = {
                description = "対象妊娠",
                name = "妊娠"
             },
-            buff_punishment = {
+            BuffPunishment = {
                name = "神罰"
             },
-            spell_raging_roar = {
+            SpellRagingRoar = {
                description = "轟音の球",
                name = "轟音の波動"
             },
-            action_rain_of_sanity = {
+            ActionRainOfSanity = {
                description = "狂気回復の球",
                name = "狂気治癒の雨"
             },
-            buff_regeneration = {
+            BuffRegeneration = {
                name = "リジェネレーション"
             },
-            spell_restore_body = {
+            SpellRestoreBody = {
                description = "肉体の弱体化の治療",
                name = "肉体復活"
             },
-            spell_restore_spirit = {
+            SpellRestoreSpirit = {
                description = "精神の弱体化の治療",
                name = "精神復活"
             },
-            spell_resurrection = {
+            SpellResurrection = {
                description = "死者の蘇生",
                name = "復活"
             },
-            spell_return = {
+            SpellReturn = {
                description = "特定の場所への帰還",
                name = "帰還"
             },
-            riding = {
+            Riding = {
                description = "上手に乗りこなす",
                enchantment_description = "乗馬の腕を上げる",
                name = "乗馬"
             },
-            action_scavenge = {
+            ActionScavenge = {
                description = "盗んで食べる",
                name = "食い漁り"
             },
-            scythe = {
+            Scythe = {
                description = "鎌を扱う技術",
                name = "鎌"
             },
-            spell_sense_object = {
+            SpellSenseObject = {
                description = "周囲の物質感知",
                name = "物質感知"
             },
-            sense_quality = {
+            SenseQuality = {
                description = "アイテムの質や種類を感じ取る",
                name = "自然鑑定"
             },
-            action_shadow_step = {
+            ActionShadowStep = {
                description = "対象へのテレポート",
                name = "接近"
             },
-            shield = {
+            Shield = {
                description = "盾を扱う技術",
                name = "盾"
             },
-            short_sword = {
+            ShortSword = {
                description = "刃渡りの短い剣を扱う技術",
                name = "短剣"
             },
-            spell_short_teleport = {
+            SpellShortTeleport = {
                description = "近くへの瞬間移動",
                name = "ショートテレポート"
             },
-            buff_slow = {
+            BuffSlow = {
                name = "鈍足"
             },
-            action_sound_breath = {
+            ActionSoundBreath = {
                description = "轟音のブレス",
                name = "轟音のブレス"
             },
-            buff_speed = {
+            BuffSpeed = {
                name = "加速"
             },
-            stave = {
+            Stave = {
                description = "杖を扱う技術",
                name = "杖"
             },
-            stealth = {
+            Stealth = {
                description = "周囲に気づかれず行動する",
                enchantment_description = "隠密能力を強化する",
                name = "隠密"
             },
-            action_suicide_attack = {
+            ActionSuicideAttack = {
                description = "自爆の球",
                name = "自爆"
             },
-            action_summon_cats = {
+            ActionSummonCats = {
                description = "猫を召喚する",
                name = "猫召喚"
             },
-            action_summon_fire = {
+            ActionSummonFire = {
                description = "炎の生き物を召喚する",
                name = "炎召喚"
             },
-            spell_summon_monsters = {
+            SpellSummonMonsters = {
                description = "モンスターを召喚する",
                name = "モンスター召喚"
             },
-            action_summon_pawn = {
+            ActionSummonPawn = {
                description = "駒を召喚する",
                name = "駒召喚"
             },
-            action_summon_sister = {
+            ActionSummonSister = {
                description = "妹を召喚する",
                name = "妹召喚"
             },
-            spell_summon_wild = {
+            SpellSummonWild = {
                description = "野生の生き物を召喚する",
                name = "野生召喚"
             },
-            action_summon_yeek = {
+            ActionSummonYeek = {
                description = "イークを召喚する",
                name = "イーク召喚"
             },
-            action_suspicious_hand = {
+            ActionSuspiciousHand = {
                description = "盗み",
                name = "スリの指"
             },
-            action_swarm = {
+            ActionSwarm = {
                description = "隣接対象攻撃",
                name = "スウォーム"
             },
-            tactics = {
+            Tactics = {
                description = "近接攻撃の威力を上げる",
                enchantment_description = "戦術の理解を深める",
                name = "戦術"
             },
-            tailoring = {
+            Tailoring = {
                description = "革や蔓を用い、アイテムを作り出す",
                enchantment_description = "裁縫の腕を上げる",
                name = "裁縫"
             },
-            spell_teleport = {
+            SpellTeleport = {
                description = "瞬間移動",
                name = "テレポート"
             },
-            spell_teleport_other = {
+            SpellTeleportOther = {
                description = "対象を瞬間移動させる",
                name = "テレポートアザー"
             },
-            throwing = {
+            Throwing = {
                description = "投擲道具を扱う技術",
                name = "投擲"
             },
-            action_touch_of_fear = {
+            ActionTouchOfFear = {
                description = "無属性攻撃",
                name = "恐怖の手"
             },
-            action_touch_of_hunger = {
+            ActionTouchOfHunger = {
                description = "飢餓攻撃",
                name = "飢餓の手"
             },
-            action_touch_of_nerve = {
+            ActionTouchOfNerve = {
                description = "神経攻撃",
                name = "麻痺の手"
             },
-            action_touch_of_poison = {
+            ActionTouchOfPoison = {
                description = "毒攻撃",
                name = "毒の手"
             },
-            action_touch_of_sleep = {
+            ActionTouchOfSleep = {
                description = "精神攻撃",
                name = "眠りの手"
             },
-            action_touch_of_weakness = {
+            ActionTouchOfWeakness = {
                description = "弱体化",
                name = "弱体化の手"
             },
-            traveling = {
+            Traveling = {
                description = "旅の進行を早め経験を深める",
                enchantment_description = "旅の熟練を上げる",
                name = "旅歩き"
             },
-            two_hand = {
+            TwoHand = {
                description = "両手で武器を扱う技術",
                name = "両手持ち"
             },
-            spell_uncurse = {
+            SpellUncurse = {
                description = "アイテム解呪",
                name = "解呪"
             },
-            action_vanish = {
+            ActionVanish = {
                description = "退却する",
                name = "退却"
             },
-            spell_vanquish_hex = {
+            SpellVanquishHex = {
                description = "全ての呪い(hex)除去",
                name = "全浄化"
             },
-            spell_wall_creation = {
+            SpellWallCreation = {
                description = "壁の生成",
                name = "壁生成"
             },
-            spell_web = {
+            SpellWeb = {
                description = "蜘蛛の巣発生",
                name = "蜘蛛の巣"
             },
-            weight_lifting = {
+            WeightLifting = {
                description = "重い荷物を持ち運ぶことを可能にする",
                name = "重量挙げ"
             },
-            spell_wish = {
+            SpellWish = {
                description = "願いの効果",
                name = "願い"
             },
-            spell_wizards_harvest = {
+            SpellWizardsHarvest = {
                description = "ランダムな収穫",
                name = "魔術師の収穫"
             }

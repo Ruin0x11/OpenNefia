@@ -350,7 +350,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
 
 (defun open-nefia--project-root ()
   (let ((root (projectile-project-root)))
-    (projectile-locate-dominating-file root "OpenNefia")))
+    (projectile-locate-dominating-file root ".dir-locals.el")))
 
 (defun open-nefia--require-path-of-file (file)
   (let* ((prefix

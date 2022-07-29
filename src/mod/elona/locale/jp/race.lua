@@ -1,247 +1,247 @@
 return {
    race = {
       elona = {
-         armor = {
+         Armor = {
             name = "鎧"
          },
-         asura = {
+         Asura = {
             name = "阿修羅"
          },
-         bat = {
+         Bat = {
             name = "コウモリ"
          },
-         bear = {
+         Bear = {
             name = "熊"
          },
-         beetle = {
+         Beetle = {
             name = "昆虫"
          },
-         bike = {
+         Bike = {
             name = "バイク"
          },
-         cat = {
+         Cat = {
             name = "猫"
          },
-         catgod = {
+         Catgod = {
             name = "猫の神"
          },
-         catsister = {
+         Catsister = {
             name = "妹猫"
          },
-         centipede = {
+         Centipede = {
             name = "ムカデ"
          },
-         cerberus = {
+         Cerberus = {
             name = "ケルベロス"
          },
-         chicken = {
+         Chicken = {
             name = "鶏"
          },
-         crab = {
+         Crab = {
             name = "蟹"
          },
-         cupid = {
+         Cupid = {
             name = "キューピット"
          },
-         dinosaur = {
+         Dinosaur = {
             name = "恐竜"
          },
-         dog = {
+         Dog = {
             name = "犬"
          },
-         dragon = {
+         Dragon = {
             name = "ドラゴン"
          },
-         drake = {
+         Drake = {
             name = "ドレイク"
          },
-         dwarf = {
+         Dwarf = {
             description = "丘の民、別名ドワーフは頑強で無骨な背の低い種族です。彼らは高い耐久力と力を持ち、幾つかの生産系の技術にも精通しています。彼らには暗黒と強い毒への耐性があります。",
             name = "丘の民"
          },
-         elea = {
+         Elea = {
             description = "エレアは、幾つもの世代を生き抜いたエルフの末梢で、他の種族から姿を隠し、静かに生活しています。彼らこそが、エイス・テールを滅ぼした災厄の元凶であるとするイェルスの皇子のバッシングにより、彼らは他の種族から嫌われています。エレアはエーテルへの耐性と高い魔力を持ち、魔力の反動によるダメージを軽減することができます。",
             name = "エレア"
          },
-         ent = {
+         Ent = {
             name = "エント"
          },
-         eulderna = {
+         Eulderna = {
             description = "エウダーナは最も古い国の一つで、今もなお強力な大国です。彼らは、自分たちのみが世界を動かすに値すると考える選民意識の持ち主で、エリートであり、完ぺき主義者です。エウダーナは魔法や魔法道具の扱いにたけ、キャスターや中間的な職業に向いています。彼らは高い詠唱能力と魔法への耐性をもっています。",
             name = "エウダーナ"
          },
-         eye = {
+         Eye = {
             name = "目"
          },
-         fairy = {
+         Fairy = {
             description = "妖精は可憐で非力で儚い生物です。彼女達は、人間族と比べて高い魔力と回避力、目にも止まらぬすばしっこさを持ち、ほぼ全ての耐性に高い抵抗力を持っています。反面、妖精は重さ1s以上の装備を身につけることができず、防御力をあげるのは困難です。その体力の低さからも、まともな物理攻撃を一度でもくらうと危機に陥るでしょう。",
             name = "妖精"
          },
-         frog = {
+         Frog = {
             name = "蛙"
          },
-         ghost = {
+         Ghost = {
             name = "幽霊"
          },
-         giant = {
+         Giant = {
             name = "巨人"
          },
-         goblin = {
+         Goblin = {
             description = "ゴブリンは好戦的で獰猛な種族です。彼らは特筆するべき能力を持っておらず、またこれといった弱点もありません。ゴブリンはやや高い能力と、暗黒への耐性と、自然治癒の技術を持っています。また、採取スポットでより長く採取することができます。",
             name = "ゴブリン"
          },
-         god = {
+         God = {
             name = "神"
          },
-         golem = {
+         Golem = {
             description = "ゴーレムは魔力により生命を与えられた物質です。ゴーレムは他の種族に比べ遥かに高い体力を持っています。その代償としてか、彼らのマナと速度は、通常よりも劣っています。ゴーレムには毒への強い耐性があり、また朦朧状態にならないという利点があります。",
             name = "ゴーレム"
          },
-         hand = {
+         Hand = {
             name = "手"
          },
-         harpy = {
+         Harpy = {
             name = "ハーピー"
          },
-         horse = {
+         Horse = {
             name = "馬"
          },
-         hound = {
+         Hound = {
             name = "猟犬"
          },
-         imp = {
+         Imp = {
             name = "インプ"
          },
-         juere = {
+         Juere = {
             description = "ジューアは、元は盗賊や悪人のあつまりであり、今もならず者国家として嫌われる国です。彼らは束縛されることを嫌い、自分の意思を尊重し、自由に生きることを好みます。ジューアは手先が器用で、鋭い感覚と高い学習能力を持ち、多彩な技術に精通しています。彼らはパフォーマンスをすることで生計をたてることができ、食事をゆっくりと消化し、採取スポットでより長い時間採取できます。",
             name = "ジューア"
          },
-         kobold = {
+         Kobold = {
             name = "コボルト"
          },
-         lich = {
+         Lich = {
             description = "リッチは高い知能と魔力を備えた不朽のアンデッドです。彼らは通常の種族よりも高いマナと瞑想の技術を得ますが、肉弾戦に耐え切れるほどの体力はありません。リッチは冷気と毒と強い暗黒への耐性を持っています。",
             name = "リッチ"
          },
-         lizardman = {
+         Lizardman = {
             name = "リザードマン"
          },
-         machine = {
+         Machine = {
             name = "機械"
          },
-         machinegod = {
+         Machinegod = {
             name = "機械の神"
          },
-         mandrake = {
+         Mandrake = {
             name = "マンドレイク"
          },
-         medusa = {
+         Medusa = {
             name = "メデューサ"
          },
-         metal = {
+         Metal = {
             name = "メタル"
          },
-         minotaur = {
+         Minotaur = {
             name = "ミノタウロス"
          },
-         mushroom = {
+         Mushroom = {
             name = "きのこ"
          },
-         mutant = {
+         Mutant = {
             description = "カオスシェイプについて分かっていることは、ほとんどありません。異形の人とも呼ばれる彼らは、かろうじて人の形を保っています。カオスシェイプは成長とともに新しい身体の部位を獲得しますが、何が生えてくるかは予測不可能です。",
             name = "カオスシェイプ"
          },
-         norland = {
+         Norland = {
             name = "ノーランド"
          },
-         orc = {
+         Orc = {
             name = "オーク"
          },
-         phantom = {
+         Phantom = {
             name = "ファントム"
          },
-         piece = {
+         Piece = {
             name = "駒"
          },
-         quickling = {
+         Quickling = {
             name = "クイックリング"
          },
-         rabbit = {
+         Rabbit = {
             name = "ウサギ"
          },
-         rat = {
+         Rat = {
             name = "ねずみ"
          },
-         rock = {
+         Rock = {
             name = "岩"
          },
-         roran = {
+         Roran = {
             name = "ローラン"
          },
-         servant = {
+         Servant = {
             name = "神の化身"
          },
-         sheep = {
+         Sheep = {
             name = "羊"
          },
-         shell = {
+         Shell = {
             name = "やどかり"
          },
-         skeleton = {
+         Skeleton = {
             name = "骸骨"
          },
-         slime = {
+         Slime = {
             name = "スライム"
          },
-         slug = {
+         Slug = {
             description = "デバッグ用",
             name = "ナメクジ"
          },
-         snail = {
+         Snail = {
             description = "カタツムリは非常に鈍い生き物です。彼らは脆く、非力で、不器用で、学習能力がなく、塩で溶けます。",
             name = "かたつむり"
          },
-         snake = {
+         Snake = {
             name = "蛇"
          },
-         spider = {
+         Spider = {
             name = "蜘蛛"
          },
-         spirit = {
+         Spirit = {
             name = "精霊"
          },
-         stalker = {
+         Stalker = {
             name = "ストーカー"
          },
-         troll = {
+         Troll = {
             name = "トロール"
          },
-         undeadgod = {
+         Undeadgod = {
             name = "死霊の神"
          },
-         wasp = {
+         Wasp = {
             name = "ワスプ"
          },
-         wisp = {
+         Wisp = {
             name = "ウィスプ"
          },
-         wolf = {
+         Wolf = {
             name = "狼"
          },
-         wyvern = {
+         Wyvern = {
             name = "ワイバーン"
          },
-         yeek = {
+         Yeek = {
             name = "イーク"
          },
-         yerles = {
+         Yerles = {
             description = "シエラ・テール西方で急速に台頭してきた新王国の人間が、イェルスです。彼らは現実的な思考を好み、エイス・テールの文明を崇拝する一方で、それがたとえ自らの理解を超えていても、利益になるものであれば積極的にとりいれようとする柔軟性を持っています。彼らは高い学習能力を持ち、ほぼ全ての職業に適応することができます。イェルスは機械武装の扱いにたけ、追加の成長ボーナスを受け取ります。",
             name = "イェルス"
          },
-         yith = {
+         Yith = {
             name = "イス"
          },
-         zombie = {
+         Zombie = {
             name = "ゾンビ"
          }
       }

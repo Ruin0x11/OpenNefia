@@ -37,9 +37,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_teleport",
-         charges = function(self)
-            return 5 + Rand.rnd(5) - Rand.rnd(5)
-         end,
+         charges = 5,
          max_charges = 5,
       }
    },
@@ -66,9 +64,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_identify",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -95,9 +91,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_uncurse",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -123,9 +117,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_ice_bolt",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -151,9 +143,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_fire_bolt",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -179,9 +169,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_lightning_bolt",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -207,9 +195,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_teleport",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -236,9 +222,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_summon_monsters",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -266,9 +250,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_magic_map",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -296,9 +278,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_oracle",
-         charges = function(self)
-            return 2 + Rand.rnd(2) - Rand.rnd(2)
-         end,
+         charges = 2,
          max_charges = 2,
       }
    },
@@ -326,9 +306,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_return",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -354,9 +332,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_heal_light",
-         charges = function(self)
-            return 5 + Rand.rnd(5) - Rand.rnd(5)
-         end,
+         charges = 5,
          max_charges = 5,
       }
    },
@@ -383,9 +359,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_heal_critical",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -413,9 +387,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_cure_of_eris",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -443,9 +415,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_cure_of_jure",
-         charges = function(self)
-            return 2 + Rand.rnd(2) - Rand.rnd(2)
-         end,
+         charges = 2,
          max_charges = 2,
       }
    },
@@ -471,9 +441,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_magic_dart",
-         charges = function(self)
-            return 5 + Rand.rnd(5) - Rand.rnd(5)
-         end,
+         charges = 5,
          max_charges = 5,
       }
    },
@@ -500,9 +468,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_nether_arrow",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -530,9 +496,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_chaos_eye",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -559,9 +523,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_nerve_arrow",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -588,9 +550,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_darkness_bolt",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -617,9 +577,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_mind_bolt",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -646,9 +604,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_ice_ball",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -675,9 +631,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_fire_ball",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -705,9 +659,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_raging_roar",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -735,9 +687,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_chaos_ball",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -767,9 +717,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_wish",
-         charges = function(self)
-            return 1 + Rand.rnd(1) - Rand.rnd(1)
-         end,
+         charges = 1,
          can_be_recharged = false,
       },
       ["elona.spellbook"] = {
@@ -799,9 +747,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.buff_holy_shield",
-         charges = function(self)
-            return 5 + Rand.rnd(5) - Rand.rnd(5)
-         end,
+         charges = 5,
          max_charges = 5,
       }
    },
@@ -829,9 +775,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.buff_mist_of_silence",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -859,9 +803,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.buff_regeneration",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -889,9 +831,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.buff_elemental_shield",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -919,9 +859,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.buff_speed",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -949,9 +887,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.buff_slow",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -978,9 +914,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.buff_hero",
-         charges = function(self)
-            return 5 + Rand.rnd(5) - Rand.rnd(5)
-         end,
+         charges = 5,
          max_charges = 5,
       }
    },
@@ -1007,9 +941,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.buff_mist_of_frailness",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -1037,9 +969,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.buff_element_scar",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -1067,9 +997,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.buff_holy_veil",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -1097,9 +1025,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_holy_light",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -1127,9 +1053,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_vanquish_hex",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -1157,9 +1081,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.buff_nightmare",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -1187,9 +1109,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.buff_divine_wisdom",
-         charges = function(self)
-            return 5 + Rand.rnd(5) - Rand.rnd(5)
-         end,
+         charges = 5,
          max_charges = 5,
       }
    },
@@ -1216,9 +1136,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_sense_object",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -1246,9 +1164,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_mutation",
-         charges = function(self)
-            return 2 + Rand.rnd(2) - Rand.rnd(2)
-         end,
+         charges = 2,
          max_charges = 2,
       }
    },
@@ -1276,9 +1192,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_dominate",
-         charges = function(self)
-            return 2 + Rand.rnd(2) - Rand.rnd(2)
-         end,
+         charges = 2,
          max_charges = 2,
       }
    },
@@ -1305,9 +1219,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_web",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -1335,9 +1247,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_wall_creation",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -1365,9 +1275,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_healing_rain",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -1395,9 +1303,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_healing_touch",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -1425,9 +1331,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_acid_ground",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -1455,9 +1359,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_fire_wall",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -1484,9 +1386,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_door_creation",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -1514,9 +1414,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.buff_incognito",
-         charges = function(self)
-            return 4 + Rand.rnd(4) - Rand.rnd(4)
-         end,
+         charges = 4,
          max_charges = 4,
       }
    },
@@ -1543,9 +1441,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_dark_eye",
-         charges = function(self)
-            return 5 + Rand.rnd(5) - Rand.rnd(5)
-         end,
+         charges = 5,
          max_charges = 5,
       }
    },
@@ -1568,9 +1464,7 @@ data:add {
 
    _ext = {
       [IItemAncientBook] = {
-         charges = function(self)
-            return 2 + Rand.rnd(2) - Rand.rnd(2)
-         end,
+         charges = 2,
          max_charges = 2,
          display_charge_count = false
       }
@@ -1602,9 +1496,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_magic_storm",
-         charges = function(self)
-            return 2 + Rand.rnd(2) - Rand.rnd(2)
-         end,
+         charges = 2,
          max_charges = 2,
       }
    },
@@ -1632,9 +1524,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_crystal_spear",
-         charges = function(self)
-            return 2 + Rand.rnd(2) - Rand.rnd(2)
-         end,
+         charges = 2,
          max_charges = 2,
       }
    },
@@ -1662,9 +1552,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.buff_contingency",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -1692,9 +1580,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_four_dimensional_pocket",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
       }
    },
@@ -1722,9 +1608,7 @@ data:add {
    _ext = {
       [IItemSpellbook] = {
          skill_id = "elona.spell_wizards_harvest",
-         charges = function(self)
-            return 3 + Rand.rnd(3) - Rand.rnd(3)
-         end,
+         charges = 3,
          max_charges = 3,
          can_be_recharged = false,
       },

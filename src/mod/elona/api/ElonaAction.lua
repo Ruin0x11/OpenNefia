@@ -66,7 +66,7 @@ function ElonaAction.melee_attack(chara, target)
    -- <<<<<<<< shade2/action.hsp:1229     return ..
 end
 
-function ElonaAction.get_ranged_weapon_and_ammo(chara)
+function ElonaAction.get_ranged_weapon_and_ammo(chara, ignore_ammo)
    -- >>>>>>>> shade2/command.hsp:4290 *FindRangeWeapon ...
    local pred = body_part_where_equipped(EquipRules.is_ranged_weapon)
    local ranged = chara:iter_equipped_body_parts():filter(pred):extract("equipped"):nth(1)
@@ -83,7 +83,7 @@ function ElonaAction.get_ranged_weapon_and_ammo(chara)
       return nil, "no_ammo"
    end
 
-   if ammo and not aspect:can_use_with_ammo(ranged, ammo) then
+   if ammo and not aspect:can_use_with_ammo(ranged, ammo) and not ignore_ammo then
       return nil, "wrong_ammo"
    end
 

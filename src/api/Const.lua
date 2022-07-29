@@ -19,7 +19,7 @@ Const.MAP_RENEW_MINOR_HOURS = 24
 Const.RESIST_GRADE = 50
 Const.RESIST_LEVEL_MINIMUM = 3
 Const.RESIST_LEVEL_STRONG = 7
-Const.RESIST_LEVEL_IMMUNE = 7
+Const.RESIST_LEVEL_IMMUNE = 10
 -- <<<<<<<< shade2/init.hsp:57 	#define global resistImmune	10 ..
 
 Const.MAX_ENCHANTMENTS = 15

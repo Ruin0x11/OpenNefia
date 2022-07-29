@@ -43,7 +43,7 @@ local function per_curse_state(curse_state, doomed, cursed, none, blessed)
 end
 
 data:add {
-   _id = "milk",
+   _id = "effect_milk",
    _type = "elona_sys.magic",
    elona_id = 1101,
 

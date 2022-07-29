@@ -1834,7 +1834,7 @@ data:add {
    effect_id = "elona.evolution",
 }
 data:add {
-   _id = "evolution",
+   _id = "effect_evolution",
    _type = "elona_sys.magic",
    elona_id = 1144,
 

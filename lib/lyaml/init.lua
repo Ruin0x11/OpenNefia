@@ -116,13 +116,16 @@ local dumper_mt = {
             return self:dump_alias(alias)
          end
 
-         self:emit {
-            type = 'MAPPING_START',
-            anchor = self:get_anchor(map),
-            style = 'BLOCK',
-         }
-
          local mt = getmetatable(map)
+
+         local tag
+         local implicit = true
+         local style = 'BLOCK'
+         if mt and mt.tag then
+            tag = mt.tag
+            implicit = false
+         end
+
          local order
          if mt and mt.order then
             order = mt.order
@@ -130,6 +133,18 @@ local dumper_mt = {
             order = table.keys(map)
             table.sort(order)
          end
+
+         if #order == 0 then
+            style = 'FLOW'
+         end
+
+         self:emit {
+            type = 'MAPPING_START',
+            anchor = self:get_anchor(map),
+            style = style,
+            implicit = implicit,
+            tag = tag
+         }
          for _, k in ipairs(order) do
             local v = map[k]
             self:dump_node(k)
@@ -197,7 +212,7 @@ local dumper_mt = {
             value = value,
             plain_implicit = true,
             quoted_implicit = true,
-            style = style,
+            style = style
          }
       end,
 
@@ -209,6 +224,8 @@ local dumper_mt = {
          elseif itsa == 'string' or itsa == 'boolean' or itsa == 'number' then
             return self:dump_scalar(node)
          elseif itsa == 'table' then
+            local mt = getmetatable(node)
+
             -- Something is only a sequence if its keys start at 1
             -- and are consecutive integers without any jumps.
             local prior_key = 0
@@ -221,6 +238,9 @@ local dumper_mt = {
                 prior_key = i
                 i, v = next(node, prior_key)
               end
+            end
+            if mt and mt.type == "mapping" then
+               is_pure_sequence = false
             end
             if is_pure_sequence then
                -- Only sequentially numbered integer keys starting from 1.
@@ -237,7 +257,7 @@ local dumper_mt = {
 
       -- Dump DOCUMENT into the event stream.
       dump_document = function(self, document)
-         self:emit {type='DOCUMENT_START'}
+         self:emit {type='DOCUMENT_START', tag_directives=self.tag_directives}
          self:dump_node(document)
          return self:emit {type='DOCUMENT_END'}
       end,
@@ -256,6 +276,7 @@ local function Dumper(opts)
       anchors = anchors,
       emitter = yaml.emitter(),
       implicit_scalar = opts.implicit_scalar,
+      tag_directives = opts.tag_directives
    }
    return setmetatable(object, dumper_mt)
 end
@@ -275,13 +296,14 @@ local function dump(documents, opts)
    opts = opts or {}
 
    -- backwards compatibility
-   if opts.anchors == nil and opts.implicit_scalar == nil then
+   if opts.anchors == nil and opts.implicit_scalar == nil and opts.tag_directives == nil then
       opts = {anchors=opts}
    end
 
    local dumper = Dumper {
       anchors = opts.anchors or {},
       implicit_scalar = opts.implicit_scalar or default.implicit_scalar,
+      tag_directives = opts.tag_directives or {}
    }
 
    dumper:emit {type='STREAM_START', encoding='UTF8'}

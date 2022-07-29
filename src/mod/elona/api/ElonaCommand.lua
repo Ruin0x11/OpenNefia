@@ -452,7 +452,7 @@ end
 
 function ElonaCommand.ammo(player)
    -- >>>>>>>> elona122/shade2/command.hsp:4694 *com_ammo ..
-   local weapon, ammo = ElonaAction.get_ranged_weapon_and_ammo(player)
+   local weapon, ammo = ElonaAction.get_ranged_weapon_and_ammo(player, true)
 
    if ammo == nil then
       Gui.mes("action.ammo.need_to_equip")
