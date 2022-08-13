@@ -39,6 +39,7 @@ data:add {
          return "come_again"
       end,
       train_confirm = {
+         -- text = function(t, state)
          text = function(t, state)
             local skill_name = I18N.localize("base.skill", state.skill_id, "name")
             return {
