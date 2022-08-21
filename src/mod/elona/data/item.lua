@@ -8,24 +8,23 @@ local light = require("mod.elona.data.item.light")
 -- to event handlers that are dynamically generated in elona_sys.events. See the
 -- "Connect item events" handler there for details.
 
-local item =
-   {
-      {
-         _id = "bug",
-         elona_id = 0,
-         image = "elona.item_worthless_fake_gold_bar",
-         value = 1,
-         weight = 1,
-         fltselect = Enum.FltSelect.Sp,
-         coefficient = 100,
-         categories = {
-            "elona.bug",
-            "elona.no_generate"
-         },
-         light = light.item,
-         is_wishable = false
-      },
-   }
+local item = {
+	{
+		_id = "bug",
+		elona_id = 0,
+		image = "elona.item_worthless_fake_gold_bar",
+		value = 1,
+		weight = 1,
+		fltselect = Enum.FltSelect.Sp,
+		coefficient = 100,
+		categories = {
+			"elona.bug",
+			"elona.no_generate",
+		},
+		light = "elona.item",
+		is_wishable = false,
+	},
+}
 
 data:add_multi("base.item", item)
 

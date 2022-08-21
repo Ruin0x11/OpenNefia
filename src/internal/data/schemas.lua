@@ -787,13 +787,11 @@ Relative strength of this item.
 		},
 		{
 			name = "container_params",
-			type = types.optional(
-				types.fields({
-					type = types.literal("local"),
-					max_capacity = types.optional(types.uint),
-					combine_weight = types.optional(types.boolean),
-				})
-			),
+			type = types.optional(types.fields({
+				type = types.literal("local"),
+				max_capacity = types.optional(types.uint),
+				combine_weight = types.optional(types.boolean),
+			})),
 			default = nil,
 		},
 		{
@@ -1065,7 +1063,7 @@ If true, lights up dungeons if in the player's inventory.
 		},
 		{
 			name = "light",
-			type = types.optional(ty_light),
+			type = types.optional(types.string),
 			default = nil,
 			doc = [[
 Ambient light information.
@@ -1841,19 +1839,14 @@ can be applied to any item generated randomly.
 		},
 		{
 			name = "on_generate",
-			type = types.optional(
-				types.callback(
-					{
-						"self",
-						types.data_entry("base.enchantment"),
-						"item",
-						types.map_object("base.item"),
-						"params",
-						types.table,
-					},
-					types.boolean
-				)
-			),
+			type = types.optional(types.callback({
+				"self",
+				types.data_entry("base.enchantment"),
+				"item",
+				types.map_object("base.item"),
+				"params",
+				types.table,
+			}, types.boolean)),
 			template = true,
 		},
 		{
@@ -2016,26 +2009,10 @@ data:add_type({
 	fields = {},
 })
 
-local ty_target_type = types.literal(
-	"self",
-	"nearby",
-	"self_or_nearby",
-	"enemy",
-	"other",
-	"location",
-	"direction",
-	"target_or_location"
-)
-local ty_triggered_by = types.literal(
-	"spell",
-	"action",
-	"wand",
-	"potion",
-	"potion_thrown",
-	"potion_spilt",
-	"use",
-	"open"
-)
+local ty_target_type =
+	types.literal("self", "nearby", "self_or_nearby", "enemy", "other", "location", "direction", "target_or_location")
+local ty_triggered_by =
+	types.literal("spell", "action", "wand", "potion", "potion_thrown", "potion_spilt", "use", "open")
 
 data:add_type({
 	name = "enchantment_skill",
@@ -2282,21 +2259,16 @@ Used only when the skill's `type` is "spell" or "action".
 		},
 		{
 			name = "calc_damage_params",
-			type = types.optional(
-				types.callback(
-					{
-						"self",
-						types.data_entry("base.skill"),
-						"chara",
-						types.map_object("base.chara"),
-						"weapon",
-						types.optional(types.map_object("base.item")),
-						"target",
-						types.map_object("base.chara"),
-					},
-					ty_damage_params
-				)
-			),
+			type = types.optional(types.callback({
+				"self",
+				types.data_entry("base.skill"),
+				"chara",
+				types.map_object("base.chara"),
+				"weapon",
+				types.optional(types.map_object("base.item")),
+				"target",
+				types.map_object("base.chara"),
+			}, ty_damage_params)),
 		},
 		{
 			name = "calc_final",
