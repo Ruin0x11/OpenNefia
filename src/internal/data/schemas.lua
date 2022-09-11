@@ -1135,6 +1135,19 @@ If false, this item cannot be wished for.
 			type = types.optional(types.boolean),
 			default = nil,
 		},
+
+		{
+			name = "spell_power",
+			type = types.optional(types.int),
+		},
+		{
+			name = "scroll_id",
+			type = types.optional(types.string),
+		},
+		{
+			name = "spell_no_consume",
+			type = types.optional(types.boolean),
+		},
 	},
 	fallbacks = {
 		amount = 1,
@@ -2009,10 +2022,26 @@ data:add_type({
 	fields = {},
 })
 
-local ty_target_type =
-	types.literal("self", "nearby", "self_or_nearby", "enemy", "other", "location", "direction", "target_or_location")
-local ty_triggered_by =
-	types.literal("spell", "action", "wand", "potion", "potion_thrown", "potion_spilt", "use", "open")
+local ty_target_type = types.literal(
+	"self",
+	"nearby",
+	"self_or_nearby",
+	"enemy",
+	"other",
+	"location",
+	"direction",
+	"target_or_location"
+)
+local ty_triggered_by = types.literal(
+	"spell",
+	"action",
+	"wand",
+	"potion",
+	"potion_thrown",
+	"potion_spilt",
+	"use",
+	"open"
+)
 
 data:add_type({
 	name = "enchantment_skill",
