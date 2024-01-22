@@ -163,7 +163,7 @@ local function normalize_input(wish)
    -- >>>>>>>> shade2/module.hsp:2063 	cnv_str s,"card ","" ..
    wish = wish:gsub(I18N.get("wish.general_wish.card"), "")
    wish = wish:gsub(I18N.get("wish.general_wish.figure"), "")
-   -- >>>>>>>> shade2/module.hsp:2063 	cnv_str s,"card ","" ..
+   -- 
 
    wish = string.strip_whitespace(wish)
    wish = wish:lower()

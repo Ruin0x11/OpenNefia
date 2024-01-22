@@ -714,7 +714,7 @@ data:add({
 	_ext = {
 		[IItemPotion] = {
 			effects = {
-				{ _id = "elona.milk", power = 100 },
+				{ _id = "elona.effect_milk", power = 100 },
 			},
 		},
 		IItemFromChara,
@@ -1013,7 +1013,7 @@ data:add({
 	_ext = {
 		[IItemPotion] = {
 			effects = {
-				{ _id = "elona.evolution", power = 100 },
+				{ _id = "elona.effect_evolution", power = 100 },
 			},
 		},
 	},

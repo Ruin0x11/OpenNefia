@@ -844,18 +844,6 @@ make_heal {
 }
 
 make_heal {
-   _id = "healing_touch",
-   elona_id = 405,
-   message = "magic.healed.normal",
-   dice_x = function(p, l) return 2 + l / 22 end,
-   dice_y = function(p, l) return p / 18 + 5 end,
-   bonus = function(p, l) return p / 10 end,
-   cost = 20,
-   difficulty = 400,
-   target_type = "nearby"
-}
-
-make_heal {
    _id = "cure_of_eris",
    elona_id = 402,
    message = "magic.healed.greatly",
@@ -875,6 +863,18 @@ make_heal {
    bonus = function(p, l) return p / 2 end,
    cost = 80,
    difficulty = 1300
+}
+
+make_heal {
+   _id = "healing_touch",
+   elona_id = 405,
+   message = "magic.healed.normal",
+   dice_x = function(p, l) return 2 + l / 22 end,
+   dice_y = function(p, l) return p / 18 + 5 end,
+   bonus = function(p, l) return p / 10 end,
+   cost = 20,
+   difficulty = 400,
+   target_type = "nearby"
 }
 
 data:add {
@@ -1831,7 +1831,7 @@ data:add {
    elona_id = 1144,
 
    type = "effect",
-   effect_id = "elona.evolution",
+   effect_id = "elona.effect_evolution",
 }
 data:add {
    _id = "effect_evolution",

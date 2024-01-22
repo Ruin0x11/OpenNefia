@@ -21,7 +21,7 @@ data:add({
 	on_read = function(self, params)
 		return ElonaMagic.read_scroll(self, { { _id = "elona.identify", power = 100 } }, params)
 	end,
-	scroll_id = "elona.identify",
+	scroll_id = "elona.spell_identify",
 	spell_power = 100,
 	coefficient = 0,
 	originalnameref2 = "scroll",
@@ -45,7 +45,7 @@ data:add({
 	on_read = function(self, params)
 		return ElonaMagic.read_scroll(self, { { _id = "elona.oracle", power = 100 } }, params)
 	end,
-	scroll_id = "elona.oracle",
+	scroll_id = "elona.spell_oracle",
 	spell_power = 100,
 	coefficient = 0,
 	originalnameref2 = "scroll",
@@ -69,7 +69,7 @@ data:add({
 	on_read = function(self, params)
 		return ElonaMagic.read_scroll(self, { { _id = "elona.teleport", power = 100 } }, params)
 	end,
-	scroll_id = "elona.teleport",
+	scroll_id = "elona.spell_teleport",
 	spell_power = 100,
 	coefficient = 0,
 	originalnameref2 = "scroll",
@@ -120,7 +120,7 @@ data:add({
 	on_read = function(self, params)
 		return ElonaMagic.read_scroll(self, { { _id = "elona.uncurse", power = 100 } }, params)
 	end,
-	scroll_id = "elona.uncurse",
+	scroll_id = "elona.spell_uncurse",
 	spell_power = 100,
 	coefficient = 0,
 	originalnameref2 = "scroll",
@@ -144,7 +144,7 @@ data:add({
 	on_read = function(self, params)
 		return ElonaMagic.read_scroll(self, { { _id = "elona.return", power = 100 } }, params)
 	end,
-	scroll_id = "elona.return",
+	scroll_id = "elona.spell_return",
 	spell_power = 100,
 	rarity = 300000,
 	coefficient = 0,
@@ -169,7 +169,7 @@ data:add({
 	on_read = function(self, params)
 		return ElonaMagic.read_scroll(self, { { _id = "elona.magic_map", power = 500 } }, params)
 	end,
-	scroll_id = "elona.magic_map",
+	scroll_id = "elona.spell_magic_map",
 	spell_power = 500,
 	coefficient = 0,
 	originalnameref2 = "scroll",
@@ -191,7 +191,7 @@ data:add({
 	value = 240000,
 	weight = 20,
 	on_read = function(self, params)
-		return ElonaMagic.read_scroll(self, { { _id = "elona.effect_gain_skill", power = 100 } }, params)
+		return ElonaMagic.read_scroll(self, { { _id = "elona.gain_skill", power = 100 } }, params)
 	end,
 	scroll_id = "elona.effect_gain_skill",
 	spell_power = 100,
@@ -261,7 +261,7 @@ data:add({
 	on_read = function(self, params)
 		return ElonaMagic.read_scroll(self, { { _id = "elona.teleport", power = 100 } }, params)
 	end,
-	scroll_id = "elona.teleport",
+	scroll_id = "elona.spell_teleport",
 	spell_power = 100,
 	coefficient = 0,
 	originalnameref2 = "scroll",
@@ -314,7 +314,7 @@ data:add({
 	on_read = function(self, params)
 		return ElonaMagic.read_scroll(self, { { _id = "elona.identify", power = 2000 } }, params)
 	end,
-	scroll_id = "elona.identify",
+	scroll_id = "elona.spell_identify",
 	spell_power = 2000,
 	level = 10,
 	rarity = 300000,
@@ -340,7 +340,7 @@ data:add({
 	on_read = function(self, params)
 		return ElonaMagic.read_scroll(self, { { _id = "elona.uncurse", power = 2500 } }, params)
 	end,
-	scroll_id = "elona.uncurse",
+	scroll_id = "elona.spell_uncurse",
 	spell_power = 2500,
 	level = 12,
 	rarity = 300000,
@@ -392,7 +392,7 @@ data:add({
 	on_read = function(self, params)
 		return ElonaMagic.read_scroll(self, { { _id = "elona.holy_light", power = 300 } }, params)
 	end,
-	scroll_id = "elona.holy_light",
+	scroll_id = "elona.spell_holy_light",
 	spell_power = 300,
 	rarity = 800000,
 	coefficient = 0,
@@ -417,7 +417,7 @@ data:add({
 	on_read = function(self, params)
 		return ElonaMagic.read_scroll(self, { { _id = "elona.vanquish_hex", power = 300 } }, params)
 	end,
-	scroll_id = "elona.vanquish_hex",
+	scroll_id = "elona.spell_vanquish_hex",
 	spell_power = 300,
 	level = 5,
 	rarity = 400000,
@@ -443,7 +443,7 @@ data:add({
 	on_read = function(self, params)
 		return ElonaMagic.read_scroll(self, { { _id = "elona.harvest_mana", power = 250 } }, params)
 	end,
-	scroll_id = "elona.harvest_mana",
+	scroll_id = "elona.action_harvest_mana",
 	spell_power = 250,
 	level = 5,
 	rarity = 150000,
@@ -521,7 +521,7 @@ data:add({
 	on_read = function(self, params)
 		return ElonaMagic.read_scroll(self, { { _id = "elona.sense_object", power = 500 } }, params)
 	end,
-	scroll_id = "elona.sense_object",
+	scroll_id = "elona.spell_sense_object",
 	spell_power = 500,
 	coefficient = 0,
 	originalnameref2 = "scroll",
@@ -931,7 +931,7 @@ data:add({
 	on_read = function(self, params)
 		return ElonaMagic.read_scroll(self, { { _id = "elona.resurrection", power = 2500 } }, params)
 	end,
-	scroll_id = "elona.resurrection",
+	scroll_id = "elona.spell_resurrection",
 	spell_power = 2500,
 	rarity = 3000,
 	coefficient = 0,

@@ -403,8 +403,7 @@ end
 
 do
    local rain = {
-      _type = "elona.weather",
-      _id = "rain",
+      _type = "elona.weather",      _id = "rain",
       elona_id = 3,
 
       -- >>>>>>>> shade2/sound.hsp:377 	if gWeather=weatherRain		:env=seBgRain ...
