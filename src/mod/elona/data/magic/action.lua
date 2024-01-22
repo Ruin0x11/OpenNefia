@@ -212,6 +212,7 @@ data:add({
 	_type = "elona_sys.magic",
 	elona_id = 621,
 
+	type = "action",
 	params = {
 		"source",
 		"target",
@@ -726,7 +727,7 @@ data:add({
 		target:damage_hp(target:calc("max_hp"), source, {
 			no_attack_text = true,
 			message_tense = tense,
-			is_third_pereson = is_third_person,
+			is_third_person = is_third_person,
 			element = "elona.vorpal",
 			element_power = 0,
 		})
@@ -989,6 +990,7 @@ data:add({
 	_type = "elona_sys.magic",
 	elona_id = 628,
 
+	type = "action",
 	params = {
 		"source",
 		"target",

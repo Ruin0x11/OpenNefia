@@ -85,6 +85,7 @@ data:add({
 	_type = "elona_sys.magic",
 	elona_id = 435,
 
+	type = "spell",
 	params = {
 		"source",
 		"target",
